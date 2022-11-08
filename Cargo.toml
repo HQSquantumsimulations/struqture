@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "struqture",
+    "struqture-py",
+]
+
+[profile.release]
+lto = true
+
+[profile.bench]
+lto = true

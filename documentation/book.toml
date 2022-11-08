@@ -1,0 +1,13 @@
+[book]
+authors = ["HQS Quantum Simulations", "Kirsten Bark", "Nicolas Vogt"]
+language = "en"
+multilingual = false
+src = "src"
+title = "HQS StruQture User Documentation"
+
+[preprocessor.katex]
+
+[output.katex]
+
+[output.html]
+mathjax-support = true

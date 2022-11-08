@@ -1,0 +1,25 @@
+[book]
+title = "Struqture User Guide"
+author = "HQS Quantum Simulations GmbH"
+description = "User guide for the struqture package to represent physical systems."
+src = "documentation/src"
+
+[rust]
+edition = "2021"
+
+[build]
+build-dir = "documentation/book"
+create-missing = false
+
+[preprocessor.index]
+
+[preprocessor.links]
+
+[output.html]
+mathjax-support = true
+
+[output.html.search]
+limit-results = 15
+
+[output.html.playground]
+runnable = false

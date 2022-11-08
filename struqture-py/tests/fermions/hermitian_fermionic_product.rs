@@ -1,0 +1,414 @@
+// Copyright © 2021-2022 HQS Quantum Simulations GmbH. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License. You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed under the
+// License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+// express or implied. See the License for the specific language governing permissions and
+// limitations under the License.
+
+use num_complex::Complex64;
+use pyo3::prelude::*;
+use std::cmp::Ordering;
+use struqture_py::fermions::{FermionProductWrapper, HermitianFermionProductWrapper};
+
+// helper functions
+fn new_pp(
+    py: Python,
+    creators: Vec<usize>,
+    annihilators: Vec<usize>,
+) -> &PyCell<HermitianFermionProductWrapper> {
+    let pp_type = py.get_type::<HermitianFermionProductWrapper>();
+    pp_type
+        .call1((creators, annihilators))
+        .unwrap()
+        .cast_as::<PyCell<HermitianFermionProductWrapper>>()
+        .unwrap()
+}
+
+fn new_pp_fermionic(
+    py: Python,
+    creators: Vec<usize>,
+    annihilators: Vec<usize>,
+) -> &PyCell<FermionProductWrapper> {
+    let pp_type = py.get_type::<FermionProductWrapper>();
+    pp_type
+        .call1((creators, annihilators))
+        .unwrap()
+        .cast_as::<PyCell<FermionProductWrapper>>()
+        .unwrap()
+}
+
+/// Test default function of HermitianFermionProductWrapper
+#[test]
+fn test_default_partialeq_debug_clone() {
+    pyo3::prepare_freethreaded_python();
+    Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+        let pp_wrapper = pp.extract::<HermitianFermionProductWrapper>().unwrap();
+
+        // PartialEq
+        let helper_ne: bool = HermitianFermionProductWrapper::default() != pp_wrapper;
+        assert!(helper_ne);
+        let helper_eq: bool = HermitianFermionProductWrapper::default()
+            == HermitianFermionProductWrapper::new(vec![], vec![]).unwrap();
+        assert!(helper_eq);
+
+        // Test PartialOrd trait
+        let pp_0 = new_pp(py, vec![0, 1], vec![1, 2]);
+        let pp_wrapper_0 = pp_0.extract::<HermitianFermionProductWrapper>().unwrap();
+        let pp_1 = new_pp(py, vec![0, 1], vec![1, 3]);
+        let pp_wrapper_1 = pp_1.extract::<HermitianFermionProductWrapper>().unwrap();
+
+        assert_eq!(pp_wrapper_0.partial_cmp(&pp_wrapper), Some(Ordering::Equal));
+        assert_eq!(pp_wrapper.partial_cmp(&pp_wrapper_0), Some(Ordering::Equal));
+        assert_eq!(
+            pp_wrapper_1.partial_cmp(&pp_wrapper),
+            Some(Ordering::Greater)
+        );
+        assert_eq!(pp_wrapper.partial_cmp(&pp_wrapper_1), Some(Ordering::Less));
+
+        assert_eq!(pp_wrapper_0.cmp(&pp_wrapper), Ordering::Equal);
+        assert_eq!(pp_wrapper.cmp(&pp_wrapper_0), Ordering::Equal);
+        assert_eq!(pp_wrapper_1.cmp(&pp_wrapper), Ordering::Greater);
+        assert_eq!(pp_wrapper.cmp(&pp_wrapper_1), Ordering::Less);
+
+        // Clone
+        assert_eq!(pp_wrapper.clone(), pp_wrapper);
+
+        // Debug
+
+        assert_eq!(
+            format!("{:?}", HermitianFermionProductWrapper::new(vec![0, 1], vec![1, 2]).unwrap()),
+            "HermitianFermionProductWrapper { internal: HermitianFermionProduct { creators: [0, 1], annihilators: [1, 2] } }"
+        );
+    })
+}
+
+/// Test new function of FermionProduct
+#[test]
+fn test_new_error() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp_type = py.get_type::<HermitianFermionProductWrapper>();
+        let pp = pp_type.call1(([0_u64, 1_u64], [1_u64, 1_u64]));
+        assert!(pp.is_err());
+    });
+}
+
+/// Test from_string function of HermitianFermionProduct
+#[test]
+fn test_from_string() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+
+        let string_pp = pp.call_method1("from_string", ("c0c1a1a2",)).unwrap();
+        let comparison = bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = string_pp.call_method0("current_number_modes").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (3_u64,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = string_pp.call_method0("number_creators").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = string_pp.call_method0("number_annihilators").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+        assert!(comparison);
+    });
+}
+
+/// Test from_string function of HermitianFermionProduct - PyValueError
+#[test]
+fn test_from_string_error() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_pp_1 = new_pp(py, vec![0, 1], vec![1, 2]);
+        let error_pp = new_pp_1.call_method1("from_string", ("0X1Z3J",));
+        assert!(error_pp.is_err());
+    });
+}
+
+/// Test creators and annihilators functions of HermitianFermionProduct
+#[test]
+fn test_creators_annihilators_create_valid_pair() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+
+        let valid = pp
+            .call_method1(
+                "create_valid_pair",
+                (
+                    vec![0_u64, 1_u64],
+                    vec![1_u64, 2_u64],
+                    Complex64::new(1.0, 2.0),
+                ),
+            )
+            .unwrap();
+        let comparison = bool::extract(
+            valid
+                .call_method1("__eq__", ((pp, Complex64::new(1.0, 2.0)),))
+                .unwrap(),
+        )
+        .unwrap();
+        assert!(comparison);
+
+        let valid_pp = new_pp(py, vec![0, 1], vec![1, 2]);
+        let valid = pp
+            .call_method1(
+                "create_valid_pair",
+                (
+                    vec![1_u64, 2_u64],
+                    vec![0_u64, 1_u64],
+                    Complex64::new(1.0, 2.0),
+                ),
+            )
+            .unwrap();
+        let comparison = bool::extract(
+            valid
+                .call_method1("__eq__", ((valid_pp, Complex64::new(1.0, -2.0)),))
+                .unwrap(),
+        )
+        .unwrap();
+        assert!(comparison);
+
+        let nbr_spins = pp.call_method0("current_number_modes").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (3_u64,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = pp.call_method0("number_creators").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = pp.call_method0("number_annihilators").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = pp.call_method0("creators").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (vec![0, 1],)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let nbr_spins = pp.call_method0("annihilators").unwrap();
+        let comparison =
+            bool::extract(nbr_spins.call_method1("__eq__", (vec![1, 2],)).unwrap()).unwrap();
+        assert!(comparison);
+    });
+}
+
+/// Test hermitian_conjugate and is_natural_hermitian functions of HermitianFermionProduct
+#[test]
+fn test_hermitian_conj() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![0, 2]);
+
+        let hermitian_conjugate_pp = pp.call_method0("hermitian_conjugate").unwrap();
+        let comparison = bool::extract(
+            hermitian_conjugate_pp
+                .call_method1("__eq__", ((pp, 1_f64),))
+                .unwrap(),
+        )
+        .unwrap();
+        assert!(comparison);
+
+        let is_natural_hermitian_pp =
+            bool::extract(pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
+        assert!(!is_natural_hermitian_pp);
+    });
+}
+
+/// Test concatenate functions of HermitianFermionProduct
+#[test]
+fn test_multiply() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp_0 = new_pp(py, vec![0, 1], vec![2, 20]);
+        let pp_1 = new_pp(py, vec![2, 30], vec![84, 95]);
+        let pp_mul_1 = new_pp_fermionic(py, vec![0, 1, 30], vec![20, 84, 95]);
+        let pp_mul_2 = new_pp_fermionic(py, vec![0, 1, 2, 30], vec![2, 20, 84, 95]);
+        let pp_mul_3 = new_pp_fermionic(py, vec![2, 20, 84, 95], vec![0, 1, 2, 30]);
+
+        let multiplied = pp_0.call_method1("__mul__", (pp_1,)).unwrap();
+        let comparison = bool::extract(
+            multiplied
+                .call_method1(
+                    "__eq__",
+                    (vec![(pp_mul_1, 1.0), (pp_mul_2, 1.0), (pp_mul_3, 1.0)],),
+                )
+                .unwrap(),
+        )
+        .unwrap();
+        assert!(comparison);
+    });
+}
+
+/// Test copy and deepcopy functions of HermitianFermionProduct
+#[test]
+fn test_copy_deepcopy() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+
+        let copy_pp = pp.call_method0("__copy__").unwrap();
+        let deepcopy_pp = pp.call_method1("__deepcopy__", ("",)).unwrap();
+        // let copy_deepcopy_param = pp.clone();
+
+        let comparison_copy =
+            bool::extract(copy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        assert!(comparison_copy);
+        let comparison_deepcopy =
+            bool::extract(deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        assert!(comparison_deepcopy);
+    });
+}
+
+/// Test to_bincode and from_bincode functions of HermitianFermionProduct
+#[test]
+fn test_to_from_bincode() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+
+        let serialised = pp.call_method0("to_bincode").unwrap();
+        let new = new_pp(py, vec![0, 1], vec![1, 2]);
+        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+
+        let deserialised_error =
+            new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
+        assert!(deserialised_error.is_err());
+
+        let deserialised_error =
+            new.call_method1("from_bincode", (bincode::serialize(&vec![0]).unwrap(),));
+        assert!(deserialised_error.is_err());
+
+        let deserialised_error = deserialised.call_method0("from_bincode");
+        assert!(deserialised_error.is_err());
+
+        let serialised_error = serialised.call_method0("to_bincode");
+        assert!(serialised_error.is_err());
+
+        let comparison =
+            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        assert!(comparison)
+    });
+}
+
+#[test]
+fn test_value_error_bincode() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_pp(py, vec![0, 1], vec![1, 2]);
+        let deserialised_error = new.call_method1("from_bincode", ("J",));
+        assert!(deserialised_error.is_err());
+    });
+}
+
+/// Test to_ and from_json functions of HermitianFermionProduct
+#[test]
+fn test_to_from_json() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+
+        let serialised = pp.call_method0("to_json").unwrap();
+        let new = new_pp(py, vec![0, 1], vec![1, 2]);
+        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+
+        let deserialised_error = new.call_method1("from_json", ("fails".to_string(),));
+        assert!(deserialised_error.is_err());
+
+        let deserialised_error = new.call_method1("from_json", (0,));
+        assert!(deserialised_error.is_err());
+
+        let serialised_error = serialised.call_method0("to_json");
+        assert!(serialised_error.is_err());
+
+        let deserialised_error = deserialised.call_method0("from_json");
+        assert!(deserialised_error.is_err());
+
+        let comparison =
+            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        assert!(comparison)
+    });
+}
+
+/// Test the __repr__ and __format__ functions
+#[test]
+fn test_format_repr() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+        let format_repr = "c0c1a1a2";
+
+        let to_str = pp.call_method0("__str__").unwrap();
+        let str_op: &str = <&str>::extract(to_str).unwrap();
+
+        let to_format = pp.call_method1("__format__", ("",)).unwrap();
+        let format_op: &str = <&str>::extract(to_format).unwrap();
+
+        let to_repr = pp.call_method0("__repr__").unwrap();
+        let repr_op: &str = <&str>::extract(to_repr).unwrap();
+
+        assert_eq!(str_op, format_repr);
+        assert_eq!(format_op, format_repr);
+        assert_eq!(repr_op, format_repr);
+    });
+}
+
+/// Test the __richcmp__ function
+#[test]
+fn test_richcmp() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp_one = new_pp(py, vec![0, 1], vec![1, 2]);
+        let pp_two = new_pp(py, vec![1, 2], vec![1, 2]);
+
+        let comparison = bool::extract(pp_one.call_method1("__eq__", (pp_two,)).unwrap()).unwrap();
+        assert!(!comparison);
+        let comparison =
+            bool::extract(pp_one.call_method1("__eq__", ("c0c1a1a2",)).unwrap()).unwrap();
+        assert!(comparison);
+
+        let comparison = bool::extract(pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
+        assert!(comparison);
+        let comparison =
+            bool::extract(pp_one.call_method1("__ne__", ("c0c1a1a2",)).unwrap()).unwrap();
+        assert!(!comparison);
+
+        let comparison = pp_one.call_method1("__ge__", ("c0c1a1a2",));
+        assert!(comparison.is_err());
+    });
+}
+
+/// Test hash functions of HermitianFermionProduct
+#[test]
+fn test_hash() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pp = new_pp(py, vec![0, 1], vec![1, 2]);
+        let pp_other = new_pp(py, vec![1, 2], vec![1, 2]);
+
+        let hash_pp = pp.call_method0("__hash__").unwrap();
+        let hash_other_pp = pp_other.call_method0("__hash__").unwrap();
+
+        let equal = bool::extract(hash_pp.call_method1("__eq__", (hash_pp,)).unwrap()).unwrap();
+        assert!(equal);
+        let not_equal =
+            bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap()).unwrap();
+        assert!(!not_equal);
+    });
+}
