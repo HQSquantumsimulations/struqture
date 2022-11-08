@@ -13,23 +13,13 @@ updates:
       - dependency-type: "all"
 
   - package-ecosystem: "pip"
-    directory: "/qoqo/docs"
+    directory: "/struqture-py/docs"
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
     target-branch: "main"
     allow:
       - dependency-type: "all"
-  
-  - package-ecosystem: "pip"
-    directory: "/qoqo/examples"
-    schedule:
-      # Check for updates to GitHub Actions every weekday
-      interval: "daily"
-    target-branch: "main"
-    allow:
-      - dependency-type: "all"
-  
   - package-ecosystem: "github-actions"
     # Workflow files stored in the
     # default location of `.github/workflows`

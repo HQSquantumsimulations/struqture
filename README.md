@@ -18,8 +18,8 @@ Struqture is designed to also support the construction and (de)serialisation of 
 
 ## Documentation
 
-We recommend users to start with the [user documentation](https://hqsquantumsimulations.github.io/qoqo_examples/) for stuqture and struqture-py.
-The user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of [struqture](https://docs.rs/roqoqo/) and [struqture-py]().
+We recommend users to start with the [user documentation](https://hqsquantumsimulations.github.io/struqture/) for stuqture and struqture-py.
+The user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of [struqture](https://docs.rs/struqture/) and [struqture-py]().
 
 ## Installation
 

@@ -111,7 +111,7 @@ jobs:
           maturin-version: latest
           command: build
           manylinux: 2014
-          args: -i python${{ matrix.python.py }} --out wheels  -m qoqo/Cargo.toml --locked
+          args: -i python${{ matrix.python.py }} --out wheels  -m struqture-py/Cargo.toml --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
@@ -144,7 +144,7 @@ jobs:
         with:
           maturin-version: latest
           command: sdist
-          args: --out wheels -m qoqo/Cargo.toml
+          args: --out wheels -m struqture-py/Cargo.toml
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
@@ -177,7 +177,7 @@ jobs:
         with:
           maturin-version: latest
           command: build
-          args: -i python --out wheels -m qoqo/Cargo.toml --locked
+          args: -i python --out wheels -m struqture-py/Cargo.toml --locked
 
   test_maturin_builds_macos:
     name: maturin_check-${{ matrix.combinations.runs_on }}
@@ -208,11 +208,11 @@ jobs:
       - name: macos wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo/Cargo.toml --locked
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m struqture-py/Cargo.toml --locked
       - name: universal wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --universal2 --out wheels  -m qoqo/Cargo.toml --locked
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --universal2 --out wheels  -m struqture-py/Cargo.toml --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
@@ -245,7 +245,7 @@ jobs:
           python -m pip install --upgrade pip maturin pytest numpy twine        
       - name: macos wheels
         run: |
-          maturin sdist --out wheels -m qoqo/Cargo.toml
+          maturin sdist --out wheels -m struqture-py/Cargo.toml
       - name: test install
         run: |
           RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" pip install wheels/* --force-reinstall
@@ -263,7 +263,7 @@ jobs:
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
       - run: |
-          cd roqoqo
+          cd struqture
           cargo test --doc --locked
 
   code_coverage_struqture:
@@ -284,44 +284,16 @@ jobs:
       - uses: taiki-e/install-action@cargo-llvm-cov
       - run: |
           pip install numpy
-          cargo llvm-cov --no-default-features --workspace --lcov --output-path lcov_roqoqo.info --fail-under-lines=89
+          cargo llvm-cov --no-default-features --workspace --lcov --output-path lcov_struqture.info --fail-under-lines=89
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v3
       #   with:
       #     # token: ${{ secrets.CODECOV_TOKEN }}
-      #     files: lcov_roqoqo.info
+      #     files: lcov_struqture.info
       #     flags: unittests
       #     name: codecov-umbrella
       #     fail_ci_if_error: true
       #     verbose: true
-  
-  # code_coverage_qoqo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
-  #     - uses: actions-rs/toolchain@v1
-  #       with:
-  #           toolchain: stable
-  #           components: llvm-tools-preview
-  #           override: true
-  #     - run: |
-  #         export RUSTFLAGS="-Cinstrument-coverage"
-  #         export RUSTDOCFLAGS="-Cinstrument-coverage"
-  #         python -m pip install numpy
-  #         cargo build --verbose --locked
-  #         LLVM_PROFILE_FILE="coverage-%p-%m.profraw" cargo test --workspace --package=qoqo --no-default-features
-  #         cd qoqo/
-  #         cargo install grcov
-  #         grcov . --binary-path ../target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "cargo" --ignore "/mod.rs" --ignore "/lib.rs" --ignore "*/_auto_generated_operations.rs" --keep-only "src/*" -o lcov_qoqo.info
-  #     - name: Upload coverage to Codecov
-  #       uses: codecov/codecov-action@v3
-  #       with:
-  #         # token: ${{ secrets.CODECOV_TOKEN }}
-  #         files: lcov_qoqo.info
-  #         flags: unittests
-  #         name: codecov-umbrella
-  #         fail_ci_if_error: true
-  #         verbose: true
   
   format_check: # needs to run after test otherwise auogenerated files are not built
     runs-on: ubuntu-latest
