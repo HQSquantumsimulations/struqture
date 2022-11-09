@@ -8,7 +8,6 @@ categories = ["science", "simulation"]
 description = "HQS tool for representing operators, Hamiltonians and open systems."
 license = "Apache-2.0"
 include = ["Cargo.toml", "src*", "LICENSE", "../README.md"]
-publish = false
 
 [lib]
 name = "struqture"

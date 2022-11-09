@@ -1,4 +1,4 @@
-struqture_py>=0.6.0
+struqture_py>=1.0.0
 numpy
 sphinx >= 2.1
 nbsphinx
