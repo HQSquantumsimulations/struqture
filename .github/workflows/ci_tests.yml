@@ -188,7 +188,8 @@ jobs:
           { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
         ]
         python: [
-            {py: '3.10', interpreter: "python3.10"}
+            {py: '3.10', interpreter: "python3.10"},
+            {py: '3.11', interpreter: "python3.11"}
         ]
     steps:
       - uses: actions/checkout@v3
