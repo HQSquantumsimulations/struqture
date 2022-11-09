@@ -21,7 +21,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip maturin
         pip install ./struqture-py/
-        python -m pip install -r ./struquture-py/docs/requirements.txt
+        python -m pip install -r ./struqture-py/docs/requirements.txt
     - uses: peaceiris/actions-mdbook@v1
       with:
         version: latest
