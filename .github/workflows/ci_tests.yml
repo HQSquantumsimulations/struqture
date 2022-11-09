@@ -117,7 +117,7 @@ jobs:
           pip install wheels/* --force-reinstall
 
   test_maturin_builds_linux_src:
-    name: maturin_check-${{ matrix.combinations.runs_on }}
+    name: maturin_check_src-${{ matrix.combinations.runs_on }}
     runs-on: ${{ matrix.combinations.runs_on }}
     strategy:
       matrix:
@@ -218,7 +218,7 @@ jobs:
           pip install wheels/* --force-reinstall
 
   test_maturin_builds_macos_src:
-    name: maturin_check-${{ matrix.combinations.runs_on }}
+    name: maturin_check_src_${{ matrix.combinations.runs_on }}
     runs-on: ${{ matrix.combinations.runs_on }}
     strategy:
       matrix:
