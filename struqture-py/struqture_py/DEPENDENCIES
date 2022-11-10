@@ -11817,7 +11817,7 @@ LICENSE:
 ====================================================
 struqture-py 1.0.0-beta.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
-Python interface of struqture, the HQS system management tool.
+Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
 ----------------------------------------------------
 LICENSE:
