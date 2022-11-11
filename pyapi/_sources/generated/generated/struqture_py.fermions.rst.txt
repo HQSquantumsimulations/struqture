@@ -1,0 +1,34 @@
+struqture\_py.fermions
+======================
+
+.. automodule:: struqture_py.fermions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FermionHamiltonianSystem
+      FermionLindbladNoiseSystem
+      FermionLindbladOpenSystem
+      FermionProduct
+      FermionSystem
+      HermitianFermionProduct
+   
+   
+
+   
+   
+   
+
+
+

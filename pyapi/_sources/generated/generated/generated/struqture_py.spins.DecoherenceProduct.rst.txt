@@ -1,0 +1,40 @@
+struqture\_py.spins.DecoherenceProduct
+======================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: DecoherenceProduct
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DecoherenceProduct.__init__
+      ~DecoherenceProduct.concatenate
+      ~DecoherenceProduct.current_number_spins
+      ~DecoherenceProduct.from_bincode
+      ~DecoherenceProduct.from_json
+      ~DecoherenceProduct.from_string
+      ~DecoherenceProduct.get
+      ~DecoherenceProduct.hermitian_conjugate
+      ~DecoherenceProduct.is_empty
+      ~DecoherenceProduct.is_natural_hermitian
+      ~DecoherenceProduct.iy
+      ~DecoherenceProduct.keys
+      ~DecoherenceProduct.multiply
+      ~DecoherenceProduct.remap_qubits
+      ~DecoherenceProduct.set_pauli
+      ~DecoherenceProduct.to_bincode
+      ~DecoherenceProduct.to_json
+      ~DecoherenceProduct.x
+      ~DecoherenceProduct.z
+   
+   
+
+   
+   
+   

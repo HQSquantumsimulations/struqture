@@ -1,0 +1,42 @@
+struqture\_py.spins.SpinHamiltonianSystem
+=========================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: SpinHamiltonianSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SpinHamiltonianSystem.__init__
+      ~SpinHamiltonianSystem.add_operator_product
+      ~SpinHamiltonianSystem.current_number_spins
+      ~SpinHamiltonianSystem.empty_clone
+      ~SpinHamiltonianSystem.from_bincode
+      ~SpinHamiltonianSystem.from_json
+      ~SpinHamiltonianSystem.get
+      ~SpinHamiltonianSystem.hermitian_conjugate
+      ~SpinHamiltonianSystem.is_empty
+      ~SpinHamiltonianSystem.keys
+      ~SpinHamiltonianSystem.number_spins
+      ~SpinHamiltonianSystem.remove
+      ~SpinHamiltonianSystem.set
+      ~SpinHamiltonianSystem.sparse_lindblad_entries
+      ~SpinHamiltonianSystem.sparse_matrix_coo
+      ~SpinHamiltonianSystem.sparse_matrix_superoperator_coo
+      ~SpinHamiltonianSystem.to_bincode
+      ~SpinHamiltonianSystem.to_json
+      ~SpinHamiltonianSystem.truncate
+      ~SpinHamiltonianSystem.unitary_sparse_matrix_coo
+      ~SpinHamiltonianSystem.values
+   
+   
+
+   
+   
+   

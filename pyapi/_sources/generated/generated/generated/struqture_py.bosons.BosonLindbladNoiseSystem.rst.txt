@@ -1,0 +1,37 @@
+struqture\_py.bosons.BosonLindbladNoiseSystem
+=============================================
+
+.. currentmodule:: struqture_py.bosons
+
+.. autoclass:: BosonLindbladNoiseSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BosonLindbladNoiseSystem.__init__
+      ~BosonLindbladNoiseSystem.add_operator_product
+      ~BosonLindbladNoiseSystem.current_number_modes
+      ~BosonLindbladNoiseSystem.empty_clone
+      ~BosonLindbladNoiseSystem.from_bincode
+      ~BosonLindbladNoiseSystem.from_json
+      ~BosonLindbladNoiseSystem.get
+      ~BosonLindbladNoiseSystem.is_empty
+      ~BosonLindbladNoiseSystem.keys
+      ~BosonLindbladNoiseSystem.number_modes
+      ~BosonLindbladNoiseSystem.remove
+      ~BosonLindbladNoiseSystem.set
+      ~BosonLindbladNoiseSystem.to_bincode
+      ~BosonLindbladNoiseSystem.to_json
+      ~BosonLindbladNoiseSystem.truncate
+      ~BosonLindbladNoiseSystem.values
+   
+   
+
+   
+   
+   

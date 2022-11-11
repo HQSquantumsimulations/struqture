@@ -1,0 +1,23 @@
+﻿struqture\_py
+=============
+
+.. automodule:: struqture_py
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

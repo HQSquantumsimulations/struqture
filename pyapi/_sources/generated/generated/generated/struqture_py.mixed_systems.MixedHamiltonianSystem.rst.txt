@@ -1,0 +1,42 @@
+struqture\_py.mixed\_systems.MixedHamiltonianSystem
+===================================================
+
+.. currentmodule:: struqture_py.mixed_systems
+
+.. autoclass:: MixedHamiltonianSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MixedHamiltonianSystem.__init__
+      ~MixedHamiltonianSystem.add_operator_product
+      ~MixedHamiltonianSystem.current_number_bosonic_modes
+      ~MixedHamiltonianSystem.current_number_fermionic_modes
+      ~MixedHamiltonianSystem.current_number_spins
+      ~MixedHamiltonianSystem.empty_clone
+      ~MixedHamiltonianSystem.from_bincode
+      ~MixedHamiltonianSystem.from_json
+      ~MixedHamiltonianSystem.get
+      ~MixedHamiltonianSystem.hermitian_conjugate
+      ~MixedHamiltonianSystem.is_empty
+      ~MixedHamiltonianSystem.keys
+      ~MixedHamiltonianSystem.number_bosonic_modes
+      ~MixedHamiltonianSystem.number_fermionic_modes
+      ~MixedHamiltonianSystem.number_spins
+      ~MixedHamiltonianSystem.remove
+      ~MixedHamiltonianSystem.set
+      ~MixedHamiltonianSystem.to_bincode
+      ~MixedHamiltonianSystem.to_json
+      ~MixedHamiltonianSystem.truncate
+      ~MixedHamiltonianSystem.values
+   
+   
+
+   
+   
+   

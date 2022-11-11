@@ -1,0 +1,42 @@
+struqture\_py.mixed\_systems.MixedLindbladOpenSystem
+====================================================
+
+.. currentmodule:: struqture_py.mixed_systems
+
+.. autoclass:: MixedLindbladOpenSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MixedLindbladOpenSystem.__init__
+      ~MixedLindbladOpenSystem.current_number_bosonic_modes
+      ~MixedLindbladOpenSystem.current_number_fermionic_modes
+      ~MixedLindbladOpenSystem.current_number_spins
+      ~MixedLindbladOpenSystem.empty_clone
+      ~MixedLindbladOpenSystem.from_bincode
+      ~MixedLindbladOpenSystem.from_json
+      ~MixedLindbladOpenSystem.group
+      ~MixedLindbladOpenSystem.noise
+      ~MixedLindbladOpenSystem.noise_add_operator_product
+      ~MixedLindbladOpenSystem.noise_set
+      ~MixedLindbladOpenSystem.number_bosonic_modes
+      ~MixedLindbladOpenSystem.number_fermionic_modes
+      ~MixedLindbladOpenSystem.number_spins
+      ~MixedLindbladOpenSystem.system
+      ~MixedLindbladOpenSystem.system_add_operator_product
+      ~MixedLindbladOpenSystem.system_set
+      ~MixedLindbladOpenSystem.to_bincode
+      ~MixedLindbladOpenSystem.to_json
+      ~MixedLindbladOpenSystem.truncate
+      ~MixedLindbladOpenSystem.ungroup
+   
+   
+
+   
+   
+   

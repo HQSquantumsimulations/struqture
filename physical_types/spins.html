@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Spins - Struqture User Guide</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="User guide for the struqture package to represent physical systems.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="../physical_types/intro.html"><strong aria-hidden="true">1.</strong> Physical Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../physical_types/spins.html" class="active"><strong aria-hidden="true">1.1.</strong> Spins</a></li><li class="chapter-item expanded "><a href="../physical_types/fermions.html"><strong aria-hidden="true">1.2.</strong> Fermions</a></li><li class="chapter-item expanded "><a href="../physical_types/bosons.html"><strong aria-hidden="true">1.3.</strong> Bosons</a></li><li class="chapter-item expanded "><a href="../physical_types/mixed_systems.html"><strong aria-hidden="true">1.4.</strong> Mixed Systems</a></li></ol></li><li class="chapter-item expanded "><a href="../container_types/intro.html"><strong aria-hidden="true">2.</strong> Container Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../container_types/indices.html"><strong aria-hidden="true">2.1.</strong> Indices and Products</a></li><li class="chapter-item expanded "><a href="../container_types/operators_hamiltonians_and_systems.html"><strong aria-hidden="true">2.2.</strong> Operators and Systems</a></li><li class="chapter-item expanded "><a href="../container_types/operators_hamiltonians_and_systems.html"><strong aria-hidden="true">2.3.</strong> Hamiltonians and Hamiltonian Systems</a></li><li class="chapter-item expanded "><a href="../container_types/noise_operators_and_systems.html"><strong aria-hidden="true">2.4.</strong> Lindblad Noise Operators and Lindblad Noise Systems</a></li><li class="chapter-item expanded "><a href="../container_types/open_systems.html"><strong aria-hidden="true">2.5.</strong> Lindblad Open Systems</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Struqture User Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="spins"><a class="header" href="#spins">Spins</a></h1>
+<h2 id="building-blocks"><a class="header" href="#building-blocks">Building blocks</a></h2>
+<p>All spin objects in struqture are expressed based on products of either Pauli operators (X, Y, Z) or operators suited to express decoherence (X, iY, Z). The products are built by setting the operators acting on separate spins.</p>
+<h3 id="pauliproducts"><a class="header" href="#pauliproducts">PauliProducts</a></h3>
+<p>PauliProducts are combinations of SingleSpinOperators on specific qubits. These are the <code>SingleSpinOperators</code>, or Pauli matrices, that are available for PauliProducts:</p>
+<ul>
+<li>
+<p>I: identity matrix
+\[
+I = \begin{pmatrix}
+1 &amp; 0\\
+0 &amp; 1
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>X: pauli x matrix
+\[
+X = \begin{pmatrix}
+0 &amp; 1\\
+1 &amp; 0
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>Y: pauli y matrix
+\[
+Y = \begin{pmatrix}
+0 &amp; -i\\
+i &amp; 0
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>Z: pauli z matrix
+\[
+Z = \begin{pmatrix}
+1 &amp; 0\\
+0 &amp; -1
+\end{pmatrix}
+\]</p>
+</li>
+</ul>
+<h3 id="decoherenceproducts"><a class="header" href="#decoherenceproducts">DecoherenceProducts</a></h3>
+<p>DecoherenceProducts are products of a decoherence operators acting on single spins. These <code>SingleDecoherenceOperators</code>
+are almost identical to the <code>SinglePauliOperators</code> with the exception of an additional \(i\) factor and are well suited to represent decoherence properties</p>
+<ul>
+<li>I: identity matrix
+\[
+\begin{pmatrix}
+1 &amp; 0\\
+0 &amp; 1
+\end{pmatrix}
+\]</li>
+<li>X: pauli X matrix
+\[
+\begin{pmatrix}
+0 &amp; 1\\
+1 &amp; 0
+\end{pmatrix}
+\]</li>
+<li>iY: pauli Y matrix multiplied by i
+\[
+\begin{pmatrix}
+0 &amp; 1 \\
+-1 &amp; 0
+\end{pmatrix}
+\]</li>
+<li>Z: pauli z matrix
+\[
+\begin{pmatrix}
+1 &amp; 0\\
+0 &amp; -1
+\end{pmatrix}
+\]</li>
+</ul>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.</p>
+<pre><code class="language-python">from struqture_py.spins import PauliProduct, DecoherenceProduct
+
+# A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
+pp = PauliProduct().x(0).y(3).z(20)
+# Often equivalent the string representation
+pp_string = str(pp)
+
+
+# A product of a X acting on spin 0, a iY acting on spin 3 and a Z acting on spin 20
+dp = DecoherenceProduct().x(0).iy(3).z(20)
+# Often equivalent the string representation
+dp_string = str(dp)
+</code></pre>
+<p>In Rust the user can also import enums for the operators acting on single spins. In rust the equivalent string representation cannot be used in function and method arguments.</p>
+<pre><code class="language-rust">use struqture::prelude::*;
+use struqture::spins::{
+    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator,
+};
+
+// A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
+let pp = PauliProduct::new().x(0).y(3).z(20);
+// Constructing with SingleSpinOperator
+let pp_equivalent = PauliProduct::new()
+    .set_pauli(0, SingleSpinOperator::X)
+    .set_pauli(3, SingleSpinOperator::Y)
+    .set_pauli(20, SingleSpinOperator::Z);
+
+// A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
+let dp = DecoherenceProduct::new().x(0).iy(3).z(20);
+// Constructing with SingleSpinOperator
+let dp_equivalent = DecoherenceProduct::new()
+    .set_pauli(0, SingleDecoherenceOperator::X)
+    .set_pauli(3, SingleDecoherenceOperator::IY)
+    .set_pauli(20, SingleDecoherenceOperator::Z);
+</code></pre>
+<h2 id="operators-and-hamiltonians"><a class="header" href="#operators-and-hamiltonians">Operators and Hamiltonians</a></h2>
+<p>A good example how complex objects are constructed from operator products are <code>SpinOperators</code> and <code>SpinHamiltonians</code>
+(for more information, <a href="../container_types/operators_hamiltonians_and_systems.html">see also</a>).</p>
+<p>These <code>SpinOperators</code> and <code>SpinHamiltonians</code> represent operators or hamiltonians such as:
+\[
+\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma(k,j) \\
+\sigma(k,j) \in \{ X, Y, Z, I \}
+\]
+where the \(\sigma(k,k)\) are <code>SinglePauliOperators</code>.</p>
+<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the <code>PauliProducts</code> as keys and the coefficients \(\alpha_j\) as values.</p>
+<p>In struqture we distinguish between spin operators and hamiltonians to avoid introducing unphysical behaviour by accident.
+While both are sums over PauliProducts, hamiltonians are guaranteed to be hermitian. In a spin hamiltonian, this means that the prefactor of each <code>PauliProduct</code> has to be real.</p>
+<h3 id="examples-1"><a class="header" href="#examples-1">Examples</a></h3>
+<p>Here is an example of how to build a <code>SpinOperator</code> and a <code>SpinHamiltonian</code>, in Rust:</p>
+<pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
+use struqture::prelude::*;
+use struqture::spins::{PauliProduct, SpinOperator, SpinHamiltonian};
+
+// Building the term sigma^x_0 * sigma^z_2
+let pp = PauliProduct::new().x(0).z(2);
+
+// O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
+let mut operator = SpinOperator::new();
+operator.add_operator_product(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
+assert_eq!(operator.get(&amp;pp), &amp;CalculatorComplex::new(1.0, 1.5));
+println!(&quot;{}&quot;, operator);
+
+// Or when overwriting the previous value
+let mut operator = SpinOperator::new();
+operator.set(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
+println!(&quot;{}&quot;, operator);
+
+// A complex entry is not valid for a SpinHamiltonian
+let mut hamiltonian = SpinHamiltonian::new();
+// This would fail
+hamiltonian.add_operator_product(pp, CalculatorComplex::new(1.0, 1.5)).unwrap();
+// This is possible
+hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
+println!(&quot;{}&quot;, hamiltonian);
+</code></pre>
+<p>In python, we need to use a <code>SpinSystem</code> and <code>SpinHamiltonianSystem</code> instead of an<code>SpinOperator</code> and <code>SpinHamiltonian</code>. See next section for more details.</p>
+<h2 id="systems-and-hamiltoniansystems"><a class="header" href="#systems-and-hamiltoniansystems">Systems and HamiltonianSystems</a></h2>
+<p>Following the intention to avoid unphysical behaviour, SpinSystems and SpinHamiltonianSystems are wrappers around SpinOperators and SpinHamiltonians that allow to explicitly set the number of spins of the systems.
+When setting or adding a PauliProduct to the systems, it is guaranteed that the spin indices involved cannot exceed the number of spins in the system.
+Note that the user can decide to explicitly set the number of spins to be variable.</p>
+<h3 id="examples-2"><a class="header" href="#examples-2">Examples</a></h3>
+<pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
+use struqture::prelude::*;
+use struqture::spins::{PauliProduct, SpinSystem};
+
+let mut system = SpinSystem::new(Some(3));
+
+// This will work
+let pp = PauliProduct::new().x(0).z(2);
+system
+    .add_operator_product(pp, CalculatorComplex::new(1.0, 1.5))
+    .unwrap();
+println!(&quot;{}&quot;, system);
+
+// This will not work, as the spin index of the PauliProduct is larger than
+// the number of the spins in the system (the spin with the smallest index is 0).
+let pp_error = PauliProduct::new().z(3);
+let error = system.add_operator_product(pp_error, CalculatorComplex::new(1.0, 1.5));
+println!(&quot;{:?}&quot;, error);
+
+// This will work because we leave the number of spins dynamic
+let mut system = SpinSystem::new(None);
+system
+    .add_operator_product(PauliProduct::new().z(3), CalculatorComplex::new(1.0, 1.5))
+    .unwrap();
+</code></pre>
+<p>The equivalent code in python:</p>
+<pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
+from struqture_py import spins
+
+system = spins.SpinSystem(3)
+
+# This will work
+pp = spins.PauliProduct().x(0).z(2)
+system.add_operator_product(pp, CalculatorComplex.from_pair(1.0, 1.5))
+print(system)
+
+# This will not work, as the spin index of the PauliProduct is larger
+# than the number of the spins in the system (the spin with the smallest index is 0).
+pp_error = spins.PauliProduct().z(3)
+value = CalculatorComplex.from_pair(1.0, 1.5)
+# system.add_operator_product(pp_error, value)  # Uncomment me!
+
+
+# This will work because we leave the number of spins dynamic
+system = spins.SpinSystem()
+system.add_operator_product(spins.PauliProduct().z(3), 1.0)
+</code></pre>
+<h2 id="noise-operators-and-systems"><a class="header" href="#noise-operators-and-systems">Noise operators and systems</a></h2>
+<p>We describe decoherence by representing it with the Lindblad equation.
+The Lindblad is a master equation determining the time evolution of the density matrix.
+It is given by
+\[
+\dot{\rho} = \mathcal{L}(\rho) =-i [H, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
+\]
+with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
+<p>To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
+We use <code>DecoherenceProducts</code> as the operator base. To describe spin noise we use the Lindblad equation with \(H=0\).</p>
+<p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>DecoherenceProducts</code>, giving the operators acting from the left and right on the density matrix.
+In programming terms the object <code>SpinLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>DecoherenceProduct</code>, <code>DecoherenceProduct</code>) as keys and the entries in the rate matrix as values.</p>
+<p>Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent: <code>SpinLindbladNoiseSystem</code>, with a number of involved spins defined by the user. For more information on these, see the <a href="../container_types/noise_operators_and_systems">noise container</a> chapter.</p>
+<h3 id="examples-3"><a class="header" href="#examples-3">Examples</a></h3>
+<p>Here, we add the term \(\sigma^{x}_0 sigma^{z}_2\) with coefficient 1.0.</p>
+<pre><code class="language-rust">use struqture::prelude::*;
+use struqture::spins::{DecoherenceProduct, SpinLindbladNoiseSystem};
+
+let mut system = SpinLindbladNoiseSystem::new(Some(3));
+
+let dp = DecoherenceProduct::new().x(0).z(2);
+
+system.add_operator_product((dp.clone(), dp.clone()), 1.0.into()).unwrap();
+assert_eq!(system.get(&amp;(dp.clone(), dp)), &amp;CalculatorComplex::new(1.0, 0.0));
+println!(&quot;{}&quot;, system);
+</code></pre>
+<p>The equivalent code in python:</p>
+<pre><code class="language-python">from struqture_py import spins
+
+system = spins.SpinLindbladNoiseSystem(3)
+
+dp = spins.DecoherenceProduct().x(0).z(2)
+
+system.add_operator_product((dp, dp), 1.0+1.5*1j)
+print(system)
+
+# In python we can also use the string representation
+system = spins.SpinLindbladNoiseSystem(3)
+system.add_operator_product((str(dp), str(dp)), 1.0+1.5*1j)
+print(system)
+</code></pre>
+<h2 id="open-systems"><a class="header" href="#open-systems">Open systems</a></h2>
+<p>Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
+In struqture they are composed of a hamiltonian (SpinHamiltonianSystem) and noise (SpinLindbladNoiseSystem). They have different ways to set terms in Rust and Python:</p>
+<h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
+<pre><code class="language-rust">use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
+use struqture::prelude::*;
+use struqture::spins::{DecoherenceProduct, PauliProduct, SpinLindbladOpenSystem};
+
+let mut open_system = SpinLindbladOpenSystem::new(Some(3));
+
+let pp = PauliProduct::new().z(1);
+let dp = DecoherenceProduct::new().x(0).z(2);
+
+let system = open_system.system_mut();
+system.add_operator_product(pp, CalculatorFloat::from(2.0)).unwrap();
+
+let noise = open_system.noise_mut();
+noise
+    .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
+    .unwrap();
+
+println!(&quot;{}&quot;, open_system);
+</code></pre>
+<p>The equivalent code in python:</p>
+<pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
+from struqture_py import spins
+
+open_system = spins.SpinLindbladOpenSystem(3)
+
+pp = spins.PauliProduct().z(1)
+dp = spins.DecoherenceProduct().x(0).z(2)
+
+open_system.system_add_operator_product(pp, CalculatorFloat(2.0))
+open_system.noise_add_operator_product(
+    (dp, dp), CalculatorComplex.from_pair(0.0, 1.0))
+
+print(open_system)
+</code></pre>
+<h2 id="matrix-representation"><a class="header" href="#matrix-representation">Matrix representation</a></h2>
+<p>All spin-objects can be converted into sparse matrices with the following convention.
+If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
+\[
+M = M_2 \otimes M_1 \otimes \mathbb{1}
+\]
+For an \(N\)-spin system an operator acts on the \(2^N\) dimensional space of state vectors.
+A superoperator operates on the \(4^N\) dimensional space of flattened density-matrices.
+struqture uses the convention that density matrices are flattened in row-major order
+\[
+\rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
+\]
+For noiseless objects (SpinSystem, SpinHamiltonianSystem), sparse operators and sparse superoperators can be constructed, while only sparse superoperators can be constructed for systems with noise (SpinLindbladNoiseSystem, SpinLindbladOpenSystem).</p>
+<pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
+use struqture::prelude::*;
+use struqture::spins::{DecoherenceProduct, SpinLindbladNoiseSystem};
+
+let mut system = SpinLindbladNoiseSystem::new(Some(3));
+
+let dp = DecoherenceProduct::new().x(0).z(2);
+
+system
+    .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
+    .unwrap();
+
+let matrix = system.sparse_matrix_superoperator(Some(3)).unwrap();
+println!(&quot;{:?}&quot;, matrix);
+</code></pre>
+<p>The equivalent code in python:</p>
+<pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
+from struqture_py import spins
+from scipy.sparse import coo_matrix
+
+system = spins.SpinLindbladNoiseSystem(3)
+
+dp = spins.DecoherenceProduct().x(0).z(2)
+system.add_operator_product((dp, dp), CalculatorComplex.from_pair(1.0, 1.5))
+# Using the `sparse_matrix_superoperator_coo` function, you can also
+# return the information in scipy coo_matrix form, which can be directly fed in:
+python_coo = coo_matrix(system.sparse_matrix_superoperator_coo())
+print(python_coo.todense())
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../physical_types/intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../physical_types/fermions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../physical_types/intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../physical_types/fermions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

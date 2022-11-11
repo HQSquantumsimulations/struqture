@@ -1,0 +1,35 @@
+struqture\_py.bosons.BosonProduct
+=================================
+
+.. currentmodule:: struqture_py.bosons
+
+.. autoclass:: BosonProduct
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BosonProduct.__init__
+      ~BosonProduct.annihilators
+      ~BosonProduct.create_valid_pair
+      ~BosonProduct.creators
+      ~BosonProduct.current_number_modes
+      ~BosonProduct.from_bincode
+      ~BosonProduct.from_json
+      ~BosonProduct.from_string
+      ~BosonProduct.hermitian_conjugate
+      ~BosonProduct.is_natural_hermitian
+      ~BosonProduct.number_annihilators
+      ~BosonProduct.number_creators
+      ~BosonProduct.to_bincode
+      ~BosonProduct.to_json
+   
+   
+
+   
+   
+   

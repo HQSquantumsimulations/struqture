@@ -1,0 +1,34 @@
+struqture\_py.spins
+===================
+
+.. automodule:: struqture_py.spins
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DecoherenceProduct
+      PauliProduct
+      SpinHamiltonianSystem
+      SpinLindbladNoiseSystem
+      SpinLindbladOpenSystem
+      SpinSystem
+   
+   
+
+   
+   
+   
+
+
+

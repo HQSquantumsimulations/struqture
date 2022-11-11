@@ -1,0 +1,42 @@
+struqture\_py.spins.SpinSystem
+==============================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: SpinSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SpinSystem.__init__
+      ~SpinSystem.add_operator_product
+      ~SpinSystem.current_number_spins
+      ~SpinSystem.empty_clone
+      ~SpinSystem.from_bincode
+      ~SpinSystem.from_json
+      ~SpinSystem.get
+      ~SpinSystem.hermitian_conjugate
+      ~SpinSystem.is_empty
+      ~SpinSystem.keys
+      ~SpinSystem.number_spins
+      ~SpinSystem.remove
+      ~SpinSystem.set
+      ~SpinSystem.sparse_lindblad_entries
+      ~SpinSystem.sparse_matrix_coo
+      ~SpinSystem.sparse_matrix_superoperator_coo
+      ~SpinSystem.to_bincode
+      ~SpinSystem.to_json
+      ~SpinSystem.truncate
+      ~SpinSystem.unitary_sparse_matrix_coo
+      ~SpinSystem.values
+   
+   
+
+   
+   
+   

@@ -1,0 +1,35 @@
+struqture\_py.fermions.FermionProduct
+=====================================
+
+.. currentmodule:: struqture_py.fermions
+
+.. autoclass:: FermionProduct
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FermionProduct.__init__
+      ~FermionProduct.annihilators
+      ~FermionProduct.create_valid_pair
+      ~FermionProduct.creators
+      ~FermionProduct.current_number_modes
+      ~FermionProduct.from_bincode
+      ~FermionProduct.from_json
+      ~FermionProduct.from_string
+      ~FermionProduct.hermitian_conjugate
+      ~FermionProduct.is_natural_hermitian
+      ~FermionProduct.number_annihilators
+      ~FermionProduct.number_creators
+      ~FermionProduct.to_bincode
+      ~FermionProduct.to_json
+   
+   
+
+   
+   
+   

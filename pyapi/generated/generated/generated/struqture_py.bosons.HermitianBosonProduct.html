@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>struqture_py.bosons.HermitianBosonProduct &mdash; struqture_py 0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="struqture_py.bosons.BosonSystem" href="struqture_py.bosons.BosonSystem.html" />
+    <link rel="prev" title="struqture_py.bosons.BosonProduct" href="struqture_py.bosons.BosonProduct.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> struqture_py
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../modules.html">struqture_py documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../struqture_py.html">struqture_py</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.spins.html">struqture_py.spins</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.bosons.html">struqture_py.bosons</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonProduct.html">struqture_py.bosons.BosonProduct</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.bosons.HermitianBosonProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonSystem.html">struqture_py.bosons.BosonSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonHamiltonianSystem.html">struqture_py.bosons.BosonHamiltonianSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonLindbladNoiseSystem.html">struqture_py.bosons.BosonLindbladNoiseSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonLindbladOpenSystem.html">struqture_py.bosons.BosonLindbladOpenSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonianSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct"><code class="docutils literal notranslate"><span class="pre">BosonProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem"><code class="docutils literal notranslate"><span class="pre">BosonSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.fermions.html">struqture_py.fermions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">struqture_py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../modules.html">struqture_py documentation</a></li>
+          <li class="breadcrumb-item"><a href="../../struqture_py.html">struqture_py</a></li>
+          <li class="breadcrumb-item"><a href="../struqture_py.bosons.html">struqture_py.bosons</a></li>
+      <li class="breadcrumb-item active">struqture_py.bosons.HermitianBosonProduct</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/generated/generated/generated/struqture_py.bosons.HermitianBosonProduct.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="struqture-py-bosons-hermitianbosonproduct">
+<h1>struqture_py.bosons.HermitianBosonProduct<a class="headerlink" href="#struqture-py-bosons-hermitianbosonproduct" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">HermitianBosonProduct</span></span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct" title="Permalink to this definition"></a></dt>
+<dd><p>A product of bosonic creation and annihilation operators.</p>
+<p>The HermitianBosonProduct is used as an index for non-hermitian, normal ordered bosonic operators.
+A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+The HermitianBosonProduct is used as an index when setting or adding new summands to a bosonic operator and when querrying the
+weight of a product of operators in the sum.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">HermitianBosonProduct</span>
+<span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="c1"># For instance, to represent $c_0a_0$</span>
+<span class="n">b_product</span> <span class="o">=</span> <span class="n">HermitianBosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">creators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">annihilators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.HermitianBosonProduct.__init__" title="struqture_py.bosons.HermitianBosonProduct.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.annihilators" title="struqture_py.bosons.HermitianBosonProduct.annihilators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">annihilators</span></code></a></p></td>
+<td><p>Return list of annihilator indices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.create_valid_pair" title="struqture_py.bosons.HermitianBosonProduct.create_valid_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_valid_pair</span></code></a></p></td>
+<td><p>Create valid pair of index and value to be set in an operator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.creators" title="struqture_py.bosons.HermitianBosonProduct.creators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">creators</span></code></a></p></td>
+<td><p>Return list of creator indices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.current_number_modes" title="struqture_py.bosons.HermitianBosonProduct.current_number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_modes</span></code></a></p></td>
+<td><p>Returns the maximal number of modes self acts on.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.from_bincode" title="struqture_py.bosons.HermitianBosonProduct.from_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_bincode</span></code></a></p></td>
+<td><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.from_json" title="struqture_py.bosons.HermitianBosonProduct.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(input)</p></td>
+<td><p>Convert the json representation of the object to an instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.from_string" title="struqture_py.bosons.HermitianBosonProduct.from_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_string</span></code></a>(input)</p></td>
+<td><p>Convert a string representation of the object to an instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate" title="struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hermitian_conjugate</span></code></a></p></td>
+<td><p>Return the hermitian conjugate of self and its prefactor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian" title="struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_natural_hermitian</span></code></a></p></td>
+<td><p>Return whether self is naturally hermitian.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.number_annihilators" title="struqture_py.bosons.HermitianBosonProduct.number_annihilators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_annihilators</span></code></a></p></td>
+<td><p>Get the number of annihilator indices of self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.number_creators" title="struqture_py.bosons.HermitianBosonProduct.number_creators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_creators</span></code></a></p></td>
+<td><p>Get the number of creator indices of self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="struqture_py.bosons.HermitianBosonProduct.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a></p></td>
+<td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.to_json" title="struqture_py.bosons.HermitianBosonProduct.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a></p></td>
+<td><p>Return the json representation of the object.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.annihilators">
+<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.annihilators" title="Permalink to this definition"></a></dt>
+<dd><p>Return list of annihilator indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of the corresponding annihilator indices.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.create_valid_pair">
+<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.create_valid_pair" title="Permalink to this definition"></a></dt>
+<dd><p>Create valid pair of index and value to be set in an operator.</p>
+<p>The first item is the valid instance of self created from the input creators and annihilators.
+The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>creators</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) -- The creator indices to have in the instance of self.</p></li>
+<li><p><strong>annihilators</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) -- The annihilators indices to have in the instance of self.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The CalculatorComplex to transform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The valid instance of self and the corresponding transformed CalculatorComplex.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(self, CalculatorComplex)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex.</p></li>
+<li><p><strong>ValueError</strong> -- Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.creators">
+<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.creators" title="Permalink to this definition"></a></dt>
+<dd><p>Return list of creator indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of the corresponding creator indices.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_number_modes" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the maximal number of modes self acts on.</p>
+<p>Self acts on a state space of unknown dimension.
+There is only a lower bound of the dimension or number of modes based on the
+maximal mode the product of operators in the index acts on.
+For example an index consisting of one creator acting on mode 0 would have
+a current_number_modes of one. An index consisting of one annhihilator acting on 3
+would have current_number_modes of four.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The maximal number of modes self acts on.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_bincode" title="Permalink to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>ByteArray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The deserialized Spin System.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_json" title="Permalink to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_string">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_string" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a string representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized index in str representation.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The converted object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Input cannot be converted from str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate">
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate" title="Permalink to this definition"></a></dt>
+<dd><p>Return the hermitian conjugate of self and its prefactor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The hermitian conjugate of self and the potential sign it has picked up.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(self, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian">
+<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian" title="Permalink to this definition"></a></dt>
+<dd><p>Return whether self is naturally hermitian.</p>
+<p>For spin objects, this is true when applying the hermitian conjugation does not change the sign.
+For bosonic and fermionic objects, this is true when creators == annihilators.
+For mixed objects, this is true when all of the spin, bosonic and fermionic parts' <cite>is_naturally_hermitian</cite> functions evaluate to true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether self is naturally hermitian or not.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.number_annihilators">
+<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_annihilators" title="Permalink to this definition"></a></dt>
+<dd><p>Get the number of annihilator indices of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of annihilator indices in self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.number_creators">
+<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_creators" title="Permalink to this definition"></a></dt>
+<dd><p>Get the number of creator indices of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of creator indices in self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="Permalink to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ByteArray</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_json" title="Permalink to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="struqture_py.bosons.BosonProduct.html" class="btn btn-neutral float-left" title="struqture_py.bosons.BosonProduct" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="struqture_py.bosons.BosonSystem.html" class="btn btn-neutral float-right" title="struqture_py.bosons.BosonSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, HQS Quantum Simulations GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+struqture\_py.mixed\_systems
+============================
+
+.. automodule:: struqture_py.mixed_systems
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      HermitianMixedProduct
+      MixedDecoherenceProduct
+      MixedHamiltonianSystem
+      MixedLindbladNoiseSystem
+      MixedLindbladOpenSystem
+      MixedProduct
+      MixedSystem
+   
+   
+
+   
+   
+   
+
+
+
