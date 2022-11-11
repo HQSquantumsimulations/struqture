@@ -110,7 +110,7 @@ jobs:
           { runs_on: 'windows-latest', rust: "x86_64-pc-windows-msvc" },
         ]
         python: [
-            {py: '3.10', interpreter: "python3.10"}  
+            {py: '3.11', interpreter: "python3.11"}
         ]
     steps:
       - uses: actions/checkout@v3
@@ -145,10 +145,7 @@ jobs:
           { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
         ]
         python: [
-            {py: '3.7', interpreter: "python3.7"},
-            {py: '3.8', interpreter: "python3.8"},
-            {py: '3.9', interpreter: "python3.9"},
-            {py: '3.10', interpreter: "python3.10"}
+            {py: '3.11', interpreter: "python3.11"}
         ]
     steps:
       - uses: actions/checkout@v3
@@ -165,11 +162,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip maturin pytest numpy twine        
       - name: macos wheels
-        uses: messense/maturin-action@v1
-        with:
-          maturin-version: latest
-          command: build
-          args: --find-interpreter --out wheels  -m struqture-py/Cargo.toml --release --locked
+        run: |
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build --find-interpreter --out wheels  -m struqture-py/Cargo.toml --locked
       - name: store artifact
         uses: actions/upload-artifact@v3
         with:
