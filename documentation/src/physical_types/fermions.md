@@ -179,7 +179,7 @@ system.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 0.0))
 ## Noise operators and systems
 
 We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) = -i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
@@ -194,7 +194,7 @@ In programming terms the object `FermionLindbladNoiseOperator` is given by a Has
 Similarly to FermionOperators, FermionLindbladNoiseOperators have a system equivalent: `FermionLindbladNoiseSystem`, with a number of involved fermionic modes defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
 
 ### Examples
-Here, we add the term \\(c^{\dagger}_0 c_0\\) with coefficient \\i\\.
+Here, we add the term \\(c^{\dagger}_0 c_0\\) with coefficient 1.0.
 
 ```rust
 use qoqo_calculator::CalculatorComplex;

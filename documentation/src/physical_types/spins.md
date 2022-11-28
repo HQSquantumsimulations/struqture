@@ -16,7 +16,7 @@ I = \begin{pmatrix}
 \end{pmatrix}
 \\]
 
-* X: pauli x matrix
+* X: Pauli x matrix
 \\[
 X = \begin{pmatrix}
 0 & 1\\\\
@@ -24,7 +24,7 @@ X = \begin{pmatrix}
 \end{pmatrix}
 \\]
 
-* Y: pauli y matrix
+* Y: Pauli y matrix
 \\[
 Y = \begin{pmatrix}
 0 & -i\\\\
@@ -32,7 +32,7 @@ i & 0
 \end{pmatrix}
 \\]
 
-* Z: pauli z matrix
+* Z: Pauli z matrix
 \\[
 Z = \begin{pmatrix}
 1 & 0\\\\
@@ -52,21 +52,21 @@ are almost identical to the `SinglePauliOperators` with the exception of an addi
 0 & 1
 \end{pmatrix}
 \\]
-* X: pauli X matrix
+* X: Pauli X matrix
 \\[
 \begin{pmatrix}
 0 & 1\\\\
 1 & 0
 \end{pmatrix}
 \\]
-* iY: pauli Y matrix multiplied by i
+* iY: Pauli Y matrix multiplied by i
 \\[
 \begin{pmatrix}
 0 & 1 \\\\
 -1 & 0
 \end{pmatrix}
 \\]
-* Z: pauli z matrix
+* Z: Pauli z matrix
 \\[
 \begin{pmatrix}
 1 & 0\\\\
@@ -125,10 +125,10 @@ A good example how complex objects are constructed from operator products are `S
 
 These `SpinOperators` and `SpinHamiltonians` represent operators or hamiltonians such as:
 \\[
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma(k,j) \\\\
-    \sigma(k,j) \in \\{ X, Y, Z, I \\}
+\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
+    \sigma^{k}_j \in \\{ X, Y, Z, I \\}
 \\]
-where the \\(\sigma(k,k)\\) are `SinglePauliOperators`.
+where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the `PauliProducts` as keys and the coefficients \\(\alpha_j\\) as values.
 
@@ -232,7 +232,7 @@ system.add_operator_product(spins.PauliProduct().z(3), 1.0)
 ## Noise operators and systems
 
 We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
@@ -249,7 +249,7 @@ Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent:
 
 ### Examples
 
-Here, we add the term \\(\sigma^{x}_0 sigma^{z}_2\\) with coefficient 1.0.
+Here, we add the term \\(\sigma^{x}_0 \sigma^{z}_2\\) with coefficient 1.0.
 
 ```rust
 use struqture::prelude::*;

@@ -2,7 +2,7 @@
 
 ## Building blocks
 
-All the mixed operators are expressed based on products of mixed indices which contain spin terms, bosonic terms and fermionic terms. The spin terms respect pauli operator cyclicity, the bosonic terms respect bosonic commutation relations, and the fermionic terms respect fermionic anti-commutation relations.
+All the mixed operators are expressed based on products of mixed indices which contain spin terms, bosonic terms and fermionic terms. The spin terms respect Pauli operator cyclicity, the bosonic terms respect bosonic commutation relations, and the fermionic terms respect fermionic anti-commutation relations.
 
 These products respect the following relations:
 \\[
@@ -110,7 +110,7 @@ Complex objects are constructed from operator products are `MixedOperators` and 
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `MixedOperators` and `MixedHamiltonians` represent operators or hamiltonians such as:
-\\[ H = \sum_{j=0}^N \alpha_j \prod_{k} \sigma(k,j) \prod_{l, m} c_b^{\dagger}(l,j) c_b(m,j) \prod_{r, s} c_f^{\dagger}(r,j) c_f(s,j) \\]
+\\[ H = \sum_{j=0}^N \alpha_j \prod_{k} \sigma_j^{k}  \prod_{l, m} c_b^{\dagger}(l,j) c_b(m,j) \prod_{r, s} c_f^{\dagger}(r,j) c_f(s,j) \\]
 with commutation relations and cyclicity respected.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `MixedProducts` or `HermitianMixedProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
@@ -301,7 +301,7 @@ system.add_operator_product(hmp_error, CalculatorComplex.from_pair(1.0, 0.0))
 ## Noise operators and systems
 
 We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
