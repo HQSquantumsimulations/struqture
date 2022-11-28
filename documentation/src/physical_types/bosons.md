@@ -79,6 +79,8 @@ with
     \lbrack c_k, c_j \rbrack = 0, \\\\
     \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \\]
 
+For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagger}\\) term acting on 0, and both a \\(c^{\dagger}\\) term and a \\(c\\) term acting on 1.
+
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `BosonProducts` or `HermitianBosonProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In struqture we distinguish between bosonic operators and hamiltonians to avoid introducing unphysical behaviour by accident.
@@ -196,7 +198,8 @@ Similarly to BosonOperators, BosonLindbladNoiseOperators have a system equivalen
 
 ### Examples
 
-Here, we add the term \\(c^{\dagger}_0 c_0\\) with coefficient 1.0.
+Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use qoqo_calculator::CalculatorComplex;

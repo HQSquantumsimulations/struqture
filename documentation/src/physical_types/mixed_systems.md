@@ -316,6 +316,8 @@ In programming terms the object `MixedLindbladNoiseOperators` is given by a Hash
 Similarly to MixedOperators, MixedLindbladNoiseOperators have a system equivalent: `MixedLindbladNoiseOperators`, with a number of involved spins, bosonic modes and fermionic modes (for each subsystem) defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
 
 ### Examples
+Here, we add the terms \\(L_0 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\\) and \\(L_1 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\\) with coefficient 1.0:
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use qoqo_calculator::CalculatorComplex;

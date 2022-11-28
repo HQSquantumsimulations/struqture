@@ -19,6 +19,8 @@ Struqture is designed to also support the construction and (de)serialisation of 
 
 This documentation is split into two parts. The [first part](physical_types/intro.md) covers the basic usage for spins, bosons, fermions and mixed systems. The [second part](container_types/intro.md) covers the shared design patterns between spins, bosons, fermions and mixed systems.
 
+Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls. 
+
 ## Installation
 
 ### Python

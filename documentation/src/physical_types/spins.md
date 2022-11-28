@@ -126,9 +126,9 @@ A good example how complex objects are constructed from operator products are `S
 These `SpinOperators` and `SpinHamiltonians` represent operators or hamiltonians such as:
 \\[
 \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
-    \sigma^{k}_j \in \\{ X, Y, Z, I \\}
+    \sigma^{k} \in \\{ X, Y, Z, I \\}
 \\]
-where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
+where the \\(\sigma^{k}_j\\) are `SinglePauliOperators` (e.g. \\(sigma^x_0\\) is a \\(sigma^x\\) Pauli operator acting on qubit 0).
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the `PauliProducts` as keys and the coefficients \\(\alpha_j\\) as values.
 
@@ -144,7 +144,8 @@ use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
 use struqture::spins::{PauliProduct, SpinOperator, SpinHamiltonian};
 
-// Building the term sigma^x_0 * sigma^z_2
+// Building the term sigma^x_0 * sigma^z_2: sigma_x acting on qubit 0
+// and sigma_z acting on qubit 2
 let pp = PauliProduct::new().x(0).z(2);
 
 // O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
@@ -249,7 +250,8 @@ Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent:
 
 ### Examples
 
-Here, we add the term \\(\sigma^{x}_0 \sigma^{z}_2\\) with coefficient 1.0: \\(\hat{H} = 1.0 * \sigma^{x}_0 \sigma^{z}_2\\)
+Here, we add the terms \\( L_0 = \sigma_0^{x} \sigma_2^{z} \\) and \\( L_1 = \sigma_0^{x} \sigma_2^{z} \\) with coefficient 1.0: 
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use struqture::prelude::*;

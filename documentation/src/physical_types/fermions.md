@@ -78,6 +78,8 @@ with
     \lbrace c_k, c_j \rbrace = 0, \\\\
     \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \\]
 
+For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagger}\\) term acting on 0, and both a \\(c^{\dagger}\\) term and a \\(c\\) term acting on 1.
+
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `FermionProducts` or `HermitianFermionProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In struqture we distinguish between fermionic operators and hamiltonians to avoid introducing unphysical behaviour by accident.
@@ -194,7 +196,8 @@ In programming terms the object `FermionLindbladNoiseOperator` is given by a Has
 Similarly to FermionOperators, FermionLindbladNoiseOperators have a system equivalent: `FermionLindbladNoiseSystem`, with a number of involved fermionic modes defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
 
 ### Examples
-Here, we add the term \\(c^{\dagger}_0 c_0\\) with coefficient 1.0.
+Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use qoqo_calculator::CalculatorComplex;
