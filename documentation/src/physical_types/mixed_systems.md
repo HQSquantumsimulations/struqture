@@ -8,15 +8,15 @@ These products respect the following relations:
 \\[
     -i \sigma^x \sigma^y \sigma^z = I
 \\]
-\\[ \lbrack c_b^{\dagger}(k), c_b^{\dagger}(j) \rbrack = 0, \\\\
-    \lbrack c_b(k), c_b(j) \rbrack = 0, \\\\
-    \lbrack c_b^{\dagger}(k), c_b(j) \rbrack = \delta (k, j). \\]
-\\[ \lbrace c_f^{\dagger}(k), c_f^{\dagger}(j) \rbrace = 0, \\\\
-    \lbrace c_f(k), c_f(j) \rbrace = 0, \\\\
-    \lbrace c_f^{\dagger}(k), c_f(j) \rbrace = \delta (k, j). \\]
+\\[ \lbrack c_{b, k}^{\dagger}, c_{b, j}^{\dagger} \rbrack = 0, \\\\
+    \lbrack c_{b, k}, c_{b, j} \rbrack = 0, \\\\
+    \lbrack c_{b, k}^{\dagger}, c_{b, j} \rbrack = \delta_{k, j}. \\]
+\\[ \lbrace c_{f, k}^{\dagger}, c_{f, j}^{\dagger} \rbrace = 0, \\\\
+    \lbrace c_{f, k}, c_{f, j} \rbrace = 0, \\\\
+    \lbrace c_{f, k}^{\dagger}, c_{f, j} \rbrace = \delta_{k, j}. \\]
 
 with 
-\\(c_b^{\dagger}\\) the bosonic creation operator, \\(c_b\\) the bosonic annihilation operator, \\(c_f^{\dagger}\\) the fermionic creation operator, and \\(c_f\\) the fermionic annihilation operator.
+\\(c_b^{\dagger}\\) the bosonic creation operator, \\(c_b\\) the bosonic annihilation operator, \\(\lbrack ., . \rbrack\\) the bosonic commutation relations, \\(c_f^{\dagger}\\) the fermionic creation operator, \\(c_f\\) the fermionic annihilation operator, and \\(\lbrace ., . \rbrace\\) the fermionic anti-commutation relations.
 
 ### MixedProducts
 
@@ -110,13 +110,13 @@ Complex objects are constructed from operator products are `MixedOperators` and 
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `MixedOperators` and `MixedHamiltonians` represent operators or hamiltonians such as:
-\\[ H = \sum_{j=0}^N \alpha_j \prod_{k} \sigma_j^{k}  \prod_{l, m} c_b^{\dagger}(l,j) c_b(m,j) \prod_{r, s} c_f^{\dagger}(r,j) c_f(s,j) \\]
+\\[ \hat{H} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma_j^{k}  \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \\]
 with commutation relations and cyclicity respected.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `MixedProducts` or `HermitianMixedProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In struqture we distinguish between mixed operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed hamiltonian, this means that the sums of products are sums of hermitian mixed products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators that is not present in the annihilators is smaller than the smallest index of the annihilators that is not present in the creators.
+While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed hamiltonian, this means that the sums of products are sums of hermitian mixed products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
 
 For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/hamiltonian. See the example for more information.
 
@@ -304,16 +304,16 @@ We describe decoherence by representing it with the Lindblad equation.
 The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
-    \dot{\rho} = \mathcal{L}(\rho) =-i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 with the rate matrix \\(\Gamma_{j,k}\\) and the Lindblad operator \\(L_{j}\\).
 To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use `MixedDecoherenceProducts` as the operator base. To describe mixed noise we use the Lindblad equation with \\(H=0\\).
+We use `MixedDecoherenceProducts` as the operator base. To describe mixed noise we use the Lindblad equation with \\(\hat{H}=0\\).
 
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `MixedDecoherenceProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `MixedLindbladNoiseOperators` is given by a HashMap or Dictionary with the tuple (`MixedDecoherenceProduct`, `MixedDecoherenceProduct`) as keys and the entries in the rate matrix as values.
 
-Similarly to MixedOperators, MixedLindbladNoiseOperatorss have a system equivalent: `MixedLindbladNoiseOperators`, with a number of involved spins, bosonic modes and fermionic modes (for each subsystem) defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
+Similarly to MixedOperators, MixedLindbladNoiseOperators have a system equivalent: `MixedLindbladNoiseOperators`, with a number of involved spins, bosonic modes and fermionic modes (for each subsystem) defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
 
 ### Examples
 
@@ -386,6 +386,11 @@ print(system)
 ## Open systems
 
 Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
+The Lindblad master equation is given by
+\\[
+    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+\\]
+
 In struqture they are composed of a hamiltonian (MixedHamiltonianSystem) and noise (MixedLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
 
 ### Examples
