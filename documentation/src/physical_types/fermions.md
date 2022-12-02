@@ -71,8 +71,11 @@ Complex objects are constructed from operator products are `FermionOperators` an
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `FermionOperators` and `FermionHamiltonians` represent operators or hamiltonians such as:
-\\[ \hat{H} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l,j}  \\]
-with 
+\\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
+with
+\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ 1 \end{cases} , \\]
+\\[ g(j, l) = \begin{cases} c_l \\\\ 1 \end{cases} , \\]
+and 
 \\(c^{\dagger}\\) the fermionionic creation operator, \\(c\\) the fermionionic annihilation operator
 \\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\\\
     \lbrace c_k, c_j \rbrace = 0, \\\\

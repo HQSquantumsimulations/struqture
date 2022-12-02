@@ -17,7 +17,7 @@ Similarly the support of symbolic expression leads to a trade-off in speed compa
 The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported frrom [qoqo_calculator] (https://github.com/HQSquantumsimulations/qoqo_calculator).
 Struqture is designed to also support the construction and (de)serialisation of large systems but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
 
-This documentation is split into two parts. The [first part](physical_types/intro.md) covers the basic usage for spins, bosons, fermions and mixed systems. The [second part](container_types/intro.md) covers the shared design patterns between spins, bosons, fermions and mixed systems.
+This documentation is split into two parts. The [first part](physical_types/intro.md) covers the basic usage for spins, bosons, fermions and mixed systems. The [second part](container_types/intro.md) covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world [example](example.md) is also included in.
 
 Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls. 
 

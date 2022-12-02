@@ -72,14 +72,16 @@ Complex objects are constructed from operator products are `BosonOperators` and 
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `BosonOperators` and `BosonHamiltonians` represent operators or hamiltonians such as:
-\\[ \hat{H} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l,j} \\]
-with 
+\\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
+with
+\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ 1 \end{cases} , \\]
+\\[ g(j, l) = \begin{cases} c_l \\\\ 1 \end{cases} , \\]
+and 
 \\(c^{\dagger}\\) the bosonic creation operator, \\(c\\) the bosonic annihilation operator 
 \\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\\\
     \lbrack c_k, c_j \rbrack = 0, \\\\
     \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \\]
 
-For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagger}\\) term acting on 0, and both a \\(c^{\dagger}\\) term and a \\(c\\) term acting on 1.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `BosonProducts` or `HermitianBosonProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 

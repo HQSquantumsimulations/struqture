@@ -128,7 +128,7 @@ These `SpinOperators` and `SpinHamiltonians` represent operators or hamiltonians
 \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
     \sigma^{k} \in \\{ X, Y, Z, I \\}
 \\]
-where the \\(\sigma^{k}_j\\) are `SinglePauliOperators` (e.g. \\(sigma^x_0\\) is a \\(sigma^x\\) Pauli operator acting on qubit 0).
+where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the `PauliProducts` as keys and the coefficients \\(\alpha_j\\) as values.
 
