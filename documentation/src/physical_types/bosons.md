@@ -3,9 +3,9 @@
 ## Building blocks
 
 All bosonic objects in struqture are expressed based on products of bosonic creation and annihilation operators, which respect bosonic commutation relations
-\\[ \lbrack c^{\dagger}(k), c^{\dagger}(j) \rbrack = 0, \\\\
-    \lbrack c(k), c(j) \rbrack = 0, \\\\
-    \lbrack c^{\dagger}(k), c(j) \rbrack = \delta (k, j). \\]
+\\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\\\
+    \lbrack c_k, c_j \rbrack = 0, \\\\
+    \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \\]
 
 ### BosonProducts
 
@@ -72,17 +72,21 @@ Complex objects are constructed from operator products are `BosonOperators` and 
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `BosonOperators` and `BosonHamiltonians` represent operators or hamiltonians such as:
-\\[ H = \sum_{j=0}^N \alpha_j \prod_{k, l} c^{\dagger}(k,j)c(l,j) \\]
-with 
+\\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
+with
+\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ 1 \end{cases} , \\]
+\\[ g(j, l) = \begin{cases} c_l \\\\ 1 \end{cases} , \\]
+and 
 \\(c^{\dagger}\\) the bosonic creation operator, \\(c\\) the bosonic annihilation operator 
-\\[ \lbrack c^{\dagger}(k), c^{\dagger}(j) \rbrack = 0, \\\\
-    \lbrack c(k), c(j) \rbrack = 0, \\\\
-    \lbrack c^{\dagger}(k), c(j) \rbrack = \delta (k, j). \\]
+\\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\\\
+    \lbrack c_k, c_j \rbrack = 0, \\\\
+    \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \\]
+
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `BosonProducts` or `HermitianBosonProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In struqture we distinguish between bosonic operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a bosonic hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators that is not present in the annihilators is smaller than the smallest index of the annihilators that is not present in the creators.
+While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a bosonic hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
 
 ### Examples
 
@@ -180,14 +184,14 @@ system.add_operator_product(hbp, CalculatorComplex.from_pair(1.0, 0.0))
 ## Noise operators and systems
 
 We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
-    \dot{\rho} = \mathcal{L}(\rho) = -i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+    \dot{\rho} = \mathcal{L}(\rho) = -i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 with the rate matrix \\(\Gamma_{j,k}\\) and the Lindblad operator \\(L_{j}\\).
 To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use `BosonProducts` as the operator base. To describe bosonic noise we use the Lindblad equation with \\(H=0\\).
+We use `BosonProducts` as the operator base. To describe bosonic noise we use the Lindblad equation with \\(\hat{H}=0\\).
 
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `BosonProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `BosonLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`BosonProduct`, `BosonProduct`) as keys and the entries in the rate matrix as values.
@@ -196,7 +200,8 @@ Similarly to BosonOperators, BosonLindbladNoiseOperators have a system equivalen
 
 ### Examples
 
-Here, we add the term \\(c^{\dagger}_0 c_0\\) with coefficient \\i\\.
+Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use qoqo_calculator::CalculatorComplex;
@@ -236,6 +241,10 @@ print(system)
 ## Open systems
 
 Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
+The Lindblad master equation is given by
+\\[
+    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+\\]
 In struqture they are composed of a hamiltonian (BosonHamiltonianSystem) and noise (BosonLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
 
 ### Examples

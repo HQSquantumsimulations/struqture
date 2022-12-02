@@ -16,7 +16,7 @@ I = \begin{pmatrix}
 \end{pmatrix}
 \\]
 
-* X: pauli x matrix
+* X: Pauli x matrix
 \\[
 X = \begin{pmatrix}
 0 & 1\\\\
@@ -24,7 +24,7 @@ X = \begin{pmatrix}
 \end{pmatrix}
 \\]
 
-* Y: pauli y matrix
+* Y: Pauli y matrix
 \\[
 Y = \begin{pmatrix}
 0 & -i\\\\
@@ -32,7 +32,7 @@ i & 0
 \end{pmatrix}
 \\]
 
-* Z: pauli z matrix
+* Z: Pauli z matrix
 \\[
 Z = \begin{pmatrix}
 1 & 0\\\\
@@ -52,21 +52,21 @@ are almost identical to the `SinglePauliOperators` with the exception of an addi
 0 & 1
 \end{pmatrix}
 \\]
-* X: pauli X matrix
+* X: Pauli X matrix
 \\[
 \begin{pmatrix}
 0 & 1\\\\
 1 & 0
 \end{pmatrix}
 \\]
-* iY: pauli Y matrix multiplied by i
+* iY: Pauli Y matrix multiplied by i
 \\[
 \begin{pmatrix}
 0 & 1 \\\\
 -1 & 0
 \end{pmatrix}
 \\]
-* Z: pauli z matrix
+* Z: Pauli z matrix
 \\[
 \begin{pmatrix}
 1 & 0\\\\
@@ -125,10 +125,10 @@ A good example how complex objects are constructed from operator products are `S
 
 These `SpinOperators` and `SpinHamiltonians` represent operators or hamiltonians such as:
 \\[
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma(k,j) \\\\
-    \sigma(k,j) \in \\{ X, Y, Z, I \\}
+\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
+    \sigma^{k} \in \\{ X, Y, Z, I \\}
 \\]
-where the \\(\sigma(k,k)\\) are `SinglePauliOperators`.
+where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the `PauliProducts` as keys and the coefficients \\(\alpha_j\\) as values.
 
@@ -144,7 +144,8 @@ use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
 use struqture::spins::{PauliProduct, SpinOperator, SpinHamiltonian};
 
-// Building the term sigma^x_0 * sigma^z_2
+// Building the term sigma^x_0 * sigma^z_2: sigma_x acting on qubit 0
+// and sigma_z acting on qubit 2
 let pp = PauliProduct::new().x(0).z(2);
 
 // O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
@@ -232,15 +233,15 @@ system.add_operator_product(spins.PauliProduct().z(3), 1.0)
 ## Noise operators and systems
 
 We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
-    \dot{\rho} = \mathcal{L}(\rho) =-i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 with the rate matrix \\(\Gamma_{j,k}\\) and the Lindblad operator \\(L_{j}\\).
 
 To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use `DecoherenceProducts` as the operator base. To describe spin noise we use the Lindblad equation with \\(H=0\\).
+We use `DecoherenceProducts` as the operator base. To describe spin noise we use the Lindblad equation with \\(\hat{H}=0\\).
 
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `DecoherenceProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `SpinLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`DecoherenceProduct`, `DecoherenceProduct`) as keys and the entries in the rate matrix as values.
@@ -249,7 +250,8 @@ Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent:
 
 ### Examples
 
-Here, we add the term \\(\sigma^{x}_0 sigma^{z}_2\\) with coefficient 1.0.
+Here, we add the terms \\( L_0 = \sigma_0^{x} \sigma_2^{z} \\) and \\( L_1 = \sigma_0^{x} \sigma_2^{z} \\) with coefficient 1.0: 
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use struqture::prelude::*;
@@ -285,6 +287,10 @@ print(system)
 ## Open systems
 
 Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
+The Lindblad master equation is given by
+\\[
+    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+\\]
 In struqture they are composed of a hamiltonian (SpinHamiltonianSystem) and noise (SpinLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
 
 ### Examples
@@ -328,7 +334,7 @@ open_system.noise_add_operator_product(
 print(open_system)
 ```
 
-## Matrix representation
+## Matrix representation: spin objects only
 
 All spin-objects can be converted into sparse matrices with the following convention.
 If \\(M_2\\) corresponds to the matrix acting on spin 2 and \\(M_1\\) corresponds to the matrix acting on spin 1 the total matrix \\(M\\) acting on spins 0 to 2 is given by
@@ -342,6 +348,8 @@ struqture uses the convention that density matrices are flattened in row-major o
     \rho = \begin{pmatrix} a & b \\\\ c & d \end{pmatrix} => \vec{\rho} = \begin{pmatrix} a \\\\ b \\\\ c \\\\ d \end{pmatrix}
 \\]
 For noiseless objects (SpinSystem, SpinHamiltonianSystem), sparse operators and sparse superoperators can be constructed, while only sparse superoperators can be constructed for systems with noise (SpinLindbladNoiseSystem, SpinLindbladOpenSystem).
+
+Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.
 
 ```rust
 use qoqo_calculator::CalculatorComplex;

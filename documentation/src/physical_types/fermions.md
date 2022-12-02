@@ -2,10 +2,10 @@
 
 ## Building blocks
 
-All fermionic objects in struqture are expressed based on products of fermionic creation and annihilation operators, which respect fermionic commutation relations
-\\[ \lbrace c^{\dagger}(k), c^{\dagger}(j) \rbrace = 0, \\\\
-    \lbrace c(k), c(j) \rbrace = 0, \\\\
-    \lbrace c^{\dagger}(k), c(j) \rbrace = \delta (k, j). \\]
+All fermionic objects in struqture are expressed based on products of fermionic creation and annihilation operators, which respect fermionic anti-commutation relations
+\\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\\\
+    \lbrace c_k, c_j \rbrace = 0, \\\\
+    \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \\]
 
 ### FermionProducts
 
@@ -19,7 +19,7 @@ HermitianFermionProducts are the hermitian equivalent of FermionProducts. This m
 
 In both Python and Rust, the operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.
 
-Note: (Hermitian)FermionProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the `create_valid_pair` function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the commutation and hermitian conjugation rules.
+Note: (Hermitian)FermionProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the `create_valid_pair` function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the anti-commutation and hermitian conjugation rules.
 
 ```python
 from struqture_py.fermions import FermionProduct, HermitianFermionProduct
@@ -71,17 +71,22 @@ Complex objects are constructed from operator products are `FermionOperators` an
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `FermionOperators` and `FermionHamiltonians` represent operators or hamiltonians such as:
-\\[ H = \sum_{j=0}^N \alpha_j \prod_{k, l} c^{\dagger}(k,j)c(l,j)  \\]
-with 
+\\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
+with
+\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ 1 \end{cases} , \\]
+\\[ g(j, l) = \begin{cases} c_l \\\\ 1 \end{cases} , \\]
+and 
 \\(c^{\dagger}\\) the fermionionic creation operator, \\(c\\) the fermionionic annihilation operator
-\\[ \lbrace c^{\dagger}(k), c^{\dagger}(j) \rbrace = 0, \\\\
-    \lbrace c(k), c(j) \rbrace = 0, \\\\
-    \lbrace c^{\dagger}(k), c(j) \rbrace = \delta (k, j). \\]
+\\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\\\
+    \lbrace c_k, c_j \rbrace = 0, \\\\
+    \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \\]
+
+For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagger}\\) term acting on 0, and both a \\(c^{\dagger}\\) term and a \\(c\\) term acting on 1.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `FermionProducts` or `HermitianFermionProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In struqture we distinguish between fermionic operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a fermionic hamiltonian, this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators that is not present in the annihilators is smaller than the smallest index of the annihilators that is not present in the creators.
+While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a fermionic hamiltonian, this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
 
 ### Examples
 
@@ -179,14 +184,14 @@ system.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 0.0))
 ## Noise operators and systems
 
 We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \\[
-    \dot{\rho} = \mathcal{L}(\rho) = -i \[H, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+    \dot{\rho} = \mathcal{L}(\rho) = -i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 with the rate matrix \\(\Gamma_{j,k}\\) and the Lindblad operator \\(L_{j}\\).
 To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use `FermionProducts` as the operator base. To describe fermionic noise we use the Lindblad equation with \\(H=0\\).
+We use `FermionProducts` as the operator base. To describe fermionic noise we use the Lindblad equation with \\(\hat{H}=0\\).
 
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `FermionProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `FermionLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`FermionProduct`, `FermionProduct`) as keys and the entries in the rate matrix as values.
@@ -194,7 +199,8 @@ In programming terms the object `FermionLindbladNoiseOperator` is given by a Has
 Similarly to FermionOperators, FermionLindbladNoiseOperators have a system equivalent: `FermionLindbladNoiseSystem`, with a number of involved fermionic modes defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
 
 ### Examples
-Here, we add the term \\(c^{\dagger}_0 c_0\\) with coefficient \\i\\.
+Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
+\\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```rust
 use qoqo_calculator::CalculatorComplex;
@@ -235,6 +241,10 @@ print(system)
 ## Open systems
 
 Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
+The Lindblad master equation is given by
+\\[
+    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
+\\]
 In struqture they are composed of a hamiltonian (FermionHamiltonianSystem) and noise (FermionLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
 
 ### Examples

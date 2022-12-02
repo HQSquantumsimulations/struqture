@@ -1,29 +1,29 @@
 # Operators and Systems
 
-Operators and systems operate on state space using HashMaps (Dictionaries) of operator products and values. The distinction between operators and systems is that systems are given a fixed system size by the user when creating the object.
+Operators and systems act on a state space using HashMaps (Dictionaries) of operator products and values. The distinction between operators and systems is that systems are given a fixed system size by the user when creating the object.
 
-For spins, operators and systems represent
+For spins, the operators and systems represent
 \\[ 
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma(k,j) \\\\
-    \sigma(k,j) \in \\{ X, Y, Z, I \\}
+\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
+    \sigma^{k}_j \in \\{ X, Y, Z, I \\}
 \\]
-where the \\(\sigma(k,k)\\) are `SinglePauliOperators`.
+where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
 
-For bosons, operators and systems represent
-\\[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c^{\dagger}(k,j)c(l,j) \\]
+For bosons, the operators and systems represent
+\\[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c\delta_{l, j} \\]
 with 
 \\(c^{\dagger}\\) the bosonic creation operator, \\(c\\) the bosonic annihilation operator 
-\\[ \lbrack c^{\dagger}(k), c^{\dagger}(j) \rbrack = 0, \\\\
-    \lbrack c(k), c(j) \rbrack = 0, \\\\
-    \lbrack c^{\dagger}(k), c(j) \rbrack = \delta (k, j). \\]
+\\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\\\
+    \lbrack c_k, c_j \rbrack = 0, \\\\
+    \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \\]
 
-For fermions, operators and systems represent
-\\[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c^{\dagger}(k,j)c(l,j)  \\]
+For fermions, the operators and systems represent
+\\[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l,j}  \\]
 with 
 \\(c^{\dagger}\\) the fermionionic creation operator, \\(c\\) the fermionionic annihilation operator
-\\[ \lbrace c^{\dagger}(k), c^{\dagger}(j) \rbrace = 0, \\\\
-    \lbrace c(k), c(j) \rbrace = 0, \\\\
-    \lbrace c^{\dagger}(k), c(j) \rbrace = \delta (k, j). \\]
+\\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\\\
+    \lbrace c_k, c_j \rbrace = 0, \\\\
+    \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \\]
 
 
 
