@@ -389,11 +389,15 @@ impl Mul<HermitianBosonProduct> for BosonProduct {
     fn mul(self, rhs: HermitianBosonProduct) -> Self::Output {
         let mut output_vec: Vec<BosonProduct> = Vec::new();
 
+        let mut right_to_mul: Vec<BosonProduct> = Vec::new();
         let hbp_to_bp = BosonProduct::new(rhs.creators, rhs.annihilators)
             .expect("Could not convert rhs into a BosonProduct");
-        let (hbp_to_bp_conj, _) = hbp_to_bp.hermitian_conjugate();
+        right_to_mul.push(hbp_to_bp.clone());
+        if !hbp_to_bp.is_natural_hermitian() {
+            right_to_mul.push(hbp_to_bp.hermitian_conjugate().0);
+        }
 
-        for right in [hbp_to_bp, hbp_to_bp_conj] {
+        for right in right_to_mul {
             output_vec.append(&mut (self.clone() * right));
         }
         output_vec
@@ -802,16 +806,24 @@ impl Mul<HermitianBosonProduct> for HermitianBosonProduct {
     fn mul(self, rhs: HermitianBosonProduct) -> Self::Output {
         let mut output_vec: Vec<BosonProduct> = Vec::new();
 
+        let mut left_to_mul: Vec<BosonProduct> = Vec::new();
         let bp_left = BosonProduct::new(self.creators, self.annihilators)
             .expect("Could not convert self into a BosonProduct");
-        let (bp_left_conj, _) = bp_left.hermitian_conjugate();
+        left_to_mul.push(bp_left.clone());
+        if !bp_left.is_natural_hermitian() {
+            left_to_mul.push(bp_left.hermitian_conjugate().0);
+        }
 
+        let mut right_to_mul: Vec<BosonProduct> = Vec::new();
         let bp_right = BosonProduct::new(rhs.creators, rhs.annihilators)
             .expect("Could not convert rhs into a BosonProduct");
-        let (bp_right_conj, _) = bp_right.hermitian_conjugate();
+        right_to_mul.push(bp_right.clone());
+        if !bp_right.is_natural_hermitian() {
+            right_to_mul.push(bp_right.hermitian_conjugate().0);
+        }
 
-        for left in [bp_left, bp_left_conj] {
-            for right in [bp_right.clone(), bp_right_conj.clone()] {
+        for left in left_to_mul {
+            for right in right_to_mul.clone() {
                 output_vec.append(&mut (left.clone() * right));
             }
         }
@@ -868,11 +880,15 @@ impl Mul<&BosonProduct> for HermitianBosonProduct {
     fn mul(self, rhs: &BosonProduct) -> Self::Output {
         let mut output_vec: Vec<BosonProduct> = Vec::new();
 
+        let mut left_to_mul: Vec<BosonProduct> = Vec::new();
         let hbp_to_bp = BosonProduct::new(self.creators, self.annihilators)
             .expect("Could not convert self into a BosonProduct");
-        let (hbp_to_bp_conj, _) = hbp_to_bp.hermitian_conjugate();
+        left_to_mul.push(hbp_to_bp.clone());
+        if !hbp_to_bp.is_natural_hermitian() {
+            left_to_mul.push(hbp_to_bp.hermitian_conjugate().0);
+        }
 
-        for left in [hbp_to_bp, hbp_to_bp_conj] {
+        for left in left_to_mul {
             output_vec.append(&mut (left.clone() * rhs.clone()));
         }
         output_vec

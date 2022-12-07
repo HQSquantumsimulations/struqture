@@ -432,10 +432,14 @@ impl Mul<HermitianFermionProduct> for FermionProduct {
     fn mul(self, rhs: HermitianFermionProduct) -> Self::Output {
         let mut output_vec: Vec<(FermionProduct, f64)> = Vec::new();
 
+        let mut right_to_mul: Vec<(FermionProduct, f64)> = Vec::new();
         let hfp_to_fp = FermionProduct::new(rhs.creators, rhs.annihilators)
             .expect("Could not convert rhs into a FermionProduct");
-        let (hfp_to_fp_conj, herm_sign) = hfp_to_fp.hermitian_conjugate();
-        for (right, rsign) in [(hfp_to_fp, 1.0), (hfp_to_fp_conj, herm_sign)] {
+        right_to_mul.push((hfp_to_fp.clone(), 1.0));
+        if !hfp_to_fp.is_natural_hermitian() {
+            right_to_mul.push(hfp_to_fp.hermitian_conjugate());
+        }
+        for (right, rsign) in right_to_mul {
             let res_vec: Vec<(FermionProduct, f64)> = self.clone() * right;
             for (fp, val) in res_vec.iter() {
                 output_vec.push((fp.clone(), val * rsign * 1.0));
@@ -871,16 +875,24 @@ impl Mul<HermitianFermionProduct> for HermitianFermionProduct {
     fn mul(self, rhs: HermitianFermionProduct) -> Self::Output {
         let mut output_vec: Vec<(FermionProduct, f64)> = Vec::new();
 
+        let mut left_to_mul: Vec<(FermionProduct, f64)> = Vec::new();
         let fp_left = FermionProduct::new(self.creators, self.annihilators)
             .expect("Could not convert self into a FermionProduct");
-        let (fp_left_conj, left_sign) = fp_left.hermitian_conjugate();
+        left_to_mul.push((fp_left.clone(), 1.0));
+        if !fp_left.is_natural_hermitian() {
+            left_to_mul.push(fp_left.hermitian_conjugate());
+        }
 
+        let mut right_to_mul: Vec<(FermionProduct, f64)> = Vec::new();
         let fp_right = FermionProduct::new(rhs.creators, rhs.annihilators)
             .expect("Could not convert rhs into a FermionProduct");
-        let (fp_right_conj, right_sign) = fp_right.hermitian_conjugate();
+        right_to_mul.push((fp_right.clone(), 1.0));
+        if !fp_right.is_natural_hermitian() {
+            right_to_mul.push(fp_right.hermitian_conjugate());
+        }
 
-        for (left, lsign) in [(fp_left, 1.0), (fp_left_conj, left_sign)] {
-            for (right, rsign) in [(fp_right.clone(), 1.0), (fp_right_conj.clone(), right_sign)] {
+        for (left, lsign) in left_to_mul {
+            for (right, rsign) in right_to_mul.clone() {
                 let res_vec: Vec<(FermionProduct, f64)> = left.clone() * right;
                 for (fp, val) in res_vec.iter() {
                     output_vec.push((fp.clone(), val * rsign * lsign));
@@ -945,10 +957,14 @@ impl Mul<&FermionProduct> for HermitianFermionProduct {
     fn mul(self, rhs: &FermionProduct) -> Self::Output {
         let mut output_vec: Vec<(FermionProduct, f64)> = Vec::new();
 
+        let mut left_to_mul: Vec<(FermionProduct, f64)> = Vec::new();
         let hfp_to_fp = FermionProduct::new(self.creators, self.annihilators)
             .expect("Could not convert self into a FermionProduct");
-        let (hfp_to_fp_conj, herm_sign) = hfp_to_fp.hermitian_conjugate();
-        for (left, lsign) in [(hfp_to_fp, 1.0), (hfp_to_fp_conj, herm_sign)] {
+        left_to_mul.push((hfp_to_fp.clone(), 1.0));
+        if !hfp_to_fp.is_natural_hermitian() {
+            left_to_mul.push(hfp_to_fp.hermitian_conjugate());
+        }
+        for (left, lsign) in left_to_mul {
             let res_vec: Vec<(FermionProduct, f64)> = left.clone() * rhs.clone();
             for (fp, val) in res_vec.iter() {
                 output_vec.push((fp.clone(), val * 1.0 * lsign));

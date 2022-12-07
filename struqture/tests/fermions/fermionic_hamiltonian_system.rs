@@ -321,7 +321,7 @@ fn mul_so_so() {
     let mut so_1 = FermionHamiltonianSystem::new(Some(2));
     let _ = so_1.add_operator_product(pp_1, CalculatorComplex::from(0.5));
     let mut so_0_1 = FermionSystem::new(Some(2));
-    let _ = so_0_1.add_operator_product(pp_0_1, CalculatorComplex::from(-4.0));
+    let _ = so_0_1.add_operator_product(pp_0_1, CalculatorComplex::from(-1.0));
     assert_eq!((so_0 * so_1), Ok(so_0_1));
 }
 
@@ -336,7 +336,7 @@ fn mul_so_so_same_index() {
     let mut so_1 = FermionHamiltonianSystem::new(Some(1));
     let _ = so_1.add_operator_product(pp_1, CalculatorComplex::from(0.5));
     let mut so_0_1 = FermionSystem::new(Some(1));
-    let _ = so_0_1.add_operator_product(pp_0_1, CalculatorComplex::new(4.0, 0.0));
+    let _ = so_0_1.add_operator_product(pp_0_1, CalculatorComplex::new(1.0, 0.0));
 
     assert_eq!(so_0 * so_1, Ok(so_0_1));
 }
