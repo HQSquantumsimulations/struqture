@@ -318,19 +318,10 @@ fn multiply_spins() {
     let left = HermitianMixedProduct::new([spins_left.clone()], [], []).unwrap();
     let right = HermitianMixedProduct::new([spins_right.clone()], [], []).unwrap();
 
-    let mut comparison: Vec<(MixedProduct, Complex64)> = Vec::new();
-    let left_mp = MixedProduct::new([spins_left.clone()], [], []).unwrap();
-    let left_mp_conj = MixedProduct::new([spins_left], [], []).unwrap();
-    let right_mp = MixedProduct::new([spins_right.clone()], [], []).unwrap();
-    let right_mp_conj = MixedProduct::new([spins_right], [], []).unwrap();
-    for lhs in [left_mp, left_mp_conj] {
-        for rhs in [right_mp.clone(), right_mp_conj.clone()] {
-            let result = (lhs.clone() * rhs).unwrap();
-            for vec in result {
-                comparison.push(vec);
-            }
-        }
-    }
+    let left_mp = MixedProduct::new([spins_left], [], []).unwrap();
+    let right_mp = MixedProduct::new([spins_right], [], []).unwrap();
+
+    let comparison = (left_mp * right_mp).unwrap();
 
     let result = (left * right).unwrap();
     assert_eq!(result.len(), comparison.len());
@@ -601,15 +592,8 @@ fn multiply_spins_fp_right() {
     let left = HermitianMixedProduct::new([spins_left.clone()], [], []).unwrap();
     let right = MixedProduct::new([spins_right], [], []).unwrap();
 
-    let mut comparison: Vec<(MixedProduct, Complex64)> = Vec::new();
-    let left_mp = MixedProduct::new([spins_left.clone()], [], []).unwrap();
-    let left_mp_conj = MixedProduct::new([spins_left], [], []).unwrap();
-    for lhs in [left_mp, left_mp_conj] {
-        let result = (lhs.clone() * right.clone()).unwrap();
-        for vec in result {
-            comparison.push(vec);
-        }
-    }
+    let left_mp = MixedProduct::new([spins_left], [], []).unwrap();
+    let comparison = (left_mp * right.clone()).unwrap();
 
     let result = (left * right).unwrap();
     assert_eq!(result.len(), comparison.len());
@@ -848,15 +832,8 @@ fn multiply_spins_fp_left() {
     let left = MixedProduct::new([spins_left], [], []).unwrap();
     let right = HermitianMixedProduct::new([spins_right.clone()], [], []).unwrap();
 
-    let mut comparison: Vec<(MixedProduct, Complex64)> = Vec::new();
-    let right_mp = MixedProduct::new([spins_right.clone()], [], []).unwrap();
-    let right_mp_conj = MixedProduct::new([spins_right], [], []).unwrap();
-    for rhs in [right_mp, right_mp_conj] {
-        let result = (left.clone() * rhs).unwrap();
-        for vec in result {
-            comparison.push(vec);
-        }
-    }
+    let right_mp = MixedProduct::new([spins_right], [], []).unwrap();
+    let comparison = (left.clone() * right_mp).unwrap();
 
     let result = (left * right).unwrap();
     assert_eq!(result.len(), comparison.len());

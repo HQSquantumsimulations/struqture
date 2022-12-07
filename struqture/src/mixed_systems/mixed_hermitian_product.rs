@@ -507,19 +507,24 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
         }
         let mut result_vec: Vec<(MixedProduct, Complex64)> = Vec::new();
 
+        let mut left_to_mul: Vec<(MixedProduct, f64)> = Vec::new();
         let mhp_left = MixedProduct::new(self.spins, self.bosons, self.fermions)
             .expect("Could not convert self into a MixedProduct");
-        let (mhp_left_conj, left_sign) = mhp_left.hermitian_conjugate();
+        left_to_mul.push((mhp_left.clone(), 1.0));
+        if !mhp_left.is_natural_hermitian() {
+            left_to_mul.push(mhp_left.hermitian_conjugate());
+        }
 
+        let mut right_to_mul: Vec<(MixedProduct, f64)> = Vec::new();
         let mhp_right = MixedProduct::new(rhs.spins, rhs.bosons, rhs.fermions)
             .expect("Could not convert rhs into a MixedProduct");
-        let (mhp_right_conj, right_sign) = mhp_right.hermitian_conjugate();
+        right_to_mul.push((mhp_right.clone(), 1.0));
+        if !mhp_right.is_natural_hermitian() {
+            right_to_mul.push(mhp_right.hermitian_conjugate());
+        }
 
-        for (lhs, lsign) in [(mhp_left, 1.0), (mhp_left_conj, left_sign)] {
-            for (rhs, rsign) in [
-                (mhp_right.clone(), 1.0),
-                (mhp_right_conj.clone(), right_sign),
-            ] {
+        for (lhs, lsign) in left_to_mul {
+            for (rhs, rsign) in right_to_mul.clone() {
                 let mut coefficient = Complex64::new(lsign * rsign, 0.0);
                 let mut tmp_spins: Vec<PauliProduct> = Vec::with_capacity(lhs.spins().len());
                 let mut tmp_bosons: Vec<Vec<BosonProduct>> = Vec::with_capacity(lhs.bosons().len());
@@ -651,11 +656,15 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
         }
         let mut result_vec: Vec<(MixedProduct, Complex64)> = Vec::new();
 
+        let mut left_to_mul: Vec<(MixedProduct, f64)> = Vec::new();
         let mhp_left = MixedProduct::new(self.spins, self.bosons, self.fermions)
             .expect("Could not convert self into a MixedProduct");
-        let (mhp_left_conj, left_sign) = mhp_left.hermitian_conjugate();
+        left_to_mul.push((mhp_left.clone(), 1.0));
+        if !mhp_left.is_natural_hermitian() {
+            left_to_mul.push(mhp_left.hermitian_conjugate());
+        }
 
-        for (lhs, lsign) in [(mhp_left, 1.0), (mhp_left_conj, left_sign)] {
+        for (lhs, lsign) in left_to_mul {
             let mut coefficient = Complex64::new(lsign, 0.0);
             let mut tmp_spins: Vec<PauliProduct> = Vec::with_capacity(lhs.spins().len());
             let mut tmp_bosons: Vec<Vec<BosonProduct>> = Vec::with_capacity(lhs.bosons().len());

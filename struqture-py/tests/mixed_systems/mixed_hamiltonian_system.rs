@@ -829,13 +829,13 @@ fn test_mul_self() {
         system_0_1
             .call_method1(
                 "add_operator_product",
-                ("S0Z1X:Bc0c2c3a0a2:Fc0c2a0a2", -0.2),
+                ("S0Z1X:Bc0c2c3a0a2:Fc0c2a0a2", -0.1),
             )
             .unwrap();
         system_0_1
             .call_method1(
                 "add_operator_product",
-                ("S0Z1X:Bc0c2a0a2a3:Fc0c2a0a2", -0.2),
+                ("S0Z1X:Bc0c2a0a2a3:Fc0c2a0a2", -0.1),
             )
             .unwrap();
 
