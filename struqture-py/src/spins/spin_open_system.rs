@@ -37,9 +37,9 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
 ///     from struqture_py.spins import SpinLindbladOpenSystem, DecoherenceProduct
 ///
-///     slns = spins.SpinLindbladOpenSystem()
-///     dp = spins.DecoherenceProduct().z(0).x(1)
-///     slns = slns.system_add_operator_product(dp, 2.0)
+///     slns = SpinLindbladOpenSystem()
+///     dp = DecoherenceProduct().z(0).x(1)
+///     slns.system_add_operator_product(dp, 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
 ///     dimension = 4**slns.number_spins()

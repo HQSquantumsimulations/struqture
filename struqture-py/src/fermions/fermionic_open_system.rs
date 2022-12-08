@@ -37,10 +37,10 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.fermions import FermionLindbladOpenSystem, FermionProduct
 ///
-///     slns = fermions.FermionLindbladOpenSystem()
-///     dp = fermions.FermionProduct([0], [0])
-///     slns = slns.system_add_operator_product(dp, 2.0)
-///     npt.assert_equal(slns.current_number_fermions(), 2)
+///     slns = FermionLindbladOpenSystem()
+///     dp = FermionProduct([0], [1])
+///     slns.system_add_operator_product(dp, 2.0)
+///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorComplex(2))
 ///
 #[pyclass(name = "FermionLindbladOpenSystem", module = "struqture_py.fermions")]

@@ -33,14 +33,14 @@ use struqture_py_macros::product_wrapper;
 ///
 /// .. code-block:: python
 ///
-///     from struqture_py.bosons import FermionProduct
+///     from struqture_py.fermions import FermionProduct
 ///     import numpy.testing as npt
 ///     # For instance, to represent $c_0a_0$
-///     b_product = FermionProduct([0], [0])
-///     npt.assert_equal(bp.creators(), [0])
-///     npt.assert_equal(bp.annihilators(), [0])
+///     fp = FermionProduct([0], [0])
+///     npt.assert_equal(fp.creators(), [0])
+///     npt.assert_equal(fp.annihilators(), [0])
 ///     
-#[pyclass(name = "FermionProduct", module = "struqture_py.bosons")]
+#[pyclass(name = "FermionProduct", module = "struqture_py.fermions")]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct FermionProductWrapper {
     pub internal: FermionProduct,

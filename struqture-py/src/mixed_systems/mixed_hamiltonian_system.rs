@@ -41,10 +41,10 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     from struqture_py.bosons import BosonProduct
 ///     from struqture_py.fermions import FermionProduct
 ///
-///     ssystem = mixed_systems.MixedHamiltonianSystem([2], [2], [2])
-///     pp = mixed_systems.HermitianMixedProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct[0], [0]])
-///     ssystem = ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_mixed_systems(), 2)
+///     ssystem = MixedHamiltonianSystem([2], [2], [2])
+///     pp = HermitianMixedProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
+///     ssystem.add_operator_product(pp, 5.0)
+///     npt.assert_equal(ssystem.number_spins(), [2])
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///
 #[pyclass(name = "MixedHamiltonianSystem", module = "struqture_py.mixed_systems")]

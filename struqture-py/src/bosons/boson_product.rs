@@ -37,8 +37,8 @@ use struqture_py_macros::product_wrapper;
 ///     import numpy.testing as npt
 ///     # For instance, to represent $c_0a_0$
 ///     b_product = BosonProduct([0], [0])
-///     npt.assert_equal(bp.creators(), [0])
-///     npt.assert_equal(bp.annihilators(), [0])
+///     npt.assert_equal(b_product.creators(), [0])
+///     npt.assert_equal(b_product.annihilators(), [0])
 ///     
 #[pyclass(name = "BosonProduct", module = "struqture_py.bosons")]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]

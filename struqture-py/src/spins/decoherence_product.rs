@@ -41,7 +41,7 @@ use struqture_py_macros::product_wrapper;
 ///
 ///     import numpy.testing as npt
 ///     from struqture_py.spins import DecoherenceProduct
-///     dp = spins.DecoherenceProduct().x(0).iy(1).z(2)
+///     dp = DecoherenceProduct().x(0).iy(1).z(2)
 ///     dp = dp.set_pauli(3, "X")
 ///     npt.assert_equal(dp.get(1), "iY")
 ///     npt.assert_equal(dp.keys(), [0, 1, 2, 3])

@@ -43,7 +43,7 @@ use struqture_py_macros::product_wrapper;
 ///
 ///     import numpy.testing as npt
 ///     from struqture_py.spins import PauliProduct
-///     pp = spins.PauliProduct().x(0).y(1).z(2)
+///     pp = PauliProduct().x(0).y(1).z(2)
 ///     pp = pp.set_pauli(3, "X")
 ///     npt.assert_equal(pp.get(0), "X")
 ///     npt.assert_equal(pp.keys(), [0, 1, 2, 3])
