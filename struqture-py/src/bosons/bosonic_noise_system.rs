@@ -32,12 +32,12 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.bosons import BosonLindbladNoiseSystem, DecoherenceProduct
+///     from struqture_py.bosons import BosonLindbladNoiseSystem, BosonProduct
 ///
-///     slns = bosons.BosonLindbladNoiseSystem()
-///     dp = bosons.BosonDecoherence().z(0).x(1)
-///     slns = slns.add_operator_product((dp, dp), 2.0)
-///     npt.assert_equal(slns.current_number_bosons(), 2)
+///     slns = BosonLindbladNoiseSystem()
+///     dp = BosonProduct([0], [1])
+///     slns.add_operator_product((dp, dp), 2.0)
+///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///
 #[pyclass(name = "BosonLindbladNoiseSystem", module = "struqture_py.bosons")]

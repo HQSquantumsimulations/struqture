@@ -32,22 +32,18 @@ use struqture_py_macros::noisy_system_wrapper;
 ///
 /// .. code-block:: python
 ///     import numpy.testing as npt
-///     from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
-///     from struqture_py.mixed_systems import MixedLindbladOpenSystem, DecoherenceProduct
-///
-///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
-///     from struqture_py.mixed_systems import MixedLindbladOpenSystem, DecoherenceProduct
-///     from struqture_py.spins import PauliProduct
+///     from struqture_py.mixed_systems import MixedLindbladOpenSystem
+///     from struqture_py.spins import DecoherenceProduct
 ///     from struqture_py.bosons import BosonProduct
 ///     from struqture_py.fermions import FermionProduct
 ///
-///     slns = mixed_systems.MixedLindbladOpenSystem()
-///     dp = mixed_systems.MixedDecoherenceProduct([DecoherenceProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
-///     slns = slns.system_add_operator_product((dp, dp), 2.0)
-///     npt.assert_equal(slns.current_number_spins(), 2)
-///     npt.assert_equal(slns.get((dp, dp)), CalculatorFloat(2))
+///     slns = MixedLindbladOpenSystem()
+///     dp = MixedDecoherenceProduct([DecoherenceProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
+///     slns.noise_add_operator_product((dp, dp), 2.0)
+///     npt.assert_equal(slns.current_number_spins(), [1])
+///     npt.assert_equal(slns.noise().get((dp, dp)), CalculatorFloat(2))
 ///
 #[pyclass(
     name = "MixedLindbladOpenSystem",

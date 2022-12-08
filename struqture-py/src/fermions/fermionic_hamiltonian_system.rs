@@ -37,12 +37,12 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.fermions import FermionHamiltonianSystem, HermitianFermionProduct
 ///
-///     ssystem = fermions.FermionHamiltonianSystem(2)
-///     pp = fermions.HermitianFermionProduct([0], [0])
-///     ssystem = ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_fermions(), 2)
+///     ssystem = FermionHamiltonianSystem(2)
+///     pp = HermitianFermionProduct([0], [0])
+///     ssystem.add_operator_product(pp, 5.0)
+///     npt.assert_equal(ssystem.number_modes(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-///     npt.assert_equal(ssystem.keys(), ["c0a0"])
+///     npt.assert_equal(ssystem.keys(), [pp])
 ///
 #[pyclass(name = "FermionHamiltonianSystem", module = "struqture_py.fermions")]
 #[derive(Clone, Debug, PartialEq)]

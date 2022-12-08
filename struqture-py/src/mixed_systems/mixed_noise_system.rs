@@ -37,10 +37,10 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     from struqture_py.bosons import BosonProduct
 ///     from struqture_py.fermions import FermionProduct
 ///
-///     slns = mixed_systems.MixedLindbladNoiseSystem()
-///     dp = mixed_systems.MixedDecoherenceProduct([DecoherenceProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
-///     slns = slns.add_operator_product((dp, dp), 2.0)
-///     npt.assert_equal(slns.current_number_spins(), 2)
+///     slns = MixedLindbladNoiseSystem()
+///     dp = MixedDecoherenceProduct([DecoherenceProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
+///     slns.add_operator_product((dp, dp), 2.0)
+///     npt.assert_equal(slns.current_number_spins(), [1])
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorFloat(2))
 ///
 #[pyclass(

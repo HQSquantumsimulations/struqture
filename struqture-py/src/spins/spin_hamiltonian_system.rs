@@ -42,12 +42,12 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.spins import SpinHamiltonianSystem, PauliProduct
 ///
-///     ssystem = spins.SpinHamiltonianSystem(2)
-///     pp = spins.PauliProduct().z(0)
-///     ssystem = ssystem.add_operator_product(pp, 5.0)
+///     ssystem = SpinHamiltonianSystem(2)
+///     pp = PauliProduct().z(0)
+///     ssystem.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(ssystem.number_spins(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-///     npt.assert_equal(ssystem.keys(), ["0Z"])
+///     npt.assert_equal(ssystem.keys(), [pp])
 ///     dimension = 4**ssystem.number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///

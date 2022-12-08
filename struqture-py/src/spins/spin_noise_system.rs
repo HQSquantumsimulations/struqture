@@ -36,13 +36,12 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.spins import SpinLindbladNoiseSystem, DecoherenceProduct
 ///
-///     slns = spins.SpinLindbladNoiseSystem()
-///     dp = spins.DecoherenceProduct().z(0).x(1)
-///     slns = slns.add_operator_product((dp, dp), 2.0)
+///     slns = SpinLindbladNoiseSystem()
+///     dp = DecoherenceProduct().z(0).x(1)
+///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
-///     npt.assert_equal(slns.keys(), [("0Z1X", "0Z1X")])
-///     npt.assert_equal(slns.dict(), dict({("0Z1X", "0Z1X"): CalculatorComplex(2.0)}))
+///     npt.assert_equal(slns.keys(), [(dp, dp)])
 ///     dimension = 4**slns.number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///

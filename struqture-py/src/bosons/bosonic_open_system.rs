@@ -37,10 +37,10 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
 ///     from struqture_py.bosons import BosonLindbladOpenSystem, BosonProduct
 ///
-///     slns = bosons.BosonLindbladOpenSystem()
-///     dp = bosons.BosonProduct([0], [0])
-///     slns = slns.system_add_operator_product(dp, 2.0)
-///     npt.assert_equal(slns.current_number_bosons(), 2)
+///     slns = BosonLindbladOpenSystem()
+///     dp = BosonProduct([0], [1])
+///     slns.system_add_operator_product(dp, 2.0)
+///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
 ///
 #[pyclass(name = "BosonLindbladOpenSystem", module = "struqture_py.bosons")]
