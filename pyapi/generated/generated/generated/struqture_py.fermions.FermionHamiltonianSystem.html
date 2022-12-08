@@ -136,12 +136,12 @@ and an optional number of fermions.</p>
 <span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span>
 <span class="kn">from</span> <span class="nn">struqture_py.fermions</span> <span class="kn">import</span> <span class="n">FermionHamiltonianSystem</span><span class="p">,</span> <span class="n">HermitianFermionProduct</span>
 
-<span class="n">ssystem</span> <span class="o">=</span> <span class="n">fermions</span><span class="o">.</span><span class="n">FermionHamiltonianSystem</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">pp</span> <span class="o">=</span> <span class="n">fermions</span><span class="o">.</span><span class="n">HermitianFermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ssystem</span> <span class="o">=</span> <span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">number_fermions</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ssystem</span> <span class="o">=</span> <span class="n">FermionHamiltonianSystem</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pp</span> <span class="o">=</span> <span class="n">HermitianFermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="s2">&quot;c0a0&quot;</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 </pre></div>
 </div>
 <dl class="py method">

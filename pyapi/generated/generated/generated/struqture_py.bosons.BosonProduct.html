@@ -138,8 +138,8 @@ weight of a product of operators in the sum.</p>
 <span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="c1"># For instance, to represent $c_0a_0$</span>
 <span class="n">b_product</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">creators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">annihilators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">b_product</span><span class="o">.</span><span class="n">creators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">b_product</span><span class="o">.</span><span class="n">annihilators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 <dl class="py method">

@@ -133,12 +133,12 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span>
-<span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonLindbladNoiseSystem</span><span class="p">,</span> <span class="n">DecoherenceProduct</span>
+<span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonLindbladNoiseSystem</span><span class="p">,</span> <span class="n">BosonProduct</span>
 
-<span class="n">slns</span> <span class="o">=</span> <span class="n">bosons</span><span class="o">.</span><span class="n">BosonLindbladNoiseSystem</span><span class="p">()</span>
-<span class="n">dp</span> <span class="o">=</span> <span class="n">bosons</span><span class="o">.</span><span class="n">BosonDecoherence</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">slns</span> <span class="o">=</span> <span class="n">slns</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_bosons</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">slns</span> <span class="o">=</span> <span class="n">BosonLindbladNoiseSystem</span><span class="p">()</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">slns</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">)),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>

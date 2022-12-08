@@ -135,10 +135,10 @@
 <span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span>
 <span class="kn">from</span> <span class="nn">struqture_py.fermions</span> <span class="kn">import</span> <span class="n">FermionLindbladOpenSystem</span><span class="p">,</span> <span class="n">FermionProduct</span>
 
-<span class="n">slns</span> <span class="o">=</span> <span class="n">fermions</span><span class="o">.</span><span class="n">FermionLindbladOpenSystem</span><span class="p">()</span>
-<span class="n">dp</span> <span class="o">=</span> <span class="n">fermions</span><span class="o">.</span><span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">slns</span> <span class="o">=</span> <span class="n">slns</span><span class="o">.</span><span class="n">system_add_operator_product</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_fermions</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">slns</span> <span class="o">=</span> <span class="n">FermionLindbladOpenSystem</span><span class="p">()</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">slns</span><span class="o">.</span><span class="n">system_add_operator_product</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
