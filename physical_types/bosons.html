@@ -5,7 +5,6 @@
         <meta charset="UTF-8">
         <title>Bosons - Struqture User Guide</title>
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="User guide for the struqture package to represent physical systems.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -26,17 +25,17 @@
 
         <!-- Custom theme stylesheets -->
         <!-- MathJax -->
-        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
     <body>
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -52,7 +51,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -64,7 +63,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -77,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="../physical_types/intro.html"><strong aria-hidden="true">1.</strong> Physical Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../physical_types/spins.html"><strong aria-hidden="true">1.1.</strong> Spins</a></li><li class="chapter-item expanded "><a href="../physical_types/fermions.html"><strong aria-hidden="true">1.2.</strong> Fermions</a></li><li class="chapter-item expanded "><a href="../physical_types/bosons.html" class="active"><strong aria-hidden="true">1.3.</strong> Bosons</a></li><li class="chapter-item expanded "><a href="../physical_types/mixed_systems.html"><strong aria-hidden="true">1.4.</strong> Mixed Systems</a></li></ol></li><li class="chapter-item expanded "><a href="../container_types/intro.html"><strong aria-hidden="true">2.</strong> Container Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../container_types/indices.html"><strong aria-hidden="true">2.1.</strong> Indices and Products</a></li><li class="chapter-item expanded "><a href="../container_types/operators_hamiltonians_and_systems.html"><strong aria-hidden="true">2.2.</strong> Operators and Systems</a></li><li class="chapter-item expanded "><a href="../container_types/operators_hamiltonians_and_systems.html"><strong aria-hidden="true">2.3.</strong> Hamiltonians and Hamiltonian Systems</a></li><li class="chapter-item expanded "><a href="../container_types/noise_operators_and_systems.html"><strong aria-hidden="true">2.4.</strong> Lindblad Noise Operators and Lindblad Noise Systems</a></li><li class="chapter-item expanded "><a href="../container_types/open_systems.html"><strong aria-hidden="true">2.5.</strong> Lindblad Open Systems</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="../physical_types/intro.html"><strong aria-hidden="true">1.</strong> Physical Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../physical_types/spins.html"><strong aria-hidden="true">1.1.</strong> Spins</a></li><li class="chapter-item expanded "><a href="../physical_types/fermions.html"><strong aria-hidden="true">1.2.</strong> Fermions</a></li><li class="chapter-item expanded "><a href="../physical_types/bosons.html" class="active"><strong aria-hidden="true">1.3.</strong> Bosons</a></li><li class="chapter-item expanded "><a href="../physical_types/mixed_systems.html"><strong aria-hidden="true">1.4.</strong> Mixed Systems</a></li></ol></li><li class="chapter-item expanded "><a href="../container_types/intro.html"><strong aria-hidden="true">2.</strong> Container Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../container_types/indices.html"><strong aria-hidden="true">2.1.</strong> Indices and Products</a></li><li class="chapter-item expanded "><a href="../container_types/operators_hamiltonians_and_systems.html"><strong aria-hidden="true">2.2.</strong> Operators and Systems</a></li><li class="chapter-item expanded "><a href="../container_types/operators_hamiltonians_and_systems.html"><strong aria-hidden="true">2.3.</strong> Hamiltonians and Hamiltonian Systems</a></li><li class="chapter-item expanded "><a href="../container_types/noise_operators_and_systems.html"><strong aria-hidden="true">2.4.</strong> Lindblad Noise Operators and Lindblad Noise Systems</a></li><li class="chapter-item expanded "><a href="../container_types/open_systems.html"><strong aria-hidden="true">2.5.</strong> Lindblad Open Systems</a></li></ol></li><li class="chapter-item expanded "><a href="../example.html"><strong aria-hidden="true">3.</strong> Applied Example</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -95,7 +94,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -126,7 +125,7 @@
                     </div>
                 </div>
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -139,9 +138,9 @@
                         <h1 id="bosons"><a class="header" href="#bosons">Bosons</a></h1>
 <h2 id="building-blocks"><a class="header" href="#building-blocks">Building blocks</a></h2>
 <p>All bosonic objects in struqture are expressed based on products of bosonic creation and annihilation operators, which respect bosonic commutation relations
-\[ \lbrack c^{\dagger}(k), c^{\dagger}(j) \rbrack = 0, \\
-\lbrack c(k), c(j) \rbrack = 0, \\
-\lbrack c^{\dagger}(k), c(j) \rbrack = \delta (k, j). \]</p>
+\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
+\lbrack c_k, c_j \rbrack = 0, \\
+\lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
 <h3 id="bosonproducts"><a class="header" href="#bosonproducts">BosonProducts</a></h3>
 <p>BosonProducts are simple combinations of bosonic creation and annihilation operators.</p>
 <h3 id="hermitianbosonproducts"><a class="header" href="#hermitianbosonproducts">HermitianBosonProducts</a></h3>
@@ -187,21 +186,23 @@ let bp_0 = HermitianBosonProduct::new([0], [20]).unwrap();
 // Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
 let (bp_1, coeff) = HermitianBosonProduct::create_valid_pair(
     [3, 0], [0], CalculatorComplex::from(1.0)
-).unwrap();
-</code></pre>
+).unwrap();</code></pre>
 <h2 id="operators-and-hamiltonians"><a class="header" href="#operators-and-hamiltonians">Operators and Hamiltonians</a></h2>
 <p>Complex objects are constructed from operator products are <code>BosonOperators</code> and <code>BosonHamiltonians</code>
 (for more information, <a href="../container_types/operators_hamiltonians_and_systems.html">see also</a>).</p>
 <p>These <code>BosonOperators</code> and <code>BosonHamiltonians</code> represent operators or hamiltonians such as:
-\[ H = \sum_{j=0}^N \alpha_j \prod_{k, l} c^{\dagger}(k,j)c(l,j) \]
-with 
+\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
+with
+\[ f(j, k) = \begin{cases} c_k^{\dagger} \\ 1 \end{cases} , \]
+\[ g(j, l) = \begin{cases} c_l \\ 1 \end{cases} , \]
+and 
 \(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator 
-\[ \lbrack c^{\dagger}(k), c^{\dagger}(j) \rbrack = 0, \\
-\lbrack c(k), c(j) \rbrack = 0, \\
-\lbrack c^{\dagger}(k), c(j) \rbrack = \delta (k, j). \]</p>
+\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
+\lbrack c_k, c_j \rbrack = 0, \\
+\lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
 <p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>BosonProducts</code> or <code>HermitianBosonProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
 <p>In struqture we distinguish between bosonic operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a bosonic hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators that is not present in the annihilators is smaller than the smallest index of the annihilators that is not present in the creators.</p>
+While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a bosonic hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.</p>
 <h3 id="examples-1"><a class="header" href="#examples-1">Examples</a></h3>
 <p>Here is an example of how to build a <code>BosonOperator</code> and a <code>BosonHamiltonian</code>, in Rust:</p>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
@@ -230,8 +231,7 @@ hamiltonian.add_operator_product(bp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 // This is possible
 let hbp = HermitianBosonProduct::new([0, 2], [0, 1]).unwrap();
 hamiltonian.add_operator_product(hbp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!(&quot;{}&quot;, hamiltonian);
-</code></pre>
+println!(&quot;{}&quot;, hamiltonian);</code></pre>
 <p>In python, we need to use a <code>BosonSystem</code> and <code>BosonHamiltonianSystem</code> instead of a <code>BosonOperator</code> and <code>BosonHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems"><a class="header" href="#systems-and-hamiltoniansystems">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, BosonSystems and BosonHamiltonianSystems are wrappers around BosonOperators and BosonHamiltonians that allow to explicitly set the number of spins of the systems.
@@ -259,8 +259,7 @@ println!(&quot;{:?}&quot;, error);
 // This will work because we leave the number of spins dynamic
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
 let mut system = BosonHamiltonianSystem::new(None);
-system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-</code></pre>
+system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
@@ -286,19 +285,20 @@ system.add_operator_product(hbp, CalculatorComplex.from_pair(1.0, 0.0))
 </code></pre>
 <h2 id="noise-operators-and-systems"><a class="header" href="#noise-operators-and-systems">Noise operators and systems</a></h2>
 <p>We describe decoherence by representing it with the Lindblad equation.
-The Lindblad is a master equation determining the time evolution of the density matrix.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
 \[
-\dot{\rho} = \mathcal{L}(\rho) = -i [H, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
+\dot{\rho} = \mathcal{L}(\rho) = -i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
 with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).
 To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use <code>BosonProducts</code> as the operator base. To describe bosonic noise we use the Lindblad equation with \(H=0\).</p>
+We use <code>BosonProducts</code> as the operator base. To describe bosonic noise we use the Lindblad equation with \(\hat{H}=0\).</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>BosonProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>BosonLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>BosonProduct</code>, <code>BosonProduct</code>) as keys and the entries in the rate matrix as values.</p>
 <p>Similarly to BosonOperators, BosonLindbladNoiseOperators have a system equivalent: <code>BosonLindbladNoiseSystem</code>, with a number of involved bosonic modes defined by the user. For more information on these, see the <a href="../container_types/noise_operators_and_systems">noise container</a> chapter.</p>
 <h3 id="examples-3"><a class="header" href="#examples-3">Examples</a></h3>
-<p>Here, we add the term \(c^{\dagger}_0 c_0\) with coefficient \i\.</p>
+<p>Here, we add the terms \(L_0 = c^{\dagger}_0 c_0\) and \(L_1 = c^{\dagger}_0 c_0\) with coefficient 1.0:
+\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
 use struqture::bosons::{BosonProduct, BosonLindbladNoiseSystem};
@@ -312,8 +312,7 @@ system
         (bp.clone(), bp.clone()), CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
 assert_eq!(system.get(&amp;(bp.clone(), bp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!(&quot;{}&quot;, system);
-</code></pre>
+println!(&quot;{}&quot;, system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
@@ -332,6 +331,10 @@ print(system)
 </code></pre>
 <h2 id="open-systems"><a class="header" href="#open-systems">Open systems</a></h2>
 <p>Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
+The Lindblad master equation is given by
+\[
+\dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
+\]
 In struqture they are composed of a hamiltonian (BosonHamiltonianSystem) and noise (BosonLindbladNoiseSystem). They have different ways to set terms in Rust and Python:</p>
 <h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
@@ -351,8 +354,7 @@ noise
     .add_operator_product((bp.clone(), bp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
-println!(&quot;{}&quot;, open_system);
-</code></pre>
+println!(&quot;{}&quot;, open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
@@ -395,15 +397,15 @@ print(open_system)
 
         </div>
 
-        <script type="text/javascript">
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
     </body>
