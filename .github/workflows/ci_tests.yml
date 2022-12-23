@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4.2.0
+    - uses: actions/setup-python@v4.4.0
       with:
         python-version: '3.10'
     - uses: actions-rs/toolchain@v1
@@ -64,7 +64,7 @@ jobs:
           default: true
           components: rustfmt
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: ${{ matrix.python.py }}
       - run: |
@@ -102,7 +102,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: linux wheels
@@ -136,7 +136,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: linux wheels
@@ -169,7 +169,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: windows wheels
@@ -200,7 +200,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.1.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: Install dependencies
@@ -238,7 +238,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.1.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: Install dependencies
@@ -278,7 +278,7 @@ jobs:
             components: llvm-tools-preview
             override: true
       - uses: Swatinem/rust-cache@v2.2.0
-      - uses: actions/setup-python@v4.1.0
+      - uses: actions/setup-python@v4.4.0
         with:
           python-version: '3.10'
           cache: pip
