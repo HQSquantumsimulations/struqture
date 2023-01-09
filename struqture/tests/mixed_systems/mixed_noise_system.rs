@@ -118,7 +118,7 @@ fn empty_clone_options() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(2)], [Some(3)]);
     mo.set((pp_0.clone(), pp_0), CalculatorComplex::from(0.5))
         .unwrap();
 
@@ -126,11 +126,11 @@ fn empty_clone_options() {
     let full: Option<usize> = Some(2);
     assert_eq!(
         mo.empty_clone(empty),
-        MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)])
+        MixedLindbladNoiseSystem::new([Some(1)], [Some(2)], [Some(3)])
     );
     assert_eq!(
         mo.empty_clone(full),
-        MixedLindbladNoiseSystem::with_capacity([Some(1)], [Some(1)], [Some(1)], 2)
+        MixedLindbladNoiseSystem::with_capacity([Some(1)], [Some(2)], [Some(3)], 2)
     );
 }
 
@@ -224,7 +224,7 @@ fn internal_map_current_number_spins_and_modes() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
@@ -251,7 +251,7 @@ fn internal_map_len() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set((pp_2.clone(), pp_2), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(mo.len(), 1_usize);
@@ -266,7 +266,7 @@ fn internal_map_keys() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(2)], [Some(4)], [Some(3)]);
     let pp_0_vec: Vec<(
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,
@@ -308,7 +308,7 @@ fn internal_map_set_get_remove() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
 
     // 1) Test try_set_pauli_product and get functions
     // Vacant
@@ -327,12 +327,12 @@ fn internal_map_set_get_remove() {
     mo.remove(&(pp_2.clone(), pp_2));
     assert_eq!(
         mo,
-        MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)])
+        MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)])
     );
 }
 
 #[test]
-fn set_fail() {
+fn set_fail_number_subsystems() {
     let pp_0: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
         [DecoherenceProduct::new().x(0)],
         [BosonProduct::new([0], [1]).unwrap()],
@@ -355,7 +355,7 @@ fn set_fail() {
     )
     .unwrap();
 
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     let err = mo.set((pp_0.clone(), pp_3), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -369,7 +369,7 @@ fn set_fail() {
         })
     );
 
-    let mut mo = MixedLindbladNoiseSystem::new([], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([], [Some(4)], [Some(3)]);
     assert_eq!(mo.current_number_spins(), Vec::<usize>::new());
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
@@ -387,7 +387,7 @@ fn set_fail() {
         })
     );
 
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [], [Some(3)]);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), Vec::<usize>::new());
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
@@ -405,7 +405,7 @@ fn set_fail() {
         })
     );
 
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], []);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], []);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), Vec::<usize>::new());
@@ -424,6 +424,28 @@ fn set_fail() {
     );
 }
 
+#[test]
+fn set_fail_number_particles() {
+    let pp_0: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().x(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [FermionProduct::new([0], [2]).unwrap()],
+    )
+    .unwrap();
+
+    let mut mo = MixedLindbladNoiseSystem::new([Some(0)], [Some(4)], [Some(3)]);
+    let err = mo.set((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberSpins));
+
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(0)], [Some(3)]);
+    let err = mo.set((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(0)]);
+    let err = mo.set((pp_0.clone(), pp_0), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+}
+
 // Test the add_operator_product function of the MixedLindbladNoiseSystem
 #[test]
 fn internal_map_add_operator_product() {
@@ -433,7 +455,7 @@ fn internal_map_add_operator_product() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
 
     mo.add_operator_product((pp_2.clone(), pp_2.clone()), CalculatorComplex::from(0.5))
         .unwrap();
@@ -447,7 +469,7 @@ fn internal_map_add_operator_product() {
 }
 
 #[test]
-fn fail_add_operator_product() {
+fn fail_add_operator_product_number_subsystems() {
     let pp_2: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
         [DecoherenceProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
@@ -455,7 +477,7 @@ fn fail_add_operator_product() {
     )
     .unwrap();
 
-    let mut mo = MixedLindbladNoiseSystem::new([], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([], [Some(4)], [Some(3)]);
     let err = mo.add_operator_product((pp_2.clone(), pp_2.clone()), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -469,7 +491,7 @@ fn fail_add_operator_product() {
         })
     );
 
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [], [Some(3)]);
     let err = mo.add_operator_product((pp_2.clone(), pp_2.clone()), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -483,7 +505,7 @@ fn fail_add_operator_product() {
         })
     );
 
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], []);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], []);
     let err = mo.add_operator_product((pp_2.clone(), pp_2), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -498,6 +520,28 @@ fn fail_add_operator_product() {
     );
 }
 
+#[test]
+fn fail_add_operator_product_number_particles() {
+    let pp_2: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().z(2)],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [2]).unwrap()],
+    )
+    .unwrap();
+
+    let mut mo = MixedLindbladNoiseSystem::new([Some(0)], [Some(4)], [Some(3)]);
+    let err = mo.add_operator_product((pp_2.clone(), pp_2.clone()), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberSpins));
+
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(0)], [Some(3)]);
+    let err = mo.add_operator_product((pp_2.clone(), pp_2.clone()), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(0)]);
+    let err = mo.add_operator_product((pp_2.clone(), pp_2), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+}
+
 // Test the negative operation: -MixedLindbladNoiseSystem
 #[test]
 fn negative_mo() {
@@ -507,10 +551,10 @@ fn negative_mo() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_0_minus = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_minus = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0_minus
         .add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(-1.0))
         .unwrap();
@@ -533,13 +577,13 @@ fn add_so_so() {
         [FermionProduct::new([1], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedLindbladNoiseSystem::new([Some(2)], [Some(3)], [Some(4)]);
     mo_1.add_operator_product((pp_1.clone(), pp_1.clone()), CalculatorComplex::from(-1.0))
         .unwrap();
-    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0_1
         .add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(1.0))
         .unwrap();
@@ -565,13 +609,13 @@ fn sub_so_so() {
         [FermionProduct::new([1], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedLindbladNoiseSystem::new([Some(2)], [Some(3)], [Some(4)]);
     mo_1.add_operator_product((pp_1.clone(), pp_1.clone()), CalculatorComplex::from(-1.0))
         .unwrap();
-    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0_1
         .add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(1.0))
         .unwrap();
@@ -591,10 +635,10 @@ fn mul_so_cf() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(2.0))
         .unwrap();
-    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0_1
         .add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(6.0))
         .unwrap();
@@ -611,10 +655,10 @@ fn mul_so_cc() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(2.0))
         .unwrap();
-    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0_1
         .add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(6.0))
         .unwrap();
@@ -714,7 +758,7 @@ fn from_iterator_old() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(1.0))
         .unwrap();
     let mut iterator: HashMap<
@@ -753,12 +797,12 @@ fn debug() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
         format!("{:?}", mo),
-        "MixedLindbladNoiseSystem { number_spins: [Some(1)], number_bosons: [Some(1)], number_fermions: [Some(1)], operator: MixedLindbladNoiseOperator { internal_map: {(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }): CalculatorComplex { re: Float(1.0), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
+        "MixedLindbladNoiseSystem { number_spins: [Some(3)], number_bosons: [Some(4)], number_fermions: [Some(4)], operator: MixedLindbladNoiseOperator { internal_map: {(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }): CalculatorComplex { re: Float(1.0), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
     );
 }
 
@@ -771,13 +815,13 @@ fn display() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
         format!("{}", mo),
         format!(
-            "MixedLindbladNoiseSystem(\nnumber_spins: 1, \nnumber_bosons: 1, \nnumber_fermions: 1, )\n{{(S2Z:Bc0a3:Fc0a3:, S2Z:Bc0a3:Fc0a3:): {},\n}}",
+            "MixedLindbladNoiseSystem(\nnumber_spins: 3, \nnumber_bosons: 4, \nnumber_fermions: 4, )\n{{(S2Z:Bc0a3:Fc0a3:, S2Z:Bc0a3:Fc0a3:): {},\n}}",
             CalculatorComplex::from(1.0)
         )
     );
@@ -792,7 +836,7 @@ fn clone_partial_eq_partial_ord() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(1.0))
         .unwrap();
 
@@ -800,10 +844,10 @@ fn clone_partial_eq_partial_ord() {
     assert_eq!(mo.clone(), mo);
 
     // Test PartialEq trait
-    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.set((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_1.set((pp_0.clone(), pp_0), CalculatorComplex::from(2.0))
         .unwrap();
     assert!(mo_0 == mo);
@@ -820,7 +864,7 @@ fn serde_json() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set((pp.clone(), pp), CalculatorComplex::from(1.0))
         .unwrap();
 
@@ -854,7 +898,7 @@ fn serde_readable() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set((pp.clone(), pp), CalculatorComplex::from(0.5))
         .unwrap();
     assert_tokens(
@@ -867,17 +911,17 @@ fn serde_readable() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("operator"),
             Token::Struct {
@@ -923,7 +967,7 @@ fn bincode() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set((pp.clone(), pp), CalculatorComplex::from(1.0))
         .unwrap();
 
@@ -959,7 +1003,7 @@ fn serde_compact() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedLindbladNoiseSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedLindbladNoiseSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set((pp.clone(), pp), CalculatorComplex::from(0.5))
         .unwrap();
     assert_tokens(
@@ -972,17 +1016,17 @@ fn serde_compact() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("operator"),
             Token::Struct {

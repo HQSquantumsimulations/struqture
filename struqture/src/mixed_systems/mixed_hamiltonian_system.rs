@@ -158,6 +158,27 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonianSystem {
                 actual_number_fermion_subsystems: key.fermions().len(),
             });
         }
+        for (x, y) in key.bosons().zip(self.number_bosons.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.fermions().zip(self.number_fermions.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.spins().zip(self.number_spins.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_spins() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+            }
+        }
         self.hamiltonian.set(key, value)
     }
 
@@ -190,6 +211,27 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonianSystem {
                 actual_number_boson_subsystems: key.bosons().len(),
                 actual_number_fermion_subsystems: key.fermions().len(),
             });
+        }
+        for (x, y) in key.bosons().zip(self.number_bosons.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.fermions().zip(self.number_fermions.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.spins().zip(self.number_spins.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_spins() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+            }
         }
         self.hamiltonian.add_operator_product(key, value)
     }
@@ -618,6 +660,7 @@ impl FromIterator<(HermitianMixedProduct, CalculatorComplex)> for MixedHamiltoni
                     .collect();
                 let mut slno =
                     MixedHamiltonianSystem::new(number_spins, number_bosons, number_fermions);
+                println!("{:?}, {:?}", slno, first_element);
                 slno.set(first_element.0, first_element.1)
                     .expect("Internal error in set");
                 for (pair, cc) in iterator {
