@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py-macros"
-version = "1.0.0-beta.4"
+version = "1.0.0-beta.5"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.57"
@@ -12,8 +12,6 @@ include=["src*", "Cargo.toml", "LICENSE"]
 [lib]
 proc-macro = true
 doctest = false
-
-
 
 [dependencies]
 proc-macro2 = "1.0"

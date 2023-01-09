@@ -122,18 +122,18 @@ fn empty_clone_options() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(1)], [Some(2)], [Some(3)]);
     mo.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
 
     let empty: Option<usize> = None;
     let full: Option<usize> = Some(2);
     assert_eq!(
         mo.empty_clone(empty),
-        MixedSystem::new([Some(1)], [Some(1)], [Some(1)])
+        MixedSystem::new([Some(1)], [Some(2)], [Some(3)])
     );
     assert_eq!(
         mo.empty_clone(full),
-        MixedSystem::with_capacity([Some(1)], [Some(1)], [Some(1)], 2)
+        MixedSystem::with_capacity([Some(1)], [Some(2)], [Some(3)], 2)
     );
 }
 
@@ -226,7 +226,7 @@ fn internal_map_current_number_spins_and_modes() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
@@ -251,7 +251,7 @@ fn internal_map_len() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
     assert_eq!(mo.len(), 1_usize);
 }
@@ -265,7 +265,7 @@ fn internal_map_keys() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(2)], [Some(4)], [Some(3)]);
     let pp_0_vec: Vec<(MixedProduct, CalculatorComplex)> = vec![(pp_0.clone(), 0.3.into())];
     mo.extend(pp_0_vec.iter().cloned());
 
@@ -303,7 +303,7 @@ fn internal_map_set_get_remove() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
 
     // 1) Test try_set_pauli_product and get functions
     // Vacant
@@ -316,11 +316,11 @@ fn internal_map_set_get_remove() {
     );
     // 2) Test remove function
     mo.remove(&pp_2);
-    assert_eq!(mo, MixedSystem::new([Some(1)], [Some(1)], [Some(1)]));
+    assert_eq!(mo, MixedSystem::new([Some(3)], [Some(4)], [Some(3)]));
 }
 
 #[test]
-fn set_fail() {
+fn set_fail_number_subsystems() {
     let pp_0: MixedProduct = MixedProduct::new(
         [PauliProduct::new().x(0)],
         [BosonProduct::new([0], [1]).unwrap()],
@@ -333,7 +333,7 @@ fn set_fail() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([], [Some(4)], [Some(3)]);
     assert_eq!(mo.current_number_spins(), Vec::<usize>::new());
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
@@ -351,7 +351,7 @@ fn set_fail() {
         })
     );
 
-    let mut mo = MixedSystem::new([Some(1)], [], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [], [Some(3)]);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), Vec::<usize>::new());
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
@@ -369,7 +369,7 @@ fn set_fail() {
         })
     );
 
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], []);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], []);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), Vec::<usize>::new());
@@ -388,6 +388,28 @@ fn set_fail() {
     );
 }
 
+#[test]
+fn set_fail_number_particles() {
+    let pp: MixedProduct = MixedProduct::new(
+        [PauliProduct::new().x(2)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [FermionProduct::new([0], [2]).unwrap()],
+    )
+    .unwrap();
+
+    let mut mo = MixedSystem::new([Some(1)], [Some(2)], [Some(3)]);
+    let err = mo.set(pp.clone(), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberSpins));
+
+    let mut mo = MixedSystem::new([Some(3)], [Some(1)], [Some(3)]);
+    let err = mo.set(pp.clone(), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+
+    let mut mo = MixedSystem::new([Some(3)], [Some(2)], [Some(1)]);
+    let err = mo.set(pp, CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+}
+
 // Test the add_operator_product function of the MixedSystem
 #[test]
 fn internal_map_add_operator_product() {
@@ -397,7 +419,7 @@ fn internal_map_add_operator_product() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
 
     mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5))
         .unwrap();
@@ -408,7 +430,7 @@ fn internal_map_add_operator_product() {
 }
 
 #[test]
-fn fail_add_operator_product() {
+fn fail_add_operator_product_number_subsystems() {
     let pp_2: MixedProduct = MixedProduct::new(
         [PauliProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
@@ -416,7 +438,7 @@ fn fail_add_operator_product() {
     )
     .unwrap();
 
-    let mut mo = MixedSystem::new([], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([], [Some(4)], [Some(3)]);
     let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -430,7 +452,7 @@ fn fail_add_operator_product() {
         })
     );
 
-    let mut mo = MixedSystem::new([Some(1)], [], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [], [Some(3)]);
     let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -444,7 +466,7 @@ fn fail_add_operator_product() {
         })
     );
 
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], []);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], []);
     let err = mo.add_operator_product(pp_2, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
@@ -459,6 +481,28 @@ fn fail_add_operator_product() {
     );
 }
 
+#[test]
+fn fail_add_operator_product_number_particles() {
+    let pp_2: MixedProduct = MixedProduct::new(
+        [PauliProduct::new().z(2)],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [2]).unwrap()],
+    )
+    .unwrap();
+
+    let mut mo = MixedSystem::new([Some(1)], [Some(4)], [Some(3)]);
+    let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberSpins));
+
+    let mut mo = MixedSystem::new([Some(3)], [Some(1)], [Some(3)]);
+    let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(1)]);
+    let err = mo.add_operator_product(pp_2, CalculatorComplex::from(0.5));
+    assert_eq!(err, Err(StruqtureError::MissmatchedNumberModes));
+}
+
 // Test the hermitian_conjugate and is_natural_hermitian functions of the MixedProduct
 #[test]
 fn hermitian_test() {
@@ -468,7 +512,7 @@ fn hermitian_test() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut test_new = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut test_new = MixedSystem::new([Some(1)], [Some(2)], [Some(3)]);
     test_new.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
 
     assert_eq!(test_new.hermitian_conjugate(), test_new.clone());
@@ -483,10 +527,10 @@ fn negative_mo() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_0_minus = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_minus = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0_minus
         .add_operator_product(pp_0, CalculatorComplex::from(-1.0))
         .unwrap();
@@ -509,13 +553,13 @@ fn add_so_so() {
         [FermionProduct::new([1], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedSystem::new([Some(2)], [Some(3)], [Some(4)]);
     mo_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(-1.0))
         .unwrap();
-    let mut mo_0_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0_1
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -541,13 +585,13 @@ fn sub_so_so() {
         [FermionProduct::new([1], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedSystem::new([Some(2)], [Some(3)], [Some(4)]);
     mo_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(-1.0))
         .unwrap();
-    let mut mo_0_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0_1
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -572,15 +616,15 @@ fn mul_so_so() {
         [FermionProduct::new([1], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedSystem::new([Some(2)], [Some(3)], [Some(4)]);
     mo_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(2.0))
         .unwrap();
 
     let pp_0_1 = (pp_0 * pp_1).unwrap();
-    let mut mo_0_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     for pp in pp_0_1 {
         mo_0_1
             .add_operator_product(pp.0, CalculatorComplex::from(2.0) * pp.1)
@@ -599,10 +643,10 @@ fn mul_so_cf() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0))
         .unwrap();
-    let mut mo_0_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0_1
         .add_operator_product(pp_0, CalculatorComplex::from(6.0))
         .unwrap();
@@ -619,10 +663,10 @@ fn mul_so_cc() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0))
         .unwrap();
-    let mut mo_0_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0_1 = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo_0_1
         .add_operator_product(pp_0, CalculatorComplex::from(6.0))
         .unwrap();
@@ -720,12 +764,12 @@ fn debug() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
         format!("{:?}", mo),
-        "MixedSystem { number_spins: [Some(1)], number_bosons: [Some(1)], number_fermions: [Some(1)], operator: MixedOperator { internal_map: {MixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }: CalculatorComplex { re: Float(1.0), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
+        "MixedSystem { number_spins: [Some(3)], number_bosons: [Some(4)], number_fermions: [Some(4)], operator: MixedOperator { internal_map: {MixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }: CalculatorComplex { re: Float(1.0), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
     );
 }
 
@@ -738,13 +782,13 @@ fn display() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
         format!("{}", mo),
         format!(
-            "MixedSystem(\nnumber_spins: 1, \nnumber_bosons: 1, \nnumber_fermions: 1, )\n{{S2Z:Bc0a3:Fc0a3:: {},\n}}",
+            "MixedSystem(\nnumber_spins: 3, \nnumber_bosons: 4, \nnumber_fermions: 4, )\n{{S2Z:Bc0a3:Fc0a3:: {},\n}}",
             CalculatorComplex::from(1.0)
         )
     );
@@ -759,7 +803,7 @@ fn clone_partial_eq_partial_ord() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
 
@@ -767,10 +811,10 @@ fn clone_partial_eq_partial_ord() {
     assert_eq!(mo.clone(), mo);
 
     // Test PartialEq trait
-    let mut mo_0 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_0 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_0.set(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut mo_1 = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo_1 = MixedSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo_1.set(pp_0, CalculatorComplex::from(2.0)).unwrap();
     assert!(mo_0 == mo);
     assert!(mo == mo_0);
@@ -786,7 +830,7 @@ fn serde_json() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
     let serialized = serde_json::to_string(&mo).unwrap();
@@ -819,7 +863,7 @@ fn serde_readable() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set(pp, CalculatorComplex::from(0.5)).unwrap();
     assert_tokens(
         &mo.readable(),
@@ -831,17 +875,17 @@ fn serde_readable() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("operator"),
             Token::Struct {
@@ -886,7 +930,7 @@ fn bincode() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
     let serialized = serialize(&mo).unwrap();
@@ -921,7 +965,7 @@ fn serde_compact() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut mo = MixedSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set(pp, CalculatorComplex::from(0.5)).unwrap();
     assert_tokens(
         &mo.compact(),
@@ -933,17 +977,17 @@ fn serde_compact() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(1),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("operator"),
             Token::Struct {

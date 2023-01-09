@@ -176,6 +176,48 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseSystem {
                 actual_number_fermion_subsystems: key.1.fermions().len(),
             });
         }
+        for (x, y) in key.0.bosons().zip(self.number_bosons.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.0.fermions().zip(self.number_fermions.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.0.spins().zip(self.number_spins.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_spins() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+            }
+        }
+        for (x, y) in key.1.bosons().zip(self.number_bosons.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.1.fermions().zip(self.number_fermions.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.1.spins().zip(self.number_spins.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_spins() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+            }
+        }
 
         self.operator.set(key, value)
     }
@@ -221,6 +263,48 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseSystem {
                 actual_number_boson_subsystems: key.1.bosons().len(),
                 actual_number_fermion_subsystems: key.1.fermions().len(),
             });
+        }
+        for (x, y) in key.0.bosons().zip(self.number_bosons.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.0.fermions().zip(self.number_fermions.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.0.spins().zip(self.number_spins.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_spins() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+            }
+        }
+        for (x, y) in key.1.bosons().zip(self.number_bosons.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.1.fermions().zip(self.number_fermions.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_modes() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+            }
+        }
+        for (x, y) in key.1.spins().zip(self.number_spins.clone()) {
+            if let Some(max_number) = y {
+                if x.current_number_spins() > max_number {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+            }
         }
 
         self.operator.add_operator_product(key, value)

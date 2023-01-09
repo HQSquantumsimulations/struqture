@@ -1796,7 +1796,7 @@ limitations under the License.
 
 
 ====================================================
-indoc 1.0.7
+indoc 1.0.8
 https://github.com/dtolnay/indoc
 by David Tolnay <dtolnay@gmail.com>
 Indented document literals
@@ -2276,7 +2276,7 @@ limitations under the License.
 
 
 ====================================================
-itoa 1.0.4
+itoa 1.0.5
 https://github.com/dtolnay/itoa
 by David Tolnay <dtolnay@gmail.com>
 Fast integer primitive to string conversion
@@ -2515,7 +2515,7 @@ limitations under the License.
 
 
 ====================================================
-libc 0.2.137
+libc 0.2.139
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -3247,7 +3247,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ====================================================
-nalgebra 0.30.1
+nalgebra 0.31.4
 https://nalgebra.org
 by Sébastien Crozet <developer@crozet.re>
 General-purpose linear algebra library with transformations and statically-sized or dynamically-sized matrices.
@@ -4709,7 +4709,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
-once_cell 1.16.0
+once_cell 1.17.0
 https://github.com/matklad/once_cell
 by Aleksey Kladov <aleksey.kladov@gmail.com>
 Single assignment cells and lazy values.
@@ -5189,7 +5189,7 @@ limitations under the License.
 
 
 ====================================================
-parking_lot_core 0.9.4
+parking_lot_core 0.9.5
 https://github.com/Amanieu/parking_lot
 by Amanieu d'Antras <amanieu@gmail.com>
 An advanced API for creating custom synchronization primitives.
@@ -5430,15 +5430,13 @@ limitations under the License.
 
 
 ====================================================
-paste 1.0.9
+paste 1.0.11
 https://github.com/dtolnay/paste
 by David Tolnay <dtolnay@gmail.com>
 Macros for all your token pasting needs
 License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
-
-Copyright (c) 2018
 
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and associated
@@ -6386,15 +6384,13 @@ limitations under the License.
 
 
 ====================================================
-proc-macro2 1.0.47
+proc-macro2 1.0.49
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
 License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
-
-Copyright (c) 2014 Alex Crichton
 
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and associated
@@ -8479,15 +8475,13 @@ LICENSE:
 
 
 ====================================================
-quote 1.0.21
+quote 1.0.23
 https://github.com/dtolnay/quote
 by David Tolnay <dtolnay@gmail.com>
 Quasi-quoting macro quote!(...)
 License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
-
-Copyright (c) 2016 The Rust Project Developers
 
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and associated
@@ -9688,7 +9682,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-ryu 1.0.11
+ryu 1.0.12
 https://github.com/dtolnay/ryu
 by David Tolnay <dtolnay@gmail.com>
 Fast floating point to string conversion
@@ -10195,7 +10189,7 @@ limitations under the License.
 
 
 ====================================================
-serde 1.0.147
+serde 1.0.152
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -10434,7 +10428,7 @@ limitations under the License.
 
 
 ====================================================
-serde_derive 1.0.147
+serde_derive 1.0.152
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -10673,7 +10667,7 @@ limitations under the License.
 
 
 ====================================================
-serde_json 1.0.87
+serde_json 1.0.91
 https://github.com/serde-rs/json
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A JSON serialization file format
@@ -10912,7 +10906,7 @@ limitations under the License.
 
 
 ====================================================
-serde_test 1.0.147
+serde_test 1.0.152
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Token De/Serializer for testing De/Serialize implementations
@@ -11604,7 +11598,7 @@ limitations under the License.
 
 
 ====================================================
-struqture 1.0.0-beta.4
+struqture 1.0.0-beta.5
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -11815,7 +11809,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 1.0.0-beta.4
+struqture-py 1.0.0-beta.5
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -12026,7 +12020,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 1.0.0-beta.4
+struqture-py-macros 1.0.0-beta.5
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -12237,7 +12231,7 @@ LICENSE:
 
 
 ====================================================
-syn 1.0.103
+syn 1.0.107
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -12746,7 +12740,7 @@ Provides #[test_case(...)] procedural macro attribute for generating parametrize
 License: MIT
 
 ====================================================
-thiserror 1.0.37
+thiserror 1.0.38
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -12985,7 +12979,7 @@ limitations under the License.
 
 
 ====================================================
-thiserror-impl 1.0.37
+thiserror-impl 1.0.38
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate
@@ -13493,7 +13487,7 @@ SOFTWARE.
 
 
 ====================================================
-typenum 1.15.0
+typenum 1.16.0
 https://github.com/paholg/typenum
 by Paho Lurie-Gregg <paho@paholg.com>, Andre Bogus <bogusandre@gmail.com>
 Typenum is a Rust library for type-level numbers evaluated at
@@ -13736,7 +13730,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ====================================================
-unicode-ident 1.0.5
+unicode-ident 1.0.6
 https://github.com/dtolnay/unicode-ident
 by David Tolnay <dtolnay@gmail.com>
 Determine whether characters have the XID_Start or XID_Continue properties according to Unicode Standard Annex #31
@@ -14025,7 +14019,7 @@ limitations under the License.
 
 
 ====================================================
-unindent 0.1.10
+unindent 0.1.11
 https://github.com/dtolnay/indoc
 by David Tolnay <dtolnay@gmail.com>
 Remove a column of leading whitespace from a string

@@ -103,13 +103,13 @@ fn empty_clone_options() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(3)], [Some(3)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.noise_mut()
         .set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(
         slos.empty_clone(),
-        MixedLindbladOpenSystem::new([Some(3)], [Some(3)], [Some(3)])
+        MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)])
     );
 }
 
@@ -128,7 +128,7 @@ fn internal_map_set_get_system_noise() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
 
     // 1) System
     slos.system_mut()
@@ -163,7 +163,7 @@ fn internal_map_add_system_noise() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
 
     // System
     slos.system_mut()
@@ -207,7 +207,7 @@ fn internal_map_keys() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
 
     slos.system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.5))
@@ -303,7 +303,7 @@ fn negative_slos() {
         [FermionProduct::new([0], [1]).unwrap()],
     )
     .unwrap();
-    let mut slos_0 = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos_0 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -312,7 +312,7 @@ fn negative_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_minus = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos_0_minus = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0_minus
         .system_mut()
         .set(pp_0, CalculatorComplex::from(-0.4))
@@ -352,7 +352,7 @@ fn add_slos_slos() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut slos_0 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_0 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -361,7 +361,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_1 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorComplex::from(0.4))
@@ -370,7 +370,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_0_1 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(0.4))
@@ -418,7 +418,7 @@ fn sub_slos_slos() {
         [FermionProduct::new([0], [2]).unwrap()],
     )
     .unwrap();
-    let mut slos_0 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_0 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -427,7 +427,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_1 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorComplex::from(0.4))
@@ -436,7 +436,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_0_1 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(0.4))
@@ -472,7 +472,7 @@ fn mul_so_cf() {
         [FermionProduct::new([0], [1]).unwrap()],
     )
     .unwrap();
-    let mut slos_0 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_0 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(1.0))
@@ -481,7 +481,7 @@ fn mul_so_cf() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos_0_1 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(3.0))
@@ -509,7 +509,7 @@ fn debug() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -518,7 +518,7 @@ fn debug() {
         .unwrap();
     assert_eq!(
         format!("{:?}", slos),
-        "MixedLindbladOpenSystem { system: MixedHamiltonianSystem { number_spins: [Some(2)], number_bosons: [Some(2)], number_fermions: [Some(2)], hamiltonian: MixedHamiltonian { internal_map: {HermitianMixedProduct { spins: [PauliProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [1] }], fermions: [FermionProduct { creators: [0], annihilators: [1] }] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }, noise: MixedLindbladNoiseSystem { number_spins: [Some(2)], number_bosons: [Some(2)], number_fermions: [Some(2)], operator: MixedLindbladNoiseOperator { internal_map: {(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
+        "MixedLindbladOpenSystem { system: MixedHamiltonianSystem { number_spins: [Some(3)], number_bosons: [Some(4)], number_fermions: [Some(4)], hamiltonian: MixedHamiltonian { internal_map: {HermitianMixedProduct { spins: [PauliProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [1] }], fermions: [FermionProduct { creators: [0], annihilators: [1] }] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }, noise: MixedLindbladNoiseSystem { number_spins: [Some(3)], number_bosons: [Some(4)], number_fermions: [Some(4)], operator: MixedLindbladNoiseOperator { internal_map: {(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
     );
 }
 
@@ -537,7 +537,7 @@ fn display() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -547,7 +547,7 @@ fn display() {
 
     assert_eq!(
         format!("{}", slos),
-        "MixedLindbladOpenSystem{\nSystem: {\nMixedHamiltonianSystem(\nnumber_spins: 1, \nnumber_bosons: 1, \nnumber_fermions: 1, )\n{S0X:Bc0a1:Fc0a1:: (4e-1 + i * 0e0),\n}}\nNoise: {\nMixedLindbladNoiseSystem(\nnumber_spins: 1, \nnumber_bosons: 1, \nnumber_fermions: 1, )\n{(S2Z:Bc0a3:Fc0a3:, S2Z:Bc0a3:Fc0a3:): (5e-1 + i * 0e0),\n}}\n}"
+        "MixedLindbladOpenSystem{\nSystem: {\nMixedHamiltonianSystem(\nnumber_spins: 3, \nnumber_bosons: 4, \nnumber_fermions: 4, )\n{S0X:Bc0a1:Fc0a1:: (4e-1 + i * 0e0),\n}}\nNoise: {\nMixedLindbladNoiseSystem(\nnumber_spins: 3, \nnumber_bosons: 4, \nnumber_fermions: 4, )\n{(S2Z:Bc0a3:Fc0a3:, S2Z:Bc0a3:Fc0a3:): (5e-1 + i * 0e0),\n}}\n}"
     );
 }
 
@@ -566,7 +566,7 @@ fn clone_partial_eq() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -602,7 +602,7 @@ fn clone_partial_eq() {
         [FermionProduct::new([0], [1]).unwrap()],
     )
     .unwrap();
-    let mut slos_1 = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos_1 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos_1
         .system_mut()
         .set(pp_1, CalculatorComplex::from(0.4))
@@ -611,7 +611,7 @@ fn clone_partial_eq() {
         .noise_mut()
         .set((dp_1.clone(), dp_1), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_2 = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos_2 = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     assert!(slos_1 == slos);
     assert!(slos == slos_1);
     assert!(slos_2 != slos);
@@ -644,7 +644,7 @@ fn serde_json() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -686,7 +686,7 @@ fn serde_readable() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.5))
         .unwrap();
@@ -709,17 +709,17 @@ fn serde_readable() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("hamiltonian"),
             Token::Struct {
@@ -760,17 +760,17 @@ fn serde_readable() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("operator"),
             Token::Struct {
@@ -823,7 +823,7 @@ fn bincode() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(1)], [Some(1)], [Some(1)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -870,7 +870,7 @@ fn serde_compact() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
-    let mut slos = MixedLindbladOpenSystem::new([Some(2)], [Some(2)], [Some(2)]);
+    let mut slos = MixedLindbladOpenSystem::new([Some(3)], [Some(4)], [Some(4)]);
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.5))
         .unwrap();
@@ -893,17 +893,17 @@ fn serde_compact() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("hamiltonian"),
             Token::Struct {
@@ -984,17 +984,17 @@ fn serde_compact() {
             Token::Str("number_spins"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(3),
             Token::SeqEnd,
             Token::Str("number_bosons"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("number_fermions"),
             Token::Seq { len: Some(1) },
             Token::Some,
-            Token::U64(2),
+            Token::U64(4),
             Token::SeqEnd,
             Token::Str("operator"),
             Token::Struct {
