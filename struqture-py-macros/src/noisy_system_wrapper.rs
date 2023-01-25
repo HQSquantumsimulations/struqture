@@ -652,6 +652,51 @@ pub fn noisywrapper(
                 })
             }
 
+            /// Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.
+            ///
+            /// Args:
+            ///     key (Product type): Product key of set object.
+            ///
+            /// Returns:
+            ///     CalculatorComplex or CalculatorFloat: Value at key (or 0.0).
+            ///
+            /// Raises:
+            ///     ValueError: key element cannot be converted to product.
+            pub fn system_get(
+                &mut self,
+                key: Py<PyAny>,
+            ) -> PyResult<#value_type> {
+                let pp = #system_index_type::from_pyany(key)?;
+                let get_value = self.internal.system().get(&pp);
+
+                Ok(#value_type {
+                    internal: get_value.into(),
+                })
+            }
+
+            /// Get the CalculatorComplex coefficient corresponding to the key.
+            ///
+            /// Args:
+            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///
+            /// Returns:
+            ///     CalculatorComplex: Value at key (or 0.0).
+            ///
+            /// Raises:
+            ///     ValueError: Left key element cannot be converted to product.
+            ///     ValueError: Right key element cannot be converted to product.
+            pub fn noise_get(
+                &mut self,
+                key: (Py<PyAny>, Py<PyAny>),
+            ) -> PyResult<CalculatorComplexWrapper> {
+                let dp_left = #index_type::from_pyany(key.0)?;
+                let dp_right = #index_type::from_pyany(key.1)?;
+                let get_value = self.internal.noise().get(&(dp_left, dp_right));
+
+                Ok(CalculatorComplexWrapper {
+                    internal: get_value.into(),
+                })
+            }
 
             /// Add a new entry to the system of the open system.
             ///
