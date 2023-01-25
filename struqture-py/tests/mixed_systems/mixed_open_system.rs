@@ -183,43 +183,32 @@ fn mixed_system_test_add_operator_product_remove_system() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a0:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc3a3:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc3a3:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc2a2:Fc0a1:",))
+            .call_method1("system_get", ("S0Z:Bc2a2:Fc0a1:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
-        let error = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("j2",));
+        let error = system.call_method1("system_get", ("j2",));
         assert!(error.is_err());
 
         // Try_set error 1: Key (MixedProduct) cannot be converted from string
@@ -277,43 +266,32 @@ fn mixed_system_test_add_operator_product_remove_noise() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc3a3:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc3a3:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc2a2:Fc0a1:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc2a2:Fc0a1:"),))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
-        let error = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("j2", "S0Z:Bc0a1:Fc0a0:"),));
+        let error = system.call_method1("noise_get", (("j2", "S0Z:Bc0a1:Fc0a0:"),));
         assert!(error.is_err());
 
         // Try_set error 1: Key (MixedProduct) cannot be converted from string
@@ -742,9 +720,7 @@ fn test_set_pauli_get_pauli() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a0:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -758,9 +734,7 @@ fn test_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -774,9 +748,7 @@ fn test_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc3a3:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc3a3:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -791,9 +763,7 @@ fn test_set_pauli_get_pauli() {
 
         // Get zero
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc2a2:Fc0a1:",))
+            .call_method1("system_get", ("S0Z:Bc2a2:Fc0a1:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -864,9 +834,7 @@ fn test_set_noise_get_noise() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -880,9 +848,7 @@ fn test_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a2:", "S0Z:Bc3a3:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a2:", "S0Z:Bc3a3:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -896,9 +862,7 @@ fn test_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -913,9 +877,7 @@ fn test_set_noise_get_noise() {
 
         // Get zero
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0X:Bc2a2:Fc0a1a3:", "S0X:Bc2a2:Fc0a1a3:"),))
+            .call_method1("noise_get", (("S0X:Bc2a2:Fc0a1a3:", "S0X:Bc2a2:Fc0a1a3:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -929,17 +891,11 @@ fn test_set_noise_get_noise() {
         assert!(comparison);
 
         // Get error 1a: Key left (MixedProduct) cannot be converted from string
-        let error = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("1+c0a1", "S0Z:Bc0a1:Fc0a2:"),));
+        let error = system.call_method1("noise_get", (("1+c0a1", "S0Z:Bc0a1:Fc0a2:"),));
         assert!(error.is_err()); // same error as in ADP - Ask!
 
         // Get error 1b: Key right (MixedProduct) cannot be converted from string
-        let error = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a2:", "1+c0a1"),));
+        let error = system.call_method1("noise_get", (("S0Z:Bc0a1:Fc0a2:", "1+c0a1"),));
         assert!(error.is_err()); // same error as in ADP - Ask!
 
         // Try_set error 1a: Key left (MixedProduct) cannot be converted from string
@@ -1014,9 +970,7 @@ fn test_try_set_pauli_get_pauli() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a0:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1030,9 +984,7 @@ fn test_try_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1046,9 +998,7 @@ fn test_try_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc3a3:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc3a3:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1063,9 +1013,7 @@ fn test_try_set_pauli_get_pauli() {
 
         // Get zero
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc2a2:Fc0a1:",))
+            .call_method1("system_get", ("S0Z:Bc2a2:Fc0a1:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1132,9 +1080,7 @@ fn test_try_set_noise_get_noise() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1148,9 +1094,7 @@ fn test_try_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a2:", "S0Z:Bc3a3:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a2:", "S0Z:Bc3a3:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1164,9 +1108,7 @@ fn test_try_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1181,9 +1123,7 @@ fn test_try_set_noise_get_noise() {
 
         // Get zero
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0X:Bc2a2:Fc0a1a3:", "S0X:Bc2a2:Fc0a1a3:"),))
+            .call_method1("noise_get", (("S0X:Bc2a2:Fc0a1a3:", "S0X:Bc2a2:Fc0a1a3:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1266,9 +1206,7 @@ fn test_add_pauli_get_pauli() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a0:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1282,9 +1220,7 @@ fn test_add_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc0a1:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc0a1:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1298,9 +1234,7 @@ fn test_add_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc3a3:Fc0a2:",))
+            .call_method1("system_get", ("S0Z:Bc3a3:Fc0a2:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1315,9 +1249,7 @@ fn test_add_pauli_get_pauli() {
 
         // Get zero
         let comp_op = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("S0Z:Bc2a2:Fc0a1:",))
+            .call_method1("system_get", ("S0Z:Bc2a2:Fc0a1:",))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1331,10 +1263,7 @@ fn test_add_pauli_get_pauli() {
         assert!(comparison);
 
         // Get error
-        let error = system
-            .call_method0("system")
-            .unwrap()
-            .call_method1("get", ("j2",));
+        let error = system.call_method1("system_get", ("j2",));
         assert!(error.is_err());
 
         // Try_set error 1: Key (MixedProduct) cannot be converted from string
@@ -1398,9 +1327,7 @@ fn test_add_noise_get_noise() {
 
         // test access at index 0
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1414,9 +1341,7 @@ fn test_add_noise_get_noise() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a2:", "S0Z:Bc3a3:Fc0a2:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a2:", "S0Z:Bc3a3:Fc0a2:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1430,9 +1355,7 @@ fn test_add_noise_get_noise() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
+            .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op
@@ -1447,9 +1370,7 @@ fn test_add_noise_get_noise() {
 
         // Get zero
         let comp_op = system
-            .call_method0("noise")
-            .unwrap()
-            .call_method1("get", (("S0X:Bc2a2:Fc0a1a3:", "S0X:Bc2a2:Fc0a1a3:"),))
+            .call_method1("noise_get", (("S0X:Bc2a2:Fc0a1a3:", "S0X:Bc2a2:Fc0a1a3:"),))
             .unwrap();
         let comparison = bool::extract(
             comp_op

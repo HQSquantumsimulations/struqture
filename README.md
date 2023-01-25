@@ -1,7 +1,7 @@
 # Struqture
 
 Struqture is a Rust (struqture) and Python (struqture-py) library by [HQS Quantum Simulations](https://quantumsimulations.de/) to represent quantum mechanical operators, Hamiltonians and open quantum systems.
-The library supports building [spin](physical_types/spins.md) objects, [fermionic](physical_types/fermions.md) objects, [bosonic](physical_types/bosons.md) objects and [mixed system](physical_types/mixed_systems.md) objects that contain arbitrary many spin, fermionic and bosonic subsystems.
+The library supports building [spin](https://hqsquantumsimulations.github.io/struqture/physical_types/spins.html) objects, [fermionic](https://hqsquantumsimulations.github.io/struqture/physical_types/fermions.html) objects, [bosonic](https://hqsquantumsimulations.github.io/struqture/physical_types/bosons.html) objects and [mixed system](https://hqsquantumsimulations.github.io/struqture/physical_types/mixed_systems.html) objects that contain arbitrary many spin, fermionic and bosonic subsystems.
 
 Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.
 
