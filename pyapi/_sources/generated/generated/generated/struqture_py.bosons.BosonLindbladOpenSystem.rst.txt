@@ -21,10 +21,12 @@ struqture\_py.bosons.BosonLindbladOpenSystem
       ~BosonLindbladOpenSystem.group
       ~BosonLindbladOpenSystem.noise
       ~BosonLindbladOpenSystem.noise_add_operator_product
+      ~BosonLindbladOpenSystem.noise_get
       ~BosonLindbladOpenSystem.noise_set
       ~BosonLindbladOpenSystem.number_modes
       ~BosonLindbladOpenSystem.system
       ~BosonLindbladOpenSystem.system_add_operator_product
+      ~BosonLindbladOpenSystem.system_get
       ~BosonLindbladOpenSystem.system_set
       ~BosonLindbladOpenSystem.to_bincode
       ~BosonLindbladOpenSystem.to_json

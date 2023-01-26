@@ -972,6 +972,29 @@ and an optional number of bosons.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_get">
+<span class="sig-name descname"><span class="pre">noise_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the CalculatorComplex coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Tuple</em><em>(</em><em>Product type</em><em>, </em><em>Product type</em><em>)</em>) -- Tuple of Products of set object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left key element cannot be converted to product.</p></li>
+<li><p><strong>ValueError</strong> -- Right key element cannot be converted to product.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_set">
 <span class="sig-name descname"><span class="pre">noise_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a new entry in the noise of the open system.</p>
@@ -1048,6 +1071,26 @@ and an optional number of bosons.</p>
 <li><p><strong>ValueError</strong> -- key element cannot be converted to product.</p></li>
 <li><p><strong>TypeError</strong> -- Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_get">
+<span class="sig-name descname"><span class="pre">system_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Product type</em>) -- Product key of set object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex or CalculatorFloat</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- key element cannot be converted to product.</p>
 </dd>
 </dl>
 </dd></dl>

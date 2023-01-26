@@ -21,12 +21,14 @@ struqture\_py.spins.SpinLindbladOpenSystem
       ~SpinLindbladOpenSystem.group
       ~SpinLindbladOpenSystem.noise
       ~SpinLindbladOpenSystem.noise_add_operator_product
+      ~SpinLindbladOpenSystem.noise_get
       ~SpinLindbladOpenSystem.noise_set
       ~SpinLindbladOpenSystem.number_spins
       ~SpinLindbladOpenSystem.sparse_lindblad_entries
       ~SpinLindbladOpenSystem.sparse_matrix_superoperator_coo
       ~SpinLindbladOpenSystem.system
       ~SpinLindbladOpenSystem.system_add_operator_product
+      ~SpinLindbladOpenSystem.system_get
       ~SpinLindbladOpenSystem.system_set
       ~SpinLindbladOpenSystem.to_bincode
       ~SpinLindbladOpenSystem.to_json
