@@ -45,6 +45,7 @@ jobs:
     with: 
       py_interface_folder: "struqture-py"
       deploy: true
+      universal2: true
     secrets: inherit
 
 # Build windows wheels and upload them to PyPi
