@@ -10,7 +10,7 @@ maintainers = [{name = "HQS Quantum Simulations GmbH", email = "info@quantumsimu
 requires-python = ">=3.7"
 
 [build-system]
-requires = ["maturin>=0.13,<0.14"]
+requires = ["maturin>=0.14,<0.15"]
 build-backend = "maturin"
 
 [tool.maturin]

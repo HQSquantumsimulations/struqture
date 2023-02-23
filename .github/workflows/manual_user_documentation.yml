@@ -1,0 +1,25 @@
+name: documentation
+
+on:
+  release:
+    types: [created]
+
+jobs:
+
+  publish_documentation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4.2.0
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        target: x86_64-unknown-linux-gnu
+        default: true
+        
+    - name: publish
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./documentation/book/
