@@ -2,3 +2,5 @@ target/*
 documentation/book/*
 documentation/_build*
 documentation/generated*
+.vscode
+*/__pycache__/*
