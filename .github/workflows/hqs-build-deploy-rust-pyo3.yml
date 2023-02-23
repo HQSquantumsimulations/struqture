@@ -20,11 +20,11 @@ jobs:
     - name: setup cargo
       run: |
         cargo login ${{ secrets.CRATES_IO_API_TOKEN }}
-        cargo publish --manifest-path=struqture/Cargo.toml
+        # cargo publish --manifest-path=struqture/Cargo.toml
+        # sleep 45
+        cargo publish --manifest-path=struqture-py-macros/Cargo.toml
         sleep 45
         cargo publish --manifest-path=struqture-py/Cargo.toml
-        sleep 45
-        cargo publish --manifest-path=struqture-py-macros/Cargo.toml
 # Build linux wheels and upload them to PyPi
   build_maturin_builds_linux:
     name: maturin_build-linux
