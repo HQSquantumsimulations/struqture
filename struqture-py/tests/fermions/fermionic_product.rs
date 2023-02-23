@@ -25,7 +25,7 @@ fn new_pp(
     pp_type
         .call1((creators, annihilators))
         .unwrap()
-        .cast_as::<PyCell<FermionProductWrapper>>()
+        .downcast::<PyCell<FermionProductWrapper>>()
         .unwrap()
 }
 

@@ -21,7 +21,7 @@ fn new_pp(py: Python) -> &PyCell<PauliProductWrapper> {
     pp_type
         .call0()
         .unwrap()
-        .cast_as::<PyCell<PauliProductWrapper>>()
+        .downcast::<PyCell<PauliProductWrapper>>()
         .unwrap()
 }
 

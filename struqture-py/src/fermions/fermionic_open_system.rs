@@ -60,7 +60,7 @@ impl FermionLindbladOpenSystemWrapper {
     /// Returns:
     ///     self: The new FermionLindbladOpenSystem with the input number of fermions.
     #[new]
-    #[args(number_fermions = "None")]
+    #[pyo3(signature = (number_fermions = None))]
     pub fn new(number_fermions: Option<usize>) -> Self {
         Self {
             internal: FermionLindbladOpenSystem::new(number_fermions),

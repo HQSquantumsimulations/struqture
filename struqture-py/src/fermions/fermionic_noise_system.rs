@@ -57,7 +57,7 @@ impl FermionLindbladNoiseSystemWrapper {
     /// Returns:
     ///     self: The new FermionLindbladNoiseSystem with the input number of fermions.
     #[new]
-    #[args(number_fermions = "None")]
+    #[pyo3(signature = (number_fermions = None))]
     pub fn new(number_fermions: Option<usize>) -> Self {
         Self {
             internal: FermionLindbladNoiseSystem::new(number_fermions),

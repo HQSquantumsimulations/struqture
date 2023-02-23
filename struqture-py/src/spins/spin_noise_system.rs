@@ -67,7 +67,7 @@ impl SpinLindbladNoiseSystemWrapper {
     /// Returns:
     ///     self: The new SpinLindbladNoiseSystem with the input number of spins.
     #[new]
-    #[args(number_spins = "None")]
+    #[pyo3(signature = (number_spins = None))]
     pub fn new(number_spins: Option<usize>) -> Self {
         Self {
             internal: SpinLindbladNoiseSystem::new(number_spins),

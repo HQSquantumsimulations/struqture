@@ -67,11 +67,11 @@ impl MixedLindbladOpenSystemWrapper {
     /// Returns:
     ///     self: The new MixedLindbladOpenSystem.
     #[new]
-    #[args(
-        number_spins = "vec![None]",
-        number_bosons = "vec![None]",
-        number_fermions = "vec![None]"
-    )]
+    #[pyo3(signature = (
+        number_spins = vec![None],
+        number_bosons = vec![None],
+        number_fermions = vec![None],
+    ))]
     pub fn new(
         number_spins: Vec<Option<usize>>,
         number_bosons: Vec<Option<usize>>,

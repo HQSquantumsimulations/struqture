@@ -34,7 +34,7 @@ fn new_system(
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .cast_as::<PyCell<MixedHamiltonianSystemWrapper>>()
+        .downcast::<PyCell<MixedHamiltonianSystemWrapper>>()
         .unwrap()
 }
 
@@ -201,7 +201,7 @@ fn boson_system_test_set_get() {
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<MixedHamiltonianSystemWrapper>>()
             .unwrap();
         system
             .call_method1("set", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
@@ -267,7 +267,7 @@ fn boson_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<MixedHamiltonianSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
@@ -652,7 +652,7 @@ fn test_mul_cf() {
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedSystemWrapper>>()
             .unwrap();
         system_0_1
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.2))
@@ -687,7 +687,7 @@ fn test_mul_cf_with_conj() {
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedSystemWrapper>>()
             .unwrap();
         system_0_1
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.2))
@@ -725,7 +725,7 @@ fn test_mul_cc() {
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedSystemWrapper>>()
             .unwrap();
         system_0_1
             .call_method1(
@@ -770,7 +770,7 @@ fn test_mul_cc_with_conj() {
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedSystemWrapper>>()
             .unwrap();
         system_0_1
             .call_method1(
