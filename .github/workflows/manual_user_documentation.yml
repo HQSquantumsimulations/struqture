@@ -17,6 +17,21 @@ jobs:
         toolchain: stable
         target: x86_64-unknown-linux-gnu
         default: true
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip maturin
+        pip install ./struqture-py/
+        python -m pip install -r ./struqture-py/docs/requirements.txt
+    - uses: peaceiris/actions-mdbook@v1
+      with:
+        version: latest
+    - name: build
+      run: |
+        cd ./struqture-py/docs
+        python -m sphinx -T -E -b html . _build/html
+        cd ../../
+        cp -r ./struqture-py/docs/_build/html documentation/src/pyapi
+        mdbook build
         
     - name: publish
       uses: peaceiris/actions-gh-pages@v3
