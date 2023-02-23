@@ -21,7 +21,7 @@ fn new_pp(py: Python) -> &PyCell<DecoherenceProductWrapper> {
     pp_type
         .call0()
         .unwrap()
-        .cast_as::<PyCell<DecoherenceProductWrapper>>()
+        .downcast::<PyCell<DecoherenceProductWrapper>>()
         .unwrap()
 }
 

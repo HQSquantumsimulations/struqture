@@ -67,7 +67,7 @@ impl FermionHamiltonianSystemWrapper {
     /// Returns:
     ///     self: The new FermionHamiltonianSystem with the input number of fermions.
     #[new]
-    #[args(number_fermions = "None")]
+    #[pyo3(signature = (number_fermions = None))]
     pub fn new(number_fermions: Option<usize>) -> Self {
         Self {
             internal: FermionHamiltonianSystem::new(number_fermions),

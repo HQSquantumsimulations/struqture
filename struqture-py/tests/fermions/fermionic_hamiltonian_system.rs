@@ -29,7 +29,7 @@ fn new_system(
     system_type
         .call1((number_fermions,))
         .unwrap()
-        .cast_as::<PyCell<FermionHamiltonianSystemWrapper>>()
+        .downcast::<PyCell<FermionHamiltonianSystemWrapper>>()
         .unwrap()
 }
 // helper functions
@@ -41,7 +41,7 @@ fn new_fermionic_system(
     system_type
         .call1((number_fermions,))
         .unwrap()
-        .cast_as::<PyCell<FermionSystemWrapper>>()
+        .downcast::<PyCell<FermionSystemWrapper>>()
         .unwrap()
 }
 
@@ -162,7 +162,7 @@ fn fermion_system_test_set_get() {
         let system = new_system
             .call1((number_fermions,))
             .unwrap()
-            .cast_as::<PyCell<FermionHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<FermionHamiltonianSystemWrapper>>()
             .unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c1c2a3", 0.2)).unwrap();
@@ -214,7 +214,7 @@ fn fermion_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_fermions,))
             .unwrap()
-            .cast_as::<PyCell<FermionHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<FermionHamiltonianSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))

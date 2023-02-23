@@ -2,6 +2,11 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.0.1
+
+* Updated to pyo3 0.18 and test-case 3.0
+* Updated to the new workflows
+
 ## 1.0.0
 
 * Added `noise_get` and `system_get` getters for all OpenSystems in python interface

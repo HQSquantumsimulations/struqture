@@ -35,7 +35,7 @@ fn new_pp(
     pp_type
         .call1((spin_sub, boson_sub, fermion_sub))
         .unwrap()
-        .cast_as::<PyCell<HermitianMixedProductWrapper>>()
+        .downcast::<PyCell<HermitianMixedProductWrapper>>()
         .unwrap()
 }
 
@@ -180,7 +180,7 @@ fn test_from_string() {
         let spins = noise_type
             .call0()
             .unwrap()
-            .cast_as::<PyCell<PauliProductWrapper>>()
+            .downcast::<PyCell<PauliProductWrapper>>()
             .unwrap()
             .call_method1("z", ((0),))
             .unwrap();
@@ -193,7 +193,7 @@ fn test_from_string() {
         let bosons = noise_type
             .call1(([0], [1]))
             .unwrap()
-            .cast_as::<PyCell<BosonProductWrapper>>()
+            .downcast::<PyCell<BosonProductWrapper>>()
             .unwrap();
         let comparison =
             bool::extract(comp_op.call_method1("__eq__", (vec![bosons],)).unwrap()).unwrap();
@@ -204,7 +204,7 @@ fn test_from_string() {
         let fermions = noise_type
             .call1(([0], [0]))
             .unwrap()
-            .cast_as::<PyCell<FermionProductWrapper>>()
+            .downcast::<PyCell<FermionProductWrapper>>()
             .unwrap();
         let comparison =
             bool::extract(comp_op.call_method1("__eq__", (vec![fermions],)).unwrap()).unwrap();

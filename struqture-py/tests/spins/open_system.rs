@@ -30,7 +30,7 @@ fn new_system(py: Python) -> &PyCell<SpinLindbladOpenSystemWrapper> {
     system_type
         .call0()
         .unwrap()
-        .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+        .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
         .unwrap()
 }
 
@@ -44,12 +44,12 @@ fn convert_cf_to_pyobject(
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .cast_as::<PyCell<CalculatorFloatWrapper>>()
+            .downcast::<PyCell<CalculatorFloatWrapper>>()
             .unwrap(),
         CalculatorFloat::Str(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .cast_as::<PyCell<CalculatorFloatWrapper>>()
+            .downcast::<PyCell<CalculatorFloatWrapper>>()
             .unwrap(),
     }
 }
@@ -105,7 +105,7 @@ fn spin_system_test_add_operator_product_remove_system() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         system
             .call_method1("system_add_operator_product", ("0X", 0.1))
@@ -167,7 +167,7 @@ fn spin_system_test_add_operator_product_remove_noise() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         system
             .call_method1("noise_add_operator_product", (("0X", "0X"), 0.1))
@@ -374,7 +374,7 @@ fn test_default_partialeq_debug_clone() {
         let spin_system = system_type
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
             .unwrap();
         spin_system
             .call_method1(
@@ -392,7 +392,7 @@ fn test_default_partialeq_debug_clone() {
         let noise = noise_type
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
             .unwrap();
         noise
             .call_method1(
@@ -413,7 +413,7 @@ fn test_default_partialeq_debug_clone() {
         let noise = noise_type
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
             .unwrap();
         noise
             .call_method1(
@@ -430,7 +430,7 @@ fn test_default_partialeq_debug_clone() {
         let spin_system = system_type
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
             .unwrap();
         spin_system
             .call_method1(
@@ -464,7 +464,7 @@ fn test_set_pauli_get_pauli() {
         let new_system_1 = new_system
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         let mut system = new_system_1
             .call_method1(
@@ -564,7 +564,7 @@ fn test_set_noise_get_noise() {
         let system = new_system
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         system
             .call_method1(
@@ -691,7 +691,7 @@ fn test_try_set_pauli_get_pauli() {
         let new_system_1 = new_system
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         let mut system = new_system_1
             .call_method1(
@@ -787,7 +787,7 @@ fn test_try_set_noise_get_noise() {
         let new_system_1 = new_system
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         let mut system = new_system_1
             .call_method1(
@@ -902,7 +902,7 @@ fn test_add_pauli_get_pauli() {
         let new_system_1 = new_system
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         let mut system = new_system_1
             .call_method1(
@@ -1006,7 +1006,7 @@ fn test_add_noise_get_noise() {
         let new_system_1 = new_system
             .call0()
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
             .unwrap();
         let mut system = new_system_1
             .call_method1(

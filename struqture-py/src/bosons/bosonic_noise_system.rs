@@ -57,7 +57,7 @@ impl BosonLindbladNoiseSystemWrapper {
     /// Returns:
     ///     self: The new BosonLindbladNoiseSystem with the input number of bosons.
     #[new]
-    #[args(number_bosons = "None")]
+    #[pyo3(signature = (number_bosons = None))]
     pub fn new(number_bosons: Option<usize>) -> Self {
         Self {
             internal: BosonLindbladNoiseSystem::new(number_bosons),

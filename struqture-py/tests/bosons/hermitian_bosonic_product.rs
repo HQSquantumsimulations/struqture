@@ -25,7 +25,7 @@ fn new_pp(
     pp_type
         .call1((creators, annihilators))
         .unwrap()
-        .cast_as::<PyCell<HermitianBosonProductWrapper>>()
+        .downcast::<PyCell<HermitianBosonProductWrapper>>()
         .unwrap()
 }
 
@@ -38,7 +38,7 @@ fn new_pp_bosonic(
     pp_type
         .call1((creators, annihilators))
         .unwrap()
-        .cast_as::<PyCell<BosonProductWrapper>>()
+        .downcast::<PyCell<BosonProductWrapper>>()
         .unwrap()
 }
 

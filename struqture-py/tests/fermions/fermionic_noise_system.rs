@@ -24,7 +24,7 @@ fn new_noisesystem(py: Python) -> &PyCell<FermionLindbladNoiseSystemWrapper> {
     system_type
         .call1((number_modes,))
         .unwrap()
-        .cast_as::<PyCell<FermionLindbladNoiseSystemWrapper>>()
+        .downcast::<PyCell<FermionLindbladNoiseSystemWrapper>>()
         .unwrap()
 }
 
@@ -38,12 +38,12 @@ fn convert_cf_to_pyobject(
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .cast_as::<PyCell<CalculatorFloatWrapper>>()
+            .downcast::<PyCell<CalculatorFloatWrapper>>()
             .unwrap(),
         CalculatorFloat::Str(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .cast_as::<PyCell<CalculatorFloatWrapper>>()
+            .downcast::<PyCell<CalculatorFloatWrapper>>()
             .unwrap(),
     }
 }
@@ -57,7 +57,7 @@ fn test_default_partialeq_debug_clone() {
         let new_system = system_type
             .call1((4_usize,))
             .unwrap()
-            .cast_as::<PyCell<FermionLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<FermionLindbladNoiseSystemWrapper>>()
             .unwrap();
         let system_wrapper = new_system
             .extract::<FermionLindbladNoiseSystemWrapper>()
@@ -143,7 +143,7 @@ fn fermion_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_modes,))
             .unwrap()
-            .cast_as::<PyCell<FermionLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<FermionLindbladNoiseSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -639,7 +639,7 @@ fn test_format_repr() {
         let new_pp = pp_type
             .call1(([0], [0]))
             .unwrap()
-            .cast_as::<PyCell<FermionProductWrapper>>()
+            .downcast::<PyCell<FermionProductWrapper>>()
             .unwrap();
 
         rust_system

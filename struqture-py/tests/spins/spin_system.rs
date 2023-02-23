@@ -29,7 +29,7 @@ fn new_system(py: Python, number_spins: Option<usize>) -> &PyCell<SpinSystemWrap
     system_type
         .call1((number_spins,))
         .unwrap()
-        .cast_as::<PyCell<SpinSystemWrapper>>()
+        .downcast::<PyCell<SpinSystemWrapper>>()
         .unwrap()
 }
 
@@ -139,7 +139,7 @@ fn spin_system_test_set_get() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinSystemWrapper>>()
+            .downcast::<PyCell<SpinSystemWrapper>>()
             .unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
@@ -191,7 +191,7 @@ fn spin_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinSystemWrapper>>()
+            .downcast::<PyCell<SpinSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
@@ -610,7 +610,7 @@ fn test_mul_error() {
 //     let matrices = system.call_method0("sparse_lindblad_entries",).unwrap();
 //     let res: Vec<(PyCooMatrix, PyCooMatrix, Complex64)> = vec![((array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), (array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), Complex64::from(0.0))];
 //     // let to_operators_op = matrices
-//     //     .cast_as::<Vec<(PyCooMatrix, PyCooMatrix, Complex64)>>()
+//     //     .downcast::<Vec<(PyCooMatrix, PyCooMatrix, Complex64)>>()
 //     //     .unwrap();
 //     let comparison =
 //         bool::extract(matrices.call_method1("__eq__", (res,)).unwrap()).unwrap();
@@ -633,7 +633,7 @@ fn test_mul_error() {
 
 //     let matrices = system.call_method0("unitary_sparse_matrix_coo").unwrap();
 //     let result_matrix = matrices
-//         .cast_as::<Internal>()
+//         .downcast::<Internal>()
 //         .unwrap();
 
 //     let test_matrix: Internal = (vec![CalculatorComplexWrapper {internal: 1.0.into()}, CalculatorComplexWrapper {internal: (-1.0).into()}], (vec![0, 1], vec![0, 1]));

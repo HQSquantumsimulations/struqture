@@ -26,7 +26,7 @@ fn new_system(py: Python, number_spins: Option<usize>) -> &PyCell<SpinHamiltonia
     system_type
         .call1((number_spins,))
         .unwrap()
-        .cast_as::<PyCell<SpinHamiltonianSystemWrapper>>()
+        .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
         .unwrap()
 }
 fn new_spin_system(py: Python, number_spins: Option<usize>) -> &PyCell<SpinSystemWrapper> {
@@ -34,7 +34,7 @@ fn new_spin_system(py: Python, number_spins: Option<usize>) -> &PyCell<SpinSyste
     system_type
         .call1((number_spins,))
         .unwrap()
-        .cast_as::<PyCell<SpinSystemWrapper>>()
+        .downcast::<PyCell<SpinSystemWrapper>>()
         .unwrap()
 }
 
@@ -147,7 +147,7 @@ fn spin_system_test_set_get() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
             .unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
@@ -199,7 +199,7 @@ fn spin_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
@@ -638,7 +638,7 @@ fn test_mul_error() {
 
 //     let matrices = system.call_method0("unitary_sparse_matrix_coo").unwrap();
 //     let result_matrix = matrices
-//         .cast_as::<Internal>()
+//         .downcast::<Internal>()
 //         .unwrap();
 
 //     let test_matrix: Internal = (vec![CalculatorFloatWrapper {internal: 1.0.into()}, CalculatorFloatWrapper {internal: (-1.0).into()}], (vec![0, 1], vec![0, 1]));

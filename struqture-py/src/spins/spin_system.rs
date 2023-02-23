@@ -74,7 +74,7 @@ impl SpinSystemWrapper {
     /// Returns:
     ///     self: The new SpinSystem with the input number of spins.
     #[new]
-    #[args(number_spins = "None")]
+    #[pyo3(signature = (number_spins = None))]
     pub fn new(number_spins: Option<usize>) -> Self {
         Self {
             internal: SpinSystem::new(number_spins),

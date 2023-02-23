@@ -230,7 +230,7 @@ pub fn noisywrapper(
                 ///
                 /// Returns:
                 ///     self: An empty clone with the same properties as self, with the given capacity.
-                #[args(capacity = "None")]
+                #[pyo3(signature = (capacity = None))]
                 pub fn empty_clone(&self, capacity: Option<usize>) -> #ident {
                     #ident {
                         internal: self.internal.empty_clone(capacity)
@@ -348,7 +348,7 @@ pub fn noisywrapper(
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                #[args(number_spins = "None")]
+                #[pyo3(signature = (number_spins = None))]
                 pub fn sparse_matrix_superoperator_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal

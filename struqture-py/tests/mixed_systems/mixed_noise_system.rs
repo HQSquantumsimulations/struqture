@@ -34,7 +34,7 @@ fn new_system(
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .cast_as::<PyCell<MixedLindbladNoiseSystemWrapper>>()
+        .downcast::<PyCell<MixedLindbladNoiseSystemWrapper>>()
         .unwrap()
 }
 
@@ -187,7 +187,7 @@ fn boson_system_test_set_get() {
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<MixedLindbladNoiseSystemWrapper>>()
             .unwrap();
         system
             .call_method1("set", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 0.1))
@@ -265,7 +265,7 @@ fn boson_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .cast_as::<PyCell<MixedLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<MixedLindbladNoiseSystemWrapper>>()
             .unwrap();
         system
             .call_method1(

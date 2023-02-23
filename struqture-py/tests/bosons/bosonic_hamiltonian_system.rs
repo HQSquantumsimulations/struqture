@@ -26,7 +26,7 @@ fn new_system(py: Python, number_bosons: Option<usize>) -> &PyCell<BosonHamilton
     system_type
         .call1((number_bosons,))
         .unwrap()
-        .cast_as::<PyCell<BosonHamiltonianSystemWrapper>>()
+        .downcast::<PyCell<BosonHamiltonianSystemWrapper>>()
         .unwrap()
 }
 // helper functions
@@ -35,7 +35,7 @@ fn new_bosonic_system(py: Python, number_bosons: Option<usize>) -> &PyCell<Boson
     system_type
         .call1((number_bosons,))
         .unwrap()
-        .cast_as::<PyCell<BosonSystemWrapper>>()
+        .downcast::<PyCell<BosonSystemWrapper>>()
         .unwrap()
 }
 
@@ -156,7 +156,7 @@ fn boson_system_test_set_get() {
         let system = new_system
             .call1((number_bosons,))
             .unwrap()
-            .cast_as::<PyCell<BosonHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<BosonHamiltonianSystemWrapper>>()
             .unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c1c2a3", 0.2)).unwrap();
@@ -208,7 +208,7 @@ fn boson_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_bosons,))
             .unwrap()
-            .cast_as::<PyCell<BosonHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<BosonHamiltonianSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))

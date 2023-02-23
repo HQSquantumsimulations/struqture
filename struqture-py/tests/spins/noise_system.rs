@@ -24,7 +24,7 @@ fn new_noisesystem(py: Python) -> &PyCell<SpinLindbladNoiseSystemWrapper> {
     system_type
         .call1((number_spins,))
         .unwrap()
-        .cast_as::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+        .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
         .unwrap()
 }
 
@@ -38,12 +38,12 @@ fn convert_cf_to_pyobject(
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .cast_as::<PyCell<CalculatorFloatWrapper>>()
+            .downcast::<PyCell<CalculatorFloatWrapper>>()
             .unwrap(),
         CalculatorFloat::Str(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .cast_as::<PyCell<CalculatorFloatWrapper>>()
+            .downcast::<PyCell<CalculatorFloatWrapper>>()
             .unwrap(),
     }
 }
@@ -57,7 +57,7 @@ fn test_default_partialeq_debug_clone() {
         let new_system = system_type
             .call1((4_usize,))
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
             .unwrap();
         let system_wrapper = new_system
             .extract::<SpinLindbladNoiseSystemWrapper>()
@@ -143,7 +143,7 @@ fn spin_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_spins,))
             .unwrap()
-            .cast_as::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", (("0X", "0X"), 0.1))
@@ -639,7 +639,7 @@ fn test_format_repr() {
         let new_pp = pp_type
             .call0()
             .unwrap()
-            .cast_as::<PyCell<DecoherenceProductWrapper>>()
+            .downcast::<PyCell<DecoherenceProductWrapper>>()
             .unwrap();
         let pp = new_pp.call_method1("set_pauli", (1_u64, "Z")).unwrap();
 

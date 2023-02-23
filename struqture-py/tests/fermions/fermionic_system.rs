@@ -25,7 +25,7 @@ fn new_system(py: Python, number_fermions: Option<usize>) -> &PyCell<FermionSyst
     system_type
         .call1((number_fermions,))
         .unwrap()
-        .cast_as::<PyCell<FermionSystemWrapper>>()
+        .downcast::<PyCell<FermionSystemWrapper>>()
         .unwrap()
 }
 
@@ -143,7 +143,7 @@ fn fermion_system_test_set_get() {
         let system = new_system
             .call1((number_fermions,))
             .unwrap()
-            .cast_as::<PyCell<FermionSystemWrapper>>()
+            .downcast::<PyCell<FermionSystemWrapper>>()
             .unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c2c3a1", 0.2)).unwrap();
@@ -195,7 +195,7 @@ fn fermion_system_test_add_operator_product_remove() {
         let system = new_system
             .call1((number_fermions,))
             .unwrap()
-            .cast_as::<PyCell<FermionSystemWrapper>>()
+            .downcast::<PyCell<FermionSystemWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
