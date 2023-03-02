@@ -343,7 +343,6 @@ pp_error = spins.PauliProduct().z(3)
 value = CalculatorComplex.from_pair(1.0, 1.5)
 # system.add_operator_product(pp_error, value)  # Uncomment me!
 
-
 # This will work because we leave the number of spins dynamic
 system = spins.SpinSystem()
 system.add_operator_product(spins.PauliProduct().z(3), 1.0)
@@ -356,8 +355,9 @@ It is given by
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
 with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
-<p>To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use <code>DecoherenceProducts</code> as the operator base. To describe spin noise we use the Lindblad equation with \(\hat{H}=0\).</p>
+<p>To describe spin noise we use the Lindblad equation with \(\hat{H}=0\).</p>
+<p>Therefore, to describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
+We use <code>DecoherenceProducts</code> as the operator basis.</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>DecoherenceProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>SpinLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>DecoherenceProduct</code>, <code>DecoherenceProduct</code>) as keys and the entries in the rate matrix as values.</p>
 <p>Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent: <code>SpinLindbladNoiseSystem</code>, with a number of involved spins defined by the user. For more information on these, see the <a href="../container_types/noise_operators_and_systems">noise container</a> chapter.</p>
@@ -367,26 +367,30 @@ In programming terms the object <code>SpinLindbladNoiseOperator</code> is given 
 <pre><code class="language-rust">use struqture::prelude::*;
 use struqture::spins::{DecoherenceProduct, SpinLindbladNoiseSystem};
 
+// Constructing the system and product to be added to it
 let mut system = SpinLindbladNoiseSystem::new(Some(3));
-
 let dp = DecoherenceProduct::new().x(0).z(2);
 
+// Adding in the 0X2Z term
 system.add_operator_product((dp.clone(), dp.clone()), 1.0.into()).unwrap();
+
+// Checking our system
 assert_eq!(system.get(&amp;(dp.clone(), dp)), &amp;CalculatorComplex::new(1.0, 0.0));
 println!(&quot;{}&quot;, system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from struqture_py import spins
 
+# Constructing the system and product to be added to it
 system = spins.SpinLindbladNoiseSystem(3)
-
 dp = spins.DecoherenceProduct().x(0).z(2)
 
+# Adding in the 0X2Z term
 system.add_operator_product((dp, dp), 1.0+1.5*1j)
 print(system)
 
 # In python we can also use the string representation
 system = spins.SpinLindbladNoiseSystem(3)
-system.add_operator_product((str(dp), str(dp)), 1.0+1.5*1j)
+system.add_operator_product((&quot;0X2Z&quot;, &quot;0X2Z&quot;), 1.0+1.5*1j)
 print(system)
 </code></pre>
 <h2 id="open-systems"><a class="header" href="#open-systems">Open systems</a></h2>
@@ -395,7 +399,7 @@ The Lindblad master equation is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
-In struqture they are composed of a hamiltonian (SpinHamiltonianSystem) and noise (SpinLindbladNoiseSystem). They have different ways to set terms in Rust and Python:</p>
+In struqture they are composed of a hamiltonian (<code>SpinHamiltonianSystem</code>) and noise (<code>SpinLindbladNoiseSystem</code>). They have different ways to set terms in Rust and Python:</p>
 <h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
 <pre><code class="language-rust">use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::prelude::*;
@@ -406,9 +410,11 @@ let mut open_system = SpinLindbladOpenSystem::new(Some(3));
 let pp = PauliProduct::new().z(1);
 let dp = DecoherenceProduct::new().x(0).z(2);
 
+// Add the Z_1 term into the system part of the open system
 let system = open_system.system_mut();
 system.add_operator_product(pp, CalculatorFloat::from(2.0)).unwrap();
 
+// Add the X_0 Z_2 term into the noise part of the open system
 let noise = open_system.noise_mut();
 noise
     .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
@@ -424,7 +430,9 @@ open_system = spins.SpinLindbladOpenSystem(3)
 pp = spins.PauliProduct().z(1)
 dp = spins.DecoherenceProduct().x(0).z(2)
 
+# Add the Z_1 term into the system part of the open system
 open_system.system_add_operator_product(pp, CalculatorFloat(2.0))
+# Add the X_0 Z_2 term into the noise part of the open system
 open_system.noise_add_operator_product(
     (dp, dp), CalculatorComplex.from_pair(0.0, 1.0))
 
@@ -442,7 +450,7 @@ struqture uses the convention that density matrices are flattened in row-major o
 \[
 \rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
 \]
-For noiseless objects (SpinSystem, SpinHamiltonianSystem), sparse operators and sparse superoperators can be constructed, while only sparse superoperators can be constructed for systems with noise (SpinLindbladNoiseSystem, SpinLindbladOpenSystem).</p>
+For noiseless objects (<code>SpinSystem</code>, <code>SpinHamiltonianSystem</code>), sparse operators and sparse superoperators can be constructed, as we can represent the system as a wavefunction. For systems with noise (<code>SpinLindbladNoiseSystem</code>, <code>SpinLindbladOpenSystem</code>), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.</p>
 <p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
@@ -456,6 +464,7 @@ system
     .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
+// Here we have a noise system, so we can only construct a superoperator
 let matrix = system.sparse_matrix_superoperator(Some(3)).unwrap();
 println!(&quot;{:?}&quot;, matrix);</code></pre>
 <p>The equivalent code in python:</p>

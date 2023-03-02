@@ -202,8 +202,8 @@ let (bp_1, coeff) = HermitianBosonProduct::create_valid_pair(
 <p>These <code>BosonOperators</code> and <code>BosonHamiltonians</code> represent operators or hamiltonians such as:
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
 with
-\[ f(j, k) = \begin{cases} c_k^{\dagger} \\ 1 \end{cases} , \]
-\[ g(j, l) = \begin{cases} c_l \\ 1 \end{cases} , \]
+\[ f(j, k) = \begin{cases} c_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
+\[ g(j, l) = \begin{cases} c_l \\ \mathbb{1} \end{cases} , \]
 and 
 \(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator 
 \[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
@@ -211,7 +211,8 @@ and
 \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
 <p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>BosonProducts</code> or <code>HermitianBosonProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
 <p>In struqture we distinguish between bosonic operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a bosonic hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.</p>
+While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian. In a bosonic hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+In the <code>HermitianBosonProducts</code>, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.</p>
 <h3 id="examples-1"><a class="header" href="#examples-1">Examples</a></h3>
 <p>Here is an example of how to build a <code>BosonOperator</code> and a <code>BosonHamiltonian</code>, in Rust:</p>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
@@ -299,9 +300,10 @@ It is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) = -i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
-with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).
-To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use <code>BosonProducts</code> as the operator base. To describe bosonic noise we use the Lindblad equation with \(\hat{H}=0\).</p>
+with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
+<p>To describe bosonic noise we use the Lindblad equation with \(\hat{H}=0\).
+Therefore, to describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
+We use <code>BosonProducts</code> as the operator basis.</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>BosonProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>BosonLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>BosonProduct</code>, <code>BosonProduct</code>) as keys and the entries in the rate matrix as values.</p>
 <p>Similarly to BosonOperators, BosonLindbladNoiseOperators have a system equivalent: <code>BosonLindbladNoiseSystem</code>, with a number of involved bosonic modes defined by the user. For more information on these, see the <a href="../container_types/noise_operators_and_systems">noise container</a> chapter.</p>
@@ -312,10 +314,11 @@ In programming terms the object <code>BosonLindbladNoiseOperator</code> is given
 use struqture::prelude::*;
 use struqture::bosons::{BosonProduct, BosonLindbladNoiseSystem};
 
+// Setting up the system and the product we want to add to it
 let mut system = BosonLindbladNoiseSystem::new(Some(3));
-
 let bp = BosonProduct::new([0], [0]).unwrap();
 
+// Adding the product to the system
 system
     .add_operator_product(
         (bp.clone(), bp.clone()), CalculatorComplex::new(1.0, 0.0)
@@ -326,10 +329,11 @@ println!(&quot;{}&quot;, system);</code></pre>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
+# Setting up the system and the product we want to add to it
 system = bosons.BosonLindbladNoiseSystem(3)
-
 bp = bosons.BosonProduct([0], [0])
 
+# Adding the product to the system
 system.add_operator_product((bp, bp), CalculatorComplex.from_pair(1.0, 1.5))
 print(system)
 
@@ -344,7 +348,7 @@ The Lindblad master equation is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
-In struqture they are composed of a hamiltonian (BosonHamiltonianSystem) and noise (BosonLindbladNoiseSystem). They have different ways to set terms in Rust and Python:</p>
+In struqture they are composed of a hamiltonian (<code>BosonHamiltonianSystem</code>) and noise (<code>BosonLindbladNoiseSystem</code>). They have different ways to set terms in Rust and Python:</p>
 <h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
@@ -355,9 +359,11 @@ let mut open_system = BosonLindbladOpenSystem::new(Some(3));
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
 let bp = BosonProduct::new([0], [0]).unwrap();
 
+// Adding the c_0^dag c_1^dag c_0 c_2 term to the system part of the open system
 let system = open_system.system_mut();
 system.add_operator_product(hbp, CalculatorComplex::new(2.0, 0.0)).unwrap();
 
+// Adding the c_0^dag c_0 part to the noise part of the open system
 let noise = open_system.noise_mut();
 noise
     .add_operator_product((bp.clone(), bp), CalculatorComplex::new(1.0, 0.0))
@@ -373,7 +379,9 @@ open_system = bosons.BosonLindbladOpenSystem(3)
 hbp = bosons.HermitianBosonProduct([0, 1], [0, 2])
 bp = bosons.BosonProduct([0], [0])
 
+# Adding the c_0^dag c_1^dag c_0 c_2 term to the system part of the open system
 open_system.system_add_operator_product(hbp, CalculatorComplex.from_pair(2.0, 0.0))
+# Adding the c_0^dag c_0 part to the noise part of the open system
 open_system.noise_add_operator_product(
     (bp, bp), CalculatorComplex.from_pair(0.0, 1.0))
 
