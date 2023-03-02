@@ -1,4 +1,4 @@
-name: documentation
+name: Manual user documentation and API documentation generation and upload
 
 on:
   release:
