@@ -1,6 +1,7 @@
 name: Manual user documentation and API documentation generation and upload
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
