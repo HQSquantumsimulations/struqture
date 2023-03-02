@@ -308,7 +308,7 @@ It is given by
 \\]
 with the rate matrix \\(\Gamma_{j,k}\\) and the Lindblad operator \\(L_{j}\\).
 To describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
-We use `MixedDecoherenceProducts` as the operator base. To describe mixed noise we use the Lindblad equation with \\(\hat{H}=0\\).
+We use `MixedDecoherenceProducts` as the operator basis. To describe mixed noise we use the Lindblad equation with \\(\hat{H}=0\\).
 
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `MixedDecoherenceProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `MixedLindbladNoiseOperators` is given by a HashMap or Dictionary with the tuple (`MixedDecoherenceProduct`, `MixedDecoherenceProduct`) as keys and the entries in the rate matrix as values.
@@ -331,12 +331,12 @@ let mut system = MixedLindbladNoiseSystem::new([Some(3)], [Some(3)], [Some(3)]);
 
 // Building the spin term sigma^x_0 sigma^z_1
 let pp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
+// Building the bosonic term c_b^{\dagger}_1 * c_b_1
 let bp = BosonProduct::new([1], [1]).unwrap();
 // Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
 
-// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_2 * c_b_0
+// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
 // * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 let mdp = MixedDecoherenceProduct::new(
     [pp],
@@ -344,12 +344,15 @@ let mdp = MixedDecoherenceProduct::new(
     [fp]
 ).unwrap();
 
+// Adding in the mixed decoherence product
 system
     .add_operator_product(
         (mdp.clone(), mdp.clone()),
         CalculatorComplex::new(1.0, 1.5),
     )
     .unwrap();
+
+// Checking the system
 assert_eq!(
     system.get(&(mdp.clone(), mdp)),
     &CalculatorComplex::new(1.0, 1.5)
@@ -366,15 +369,16 @@ system = mixed_systems.MixedLindbladNoiseSystem([3], [3], [3])
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp_0 = spins.DecoherenceProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
+# Building the bosonic term c_b^{\dagger}_0 * c_b_0
 bp = bosons.BosonProduct([0], [0])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
-# Building the term sigma^x_0 sigma^z_1 * c_f^{\dagger}_0
-# * c_b^{\dagger}_0 * c_b^{\dagger}_1 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# Building the term sigma^x_0 sigma^z_1
+# * c_b^{\dagger}_0 * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 mdp = mixed_systems.MixedDecoherenceProduct([pp], [bp], [fp])
 
+# Adding in the mixed decoherence product
 system.add_operator_product(
     (mdp, mdp), CalculatorComplex.from_pair(1.0, 1.5))
 print(system)
@@ -409,23 +413,36 @@ use struqture::spins::{DecoherenceProduct, PauliProduct};
 
 let mut open_system = MixedLindbladOpenSystem::new([Some(3)], [Some(3)], [Some(3)]);
 
+// Building the spin term sigma^x_0 sigma^z_1
 let pp = PauliProduct::new().x(0).z(1);
+// Building the bosonic term c_b^{\dagger}_0 * c_b_0
 let bp = BosonProduct::new([0], [0]).unwrap();
+// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
 
+// Building the term (sigma^x_0 sigma^z_1 * c_b^{\dagger}_0
+// * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1)
+// + h.c.
 let hmp = HermitianMixedProduct::new([pp], [bp], [fp]).unwrap();
 
+// Building the spin term sigma^x_0 sigma^z_1
 let pp = DecoherenceProduct::new().x(0).z(1);
+// Building the bosonic term c_b^{\dagger}_1 * c_b_1
 let bp = BosonProduct::new([1], [1]).unwrap();
+// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
 
+// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
+// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 let mdp = MixedDecoherenceProduct::new([pp], [bp], [fp]).unwrap();
 
+// Adding in the system term
 let system = open_system.system_mut();
 system
     .add_operator_product(hmp, CalculatorComplex::new(2.0, 0.0))
     .unwrap();
 
+// Adding in the noise term
 let noise = open_system.noise_mut();
 noise
     .add_operator_product((mdp.clone(), mdp), CalculatorComplex::new(1.0, 0.0))
@@ -441,19 +458,32 @@ from struqture_py import bosons, fermions, spins, mixed_systems
 
 open_system = mixed_systems.MixedLindbladOpenSystem([3], [3], [3])
 
+# Building the spin term sigma^x_0 sigma^z_1
 pp = spins.PauliProduct().x(0).z(1)
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_1
 bp = bosons.BosonProduct([1, 2], [1])
+# Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
+# Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
+# * c_b^{\dagger}_2 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# + h.c.
 hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
 
+# Building the spin term sigma^x_0 sigma^z_1
 dp = spins.DecoherenceProduct().x(0).z(1)
+# Building the bosonic term c_b^{\dagger}_1 * c_b_1
 bp = bosons.BosonProduct([1], [1])
+# Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
+# Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
+# * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
 
+# Adding in the system term
 open_system.system_add_operator_product(hmp, CalculatorComplex.from_pair(2.0, 0.0))
+# Adding in the noise term
 open_system.noise_add_operator_product(
     (mdp, mdp), CalculatorComplex.from_pair(0.0, 1.0))
 
