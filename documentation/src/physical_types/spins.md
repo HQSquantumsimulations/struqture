@@ -93,7 +93,7 @@ dp = DecoherenceProduct().x(0).iy(3).z(20)
 dp_string = str(dp)
 ```
 
-In Rust the user can also import enums for the operators acting on single spins. In rust the equivalent string representation cannot be used in function and method arguments.
+In Rust the user can also import enums for the operators acting on single spins. In Rust the equivalent string representation cannot be used in function and method arguments.
 
 ```rust
 use struqture::prelude::*;
@@ -123,17 +123,17 @@ let dp_equivalent = DecoherenceProduct::new()
 A good example how complex objects are constructed from operator products are `SpinOperators` and `SpinHamiltonians`
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
-These `SpinOperators` and `SpinHamiltonians` represent operators or hamiltonians such as:
+These `SpinOperators` and `SpinHamiltonians` represent operators or Hamiltonians such as:
 \\[
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
-    \sigma^{k} \in \\{ X, Y, Z, I \\}
+\hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\\\
+    \sigma_{j, k} \in \\{ X_k, Y_k, Z_k, I \\}
 \\]
-where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
+where the \\(\sigma_{j, k}\\) are `SinglePauliOperators`.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the `PauliProducts` as keys and the coefficients \\(\alpha_j\\) as values.
 
-In struqture we distinguish between spin operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over PauliProducts, hamiltonians are guaranteed to be hermitian. In a spin hamiltonian, this means that the prefactor of each `PauliProduct` has to be real.
+In struqture we distinguish between spin operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian , this means that the prefactor of each `PauliProduct` has to be real.
 
 ### Examples
 

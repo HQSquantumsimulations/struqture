@@ -22,11 +22,11 @@ use struqture::fermions::*;
 use struqture::prelude::*;
 use struqture_py_macros::product_wrapper;
 
-/// A product of bosonic creation and annihilation operators.
+/// A product of fermionic creation and annihilation operators.
 ///
-/// The HermitianFermionProduct is used as an index for non-hermitian, normal ordered bosonic operators.
-/// A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
-/// The HermitianFermionProduct is used as an index when setting or adding new summands to a bosonic operator and when querrying the
+/// The HermitianFermionProduct is used as an index for non-hermitian, normal ordered fermionic operators.
+/// A fermionic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+/// The HermitianFermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
 /// weight of a product of operators in the sum.
 ///
 /// Examples

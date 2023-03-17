@@ -190,7 +190,7 @@ impl<'a> OperateOnModes<'a> for FermionLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `usize` - The number of bosons in the FermionLindbladNoiseOperator.
+    /// * `usize` - The number of fermionic modes in the FermionLindbladNoiseOperator.
     fn number_modes(&'a self) -> usize {
         self.current_number_modes()
     }

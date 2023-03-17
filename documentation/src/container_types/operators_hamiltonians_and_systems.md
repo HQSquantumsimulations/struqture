@@ -4,10 +4,10 @@ Operators and systems act on a state space using HashMaps (Dictionaries) of oper
 
 For spins, the operators and systems represent
 \\[ 
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\\\
-    \sigma^{k}_j \in \\{ X, Y, Z, I \\}
+\hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\\\
+    \sigma_{j, k} \in \\{ X_k, Y_k, Z_k, I \\}
 \\]
-where the \\(\sigma^{k}_j\\) are `SinglePauliOperators`.
+where the \\(\sigma_{j, k}\\) are `SinglePauliOperators`.
 
 For bosons, the operators and systems represent
 \\[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l, j} \\]
@@ -41,10 +41,10 @@ The operators and systems in struqture are
 
 # Hamiltonians and HamiltonianSystems
 
-Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are the hermitian equivalents to Systems. The operator products for hamiltonian and hamiltonian systems are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.
+Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are the hermitian equivalents to Systems. The operator products for Hamiltonian and Hamiltonian systems are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the Hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.
 
 
-The hamiltonians and hamiltonian systems in struqture are
+The Hamiltonians and Hamiltonian systems in struqture are
 
 * `SpinHamiltonian`
 * `SpinHamiltonianSystem`
