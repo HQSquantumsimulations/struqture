@@ -119,13 +119,13 @@ fn internal_map_set_get_dict() {
     assert_eq!(error, Err(StruqtureError::NumberSpinsExceeded));
 }
 
-// Test the get and remove functions of the BosonOperator
+// Test the get and remove functions of the spinOperator
 #[test]
 fn internal_map_set_get_remove() {
     let pp: PauliProduct = PauliProduct::new().z(0);
     let mut system = SpinSystem::new(Some(1));
 
-    // 1) Test try_set_boson_product and get functions
+    // 1) Test try_set_spin_product and get functions
     // Vacant
     system.set(pp.clone(), 0.5.into()).unwrap();
     assert_eq!(system.get(&pp.clone()), &0.5.into());

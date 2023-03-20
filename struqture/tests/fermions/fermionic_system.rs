@@ -59,7 +59,7 @@ fn empty_clone_options() {
 
 // Test the from_spin_operator and spin_operator functions of the FermionSystem with number_spins = None
 #[test]
-fn from_boson_operator_none() {
+fn from_fermion_operator_none() {
     let mut so: FermionOperator = FermionOperator::new();
     let mut system = FermionSystem::new(None);
     let pp: FermionProduct = FermionProduct::new([0], [2]).unwrap();
@@ -89,7 +89,7 @@ fn from_boson_operator_none() {
 
 // Test the from_spin_operator and spin_operator functions of the FermionSystem with number_spins = Some(2)
 #[test]
-fn from_boson_operator_some() {
+fn from_fermion_operator_some() {
     let mut so: FermionOperator = FermionOperator::new();
     let mut system = FermionSystem::new(Some(2));
     let pp: FermionProduct = FermionProduct::new([0], [1]).unwrap();

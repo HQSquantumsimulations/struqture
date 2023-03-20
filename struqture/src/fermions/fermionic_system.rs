@@ -225,17 +225,17 @@ impl FermionSystem {
         &self.operator
     }
 
-    /// Creates a FermionSystem from a FermionOperator and an optional number of bosonic modes.
+    /// Creates a FermionSystem from a FermionOperator and an optional number of fermionic modes.
     ///
     /// # Arguments
     ///
     /// * `operator` - The FermionOperator to create the SpinSytem from.
-    /// * `number_modes` - The optional number of bosonic modes for the FermionSystem to be created.
+    /// * `number_modes` - The optional number of fermionic modes for the FermionSystem to be created.
     ///
     /// # Returns
     ///
     /// * `Ok(Self)` - The FermionSystem created from the inputs.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Number of bosonic modes in entry exceeds number of bosonic modes in system.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Number of fermionic modes in entry exceeds number of fermionic modes in system.
     pub fn from_operator(
         operator: FermionOperator,
         number_modes: Option<usize>,

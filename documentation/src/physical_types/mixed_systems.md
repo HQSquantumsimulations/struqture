@@ -10,10 +10,10 @@ These products respect the following relations:
 \\]
 \\[ \lbrack c_{b, k}^{\dagger}, c_{b, j}^{\dagger} \rbrack = 0, \\\\
     \lbrack c_{b, k}, c_{b, j} \rbrack = 0, \\\\
-    \lbrack c_{b, k}^{\dagger}, c_{b, j} \rbrack = \delta_{k, j}. \\]
+    \lbrack c_{b, k}, c_{b, j}^{\dagger} \rbrack = \delta_{k, j}. \\]
 \\[ \lbrace c_{f, k}^{\dagger}, c_{f, j}^{\dagger} \rbrace = 0, \\\\
     \lbrace c_{f, k}, c_{f, j} \rbrace = 0, \\\\
-    \lbrace c_{f, k}^{\dagger}, c_{f, j} \rbrace = \delta_{k, j}. \\]
+    \lbrace c_{f, k}, c_{f, j}^{\dagger} \rbrace = \delta_{k, j}. \\]
 
 with 
 \\(c_b^{\dagger}\\) the bosonic creation operator, \\(c_b\\) the bosonic annihilation operator, \\(\lbrack ., . \rbrack\\) the bosonic commutation relations, \\(c_f^{\dagger}\\) the fermionic creation operator, \\(c_f\\) the fermionic annihilation operator, and \\(\lbrace ., . \rbrace\\) the fermionic anti-commutation relations.
@@ -64,7 +64,7 @@ fp = fermions.FermionProduct([0, 1], [0, 1])
 mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
 ```
 
-In rust the equivalent string representation cannot be used in function and method arguments.
+In Rust the equivalent string representation cannot be used in function and method arguments.
 
 ```rust
 use struqture::prelude::*;
@@ -109,16 +109,16 @@ let mdp = MixedDecoherenceProduct::new([dp], [bp], [fp]).unwrap();
 Complex objects are constructed from operator products are `MixedOperators` and `MixedHamiltonians`
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
-These `MixedOperators` and `MixedHamiltonians` represent operators or hamiltonians such as:
-\\[ \hat{H} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma_j^{k}  \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \\]
+These `MixedOperators` and `MixedHamiltonians` represent operators or Hamiltonians such as:
+\\[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \\]
 with commutation relations and cyclicity respected.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `MixedProducts` or `HermitianMixedProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
-In struqture we distinguish between mixed operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed hamiltonian, this means that the sums of products are sums of hermitian mixed products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
+In struqture we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed Hamiltonian , this means that the sums of products are sums of hermitian mixed products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
 
-For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/hamiltonian. See the example for more information.
+For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.
 
 ### Examples
 
@@ -397,7 +397,7 @@ The Lindblad master equation is given by
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 
-In struqture they are composed of a hamiltonian (MixedHamiltonianSystem) and noise (MixedLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (MixedHamiltonianSystem) and noise (MixedLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
 
 ### Examples
 

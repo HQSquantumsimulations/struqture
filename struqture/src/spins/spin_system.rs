@@ -166,9 +166,9 @@ impl<'a> OperateOnState<'a> for SpinSystem {
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.number_spins, self.len());
         for (pauli_product, value) in self.iter() {
-            let (new_boson_product, prefactor) = pauli_product.hermitian_conjugate();
+            let (new_spin_product, prefactor) = pauli_product.hermitian_conjugate();
             new_operator
-                .add_operator_product(new_boson_product, value.conj() * prefactor)
+                .add_operator_product(new_spin_product, value.conj() * prefactor)
                 .expect("Internal bug in add_operator_product");
         }
         new_operator
