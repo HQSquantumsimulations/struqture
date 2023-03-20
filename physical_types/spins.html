@@ -72,10 +72,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -235,7 +237,7 @@ dp = DecoherenceProduct().x(0).iy(3).z(20)
 # Often equivalent the string representation
 dp_string = str(dp)
 </code></pre>
-<p>In Rust the user can also import enums for the operators acting on single spins. In rust the equivalent string representation cannot be used in function and method arguments.</p>
+<p>In Rust the user can also import enums for the operators acting on single spins. In Rust the equivalent string representation cannot be used in function and method arguments.</p>
 <pre><code class="language-rust">use struqture::prelude::*;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator,
@@ -259,15 +261,15 @@ let dp_equivalent = DecoherenceProduct::new()
 <h2 id="operators-and-hamiltonians"><a class="header" href="#operators-and-hamiltonians">Operators and Hamiltonians</a></h2>
 <p>A good example how complex objects are constructed from operator products are <code>SpinOperators</code> and <code>SpinHamiltonians</code>
 (for more information, <a href="../container_types/operators_hamiltonians_and_systems.html">see also</a>).</p>
-<p>These <code>SpinOperators</code> and <code>SpinHamiltonians</code> represent operators or hamiltonians such as:
+<p>These <code>SpinOperators</code> and <code>SpinHamiltonians</code> represent operators or Hamiltonians such as:
 \[
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\
-\sigma^{k} \in \{ X, Y, Z, I \}
+\hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
+\sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \}
 \]
-where the \(\sigma^{k}_j\) are <code>SinglePauliOperators</code>.</p>
+where the \(\sigma_{j, k}\) are <code>SinglePauliOperators</code>.</p>
 <p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the <code>PauliProducts</code> as keys and the coefficients \(\alpha_j\) as values.</p>
-<p>In struqture we distinguish between spin operators and hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over PauliProducts, hamiltonians are guaranteed to be hermitian. In a spin hamiltonian, this means that the prefactor of each <code>PauliProduct</code> has to be real.</p>
+<p>In struqture we distinguish between spin operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian , this means that the prefactor of each <code>PauliProduct</code> has to be real.</p>
 <h3 id="examples-1"><a class="header" href="#examples-1">Examples</a></h3>
 <p>Here is an example of how to build a <code>SpinOperator</code> and a <code>SpinHamiltonian</code>, in Rust:</p>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;

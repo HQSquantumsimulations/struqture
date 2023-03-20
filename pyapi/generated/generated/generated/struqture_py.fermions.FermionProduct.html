@@ -11,7 +11,6 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
@@ -100,39 +99,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<section id="struqture-py-fermions-fermionproduct">
+  <section id="struqture-py-fermions-fermionproduct">
 <h1>struqture_py.fermions.FermionProduct<a class="headerlink" href="#struqture-py-fermions-fermionproduct" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.fermions.FermionProduct">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.fermions.</span></span><span class="sig-name descname"><span class="pre">FermionProduct</span></span><a class="headerlink" href="#struqture_py.fermions.FermionProduct" title="Permalink to this definition"></a></dt>
-<dd><p>A product of bosonic creation and annihilation operators.</p>
-<p>The FermionProduct is used as an index for non-hermitian, normal ordered bosonic operators.
-A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
-The FermionProduct is used as an index when setting or adding new summands to a bosonic operator and when querrying the
+<dd><p>A product of fermionic creation and annihilation operators.</p>
+<p>The FermionProduct is used as an index for non-hermitian, normal ordered fermionic operators.
+A fermionic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+The FermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
 weight of a product of operators in the sum.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">struqture_py.fermions</span> <span class="kn">import</span> <span class="n">FermionProduct</span>

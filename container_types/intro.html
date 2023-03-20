@@ -72,10 +72,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -151,9 +153,9 @@ All container types for operators, Hamiltonians and open systems behave like has
 <ul>
 <li><a href="./indices.html">indices</a></li>
 <li><a href="./operators_hamiltonians_and_systems.html">operators</a></li>
-<li><a href="./operators_hamiltonians_and_systems.html">hamiltonians</a></li>
+<li><a href="./operators_hamiltonians_and_systems.html">Hamiltonians</a></li>
 <li><a href="./operators_hamiltonians_and_systems.html">systems</a></li>
-<li><a href="./operators_hamiltonians_and_systems.html">hamiltonian systems</a></li>
+<li><a href="./operators_hamiltonians_and_systems.html">Hamiltonian systems</a></li>
 <li><a href="./noise_operators_and_systems.html">noise operators</a></li>
 <li><a href="./noise_operators_and_systems.html">noise systems</a></li>
 <li><a href="./open_systems.html">open systems</a></li>

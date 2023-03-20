@@ -72,10 +72,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -148,10 +150,10 @@
 <p>Operators and systems act on a state space using HashMaps (Dictionaries) of operator products and values. The distinction between operators and systems is that systems are given a fixed system size by the user when creating the object.</p>
 <p>For spins, the operators and systems represent
 \[ 
-\hat{O} = \sum_{j=0}^N \alpha_j \prod_{k} \sigma^{k}_j \\
-\sigma^{k}_j \in \{ X, Y, Z, I \}
+\hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
+\sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \}
 \]
-where the \(\sigma^{k}_j\) are <code>SinglePauliOperators</code>.</p>
+where the \(\sigma_{j, k}\) are <code>SinglePauliOperators</code>.</p>
 <p>For bosons, the operators and systems represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l, j} \]
 with 
@@ -179,8 +181,8 @@ with
 <li><code>MixedSystem</code></li>
 </ul>
 <h1 id="hamiltonians-and-hamiltoniansystems"><a class="header" href="#hamiltonians-and-hamiltoniansystems">Hamiltonians and HamiltonianSystems</a></h1>
-<p>Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are the hermitian equivalents to Systems. The operator products for hamiltonian and hamiltonian systems are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.</p>
-<p>The hamiltonians and hamiltonian systems in struqture are</p>
+<p>Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are the hermitian equivalents to Systems. The operator products for Hamiltonian and Hamiltonian systems are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the Hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.</p>
+<p>The Hamiltonians and Hamiltonian systems in struqture are</p>
 <ul>
 <li><code>SpinHamiltonian</code></li>
 <li><code>SpinHamiltonianSystem</code></li>
