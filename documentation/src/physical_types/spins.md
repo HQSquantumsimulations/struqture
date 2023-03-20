@@ -126,7 +126,7 @@ A good example how complex objects are constructed from operator products are `S
 These `SpinOperators` and `SpinHamiltonians` represent operators or Hamiltonians such as:
 \\[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\\\
-    \sigma_{j, k} \in \\{ X_k, Y_k, Z_k, I \\}
+    \sigma_{j, k} \in \\{ X_k, Y_k, Z_k, I_k \\}
 \\]
 where the \\(\sigma_{j, k}\\) are `SinglePauliOperators`.
 

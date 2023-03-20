@@ -110,7 +110,7 @@ Complex objects are constructed from operator products are `MixedOperators` and 
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
 These `MixedOperators` and `MixedHamiltonians` represent operators or Hamiltonians such as:
-\\[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k}^{a} \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \\]
+\\[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \\]
 with commutation relations and cyclicity respected.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `MixedProducts` or `HermitianMixedProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
