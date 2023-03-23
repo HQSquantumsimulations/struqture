@@ -50,6 +50,15 @@ pub use spin_noise_system::*;
 mod spin_open_system;
 pub use spin_open_system::*;
 
+mod plus_minus_product;
+pub use plus_minus_product::*;
+
+mod plus_minus_operator;
+pub use plus_minus_operator::*;
+
+mod plus_minus_noise_operator;
+pub use plus_minus_noise_operator::*;
+
 use crate::CooSparseMatrix;
 
 /// Trait for non-Hermitian operations on spins.
