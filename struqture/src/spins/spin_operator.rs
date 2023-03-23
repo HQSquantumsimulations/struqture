@@ -14,7 +14,7 @@ use super::{ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
 use crate::spins::{OperateOnSpins, PauliProduct, SpinHamiltonian, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    StruqtureVersion, SymmetricIndex,
+    StruqtureVersionSerializable, SymmetricIndex,
 };
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -60,7 +60,7 @@ pub struct SpinOperator {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 struct SpinOperatorSerialize {
     items: Vec<(PauliProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<SpinOperatorSerialize> for SpinOperator {
@@ -76,13 +76,18 @@ impl From<SpinOperatorSerialize> for SpinOperator {
 
 impl From<SpinOperator> for SpinOperatorSerialize {
     fn from(value: SpinOperator) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -603,7 +608,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut so = SpinOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
@@ -617,7 +625,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -627,12 +638,18 @@ mod test {
         let pp_1: PauliProduct = PauliProduct::new().z(0);
         let sos_1 = SpinOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let pp_2: PauliProduct = PauliProduct::new().z(2);
         let sos_2 = SpinOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(sos_1 == sos);
         assert!(sos == sos_1);
@@ -646,12 +663,15 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "SpinOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersion }"
+            "SpinOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
@@ -676,7 +696,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(
@@ -730,7 +753,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(

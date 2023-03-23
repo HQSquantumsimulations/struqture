@@ -12,8 +12,8 @@
 
 use super::{HermitianMixedProduct, MixedIndex, MixedOperator, OperateOnMixedSystems};
 use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError, StruqtureVersion,
-    SymmetricIndex,
+    ModeIndex, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
+    StruqtureVersionSerializable, SymmetricIndex,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -69,7 +69,7 @@ struct MixedHamiltonianSerialize {
     n_spins: usize,
     n_bosons: usize,
     n_fermions: usize,
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<MixedHamiltonianSerialize> for MixedHamiltonian {
@@ -86,17 +86,22 @@ impl From<MixedHamiltonianSerialize> for MixedHamiltonian {
 
 impl From<MixedHamiltonian> for MixedHamiltonianSerialize {
     fn from(value: MixedHamiltonian) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(HermitianMixedProduct, CalculatorFloat, CalculatorFloat)> = value
             .clone()
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
             n_spins: value.n_spins,
             n_bosons: value.n_bosons,
             n_fermions: value.n_fermions,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -604,7 +609,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut so = MixedHamiltonian::new(1, 1, 1);
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
@@ -626,7 +634,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -644,7 +655,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let pp_2: HermitianMixedProduct = HermitianMixedProduct::new(
             [PauliProduct::new().z(0)],
@@ -657,7 +671,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(sos_1 == sos);
         assert!(sos == sos_1);
@@ -679,12 +696,15 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "MixedHamiltonianSerialize { items: [(HermitianMixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersion }"
+            "MixedHamiltonianSerialize { items: [(HermitianMixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
@@ -717,7 +737,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(
@@ -785,7 +808,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(

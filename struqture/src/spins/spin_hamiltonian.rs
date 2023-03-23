@@ -14,7 +14,7 @@ use super::{OperateOnSpins, SpinOperator, ToSparseMatrixOperator, ToSparseMatrix
 use crate::spins::{HermitianOperateOnSpins, PauliProduct, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    StruqtureVersion,
+    StruqtureVersionSerializable,
 };
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -61,7 +61,7 @@ pub struct SpinHamiltonian {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 struct SpinHamiltonianSerialize {
     items: Vec<(PauliProduct, CalculatorFloat)>,
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<SpinHamiltonianSerialize> for SpinHamiltonian {
@@ -73,11 +73,16 @@ impl From<SpinHamiltonianSerialize> for SpinHamiltonian {
 
 impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
     fn from(value: SpinHamiltonian) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> =
             value.into_iter().map(|(key, val)| (key, val)).collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -557,7 +562,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp.clone(), 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut sh = SpinHamiltonian::new();
         sh.set(pp, CalculatorFloat::from(0.5)).unwrap();
@@ -571,7 +579,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -581,12 +592,18 @@ mod test {
         let pp_1: PauliProduct = PauliProduct::new().z(0);
         let shs_1 = SpinHamiltonianSerialize {
             items: vec![(pp_1, 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let pp_2: PauliProduct = PauliProduct::new().z(2);
         let shs_2 = SpinHamiltonianSerialize {
             items: vec![(pp_2, 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(shs_1 == shs);
         assert!(shs == shs_1);
@@ -600,12 +617,15 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", shs),
-            "SpinHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], _struqture_version: StruqtureVersion }"
+            "SpinHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
@@ -630,7 +650,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(
@@ -683,7 +706,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(

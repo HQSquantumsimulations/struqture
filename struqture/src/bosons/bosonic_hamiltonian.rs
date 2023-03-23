@@ -13,7 +13,7 @@
 use super::{BosonOperator, BosonProduct, HermitianBosonProduct, ModeIndex, OperateOnBosons};
 use crate::{
     GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
-    StruqtureVersion, SymmetricIndex,
+    StruqtureVersionSerializable, SymmetricIndex,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -59,7 +59,7 @@ pub struct BosonHamiltonian {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 struct BosonHamiltonianSerialize {
     items: Vec<(HermitianBosonProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<BosonHamiltonianSerialize> for BosonHamiltonian {
@@ -75,13 +75,18 @@ impl From<BosonHamiltonianSerialize> for BosonHamiltonian {
 
 impl From<BosonHamiltonian> for BosonHamiltonianSerialize {
     fn from(value: BosonHamiltonian) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(HermitianBosonProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -588,7 +593,10 @@ mod test {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut so = BosonHamiltonian::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
@@ -602,7 +610,10 @@ mod test {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -612,12 +623,18 @@ mod test {
         let pp_1: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos_1 = BosonHamiltonianSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let pp_2: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
         let sos_2 = BosonHamiltonianSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(sos_1 == sos);
         assert!(sos == sos_1);
@@ -631,12 +648,15 @@ mod test {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "BosonHamiltonianSerialize { items: [(HermitianBosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersion }"
+            "BosonHamiltonianSerialize { items: [(HermitianBosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
@@ -661,7 +681,10 @@ mod test {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(
@@ -715,7 +738,10 @@ mod test {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version,
+                minor_version,
+            },
         };
 
         assert_tokens(
