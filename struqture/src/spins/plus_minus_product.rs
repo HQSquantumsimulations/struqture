@@ -126,7 +126,7 @@ impl SinglePlusMinusOperator {
         left: SinglePlusMinusOperator,
         right: SinglePlusMinusOperator,
     ) -> Vec<(Self, Complex64)> {
-        let vector = match (left, right) {
+        match (left, right) {
             (SinglePlusMinusOperator::Identity, x) => vec![(x, Complex64::new(1.0, 0.0))],
             (x, SinglePlusMinusOperator::Identity) => vec![(x, Complex64::new(1.0, 0.0))],
             (SinglePlusMinusOperator::Plus, SinglePlusMinusOperator::Plus) => {
@@ -162,14 +162,13 @@ impl SinglePlusMinusOperator {
             (SinglePlusMinusOperator::Z, SinglePlusMinusOperator::Z) => {
                 vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
             }
-        };
-        vector
+        }
     }
 }
 
-impl Into<Vec<(SingleSpinOperator, Complex64)>> for SinglePlusMinusOperator {
-    fn into(self) -> Vec<(SingleSpinOperator, Complex64)> {
-        match self {
+impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
+    fn from(val: SinglePlusMinusOperator) -> Self {
+        match val {
             SinglePlusMinusOperator::Identity => {
                 vec![(SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))]
             }
@@ -186,9 +185,9 @@ impl Into<Vec<(SingleSpinOperator, Complex64)>> for SinglePlusMinusOperator {
     }
 }
 
-impl Into<Vec<(SinglePlusMinusOperator, Complex64)>> for SingleSpinOperator {
-    fn into(self) -> Vec<(SinglePlusMinusOperator, Complex64)> {
-        match self {
+impl From<SingleSpinOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
+    fn from(val: SingleSpinOperator) -> Self {
+        match val {
             SingleSpinOperator::Identity => {
                 vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
             }
@@ -205,9 +204,9 @@ impl Into<Vec<(SinglePlusMinusOperator, Complex64)>> for SingleSpinOperator {
     }
 }
 
-impl Into<Vec<(SingleDecoherenceOperator, Complex64)>> for SinglePlusMinusOperator {
-    fn into(self) -> Vec<(SingleDecoherenceOperator, Complex64)> {
-        match self {
+impl From<SinglePlusMinusOperator> for Vec<(SingleDecoherenceOperator, Complex64)> {
+    fn from(val: SinglePlusMinusOperator) -> Self {
+        match val {
             SinglePlusMinusOperator::Identity => vec![(
                 SingleDecoherenceOperator::Identity,
                 Complex64::new(1.0, 0.0),
@@ -227,9 +226,9 @@ impl Into<Vec<(SingleDecoherenceOperator, Complex64)>> for SinglePlusMinusOperat
     }
 }
 
-impl Into<Vec<(SinglePlusMinusOperator, Complex64)>> for SingleDecoherenceOperator {
-    fn into(self) -> Vec<(SinglePlusMinusOperator, Complex64)> {
-        match self {
+impl From<SingleDecoherenceOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
+    fn from(val: SingleDecoherenceOperator) -> Self {
+        match val {
             SingleDecoherenceOperator::Identity => {
                 vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
             }
@@ -248,11 +247,11 @@ impl Into<Vec<(SinglePlusMinusOperator, Complex64)>> for SingleDecoherenceOperat
     }
 }
 
-impl Into<Vec<(PlusMinusProduct, Complex64)>> for PauliProduct {
-    fn into(self) -> Vec<(PlusMinusProduct, Complex64)> {
-        let mut new_vec: Vec<(PlusMinusProduct, Complex64)> = Vec::new();
-        new_vec.push((PlusMinusProduct::new(), Complex64::new(1.0, 0.0)));
-        for (index, single) in self.iter() {
+impl From<PauliProduct> for Vec<(PlusMinusProduct, Complex64)> {
+    fn from(value: PauliProduct) -> Self {
+        let new_vec: Vec<(PlusMinusProduct, Complex64)> =
+            vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
+        for (index, single) in value.iter() {
             let temp_vec: Vec<(SinglePlusMinusOperator, Complex64)> = (*single).into();
             let mut temp_new_vec: Vec<(PlusMinusProduct, Complex64)> = Vec::new();
             for (new_op, new_prefactor) in temp_vec {
@@ -266,11 +265,11 @@ impl Into<Vec<(PlusMinusProduct, Complex64)>> for PauliProduct {
     }
 }
 
-impl Into<Vec<(PlusMinusProduct, Complex64)>> for DecoherenceProduct {
-    fn into(self) -> Vec<(PlusMinusProduct, Complex64)> {
-        let mut new_vec: Vec<(PlusMinusProduct, Complex64)> = Vec::new();
-        new_vec.push((PlusMinusProduct::new(), Complex64::new(1.0, 0.0)));
-        for (index, single) in self.iter() {
+impl From<DecoherenceProduct> for Vec<(PlusMinusProduct, Complex64)> {
+    fn from(value: DecoherenceProduct) -> Self {
+        let new_vec: Vec<(PlusMinusProduct, Complex64)> =
+            vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
+        for (index, single) in value.iter() {
             let temp_vec: Vec<(SinglePlusMinusOperator, Complex64)> = (*single).into();
             let mut temp_new_vec: Vec<(PlusMinusProduct, Complex64)> = Vec::new();
             for (new_op, new_prefactor) in temp_vec {
@@ -284,11 +283,11 @@ impl Into<Vec<(PlusMinusProduct, Complex64)>> for DecoherenceProduct {
     }
 }
 
-impl Into<Vec<(PauliProduct, Complex64)>> for PlusMinusProduct {
-    fn into(self) -> Vec<(PauliProduct, Complex64)> {
-        let mut new_vec: Vec<(PauliProduct, Complex64)> = Vec::new();
-        new_vec.push((PauliProduct::new(), Complex64::new(1.0, 0.0)));
-        for (index, single) in self.iter() {
+impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
+    fn from(value: PlusMinusProduct) -> Self {
+        let new_vec: Vec<(PauliProduct, Complex64)> =
+            vec![(PauliProduct::new(), Complex64::new(1.0, 0.0))];
+        for (index, single) in value.iter() {
             let temp_vec: Vec<(SingleSpinOperator, Complex64)> = (*single).into();
             let mut temp_new_vec: Vec<(PauliProduct, Complex64)> = Vec::new();
             for (new_op, new_prefactor) in temp_vec {
@@ -302,11 +301,11 @@ impl Into<Vec<(PauliProduct, Complex64)>> for PlusMinusProduct {
     }
 }
 
-impl Into<Vec<(DecoherenceProduct, Complex64)>> for PlusMinusProduct {
-    fn into(self) -> Vec<(DecoherenceProduct, Complex64)> {
-        let mut new_vec: Vec<(DecoherenceProduct, Complex64)> = Vec::new();
-        new_vec.push((DecoherenceProduct::new(), Complex64::new(1.0, 0.0)));
-        for (index, single) in self.iter() {
+impl From<PlusMinusProduct> for Vec<(DecoherenceProduct, Complex64)> {
+    fn from(value: PlusMinusProduct) -> Self {
+        let new_vec: Vec<(DecoherenceProduct, Complex64)> =
+            vec![(DecoherenceProduct::new(), Complex64::new(1.0, 0.0))];
+        for (index, single) in value.iter() {
             let temp_vec: Vec<(SingleDecoherenceOperator, Complex64)> = (*single).into();
             let mut temp_new_vec: Vec<(DecoherenceProduct, Complex64)> = Vec::new();
             for (new_op, new_prefactor) in temp_vec {
