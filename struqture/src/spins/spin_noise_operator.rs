@@ -744,7 +744,6 @@ fn add_lindblad_terms(
 mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
-    use std::str::FromStr;
 
     // Test the Clone and PartialEq traits of SpinOperator
     #[test]
@@ -823,27 +822,12 @@ mod test {
     /// Test SpinOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let pp = DecoherenceProduct::new().x(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
-                major_version,
-                minor_version,
+                major_version: 1,
+                minor_version: 0,
             },
         };
 
@@ -869,9 +853,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -881,27 +865,12 @@ mod test {
     /// Test SpinOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let pp = DecoherenceProduct::new().x(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
-                major_version,
-                minor_version,
+                major_version: 1,
+                minor_version: 0,
             },
         };
 
@@ -951,9 +920,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
