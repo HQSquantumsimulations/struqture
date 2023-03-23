@@ -12,7 +12,7 @@
 
 use super::{MixedDecoherenceProduct, MixedIndex, OperateOnMixedSystems};
 use crate::prelude::*;
-use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersion};
+use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
@@ -76,7 +76,7 @@ struct MixedLindbladNoiseOperatorSerialize {
     n_bosons: usize,
     n_fermions: usize,
     /// The struqture version
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
@@ -97,6 +97,7 @@ impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
 
 impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
     fn from(value: MixedLindbladNoiseOperator) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(
             MixedDecoherenceProduct,
             MixedDecoherenceProduct,
@@ -107,12 +108,16 @@ impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
             n_spins: value.n_spins,
             n_bosons: value.n_bosons,
             n_fermions: value.n_fermions,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -651,7 +656,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut so = MixedLindbladNoiseOperator::new(1, 1, 1);
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
@@ -674,7 +682,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -692,7 +703,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let spins = DecoherenceProduct::from_str("0X").unwrap();
         let creators = &[0];
@@ -705,7 +719,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(sos_1 == sos);
         assert!(sos == sos_1);
@@ -727,33 +744,21 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersion }"
+            "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
     /// Test SpinOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let spins = DecoherenceProduct::from_str("0X").unwrap();
         let creators = &[0];
         let annihilators = &[3];
@@ -765,7 +770,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_tokens(
@@ -796,9 +804,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -808,21 +816,6 @@ mod test {
     /// Test SpinOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let spins = DecoherenceProduct::from_str("0X").unwrap();
         let creators = &[0];
         let annihilators = &[3];
@@ -834,7 +827,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_tokens(
@@ -937,9 +933,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

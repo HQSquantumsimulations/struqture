@@ -13,8 +13,8 @@
 use super::{OperateOnSpins, SingleDecoherenceOperator, ToSparseMatrixSuperOperator};
 use crate::spins::{DecoherenceOperator, DecoherenceProduct};
 use crate::{
-    CooSparseMatrix, OperateOnDensityMatrix, SpinIndex, StruqtureError, StruqtureVersion,
-    SymmetricIndex,
+    CooSparseMatrix, OperateOnDensityMatrix, SpinIndex, StruqtureError,
+    StruqtureVersionSerializable, SymmetricIndex,
 };
 use itertools::Itertools;
 use num_complex::Complex64;
@@ -70,7 +70,7 @@ struct SpinLindbladNoiseOperatorSerialize {
         CalculatorFloat,
     )>,
     /// The struqture version
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<SpinLindbladNoiseOperatorSerialize> for SpinLindbladNoiseOperator {
@@ -88,6 +88,7 @@ impl From<SpinLindbladNoiseOperatorSerialize> for SpinLindbladNoiseOperator {
 
 impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
     fn from(value: SpinLindbladNoiseOperator) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(
             DecoherenceProduct,
             DecoherenceProduct,
@@ -97,9 +98,13 @@ impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -739,7 +744,6 @@ fn add_lindblad_terms(
 mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
-    use std::str::FromStr;
 
     // Test the Clone and PartialEq traits of SpinOperator
     #[test]
@@ -747,7 +751,10 @@ mod test {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut so = SpinLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
@@ -762,7 +769,10 @@ mod test {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -772,12 +782,18 @@ mod test {
         let pp_1: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos_1 = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let pp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
         let sos_2 = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(sos_1 == sos);
         assert!(sos == sos_1);
@@ -791,37 +807,28 @@ mod test {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "SpinLindbladNoiseOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersion }"
+            "SpinLindbladNoiseOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
     /// Test SpinOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let pp = DecoherenceProduct::new().x(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_tokens(
@@ -846,9 +853,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -858,25 +865,13 @@ mod test {
     /// Test SpinOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let pp = DecoherenceProduct::new().x(0);
         let sos = SpinLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_tokens(
@@ -925,9 +920,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
