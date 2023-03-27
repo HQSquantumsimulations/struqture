@@ -1114,6 +1114,7 @@ impl GetValue<HermitianFermionProduct> for FermionProduct {
     ///
     /// # Arguments
     ///
+
     /// * `index` - The HermitianFermionProduct to transform the value by.
     /// * `value` - The value to be transformed.
     ///

@@ -1002,6 +1002,7 @@ pub mod fermions;
 pub mod mixed_systems;
 pub mod prelude;
 pub mod spins;
+pub mod mappings;
 
 /// Shorhand type for TinyVec representation of creators or annihilators
 #[cfg(test)]
