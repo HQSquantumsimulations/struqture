@@ -14,6 +14,10 @@ use super::FermionIndex;
 use crate::{
     CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, StruqtureError, SymmetricIndex,
 };
+use crate::spins::{PauliProduct, SingleSpinOperator, SpinOperator};
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::prelude::*;
+
 use qoqo_calculator::CalculatorComplex;
 use serde::{
     de::{Error, SeqAccess, Visitor},
@@ -1223,6 +1227,69 @@ fn sort_and_signal(indices: TinyVec<[usize; 2]>) -> (TinyVec<[usize; 2]>, bool, 
         }
     }
     (local_indices, contain_double, parity)
+}
+
+fn _lowering_operator(i: &usize) -> SpinOperator {
+    let mut out = SpinOperator::new();
+    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0)).unwrap();
+    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5)).unwrap();
+    out
+}
+fn _raising_operator(i: &usize) -> SpinOperator {
+    let mut out = SpinOperator::new();
+    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0)).unwrap();
+    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5)).unwrap();
+    out
+}
+
+
+impl JordanWignerFermionToSpin for FermionProduct {
+    type Output = SpinOperator;
+
+    /// Implements JordanWignerFermionToSpin for FermionProduct.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `SpinOperator` - The spin operator that results from the transformation.
+    fn jordan_wigner(self) -> Self::Output {
+        let number_creators = self.number_creators();
+        let number_annihilators = self.number_annihilators();
+        let mut out = SpinOperator::new();
+
+        // initialize out with an identity
+        let mut id = PauliProduct::new();
+        id = id.set_pauli(0, SingleSpinOperator::Identity);
+        out.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
+        
+        let mut previous = 0;
+        for (index, site) in self.creators().enumerate() {
+            // insert Jordan-Wigner string
+            if index%2 != number_creators%2 {
+                for i in previous..*site {                    
+                    out = out * PauliProduct::new().z(i)
+                }
+            }
+            out = out * _lowering_operator(site);
+            previous = *site;
+        }
+
+        previous = 0;
+        for (index, site) in self.annihilators().enumerate() {
+            // insert Jordan-Wigner string
+            if index%2 != number_annihilators%2 {
+                for i in previous..*site {                    
+                    out = out * PauliProduct::new().z(i)
+                }
+            }
+            out = out * _raising_operator(site);
+            previous = *site;
+        }
+        out
+
+    }
 }
 
 // When constructing multiplication with commute_creator remember to skip all products with double creators or double annihilators

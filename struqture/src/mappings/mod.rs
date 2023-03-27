@@ -15,4 +15,7 @@
 
 pub mod jordan_wigner;
 
+pub use jordan_wigner::JordanWignerFermionToSpin;
+pub use jordan_wigner::JordanWignerSpinToFermion;
+
 

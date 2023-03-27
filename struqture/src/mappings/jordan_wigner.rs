@@ -35,7 +35,7 @@ use crate::spins::{
     SpinHamiltonian,
     SpinLindbladOpenSystem,
     SingleSpinOperator,
-}
+};
 use crate::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 
@@ -71,61 +71,3 @@ pub trait JordanWignerSpinToFermion{
 
 }
 
-fn _lowering_operator(i: &usize) -> SpinOperator {
-    let mut out = SpinOperator::new();
-    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0)).unwrap();
-    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5)).unwrap();
-    out
-}
-fn _raising_operator(i: &usize) -> SpinOperator {
-    let mut out = SpinOperator::new();
-    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0)).unwrap();
-    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5)).unwrap();
-    out
-}
-
-
-impl JordanWignerFermionToSpin for FermionProduct {
-    type Output = SpinOperator;
-
-    /// TODO docstring explaining simplifications
-    fn jordan_wigner(self) -> Self::Output {
-        let number_creators = self.number_creators();
-        let number_annihilators = self.number_annihilators();
-        let mut out = SpinOperator::new();
-
-        // initialize out with an identity
-        let mut id = PauliProduct::new();
-        id = id.set_pauli(0, SingleSpinOperator::Identity);
-        out.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
-        
-        // TODO add check that input is not the identity?
-        // or see if it works fine already
-
-        let mut previous = 0;
-        for (index, site) in self.creators().enumerate() {
-            // insert Jordan-Wigner string
-            if index%2 != number_creators%2 {
-                for i in previous..*site {                    
-                    out = out * PauliProduct::new().z(i)
-                }
-            }
-            out = out * _lowering_operator(site);
-            previous = *site;
-        }
-
-        previous = 0;
-        for (index, site) in self.annihilators().enumerate() {
-            // insert Jordan-Wigner string
-            if index%2 != number_annihilators%2 {
-                for i in previous..*site {                    
-                    out = out * PauliProduct::new().z(i)
-                }
-            }
-            out = out * _raising_operator(site);
-            previous = *site;
-        }
-        out
-
-    }
-}

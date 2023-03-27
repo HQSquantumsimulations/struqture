@@ -25,3 +25,6 @@ mod spins;
 
 #[cfg(test)]
 mod mixed_systems;
+
+#[cfg(test)]
+mod mappings;

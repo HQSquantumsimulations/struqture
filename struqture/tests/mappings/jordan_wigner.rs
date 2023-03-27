@@ -10,19 +10,16 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use test_case::test_case;
-use qoqo_calculator::Calculatorcomplex;
+use qoqo_calculator::CalculatorComplex;
 
-use crate::prelude::*;
-use crate::fermions::FermionProduct;
-use crate::spins::{PauliProduct, SpinOperator};
-use crate::mappings::jordan_wigner;
+use struqture::prelude::*;
+use struqture::fermions::FermionProduct;
+use struqture::spins::{PauliProduct,
+                       SpinOperator,
+                       SingleSpinOperator,
+};
+use struqture::mappings::JordanWignerFermionToSpin;
 
-
-// NOTE for the moment we work on tests only for the FermionProduct
-// implementation of the JordanWignerSpinToFermion trait.
-
-// TODO move to FermionProduct tests
 #[test]
 fn test_jw_fermion_to_spin() {
 
@@ -39,7 +36,14 @@ fn test_jw_fermion_to_spin() {
     so.add_operator_product(pp_3.clone(), CalculatorComplex::new(0.25, 0.0)).unwrap();
     so.add_operator_product(pp_4.clone(), CalculatorComplex::new(0.25, 0.0)).unwrap();
 
-    assert_eq!(fp.jordan_wigner(), sp)
+    assert_eq!(fp.jordan_wigner(), so);
 
+    let fp = FermionProduct::new([], []).unwrap();
+    let mut so = SpinOperator::new();
+    let mut id = PauliProduct::new();
+    id = id.set_pauli(0, SingleSpinOperator::Identity);
+    so.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
+    
+    assert_eq!(fp.jordan_wigner(), so)
 }
 
