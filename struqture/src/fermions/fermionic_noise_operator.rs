@@ -11,7 +11,9 @@
 // limitations under the License.
 
 use super::{FermionProduct, OperateOnFermions};
-use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, StruqtureVersion};
+use crate::{
+    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, StruqtureVersionSerializable,
+};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
@@ -64,7 +66,7 @@ struct FermionLindbladNoiseOperatorSerialize {
         CalculatorFloat,
     )>,
     /// The struqture version
-    _struqture_version: StruqtureVersion,
+    _struqture_version: StruqtureVersionSerializable,
 }
 
 impl From<FermionLindbladNoiseOperatorSerialize> for FermionLindbladNoiseOperator {
@@ -82,6 +84,7 @@ impl From<FermionLindbladNoiseOperatorSerialize> for FermionLindbladNoiseOperato
 
 impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerialize {
     fn from(value: FermionLindbladNoiseOperator) -> Self {
+        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(
             FermionProduct,
             FermionProduct,
@@ -91,9 +94,13 @@ impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerializ
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
+        let current_version = StruqtureVersionSerializable {
+            major_version: min_version.0,
+            minor_version: min_version.1,
+        };
         Self {
             items: new_noise_op,
-            _struqture_version: StruqtureVersion,
+            _struqture_version: current_version,
         }
     }
 }
@@ -458,7 +465,6 @@ impl fmt::Display for FermionLindbladNoiseOperator {
 mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
-    use std::str::FromStr;
 
     // Test the Clone and PartialEq traits of SpinOperator
     #[test]
@@ -466,7 +472,10 @@ mod test {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let mut so = FermionLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
@@ -481,7 +490,10 @@ mod test {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         // Test Clone trait
@@ -491,12 +503,18 @@ mod test {
         let pp_1: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos_1 = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         let pp_2: FermionProduct = FermionProduct::new([0], [1]).unwrap();
         let sos_2 = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
         assert!(sos_1 == sos);
         assert!(sos == sos_1);
@@ -510,37 +528,28 @@ mod test {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "FermionLindbladNoiseOperatorSerialize { items: [(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersion }"
+            "FermionLindbladNoiseOperatorSerialize { items: [(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
     /// Test SpinOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_tokens(
@@ -565,9 +574,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -577,25 +586,13 @@ mod test {
     /// Test SpinOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
-        use crate::STRUQTURE_VERSION;
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersion,
+            _struqture_version: StruqtureVersionSerializable {
+                major_version: 1,
+                minor_version: 0,
+            },
         };
 
         assert_tokens(
@@ -642,9 +639,9 @@ mod test {
                     len: 2,
                 },
                 Token::Str("major_version"),
-                Token::U32(major_version),
+                Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(minor_version),
+                Token::U32(0),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
