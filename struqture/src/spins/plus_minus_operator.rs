@@ -170,30 +170,6 @@ impl<'a> OperateOnState<'a> for PlusMinusOperator {
     }
 }
 
-// impl<'a> OperateOnSpins<'a> for PlusMinusOperator {
-//     // From trait
-//     fn current_number_spins(&self) -> usize {
-//         let mut max_mode: usize = 0;
-//         if !self.internal_map.is_empty() {
-//             for key in self.internal_map.keys() {
-//                 if key.current_number_spins() > max_mode {
-//                     max_mode = key.current_number_spins()
-//                 }
-//             }
-//         }
-//         max_mode
-//     }
-
-//     /// Gets the maximum index of the PlusMinusOperator.
-//     ///
-//     /// # Returns
-//     ///
-//     /// * `usize` - The number of spins in the PlusMinusOperator.
-//     fn number_spins(&self) -> usize {
-//         self.current_number_spins()
-//     }
-// }
-
 /// Implements the default function (Default trait) of PlusMinusOperator (an empty PlusMinusOperator).
 ///
 impl Default for PlusMinusOperator {

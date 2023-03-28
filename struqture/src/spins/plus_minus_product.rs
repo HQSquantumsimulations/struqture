@@ -10,9 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::{GetValue, SpinIndex, StruqtureError, SymmetricIndex};
+use crate::{SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
-use qoqo_calculator::CalculatorComplex;
 use serde::de::{Deserializer, Error, SeqAccess, Visitor};
 use serde::ser::{SerializeSeq, Serializer};
 use serde::{Deserialize, Serialize};
@@ -591,41 +590,6 @@ impl Ord for PlusMinusProduct {
 impl PartialOrd for PlusMinusProduct {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
-    }
-}
-
-impl GetValue<PlusMinusProduct> for PlusMinusProduct {
-    type ValueIn = CalculatorComplex;
-    type ValueOut = CalculatorComplex;
-
-    /// Gets the key corresponding to the input index (here, itself).
-    ///
-    /// # Arguments
-    ///
-    /// * `index` - The index for which to get the corresponding Product.
-    ///
-    /// # Returns
-    ///
-    /// * `Self` - The corresponding PlusMinusProduct.
-    fn get_key(index: &PlusMinusProduct) -> Self {
-        index.clone()
-    }
-
-    /// Gets the transformed value corresponding to the input index and value (here, itself).
-    ///
-    /// # Arguments
-    ///
-    /// * `index` - The index to transform the value by.
-    /// * `value` - The value to be transformed.
-    ///
-    /// # Returns
-    ///
-    /// * `CalculatorComplex` - The transformed value.
-    fn get_transform(
-        _index: &PlusMinusProduct,
-        value: qoqo_calculator::CalculatorComplex,
-    ) -> qoqo_calculator::CalculatorComplex {
-        value
     }
 }
 
