@@ -21,20 +21,30 @@ use std::collections::{BTreeMap, HashMap};
 use std::hash::{Hash, Hasher};
 use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
-use struqture::spins::{PlusMinusProduct, SinglePlusMinusOperator};
-use struqture::{StruqtureError, SymmetricIndex};
+use struqture::spins::{
+    DecoherenceProduct, PauliProduct, PlusMinusProduct, SingleDecoherenceOperator,
+    SinglePlusMinusOperator, SingleSpinOperator,
+};
+use struqture::{SpinIndex, StruqtureError, SymmetricIndex};
 
 // Test the new function of the PlusMinusProduct
 #[test]
 fn new() {
     let mut pmp = PlusMinusProduct::new();
-    pmp = pmp.set_pauli(0, SinglePlusMinusOperator::Plus);
+    assert!(pmp.is_natural_hermitian());
+    pmp = pmp.set_pauli(0, SinglePlusMinusOperator::Z);
+    assert!(pmp.is_natural_hermitian());
+    pmp = pmp.set_pauli(1, SinglePlusMinusOperator::Minus);
+    assert!(!pmp.is_natural_hermitian());
+    let mut pmp_h = PlusMinusProduct::new();
+    pmp_h = pmp_h.set_pauli(2, SinglePlusMinusOperator::Plus);
+    assert!(!pmp_h.is_natural_hermitian());
 
     let mut pp_compare = PlusMinusProduct::new();
     // assert!(pp_compare.is_empty());
-    assert!(pp_compare.is_natural_hermitian());
     // assert_eq!(pp_compare.current_number_spins(), 0_usize);
-    pp_compare = pp_compare.set_pauli(0, SinglePlusMinusOperator::Plus);
+    pp_compare = pp_compare.set_pauli(0, SinglePlusMinusOperator::Z);
+    pp_compare = pp_compare.set_pauli(1, SinglePlusMinusOperator::Minus);
 
     assert_eq!(pmp, pp_compare);
     // assert_eq!(pp_compare.corresponds_to(), pp_compare);
@@ -206,7 +216,7 @@ fn from_str() {
 
     assert_eq!(PlusMinusProduct::from_str(string).unwrap(), pmp);
 
-    let string_err = "0+100J";
+    let string_err = "0Z100J";
     let error = PlusMinusProduct::from_str(string_err);
     assert!(error.is_err());
     assert_eq!(
@@ -216,13 +226,23 @@ fn from_str() {
         })
     );
 
-    let string_err = " Plus";
+    let string_err = " +";
     let error = PlusMinusProduct::from_str(string_err);
     assert!(error.is_err());
     assert_eq!(
         error,
         Err(StruqtureError::FromStringFailed {
             msg: "Using   instead of unsigned integer as spin index".to_string()
+        })
+    );
+
+    let string_err = "0Z0+";
+    let error = PlusMinusProduct::from_str(string_err);
+    assert!(error.is_err());
+    assert_eq!(
+        error,
+        Err(StruqtureError::FromStringFailed {
+            msg: "At least one spin index is used more than once.".to_string()
         })
     );
 }
@@ -252,19 +272,23 @@ fn hash_debug() {
     assert_eq!(format!("{}", pmp), "I");
 
     pmp = pmp.set_pauli(0, SinglePlusMinusOperator::Plus);
+    pmp = pmp.set_pauli(1, SinglePlusMinusOperator::Minus);
     pmp = pmp.set_pauli(2, SinglePlusMinusOperator::Z);
+    pmp = pmp.set_pauli(3, SinglePlusMinusOperator::Identity);
 
     assert_eq!(
         format!("{:?}", pmp),
-        "PlusMinusProduct { items: [(0, Plus), (2, Z)] }"
+        "PlusMinusProduct { items: [(0, Plus), (1, Minus), (2, Z)] }"
     );
-    assert_eq!(format!("{}", pmp), "0+2Z");
+    assert_eq!(format!("{}", pmp), "0+1-2Z");
 
     let mut pp_1 = PlusMinusProduct::new();
     pp_1 = pp_1.set_pauli(0, SinglePlusMinusOperator::Plus);
+    pp_1 = pp_1.set_pauli(1, SinglePlusMinusOperator::Minus);
     pp_1 = pp_1.set_pauli(2, SinglePlusMinusOperator::Z);
     let mut pp_2 = PlusMinusProduct::new();
     pp_2 = pp_2.set_pauli(2, SinglePlusMinusOperator::Z);
+    pp_2 = pp_2.set_pauli(1, SinglePlusMinusOperator::Minus);
     pp_2 = pp_2.set_pauli(0, SinglePlusMinusOperator::Plus);
 
     let mut s_1 = DefaultHasher::new();
@@ -288,6 +312,7 @@ fn clone_partial_eq_partial_ord() {
     pp_0 = pp_0.set_pauli(0, SinglePlusMinusOperator::Plus);
     let mut pp_1 = PlusMinusProduct::new();
     pp_1 = pp_1.set_pauli(0, SinglePlusMinusOperator::Z);
+    pp_1 = pp_1.set_pauli(1, SinglePlusMinusOperator::Minus);
     assert!(pp_0 == pmp);
     assert!(pmp == pp_0);
     assert!(pp_1 != pmp);
@@ -525,4 +550,399 @@ fn test_single_plus_minus_operator_product() {
         let direct_matrix_multiplication = inner_mat.dot(outer_mat);
         assert_eq!(test_mat, direct_matrix_multiplication)
     }
+}
+
+#[test]
+fn single_so_from_single_pm() {
+    let result: Vec<(SingleSpinOperator, Complex64)> =
+        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Z);
+    assert_eq!(
+        result,
+        vec![(SingleSpinOperator::Z, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SingleSpinOperator, Complex64)> =
+        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Identity);
+    assert_eq!(
+        result,
+        vec![(SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SingleSpinOperator, Complex64)> =
+        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Plus);
+    assert_eq!(
+        result,
+        vec![
+            (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
+            (SingleSpinOperator::Y, Complex64::new(0.0, 0.5))
+        ]
+    );
+
+    let result: Vec<(SingleSpinOperator, Complex64)> =
+        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Minus);
+    assert_eq!(
+        result,
+        vec![
+            (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
+            (SingleSpinOperator::Y, Complex64::new(0.0, -0.5))
+        ]
+    );
+}
+
+#[test]
+fn single_do_from_single_pm() {
+    let result: Vec<(SingleDecoherenceOperator, Complex64)> =
+        Vec::<(SingleDecoherenceOperator, Complex64)>::from(SinglePlusMinusOperator::Z);
+    assert_eq!(
+        result,
+        vec![(SingleDecoherenceOperator::Z, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SingleDecoherenceOperator, Complex64)> =
+        Vec::<(SingleDecoherenceOperator, Complex64)>::from(SinglePlusMinusOperator::Identity);
+    assert_eq!(
+        result,
+        vec![(
+            SingleDecoherenceOperator::Identity,
+            Complex64::new(1.0, 0.0)
+        )]
+    );
+
+    let result: Vec<(SingleDecoherenceOperator, Complex64)> =
+        Vec::<(SingleDecoherenceOperator, Complex64)>::from(SinglePlusMinusOperator::Plus);
+    assert_eq!(
+        result,
+        vec![
+            (SingleDecoherenceOperator::X, Complex64::new(0.5, 0.0)),
+            (SingleDecoherenceOperator::IY, Complex64::new(0.5, 0.0))
+        ]
+    );
+
+    let result: Vec<(SingleDecoherenceOperator, Complex64)> =
+        Vec::<(SingleDecoherenceOperator, Complex64)>::from(SinglePlusMinusOperator::Minus);
+    assert_eq!(
+        result,
+        vec![
+            (SingleDecoherenceOperator::X, Complex64::new(0.5, 0.0)),
+            (SingleDecoherenceOperator::IY, Complex64::new(-0.5, 0.0))
+        ]
+    );
+}
+
+#[test]
+fn single_pm_from_single_so() {
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::Z);
+    assert_eq!(
+        result,
+        vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::Identity);
+    assert_eq!(
+        result,
+        vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::X);
+    assert_eq!(
+        result,
+        vec![
+            (SinglePlusMinusOperator::Plus, Complex64::new(1.0, 0.0)),
+            (SinglePlusMinusOperator::Minus, Complex64::new(1.0, 0.0))
+        ]
+    );
+
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::Y);
+    assert_eq!(
+        result,
+        vec![
+            (SinglePlusMinusOperator::Plus, Complex64::new(0.0, -1.0)),
+            (SinglePlusMinusOperator::Minus, Complex64::new(0.0, 1.0))
+        ]
+    );
+}
+
+#[test]
+fn single_pm_from_single_do() {
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleDecoherenceOperator::Z);
+    assert_eq!(
+        result,
+        vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleDecoherenceOperator::Identity);
+    assert_eq!(
+        result,
+        vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleDecoherenceOperator::X);
+    assert_eq!(
+        result,
+        vec![
+            (SinglePlusMinusOperator::Plus, Complex64::new(1.0, 0.0)),
+            (SinglePlusMinusOperator::Minus, Complex64::new(1.0, 0.0))
+        ]
+    );
+
+    let result: Vec<(SinglePlusMinusOperator, Complex64)> =
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleDecoherenceOperator::IY);
+    assert_eq!(
+        result,
+        vec![
+            (SinglePlusMinusOperator::Plus, Complex64::new(1.0, 0.0)),
+            (SinglePlusMinusOperator::Minus, Complex64::new(-1.0, 0.0))
+        ]
+    );
+}
+
+#[test]
+fn pm_from_pp() {
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(PauliProduct::new().z(0));
+    assert_eq!(
+        result,
+        vec![(PlusMinusProduct::new().z(0), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(PauliProduct::new());
+    assert_eq!(
+        result,
+        vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(PauliProduct::new().x(0));
+    assert_eq!(
+        result,
+        vec![
+            (PlusMinusProduct::new().plus(0), Complex64::new(1.0, 0.0)),
+            (PlusMinusProduct::new().minus(0), Complex64::new(1.0, 0.0))
+        ]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(PauliProduct::new().y(0));
+    assert_eq!(
+        result,
+        vec![
+            (PlusMinusProduct::new().plus(0), Complex64::new(0.0, -1.0)),
+            (PlusMinusProduct::new().minus(0), Complex64::new(0.0, 1.0))
+        ]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(PauliProduct::new().x(0).y(1).z(2));
+    assert_eq!(
+        result,
+        vec![
+            (
+                PlusMinusProduct::new().plus(0).plus(1).z(2),
+                Complex64::new(0.0, -1.0)
+            ),
+            (
+                PlusMinusProduct::new().minus(0).plus(1).z(2),
+                Complex64::new(0.0, -1.0)
+            ),
+            (
+                PlusMinusProduct::new().plus(0).minus(1).z(2),
+                Complex64::new(0.0, 1.0)
+            ),
+            (
+                PlusMinusProduct::new().minus(0).minus(1).z(2),
+                Complex64::new(0.0, 1.0)
+            ),
+        ]
+    );
+}
+
+#[test]
+fn pp_from_pm() {
+    let result: Vec<(PauliProduct, Complex64)> =
+        Vec::<(PauliProduct, Complex64)>::from(PlusMinusProduct::new().z(0));
+    assert_eq!(
+        result,
+        vec![(PauliProduct::new().z(0), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(PauliProduct, Complex64)> =
+        Vec::<(PauliProduct, Complex64)>::from(PlusMinusProduct::new());
+    assert_eq!(
+        result,
+        vec![(PauliProduct::new(), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(PauliProduct, Complex64)> =
+        Vec::<(PauliProduct, Complex64)>::from(PlusMinusProduct::new().plus(0));
+    assert_eq!(
+        result,
+        vec![
+            (PauliProduct::new().x(0), Complex64::new(0.5, 0.0)),
+            (PauliProduct::new().y(0), Complex64::new(0.0, 0.5))
+        ]
+    );
+
+    let result: Vec<(PauliProduct, Complex64)> =
+        Vec::<(PauliProduct, Complex64)>::from(PlusMinusProduct::new().minus(0));
+    assert_eq!(
+        result,
+        vec![
+            (PauliProduct::new().x(0), Complex64::new(0.5, 0.0)),
+            (PauliProduct::new().y(0), Complex64::new(0.0, -0.5))
+        ]
+    );
+
+    let result: Vec<(PauliProduct, Complex64)> =
+        Vec::<(PauliProduct, Complex64)>::from(PlusMinusProduct::new().plus(0).minus(1).z(2));
+    assert_eq!(
+        result,
+        vec![
+            (
+                PauliProduct::new().x(0).x(1).z(2),
+                Complex64::new(0.25, 0.0)
+            ),
+            (
+                PauliProduct::new().y(0).x(1).z(2),
+                Complex64::new(0.0, 0.25)
+            ),
+            (
+                PauliProduct::new().x(0).y(1).z(2),
+                Complex64::new(0.0, -0.25)
+            ),
+            (
+                PauliProduct::new().y(0).y(1).z(2),
+                Complex64::new(0.25, 0.0)
+            ),
+        ]
+    );
+}
+
+#[test]
+fn pm_from_dp() {
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(DecoherenceProduct::new().z(0));
+    assert_eq!(
+        result,
+        vec![(PlusMinusProduct::new().z(0), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(DecoherenceProduct::new());
+    assert_eq!(
+        result,
+        vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(DecoherenceProduct::new().x(0));
+    assert_eq!(
+        result,
+        vec![
+            (PlusMinusProduct::new().plus(0), Complex64::new(1.0, 0.0)),
+            (PlusMinusProduct::new().minus(0), Complex64::new(1.0, 0.0))
+        ]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(DecoherenceProduct::new().iy(0));
+    assert_eq!(
+        result,
+        vec![
+            (PlusMinusProduct::new().plus(0), Complex64::new(1.0, 0.0)),
+            (PlusMinusProduct::new().minus(0), Complex64::new(-1.0, 0.0))
+        ]
+    );
+
+    let result: Vec<(PlusMinusProduct, Complex64)> =
+        Vec::<(PlusMinusProduct, Complex64)>::from(DecoherenceProduct::new().x(0).iy(1).z(2));
+    assert_eq!(
+        result,
+        vec![
+            (
+                PlusMinusProduct::new().plus(0).plus(1).z(2),
+                Complex64::new(1.0, 0.0)
+            ),
+            (
+                PlusMinusProduct::new().minus(0).plus(1).z(2),
+                Complex64::new(1.0, 0.0)
+            ),
+            (
+                PlusMinusProduct::new().plus(0).minus(1).z(2),
+                Complex64::new(-1.0, 0.0)
+            ),
+            (
+                PlusMinusProduct::new().minus(0).minus(1).z(2),
+                Complex64::new(-1.0, 0.0)
+            ),
+        ]
+    );
+}
+
+#[test]
+fn dp_from_pm() {
+    let result: Vec<(DecoherenceProduct, Complex64)> =
+        Vec::<(DecoherenceProduct, Complex64)>::from(PlusMinusProduct::new().z(0));
+    assert_eq!(
+        result,
+        vec![(DecoherenceProduct::new().z(0), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(DecoherenceProduct, Complex64)> =
+        Vec::<(DecoherenceProduct, Complex64)>::from(PlusMinusProduct::new());
+    assert_eq!(
+        result,
+        vec![(DecoherenceProduct::new(), Complex64::new(1.0, 0.0))]
+    );
+
+    let result: Vec<(DecoherenceProduct, Complex64)> =
+        Vec::<(DecoherenceProduct, Complex64)>::from(PlusMinusProduct::new().plus(0));
+    assert_eq!(
+        result,
+        vec![
+            (DecoherenceProduct::new().x(0), Complex64::new(0.5, 0.0)),
+            (DecoherenceProduct::new().iy(0), Complex64::new(0.5, 0.0))
+        ]
+    );
+
+    let result: Vec<(DecoherenceProduct, Complex64)> =
+        Vec::<(DecoherenceProduct, Complex64)>::from(PlusMinusProduct::new().minus(0));
+    assert_eq!(
+        result,
+        vec![
+            (DecoherenceProduct::new().x(0), Complex64::new(0.5, 0.0)),
+            (DecoherenceProduct::new().iy(0), Complex64::new(-0.5, 0.0))
+        ]
+    );
+
+    let result: Vec<(DecoherenceProduct, Complex64)> =
+        Vec::<(DecoherenceProduct, Complex64)>::from(PlusMinusProduct::new().plus(0).minus(1).z(2));
+    assert_eq!(
+        result,
+        vec![
+            (
+                DecoherenceProduct::new().x(0).x(1).z(2),
+                Complex64::new(0.25, 0.0)
+            ),
+            (
+                DecoherenceProduct::new().iy(0).x(1).z(2),
+                Complex64::new(0.25, 0.0)
+            ),
+            (
+                DecoherenceProduct::new().x(0).iy(1).z(2),
+                Complex64::new(-0.25, 0.0)
+            ),
+            (
+                DecoherenceProduct::new().iy(0).iy(1).z(2),
+                Complex64::new(-0.25, 0.0)
+            ),
+        ]
+    );
 }

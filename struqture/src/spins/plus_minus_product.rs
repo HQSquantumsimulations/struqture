@@ -248,7 +248,7 @@ impl From<SingleDecoherenceOperator> for Vec<(SinglePlusMinusOperator, Complex64
 
 impl From<PauliProduct> for Vec<(PlusMinusProduct, Complex64)> {
     fn from(value: PauliProduct) -> Self {
-        let new_vec: Vec<(PlusMinusProduct, Complex64)> =
+        let mut new_vec: Vec<(PlusMinusProduct, Complex64)> =
             vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
         for (index, single) in value.iter() {
             let temp_vec: Vec<(SinglePlusMinusOperator, Complex64)> = (*single).into();
@@ -259,6 +259,7 @@ impl From<PauliProduct> for Vec<(PlusMinusProduct, Complex64)> {
                     temp_new_vec.push((product, new_prefactor * prefactor))
                 }
             }
+            new_vec = temp_new_vec;
         }
         new_vec
     }
@@ -266,7 +267,7 @@ impl From<PauliProduct> for Vec<(PlusMinusProduct, Complex64)> {
 
 impl From<DecoherenceProduct> for Vec<(PlusMinusProduct, Complex64)> {
     fn from(value: DecoherenceProduct) -> Self {
-        let new_vec: Vec<(PlusMinusProduct, Complex64)> =
+        let mut new_vec: Vec<(PlusMinusProduct, Complex64)> =
             vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
         for (index, single) in value.iter() {
             let temp_vec: Vec<(SinglePlusMinusOperator, Complex64)> = (*single).into();
@@ -277,6 +278,7 @@ impl From<DecoherenceProduct> for Vec<(PlusMinusProduct, Complex64)> {
                     temp_new_vec.push((product, new_prefactor * prefactor))
                 }
             }
+            new_vec = temp_new_vec;
         }
         new_vec
     }
@@ -284,7 +286,7 @@ impl From<DecoherenceProduct> for Vec<(PlusMinusProduct, Complex64)> {
 
 impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
     fn from(value: PlusMinusProduct) -> Self {
-        let new_vec: Vec<(PauliProduct, Complex64)> =
+        let mut new_vec: Vec<(PauliProduct, Complex64)> =
             vec![(PauliProduct::new(), Complex64::new(1.0, 0.0))];
         for (index, single) in value.iter() {
             let temp_vec: Vec<(SingleSpinOperator, Complex64)> = (*single).into();
@@ -295,6 +297,7 @@ impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
                     temp_new_vec.push((product, new_prefactor * prefactor))
                 }
             }
+            new_vec = temp_new_vec;
         }
         new_vec
     }
@@ -302,7 +305,7 @@ impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
 
 impl From<PlusMinusProduct> for Vec<(DecoherenceProduct, Complex64)> {
     fn from(value: PlusMinusProduct) -> Self {
-        let new_vec: Vec<(DecoherenceProduct, Complex64)> =
+        let mut new_vec: Vec<(DecoherenceProduct, Complex64)> =
             vec![(DecoherenceProduct::new(), Complex64::new(1.0, 0.0))];
         for (index, single) in value.iter() {
             let temp_vec: Vec<(SingleDecoherenceOperator, Complex64)> = (*single).into();
@@ -313,6 +316,7 @@ impl From<PlusMinusProduct> for Vec<(DecoherenceProduct, Complex64)> {
                     temp_new_vec.push((product, new_prefactor * prefactor))
                 }
             }
+            new_vec = temp_new_vec;
         }
         new_vec
     }
