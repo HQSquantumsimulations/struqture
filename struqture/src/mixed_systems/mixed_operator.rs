@@ -13,7 +13,7 @@
 use super::{MixedIndex, MixedProduct, OperateOnMixedSystems};
 use crate::{
     ModeIndex, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
-    StruqtureVersionSerializable,
+    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -83,15 +83,14 @@ impl From<MixedOperatorSerialize> for MixedOperator {
 
 impl From<MixedOperator> for MixedOperatorSerialize {
     fn from(value: MixedOperator) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(MixedProduct, CalculatorFloat, CalculatorFloat)> = value
             .clone()
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,

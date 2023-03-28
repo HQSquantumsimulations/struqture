@@ -19,6 +19,9 @@ pub use decoherence_product::*;
 mod pauli_product;
 pub use pauli_product::*;
 
+mod plus_minus_product;
+pub use plus_minus_product::*;
+
 mod decoherence_operator;
 pub use decoherence_operator::*;
 

@@ -18,7 +18,6 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::collections::HashMap;
-use std::str::FromStr;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::prelude::*;
@@ -842,20 +841,9 @@ fn serde_json() {
 /// Test SpinOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let pp: MixedProduct = MixedProduct::new(
         [PauliProduct::new().z(2)],
@@ -944,20 +932,9 @@ fn bincode() {
 
 #[test]
 fn serde_compact() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let pp: MixedProduct = MixedProduct::new(
         [PauliProduct::new().z(2)],

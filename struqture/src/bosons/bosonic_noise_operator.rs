@@ -12,7 +12,8 @@
 
 use super::{BosonProduct, OperateOnBosons};
 use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, StruqtureVersionSerializable,
+    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
+    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -79,15 +80,14 @@ impl From<BosonLindbladNoiseOperatorSerialize> for BosonLindbladNoiseOperator {
 
 impl From<BosonLindbladNoiseOperator> for BosonLindbladNoiseOperatorSerialize {
     fn from(value: BosonLindbladNoiseOperator) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(BosonProduct, BosonProduct, CalculatorFloat, CalculatorFloat)> =
             value
                 .into_iter()
                 .map(|((left, right), val)| (left, right, val.re, val.im))
                 .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,

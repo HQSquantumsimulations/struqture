@@ -12,7 +12,9 @@
 
 use super::{MixedDecoherenceProduct, MixedIndex, OperateOnMixedSystems};
 use crate::prelude::*;
-use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
+use crate::{
+    OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
+};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
@@ -97,7 +99,6 @@ impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
 
 impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
     fn from(value: MixedLindbladNoiseOperator) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(
             MixedDecoherenceProduct,
             MixedDecoherenceProduct,
@@ -109,8 +110,8 @@ impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,

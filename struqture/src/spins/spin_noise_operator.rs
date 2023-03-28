@@ -14,7 +14,7 @@ use super::{OperateOnSpins, SingleDecoherenceOperator, ToSparseMatrixSuperOperat
 use crate::spins::{DecoherenceOperator, DecoherenceProduct};
 use crate::{
     CooSparseMatrix, OperateOnDensityMatrix, SpinIndex, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex,
+    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
 };
 use itertools::Itertools;
 use num_complex::Complex64;
@@ -88,7 +88,6 @@ impl From<SpinLindbladNoiseOperatorSerialize> for SpinLindbladNoiseOperator {
 
 impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
     fn from(value: SpinLindbladNoiseOperator) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(
             DecoherenceProduct,
             DecoherenceProduct,
@@ -99,8 +98,8 @@ impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,

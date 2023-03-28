@@ -12,7 +12,8 @@
 
 use super::{FermionProduct, OperateOnFermions};
 use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, StruqtureVersionSerializable,
+    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
+    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -84,7 +85,6 @@ impl From<FermionLindbladNoiseOperatorSerialize> for FermionLindbladNoiseOperato
 
 impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerialize {
     fn from(value: FermionLindbladNoiseOperator) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(
             FermionProduct,
             FermionProduct,
@@ -95,8 +95,8 @@ impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerializ
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,

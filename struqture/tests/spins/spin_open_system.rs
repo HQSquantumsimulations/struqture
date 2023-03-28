@@ -468,20 +468,9 @@ fn serde_json() {
 
 #[test]
 fn serde_readable() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let pp = PauliProduct::new().x(0);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
@@ -595,20 +584,9 @@ fn bincode() {
 /// Test SpinLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let pp = PauliProduct::new().x(0);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
