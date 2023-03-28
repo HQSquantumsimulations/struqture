@@ -1243,10 +1243,10 @@ fn _raising_operator(i: &usize) -> SpinOperator {
 }
 
 
-impl JordanWignerFermionToSpin for FermionProduct {
+impl<T: FermionIndex> JordanWignerFermionToSpin for T {
     type Output = SpinOperator;
 
-    /// Implements JordanWignerFermionToSpin for FermionProduct.
+    /// Implements JordanWignerFermionToSpin for a FermionIndex.
     ///
     /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
     /// and |1> represents an occupied fermionic state.
@@ -1257,37 +1257,52 @@ impl JordanWignerFermionToSpin for FermionProduct {
     fn jordan_wigner(self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
-        let mut out = SpinOperator::new();
+        let mut spin_operator = SpinOperator::new();
 
-        // initialize out with an identity
         let mut id = PauliProduct::new();
         id = id.set_pauli(0, SingleSpinOperator::Identity);
-        out.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
+        spin_operator.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
         
+        // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
+        // odd positions depending on the parity of the total number of creation (annihilation)
+        // operators. 
         let mut previous = 0;
         for (index, site) in self.creators().enumerate() {
-            // insert Jordan-Wigner string
             if index%2 != number_creators%2 {
                 for i in previous..*site {                    
-                    out = out * PauliProduct::new().z(i)
+                    spin_operator = spin_operator * PauliProduct::new().z(i)
                 }
             }
-            out = out * _lowering_operator(site);
+            spin_operator = spin_operator * _lowering_operator(site);
             previous = *site;
         }
 
         previous = 0;
         for (index, site) in self.annihilators().enumerate() {
-            // insert Jordan-Wigner string
             if index%2 != number_annihilators%2 {
                 for i in previous..*site {                    
-                    out = out * PauliProduct::new().z(i)
+                    spin_operator = spin_operator * PauliProduct::new().z(i)
                 }
             }
-            out = out * _raising_operator(site);
+            spin_operator = spin_operator * _raising_operator(site);
             previous = *site;
         }
-        out
+
+        // For HermitianFermionProduct, spin terms with imaginary coefficients are dropped, and
+        // real coefficients are doubled. 
+        if !self.is_natural_hermitian() &&
+            std::any::type_name::<T>() == std::any::type_name::<HermitianFermionProduct>() {
+                let mut out = SpinOperator::new();
+                for (product, coeff) in spin_operator.iter() {
+                    if coeff.im == 0.0.into() {
+                        out.add_operator_product(product.clone(), CalculatorComplex::new(
+                            coeff.re.clone()*2, 0.0
+                        )).unwrap();
+                    }
+                }
+                return out
+            }
+        spin_operator
 
     }
 }
