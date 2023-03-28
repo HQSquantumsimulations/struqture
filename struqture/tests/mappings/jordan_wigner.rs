@@ -13,7 +13,10 @@
 use qoqo_calculator::CalculatorComplex;
 
 use struqture::prelude::*;
-use struqture::fermions::FermionProduct;
+use struqture::fermions::{
+    FermionProduct,
+    HermitianFermionProduct,
+};
 use struqture::spins::{PauliProduct,
                        SpinOperator,
                        SingleSpinOperator,
@@ -23,9 +26,7 @@ use struqture::mappings::JordanWignerFermionToSpin;
 #[test]
 fn test_jw_fermion_to_spin() {
 
-    let creators = &[1];
-    let annihilators = &[2];
-    let fp = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fp = FermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).x(2);
     let pp_2 = PauliProduct::new().x(1).y(2);
     let pp_3 = PauliProduct::new().y(1).y(2);
@@ -47,3 +48,16 @@ fn test_jw_fermion_to_spin() {
     assert_eq!(fp.jordan_wigner(), so)
 }
 
+#[test]
+fn test_jw_fermion_to_spin_hermitian() {
+
+    let hfp = HermitianFermionProduct::new([1], [2]).unwrap();  
+    let pp_1 = PauliProduct::new().y(1).y(2);
+    let pp_2 = PauliProduct::new().x(1).x(2);
+    let mut so = SpinOperator::new();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0)).unwrap();
+    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.5, 0.0)).unwrap();
+
+    assert_eq!(hfp.jordan_wigner(), so)
+
+}
