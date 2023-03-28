@@ -50,7 +50,7 @@ pub trait JordanWignerFermionToSpin{
 
     /// Transform the given fermionic object into a spin object using
     /// the Jordan Wigner mapping.
-    fn jordan_wigner(self) -> Self::Output;
+    fn jordan_wigner(&self) -> Self::Output;
 
 }
 

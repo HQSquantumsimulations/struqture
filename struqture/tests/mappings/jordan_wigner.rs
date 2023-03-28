@@ -24,7 +24,7 @@ use struqture::spins::{PauliProduct,
 use struqture::mappings::JordanWignerFermionToSpin;
 
 #[test]
-fn test_jw_fermion_to_spin() {
+fn test_jw_fermion_product_to_spin() {
 
     let fp = FermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).x(2);
@@ -49,7 +49,7 @@ fn test_jw_fermion_to_spin() {
 }
 
 #[test]
-fn test_jw_fermion_to_spin_hermitian() {
+fn test_jw_hermitian_fermion_product_to_spin() {
 
     let hfp = HermitianFermionProduct::new([1], [2]).unwrap();  
     let pp_1 = PauliProduct::new().y(1).y(2);
@@ -60,4 +60,14 @@ fn test_jw_fermion_to_spin_hermitian() {
 
     assert_eq!(hfp.jordan_wigner(), so)
 
+}
+
+#[test]
+fn test_jw_fermion_operator_to_spin() {
+    // TODO
+}
+
+#[test]
+fn test_jw_fermion_hamiltonian_to_spin() {
+    // TODO 
 }

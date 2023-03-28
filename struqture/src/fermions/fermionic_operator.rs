@@ -12,6 +12,8 @@
 
 use super::{FermionHamiltonian, OperateOnFermions};
 use crate::fermions::FermionProduct;
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::spins::SpinOperator;
 use crate::{
     GetValue, ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
     StruqtureVersionSerializable, SymmetricIndex,
@@ -492,6 +494,29 @@ impl fmt::Display for FermionOperator {
 
         write!(f, "{}", output)
     }
+}
+
+impl JordanWignerFermionToSpin for FermionOperator {
+    type Output = SpinOperator;
+
+    /// Implements JordanWignerFermionToSpin for a FermionOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `SpinOperator` - The spin operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = SpinOperator::new();
+        for fp in self.keys() {
+            out = out + fp.jordan_wigner()*self.get(fp);
+        }
+        out
+    }
+
+
+
 }
 
 #[cfg(test)]

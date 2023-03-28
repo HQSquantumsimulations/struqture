@@ -1254,7 +1254,7 @@ impl<T: FermionIndex> JordanWignerFermionToSpin for T {
     /// # Returns
     ///
     /// `SpinOperator` - The spin operator that results from the transformation.
-    fn jordan_wigner(self) -> Self::Output {
+    fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
         let mut spin_operator = SpinOperator::new();
