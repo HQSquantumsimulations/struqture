@@ -211,6 +211,31 @@ impl PlusMinusOperator {
             internal_map: HashMap::with_capacity(capacity),
         }
     }
+
+    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
+    ///
+    /// # Arguments
+    ///
+    /// * `number_of_spins` - Number of spins to filter for in the keys.
+    ///
+    /// # Returns
+    ///
+    /// (separated, remainder) - Operator with the noise terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    pub fn separate_into_n_spin_terms(
+        &self,
+        number_of_spins: usize,
+    ) -> Result<(PlusMinusOperator, PlusMinusOperator), StruqtureError> {
+        let mut separated = PlusMinusOperator::new();
+        let mut remainder = PlusMinusOperator::new();
+        for (prod, val) in self.iter() {
+            if prod.iter().len() == number_of_spins {
+                separated.add_operator_product(prod.clone(), val.clone())?;
+            } else {
+                remainder.add_operator_product(prod.clone(), val.clone())?;
+            }
+        }
+        Ok((separated, remainder))
+    }
 }
 
 impl From<PlusMinusOperator> for SpinOperator {
