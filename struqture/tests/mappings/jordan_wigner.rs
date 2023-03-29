@@ -10,14 +10,19 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use qoqo_calculator::CalculatorComplex;
-
+use qoqo_calculator::{
+    CalculatorComplex,
+    CalculatorFloat,
+};
 use struqture::prelude::*;
 use struqture::fermions::{
     FermionProduct,
     HermitianFermionProduct,
+    FermionOperator,
+    FermionHamiltonian,
 };
 use struqture::spins::{PauliProduct,
+                       SpinHamiltonian,
                        SpinOperator,
                        SingleSpinOperator,
 };
@@ -64,10 +69,34 @@ fn test_jw_hermitian_fermion_product_to_spin() {
 
 #[test]
 fn test_jw_fermion_operator_to_spin() {
-    // TODO
+
+    let mut fo = FermionOperator::new();
+    let fp1 = FermionProduct::new([1, 2], [2, 3]).unwrap();
+    let fp2 = FermionProduct::new([3, 4], [2, 5]).unwrap();
+    fo.add_operator_product(fp1.clone(), CalculatorComplex::new(1.0, 2.0)).unwrap();
+    fo.add_operator_product(fp2.clone(), CalculatorComplex::new(2.0, 1.0)).unwrap();
+    let jw_pair1 = fp1.jordan_wigner()*CalculatorComplex::new(1.0, 2.0);
+    let jw_pair2 = fp2.jordan_wigner()*CalculatorComplex::new(2.0, 1.0);
+
+    assert_eq!(fo.jordan_wigner(), jw_pair1 + jw_pair2);
 }
 
 #[test]
 fn test_jw_fermion_hamiltonian_to_spin() {
-    // TODO 
+
+    let mut fh = FermionHamiltonian::new();
+    let hfp1 = HermitianFermionProduct::new([1, 2], [2, 4]).unwrap();
+    let hfp2 = HermitianFermionProduct::new([1, 3], [1, 2]).unwrap();
+    fh.add_operator_product(hfp1.clone(), 1.0.into()).unwrap();
+    fh.add_operator_product(hfp2.clone(), 2.0.into()).unwrap();
+    let jw_pair1 = hfp1.jordan_wigner();
+    let jw_pair2 = hfp2.jordan_wigner();
+    let jw_pair1_hamiltonian = SpinHamiltonian::try_from(jw_pair1).unwrap();
+    let jw_pair2_hamiltonian = SpinHamiltonian::try_from(jw_pair2).unwrap();
+
+    assert_eq!(fh.jordan_wigner(),
+               jw_pair1_hamiltonian*CalculatorFloat::from(1.0) + 
+               jw_pair2_hamiltonian*CalculatorFloat::from(2.0)
+    );
+
 }

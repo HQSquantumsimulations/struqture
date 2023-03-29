@@ -515,8 +515,6 @@ impl JordanWignerFermionToSpin for FermionOperator {
         out
     }
 
-
-
 }
 
 #[cfg(test)]

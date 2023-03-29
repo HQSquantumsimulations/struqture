@@ -21,24 +21,6 @@
 //! $$ JW(a_p) = \left[ \prod_{i = 1}^{p - 1} Z_i \right] \left( \frac{X_p + i Y_p}{2} \right) $$
 
 
-use crate::OperateOnDensityMatrix;
-use crate::fermions::{
-    FermionProduct,
-    HermitianFermionProduct,
-    FermionOperator,
-    FermionHamiltonian,
-    FermionLindbladOpenSystem,
-};
-use crate::spins::{
-    PauliProduct,
-    SpinOperator,
-    SpinHamiltonian,
-    SpinLindbladOpenSystem,
-    SingleSpinOperator,
-};
-use crate::prelude::*;
-use qoqo_calculator::CalculatorComplex;
-
 pub trait JordanWignerFermionToSpin{
 
     /// The Output type for the JordanWigner transformation
