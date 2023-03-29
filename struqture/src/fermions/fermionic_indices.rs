@@ -11,12 +11,12 @@
 // limitations under the License.
 
 use super::FermionIndex;
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::prelude::*;
+use crate::spins::{PauliProduct, SingleSpinOperator, SpinOperator};
 use crate::{
     CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, StruqtureError, SymmetricIndex,
 };
-use crate::spins::{PauliProduct, SingleSpinOperator, SpinOperator};
-use crate::mappings::JordanWignerFermionToSpin;
-use crate::prelude::*;
 
 use qoqo_calculator::CalculatorComplex;
 use serde::{
@@ -1231,17 +1231,20 @@ fn sort_and_signal(indices: TinyVec<[usize; 2]>) -> (TinyVec<[usize; 2]>, bool, 
 
 fn _lowering_operator(i: &usize) -> SpinOperator {
     let mut out = SpinOperator::new();
-    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0)).unwrap();
-    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5)).unwrap();
+    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5))
+        .unwrap();
     out
 }
 fn _raising_operator(i: &usize) -> SpinOperator {
     let mut out = SpinOperator::new();
-    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0)).unwrap();
-    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5)).unwrap();
+    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5))
+        .unwrap();
     out
 }
-
 
 impl<T: FermionIndex> JordanWignerFermionToSpin for T {
     type Output = SpinOperator;
@@ -1261,15 +1264,17 @@ impl<T: FermionIndex> JordanWignerFermionToSpin for T {
 
         let mut id = PauliProduct::new();
         id = id.set_pauli(0, SingleSpinOperator::Identity);
-        spin_operator.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
-        
+        spin_operator
+            .add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0))
+            .unwrap();
+
         // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
         // odd positions depending on the parity of the total number of creation (annihilation)
-        // operators. 
+        // operators.
         let mut previous = 0;
         for (index, site) in self.creators().enumerate() {
-            if index%2 != number_creators%2 {
-                for i in previous..*site {                    
+            if index % 2 != number_creators % 2 {
+                for i in previous..*site {
                     spin_operator = spin_operator * PauliProduct::new().z(i)
                 }
             }
@@ -1279,8 +1284,8 @@ impl<T: FermionIndex> JordanWignerFermionToSpin for T {
 
         previous = 0;
         for (index, site) in self.annihilators().enumerate() {
-            if index%2 != number_annihilators%2 {
-                for i in previous..*site {                    
+            if index % 2 != number_annihilators % 2 {
+                for i in previous..*site {
                     spin_operator = spin_operator * PauliProduct::new().z(i)
                 }
             }
@@ -1289,21 +1294,23 @@ impl<T: FermionIndex> JordanWignerFermionToSpin for T {
         }
 
         // For HermitianFermionProduct, spin terms with imaginary coefficients are dropped, and
-        // real coefficients are doubled. 
-        if !self.is_natural_hermitian() &&
-            std::any::type_name::<T>() == std::any::type_name::<HermitianFermionProduct>() {
-                let mut out = SpinOperator::new();
-                for (product, coeff) in spin_operator.iter() {
-                    if coeff.im == 0.0.into() {
-                        out.add_operator_product(product.clone(), CalculatorComplex::new(
-                            coeff.re.clone()*2, 0.0
-                        )).unwrap();
-                    }
+        // real coefficients are doubled.
+        if !self.is_natural_hermitian()
+            && std::any::type_name::<T>() == std::any::type_name::<HermitianFermionProduct>()
+        {
+            let mut out = SpinOperator::new();
+            for (product, coeff) in spin_operator.iter() {
+                if coeff.im == 0.0.into() {
+                    out.add_operator_product(
+                        product.clone(),
+                        CalculatorComplex::new(coeff.re.clone() * 2, 0.0),
+                    )
+                    .unwrap();
                 }
-                return out
             }
+            return out;
+        }
         spin_operator
-
     }
 }
 

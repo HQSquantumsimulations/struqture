@@ -587,7 +587,7 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
         let mut out = SpinHamiltonian::new();
         for hfp in self.keys() {
             let mut new_term = hfp.jordan_wigner();
-            new_term = new_term*(self.get(hfp));
+            new_term = new_term * (self.get(hfp));
             out = out + SpinHamiltonian::try_from(new_term).unwrap();
         }
         out

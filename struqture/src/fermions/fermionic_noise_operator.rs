@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{FermionProduct, OperateOnFermions};
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::spins::{DecoherenceProduct, SpinLindbladNoiseOperator};
 use crate::{
     ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, StruqtureVersionSerializable,
 };
@@ -458,6 +460,48 @@ impl fmt::Display for FermionLindbladNoiseOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
+    type Output = SpinLindbladNoiseOperator;
+
+    /// Implements JordanWignerFermionToSpin for a FermionLindbladNoiseOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = SpinLindbladNoiseOperator::new();
+
+        for key in self.keys() {
+            // TODO this can probably be done in one shot with pattern matching and .map()
+            let jw_fp_left = key.0.jordan_wigner();
+            let jw_fp_right = key.1.jordan_wigner();
+
+            for prod_left in jw_fp_left.keys() {
+                for prod_right in jw_fp_right.keys() {
+                    let (decoherence_prod_left, decoherence_coeff_left) =
+                        DecoherenceProduct::spin_to_decoherence(prod_left.clone());
+                    let (decoherence_prod_right, decoherence_coeff_right) =
+                        DecoherenceProduct::spin_to_decoherence(prod_right.clone());
+
+                    let new_coeff = self.get(key).clone()
+                        * CalculatorComplex::from(decoherence_coeff_right)
+                        * CalculatorComplex::from(decoherence_coeff_left)
+                        * jw_fp_left.get(prod_left)
+                        * jw_fp_right.get(prod_right);
+
+                    out.set((decoherence_prod_left, decoherence_prod_right), new_coeff)
+                        .unwrap();
+                }
+            }
+        }
+
+        out
     }
 }
 

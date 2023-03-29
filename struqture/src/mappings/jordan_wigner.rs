@@ -17,27 +17,24 @@
 //!
 //! $$ JW(a_p^{\dagger}) = \left[ \prod_{i = 1}^{p - 1} Z_i \right] \left( \frac{X_p - i Y_p}{2}
 //! \right) $$
-//! 
+//!
 //! $$ JW(a_p) = \left[ \prod_{i = 1}^{p - 1} Z_i \right] \left( \frac{X_p + i Y_p}{2} \right) $$
 
-
-pub trait JordanWignerFermionToSpin{
-
+pub trait JordanWignerFermionToSpin {
     /// The Output type for the JordanWigner transformation
     ///
     /// For a FermionProduct, HermitianFermionProduct or FermionOperator it will be a SpinOperator
     /// For a FermionHamiltonian it will be a SpinHamiltonian
+    /// For a FermionLindbladNoiseOperator it will be a SpinLindbladNoiseOperator
     /// For a FermionLindbladOpenSystem it will be a SpinLindbladOpenSystem etc.
     type Output;
 
     /// Transform the given fermionic object into a spin object using
     /// the Jordan Wigner mapping.
     fn jordan_wigner(&self) -> Self::Output;
-
 }
 
-pub trait JordanWignerSpinToFermion{
-
+pub trait JordanWignerSpinToFermion {
     /// The Output type for the JordanWigner transformation
     ///
     /// TODO missing PauliOperator
@@ -50,6 +47,4 @@ pub trait JordanWignerSpinToFermion{
     /// Transform the given fermionic object into a spin object using
     /// the Jordan Wigner mapping.
     fn jordan_wigner(self) -> Self::Output;
-
 }
-

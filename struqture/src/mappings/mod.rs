@@ -10,12 +10,9 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 //! Module for representing mappings between systems of bosons, fermions and spins.
 
 pub mod jordan_wigner;
 
 pub use jordan_wigner::JordanWignerFermionToSpin;
 pub use jordan_wigner::JordanWignerSpinToFermion;
-
-

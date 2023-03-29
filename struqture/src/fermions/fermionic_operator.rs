@@ -510,11 +510,10 @@ impl JordanWignerFermionToSpin for FermionOperator {
     fn jordan_wigner(&self) -> Self::Output {
         let mut out = SpinOperator::new();
         for fp in self.keys() {
-            out = out + fp.jordan_wigner()*self.get(fp);
+            out = out + fp.jordan_wigner() * self.get(fp);
         }
         out
     }
-
 }
 
 #[cfg(test)]

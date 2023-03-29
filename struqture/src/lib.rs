@@ -999,10 +999,10 @@ type CreatorsAnnihilators = (TinyVec<[usize; 2]>, TinyVec<[usize; 2]>);
 
 pub mod bosons;
 pub mod fermions;
+pub mod mappings;
 pub mod mixed_systems;
 pub mod prelude;
 pub mod spins;
-pub mod mappings;
 
 /// Shorhand type for TinyVec representation of creators or annihilators
 #[cfg(test)]

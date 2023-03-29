@@ -10,37 +10,30 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use qoqo_calculator::{
-    CalculatorComplex,
-    CalculatorFloat,
-};
-use struqture::prelude::*;
+use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::fermions::{
-    FermionProduct,
-    HermitianFermionProduct,
-    FermionOperator,
-    FermionHamiltonian,
-};
-use struqture::spins::{PauliProduct,
-                       SpinHamiltonian,
-                       SpinOperator,
-                       SingleSpinOperator,
+    FermionHamiltonian, FermionOperator, FermionProduct, HermitianFermionProduct,
 };
 use struqture::mappings::JordanWignerFermionToSpin;
+use struqture::prelude::*;
+use struqture::spins::{PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinOperator};
 
 #[test]
 fn test_jw_fermion_product_to_spin() {
-
     let fp = FermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).x(2);
     let pp_2 = PauliProduct::new().x(1).y(2);
     let pp_3 = PauliProduct::new().y(1).y(2);
     let pp_4 = PauliProduct::new().x(1).x(2);
     let mut so = SpinOperator::new();
-    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.0, -0.25)).unwrap();
-    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.0, 0.25)).unwrap();
-    so.add_operator_product(pp_3.clone(), CalculatorComplex::new(0.25, 0.0)).unwrap();
-    so.add_operator_product(pp_4.clone(), CalculatorComplex::new(0.25, 0.0)).unwrap();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.0, -0.25))
+        .unwrap();
+    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.0, 0.25))
+        .unwrap();
+    so.add_operator_product(pp_3.clone(), CalculatorComplex::new(0.25, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_4.clone(), CalculatorComplex::new(0.25, 0.0))
+        .unwrap();
 
     assert_eq!(fp.jordan_wigner(), so);
 
@@ -48,42 +41,43 @@ fn test_jw_fermion_product_to_spin() {
     let mut so = SpinOperator::new();
     let mut id = PauliProduct::new();
     id = id.set_pauli(0, SingleSpinOperator::Identity);
-    so.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0)).unwrap();
-    
+    so.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0))
+        .unwrap();
+
     assert_eq!(fp.jordan_wigner(), so)
 }
 
 #[test]
 fn test_jw_hermitian_fermion_product_to_spin() {
-
-    let hfp = HermitianFermionProduct::new([1], [2]).unwrap();  
+    let hfp = HermitianFermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).y(2);
     let pp_2 = PauliProduct::new().x(1).x(2);
     let mut so = SpinOperator::new();
-    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0)).unwrap();
-    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.5, 0.0)).unwrap();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
 
     assert_eq!(hfp.jordan_wigner(), so)
-
 }
 
 #[test]
 fn test_jw_fermion_operator_to_spin() {
-
     let mut fo = FermionOperator::new();
     let fp1 = FermionProduct::new([1, 2], [2, 3]).unwrap();
     let fp2 = FermionProduct::new([3, 4], [2, 5]).unwrap();
-    fo.add_operator_product(fp1.clone(), CalculatorComplex::new(1.0, 2.0)).unwrap();
-    fo.add_operator_product(fp2.clone(), CalculatorComplex::new(2.0, 1.0)).unwrap();
-    let jw_pair1 = fp1.jordan_wigner()*CalculatorComplex::new(1.0, 2.0);
-    let jw_pair2 = fp2.jordan_wigner()*CalculatorComplex::new(2.0, 1.0);
+    fo.add_operator_product(fp1.clone(), CalculatorComplex::new(1.0, 2.0))
+        .unwrap();
+    fo.add_operator_product(fp2.clone(), CalculatorComplex::new(2.0, 1.0))
+        .unwrap();
+    let jw_pair1 = fp1.jordan_wigner() * CalculatorComplex::new(1.0, 2.0);
+    let jw_pair2 = fp2.jordan_wigner() * CalculatorComplex::new(2.0, 1.0);
 
     assert_eq!(fo.jordan_wigner(), jw_pair1 + jw_pair2);
 }
 
 #[test]
 fn test_jw_fermion_hamiltonian_to_spin() {
-
     let mut fh = FermionHamiltonian::new();
     let hfp1 = HermitianFermionProduct::new([1, 2], [2, 4]).unwrap();
     let hfp2 = HermitianFermionProduct::new([1, 3], [1, 2]).unwrap();
@@ -94,9 +88,9 @@ fn test_jw_fermion_hamiltonian_to_spin() {
     let jw_pair1_hamiltonian = SpinHamiltonian::try_from(jw_pair1).unwrap();
     let jw_pair2_hamiltonian = SpinHamiltonian::try_from(jw_pair2).unwrap();
 
-    assert_eq!(fh.jordan_wigner(),
-               jw_pair1_hamiltonian*CalculatorFloat::from(1.0) + 
-               jw_pair2_hamiltonian*CalculatorFloat::from(2.0)
+    assert_eq!(
+        fh.jordan_wigner(),
+        jw_pair1_hamiltonian * CalculatorFloat::from(1.0)
+            + jw_pair2_hamiltonian * CalculatorFloat::from(2.0)
     );
-
 }
