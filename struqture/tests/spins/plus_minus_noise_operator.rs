@@ -17,8 +17,11 @@ use serde_test::{assert_tokens, Configure, Token};
 use std::collections::{BTreeMap, HashMap};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
-use struqture::spins::{PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct};
-use struqture::OperateOnDensityMatrix;
+use struqture::spins::{
+    DecoherenceProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct,
+    SpinLindbladNoiseOperator,
+};
+use struqture::{OperateOnDensityMatrix, SpinIndex};
 
 // Test the new function of the PlusMinusLindbladNoiseOperator
 #[test]
@@ -553,4 +556,153 @@ fn serde_compact() {
             Token::StructEnd,
         ],
     );
+}
+
+#[test]
+fn so_from_pmo() {
+    let pmp_vec: Vec<(PlusMinusProduct, CalculatorComplex)> = vec![
+        (PlusMinusProduct::new().z(0), 3.0.into()),
+        (PlusMinusProduct::new(), 0.5.into()),
+        (
+            PlusMinusProduct::new().plus(1),
+            CalculatorComplex::new(0.0, 1.0),
+        ),
+        (PlusMinusProduct::new().minus(2), 2.0.into()),
+        (
+            PlusMinusProduct::new().plus(0).minus(1).z(2),
+            CalculatorComplex::new(1.0, 1.0),
+        ),
+    ];
+    let dp_vec: Vec<(DecoherenceProduct, CalculatorComplex)> = vec![
+        (DecoherenceProduct::new().z(0), 3.0.into()),
+        (DecoherenceProduct::new(), 0.5.into()),
+        (
+            DecoherenceProduct::new().x(1),
+            CalculatorComplex::new(0.0, 0.5),
+        ),
+        (
+            DecoherenceProduct::new().iy(1),
+            CalculatorComplex::new(0.0, 0.5),
+        ),
+        (
+            DecoherenceProduct::new().x(2),
+            CalculatorComplex::new(1.0, 0.0),
+        ),
+        (
+            DecoherenceProduct::new().iy(2),
+            CalculatorComplex::new(-1.0, 0.0),
+        ),
+        (
+            DecoherenceProduct::new().x(0).x(1).z(2),
+            CalculatorComplex::new(0.25, 0.25),
+        ),
+        (
+            DecoherenceProduct::new().iy(0).x(1).z(2),
+            CalculatorComplex::new(0.25, 0.25),
+        ),
+        (
+            DecoherenceProduct::new().x(0).iy(1).z(2),
+            CalculatorComplex::new(-0.25, -0.25),
+        ),
+        (
+            DecoherenceProduct::new().iy(0).iy(1).z(2),
+            CalculatorComplex::new(-0.25, -0.25),
+        ),
+    ];
+
+    let mut spin_op = SpinLindbladNoiseOperator::new();
+    for (key_l, val_l) in dp_vec.iter() {
+        for (key_r, val_r) in dp_vec.iter() {
+            spin_op
+                .add_operator_product((key_l.clone(), key_r.clone()), val_l.clone() * val_r)
+                .unwrap();
+        }
+    }
+
+    let mut pm_op = PlusMinusLindbladNoiseOperator::new();
+    for (key_l, val_l) in pmp_vec.iter() {
+        for (key_r, val_r) in pmp_vec.iter() {
+            pm_op
+                .add_operator_product((key_l.clone(), key_r.clone()), val_l.clone() * val_r)
+                .unwrap();
+        }
+    }
+
+    assert_eq!(SpinLindbladNoiseOperator::from(pm_op.clone()), spin_op);
+}
+
+#[test]
+fn pmo_from_so() {
+    let dp_vec: Vec<(DecoherenceProduct, CalculatorComplex)> = vec![
+        (DecoherenceProduct::new().z(0), 1.0.into()),
+        (DecoherenceProduct::new(), 0.5.into()),
+        (
+            DecoherenceProduct::new().x(0),
+            CalculatorComplex::new(0.0, 1.0),
+        ),
+        (DecoherenceProduct::new().iy(0), 2.0.into()),
+        (
+            DecoherenceProduct::new().x(0).iy(1).z(2),
+            CalculatorComplex::new(1.0, 1.0),
+        ),
+    ];
+    let pmp_vec: Vec<(PlusMinusProduct, CalculatorComplex)> = vec![
+        (
+            PlusMinusProduct::new().z(0),
+            CalculatorComplex::new(1.0, 0.0),
+        ),
+        (PlusMinusProduct::new(), CalculatorComplex::new(0.5, 0.0)),
+        (
+            PlusMinusProduct::new().plus(0),
+            CalculatorComplex::new(0.0, 1.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0),
+            CalculatorComplex::new(0.0, 1.0),
+        ),
+        (
+            PlusMinusProduct::new().plus(0),
+            CalculatorComplex::new(2.0, 0.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0),
+            CalculatorComplex::new(-2.0, 0.0),
+        ),
+        (
+            PlusMinusProduct::new().plus(0).plus(1).z(2),
+            CalculatorComplex::new(1.0, 1.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0).plus(1).z(2),
+            CalculatorComplex::new(1.0, 01.0),
+        ),
+        (
+            PlusMinusProduct::new().plus(0).minus(1).z(2),
+            CalculatorComplex::new(-1.0, -1.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0).minus(1).z(2),
+            CalculatorComplex::new(-1.0, -1.0),
+        ),
+    ];
+
+    let mut spin_op = SpinLindbladNoiseOperator::new();
+    for (key_l, val_l) in dp_vec.iter() {
+        for (key_r, val_r) in dp_vec.iter() {
+            spin_op
+                .add_operator_product((key_l.clone(), key_r.clone()), val_l.clone() * val_r)
+                .unwrap();
+        }
+    }
+
+    let mut pm_op = PlusMinusLindbladNoiseOperator::new();
+    for (key_l, val_l) in pmp_vec.iter() {
+        for (key_r, val_r) in pmp_vec.iter() {
+            pm_op
+                .add_operator_product((key_l.clone(), key_r.clone()), val_l.clone() * val_r)
+                .unwrap();
+        }
+    }
+
+    assert_eq!(PlusMinusLindbladNoiseOperator::from(spin_op), pm_op);
 }

@@ -15,6 +15,7 @@ use crate::{
     OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
 use itertools::Itertools;
+use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
@@ -22,6 +23,8 @@ use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+use super::{DecoherenceProduct, SpinLindbladNoiseOperator};
 
 /// PlusMinusLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -266,6 +269,57 @@ impl PlusMinusLindbladNoiseOperator {
                 .expect("Internal bug in add_operator_product");
         }
         new_noise
+    }
+}
+
+impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {
+    fn from(value: PlusMinusLindbladNoiseOperator) -> Self {
+        let mut new_operator = SpinLindbladNoiseOperator::with_capacity(2 * value.len());
+        for ((product_left, product_right), val) in value.into_iter() {
+            let transscribed_vector_left: Vec<(DecoherenceProduct, Complex64)> =
+                product_left.into();
+            let transscribed_vector_right: Vec<(DecoherenceProduct, Complex64)> =
+                product_right.into();
+            for (transscribed_product_left, pref_left) in transscribed_vector_left {
+                for (transscribed_product_right, pref_right) in transscribed_vector_right.clone() {
+                    new_operator
+                        .add_operator_product(
+                            (
+                                transscribed_product_left.clone(),
+                                transscribed_product_right,
+                            ),
+                            val.clone() * pref_left * pref_right,
+                        )
+                        .expect("Unexpected error adding operators. Internal struqture error");
+                }
+            }
+        }
+        new_operator
+    }
+}
+
+impl From<SpinLindbladNoiseOperator> for PlusMinusLindbladNoiseOperator {
+    fn from(value: SpinLindbladNoiseOperator) -> Self {
+        let mut new_operator = PlusMinusLindbladNoiseOperator::with_capacity(2 * value.len());
+        for ((product_left, product_right), val) in value.into_iter() {
+            let transscribed_vector_left: Vec<(PlusMinusProduct, Complex64)> = product_left.into();
+            let transscribed_vector_right: Vec<(PlusMinusProduct, Complex64)> =
+                product_right.into();
+            for (transscribed_product_left, pref_left) in transscribed_vector_left {
+                for (transscribed_product_right, pref_right) in transscribed_vector_right.clone() {
+                    new_operator
+                        .add_operator_product(
+                            (
+                                transscribed_product_left.clone(),
+                                transscribed_product_right,
+                            ),
+                            val.clone() * pref_left * pref_right,
+                        )
+                        .expect("Unexpected error adding operators. Internal struqture error");
+                }
+            }
+        }
+        new_operator
     }
 }
 
