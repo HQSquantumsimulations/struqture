@@ -28,6 +28,9 @@ pub use decoherence_operator::*;
 mod spin_operator;
 pub use spin_operator::*;
 
+mod plus_minus_operator;
+pub use plus_minus_operator::*;
+
 mod spin_hamiltonian;
 pub use spin_hamiltonian::*;
 
