@@ -43,6 +43,7 @@ fn new_system_none() {
     assert!(system.operator().is_empty());
     assert_eq!(system.operator(), &SpinOperator::default());
     assert_eq!(system.number_spins(), 0_usize);
+    assert_eq!(system, SpinSystem::default());
 }
 
 #[test]

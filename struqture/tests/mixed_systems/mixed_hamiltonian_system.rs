@@ -651,6 +651,41 @@ fn mul_so_so() {
     assert_eq!(mo_0 * mo_1, Ok(mo_0_1));
 }
 
+// Test the multiplication: FermionOperator * FermionOperator
+#[test]
+fn mul_so_so_error() {
+    let pp_0: HermitianMixedProduct = HermitianMixedProduct::new(
+        [PauliProduct::new().z(2)],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [2]).unwrap()],
+    )
+    .unwrap();
+    let pp_1: HermitianMixedProduct = HermitianMixedProduct::new(
+        [PauliProduct::new().x(1)],
+        [],
+        [FermionProduct::new([1], [3]).unwrap()],
+    )
+    .unwrap();
+    let mut mo_0 = MixedHamiltonianSystem::new([Some(3)], [Some(4)], [Some(4)]);
+    mo_0.add_operator_product(pp_0, CalculatorComplex::from(1.0))
+        .unwrap();
+    let mut mo_1 = MixedHamiltonianSystem::new([Some(2)], [], [Some(4)]);
+    mo_1.add_operator_product(pp_1, CalculatorComplex::from(2.0))
+        .unwrap();
+
+    assert_eq!(
+        mo_0 * mo_1,
+        Err(StruqtureError::MissmatchedNumberSubsystems {
+            target_number_spin_subsystems: 1,
+            target_number_boson_subsystems: 1,
+            target_number_fermion_subsystems: 1,
+            actual_number_spin_subsystems: 1,
+            actual_number_boson_subsystems: 0,
+            actual_number_fermion_subsystems: 1,
+        })
+    );
+}
+
 // Test the multiplication: SpinOperator * Calculatorcomplex
 #[test]
 fn mul_so_cf() {
@@ -694,6 +729,10 @@ fn mul_so_cc() {
 // Test the Iter traits of FermionOperator: into_iter, from_iter and extend
 #[test]
 fn into_iter_from_iter_extend() {
+    assert_eq!(
+        MixedHamiltonianSystem::from_iter(MixedHamiltonianSystem::default().into_iter()),
+        MixedHamiltonianSystem::new([], [], [])
+    );
     let pp_0: HermitianMixedProduct = HermitianMixedProduct::new(
         [PauliProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
@@ -701,6 +740,12 @@ fn into_iter_from_iter_extend() {
     )
     .unwrap();
     let pp_1: HermitianMixedProduct = HermitianMixedProduct::new(
+        [PauliProduct::new().z(0)],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [2]).unwrap()],
+    )
+    .unwrap();
+    let pp_2: HermitianMixedProduct = HermitianMixedProduct::new(
         [PauliProduct::new().x(1)],
         [BosonProduct::new([1], [2]).unwrap()],
         [FermionProduct::new([1], [3]).unwrap()],
@@ -708,6 +753,8 @@ fn into_iter_from_iter_extend() {
     .unwrap();
     let mut mo_0 = MixedHamiltonianSystem::new([None], [None], [None]);
     mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0))
+        .unwrap();
+    mo_0.add_operator_product(pp_1.clone(), CalculatorComplex::from(1.0))
         .unwrap();
 
     let mo_iter = mo_0.clone().into_iter();
@@ -717,13 +764,14 @@ fn into_iter_from_iter_extend() {
         .map(|(key, value)| (key.clone(), value.clone()));
     assert_eq!(MixedHamiltonianSystem::from_iter(mo_iter), mo_0);
     let mut mapping: BTreeMap<HermitianMixedProduct, CalculatorComplex> = BTreeMap::new();
-    mapping.insert(pp_1.clone(), CalculatorComplex::from(0.5));
+    mapping.insert(pp_2.clone(), CalculatorComplex::from(0.5));
     let mapping_iter = mapping.into_iter();
     mo_0.extend(mapping_iter);
 
     let mut mo_0_1 = MixedHamiltonianSystem::new([None], [None], [None]);
     let _ = mo_0_1.add_operator_product(pp_0, CalculatorComplex::from(2.0));
-    let _ = mo_0_1.add_operator_product(pp_1, CalculatorComplex::from(0.5));
+    let _ = mo_0_1.add_operator_product(pp_1, CalculatorComplex::from(1.0));
+    let _ = mo_0_1.add_operator_product(pp_2, CalculatorComplex::from(0.5));
 
     assert_eq!(mo_0, mo_0_1);
 }
@@ -802,14 +850,22 @@ fn display() {
         [FermionProduct::new([0], [3]).unwrap()],
     )
     .unwrap();
+    let pp_1: HermitianMixedProduct = HermitianMixedProduct::new(
+        [PauliProduct::new()],
+        [BosonProduct::new([0], [0]).unwrap()],
+        [FermionProduct::new([], []).unwrap()],
+    )
+    .unwrap();
     let mut mo = MixedHamiltonianSystem::new([Some(3)], [Some(4)], [Some(4)]);
     mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
+        .unwrap();
+    mo.add_operator_product(pp_1, CalculatorComplex::from(2.0))
         .unwrap();
     assert_eq!(
         format!("{}", mo),
         format!(
-            "MixedHamiltonianSystem(\nnumber_spins: 3, \nnumber_bosons: 4, \nnumber_fermions: 4, )\n{{S2Z:Bc0a3:Fc0a3:: {},\n}}",
-            CalculatorComplex::from(1.0)
+            "MixedHamiltonianSystem(\nnumber_spins: 3, \nnumber_bosons: 4, \nnumber_fermions: 4, )\n{{SI:Bc0a0:FI:: {},\nS2Z:Bc0a3:Fc0a3:: {},\n}}",
+            CalculatorComplex::from(2.0), CalculatorComplex::from(1.0)
         )
     );
 }

@@ -660,7 +660,6 @@ impl FromIterator<(HermitianMixedProduct, CalculatorComplex)> for MixedHamiltoni
                     .collect();
                 let mut slno =
                     MixedHamiltonianSystem::new(number_spins, number_bosons, number_fermions);
-                println!("{:?}, {:?}", slno, first_element);
                 slno.set(first_element.0, first_element.1)
                     .expect("Internal error in set");
                 for (pair, cc) in iterator {

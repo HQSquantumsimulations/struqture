@@ -43,6 +43,9 @@ pub use spin_hamiltonian_system::*;
 mod spin_noise_operator;
 pub use spin_noise_operator::*;
 
+mod plus_minus_noise_operator;
+pub use plus_minus_noise_operator::*;
+
 mod spin_noise_system;
 pub use spin_noise_system::*;
 
