@@ -20,6 +20,9 @@ pub use decoherence_product::DecoherenceProductWrapper;
 mod plus_minus_product;
 pub use plus_minus_product::PlusMinusProductWrapper;
 
+mod plus_minus_operator;
+pub use plus_minus_operator::PlusMinusOperatorWrapper;
+
 mod spin_system;
 pub use spin_system::SpinSystemWrapper;
 

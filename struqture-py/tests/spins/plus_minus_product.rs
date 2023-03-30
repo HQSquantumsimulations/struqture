@@ -528,6 +528,78 @@ fn test_from_dp() {
 }
 
 #[test]
+fn test_to_pp() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_pmp = new_pp(py);
+        let pmp = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
+
+        let pp_type = py.get_type::<PauliProductWrapper>();
+        let new_pp = pp_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<PauliProductWrapper>>()
+            .unwrap();
+        let pp_1 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
+        let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "Y")).unwrap();
+
+        let result = pmp.call_method0("to_pauli_product").unwrap();
+        let comp = vec![
+            (
+                pp_1,
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.5, 0.0),
+                },
+            ),
+            (
+                pp_2,
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.0, 0.5),
+                },
+            ),
+        ];
+        let equal = bool::extract(result.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        assert!(equal);
+    })
+}
+
+#[test]
+fn test_to_dp() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_pmp = new_pp(py);
+        let pmp = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
+
+        let pp_type = py.get_type::<DecoherenceProductWrapper>();
+        let new_pp = pp_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<DecoherenceProductWrapper>>()
+            .unwrap();
+        let pp_1 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
+        let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "iY")).unwrap();
+
+        let result = pmp.call_method0("to_decoherence_product").unwrap();
+        let comp = vec![
+            (
+                pp_1,
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.5, 0.0),
+                },
+            ),
+            (
+                pp_2,
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.5, 0.0),
+                },
+            ),
+        ];
+        let equal = bool::extract(result.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        assert!(equal);
+    })
+}
+
+#[test]
 fn test_from_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {

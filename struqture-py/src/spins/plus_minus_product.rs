@@ -20,7 +20,9 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
-use struqture::spins::{PlusMinusProduct, SinglePlusMinusOperator};
+use struqture::spins::{
+    DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
+};
 use struqture::SymmetricIndex;
 use struqture_py_macros::product_wrapper;
 
@@ -210,7 +212,6 @@ impl PlusMinusProductWrapper {
     ) -> PyResult<Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)>> {
         match PauliProductWrapper::from_pyany(value.clone()) {
             Ok(x) => {
-                println!("In here: {:?}, {:?}", value, x);
                 let result: Vec<(PlusMinusProduct, Complex64)> =
                     Vec::<(PlusMinusProduct, Complex64)>::from(x);
                 let result_pyo3: Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)> = result
@@ -230,7 +231,6 @@ impl PlusMinusProductWrapper {
             }
             Err(_) => match DecoherenceProductWrapper::from_pyany(value) {
                 Ok(x) => {
-                    println!("In here2");
                     let result: Vec<(PlusMinusProduct, Complex64)> =
                         Vec::<(PlusMinusProduct, Complex64)>::from(x);
                     let result_pyo3: Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)> =
@@ -255,19 +255,66 @@ impl PlusMinusProductWrapper {
             },
         }
     }
-}
 
-// impl From<&PyAny> for Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)> {
-//     fn from(value: &PyAny) -> PyResult<Self> {
-//         let from_value = match PauliProductWrapper::from_pyany(value) {
-//             Ok(x)=> x,
-//             Err(_) => match DecoherenceProductWrapper::from_pyany(value) {
-//                 Ok(x) => x,
-//                 Err(_) => return PyValueError::new_err("Input is neither PauliProduct nor DecoherenceProduct")
-//             }
-//         };
-//         let result: Vec<(PlusMinusProduct, Complex64)> = Vec::<(PlusMinusProduct, Complex64)>::from(from_value);
-//         let result_pyo3: Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)> = result.iter().map(|(key, val)| (PlusMinusProductWrapper { internal: key.clone() }, CalculatorComplexWrapper { internal: CalculatorComplex::new(val.re, val.im) })).collect();
-//         Ok(result_pyo3)
-//     }
-// }
+    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    ///
+    /// Args:
+    ///     other (self): The object to concatenate self with.
+    ///
+    /// Returns:
+    ///     list[int]: A list of the corresponding creator indices.
+    ///
+    /// Raises:
+    ///     ValueError: The two objects could not be concatenated.
+    pub fn to_pauli_product(
+        &self,
+    ) -> PyResult<Vec<(PauliProductWrapper, CalculatorComplexWrapper)>> {
+        let result: Vec<(PauliProduct, Complex64)> =
+            Vec::<(PauliProduct, Complex64)>::from(self.internal.clone());
+        let result_pyo3: Vec<(PauliProductWrapper, CalculatorComplexWrapper)> = result
+            .iter()
+            .map(|(key, val)| {
+                (
+                    PauliProductWrapper {
+                        internal: key.clone(),
+                    },
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(val.re, val.im),
+                    },
+                )
+            })
+            .collect();
+        Ok(result_pyo3)
+    }
+
+    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    ///
+    /// Args:
+    ///     other (self): The object to concatenate self with.
+    ///
+    /// Returns:
+    ///     list[int]: A list of the corresponding creator indices.
+    ///
+    /// Raises:
+    ///     ValueError: The two objects could not be concatenated.
+    pub fn to_decoherence_product(
+        &self,
+    ) -> PyResult<Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)>> {
+        let result: Vec<(DecoherenceProduct, Complex64)> =
+            Vec::<(DecoherenceProduct, Complex64)>::from(self.internal.clone());
+        let result_pyo3: Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> = result
+            .iter()
+            .map(|(key, val)| {
+                (
+                    DecoherenceProductWrapper {
+                        internal: key.clone(),
+                    },
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(val.re, val.im),
+                    },
+                )
+            })
+            .collect();
+        Ok(result_pyo3)
+    }
+}
