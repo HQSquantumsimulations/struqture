@@ -17,6 +17,9 @@ pub use pauli_product::PauliProductWrapper;
 mod decoherence_product;
 pub use decoherence_product::DecoherenceProductWrapper;
 
+mod plus_minus_product;
+pub use plus_minus_product::PlusMinusProductWrapper;
+
 mod spin_system;
 pub use spin_system::SpinSystemWrapper;
 

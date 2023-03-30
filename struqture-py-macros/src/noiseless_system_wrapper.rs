@@ -625,7 +625,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to json.
-            fn to_json(&self) -> PyResult<String> {
+            pub fn to_json(&self) -> PyResult<String> {
                 let serialized = serde_json::to_string(&self.internal)
                     .map_err(|_| PyValueError::new_err("Cannot serialize object to json".to_string()))?;
                 Ok(serialized)
@@ -643,7 +643,7 @@ pub fn noiselesswrapper(
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
             #[pyo3(text_signature = "(input)")]
-            fn from_json(input: String) -> PyResult<#ident> {
+            pub fn from_json(input: String) -> PyResult<#ident> {
                 Ok(#ident {
                     internal: serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
@@ -658,7 +658,7 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     str: The printable string representation of self.
-            fn __str__(&self) -> String {
+            pub fn __str__(&self) -> String {
                 format!("{}", self.internal)
             }
 
@@ -666,7 +666,7 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     str: The printable string representation of self.
-            fn __repr__(&self) -> String {
+            pub fn __repr__(&self) -> String {
                 format!("{}", self.internal)
             }
 
@@ -681,7 +681,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {
