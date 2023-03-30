@@ -12,11 +12,15 @@
 
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::fermions::{
-    FermionHamiltonian, FermionOperator, FermionProduct, HermitianFermionProduct,
+    FermionHamiltonian, FermionLindbladNoiseOperator, FermionOperator, FermionProduct,
+    HermitianFermionProduct,
 };
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
-use struqture::spins::{PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinOperator};
+use struqture::spins::{
+    DecoherenceProduct, PauliProduct, SingleSpinOperator, SpinHamiltonian,
+    SpinLindbladNoiseOperator, SpinOperator,
+};
 
 #[test]
 fn test_jw_fermion_product_to_spin() {
@@ -52,10 +56,10 @@ fn test_jw_hermitian_fermion_product_to_spin() {
     let hfp = HermitianFermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).y(2);
     let pp_2 = PauliProduct::new().x(1).x(2);
-    let mut so = SpinOperator::new();
-    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0))
+    let mut so = SpinHamiltonian::new();
+    so.add_operator_product(pp_1.clone(), CalculatorFloat::from(0.5))
         .unwrap();
-    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.5, 0.0))
+    so.add_operator_product(pp_2.clone(), CalculatorFloat::from(0.5))
         .unwrap();
 
     assert_eq!(hfp.jordan_wigner(), so)
@@ -81,8 +85,10 @@ fn test_jw_fermion_hamiltonian_to_spin() {
     let mut fh = FermionHamiltonian::new();
     let hfp1 = HermitianFermionProduct::new([1, 2], [2, 4]).unwrap();
     let hfp2 = HermitianFermionProduct::new([1, 3], [1, 2]).unwrap();
-    fh.add_operator_product(hfp1.clone(), 1.0.into()).unwrap();
-    fh.add_operator_product(hfp2.clone(), 2.0.into()).unwrap();
+    fh.add_operator_product(hfp1.clone(), CalculatorComplex::new(1.0, 2.0))
+        .unwrap();
+    fh.add_operator_product(hfp2.clone(), CalculatorComplex::new(2.0, 1.0))
+        .unwrap();
     let jw_pair1 = hfp1.jordan_wigner();
     let jw_pair2 = hfp2.jordan_wigner();
     let jw_pair1_hamiltonian = SpinHamiltonian::try_from(jw_pair1).unwrap();
@@ -93,4 +99,18 @@ fn test_jw_fermion_hamiltonian_to_spin() {
         jw_pair1_hamiltonian * CalculatorFloat::from(1.0)
             + jw_pair2_hamiltonian * CalculatorFloat::from(2.0)
     );
+}
+
+#[test]
+fn test_jw_fermion_noise_operator_to_spin() {
+    let mut fno = FermionLindbladNoiseOperator::new();
+    let fp = FermionProduct::new([0], [0]).unwrap();
+    fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
+        .unwrap();
+    let mut sno = SpinLindbladNoiseOperator::new();
+    let dp = DecoherenceProduct::new().z(0);
+    sno.add_operator_product((dp.clone(), dp), CalculatorComplex::new(0.25, 0.0))
+        .unwrap();
+
+    assert_eq!(fno.jordan_wigner(), sno)
 }

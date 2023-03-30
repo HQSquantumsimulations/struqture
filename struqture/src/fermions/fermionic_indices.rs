@@ -13,12 +13,12 @@
 use super::FermionIndex;
 use crate::mappings::JordanWignerFermionToSpin;
 use crate::prelude::*;
-use crate::spins::{PauliProduct, SingleSpinOperator, SpinOperator};
+use crate::spins::{PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinOperator};
 use crate::{
     CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, StruqtureError, SymmetricIndex,
 };
 
-use qoqo_calculator::CalculatorComplex;
+use qoqo_calculator::*;
 use serde::{
     de::{Error, SeqAccess, Visitor},
     ser::SerializeTuple,
@@ -1229,27 +1229,10 @@ fn sort_and_signal(indices: TinyVec<[usize; 2]>) -> (TinyVec<[usize; 2]>, bool, 
     (local_indices, contain_double, parity)
 }
 
-fn _lowering_operator(i: &usize) -> SpinOperator {
-    let mut out = SpinOperator::new();
-    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
-        .unwrap();
-    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5))
-        .unwrap();
-    out
-}
-fn _raising_operator(i: &usize) -> SpinOperator {
-    let mut out = SpinOperator::new();
-    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
-        .unwrap();
-    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5))
-        .unwrap();
-    out
-}
-
-impl<T: FermionIndex> JordanWignerFermionToSpin for T {
+impl JordanWignerFermionToSpin for FermionProduct {
     type Output = SpinOperator;
 
-    /// Implements JordanWignerFermionToSpin for a FermionIndex.
+    /// Implements JordanWignerFermionToSpin for a FermionProduct.
     ///
     /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
     /// and |1> represents an occupied fermionic state.
@@ -1292,26 +1275,91 @@ impl<T: FermionIndex> JordanWignerFermionToSpin for T {
             spin_operator = spin_operator * _raising_operator(site);
             previous = *site;
         }
+        spin_operator
+    }
+}
 
-        // For HermitianFermionProduct, spin terms with imaginary coefficients are dropped, and
+impl JordanWignerFermionToSpin for HermitianFermionProduct {
+    type Output = SpinHamiltonian;
+
+    /// Implements JordanWignerFermionToSpin for a HermitianFermionProduct.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `SpinHamiltonian` - The spin operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let number_creators = self.number_creators();
+        let number_annihilators = self.number_annihilators();
+        let mut spin_operator = SpinOperator::new();
+
+        let mut id = PauliProduct::new();
+        id = id.set_pauli(0, SingleSpinOperator::Identity);
+        spin_operator
+            .add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0))
+            .unwrap();
+
+        // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
+        // odd positions depending on the parity of the total number of creation (annihilation)
+        // operators.
+        let mut previous = 0;
+        for (index, site) in self.creators().enumerate() {
+            if index % 2 != number_creators % 2 {
+                for i in previous..*site {
+                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                }
+            }
+            spin_operator = spin_operator * _lowering_operator(site);
+            previous = *site;
+        }
+
+        previous = 0;
+        for (index, site) in self.annihilators().enumerate() {
+            if index % 2 != number_annihilators % 2 {
+                for i in previous..*site {
+                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                }
+            }
+            spin_operator = spin_operator * _raising_operator(site);
+            previous = *site;
+        }
+
+        // Spin terms with imaginary coefficients are dropped, and
         // real coefficients are doubled.
-        if !self.is_natural_hermitian()
-            && std::any::type_name::<T>() == std::any::type_name::<HermitianFermionProduct>()
-        {
-            let mut out = SpinOperator::new();
+        if !self.is_natural_hermitian() {
+            let mut out = SpinHamiltonian::new();
             for (product, coeff) in spin_operator.iter() {
                 if coeff.im == 0.0.into() {
                     out.add_operator_product(
                         product.clone(),
-                        CalculatorComplex::new(coeff.re.clone() * 2, 0.0),
+                        CalculatorFloat::from(coeff.re.clone() * 2),
                     )
                     .unwrap();
                 }
             }
             return out;
         }
-        spin_operator
+        SpinHamiltonian::try_from(spin_operator).unwrap()
     }
+}
+
+fn _lowering_operator(i: &usize) -> SpinOperator {
+    let mut out = SpinOperator::new();
+    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5))
+        .unwrap();
+    out
+}
+fn _raising_operator(i: &usize) -> SpinOperator {
+    let mut out = SpinOperator::new();
+    out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5))
+        .unwrap();
+    out
 }
 
 // When constructing multiplication with commute_creator remember to skip all products with double creators or double annihilators

@@ -20,7 +20,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::prelude::*;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
 use struqture::SpinIndex;
 use test_case::test_case;
 
@@ -208,6 +208,34 @@ fn into_iter_from_iter_extend() {
         .unwrap();
 
     assert_eq!(system, system_1);
+}
+
+// Test the From<SpinOperator> trait
+#[test]
+fn test_from_spin_operator() {
+    let mut so = SpinOperator::new();
+    let pp_0 = PauliProduct::new().x(0).y(1).z(2);
+    let c0 = CalculatorComplex::new(1.0, 2.0);
+    let pp_1 = PauliProduct::new().x(0).y(1).y(2);
+    let c1 = CalculatorComplex::new(2.0, 1.0);
+    let pp_2 = PauliProduct::new().y(0).y(1).y(2);
+    let c2 = CalculatorComplex::new(2.0, 3.0);
+    so.add_operator_product(pp_0, c0).unwrap();
+    so.add_operator_product(pp_1, c1).unwrap();
+    so.add_operator_product(pp_2, c2).unwrap();
+
+    let mut dec_op = DecoherenceOperator::new();
+    let dp_0 = DecoherenceProduct::new().x(0).iy(1).z(2);
+    let dp_1 = DecoherenceProduct::new().x(0).iy(1).iy(2);
+    let dp_2 = DecoherenceProduct::new().iy(0).iy(1).iy(2);
+    let d0 = CalculatorComplex::new(2.0, -1.0);
+    let d1 = CalculatorComplex::new(-2.0, -1.0);
+    let d2 = CalculatorComplex::new(-3.0, 2.0);
+    dec_op.add_operator_product(dp_0, d0).unwrap();
+    dec_op.add_operator_product(dp_1, d1).unwrap();
+    dec_op.add_operator_product(dp_2, d2).unwrap();
+
+    assert_eq!(DecoherenceOperator::from(so), dec_op);
 }
 
 // Test the negative operation: -DecoherenceOperator

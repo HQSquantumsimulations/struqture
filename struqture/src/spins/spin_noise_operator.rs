@@ -310,7 +310,8 @@ impl SpinLindbladNoiseOperator {
     /// # Arguments
     ///
     /// * `left` - DecoherenceOperator that acts on the density matrix from the left in the Lindblad equation.
-    /// * `value` -  DecoherenceOperator that acts on the density matrix from the right and in hermitian conjugated form in the Lindblad equation.
+    /// * `right` -  DecoherenceOperator that acts on the density matrix from the right and in hermitian conjugated form in the Lindblad equation.
+    /// * `value` - CalculatorComplex value representing the global coefficient of the noise term.
     ///
     /// # Returns
     ///

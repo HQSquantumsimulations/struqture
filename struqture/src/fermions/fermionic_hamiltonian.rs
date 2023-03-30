@@ -29,7 +29,7 @@ use std::ops;
 
 /// FermionHamiltonians are combinations of FermionProducts with specific CalculatorComplex coefficients.
 ///
-/// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
+/// This is a representation of sums of creation and annihilation operators with weightings, in order to build a full hamiltonian.
 /// FermionHamiltonian is the hermitian equivalent of FermionOperator.
 ///
 /// # Example
@@ -587,8 +587,12 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
         let mut out = SpinHamiltonian::new();
         for hfp in self.keys() {
             let mut new_term = hfp.jordan_wigner();
-            new_term = new_term * (self.get(hfp));
-            out = out + SpinHamiltonian::try_from(new_term).unwrap();
+            let mut new_coeff = CalculatorFloat::from(self.get(hfp).re.clone());
+            if hfp.is_natural_hermitian() {
+                new_coeff *= 2.0;
+            }
+            new_term = new_term * new_coeff;
+            out = out + new_term;
         }
         out
     }
