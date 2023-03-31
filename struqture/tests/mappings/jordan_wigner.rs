@@ -18,8 +18,8 @@ use struqture::fermions::{
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleSpinOperator, SpinHamiltonian,
-    SpinLindbladNoiseOperator, SpinOperator,
+    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator,
+    SpinHamiltonian, SpinLindbladNoiseOperator, SpinOperator,
 };
 
 #[test]
@@ -109,7 +109,17 @@ fn test_jw_fermion_noise_operator_to_spin() {
         .unwrap();
     let mut sno = SpinLindbladNoiseOperator::new();
     let dp = DecoherenceProduct::new().z(0);
-    sno.add_operator_product((dp.clone(), dp), CalculatorComplex::new(0.25, 0.0))
+    sno.add_operator_product((dp.clone(), dp.clone()), CalculatorComplex::new(0.25, 0.0))
+        .unwrap();
+
+    // TEMP adding extra terms that would cancel, because the implementation of
+    // SpinLindbladNoiseOperator still saves them
+    let id = DecoherenceProduct::new().set_pauli(0, SingleDecoherenceOperator::Identity);
+    sno.add_operator_product((id.clone(), id.clone()), CalculatorComplex::new(0.25, 0.0))
+        .unwrap();
+    sno.add_operator_product((id.clone(), dp.clone()), CalculatorComplex::new(-0.25, 0.0))
+        .unwrap();
+    sno.add_operator_product((dp.clone(), id.clone()), CalculatorComplex::new(-0.25, 0.0))
         .unwrap();
 
     assert_eq!(fno.jordan_wigner(), sno)
