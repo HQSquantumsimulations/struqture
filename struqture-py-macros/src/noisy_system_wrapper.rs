@@ -30,6 +30,8 @@ pub fn noisywrapper(
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
     let index_type = if struct_name.contains("Spin") {
         quote::format_ident!("DecoherenceProductWrapper")
+    } else if struct_name.contains("PlusMinus") {
+        quote::format_ident!("PlusMinusProductWrapper")
     } else if struct_name.contains("Boson") {
         quote::format_ident!("BosonProductWrapper")
     } else if struct_name.contains("Fermion") {
