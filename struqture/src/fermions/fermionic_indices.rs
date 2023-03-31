@@ -1248,7 +1248,7 @@ impl JordanWignerFermionToSpin for FermionProduct {
         let mut id = PauliProduct::new();
         id = id.set_pauli(0, SingleSpinOperator::Identity);
         spin_operator
-            .add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0))
+            .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
             .unwrap();
 
         // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
@@ -1298,7 +1298,7 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         let mut id = PauliProduct::new();
         id = id.set_pauli(0, SingleSpinOperator::Identity);
         spin_operator
-            .add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0))
+            .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
             .unwrap();
 
         // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
@@ -1332,11 +1332,8 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             let mut out = SpinHamiltonian::new();
             for (product, coeff) in spin_operator.iter() {
                 if coeff.im == 0.0.into() {
-                    out.add_operator_product(
-                        product.clone(),
-                        CalculatorFloat::from(coeff.re.clone() * 2),
-                    )
-                    .unwrap();
+                    out.add_operator_product(product.clone(), coeff.re.clone() * 2)
+                        .unwrap();
                 }
             }
             return out;

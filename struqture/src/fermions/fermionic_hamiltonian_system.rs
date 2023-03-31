@@ -14,7 +14,7 @@ use super::{
     FermionHamiltonian, FermionSystem, HermitianFermionProduct, ModeIndex, OperateOnFermions,
 };
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::{SpinHamiltonian, SpinHamiltonianSystem};
+use crate::spins::SpinHamiltonianSystem;
 use crate::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};

@@ -587,7 +587,7 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
         let mut out = SpinHamiltonian::new();
         for hfp in self.keys() {
             let mut new_term = hfp.jordan_wigner();
-            let mut new_coeff = CalculatorFloat::from(self.get(hfp).re.clone());
+            let mut new_coeff = self.get(hfp).re.clone();
             if hfp.is_natural_hermitian() {
                 new_coeff *= 2.0;
             }
