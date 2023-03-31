@@ -15,10 +15,8 @@
 //! The convention used is to treat the qubit state $|0 \rangle$ as empty, and the state $|1\rangle$
 //! as occupied by a fermion. The corresponding mapping is given by
 //!
-//! $$ JW(a_p^{\dagger}) = \left[ \prod_{i = 1}^{p - 1} Z_i \right] \left( \frac{X_p - i Y_p}{2}
-//! \right) $$
-//!
-//! $$ JW(a_p) = \left[ \prod_{i = 1}^{p - 1} Z_i \right] \left( \frac{X_p + i Y_p}{2} \right) $$
+//! JW(a_p^{dagger}) = ( \prod_{i = 1}^{p - 1} Z_i )(X_p - i Y_p)*1/2
+//! JW(a_p) = ( \prod_{i = 1}^{p - 1} Z_i )(X_p + i Y_p)*1/2
 
 pub trait JordanWignerFermionToSpin {
     /// The Output type for the JordanWigner transformation
