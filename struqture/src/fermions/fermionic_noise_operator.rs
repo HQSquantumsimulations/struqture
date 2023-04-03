@@ -261,7 +261,7 @@ impl FermionLindbladNoiseOperator {
         let mut remainder = Self::default();
         for ((prod_l, prod_r), val) in self.iter() {
             if (prod_l.creators().len(), prod_l.annihilators().len()) == number_particles_left
-                && (prod_r.creators().len(), prod_l.annihilators().len()) == number_particles_right
+                && (prod_r.creators().len(), prod_r.annihilators().len()) == number_particles_right
             {
                 separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
             } else {
