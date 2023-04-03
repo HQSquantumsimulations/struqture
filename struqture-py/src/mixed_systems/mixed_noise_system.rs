@@ -80,33 +80,33 @@ impl MixedLindbladNoiseSystemWrapper {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
-    ///
-    /// Args:
-    ///     number_particles_left (Tuple[int, int, int]): Number of particles to filter for in the left term of the keys.
-    ///     number_particles_right (Tuple[int, int, int]): Number of particles to filter for in the right term of the keys.
-    ///
-    /// Returns:
-    ///     int: The number of modes in self.
-    ///
-    /// Raises:
-    ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
-        &self,
-        number_particles_left: (usize, usize, usize),
-        number_particles_right: (usize, usize, usize),
-    ) -> PyResult<(Self, Self)> {
-        let (separated, remainder) = self
-            .internal
-            .separate_into_n_terms(number_particles_left, number_particles_right)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok((
-            Self {
-                internal: separated,
-            },
-            Self {
-                internal: remainder,
-            },
-        ))
-    }
+    // /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
+    // ///
+    // /// Args:
+    // ///     number_particles_left (Tuple[int, int, int]): Number of particles to filter for in the left term of the keys.
+    // ///     number_particles_right (Tuple[int, int, int]): Number of particles to filter for in the right term of the keys.
+    // ///
+    // /// Returns:
+    // ///     int: The number of modes in self.
+    // ///
+    // /// Raises:
+    // ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    // pub fn separate_into_n_terms(
+    //     &self,
+    //     number_particles_left: (usize, usize, usize),
+    //     number_particles_right: (usize, usize, usize),
+    // ) -> PyResult<(Self, Self)> {
+    //     let (separated, remainder) = self
+    //         .internal
+    //         .separate_into_n_terms(number_particles_left, number_particles_right)
+    //         .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+    //     Ok((
+    //         Self {
+    //             internal: separated,
+    //         },
+    //         Self {
+    //             internal: remainder,
+    //         },
+    //     ))
+    // }
 }
