@@ -34,18 +34,14 @@ use super::SpinLindbladNoiseSystemWrapper;
 /// .. code-block:: python
 ///
 ///     import numpy.testing as npt
-///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.spins import PlusMinusLindbladNoiseOperator, PlusMinusProduct
 ///
 ///     slns = PlusMinusLindbladNoiseOperator()
-///     dp = PlusMinusProduct().z(0).x(1)
+///     dp = PlusMinusProduct().z(0).plus(1)
 ///     slns.add_operator_product((dp, dp), 2.0)
-///     npt.assert_equal(slns.current_number_spins(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///     npt.assert_equal(slns.keys(), [(dp, dp)])
-///     dimension = 4**slns.number_spins()
-///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
 #[pyclass(name = "PlusMinusLindbladNoiseOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -112,15 +108,17 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         PlusMinusLindbladNoiseOperatorWrapper { internal: new_self }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
+    /// Separate self into an operator with the terms of given number of qubits (left and right) and an operator with the remaining operations.
     ///
-    /// # Arguments
+    /// Args
+    ///     number_of_spins_left (int): Number of spins to filter for in the left key.
+    ///     number_of_spins_right (int): Number of spins to filter for in the right key.
     ///
-    /// * `number_of_spins_left` - Number of spins to filter for in the keys.
+    /// Returns
+    ///     (PlusMinusLindbladNoiseOperator, PlusMinusLindbladNoiseOperator): Operator with the noise terms where number_of_spins (left and right) matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
-    /// # Returns
-    ///
-    /// (separated, remainder) - Operator with the noise terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    /// Raises:
+    ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_spin_terms(
         &self,
         number_of_spins_left: usize,
@@ -139,18 +137,20 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         ))
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// Convert a SpinLindbladNoiseSystem into a PlusMinusLindbladNoiseOperator.
     ///
     /// Args:
-    ///     other (self): The object to concatenate self with.
+    ///     value (SpinLindbladNoiseSystem): The SpinLindbladNoiseSystem to create the PlusMinusLindbladNoiseOperator from.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     PlusMinusLindbladNoiseOperator: The operator created from the input SpinLindbladNoiseSystem.
     ///
     /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
+    ///     ValueError: Could not create SpinLindbladNoiseSystem from input.
     #[staticmethod]
-    pub fn from(value: Py<PyAny>) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
+    pub fn from_spin_noise_system(
+        value: Py<PyAny>,
+    ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         let system = SpinLindbladNoiseSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusLindbladNoiseOperatorWrapper {
@@ -158,21 +158,24 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         })
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// Convert a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseSystem.
     ///
     /// Args:
-    ///     other (self): The object to concatenate self with.
+    ///     number_spins (Optional[int]): The number of spins to initialize the SpinLindbladNoiseSystem with.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     SpinLindbladNoiseSystem: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
-    pub fn to_spin_system(&self) -> PyResult<SpinLindbladNoiseSystemWrapper> {
+    ///     ValueError: Could not create SpinLindbladNoiseSystem from PlusMinusLindbladNoiseOperator.
+    pub fn to_spin_noise_system(
+        &self,
+        number_spins: Option<usize>,
+    ) -> PyResult<SpinLindbladNoiseSystemWrapper> {
         let result: SpinLindbladNoiseOperator =
             SpinLindbladNoiseOperator::from(self.internal.clone());
         Ok(SpinLindbladNoiseSystemWrapper {
-            internal: SpinLindbladNoiseSystem::from_operator(result, None)
+            internal: SpinLindbladNoiseSystem::from_operator(result, number_spins)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
         })
     }

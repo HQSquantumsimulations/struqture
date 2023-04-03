@@ -280,7 +280,7 @@ impl PlusMinusLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// (separated, remainder) - Operator with the noise terms where number_left and number_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
+    /// Ok((separated, remainder)) - Operator with the noise terms where number_left and number_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
     pub fn separate_into_n_spin_terms(
         &self,
         number_of_spins_left: usize,
@@ -308,6 +308,15 @@ impl PlusMinusLindbladNoiseOperator {
 }
 
 impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {
+    /// Converts a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PlusMinusLindbladNoiseOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The PlusMinusLindbladNoiseOperator converted into a SpinLindbladNoiseOperator.
     fn from(value: PlusMinusLindbladNoiseOperator) -> Self {
         let mut new_operator = SpinLindbladNoiseOperator::with_capacity(2 * value.len());
         for ((product_left, product_right), val) in value.into_iter() {
@@ -334,6 +343,15 @@ impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {
 }
 
 impl From<SpinLindbladNoiseOperator> for PlusMinusLindbladNoiseOperator {
+    /// Converts a SpinLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The SpinLindbladNoiseOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SpinLindbladNoiseOperator converted into a PlusMinusLindbladNoiseOperator.
     fn from(value: SpinLindbladNoiseOperator) -> Self {
         let mut new_operator = PlusMinusLindbladNoiseOperator::with_capacity(2 * value.len());
         for ((product_left, product_right), val) in value.into_iter() {

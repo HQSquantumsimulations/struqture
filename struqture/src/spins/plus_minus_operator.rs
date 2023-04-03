@@ -220,7 +220,7 @@ impl PlusMinusOperator {
     ///
     /// # Returns
     ///
-    /// (separated, remainder) - Operator with the noise terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    /// Ok((separated, remainder)) - Operator with the noise terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
     pub fn separate_into_n_spin_terms(
         &self,
         number_of_spins: usize,
@@ -239,6 +239,15 @@ impl PlusMinusOperator {
 }
 
 impl From<PlusMinusOperator> for SpinOperator {
+    /// Converts a PlusMinusOperator into a SpinOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PlusMinusOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The PlusMinusOperator converted into a SpinOperator.
     fn from(value: PlusMinusOperator) -> Self {
         let mut new_operator = SpinOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
@@ -254,6 +263,15 @@ impl From<PlusMinusOperator> for SpinOperator {
 }
 
 impl From<SpinOperator> for PlusMinusOperator {
+    /// Converts a SpinOperator into a PlusMinusOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The SpinOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SpinOperator converted into a PlusMinusOperator.
     fn from(value: SpinOperator) -> Self {
         let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
@@ -269,6 +287,15 @@ impl From<SpinOperator> for PlusMinusOperator {
 }
 
 impl From<PlusMinusOperator> for DecoherenceOperator {
+    /// Converts a PlusMinusOperator into a DecoherenceOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PlusMinusOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The PlusMinusOperator converted into a DecoherenceOperator.
     fn from(value: PlusMinusOperator) -> Self {
         let mut new_operator = DecoherenceOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
@@ -284,6 +311,15 @@ impl From<PlusMinusOperator> for DecoherenceOperator {
 }
 
 impl From<DecoherenceOperator> for PlusMinusOperator {
+    /// Converts a DecoherenceOperator into a PlusMinusOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The DecoherenceOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The DecoherenceOperator converted into a PlusMinusOperator.
     fn from(value: DecoherenceOperator) -> Self {
         let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
@@ -301,6 +337,16 @@ impl From<DecoherenceOperator> for PlusMinusOperator {
 impl TryFrom<PlusMinusOperator> for SpinHamiltonian {
     type Error = StruqtureError;
 
+    /// Tries to converts a PlusMinusOperator into a SpinHamiltonian.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PlusMinusOperator to try to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Self)` - The PlusMinusOperator converted into a SpinHamiltonian.
+    /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn try_from(value: PlusMinusOperator) -> Result<Self, Self::Error> {
         let tmp_operator = SpinOperator::from(value);
         SpinHamiltonian::try_from(tmp_operator)

@@ -93,6 +93,8 @@ impl FromStr for SinglePlusMinusOperator {
     }
 }
 
+/// Implements the default function (Default trait) of SinglePlusMinusOperator (an Identity SinglePlusMinusOperator).
+///
 impl Default for SinglePlusMinusOperator {
     fn default() -> Self {
         SinglePlusMinusOperator::Identity
@@ -166,6 +168,15 @@ impl SinglePlusMinusOperator {
 }
 
 impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
+    /// Converts a SinglePlusMinusOperator into a vector of tuples of (SingleSpinOperator, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `val` - The SinglePlusMinusOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SinglePlusMinusOperator converted into a vector of tuples of (SingleSpinOperator, Complex64).
     fn from(val: SinglePlusMinusOperator) -> Self {
         match val {
             SinglePlusMinusOperator::Identity => {
@@ -185,6 +196,15 @@ impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
 }
 
 impl From<SingleSpinOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
+    /// Converts a SingleSpinOperator into a vector of tuples of (SinglePlusMinusOperator, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `val` - The SingleSpinOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SingleSpinOperator converted into a vector of tuples of (SinglePlusMinusOperator, Complex64).
     fn from(val: SingleSpinOperator) -> Self {
         match val {
             SingleSpinOperator::Identity => {
@@ -204,6 +224,15 @@ impl From<SingleSpinOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
 }
 
 impl From<SinglePlusMinusOperator> for Vec<(SingleDecoherenceOperator, Complex64)> {
+    /// Converts a SinglePlusMinusOperator into a vector of tuples of (SingleDecoherenceOperator, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `val` - The SinglePlusMinusOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SinglePlusMinusOperator converted into a vector of tuples of (SingleDecoherenceOperator, Complex64).
     fn from(val: SinglePlusMinusOperator) -> Self {
         match val {
             SinglePlusMinusOperator::Identity => vec![(
@@ -226,6 +255,15 @@ impl From<SinglePlusMinusOperator> for Vec<(SingleDecoherenceOperator, Complex64
 }
 
 impl From<SingleDecoherenceOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
+    /// Converts a SingleDecoherenceOperator into a vector of tuples of (SinglePlusMinusOperator, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `val` - The SingleDecoherenceOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SingleDecoherenceOperator converted into a vector of tuples of (SinglePlusMinusOperator, Complex64).
     fn from(val: SingleDecoherenceOperator) -> Self {
         match val {
             SingleDecoherenceOperator::Identity => {
@@ -247,6 +285,15 @@ impl From<SingleDecoherenceOperator> for Vec<(SinglePlusMinusOperator, Complex64
 }
 
 impl From<PauliProduct> for Vec<(PlusMinusProduct, Complex64)> {
+    /// Converts a PauliProduct into a vector of tuples of (PlusMinusProduct, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PauliProduct to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The PauliProduct converted into a vector of tuples of (PlusMinusProduct, Complex64).
     fn from(value: PauliProduct) -> Self {
         let mut new_vec: Vec<(PlusMinusProduct, Complex64)> =
             vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
@@ -266,6 +313,15 @@ impl From<PauliProduct> for Vec<(PlusMinusProduct, Complex64)> {
 }
 
 impl From<DecoherenceProduct> for Vec<(PlusMinusProduct, Complex64)> {
+    /// Converts a DecoherenceProduct into a vector of tuples of (PlusMinusProduct, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The DecoherenceProduct to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The DecoherenceProduct converted into a vector of tuples of (PlusMinusProduct, Complex64).
     fn from(value: DecoherenceProduct) -> Self {
         let mut new_vec: Vec<(PlusMinusProduct, Complex64)> =
             vec![(PlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
@@ -285,6 +341,15 @@ impl From<DecoherenceProduct> for Vec<(PlusMinusProduct, Complex64)> {
 }
 
 impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
+    /// Converts a PlusMinusProduct into a vector of tuples of (PauliProduct, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PlusMinusProduct to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The PlusMinusProduct converted into a vector of tuples of (PauliProduct, Complex64).
     fn from(value: PlusMinusProduct) -> Self {
         let mut new_vec: Vec<(PauliProduct, Complex64)> =
             vec![(PauliProduct::new(), Complex64::new(1.0, 0.0))];
@@ -304,6 +369,15 @@ impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
 }
 
 impl From<PlusMinusProduct> for Vec<(DecoherenceProduct, Complex64)> {
+    /// Converts a PlusMinusProduct into a vector of tuples of (DecoherenceProduct, Complex64).
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The PlusMinusProduct to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The PlusMinusProduct converted into a vector of tuples of (DecoherenceProduct, Complex64).
     fn from(value: PlusMinusProduct) -> Self {
         let mut new_vec: Vec<(DecoherenceProduct, Complex64)> =
             vec![(DecoherenceProduct::new(), Complex64::new(1.0, 0.0))];
@@ -459,14 +533,27 @@ impl<'de> Deserialize<'de> for PlusMinusProduct {
 }
 
 impl PlusMinusProduct {
-    // From trait
+    /// Creates a new Self typed object.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The new (empty) instance of type `Self`.
     pub fn new() -> Self {
         PlusMinusProduct {
             items: TinyVec::<[(usize, SinglePlusMinusOperator); 5]>::with_capacity(5),
         }
     }
 
-    // From trait
+    /// Sets a new entry in Self. This function consumes Self.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - Index of set object.
+    /// * `pauli` - Value of set object.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The entry was correctly set and the new object is returned.
     pub fn set_pauli(self, index: usize, pauli: SinglePlusMinusOperator) -> Self {
         let mut pp = self;
         if let Some((vecindex, insertindex, index_in_use)) =
@@ -507,14 +594,27 @@ impl PlusMinusProduct {
         pp
     }
 
-    // From trait
+    /// Gets the pauli matrix corresponding to the index.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - The index of qubit to get the pauli matrix for.
+    ///
+    /// # Returns
+    ///
+    /// * `Some(&SinglePlusMinusOperator)` - The key exists and its corresponding value is returned.
+    /// * `None` - The key does not exist in Self.
     pub fn get(&self, index: &usize) -> Option<&SinglePlusMinusOperator> {
         self.items
             .iter()
             .find_map(|(key, value)| if key == index { Some(value) } else { None })
     }
 
-    // From trait
+    /// Returns the iterator form of Self.
+    ///
+    /// # Returns
+    ///
+    /// * `Iter<usize, SinglePlusMinusOperator>` - The iterator form of Self.
     pub fn iter(&self) -> std::slice::Iter<(usize, SinglePlusMinusOperator)> {
         return match &self.items {
             TinyVec::Heap(x) => x.iter(),
@@ -522,7 +622,15 @@ impl PlusMinusProduct {
         };
     }
 
-    // From trait
+    /// Remaps the qubits in a clone instance of Self.
+    ///
+    /// # Arguments
+    ///
+    /// * `mapping` - The map containing the {qubit: qubit} mapping to use.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` -  The new object with the qubits remapped from Self.
     pub fn remap_qubits(&self, mapping: &HashMap<usize, usize>) -> PlusMinusProduct {
         let mut mutable_internal: TinyVec<[(usize, SinglePlusMinusOperator); 5]> =
             TinyVec::<[(usize, SinglePlusMinusOperator); 5]>::with_capacity(10);
@@ -543,7 +651,16 @@ impl PlusMinusProduct {
         }
     }
 
-    // From trait
+    /// Returns the concatenation of two Self typed objects with no overlapping qubits.
+    ///
+    /// # Arguments
+    ///
+    /// * `other` - The object to concatenate Self with.
+    ///
+    /// Returns
+    ///
+    /// * `Ok(Self)` - The concatenated objects.
+    /// * `Err(StruqtureError::ProductIndexAlreadyOccupied)` - Cannot assign pauli matrix to index as it is already occupied.
     pub fn concatenate(&self, other: PlusMinusProduct) -> Result<PlusMinusProduct, StruqtureError> {
         let mut return_list = self.items.clone();
         for (key, val) in other.iter() {

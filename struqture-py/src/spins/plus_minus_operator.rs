@@ -36,18 +36,14 @@ use super::SpinHamiltonianSystemWrapper;
 /// .. code-block:: python
 ///
 ///     import numpy.testing as npt
-///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.spins import PlusMinusOperator, PlusMinusProduct
 ///
-///     ssystem = PlusMinusOperator(2)
+///     ssystem = PlusMinusOperator()
 ///     pp = PlusMinusProduct().z(0)
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
-///     dimension = 4**ssystem.number_spins()
-///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
 #[pyclass(name = "PlusMinusOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
@@ -141,13 +137,14 @@ impl PlusMinusOperatorWrapper {
 
     /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
     ///
-    /// # Arguments
+    /// Args
+    ///     number_of_spins (int): Number of spins to filter for in the keys.
     ///
-    /// * `number_of_spins` - Number of spins to filter for in the keys.
+    /// Returns
+    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
-    /// # Returns
-    ///
-    /// (separated, remainder) - Operator with the noise terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    /// Raises:
+    ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_spin_terms(
         &self,
         number_of_spins: usize,
@@ -162,18 +159,18 @@ impl PlusMinusOperatorWrapper {
         ))
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// Convert a SpinSystem into a PlusMinusOperator.
     ///
     /// Args:
-    ///     other (self): The object to concatenate self with.
+    ///     value (SpinSystem): The SpinSystem to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     PlusMinusOperator: The operator created from the input SpinSystem.
     ///
     /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
+    ///     ValueError: Could not create SpinSystem from input.
     #[staticmethod]
-    pub fn from(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_spin_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -181,73 +178,42 @@ impl PlusMinusOperatorWrapper {
         })
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// Convert a PlusMinusOperator into a SpinSystem.
     ///
     /// Args:
-    ///     other (self): The object to concatenate self with.
+    ///     number_spins (Optional[int]): The number of spins to initialize the SpinSystem with.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     SpinSystem: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
-    pub fn to_spin_system(&self) -> PyResult<SpinSystemWrapper> {
+    ///     ValueError: Could not create SpinSystem from PlusMinusOperator.
+    pub fn to_spin_system(&self, number_spins: Option<usize>) -> PyResult<SpinSystemWrapper> {
         let result: SpinOperator = SpinOperator::from(self.internal.clone());
         Ok(SpinSystemWrapper {
-            internal: SpinSystem::from_operator(result, None)
+            internal: SpinSystem::from_operator(result, number_spins)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
         })
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// Convert a PlusMinusOperator into a SpinHamiltonianSystem.
     ///
     /// Args:
-    ///     other (self): The object to concatenate self with.
+    ///     number_spins (Optional[int]): The number of spins to initialize the SpinHamiltonianSystem with.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     SpinHamiltonianSystem: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
-    pub fn to_spin_hamiltonian_system(&self) -> PyResult<SpinHamiltonianSystemWrapper> {
+    ///     ValueError: Could not create SpinHamiltonianSystem from PlusMinusOperator.
+    pub fn to_spin_hamiltonian_system(&self, number_spins: Option<usize>) -> PyResult<SpinHamiltonianSystemWrapper> {
         let result: SpinHamiltonian = SpinHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(SpinHamiltonianSystemWrapper {
-            internal: SpinHamiltonianSystem::from_hamiltonian(result, None)
+            internal: SpinHamiltonianSystem::from_hamiltonian(result, number_spins)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
         })
     }
-
-    // /// Return the concatenation of two objects of type `self` with no overlapping qubits.
-    // ///
-    // /// Args:
-    // ///     other (self): The object to concatenate self with.
-    // ///
-    // /// Returns:
-    // ///     list[int]: A list of the corresponding creator indices.
-    // ///
-    // /// Raises:
-    // ///     ValueError: The two objects could not be concatenated.
-    // pub fn to_decoherence_product(
-    //     &self,
-    // ) -> PyResult<Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)>> {
-    //     let result: Vec<(DecoherenceProduct, Complex64)> =
-    //         Vec::<(DecoherenceProduct, Complex64)>::from(self.internal.clone());
-    //     let result_pyo3: Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> = result
-    //         .iter()
-    //         .map(|(key, val)| {
-    //             (
-    //                 DecoherenceProductWrapper {
-    //                     internal: key.clone(),
-    //                 },
-    //                 CalculatorComplexWrapper {
-    //                     internal: CalculatorComplex::new(val.re, val.im),
-    //                 },
-    //             )
-    //         })
-    //         .collect();
-    //     Ok(result_pyo3)
-    // }
 }
 
 impl Default for PlusMinusOperatorWrapper {

@@ -766,7 +766,7 @@ fn test_from_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = None;
+        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
         let pp = pp_type
             .call1((number_spins,))
@@ -786,14 +786,14 @@ fn test_from_spin_sys() {
 
         let result = py
             .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
-            .call_method1("from", (pp,))
+            .call_method1("from_spin_noise_system", (pp,))
             .unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
-            .call_method1("from", ("No",));
+            .call_method1("from_spin_noise_system", ("No",));
         assert!(result.is_err())
     })
 }
@@ -814,7 +814,7 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = None;
+        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
         let sys = pp_type
             .call1((number_spins,))
@@ -862,7 +862,9 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp.call_method0("to_spin_system").unwrap();
+        let result = pmp
+            .call_method1("to_spin_noise_system", (number_spins,))
+            .unwrap();
         println!("{:?}", result);
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);

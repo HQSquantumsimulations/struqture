@@ -33,14 +33,9 @@ use super::{DecoherenceProductWrapper, PauliProductWrapper};
 /// PlusMinusProducts can be used in either noise-free or a noisy system.
 /// They are representations of products of pauli matrices acting on qubits,
 /// in order to build the terms of a hamiltonian.
-/// For instance, to represent the term :math:`\sigma_0^{x}` :math:`\sigma_2^{x}` :
+/// For instance, to represent the term :math:`\sigma_0^{+}` :math:`\sigma_2^{+}` :
 ///
-/// `PlusMinusProduct().x(0).x(2)`.
-///
-/// PlusMinusProduct is  supposed to be used as input for the function `set_pauli_product`,
-/// for instance in the spin system classes SpinLindbladOpenSystem, SpinHamiltonianSystem or SpinSystem,
-/// or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
-/// or as part of `HermitianMixedProduct <mixed_systems.HermitianMixedProduct>`.
+/// `PlusMinusProduct().plus(0).plus(2)`.
 ///
 /// Examples
 /// --------
@@ -49,9 +44,10 @@ use super::{DecoherenceProductWrapper, PauliProductWrapper};
 ///
 ///     import numpy.testing as npt
 ///     from struqture_py.spins import PlusMinusProduct
-///     pp = PlusMinusProduct().x(0).y(1).z(2)
-///     pp = pp.set_pauli(3, "X")
-///     npt.assert_equal(pp.get(0), "X")
+/// 
+///     pp = PlusMinusProduct().plus(0).minus(1).z(2)
+///     pp = pp.set_pauli(3, "+")
+///     npt.assert_equal(pp.get(0), "+")
 ///     npt.assert_equal(pp.keys(), [0, 1, 2, 3])
 ///
 #[pyclass(name = "PlusMinusProduct", module = "struqture_py.spins")]
@@ -207,7 +203,7 @@ impl PlusMinusProductWrapper {
     /// Raises:
     ///     ValueError: The two objects could not be concatenated.
     #[staticmethod]
-    pub fn from(
+    pub fn from_product(
         value: Py<PyAny>,
     ) -> PyResult<Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)>> {
         match PauliProductWrapper::from_pyany(value.clone()) {

@@ -467,7 +467,7 @@ fn test_from_pp() {
 
         let result = py
             .get_type::<PlusMinusProductWrapper>()
-            .call_method1("from", (pp,))
+            .call_method1("from_product", (pp,))
             .unwrap();
         let comp = vec![
             (
@@ -506,7 +506,7 @@ fn test_from_dp() {
 
         let result = py
             .get_type::<PlusMinusProductWrapper>()
-            .call_method1("from", (pp,))
+            .call_method1("from_product", (pp,))
             .unwrap();
         let comp = vec![
             (
@@ -605,7 +605,7 @@ fn test_from_error() {
     pyo3::Python::with_gil(|py| {
         let result = py
             .get_type::<PlusMinusProductWrapper>()
-            .call_method1("from", ("0J",));
+            .call_method1("from_product", ("0J",));
         assert!(result.is_err());
     })
 }
