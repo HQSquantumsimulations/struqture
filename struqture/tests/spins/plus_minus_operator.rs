@@ -415,7 +415,7 @@ fn separate_out_terms(number_spins: usize) {
     so.add_operator_product(pp_3_b, CalculatorComplex::from(1.5))
         .unwrap();
 
-    let result = so.separate_into_n_spin_terms(number_spins).unwrap();
+    let result = so.separate_into_n_terms(number_spins).unwrap();
     assert_eq!(result.0, separated);
     assert_eq!(result.1, remainder);
 }

@@ -281,7 +281,7 @@ impl PlusMinusLindbladNoiseOperator {
     /// # Returns
     ///
     /// `Ok((separated, remainder))` - Operator with the noise terms where number_left and number_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_spin_terms(
+    pub fn separate_into_n_terms(
         &self,
         number_particles_left: usize,
         number_particles_right: usize,

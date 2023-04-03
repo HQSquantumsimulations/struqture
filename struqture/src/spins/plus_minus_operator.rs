@@ -221,7 +221,7 @@ impl PlusMinusOperator {
     /// # Returns
     ///
     /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_spin_terms(
+    pub fn separate_into_n_terms(
         &self,
         number_particles: usize,
     ) -> Result<(PlusMinusOperator, PlusMinusOperator), StruqtureError> {

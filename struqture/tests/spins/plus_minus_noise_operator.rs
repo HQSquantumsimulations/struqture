@@ -486,7 +486,7 @@ fn separate_out_terms(number_spins_left: usize, number_spins_right: usize) {
         .unwrap();
 
     let result = so
-        .separate_into_n_spin_terms(number_spins_left, number_spins_right)
+        .separate_into_n_terms(number_spins_left, number_spins_right)
         .unwrap();
     assert_eq!(result.0, separated);
     assert_eq!(result.1, remainder);
