@@ -145,13 +145,13 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_spin_terms(
+    pub fn separate_into_n_terms(
         &self,
         number_particles: usize,
     ) -> PyResult<(PlusMinusOperatorWrapper, PlusMinusOperatorWrapper)> {
         let result = self
             .internal
-            .separate_into_n_spin_terms(number_particles)
+            .separate_into_n_terms(number_particles)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             PlusMinusOperatorWrapper { internal: result.0 },

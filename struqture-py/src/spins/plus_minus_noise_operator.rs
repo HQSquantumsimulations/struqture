@@ -119,7 +119,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_spin_terms(
+    pub fn separate_into_n_terms(
         &self,
         number_particles_left: usize,
         number_particles_right: usize,
@@ -129,7 +129,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     )> {
         let result = self
             .internal
-            .separate_into_n_spin_terms(number_particles_left, number_particles_right)
+            .separate_into_n_terms(number_particles_left, number_particles_right)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             PlusMinusLindbladNoiseOperatorWrapper { internal: result.0 },

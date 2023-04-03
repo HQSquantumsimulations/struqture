@@ -708,7 +708,7 @@ fn test_separate() {
             .unwrap();
 
         let result = pmp
-            .call_method1("separate_into_n_spin_terms", (2, 2))
+            .call_method1("separate_into_n_terms", (2, 2))
             .unwrap();
         let equal = bool::extract(
             result
