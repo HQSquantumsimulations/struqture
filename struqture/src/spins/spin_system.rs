@@ -302,6 +302,31 @@ impl SpinSystem {
             }),
         }
     }
+
+    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
+    ///
+    /// # Arguments
+    ///
+    /// * `number_particles` - Number of particles to filter for in the keys.
+    ///
+    /// # Returns
+    ///
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    pub fn separate_into_n_terms(
+        &self,
+        number_particles: usize,
+    ) -> Result<(Self, Self), StruqtureError> {
+        let mut separated = Self::default();
+        let mut remainder = Self::default();
+        for (prod, val) in self.iter() {
+            if prod.len() == number_particles {
+                separated.add_operator_product(prod.clone(), val.clone())?;
+            } else {
+                remainder.add_operator_product(prod.clone(), val.clone())?;
+            }
+        }
+        Ok((separated, remainder))
+    }
 }
 
 /// Implements the negative sign function of SpinSystem.

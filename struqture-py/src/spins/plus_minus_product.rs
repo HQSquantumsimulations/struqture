@@ -44,7 +44,7 @@ use super::{DecoherenceProductWrapper, PauliProductWrapper};
 ///
 ///     import numpy.testing as npt
 ///     from struqture_py.spins import PlusMinusProduct
-/// 
+///
 ///     pp = PlusMinusProduct().plus(0).minus(1).z(2)
 ///     pp = pp.set_pauli(3, "+")
 ///     npt.assert_equal(pp.get(0), "+")

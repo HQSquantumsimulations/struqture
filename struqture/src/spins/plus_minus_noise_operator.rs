@@ -275,16 +275,16 @@ impl PlusMinusLindbladNoiseOperator {
     ///
     /// # Arguments
     ///
-    /// * `number_of_spins_left` - Number of spins to filter for in the left term of the keys.
-    /// * `number_of_spins_right` - Number of spins to filter for in the right term of the keys.
+    /// * `number_particles_left` - Number of particles to filter for in the left term of the keys.
+    /// * `number_particles_right` - Number of particles to filter for in the right term of the keys.
     ///
     /// # Returns
     ///
-    /// Ok((separated, remainder)) - Operator with the noise terms where number_left and number_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_left and number_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
     pub fn separate_into_n_spin_terms(
         &self,
-        number_of_spins_left: usize,
-        number_of_spins_right: usize,
+        number_particles_left: usize,
+        number_particles_right: usize,
     ) -> Result<
         (
             PlusMinusLindbladNoiseOperator,
@@ -295,8 +295,8 @@ impl PlusMinusLindbladNoiseOperator {
         let mut separated = PlusMinusLindbladNoiseOperator::new();
         let mut remainder = PlusMinusLindbladNoiseOperator::new();
         for ((prod_l, prod_r), val) in self.iter() {
-            if prod_l.iter().len() == number_of_spins_left
-                && prod_r.iter().len() == number_of_spins_right
+            if prod_l.iter().len() == number_particles_left
+                && prod_r.iter().len() == number_particles_right
             {
                 separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
             } else {

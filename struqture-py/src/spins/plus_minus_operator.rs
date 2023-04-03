@@ -138,20 +138,20 @@ impl PlusMinusOperatorWrapper {
     /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
     ///
     /// Args
-    ///     number_of_spins (int): Number of spins to filter for in the keys.
+    ///     number_particles (int): Number of particles to filter for in the keys.
     ///
     /// Returns
-    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_of_spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_spin_terms(
         &self,
-        number_of_spins: usize,
+        number_particles: usize,
     ) -> PyResult<(PlusMinusOperatorWrapper, PlusMinusOperatorWrapper)> {
         let result = self
             .internal
-            .separate_into_n_spin_terms(number_of_spins)
+            .separate_into_n_spin_terms(number_particles)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             PlusMinusOperatorWrapper { internal: result.0 },
@@ -206,7 +206,10 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create SpinHamiltonianSystem from PlusMinusOperator.
-    pub fn to_spin_hamiltonian_system(&self, number_spins: Option<usize>) -> PyResult<SpinHamiltonianSystemWrapper> {
+    pub fn to_spin_hamiltonian_system(
+        &self,
+        number_spins: Option<usize>,
+    ) -> PyResult<SpinHamiltonianSystemWrapper> {
         let result: SpinHamiltonian = SpinHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(SpinHamiltonianSystemWrapper {
