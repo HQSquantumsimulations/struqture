@@ -25,6 +25,7 @@ struqture\_py.spins.SpinSystem
       ~SpinSystem.keys
       ~SpinSystem.number_spins
       ~SpinSystem.remove
+      ~SpinSystem.separate_into_n_terms
       ~SpinSystem.set
       ~SpinSystem.sparse_lindblad_entries
       ~SpinSystem.sparse_matrix_coo

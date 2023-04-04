@@ -25,6 +25,7 @@ struqture\_py.fermions.FermionHamiltonianSystem
       ~FermionHamiltonianSystem.keys
       ~FermionHamiltonianSystem.number_modes
       ~FermionHamiltonianSystem.remove
+      ~FermionHamiltonianSystem.separate_into_n_terms
       ~FermionHamiltonianSystem.set
       ~FermionHamiltonianSystem.to_bincode
       ~FermionHamiltonianSystem.to_json

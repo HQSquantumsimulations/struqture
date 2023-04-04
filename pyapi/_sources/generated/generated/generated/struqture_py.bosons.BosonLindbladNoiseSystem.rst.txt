@@ -24,6 +24,7 @@ struqture\_py.bosons.BosonLindbladNoiseSystem
       ~BosonLindbladNoiseSystem.keys
       ~BosonLindbladNoiseSystem.number_modes
       ~BosonLindbladNoiseSystem.remove
+      ~BosonLindbladNoiseSystem.separate_into_n_terms
       ~BosonLindbladNoiseSystem.set
       ~BosonLindbladNoiseSystem.to_bincode
       ~BosonLindbladNoiseSystem.to_json

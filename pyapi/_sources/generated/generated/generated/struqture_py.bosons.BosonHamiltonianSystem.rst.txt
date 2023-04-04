@@ -25,6 +25,7 @@ struqture\_py.bosons.BosonHamiltonianSystem
       ~BosonHamiltonianSystem.keys
       ~BosonHamiltonianSystem.number_modes
       ~BosonHamiltonianSystem.remove
+      ~BosonHamiltonianSystem.separate_into_n_terms
       ~BosonHamiltonianSystem.set
       ~BosonHamiltonianSystem.to_bincode
       ~BosonHamiltonianSystem.to_json

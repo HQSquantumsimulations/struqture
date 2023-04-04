@@ -24,6 +24,7 @@ struqture\_py.fermions.FermionLindbladNoiseSystem
       ~FermionLindbladNoiseSystem.keys
       ~FermionLindbladNoiseSystem.number_modes
       ~FermionLindbladNoiseSystem.remove
+      ~FermionLindbladNoiseSystem.separate_into_n_terms
       ~FermionLindbladNoiseSystem.set
       ~FermionLindbladNoiseSystem.to_bincode
       ~FermionLindbladNoiseSystem.to_json

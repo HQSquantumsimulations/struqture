@@ -25,6 +25,7 @@ struqture\_py.bosons.BosonSystem
       ~BosonSystem.keys
       ~BosonSystem.number_modes
       ~BosonSystem.remove
+      ~BosonSystem.separate_into_n_terms
       ~BosonSystem.set
       ~BosonSystem.to_bincode
       ~BosonSystem.to_json

@@ -25,6 +25,7 @@ struqture\_py.fermions.FermionSystem
       ~FermionSystem.keys
       ~FermionSystem.number_modes
       ~FermionSystem.remove
+      ~FermionSystem.separate_into_n_terms
       ~FermionSystem.set
       ~FermionSystem.to_bincode
       ~FermionSystem.to_json

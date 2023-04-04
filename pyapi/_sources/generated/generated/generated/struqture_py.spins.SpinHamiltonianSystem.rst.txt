@@ -25,6 +25,7 @@ struqture\_py.spins.SpinHamiltonianSystem
       ~SpinHamiltonianSystem.keys
       ~SpinHamiltonianSystem.number_spins
       ~SpinHamiltonianSystem.remove
+      ~SpinHamiltonianSystem.separate_into_n_terms
       ~SpinHamiltonianSystem.set
       ~SpinHamiltonianSystem.sparse_lindblad_entries
       ~SpinHamiltonianSystem.sparse_matrix_coo

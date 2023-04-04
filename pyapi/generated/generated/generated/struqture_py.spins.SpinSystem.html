@@ -57,6 +57,9 @@
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.SpinLindbladOpenSystem.html">struqture_py.spins.SpinLindbladOpenSystem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.DecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PauliProduct"><code class="docutils literal notranslate"><span class="pre">PauliProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">SpinHamiltonianSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">SpinLindbladNoiseSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">SpinLindbladOpenSystem</span></code></a></li>
@@ -167,31 +170,34 @@ and an optional number of spins.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.remove" title="struqture_py.spins.SpinSystem.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(key)</p></td>
 <td><p>Remove the value of the input key.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.set" title="struqture_py.spins.SpinSystem.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.separate_into_n_terms" title="struqture_py.spins.SpinSystem.separate_into_n_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separate_into_n_terms</span></code></a>(number_spins)</p></td>
+<td><p>Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.set" title="struqture_py.spins.SpinSystem.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
 <td><p>Overwrite an existing entry or set a new entry in self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.sparse_lindblad_entries" title="struqture_py.spins.SpinSystem.sparse_lindblad_entries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_lindblad_entries</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.sparse_lindblad_entries" title="struqture_py.spins.SpinSystem.sparse_lindblad_entries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_lindblad_entries</span></code></a>()</p></td>
 <td><p>Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.sparse_matrix_coo" title="struqture_py.spins.SpinSystem.sparse_matrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_matrix_coo</span></code></a>([number_spins])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.sparse_matrix_coo" title="struqture_py.spins.SpinSystem.sparse_matrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_matrix_coo</span></code></a>([number_spins])</p></td>
 <td><p>Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.sparse_matrix_superoperator_coo" title="struqture_py.spins.SpinSystem.sparse_matrix_superoperator_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_matrix_superoperator_coo</span></code></a>([number_spins])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.sparse_matrix_superoperator_coo" title="struqture_py.spins.SpinSystem.sparse_matrix_superoperator_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_matrix_superoperator_coo</span></code></a>([number_spins])</p></td>
 <td><p>Construct the sparse matrix representation of the superoperator in COO representation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.to_bincode" title="struqture_py.spins.SpinSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.to_bincode" title="struqture_py.spins.SpinSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of self using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.to_json" title="struqture_py.spins.SpinSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.to_json" title="struqture_py.spins.SpinSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of self.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.truncate" title="struqture_py.spins.SpinSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.truncate" title="struqture_py.spins.SpinSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
 <td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.unitary_sparse_matrix_coo" title="struqture_py.spins.SpinSystem.unitary_sparse_matrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unitary_sparse_matrix_coo</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.unitary_sparse_matrix_coo" title="struqture_py.spins.SpinSystem.unitary_sparse_matrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unitary_sparse_matrix_coo</span></code></a>()</p></td>
 <td><p>Return the unitary part of the superoperator in the sparse COO format.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.values" title="struqture_py.spins.SpinSystem.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem.values" title="struqture_py.spins.SpinSystem.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
 <td><p>Return unsorted values in self.</p></td>
 </tr>
 </tbody>
@@ -368,6 +374,26 @@ and an optional number of spins.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.spins.SpinSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.SpinSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- Number of spins to filter for in the keys.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Self, Self]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
 </dd>
 </dl>
 </dd></dl>

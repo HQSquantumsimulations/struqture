@@ -19,6 +19,9 @@ struqture\_py.spins
    
       DecoherenceProduct
       PauliProduct
+      PlusMinusLindbladNoiseOperator
+      PlusMinusOperator
+      PlusMinusProduct
       SpinHamiltonianSystem
       SpinLindbladNoiseSystem
       SpinLindbladOpenSystem

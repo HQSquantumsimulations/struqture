@@ -345,6 +345,26 @@ and an optional number of fermions.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionHamiltonianSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionHamiltonianSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_creators_annihilators</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of modes to filter for in the keys.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Self, Self]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.fermions.FermionHamiltonianSystem.set">
 <span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionHamiltonianSystem.set" title="Permalink to this definition"></a></dt>
 <dd><p>Overwrite an existing entry or set a new entry in self.</p>
@@ -611,6 +631,29 @@ and an optional number of fermions.</p>
 <li><p><strong>ValueError</strong> -- Left-hand Product could not be constructed.</p></li>
 <li><p><strong>ValueError</strong> -- Right-hand Product could not be constructed.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number_creators_annihilators_left</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of creators and number of annihilators to filter for in the left term of the keys.</p></li>
+<li><p><strong>number_creators_annihilators_right</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of creators and number of annihilators to filter for in the right term of the keys.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#struqture_py.fermions.FermionLindbladNoiseSystem" title="struqture_py.fermions.FermionLindbladNoiseSystem">FermionLindbladNoiseSystem</a>, <a class="reference internal" href="#struqture_py.fermions.FermionLindbladNoiseSystem" title="struqture_py.fermions.FermionLindbladNoiseSystem">FermionLindbladNoiseSystem</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1508,6 +1551,26 @@ and an optional number of fermions.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_creators_annihilators</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of modes to filter for in the keys.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Self, Self]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -24,6 +24,7 @@ struqture\_py.spins.SpinLindbladNoiseSystem
       ~SpinLindbladNoiseSystem.keys
       ~SpinLindbladNoiseSystem.number_spins
       ~SpinLindbladNoiseSystem.remove
+      ~SpinLindbladNoiseSystem.separate_into_n_terms
       ~SpinLindbladNoiseSystem.set
       ~SpinLindbladNoiseSystem.sparse_lindblad_entries
       ~SpinLindbladNoiseSystem.sparse_matrix_superoperator_coo

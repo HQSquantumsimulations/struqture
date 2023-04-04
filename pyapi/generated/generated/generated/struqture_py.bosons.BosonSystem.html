@@ -165,19 +165,22 @@ and an optional number of bosons.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.remove" title="struqture_py.bosons.BosonSystem.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(key)</p></td>
 <td><p>Remove the value of the input key.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.set" title="struqture_py.bosons.BosonSystem.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.separate_into_n_terms" title="struqture_py.bosons.BosonSystem.separate_into_n_terms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separate_into_n_terms</span></code></a>(...)</p></td>
+<td><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.set" title="struqture_py.bosons.BosonSystem.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
 <td><p>Overwrite an existing entry or set a new entry in self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.to_bincode" title="struqture_py.bosons.BosonSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.to_bincode" title="struqture_py.bosons.BosonSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of self using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.to_json" title="struqture_py.bosons.BosonSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.to_json" title="struqture_py.bosons.BosonSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.truncate" title="struqture_py.bosons.BosonSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.truncate" title="struqture_py.bosons.BosonSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
 <td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.values" title="struqture_py.bosons.BosonSystem.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem.values" title="struqture_py.bosons.BosonSystem.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
 <td><p>Return unsorted values in self.</p></td>
 </tr>
 </tbody>
@@ -354,6 +357,26 @@ and an optional number of bosons.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_creators_annihilators</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of modes to filter for in the keys.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Self, Self]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
 </dd>
 </dl>
 </dd></dl>
