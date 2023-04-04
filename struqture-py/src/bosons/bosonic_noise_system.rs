@@ -67,8 +67,8 @@ impl BosonLindbladNoiseSystemWrapper {
     /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
     ///
     /// Args:
-    ///     number_bosons_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
-    ///     number_bosons_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
+    ///     number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
+    ///     number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
     ///
     /// Returns:
     ///     Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
@@ -77,12 +77,15 @@ impl BosonLindbladNoiseSystemWrapper {
     ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_terms(
         &self,
-        number_bosons_left: (usize, usize),
-        number_bosons_right: (usize, usize),
+        number_creators_annihilators_left: (usize, usize),
+        number_creators_annihilators_right: (usize, usize),
     ) -> PyResult<(Self, Self)> {
         let (separated, remainder) = self
             .internal
-            .separate_into_n_terms(number_bosons_left, number_bosons_right)
+            .separate_into_n_terms(
+                number_creators_annihilators_left,
+                number_creators_annihilators_right,
+            )
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             Self {

@@ -260,15 +260,15 @@ pub fn noiselesswrapper(
             /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
             ///
             /// Args:
-            ///     number_modes (Tuple[int, int]): Number of modes to filter for in the keys.
+            ///     number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
             ///
             /// Returns:
             ///     Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
             ///
             /// Raises:
             ///     ValueError: Error in adding terms to return values.
-            pub fn separate_into_n_terms(&self, number_modes: (usize, usize)) -> PyResult<(#ident, #ident)> {
-                let (separated, remainder) = self.internal.separate_into_n_terms(number_modes).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            pub fn separate_into_n_terms(&self, number_creators_annihilators: (usize, usize)) -> PyResult<(#ident, #ident)> {
+                let (separated, remainder) = self.internal.separate_into_n_terms(number_creators_annihilators).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                 Ok((
                     #ident { internal: separated },
                     #ident { internal: remainder }

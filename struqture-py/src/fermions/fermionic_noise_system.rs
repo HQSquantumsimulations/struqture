@@ -67,8 +67,8 @@ impl FermionLindbladNoiseSystemWrapper {
     /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
     ///
     /// Args:
-    ///     number_fermions_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
-    ///     number_fermions_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
+    ///     number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
+    ///     number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
     ///
     /// Returns:
     ///     Tuple[FermionLindbladNoiseSystem, FermionLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
@@ -77,12 +77,15 @@ impl FermionLindbladNoiseSystemWrapper {
     ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_terms(
         &self,
-        number_fermions_left: (usize, usize),
-        number_fermions_right: (usize, usize),
+        number_creators_annihilators_left: (usize, usize),
+        number_creators_annihilators_right: (usize, usize),
     ) -> PyResult<(Self, Self)> {
         let (separated, remainder) = self
             .internal
-            .separate_into_n_terms(number_fermions_left, number_fermions_right)
+            .separate_into_n_terms(
+                number_creators_annihilators_left,
+                number_creators_annihilators_right,
+            )
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             Self {
