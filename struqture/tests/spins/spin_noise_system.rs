@@ -247,6 +247,132 @@ fn into_iter_from_iter_extend() {
     assert_eq!(slno_0, slno_0_1);
 }
 
+// Test the separation of terms
+#[test_case(1, 1)]
+#[test_case(1, 2)]
+#[test_case(1, 3)]
+#[test_case(2, 1)]
+#[test_case(2, 2)]
+#[test_case(2, 3)]
+#[test_case(3, 1)]
+#[test_case(3, 2)]
+#[test_case(3, 3)]
+fn separate_out_terms(number_spins_left: usize, number_spins_right: usize) {
+    let pp_1_a: DecoherenceProduct = DecoherenceProduct::new().z(0);
+    let pp_2_a: DecoherenceProduct = DecoherenceProduct::new().z(0).x(2);
+    let pp_3_a: DecoherenceProduct = DecoherenceProduct::new().z(0).z(1).z(2);
+
+    let mut allowed: Vec<(DecoherenceProduct, DecoherenceProduct, f64)> = Vec::new();
+    let mut not_allowed: Vec<(DecoherenceProduct, DecoherenceProduct, f64)> = vec![
+        (pp_1_a.clone(), pp_1_a.clone(), 1.0),
+        (pp_1_a.clone(), pp_2_a.clone(), 1.0),
+        (pp_1_a.clone(), pp_3_a.clone(), 1.0),
+        (pp_2_a.clone(), pp_1_a.clone(), 1.0),
+        (pp_2_a.clone(), pp_2_a.clone(), 1.0),
+        (pp_2_a.clone(), pp_3_a.clone(), 1.0),
+        (pp_3_a.clone(), pp_1_a.clone(), 1.0),
+        (pp_3_a.clone(), pp_2_a.clone(), 1.0),
+        (pp_3_a.clone(), pp_3_a.clone(), 1.0),
+    ];
+
+    match (number_spins_left, number_spins_right) {
+        (1, 1) => {
+            allowed.push(not_allowed[0].clone());
+            not_allowed.remove(0);
+        }
+        (1, 2) => {
+            allowed.push(not_allowed[1].clone());
+            not_allowed.remove(1);
+        }
+        (1, 3) => {
+            allowed.push(not_allowed[2].clone());
+            not_allowed.remove(2);
+        }
+        (2, 1) => {
+            allowed.push(not_allowed[3].clone());
+            not_allowed.remove(3);
+        }
+        (2, 2) => {
+            allowed.push(not_allowed[4].clone());
+            not_allowed.remove(4);
+        }
+        (2, 3) => {
+            allowed.push(not_allowed[5].clone());
+            not_allowed.remove(5);
+        }
+        (3, 1) => {
+            allowed.push(not_allowed[6].clone());
+            not_allowed.remove(6);
+        }
+        (3, 2) => {
+            allowed.push(not_allowed[7].clone());
+            not_allowed.remove(7);
+        }
+        (3, 3) => {
+            allowed.push(not_allowed[8].clone());
+            not_allowed.remove(8);
+        }
+        _ => panic!(),
+    }
+
+    let mut separated = SpinLindbladNoiseSystem::default();
+    for (key_l, key_r, value) in allowed.iter() {
+        separated
+            .add_operator_product((key_l.clone(), key_r.clone()), value.into())
+            .unwrap();
+    }
+    let mut remainder = SpinLindbladNoiseSystem::default();
+    for (key_l, key_r, value) in not_allowed.iter() {
+        remainder
+            .add_operator_product((key_l.clone(), key_r.clone()), value.into())
+            .unwrap();
+    }
+
+    let mut so = SpinLindbladNoiseSystem::default();
+    so.add_operator_product(
+        (pp_1_a.clone(), pp_1_a.clone()),
+        CalculatorComplex::from(1.0),
+    )
+    .unwrap();
+    so.add_operator_product(
+        (pp_1_a.clone(), pp_2_a.clone()),
+        CalculatorComplex::from(1.0),
+    )
+    .unwrap();
+    so.add_operator_product(
+        (pp_1_a.clone(), pp_3_a.clone()),
+        CalculatorComplex::from(1.0),
+    )
+    .unwrap();
+    so.add_operator_product(
+        (pp_2_a.clone(), pp_1_a.clone()),
+        CalculatorComplex::from(1.0),
+    )
+    .unwrap();
+    so.add_operator_product(
+        (pp_2_a.clone(), pp_2_a.clone()),
+        CalculatorComplex::from(1.0),
+    )
+    .unwrap();
+    so.add_operator_product(
+        (pp_2_a.clone(), pp_3_a.clone()),
+        CalculatorComplex::from(1.0),
+    )
+    .unwrap();
+    so.add_operator_product((pp_3_a.clone(), pp_1_a), CalculatorComplex::from(1.0))
+        .unwrap();
+    so.add_operator_product((pp_3_a.clone(), pp_2_a), CalculatorComplex::from(1.0))
+        .unwrap();
+    so.add_operator_product((pp_3_a.clone(), pp_3_a), CalculatorComplex::from(1.0))
+        .unwrap();
+
+    let result = so
+        .separate_into_n_terms(number_spins_left, number_spins_right)
+        .unwrap();
+    assert_eq!(result.0, separated);
+    assert_eq!(result.1, remainder);
+}
+
 // Test the negative operation: -SpinLindbladNoiseSystem
 #[test]
 fn negative_slno() {
@@ -386,20 +512,9 @@ fn serde_json() {
 /// Test SpinLindbladNoiseSystem Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let dp = DecoherenceProduct::new().x(0);
     let mut slno = SpinLindbladNoiseSystem::new(Some(1));
@@ -465,20 +580,9 @@ fn bincode() {
 /// Test SpinLindbladNoiseSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let dp = DecoherenceProduct::new().x(0);
     let mut slno = SpinLindbladNoiseSystem::new(Some(1));

@@ -115,7 +115,7 @@ impl PauliProductWrapper {
     ///
     /// Returns:
     ///     self: The entry was correctly set and the PauliProduct is returned.
-    fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
+    pub fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
         let converted_pauli = SingleSpinOperator::from_str(pauli.as_str()).map_err(|err| {
             PyValueError::new_err(format!(
                 "pauli could not be converted to X, Y, Z: {:?}",

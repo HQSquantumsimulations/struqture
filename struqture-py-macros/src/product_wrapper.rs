@@ -143,7 +143,7 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     Optional[str]: The key's corresponding value (if it exists).
-                fn get(&self, index: usize) -> Option<String> {
+                pub fn get(&self, index: usize) -> Option<String> {
                     match self.internal.get(&index) {
                         Some(x) => Some(format!("{}", x)),
                         None => None
@@ -416,7 +416,7 @@ pub fn productwrapper(
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to json.
-            fn to_json(&self) -> PyResult<String> {
+            pub fn to_json(&self) -> PyResult<String> {
                 let serialized = serde_json::to_string(&self.internal)
                     .map_err(|_| PyValueError::new_err("Cannot serialize object to json".to_string()))?;
                 Ok(serialized)
@@ -434,7 +434,7 @@ pub fn productwrapper(
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
             #[pyo3(text_signature = "(input)")]
-            fn from_json(input: String) -> PyResult<#ident> {
+            pub fn from_json(input: String) -> PyResult<#ident> {
                 Ok(#ident {
                     internal: serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
@@ -457,7 +457,7 @@ pub fn productwrapper(
             ///     ValueError: Input cannot be converted from str.
             #[staticmethod]
             #[pyo3(text_signature = "(input)")]
-            fn from_string(input: String) -> PyResult<#ident> {
+            pub fn from_string(input: String) -> PyResult<#ident> {
                 Ok(#ident {
                     internal: #struct_ident::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
@@ -472,7 +472,7 @@ pub fn productwrapper(
             ///
             /// Returns:
             ///     str: The printable string representation of the index.
-            fn __str__(&self) -> String {
+            pub fn __str__(&self) -> String {
                 format!("{}", self.internal)
             }
 
@@ -480,7 +480,7 @@ pub fn productwrapper(
             ///
             /// Returns:
             ///     str: The printable string representation of the index.
-            fn __repr__(&self) -> String {
+            pub fn __repr__(&self) -> String {
                 format!("{}", self.internal)
             }
 
@@ -495,7 +495,7 @@ pub fn productwrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {
@@ -517,7 +517,7 @@ pub fn productwrapper(
             ///
             /// Returns:
             ///     integer: Hash
-            fn __hash__(&self) -> PyResult<isize> {
+            pub fn __hash__(&self) -> PyResult<isize> {
                 let mut hasher = DefaultHasher::new();
                 self.internal.hash(&mut hasher);
                 Ok(hasher.finish() as isize)

@@ -14,7 +14,7 @@ use super::{OperateOnSpins, SpinOperator, ToSparseMatrixOperator, ToSparseMatrix
 use crate::spins::{HermitianOperateOnSpins, PauliProduct, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    StruqtureVersionSerializable,
+    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -73,12 +73,11 @@ impl From<SpinHamiltonianSerialize> for SpinHamiltonian {
 
 impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
     fn from(value: SpinHamiltonian) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> =
             value.into_iter().map(|(key, val)| (key, val)).collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,
@@ -256,6 +255,31 @@ impl SpinHamiltonian {
         Self {
             internal_map: HashMap::with_capacity(capacity),
         }
+    }
+
+    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
+    ///
+    /// # Arguments
+    ///
+    /// * `number_spins` - Number of spins to filter for in the keys.
+    ///
+    /// # Returns
+    ///
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    pub fn separate_into_n_terms(
+        &self,
+        number_spins: usize,
+    ) -> Result<(Self, Self), StruqtureError> {
+        let mut separated = Self::default();
+        let mut remainder = Self::default();
+        for (prod, val) in self.iter() {
+            if prod.len() == number_spins {
+                separated.add_operator_product(prod.clone(), val.clone())?;
+            } else {
+                remainder.add_operator_product(prod.clone(), val.clone())?;
+            }
+        }
+        Ok((separated, remainder))
     }
 }
 

@@ -23,7 +23,7 @@ use std::{
 
 use super::FermionProduct;
 
-/// FermionLindbladNoiseSystems are representations of systems of spins, with a FermionLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+/// FermionLindbladNoiseSystems are representations of systems of fermions, with a FermionLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of fermions.
 ///
 /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::fermions::FermionProduct] style operators.
 /// We use ([crate::fermions::FermionProduct], [crate::fermions::FermionProduct]) as a unique basis.
@@ -50,7 +50,7 @@ use super::FermionProduct;
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct FermionLindbladNoiseSystem {
-    /// The number of spins in the FermionLindbladNoiseSystem.
+    /// The number of fermions in the FermionLindbladNoiseSystem.
     pub(crate) number_modes: Option<usize>,
     /// The FermionLindbladNoiseOperator representing the Lindblad noise terms of the FermionLindbladNoiseSystem.
     pub(crate) operator: FermionLindbladNoiseOperator,
@@ -191,11 +191,11 @@ impl FermionLindbladNoiseSystem {
     ///
     /// # Arguments
     ///
-    /// * `number_modes` - The number of spins in the system.
+    /// * `number_modes` - The number of fermions in the system.
     ///
     /// # Returns
     ///
-    /// * `Self` - The new FermionLindbladNoiseSystem with the input number of spins.
+    /// * `Self` - The new FermionLindbladNoiseSystem with the input number of fermions.
     pub fn new(number_modes: Option<usize>) -> Self {
         FermionLindbladNoiseSystem {
             number_modes,
@@ -212,7 +212,7 @@ impl FermionLindbladNoiseSystem {
     ///
     /// # Returns
     ///
-    /// * `Self` - The new FermionLindbladNoiseSystem with the input number of spins.
+    /// * `Self` - The new FermionLindbladNoiseSystem with the input number of fermions.
     pub fn with_capacity(number_modes: Option<usize>, capacity: usize) -> Self {
         FermionLindbladNoiseSystem {
             number_modes,
@@ -260,6 +260,37 @@ impl FermionLindbladNoiseSystem {
                 operator,
             }),
         }
+    }
+
+    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
+    ///
+    /// # Arguments
+    ///
+    /// * `number_creators_annihilators_left` - Number of creators and number of annihilators to filter for in the left term of the keys.
+    /// * `number_creators_annihilators_right` - Number of creators and number of annihilators to filter for in the right term of the keys.
+    ///
+    /// # Returns
+    ///
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_creators_annihilators matches the number of spins the operator product acts on and Operator with all other contributions.
+    pub fn separate_into_n_terms(
+        &self,
+        number_creators_annihilators_left: (usize, usize),
+        number_creators_annihilators_right: (usize, usize),
+    ) -> Result<(Self, Self), StruqtureError> {
+        let mut separated = Self::default();
+        let mut remainder = Self::default();
+        for ((prod_l, prod_r), val) in self.iter() {
+            if (prod_l.creators().len(), prod_l.annihilators().len())
+                == number_creators_annihilators_left
+                && (prod_r.creators().len(), prod_r.annihilators().len())
+                    == number_creators_annihilators_right
+            {
+                separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
+            } else {
+                remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
+            }
+        }
+        Ok((separated, remainder))
     }
 }
 
