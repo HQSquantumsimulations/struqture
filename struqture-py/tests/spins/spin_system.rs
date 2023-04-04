@@ -442,9 +442,7 @@ fn test_separate() {
             .call_method1("add_operator_product", ("0Z1X", 1.0))
             .unwrap();
 
-        let result = pmp
-            .call_method1("separate_into_n_terms", (2,))
-            .unwrap();
+        let result = pmp.call_method1("separate_into_n_terms", (2,)).unwrap();
         let equal = bool::extract(
             result
                 .call_method1("__eq__", ((pmp_sys, pmp_rem),))
