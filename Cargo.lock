@@ -549,7 +549,7 @@ dependencies = [
  "serde_json",
  "struqture",
  "struqture-py-macros",
- "syn 1.0.109",
+ "syn 2.0.13",
  "test-case",
  "thiserror",
 ]
