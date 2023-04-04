@@ -135,23 +135,23 @@ impl PlusMinusOperatorWrapper {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
+    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
     ///
     /// Args
-    ///     number_particles (int): Number of particles to filter for in the keys.
+    ///     number_spins (int): Number of spins to filter for in the keys.
     ///
     /// Returns
-    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_terms(
         &self,
-        number_particles: usize,
+        number_spins: usize,
     ) -> PyResult<(PlusMinusOperatorWrapper, PlusMinusOperatorWrapper)> {
         let result = self
             .internal
-            .separate_into_n_terms(number_particles)
+            .separate_into_n_terms(number_spins)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             PlusMinusOperatorWrapper { internal: result.0 },

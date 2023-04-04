@@ -64,25 +64,25 @@ impl BosonLindbladNoiseSystemWrapper {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
+    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
     ///
     /// Args:
-    ///     number_particles_left (Tuple[int, int]): Number of particles to filter for in the left term of the keys.
-    ///     number_particles_right (Tuple[int, int]): Number of particles to filter for in the right term of the keys.
+    ///     number_bosons_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
+    ///     number_bosons_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
     ///
     /// Returns:
-    ///     int: The number of modes in self.
+    ///     Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
-    ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_terms(
         &self,
-        number_particles_left: (usize, usize),
-        number_particles_right: (usize, usize),
+        number_bosons_left: (usize, usize),
+        number_bosons_right: (usize, usize),
     ) -> PyResult<(Self, Self)> {
         let (separated, remainder) = self
             .internal
-            .separate_into_n_terms(number_particles_left, number_particles_right)
+            .separate_into_n_terms(number_bosons_left, number_bosons_right)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             Self {

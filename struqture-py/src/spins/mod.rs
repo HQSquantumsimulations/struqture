@@ -62,5 +62,8 @@ pub fn spins(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<SpinHamiltonianSystemWrapper>()?;
     m.add_class::<SpinLindbladNoiseSystemWrapper>()?;
     m.add_class::<SpinLindbladOpenSystemWrapper>()?;
+    m.add_class::<PlusMinusProductWrapper>()?;
+    m.add_class::<PlusMinusOperatorWrapper>()?;
+    m.add_class::<PlusMinusLindbladNoiseOperatorWrapper>()?;
     Ok(())
 }

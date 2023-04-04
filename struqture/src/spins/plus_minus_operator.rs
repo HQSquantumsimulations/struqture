@@ -14,7 +14,7 @@ use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator}
 use crate::spins::{PlusMinusProduct, SpinHamiltonian};
 use crate::{
     OperateOnDensityMatrix, OperateOnState, StruqtureError, StruqtureVersionSerializable,
-    SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
+    SymmetricIndex,
 };
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -81,8 +81,8 @@ impl From<PlusMinusOperator> for PlusMinusOperatorSerialize {
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
+            major_version: 1,
+            minor_version: 1,
         };
         Self {
             items: new_noise_op,
@@ -212,23 +212,23 @@ impl PlusMinusOperator {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
+    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
     ///
     /// # Arguments
     ///
-    /// * `number_particles` - Number of particles to filter for in the keys.
+    /// * `number_spins` - Number of spins to filter for in the keys.
     ///
     /// # Returns
     ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
     pub fn separate_into_n_terms(
         &self,
-        number_particles: usize,
+        number_spins: usize,
     ) -> Result<(PlusMinusOperator, PlusMinusOperator), StruqtureError> {
         let mut separated = PlusMinusOperator::new();
         let mut remainder = PlusMinusOperator::new();
         for (prod, val) in self.iter() {
-            if prod.iter().len() == number_particles {
+            if prod.iter().len() == number_spins {
                 separated.add_operator_product(prod.clone(), val.clone())?;
             } else {
                 remainder.add_operator_product(prod.clone(), val.clone())?;
@@ -574,7 +574,7 @@ mod test {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
         let mut so = PlusMinusOperator::new();
@@ -591,7 +591,7 @@ mod test {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
@@ -604,7 +604,7 @@ mod test {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
         let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
@@ -612,7 +612,7 @@ mod test {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
         assert!(sos_1 == sos);
@@ -629,13 +629,13 @@ mod test {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
         );
     }
 
@@ -647,7 +647,7 @@ mod test {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
@@ -674,7 +674,7 @@ mod test {
                 Token::Str("major_version"),
                 Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(0),
+                Token::U32(1),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -689,7 +689,7 @@ mod test {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
@@ -732,7 +732,7 @@ mod test {
                 Token::Str("major_version"),
                 Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(0),
+                Token::U32(1),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

@@ -257,18 +257,18 @@ pub fn noiselesswrapper(
                 self.internal.number_modes()
             }
 
-            /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
+            /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
             ///
             /// Args:
-            ///     number_particles (Tuple[int, int]): Number of particles to filter for in the keys.
+            ///     number_modes (Tuple[int, int]): Number of modes to filter for in the keys.
             ///
             /// Returns:
-            ///     int: The number of modes in self.
+            ///     Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
             ///
             /// Raises:
-            ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-            pub fn separate_into_n_terms(&self, number_particles: (usize, usize)) -> PyResult<(#ident, #ident)> {
-                let (separated, remainder) = self.internal.separate_into_n_terms(number_particles).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            ///     ValueError: Error in adding terms to return values.
+            pub fn separate_into_n_terms(&self, number_modes: (usize, usize)) -> PyResult<(#ident, #ident)> {
+                let (separated, remainder) = self.internal.separate_into_n_terms(number_modes).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                 Ok((
                     #ident { internal: separated },
                     #ident { internal: remainder }
@@ -280,40 +280,40 @@ pub fn noiselesswrapper(
     };
     let operate_on_spins_quote = if attribute_arguments.contains("OperateOnSpins") {
         quote! {
-            /// Return maximum spin index in self.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_spins(&self) -> usize {
-                self.internal.current_number_spins()
-            }
+                /// Return maximum spin index in self.
+                ///
+                /// Returns:
+                ///     int: Maximum index.
+                pub fn current_number_spins(&self) -> usize {
+                    self.internal.current_number_spins()
+                }
 
-            /// Return the number_spins input of self.
-            ///
-            /// Returns:
-            ///     int: The number of spins in self.
-            pub fn number_spins(&self) -> usize {
-                self.internal.number_spins()
-            }
+                /// Return the number_spins input of self.
+                ///
+                /// Returns:
+                ///     int: The number of spins in self.
+                pub fn number_spins(&self) -> usize {
+                    self.internal.number_spins()
+                }
 
-            /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
-            ///
-            /// Args:
-            ///     number_particles (int): Number of particles to filter for in the keys.
-            ///
-            /// Returns:
-            ///     int: The number of modes in self.
-            ///
-            /// Raises:
-            ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-            pub fn separate_into_n_terms(&self, number_particles: usize) -> PyResult<(#ident, #ident)> {
-                let (separated, remainder) = self.internal.separate_into_n_terms(number_particles).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                Ok((
-                    #ident { internal: separated },
-                    #ident { internal: remainder }
-                ))
+                /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
+                ///
+                /// Args:
+                ///     number_spins (int): Number of spins to filter for in the keys.
+                ///
+                /// Returns:
+                ///     Tuple[Self, Self]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+                ///
+                /// Raises:
+                ///     ValueError: Error in adding terms to return values.
+        pub fn separate_into_n_terms(&self, number_spins: usize) -> PyResult<(#ident, #ident)> {
+                    let (separated, remainder) = self.internal.separate_into_n_terms(number_spins).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+                    Ok((
+                        #ident { internal: separated },
+                        #ident { internal: remainder }
+                    ))
+                }
             }
-        }
     } else {
         TokenStream::new()
     };

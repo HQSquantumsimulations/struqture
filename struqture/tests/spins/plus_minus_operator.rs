@@ -435,9 +435,8 @@ fn serde_json() {
 /// Test PlusMinusOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
+    let major_version = 1;
+    let minor_version = 1;
 
     let pp = PlusMinusProduct::new().plus(0);
     let mut system = PlusMinusOperator::new();
@@ -489,9 +488,8 @@ fn bincode() {
 
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
+    let major_version = 1;
+    let minor_version = 1;
 
     let pp = PlusMinusProduct::new().plus(0);
     let mut system = PlusMinusOperator::new();

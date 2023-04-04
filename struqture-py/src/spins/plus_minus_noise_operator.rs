@@ -108,28 +108,28 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         PlusMinusLindbladNoiseOperatorWrapper { internal: new_self }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits (left and right) and an operator with the remaining operations.
+    /// Separate self into an operator with the terms of given number of spins (left and right) and an operator with the remaining operations.
     ///
     /// Args
-    ///     number_particles_left (int): Number of particles to filter for in the left key.
-    ///     number_particles_right (int): Number of particles to filter for in the right key.
+    ///     number_spins_left (int): Number of spin to filter for in the left key.
+    ///     number_spins_right (int): Number of spin to filter for in the right key.
     ///
     /// Returns
-    ///     (PlusMinusLindbladNoiseOperator, PlusMinusLindbladNoiseOperator): Operator with the noise terms where number_particles (left and right) matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     Tuple[PlusMinusLindbladNoiseOperator, PlusMinusLindbladNoiseOperator]: Operator with the noise terms where number_spins (left and right) matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_terms(
         &self,
-        number_particles_left: usize,
-        number_particles_right: usize,
+        number_spins_left: usize,
+        number_spins_right: usize,
     ) -> PyResult<(
         PlusMinusLindbladNoiseOperatorWrapper,
         PlusMinusLindbladNoiseOperatorWrapper,
     )> {
         let result = self
             .internal
-            .separate_into_n_terms(number_particles_left, number_particles_right)
+            .separate_into_n_terms(number_spins_left, number_spins_right)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             PlusMinusLindbladNoiseOperatorWrapper { internal: result.0 },
@@ -161,7 +161,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Convert a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseSystem.
     ///
     /// Args:
-    ///     number_spins (Optional[int]): The number of spins to initialize the SpinLindbladNoiseSystem with.
+    ///     number_spinss (Optional[int]): The number of spins to initialize the SpinLindbladNoiseSystem with.
     ///
     /// Returns:
     ///     SpinLindbladNoiseSystem: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
@@ -170,12 +170,12 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     ///     ValueError: Could not create SpinLindbladNoiseSystem from PlusMinusLindbladNoiseOperator.
     pub fn to_spin_noise_system(
         &self,
-        number_spins: Option<usize>,
+        number_spinss: Option<usize>,
     ) -> PyResult<SpinLindbladNoiseSystemWrapper> {
         let result: SpinLindbladNoiseOperator =
             SpinLindbladNoiseOperator::from(self.internal.clone());
         Ok(SpinLindbladNoiseSystemWrapper {
-            internal: SpinLindbladNoiseSystem::from_operator(result, number_spins)
+            internal: SpinLindbladNoiseSystem::from_operator(result, number_spinss)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
         })
     }

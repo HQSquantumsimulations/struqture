@@ -562,9 +562,8 @@ fn serde_json() {
 /// Test PlusMinusLindbladNoiseOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
+    let major_version = 1;
+    let minor_version = 1;
 
     let dp = PlusMinusProduct::new().plus(0);
     let mut slno = PlusMinusLindbladNoiseOperator::new();
@@ -621,9 +620,8 @@ fn bincode() {
 /// Test PlusMinusLindbladNoiseOperator Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
+    let major_version = 1;
+    let minor_version = 1;
 
     let dp = PlusMinusProduct::new().plus(0);
     let mut slno = PlusMinusLindbladNoiseOperator::new();

@@ -264,23 +264,23 @@ impl FermionHamiltonianSystem {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
+    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
     ///
     /// # Arguments
     ///
-    /// * `number_particles` - Number of particles to filter for in the keys.
+    /// * `number_fermions` - Number of creation and annihilation terms to filter for in the keys.
     ///
     /// # Returns
     ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_fermions matches the number of spins the operator product acts on and Operator with all other contributions.
     pub fn separate_into_n_terms(
         &self,
-        number_particles: (usize, usize),
+        number_fermions: (usize, usize),
     ) -> Result<(Self, Self), StruqtureError> {
         let mut separated = Self::default();
         let mut remainder = Self::default();
         for (prod, val) in self.iter() {
-            if (prod.creators().len(), prod.annihilators().len()) == number_particles {
+            if (prod.creators().len(), prod.annihilators().len()) == number_fermions {
                 separated.add_operator_product(prod.clone(), val.clone())?;
             } else {
                 remainder.add_operator_product(prod.clone(), val.clone())?;

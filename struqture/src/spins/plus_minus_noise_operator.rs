@@ -11,9 +11,7 @@
 // limitations under the License.
 
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
-use crate::{
-    OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
 use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -97,8 +95,8 @@ impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSeri
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
+            major_version: 1,
+            minor_version: 1,
         };
         Self {
             items: new_noise_op,
@@ -271,20 +269,20 @@ impl PlusMinusLindbladNoiseOperator {
         new_noise
     }
 
-    /// Separate self into an operator with the noise terms of given number of qubits and an operator with the remaining operations
+    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
     ///
     /// # Arguments
     ///
-    /// * `number_particles_left` - Number of particles to filter for in the left term of the keys.
-    /// * `number_particles_right` - Number of particles to filter for in the right term of the keys.
+    /// * `number_spins_left` - Number of spins to filter for in the left term of the keys.
+    /// * `number_spins_right` - Number of spins to filter for in the right term of the keys.
     ///
     /// # Returns
     ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_left and number_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_spins_left and number_spins_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
     pub fn separate_into_n_terms(
         &self,
-        number_particles_left: usize,
-        number_particles_right: usize,
+        number_spins_left: usize,
+        number_spins_right: usize,
     ) -> Result<
         (
             PlusMinusLindbladNoiseOperator,
@@ -295,8 +293,7 @@ impl PlusMinusLindbladNoiseOperator {
         let mut separated = PlusMinusLindbladNoiseOperator::new();
         let mut remainder = PlusMinusLindbladNoiseOperator::new();
         for ((prod_l, prod_r), val) in self.iter() {
-            if prod_l.iter().len() == number_particles_left
-                && prod_r.iter().len() == number_particles_right
+            if prod_l.iter().len() == number_spins_left && prod_r.iter().len() == number_spins_right
             {
                 separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
             } else {
@@ -614,7 +611,7 @@ mod test {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
         let mut so = PlusMinusLindbladNoiseOperator::new();
@@ -632,7 +629,7 @@ mod test {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
@@ -645,7 +642,7 @@ mod test {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
         let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
@@ -653,7 +650,7 @@ mod test {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
         assert!(sos_1 == sos);
@@ -670,13 +667,13 @@ mod test {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
         );
     }
 
@@ -688,7 +685,7 @@ mod test {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
@@ -716,7 +713,7 @@ mod test {
                 Token::Str("major_version"),
                 Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(0),
+                Token::U32(1),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -731,7 +728,7 @@ mod test {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             _struqture_version: StruqtureVersionSerializable {
                 major_version: 1,
-                minor_version: 0,
+                minor_version: 1,
             },
         };
 
@@ -783,7 +780,7 @@ mod test {
                 Token::Str("major_version"),
                 Token::U32(1),
                 Token::Str("minor_version"),
-                Token::U32(0),
+                Token::U32(1),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

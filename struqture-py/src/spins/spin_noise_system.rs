@@ -74,25 +74,25 @@ impl SpinLindbladNoiseSystemWrapper {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
+    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
     ///
     /// Args:
-    ///     number_particles_left (int): Number of particles to filter for in the left term of the keys.
-    ///     number_particles_right (int): Number of particles to filter for in the right term of the keys.
+    ///     number_spins_left (int): Number of spins to filter for in the left term of the keys.
+    ///     number_spins_right (int): Number of spins to filter for in the right term of the keys.
     ///
     /// Returns:
-    ///     int: The number of modes in self.
+    ///     Tuple[SpinLindbladNoiseSystem, SpinLindbladNoiseSystem]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
-    ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     ValueError: Error in adding terms to return values.
     pub fn separate_into_n_terms(
         &self,
-        number_particles_left: usize,
-        number_particles_right: usize,
+        number_spins_left: usize,
+        number_spins_right: usize,
     ) -> PyResult<(Self, Self)> {
         let (separated, remainder) = self
             .internal
-            .separate_into_n_terms(number_particles_left, number_particles_right)
+            .separate_into_n_terms(number_spins_left, number_spins_right)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok((
             Self {
