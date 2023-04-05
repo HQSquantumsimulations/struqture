@@ -161,11 +161,18 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
+    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
+        if key.0 == FermionProduct::new([], []).unwrap()
+            || key.1 == FermionProduct::new([], []).unwrap()
+        {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         if value != CalculatorComplex::ZERO {
             Ok(self.internal_map.insert(key, value))
         } else {
@@ -174,6 +181,32 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
                 Entry::Vacant(_) => Ok(None),
             }
         }
+    }
+
+    /// Adds a new entry in the FermionLindbladNoiseOperator with the given ((FermionProduct, FermionProduct) key, CalculatorComplex value) pair.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - The (FermionProduct, FermionProduct) key to set in the FermionLindbladNoiseOperator.
+    /// * `value` - The corresponding CalculatorComplex value to set for the key in the FermionLindbladNoiseOperator.
+    ///
+    /// # Returns
+    ///
+    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
+    fn add_operator_product(
+        &mut self,
+        key: Self::Index,
+        value: Self::Value,
+    ) -> Result<(), StruqtureError> {
+        if key.0 == FermionProduct::new([], []).unwrap()
+            || key.1 == FermionProduct::new([], []).unwrap()
+        {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
+        let old = self.get(&key).clone();
+        self.set(key, value + old)?;
+        Ok(())
     }
 }
 

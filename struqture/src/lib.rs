@@ -135,7 +135,7 @@ impl From<StruqtureVersion> for StruqtureVersionSerializable {
     }
 }
 
-/// Errors that can occur in roqoqo.
+/// Errors that can occur in struqture.
 #[derive(Debug, Error, PartialEq)]
 pub enum StruqtureError {
     /// Error when remapping qubits fails because qubit in operation is not in keys of BTreeMap.
@@ -236,6 +236,9 @@ pub enum StruqtureError {
     /// Transparent propagation of CalculatorError.
     #[error(transparent)]
     CalculatorError(#[from] CalculatorError),
+    /// Error when trying to insert identities into noise operators
+    #[error("Lindblad operators need to be traceless.")]
+    InvalidLindbladTerms,
 }
 
 /// Complex sparse matrix in coordinate (COO) format.

@@ -163,11 +163,16 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
+    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
+        if key.0.is_empty() || key.1.is_empty() {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         if value != CalculatorComplex::ZERO {
             Ok(self.internal_map.insert(key, value))
         } else {
@@ -176,6 +181,30 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
                 Entry::Vacant(_) => Ok(None),
             }
         }
+    }
+
+    /// Adds a new entry in the SpinLindbladNoiseOperator with the given ((DecoherenceProduct, DecoherenceProduct) key, CalculatorComplex value) pair.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - The (DecoherenceProduct, DecoherenceProduct) key to set in the SpinLindbladNoiseOperator.
+    /// * `value` - The corresponding CalculatorComplex value to set for the key in the SpinLindbladNoiseOperator.
+    ///
+    /// # Returns
+    ///
+    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
+    fn add_operator_product(
+        &mut self,
+        key: Self::Index,
+        value: Self::Value,
+    ) -> Result<(), StruqtureError> {
+        if key.0.is_empty() || key.1.is_empty() {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
+        let old = self.get(&key).clone();
+        self.set(key, value + old)?;
+        Ok(())
     }
 }
 
@@ -322,17 +351,24 @@ impl SpinLindbladNoiseOperator {
         right: &DecoherenceOperator,
         value: CalculatorComplex,
     ) -> Result<(), StruqtureError> {
+
+        if left.is_empty() || right.is_empty() {
+            return Err(StruqtureError::InvalidLindbladTerms)
+        }
+
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
             left.iter().cartesian_product(right.iter())
         {
-            let value_complex = value_right.conj() * value_left;
-            self.add_operator_product(
-                (
-                    decoherence_product_left.clone(),
-                    decoherence_product_right.clone(),
-                ),
-                value_complex * value.clone(),
-            )?;
+            if !decoherence_product_left.is_empty() && !decoherence_product_right.is_empty() {
+                let value_complex = value_right.conj() * value_left;
+                self.add_operator_product(
+                    (
+                        decoherence_product_left.clone(),
+                        decoherence_product_right.clone(),
+                    ),
+                    value_complex * value.clone(),
+                )?;
+            }
         }
         Ok(())
     }

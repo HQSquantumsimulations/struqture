@@ -20,7 +20,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::prelude::*;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct};
 use struqture::SpinIndex;
 use test_case::test_case;
 
