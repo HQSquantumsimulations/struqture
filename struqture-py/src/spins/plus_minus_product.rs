@@ -262,7 +262,7 @@ impl PlusMinusProductWrapper {
     ///
     /// Raises:
     ///     ValueError: The two objects could not be concatenated.
-    pub fn to_pauli_product(
+    pub fn to_pauli_product_list(
         &self,
     ) -> PyResult<Vec<(PauliProductWrapper, CalculatorComplexWrapper)>> {
         let result: Vec<(PauliProduct, Complex64)> =
@@ -293,7 +293,7 @@ impl PlusMinusProductWrapper {
     ///
     /// Raises:
     ///     ValueError: The two objects could not be concatenated.
-    pub fn to_decoherence_product(
+    pub fn to_decoherence_product_list(
         &self,
     ) -> PyResult<Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)>> {
         let result: Vec<(DecoherenceProduct, Complex64)> =
