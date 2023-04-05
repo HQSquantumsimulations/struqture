@@ -113,7 +113,7 @@ impl DecoherenceProductWrapper {
     ///
     /// Returns:
     ///     self: The entry was correctly set and the DecoherenceProduct is returned.
-    fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
+    pub fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
         let converted_pauli =
             SingleDecoherenceOperator::from_str(pauli.as_str()).map_err(|err| {
                 PyValueError::new_err(format!(

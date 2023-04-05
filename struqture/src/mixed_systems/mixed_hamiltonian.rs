@@ -13,7 +13,7 @@
 use super::{HermitianMixedProduct, MixedIndex, MixedOperator, OperateOnMixedSystems};
 use crate::{
     ModeIndex, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex,
+    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -86,15 +86,14 @@ impl From<MixedHamiltonianSerialize> for MixedHamiltonian {
 
 impl From<MixedHamiltonian> for MixedHamiltonianSerialize {
     fn from(value: MixedHamiltonian) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(HermitianMixedProduct, CalculatorFloat, CalculatorFloat)> = value
             .clone()
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,
@@ -318,6 +317,36 @@ impl MixedHamiltonian {
             n_fermions,
         }
     }
+
+    // /// Separate self into an operator with the terms of given number of spins, bosons and fermions and an operator with the remaining operations
+    // ///
+    // /// # Arguments
+    // ///
+    // /// * `number_particles` - Number of spins, bosons and fermions to filter for in the keys.
+    // ///
+    // /// # Returns
+    // ///
+    // /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+    // pub fn separate_into_n_terms(
+    //     &self,
+    //     number_particles: (usize, usize, usize),
+    // ) -> Result<(Self, Self), StruqtureError> {
+    //     let mut separated = Self::default();
+    //     let mut remainder = Self::default();
+    //     for (prod, val) in self.iter() {
+    //         if (
+    //             prod.spins().len(),
+    //             prod.bosons().len(),
+    //             prod.fermions().len(),
+    //         ) == number_particles
+    //         {
+    //             separated.add_operator_product(prod.clone(), val.clone())?;
+    //         } else {
+    //             remainder.add_operator_product(prod.clone(), val.clone())?;
+    //         }
+    //     }
+    //     Ok((separated, remainder))
+    // }
 }
 
 /// Implements the negative sign function of MixedHamiltonian.

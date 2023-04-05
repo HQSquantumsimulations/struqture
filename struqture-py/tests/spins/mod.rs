@@ -16,6 +16,15 @@ pub use decoherence_product::*;
 mod pauli_product;
 pub use pauli_product::*;
 
+mod plus_minus_product;
+pub use plus_minus_product::*;
+
+mod plus_minus_operator;
+pub use plus_minus_operator::*;
+
+mod plus_minus_noise_operator;
+pub use plus_minus_noise_operator::*;
+
 mod spin_system;
 pub use spin_system::*;
 

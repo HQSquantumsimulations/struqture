@@ -73,4 +73,34 @@ impl SpinLindbladNoiseSystemWrapper {
             internal: SpinLindbladNoiseSystem::new(number_spins),
         }
     }
+
+    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
+    ///
+    /// Args:
+    ///     number_spins_left (int): Number of spins to filter for in the left term of the keys.
+    ///     number_spins_right (int): Number of spins to filter for in the right term of the keys.
+    ///
+    /// Returns:
+    ///     Tuple[SpinLindbladNoiseSystem, SpinLindbladNoiseSystem]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///
+    /// Raises:
+    ///     ValueError: Error in adding terms to return values.
+    pub fn separate_into_n_terms(
+        &self,
+        number_spins_left: usize,
+        number_spins_right: usize,
+    ) -> PyResult<(Self, Self)> {
+        let (separated, remainder) = self
+            .internal
+            .separate_into_n_terms(number_spins_left, number_spins_right)
+            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+        Ok((
+            Self {
+                internal: separated,
+            },
+            Self {
+                internal: remainder,
+            },
+        ))
+    }
 }

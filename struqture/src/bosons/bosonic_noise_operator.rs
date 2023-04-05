@@ -12,7 +12,8 @@
 
 use super::{BosonProduct, OperateOnBosons};
 use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, StruqtureVersionSerializable,
+    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
+    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -79,15 +80,14 @@ impl From<BosonLindbladNoiseOperatorSerialize> for BosonLindbladNoiseOperator {
 
 impl From<BosonLindbladNoiseOperator> for BosonLindbladNoiseOperatorSerialize {
     fn from(value: BosonLindbladNoiseOperator) -> Self {
-        let min_version: (u32, u32, u32) = (1, 0, 0);
         let new_noise_op: Vec<(BosonProduct, BosonProduct, CalculatorFloat, CalculatorFloat)> =
             value
                 .into_iter()
                 .map(|((left, right), val)| (left, right, val.re, val.im))
                 .collect();
         let current_version = StruqtureVersionSerializable {
-            major_version: min_version.0,
-            minor_version: min_version.1,
+            major_version: MINIMUM_STRUQTURE_VERSION.0,
+            minor_version: MINIMUM_STRUQTURE_VERSION.1,
         };
         Self {
             items: new_noise_op,
@@ -231,6 +231,37 @@ impl BosonLindbladNoiseOperator {
         BosonLindbladNoiseOperator {
             internal_map: HashMap::with_capacity(capacity),
         }
+    }
+
+    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
+    ///
+    /// # Arguments
+    ///
+    /// * `number_creators_annihilators_left` - Number of creators and number of annihilators to filter for in the left term of the keys.
+    /// * `number_creators_annihilators_right` - Number of creators and number of annihilators to filter for in the right term of the keys.
+    ///
+    /// # Returns
+    ///
+    /// `Ok((separated, remainder))` - Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
+    pub fn separate_into_n_terms(
+        &self,
+        number_creators_annihilators_left: (usize, usize),
+        number_creators_annihilators_right: (usize, usize),
+    ) -> Result<(Self, Self), StruqtureError> {
+        let mut separated = Self::default();
+        let mut remainder = Self::default();
+        for ((prod_l, prod_r), val) in self.iter() {
+            if (prod_l.creators().len(), prod_l.annihilators().len())
+                == number_creators_annihilators_left
+                && (prod_r.creators().len(), prod_r.annihilators().len())
+                    == number_creators_annihilators_right
+            {
+                separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
+            } else {
+                remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
+            }
+        }
+        Ok((separated, remainder))
     }
 }
 

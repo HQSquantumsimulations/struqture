@@ -29,6 +29,8 @@ pub fn noiselesswrapper(
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
     let index_type = if struct_name.contains("Spin") {
         quote::format_ident!("PauliProductWrapper")
+    } else if struct_name.contains("PlusMinusOperator") {
+        quote::format_ident!("PlusMinusProductWrapper")
     } else if struct_name.contains("BosonHamiltonian") {
         quote::format_ident!("HermitianBosonProductWrapper")
     } else if struct_name.contains("Boson") {
@@ -254,28 +256,64 @@ pub fn noiselesswrapper(
             pub fn number_modes(&self) -> usize {
                 self.internal.number_modes()
             }
+
+            /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+            ///
+            /// Args:
+            ///     number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
+            ///
+            /// Returns:
+            ///     Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
+            ///
+            /// Raises:
+            ///     ValueError: Error in adding terms to return values.
+            pub fn separate_into_n_terms(&self, number_creators_annihilators: (usize, usize)) -> PyResult<(#ident, #ident)> {
+                let (separated, remainder) = self.internal.separate_into_n_terms(number_creators_annihilators).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+                Ok((
+                    #ident { internal: separated },
+                    #ident { internal: remainder }
+                ))
+            }
         }
     } else {
         TokenStream::new()
     };
     let operate_on_spins_quote = if attribute_arguments.contains("OperateOnSpins") {
         quote! {
-            /// Return maximum spin index in self.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_spins(&self) -> usize {
-                self.internal.current_number_spins()
-            }
+                /// Return maximum spin index in self.
+                ///
+                /// Returns:
+                ///     int: Maximum index.
+                pub fn current_number_spins(&self) -> usize {
+                    self.internal.current_number_spins()
+                }
 
-            /// Return the number_spins input of self.
-            ///
-            /// Returns:
-            ///     int: The number of spins in self.
-            pub fn number_spins(&self) -> usize {
-                self.internal.number_spins()
+                /// Return the number_spins input of self.
+                ///
+                /// Returns:
+                ///     int: The number of spins in self.
+                pub fn number_spins(&self) -> usize {
+                    self.internal.number_spins()
+                }
+
+                /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
+                ///
+                /// Args:
+                ///     number_spins (int): Number of spins to filter for in the keys.
+                ///
+                /// Returns:
+                ///     Tuple[Self, Self]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+                ///
+                /// Raises:
+                ///     ValueError: Error in adding terms to return values.
+        pub fn separate_into_n_terms(&self, number_spins: usize) -> PyResult<(#ident, #ident)> {
+                    let (separated, remainder) = self.internal.separate_into_n_terms(number_spins).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+                    Ok((
+                        #ident { internal: separated },
+                        #ident { internal: remainder }
+                    ))
+                }
             }
-        }
     } else {
         TokenStream::new()
     };
@@ -458,6 +496,24 @@ pub fn noiselesswrapper(
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
+
+                // /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
+                // ///
+                // /// Args:
+                // ///     number_particles (Tuple[int, int, int]): Number of particles to filter for in the keys.
+                // ///
+                // /// Returns:
+                // ///     int: The number of modes in self.
+                // ///
+                // /// Raises:
+                // ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
+                // pub fn separate_into_n_terms(&self, number_particles: (usize, usize, usize)) -> PyResult<(#ident, #ident)> {
+                //     let (separated, remainder) = self.internal.separate_into_n_terms(number_particles).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+                //     Ok((
+                //         #ident { internal: separated },
+                //         #ident { internal: remainder }
+                //     ))
+                // }
         }
     } else {
         TokenStream::new()
@@ -625,7 +681,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to json.
-            fn to_json(&self) -> PyResult<String> {
+            pub fn to_json(&self) -> PyResult<String> {
                 let serialized = serde_json::to_string(&self.internal)
                     .map_err(|_| PyValueError::new_err("Cannot serialize object to json".to_string()))?;
                 Ok(serialized)
@@ -643,7 +699,7 @@ pub fn noiselesswrapper(
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
             #[pyo3(text_signature = "(input)")]
-            fn from_json(input: String) -> PyResult<#ident> {
+            pub fn from_json(input: String) -> PyResult<#ident> {
                 Ok(#ident {
                     internal: serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
@@ -658,7 +714,7 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     str: The printable string representation of self.
-            fn __str__(&self) -> String {
+            pub fn __str__(&self) -> String {
                 format!("{}", self.internal)
             }
 
@@ -666,7 +722,7 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     str: The printable string representation of self.
-            fn __repr__(&self) -> String {
+            pub fn __repr__(&self) -> String {
                 format!("{}", self.internal)
             }
 
@@ -681,7 +737,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {

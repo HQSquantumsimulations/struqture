@@ -17,11 +17,11 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
-use std::str::FromStr;
 use struqture::fermions::{FermionOperator, FermionProduct, FermionSystem};
 use struqture::{
     ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
 };
+use test_case::test_case;
 
 // Test the new function of the SpinSystem
 #[test]
@@ -303,6 +303,85 @@ fn hermitian_test() {
     assert_eq!(system.hermitian_conjugate(), system.clone());
 }
 
+// Test the separation of terms
+#[test_case((1, 1))]
+#[test_case((1, 2))]
+#[test_case((2, 1))]
+#[test_case((2, 2))]
+fn separate_out_terms(number_spins: (usize, usize)) {
+    let pp_1_a: FermionProduct = FermionProduct::new([0], [0]).unwrap();
+    let pp_1_b: FermionProduct = FermionProduct::new([1], [1]).unwrap();
+    let pp_2_a: FermionProduct = FermionProduct::new([0, 1], [1]).unwrap();
+    let pp_2_b: FermionProduct = FermionProduct::new([0], [0, 1]).unwrap();
+    let pp_3_a: FermionProduct = FermionProduct::new([0, 1], [0, 1]).unwrap();
+    let pp_3_b: FermionProduct = FermionProduct::new([0, 2], [0, 2]).unwrap();
+
+    let mut allowed: Vec<(FermionProduct, f64)> = Vec::new();
+    let mut not_allowed: Vec<(FermionProduct, f64)> = vec![
+        (pp_1_a.clone(), 1.0),
+        (pp_1_b.clone(), 1.1),
+        (pp_2_a.clone(), 1.2),
+        (pp_2_b.clone(), 1.3),
+        (pp_3_a.clone(), 1.4),
+        (pp_3_b.clone(), 1.5),
+    ];
+
+    match number_spins {
+        (1, 1) => {
+            allowed.push((pp_1_a.clone(), 1.0));
+            allowed.push((pp_1_b.clone(), 1.1));
+            not_allowed.remove(0);
+            not_allowed.remove(0);
+        }
+        (2, 1) => {
+            allowed.push((pp_2_a.clone(), 1.2));
+            not_allowed.remove(2);
+        }
+        (1, 2) => {
+            allowed.push((pp_2_b.clone(), 1.3));
+            not_allowed.remove(3);
+        }
+        (2, 2) => {
+            allowed.push((pp_3_a.clone(), 1.4));
+            allowed.push((pp_3_b.clone(), 1.5));
+            not_allowed.remove(4);
+            not_allowed.remove(4);
+        }
+        _ => panic!(),
+    }
+
+    let mut separated = FermionSystem::default();
+    for (key, value) in allowed.iter() {
+        separated
+            .add_operator_product(key.clone(), value.into())
+            .unwrap();
+    }
+    let mut remainder = FermionSystem::default();
+    for (key, value) in not_allowed.iter() {
+        remainder
+            .add_operator_product(key.clone(), value.into())
+            .unwrap();
+    }
+
+    let mut so = FermionSystem::default();
+    so.add_operator_product(pp_1_a, CalculatorComplex::from(1.0))
+        .unwrap();
+    so.add_operator_product(pp_1_b, CalculatorComplex::from(1.1))
+        .unwrap();
+    so.add_operator_product(pp_2_a, CalculatorComplex::from(1.2))
+        .unwrap();
+    so.add_operator_product(pp_2_b, CalculatorComplex::from(1.3))
+        .unwrap();
+    so.add_operator_product(pp_3_a, CalculatorComplex::from(1.4))
+        .unwrap();
+    so.add_operator_product(pp_3_b, CalculatorComplex::from(1.5))
+        .unwrap();
+
+    let result = so.separate_into_n_terms(number_spins).unwrap();
+    assert_eq!(result.0, separated);
+    assert_eq!(result.1, remainder);
+}
+
 // Test the negative operation: -FermionSystem
 #[test]
 fn negative_so() {
@@ -467,20 +546,9 @@ fn serde_json() {
 /// Test SpinOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let pp = FermionProduct::new([0], [0]).unwrap();
     let mut so = FermionSystem::new(Some(1));
@@ -541,20 +609,9 @@ fn bincode() {
 
 #[test]
 fn serde_compact() {
-    use struqture::STRUQTURE_VERSION;
-    let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-    let major_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Major version is not unsigned integer.");
-    let minor_version = u32::from_str(
-        rsplit
-            .next()
-            .expect("Internal error: Version not conforming to semver"),
-    )
-    .expect("Internal error: Minor version is not unsigned integer.");
+    use struqture::MINIMUM_STRUQTURE_VERSION;
+    let major_version = MINIMUM_STRUQTURE_VERSION.0;
+    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
 
     let pp = FermionProduct::new([0], [0]).unwrap();
     let mut so = FermionSystem::new(Some(1));

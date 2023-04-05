@@ -17,6 +17,15 @@ pub use pauli_product::PauliProductWrapper;
 mod decoherence_product;
 pub use decoherence_product::DecoherenceProductWrapper;
 
+mod plus_minus_product;
+pub use plus_minus_product::PlusMinusProductWrapper;
+
+mod plus_minus_operator;
+pub use plus_minus_operator::PlusMinusOperatorWrapper;
+
+mod plus_minus_noise_operator;
+pub use plus_minus_noise_operator::PlusMinusLindbladNoiseOperatorWrapper;
+
 mod spin_system;
 pub use spin_system::SpinSystemWrapper;
 
@@ -53,5 +62,8 @@ pub fn spins(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<SpinHamiltonianSystemWrapper>()?;
     m.add_class::<SpinLindbladNoiseSystemWrapper>()?;
     m.add_class::<SpinLindbladOpenSystemWrapper>()?;
+    m.add_class::<PlusMinusProductWrapper>()?;
+    m.add_class::<PlusMinusOperatorWrapper>()?;
+    m.add_class::<PlusMinusLindbladNoiseOperatorWrapper>()?;
     Ok(())
 }

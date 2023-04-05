@@ -29,6 +29,7 @@ use std::ops::Sub;
 use std::str::FromStr;
 use thiserror::Error;
 pub const STRUQTURE_VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (1, 0, 0);
 use tinyvec::TinyVec;
 #[derive(
     Clone,
