@@ -167,8 +167,12 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
-        if key.0 == FermionProduct::new([], []).unwrap()
-            || key.1 == FermionProduct::new([], []).unwrap()
+        if key.0
+            == FermionProduct::new([], [])
+                .expect("Internal error in creating empty FermionProduct.")
+            || key.1
+                == FermionProduct::new([], [])
+                    .expect("Internal error in creating empty FermionProduct.")
         {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
@@ -198,8 +202,12 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
         key: Self::Index,
         value: Self::Value,
     ) -> Result<(), StruqtureError> {
-        if key.0 == FermionProduct::new([], []).unwrap()
-            || key.1 == FermionProduct::new([], []).unwrap()
+        if key.0
+            == FermionProduct::new([], [])
+                .expect("Internal error in creating empty FermionProduct.")
+            || key.1
+                == FermionProduct::new([], [])
+                    .expect("Internal error in creating empty FermionProduct.")
         {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
@@ -537,7 +545,10 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    /// * `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    /// # Panics
+    ///
+    /// * Internal bug in add_noise_from_full_operators.
     fn jordan_wigner(&self) -> Self::Output {
         let mut out = SpinLindbladNoiseOperator::new();
 
@@ -550,7 +561,7 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
                 &decoherence_operator_right,
                 self.get(key).into(),
             )
-            .unwrap();
+            .expect("Internal bug in add_noise_from_full_operators");
         }
         out
     }

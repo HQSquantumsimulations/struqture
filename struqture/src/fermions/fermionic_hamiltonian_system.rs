@@ -538,11 +538,14 @@ impl JordanWignerFermionToSpin for FermionHamiltonianSystem {
     /// # Returns
     ///
     /// `SpinHamiltonianSystem` - The spin noise operator that results from the transformation.
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner transformation for FermionHamiltonian.
     fn jordan_wigner(&self) -> Self::Output {
         SpinHamiltonianSystem::from_hamiltonian(
             self.hamiltonian().jordan_wigner(),
             Some(self.number_modes()),
         )
-        .unwrap()
+        .expect("Internal bug in jordan_wigner for FermionHamiltonian. The number of spins in the resulting Hamiltonian should equal the number of modes of the FermionHamiltonian.")
     }
 }

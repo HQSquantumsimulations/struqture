@@ -504,11 +504,14 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseSystem {
     /// # Returns
     ///
     /// `SpinLindbladNoiseSystem` - The spin noise operator that results from the transformation.
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner transformation for FermionLindbladNoiseOperator.
     fn jordan_wigner(&self) -> Self::Output {
         SpinLindbladNoiseSystem::from_operator(
             self.operator().jordan_wigner(),
             Some(self.number_modes()),
         )
-        .unwrap()
+            .expect("Internal bug in jordan_wigner for FermionLindbladNoiseOperator. The number of spins in the resulting SpinLindbladNoiseOperator should equal the number of modes of the FermionLindbladNoiseOperator.")
     }
 }

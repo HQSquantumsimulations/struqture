@@ -19,9 +19,8 @@ use struqture::fermions::{
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleSpinOperator,
-    SpinHamiltonian, SpinHamiltonianSystem, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
-    SpinLindbladOpenSystem, SpinOperator,
+    DecoherenceProduct, PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinHamiltonianSystem,
+    SpinLindbladNoiseOperator, SpinLindbladNoiseSystem, SpinLindbladOpenSystem, SpinOperator,
 };
 
 #[test]
@@ -64,12 +63,24 @@ fn test_jw_hermitian_fermion_product_to_spin() {
     so.add_operator_product(pp_2.clone(), CalculatorFloat::from(0.5))
         .unwrap();
 
-    assert_eq!(hfp.jordan_wigner(), so)
+    assert_eq!(hfp.jordan_wigner(), so);
+
+    let hfp = HermitianFermionProduct::new([], []).unwrap();
+    let mut so = SpinHamiltonian::new();
+    let mut id = PauliProduct::new();
+    id = id.set_pauli(0, SingleSpinOperator::Identity);
+    so.add_operator_product(id.clone(), 1.0.into()).unwrap();
+
+    assert_eq!(hfp.jordan_wigner(), so);
 }
 
 #[test]
 fn test_jw_fermion_operator_to_spin() {
     let mut fo = FermionOperator::new();
+    let so = SpinOperator::new();
+
+    assert_eq!(fo.jordan_wigner(), so);
+
     let fp1 = FermionProduct::new([1, 2], [2, 3]).unwrap();
     let fp2 = FermionProduct::new([3, 4], [2, 5]).unwrap();
     fo.add_operator_product(fp1.clone(), CalculatorComplex::new(1.0, 2.0))
@@ -106,15 +117,16 @@ fn test_jw_fermion_hamiltonian_to_spin() {
 #[test]
 fn test_jw_fermion_noise_operator_to_spin() {
     let mut fno = FermionLindbladNoiseOperator::new();
+    let mut sno = SpinLindbladNoiseOperator::new();
+
+    assert_eq!(fno.jordan_wigner(), sno);
+
     let fp = FermionProduct::new([0], [0]).unwrap();
     fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
-    let mut sno = SpinLindbladNoiseOperator::new();
     let dp = DecoherenceProduct::new().z(0);
     sno.add_operator_product((dp.clone(), dp.clone()), CalculatorComplex::new(0.25, 0.0))
         .unwrap();
-
-    assert_eq!(fno.jordan_wigner(), sno)
 }
 
 #[test]

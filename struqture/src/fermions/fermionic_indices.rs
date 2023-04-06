@@ -1240,6 +1240,11 @@ impl JordanWignerFermionToSpin for FermionProduct {
     /// # Returns
     ///
     /// `SpinOperator` - The spin operator that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Unexpectedly failed to add a PauliProduct to a SpinOperator internal struqture bug.
+    /// * Internal bug in `add_operator_product`.
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
@@ -1249,7 +1254,7 @@ impl JordanWignerFermionToSpin for FermionProduct {
         id = id.set_pauli(0, SingleSpinOperator::Identity);
         spin_operator
             .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
-            .unwrap();
+            .expect("Internal bug in add_operator_product.");
 
         // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
         // odd positions depending on the parity of the total number of creation (annihilation)
@@ -1290,6 +1295,9 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
     /// # Returns
     ///
     /// `SpinHamiltonian` - The spin operator that results from the transformation.
+    ///
+    /// * Unexpectedly failed to add a PauliProduct to a SpinOperator or SpinHamiltonian internal struqture bug.
+    /// * Internal bug in `add_operator_product`.
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
@@ -1299,7 +1307,7 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         id = id.set_pauli(0, SingleSpinOperator::Identity);
         spin_operator
             .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
-            .unwrap();
+            .expect("Internal bug in add_operator_product.");
 
         // Jordan-Wigner strings are inserted every second lowering (raising) operator, in even or
         // odd positions depending on the parity of the total number of creation (annihilation)
@@ -1333,7 +1341,7 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             for (product, coeff) in spin_operator.iter() {
                 if coeff.im == 0.0.into() {
                     out.add_operator_product(product.clone(), coeff.re.clone() * 2)
-                        .unwrap();
+                        .expect("Internal bug in add_operator_product.");
                 }
             }
             return out;

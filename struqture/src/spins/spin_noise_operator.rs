@@ -351,9 +351,8 @@ impl SpinLindbladNoiseOperator {
         right: &DecoherenceOperator,
         value: CalculatorComplex,
     ) -> Result<(), StruqtureError> {
-
         if left.is_empty() || right.is_empty() {
-            return Err(StruqtureError::InvalidLindbladTerms)
+            return Err(StruqtureError::InvalidLindbladTerms);
         }
 
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
