@@ -687,7 +687,6 @@ fn serde_compact() {
 fn so_from_pmo() {
     let pmp_vec: Vec<(PlusMinusProduct, CalculatorComplex)> = vec![
         (PlusMinusProduct::new().z(0), 3.0.into()),
-        (PlusMinusProduct::new(), 0.5.into()),
         (
             PlusMinusProduct::new().plus(1),
             CalculatorComplex::new(0.0, 1.0),
@@ -700,7 +699,6 @@ fn so_from_pmo() {
     ];
     let dp_vec: Vec<(DecoherenceProduct, CalculatorComplex)> = vec![
         (DecoherenceProduct::new().z(0), 3.0.into()),
-        (DecoherenceProduct::new(), 0.5.into()),
         (
             DecoherenceProduct::new().x(1),
             CalculatorComplex::new(0.0, 0.5),
@@ -760,7 +758,6 @@ fn so_from_pmo() {
 fn pmo_from_so() {
     let dp_vec: Vec<(DecoherenceProduct, CalculatorComplex)> = vec![
         (DecoherenceProduct::new().z(0), 1.0.into()),
-        (DecoherenceProduct::new(), 0.5.into()),
         (
             DecoherenceProduct::new().x(0),
             CalculatorComplex::new(0.0, 1.0),
@@ -776,7 +773,6 @@ fn pmo_from_so() {
             PlusMinusProduct::new().z(0),
             CalculatorComplex::new(1.0, 0.0),
         ),
-        (PlusMinusProduct::new(), CalculatorComplex::new(0.5, 0.0)),
         (
             PlusMinusProduct::new().plus(0),
             CalculatorComplex::new(0.0, 1.0),
