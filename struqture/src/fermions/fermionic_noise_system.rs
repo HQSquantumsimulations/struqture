@@ -504,6 +504,7 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseSystem {
     /// # Returns
     ///
     /// `SpinLindbladNoiseSystem` - The spin noise operator that results from the transformation.
+    ///
     /// # Panics
     ///
     /// * Internal error in jordan_wigner transformation for FermionLindbladNoiseOperator.

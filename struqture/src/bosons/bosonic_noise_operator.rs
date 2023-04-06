@@ -151,13 +151,19 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
     /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
+    /// # Panics
+    ///
+    /// * Internal error in BosonProduct::new
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
-        if key.0 == BosonProduct::new([], []).unwrap()
-            || key.1 == BosonProduct::new([], []).unwrap()
+        if key.0
+            == BosonProduct::new([], []).expect("Internal error when creating empty BosonProduct.")
+            || key.1
+                == BosonProduct::new([], [])
+                    .expect("Internal error when creating empty BosonProduct.")
         {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
@@ -170,32 +176,6 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
                 Entry::Vacant(_) => Ok(None),
             }
         }
-    }
-
-    /// Adds a new entry in the BosonLindbladNoiseOperator with the given ((BosonProduct, BosonProduct) key, CalculatorComplex value) pair.
-    ///
-    /// # Arguments
-    ///
-    /// * `key` - The (BosonProduct, BosonProduct) key to set in the BosonLindbladNoiseOperator.
-    /// * `value` - The corresponding CalculatorComplex value to set for the key in the BosonLindbladNoiseOperator.
-    ///
-    /// # Returns
-    ///
-    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
-    fn add_operator_product(
-        &mut self,
-        key: Self::Index,
-        value: Self::Value,
-    ) -> Result<(), StruqtureError> {
-        if key.0 == BosonProduct::new([], []).unwrap()
-            || key.1 == BosonProduct::new([], []).unwrap()
-        {
-            return Err(StruqtureError::InvalidLindbladTerms);
-        }
-
-        let old = self.get(&key).clone();
-        self.set(key, value + old)?;
-        Ok(())
     }
 }
 

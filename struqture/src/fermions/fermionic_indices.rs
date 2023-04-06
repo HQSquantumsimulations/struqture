@@ -1118,7 +1118,6 @@ impl GetValue<HermitianFermionProduct> for FermionProduct {
     ///
     /// # Arguments
     ///
-
     /// * `index` - The HermitianFermionProduct to transform the value by.
     /// * `value` - The value to be transformed.
     ///
@@ -1297,6 +1296,9 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
     /// `SpinHamiltonian` - The spin operator that results from the transformation.
     ///
     /// * Unexpectedly failed to add a PauliProduct to a SpinOperator or SpinHamiltonian internal struqture bug.
+    ///
+    /// # Panics
+    ///
     /// * Internal bug in `add_operator_product`.
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
@@ -1346,7 +1348,9 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             }
             return out;
         }
-        SpinHamiltonian::try_from(spin_operator).unwrap()
+        SpinHamiltonian::try_from(spin_operator).expect("Error in conversion from SpinOperator to
+SpinHamiltonian, despite the internal check that the HermitianFermionProduct in the jordan-wigner
+transform is hermitian.")
     }
 }
 
