@@ -1346,9 +1346,11 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             }
             return out;
         }
-        SpinHamiltonian::try_from(spin_operator).expect("Error in conversion from SpinOperator to
+        SpinHamiltonian::try_from(spin_operator).expect(
+            "Error in conversion from SpinOperator to
 SpinHamiltonian, despite the internal check that the HermitianFermionProduct in the jordan-wigner
-transform is hermitian.")
+transform is hermitian.",
+        )
     }
 }
 

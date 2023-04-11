@@ -171,11 +171,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
-        if key.0
-            == FermionProduct::new([], [])?
-            || key.1
-                == FermionProduct::new([], [])?
-        {
+        if key.0 == FermionProduct::new([], [])? || key.1 == FermionProduct::new([], [])? {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
 

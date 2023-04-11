@@ -160,11 +160,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
-        if key.0
-            == BosonProduct::new([], [])?
-            || key.1
-                == BosonProduct::new([], [])?
-        {
+        if key.0 == BosonProduct::new([], [])? || key.1 == BosonProduct::new([], [])? {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
 

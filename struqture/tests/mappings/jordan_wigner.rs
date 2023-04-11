@@ -14,13 +14,14 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::fermions::{
     FermionHamiltonian, FermionHamiltonianSystem, FermionLindbladNoiseOperator,
     FermionLindbladNoiseSystem, FermionLindbladOpenSystem, FermionOperator, FermionProduct,
-    HermitianFermionProduct,
+    FermionSystem, HermitianFermionProduct,
 };
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinHamiltonianSystem,
     SpinLindbladNoiseOperator, SpinLindbladNoiseSystem, SpinLindbladOpenSystem, SpinOperator,
+    SpinSystem,
 };
 
 #[test]
@@ -131,6 +132,19 @@ fn test_jw_fermion_noise_operator_to_spin() {
 
 #[test]
 fn test_jw_fermion_systems_to_spin() {
+    // Test FermionSystem
+    let mut fo = FermionOperator::new();
+    fo.add_operator_product(
+        FermionProduct::new([1], [2]).unwrap(),
+        CalculatorComplex::new(1.0, 2.0),
+    )
+    .unwrap();
+    let fs = FermionSystem::from_operator(fo.clone(), Some(5)).unwrap();
+    let so = fo.jordan_wigner();
+    let ss = SpinSystem::from_operator(so, Some(5)).unwrap();
+
+    assert_eq!(fs.jordan_wigner(), ss);
+
     // Test FermionHamiltonianSystem
     let mut fh = FermionHamiltonian::new();
     fh.add_operator_product(
