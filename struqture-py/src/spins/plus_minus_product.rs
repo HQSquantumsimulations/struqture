@@ -253,14 +253,12 @@ impl PlusMinusProductWrapper {
     }
 
     /// DEPRECATED: Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
-    /// 
+    ///
     /// This function is deprecated, please use `to_pauli_product_list`
     ///
     /// Returns:
     ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
-    pub fn to_pauli_product(
-        &self,
-    ) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
+    pub fn to_pauli_product(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
         self.to_pauli_product_list()
     }
 
@@ -268,9 +266,7 @@ impl PlusMinusProductWrapper {
     ///
     /// Returns:
     ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
-    pub fn to_pauli_product_list(
-        &self,
-    ) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
+    pub fn to_pauli_product_list(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
         let result: Vec<(PauliProduct, Complex64)> =
             Vec::<(PauliProduct, Complex64)>::from(self.internal.clone());
         let result_pyo3: Vec<(PauliProductWrapper, CalculatorComplexWrapper)> = result
@@ -290,7 +286,7 @@ impl PlusMinusProductWrapper {
     }
 
     /// DEPRECATED: Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
-    /// 
+    ///
     /// This function is deprecated, please use `to_decoherence_product_list`
     ///
     /// Returns:
