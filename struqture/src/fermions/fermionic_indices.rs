@@ -1295,8 +1295,6 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
     ///
     /// `SpinHamiltonian` - The spin operator that results from the transformation.
     ///
-    /// * Unexpectedly failed to add a PauliProduct to a SpinOperator or SpinHamiltonian internal struqture bug.
-    ///
     /// # Panics
     ///
     /// * Internal bug in `add_operator_product`.
@@ -1348,26 +1346,28 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             }
             return out;
         }
-        SpinHamiltonian::try_from(spin_operator).expect("Error in conversion from SpinOperator to
+        SpinHamiltonian::try_from(spin_operator).expect(
+            "Error in conversion from SpinOperator to
 SpinHamiltonian, despite the internal check that the HermitianFermionProduct in the jordan-wigner
-transform is hermitian.")
+transform is hermitian.",
+        )
     }
 }
 
 fn _lowering_operator(i: &usize) -> SpinOperator {
     let mut out = SpinOperator::new();
     out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
-        .unwrap();
+        .expect("Internal bug in add_operator_product.");
     out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5))
-        .unwrap();
+        .expect("Internal bug in add_operator_product.");
     out
 }
 fn _raising_operator(i: &usize) -> SpinOperator {
     let mut out = SpinOperator::new();
     out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
-        .unwrap();
+        .expect("Internal bug in add_operator_product.");
     out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5))
-        .unwrap();
+        .expect("Internal bug in add_operator_product.");
     out
 }
 

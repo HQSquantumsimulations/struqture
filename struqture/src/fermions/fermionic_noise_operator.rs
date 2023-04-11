@@ -161,7 +161,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
     ///
     /// # Panics
     ///
@@ -171,13 +171,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
-        if key.0
-            == FermionProduct::new([], [])
-                .expect("Internal error when creating empty FermionProduct.")
-            || key.1
-                == FermionProduct::new([], [])
-                    .expect("Internal error when creating empty FermionProduct.")
-        {
+        if key.0 == FermionProduct::new([], [])? || key.1 == FermionProduct::new([], [])? {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
 

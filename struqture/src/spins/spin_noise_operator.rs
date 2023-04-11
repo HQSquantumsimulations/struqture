@@ -182,30 +182,6 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
             }
         }
     }
-
-    /// Adds a new entry in the SpinLindbladNoiseOperator with the given ((DecoherenceProduct, DecoherenceProduct) key, CalculatorComplex value) pair.
-    ///
-    /// # Arguments
-    ///
-    /// * `key` - The (DecoherenceProduct, DecoherenceProduct) key to set in the SpinLindbladNoiseOperator.
-    /// * `value` - The corresponding CalculatorComplex value to set for the key in the SpinLindbladNoiseOperator.
-    ///
-    /// # Returns
-    ///
-    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
-    fn add_operator_product(
-        &mut self,
-        key: Self::Index,
-        value: Self::Value,
-    ) -> Result<(), StruqtureError> {
-        if key.0.is_empty() || key.1.is_empty() {
-            return Err(StruqtureError::InvalidLindbladTerms);
-        }
-
-        let old = self.get(&key).clone();
-        self.set(key, value + old)?;
-        Ok(())
-    }
 }
 
 impl<'a> OperateOnSpins<'a> for SpinLindbladNoiseOperator {
@@ -345,6 +321,7 @@ impl SpinLindbladNoiseOperator {
     ///
     /// * `Ok(())` - The noise was correctly added.
     /// * `Err(StruqtureError::NumberSpinsExceeded)` - Number of spins in entry exceeds number of spins in system.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
     pub fn add_noise_from_full_operators(
         &mut self,
         left: &DecoherenceOperator,

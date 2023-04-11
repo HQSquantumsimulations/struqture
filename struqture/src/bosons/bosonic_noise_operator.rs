@@ -150,7 +150,8 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
+    ///
     /// # Panics
     ///
     /// * Internal error in BosonProduct::new
@@ -159,12 +160,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
-        if key.0
-            == BosonProduct::new([], []).expect("Internal error when creating empty BosonProduct.")
-            || key.1
-                == BosonProduct::new([], [])
-                    .expect("Internal error when creating empty BosonProduct.")
-        {
+        if key.0 == BosonProduct::new([], [])? || key.1 == BosonProduct::new([], [])? {
             return Err(StruqtureError::InvalidLindbladTerms);
         }
 
