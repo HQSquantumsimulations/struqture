@@ -539,43 +539,6 @@ impl MixedLindbladNoiseSystem {
             Err(StruqtureError::NumberSpinsExceeded)
         }
     }
-
-    // /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
-    // ///
-    // /// # Arguments
-    // ///
-    // /// * `number_particles_left` - Number of spins, bosons and fermions to filter for in the left term of the keys.
-    // /// * `number_particles_right` - Number of spins, bosons and fermions to filter for in the right term of the keys.
-    // ///
-    // /// # Returns
-    // ///
-    // /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-    // pub fn separate_into_n_terms(
-    //     &self,
-    //     number_particles_left: (usize, usize, usize),
-    //     number_particles_right: (usize, usize, usize),
-    // ) -> Result<(Self, Self), StruqtureError> {
-    //     let mut separated = Self::default();
-    //     let mut remainder = Self::default();
-    //     for ((prod_l, prod_r), val) in self.iter() {
-    //         if (
-    //             prod_l.spins().len(),
-    //             prod_l.bosons().len(),
-    //             prod_l.fermions().len(),
-    //         ) == number_particles_left
-    //             && (
-    //                 prod_r.spins().len(),
-    //                 prod_r.bosons().len(),
-    //                 prod_r.fermions().len(),
-    //             ) == number_particles_right
-    //         {
-    //             separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-    //         } else {
-    //             remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-    //         }
-    //     }
-    //     Ok((separated, remainder))
-    // }
 }
 
 /// Implements the negative sign function of MixedLindbladNoiseSystem.
