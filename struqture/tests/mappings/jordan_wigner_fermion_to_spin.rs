@@ -24,7 +24,7 @@ use struqture::spins::{
 };
 
 #[test]
-fn test_jw_fermion_product_to_spin() {
+fn test_jw_fermion_product() {
     let fp = FermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).x(2);
     let pp_2 = PauliProduct::new().x(1).y(2);
@@ -53,7 +53,7 @@ fn test_jw_fermion_product_to_spin() {
 }
 
 #[test]
-fn test_jw_hermitian_fermion_product_to_spin() {
+fn test_jw_hermitian_fermion_product() {
     let hfp = HermitianFermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).y(2);
     let pp_2 = PauliProduct::new().x(1).x(2);
@@ -75,7 +75,7 @@ fn test_jw_hermitian_fermion_product_to_spin() {
 }
 
 #[test]
-fn test_jw_fermion_operator_to_spin() {
+fn test_jw_fermion_operator() {
     let mut fo = FermionOperator::new();
     let so = SpinOperator::new();
 
@@ -94,7 +94,7 @@ fn test_jw_fermion_operator_to_spin() {
 }
 
 #[test]
-fn test_jw_fermion_hamiltonian_to_spin() {
+fn test_jw_fermion_hamiltonian() {
     let mut fh = FermionHamiltonian::new();
     let hfp1 = HermitianFermionProduct::new([1, 2], [2, 4]).unwrap();
     let hfp2 = HermitianFermionProduct::new([1, 3], [1, 2]).unwrap();
@@ -115,7 +115,7 @@ fn test_jw_fermion_hamiltonian_to_spin() {
 }
 
 #[test]
-fn test_jw_fermion_noise_operator_to_spin() {
+fn test_jw_fermion_noise_operator() {
     let mut fno = FermionLindbladNoiseOperator::new();
     let mut sno = SpinLindbladNoiseOperator::new();
 
@@ -130,7 +130,7 @@ fn test_jw_fermion_noise_operator_to_spin() {
 }
 
 #[test]
-fn test_jw_fermion_systems_to_spin() {
+fn test_jw_fermion_systems() {
     // Test FermionHamiltonianSystem
     let mut fh = FermionHamiltonian::new();
     fh.add_operator_product(
