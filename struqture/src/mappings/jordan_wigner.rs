@@ -35,8 +35,7 @@ pub trait JordanWignerFermionToSpin {
 pub trait JordanWignerSpinToFermion {
     /// The Output type for the JordanWigner transformation
     ///
-    /// TODO missing PauliOperator
-    /// For a SpinOperator it will be a FermionOperator
+    /// For a PauliProduct or SpinOperator it will be a FermionOperator
     /// For a SpinHamiltonian it will be a FermionHamiltonian
     /// For a SpinLindbladOpenSystem it will be a FermionLindbladOpenSystem
     /// etc.
