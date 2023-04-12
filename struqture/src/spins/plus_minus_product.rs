@@ -972,4 +972,3 @@ impl Extend<(usize, SinglePlusMinusOperator)> for PlusMinusProduct {
     }
 }
 
-
