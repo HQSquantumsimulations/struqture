@@ -10,8 +10,12 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::{FermionOperator, FermionProduct};
+use crate::mappings::JordanWignerSpinToFermion;
+use crate::prelude::*;
 use crate::{SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
+use qoqo_calculator::*;
 use serde::de::{Deserializer, Error, SeqAccess, Visitor};
 use serde::ser::{SerializeSeq, Serializer};
 use serde::{Deserialize, Serialize};
@@ -972,3 +976,106 @@ impl Extend<(usize, SinglePlusMinusOperator)> for PlusMinusProduct {
     }
 }
 
+// Helper function to build fermion operators of the form 1 - 2a^{dagger}_pa_p
+#[inline]
+fn _jw_string_term(i: &usize) -> FermionOperator {
+    let mut fermion_id = FermionOperator::new();
+    fermion_id.add_operator_product(
+        FermionProduct::new([], [])
+            .expect("Internal bug in add_operator_product for FermionOperator."),
+        1.0.into()
+    ).expect("Internal bug in FermionProduct::new");
+    let mut jw_string_term = FermionOperator::new();
+    jw_string_term
+        .add_operator_product(
+            FermionProduct::new([*i], [*i]).expect("Internal bug in FermionProduct::new"),
+            CalculatorComplex::new(-2.0, 0.0),
+        )
+        .expect("Internal bug in add_operator_product for FermionOperator.");
+    fermion_id + jw_string_term
+}
+
+impl JordanWignerSpinToFermion for PlusMinusProduct {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a PlusMinusProduct.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermion operator that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal bug in `add_operator_product`
+    /// * Internal bug in `FermionProduct::new`
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut fermion_operator = FermionOperator::new();
+        fermion_operator.add_operator_product(
+            FermionProduct::new([], [])
+                .expect("Internal bug in add_operator_product for FermionOperator."),
+            1.0.into()
+        ).expect("Internal bug in FermionProduct::new");
+
+        for (index, op) in self.iter() {
+            match op {
+                SinglePlusMinusOperator::Plus => {
+                    for qubit in 0..*index {
+                        fermion_operator = fermion_operator * _jw_string_term(&qubit);
+                    }
+                    let mut last_term = FermionOperator::new();
+                    last_term
+                        .add_operator_product(
+                            FermionProduct::new([], [*index])
+                                .expect("Internal bug in FermionProduct::new"),
+                            1.0.into(),
+                        )
+                        .expect("Internal bug in add_operator_product for FermionOperator.");
+                    fermion_operator = fermion_operator * last_term;
+                }
+                SinglePlusMinusOperator::Minus => {
+                    for qubit in 0..*index {
+                        fermion_operator = fermion_operator * _jw_string_term(&qubit);
+                    }
+                    let mut last_term = FermionOperator::new();
+                    last_term
+                        .add_operator_product(
+                            FermionProduct::new([*index], [])
+                                .expect("Internal bug in FermionProduct::new"),
+                            1.0.into(),
+                        )
+                        .expect("Internal bug in add_operator_product for FermionOperator.");
+                    fermion_operator = fermion_operator * last_term;
+                }
+                SinglePlusMinusOperator::Z => {
+                    fermion_operator = fermion_operator * _jw_string_term(index);
+                }
+                _ => {}
+            }
+        }
+        fermion_operator
+    }
+}
+
+
+#[cfg(test)]
+mod test {
+    use crate::fermions::{FermionOperator, FermionProduct};
+    use crate::prelude::*;
+    use super::*;
+    use qoqo_calculator::CalculatorComplex;
+
+    #[test]
+    fn test_jw_string_term() {
+        let fermion_id = FermionOperator::new();
+        let fermion_number = FermionProduct::new([3], [3]).unwrap();
+        let mut res = FermionOperator::new();
+        res.add_operator_product(fermion_number, CalculatorComplex::new(-2.0, 0.0)).unwrap();
+        res = fermion_id + res;
+
+        assert_eq!(_jw_string_term(&3), res);
+    }
+    
+} 

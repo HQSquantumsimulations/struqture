@@ -121,7 +121,7 @@ fn test_jw_fermion_noise_operator() {
     let mut sno = SpinLindbladNoiseOperator::new();
 
     assert_eq!(fno.jordan_wigner(), sno);
-    
+
     let fp = FermionProduct::new([0], [0]).unwrap();
     fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
@@ -130,7 +130,6 @@ fn test_jw_fermion_noise_operator() {
         .unwrap();
 
     assert_eq!(fno.jordan_wigner(), sno);
-
 }
 
 #[test]
