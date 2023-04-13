@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{FermionProduct, OperateOnFermions};
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::spins::{DecoherenceOperator, SpinLindbladNoiseOperator};
 use crate::{
     ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
     StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
@@ -159,11 +161,20 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in FermionProduct::new
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
+        if key.0 == FermionProduct::new([], [])? || key.1 == FermionProduct::new([], [])? {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         if value != CalculatorComplex::ZERO {
             Ok(self.internal_map.insert(key, value))
         } else {
@@ -489,6 +500,39 @@ impl fmt::Display for FermionLindbladNoiseOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
+    type Output = SpinLindbladNoiseOperator;
+
+    /// Implements JordanWignerFermionToSpin for a FermionLindbladNoiseOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// * `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal bug in add_noise_from_full_operators.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = SpinLindbladNoiseOperator::new();
+
+        for key in self.keys() {
+            let decoherence_operator_left = DecoherenceOperator::from(key.0.jordan_wigner());
+            let decoherence_operator_right = DecoherenceOperator::from(key.1.jordan_wigner());
+
+            out.add_noise_from_full_operators(
+                &decoherence_operator_left,
+                &decoherence_operator_right,
+                self.get(key).into(),
+            )
+            .expect("Internal bug in add_noise_from_full_operators");
+        }
+        out
     }
 }
 

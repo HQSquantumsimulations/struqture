@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::OperateOnSpins;
+use super::{OperateOnSpins, SpinOperator};
 use crate::spins::DecoherenceProduct;
 use crate::{
     OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
@@ -489,6 +489,31 @@ impl fmt::Display for DecoherenceOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl From<SpinOperator> for DecoherenceOperator {
+    /// Converts a SpinOperator into a DecoherenceProduct.
+    ///
+    /// # Arguments
+    ///
+    /// * `op` - The SpinOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SpinOperator converted into a DecoherenceProduct.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in add_operator_product.
+    fn from(op: SpinOperator) -> Self {
+        let mut out = DecoherenceOperator::new();
+        for prod in op.keys() {
+            let (new_prod, new_coeff) = DecoherenceProduct::spin_to_decoherence(prod.clone());
+            out.add_operator_product(new_prod, op.get(prod).clone() * new_coeff)
+                .expect("Internal error in add_operator_product");
+        }
+        out
     }
 }
 

@@ -13,6 +13,8 @@
 use super::{
     FermionOperator, FermionProduct, HermitianFermionProduct, ModeIndex, OperateOnFermions,
 };
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::spins::SpinHamiltonian;
 use crate::{
     GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
     StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
@@ -27,7 +29,7 @@ use std::ops;
 
 /// FermionHamiltonians are combinations of FermionProducts with specific CalculatorComplex coefficients.
 ///
-/// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
+/// This is a representation of sums of creation and annihilation operators with weightings, in order to build a full hamiltonian.
 /// FermionHamiltonian is the hermitian equivalent of FermionOperator.
 ///
 /// # Example
@@ -591,6 +593,32 @@ impl fmt::Display for FermionHamiltonian {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerFermionToSpin for FermionHamiltonian {
+    type Output = SpinHamiltonian;
+
+    /// Implements JordanWignerFermionToSpin for a FermionHamiltonian.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `SpinHamiltonian` - The spin Hamiltonian that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = SpinHamiltonian::new();
+        for hfp in self.keys() {
+            let mut new_term = hfp.jordan_wigner();
+            let mut new_coeff = self.get(hfp).re.clone();
+            if hfp.is_natural_hermitian() {
+                new_coeff *= 2.0;
+            }
+            new_term = new_term * new_coeff;
+            out = out + new_term;
+        }
+        out
     }
 }
 

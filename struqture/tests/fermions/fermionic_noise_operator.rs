@@ -363,6 +363,29 @@ fn into_iter_from_iter_extend() {
     assert_eq!(so_0, so_0_1);
 }
 
+// Test the failure of creating the FermionLindbladNoiseOperator with identity terms
+#[test]
+fn illegal_identity_operators() {
+    let empty_fp = FermionProduct::new([], []).unwrap();
+    let fp = FermionProduct::new([0], [1]).unwrap();
+    let mut fno_left_identity = FermionLindbladNoiseOperator::new();
+    let cc = CalculatorComplex::new(1.0, 1.0);
+    let ok = fno_left_identity
+        .add_operator_product((empty_fp.clone(), fp.clone()), cc.clone())
+        .is_err();
+    assert!(ok);
+    let mut fno_right_identity = FermionLindbladNoiseOperator::new();
+    let ok = fno_right_identity
+        .add_operator_product((fp.clone(), empty_fp.clone()), cc.clone())
+        .is_err();
+    assert!(ok);
+    let mut fno_both_identity = FermionLindbladNoiseOperator::new();
+    let ok = fno_both_identity
+        .add_operator_product((empty_fp.clone(), empty_fp.clone()), cc)
+        .is_err();
+    assert!(ok);
+}
+
 // Test the Debug trait of FermionLindbladNoiseOperator
 #[test]
 fn debug() {

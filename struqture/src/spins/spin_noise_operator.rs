@@ -163,11 +163,16 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
+    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
+        if key.0.is_empty() || key.1.is_empty() {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         if value != CalculatorComplex::ZERO {
             Ok(self.internal_map.insert(key, value))
         } else {
@@ -309,29 +314,37 @@ impl SpinLindbladNoiseOperator {
     /// # Arguments
     ///
     /// * `left` - DecoherenceOperator that acts on the density matrix from the left in the Lindblad equation.
-    /// * `value` -  DecoherenceOperator that acts on the density matrix from the right and in hermitian conjugated form in the Lindblad equation.
+    /// * `right` -  DecoherenceOperator that acts on the density matrix from the right and in hermitian conjugated form in the Lindblad equation.
+    /// * `value` - CalculatorComplex value representing the global coefficient of the noise term.
     ///
     /// # Returns
     ///
     /// * `Ok(())` - The noise was correctly added.
     /// * `Err(StruqtureError::NumberSpinsExceeded)` - Number of spins in entry exceeds number of spins in system.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
     pub fn add_noise_from_full_operators(
         &mut self,
         left: &DecoherenceOperator,
         right: &DecoherenceOperator,
         value: CalculatorComplex,
     ) -> Result<(), StruqtureError> {
+        if left.is_empty() || right.is_empty() {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
             left.iter().cartesian_product(right.iter())
         {
-            let value_complex = value_right.conj() * value_left;
-            self.add_operator_product(
-                (
-                    decoherence_product_left.clone(),
-                    decoherence_product_right.clone(),
-                ),
-                value_complex * value.clone(),
-            )?;
+            if !decoherence_product_left.is_empty() && !decoherence_product_right.is_empty() {
+                let value_complex = value_right.conj() * value_left;
+                self.add_operator_product(
+                    (
+                        decoherence_product_left.clone(),
+                        decoherence_product_right.clone(),
+                    ),
+                    value_complex * value.clone(),
+                )?;
+            }
         }
         Ok(())
     }

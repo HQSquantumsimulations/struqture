@@ -13,6 +13,8 @@
 use super::{
     FermionHamiltonian, FermionSystem, HermitianFermionProduct, ModeIndex, OperateOnFermions,
 };
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::spins::SpinHamiltonianSystem;
 use crate::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -522,5 +524,28 @@ impl fmt::Display for FermionHamiltonianSystem {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerFermionToSpin for FermionHamiltonianSystem {
+    type Output = SpinHamiltonianSystem;
+
+    /// Implements JordanWignerFermionToSpin for a FermionHamiltonianSystem.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `SpinHamiltonianSystem` - The spin noise operator that results from the transformation.
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner transformation for FermionHamiltonian.
+    fn jordan_wigner(&self) -> Self::Output {
+        SpinHamiltonianSystem::from_hamiltonian(
+            self.hamiltonian().jordan_wigner(),
+            Some(self.number_modes()),
+        )
+        .expect("Internal bug in jordan_wigner for FermionHamiltonian. The number of spins in the resulting Hamiltonian should equal the number of modes of the FermionHamiltonian.")
     }
 }

@@ -895,3 +895,26 @@ fn test_superoperator_multiple_entries() {
         assert_eq!(&val, second_val);
     }
 }
+
+// Test the failure of creating the SpinLindbladNoiseOperator with identity terms
+#[test]
+fn illegal_identity_operators() {
+    let empty_fp = DecoherenceProduct::new();
+    let fp = DecoherenceProduct::new().x(0);
+    let mut fno_left_identity = SpinLindbladNoiseOperator::new();
+    let cc = CalculatorComplex::new(1.0, 1.0);
+    let ok = fno_left_identity
+        .add_operator_product((empty_fp.clone(), fp.clone()), cc.clone())
+        .is_err();
+    assert!(ok);
+    let mut fno_right_identity = SpinLindbladNoiseOperator::new();
+    let ok = fno_right_identity
+        .add_operator_product((fp.clone(), empty_fp.clone()), cc.clone())
+        .is_err();
+    assert!(ok);
+    let mut fno_both_identity = SpinLindbladNoiseOperator::new();
+    let ok = fno_both_identity
+        .add_operator_product((empty_fp.clone(), empty_fp.clone()), cc)
+        .is_err();
+    assert!(ok);
+}

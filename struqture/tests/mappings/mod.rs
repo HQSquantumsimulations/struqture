@@ -1,4 +1,4 @@
-// Copyright © 2021-2022 HQS Quantum Simulations GmbH. All Rights Reserved.
+// Copyright © 2020-2022 HQS Quantum Simulations GmbH. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License. You may obtain a copy of the License at
@@ -10,21 +10,4 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use tinyvec::TinyVec;
-
-type BosonTinyVec = TinyVec<[usize; 2]>;
-
-#[cfg(test)]
-mod bosons;
-
-#[cfg(test)]
-mod fermions;
-
-#[cfg(test)]
-mod spins;
-
-#[cfg(test)]
-mod mixed_systems;
-
-#[cfg(test)]
-mod mappings;
+mod jordan_wigner;
