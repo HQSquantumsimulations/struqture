@@ -980,11 +980,13 @@ impl Extend<(usize, SinglePlusMinusOperator)> for PlusMinusProduct {
 #[inline]
 fn _jw_string_term(i: &usize) -> FermionOperator {
     let mut fermion_id = FermionOperator::new();
-    fermion_id.add_operator_product(
-        FermionProduct::new([], [])
-            .expect("Internal bug in add_operator_product for FermionOperator."),
-        1.0.into()
-    ).expect("Internal bug in FermionProduct::new");
+    fermion_id
+        .add_operator_product(
+            FermionProduct::new([], [])
+                .expect("Internal bug in add_operator_product for FermionOperator."),
+            1.0.into(),
+        )
+        .expect("Internal bug in FermionProduct::new");
     let mut jw_string_term = FermionOperator::new();
     jw_string_term
         .add_operator_product(
@@ -1013,11 +1015,13 @@ impl JordanWignerSpinToFermion for PlusMinusProduct {
     /// * Internal bug in `FermionProduct::new`
     fn jordan_wigner(&self) -> Self::Output {
         let mut fermion_operator = FermionOperator::new();
-        fermion_operator.add_operator_product(
-            FermionProduct::new([], [])
-                .expect("Internal bug in add_operator_product for FermionOperator."),
-            1.0.into()
-        ).expect("Internal bug in FermionProduct::new");
+        fermion_operator
+            .add_operator_product(
+                FermionProduct::new([], [])
+                    .expect("Internal bug in add_operator_product for FermionOperator."),
+                1.0.into(),
+            )
+            .expect("Internal bug in FermionProduct::new");
 
         for (index, op) in self.iter() {
             match op {
@@ -1059,12 +1063,11 @@ impl JordanWignerSpinToFermion for PlusMinusProduct {
     }
 }
 
-
 #[cfg(test)]
 mod test {
+    use super::*;
     use crate::fermions::{FermionOperator, FermionProduct};
     use crate::prelude::*;
-    use super::*;
     use qoqo_calculator::CalculatorComplex;
 
     #[test]
@@ -1072,10 +1075,10 @@ mod test {
         let fermion_id = FermionOperator::new();
         let fermion_number = FermionProduct::new([3], [3]).unwrap();
         let mut res = FermionOperator::new();
-        res.add_operator_product(fermion_number, CalculatorComplex::new(-2.0, 0.0)).unwrap();
+        res.add_operator_product(fermion_number, CalculatorComplex::new(-2.0, 0.0))
+            .unwrap();
         res = fermion_id + res;
 
         assert_eq!(_jw_string_term(&3), res);
     }
-    
-} 
+}

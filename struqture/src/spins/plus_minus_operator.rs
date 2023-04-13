@@ -11,9 +11,9 @@
 // limitations under the License.
 
 use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
-use crate::spins::{PlusMinusProduct, SpinHamiltonian};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
+use crate::spins::{PlusMinusProduct, SpinHamiltonian};
 use crate::{
     OperateOnDensityMatrix, OperateOnState, StruqtureError, StruqtureVersionSerializable,
     SymmetricIndex,
@@ -573,7 +573,7 @@ impl JordanWignerSpinToFermion for PlusMinusOperator {
     ///
     /// # Returns
     ///
-    /// `PlusMinusOperator` - The plus minus operator that results from the transformation.
+    /// `FermionOperator` - The fermion operator that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let mut out = FermionOperator::new();
         for pmp in self.keys() {
@@ -582,6 +582,7 @@ impl JordanWignerSpinToFermion for PlusMinusOperator {
         out
     }
 }
+
 #[cfg(test)]
 mod test {
     use super::*;

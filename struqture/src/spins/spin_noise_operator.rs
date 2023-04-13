@@ -163,7 +163,7 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError)` - The input contained identities, which are not allowed as Lindblad operators.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
     fn set(
         &mut self,
         key: Self::Index,
@@ -320,7 +320,6 @@ impl SpinLindbladNoiseOperator {
     /// # Returns
     ///
     /// * `Ok(())` - The noise was correctly added.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Number of spins in entry exceeds number of spins in system.
     /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
     pub fn add_noise_from_full_operators(
         &mut self,

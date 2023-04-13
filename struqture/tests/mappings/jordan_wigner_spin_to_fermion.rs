@@ -13,21 +13,31 @@
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::fermions::{
     FermionHamiltonian, FermionHamiltonianSystem, FermionLindbladNoiseOperator,
-    FermionLindbladNoiseSystem, FermionLindbladOpenSystem, FermionOperator, FermionProduct, FermionSystem,
+    FermionLindbladNoiseSystem, FermionLindbladOpenSystem, FermionOperator, FermionProduct,
+    FermionSystem,
 };
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct, SpinHamiltonian, SpinHamiltonianSystem, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem, SpinLindbladOpenSystem, SpinOperator, SpinSystem,
+    DecoherenceProduct, PauliProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator,
+    PlusMinusProduct, SpinHamiltonian, SpinHamiltonianSystem, SpinLindbladNoiseOperator,
+    SpinLindbladNoiseSystem, SpinLindbladOpenSystem, SpinOperator, SpinSystem,
 };
 
 #[test]
 fn test_jw_plusminus_product() {
     let mut pmp = PlusMinusProduct::new();
     let mut fo = FermionOperator::new();
+    fo.add_operator_product(
+        FermionProduct::new([], [])
+            .expect("Internal bug in add_operator_product for FermionOperator."),
+        1.0.into(),
+    )
+    .expect("Internal bug in FermionProduct::new");
 
-    // assert_eq!(pmp.jordan_wigner(), fo);
+    assert_eq!(pmp.jordan_wigner(), fo);
 
+    fo = FermionOperator::new();
     pmp = pmp.plus(0).minus(1).z(2);
     let fp1 = FermionProduct::new([1], [0]).unwrap();
     let fp2 = FermionProduct::new([1, 2], [0, 2]).unwrap();
@@ -56,22 +66,22 @@ fn test_jw_plusminus_operator() {
     assert_eq!(pmo.jordan_wigner(), jw_pair1 + jw_pair2);
 }
 
-// #[test]
-// fn test_jw_plusminus_noise_operator() {
-//     let mut pmno = PlusMinusLindbladNoiseOperator::new();
-//     let mut fno = FermionLindbladNoiseOperator::new();
+#[test]
+fn test_jw_plusminus_noise_operator() {
+    let mut pmno = PlusMinusLindbladNoiseOperator::new();
+    let mut fno = FermionLindbladNoiseOperator::new();
 
-//     assert_eq!(pmno.jordan_wigner(), fno);
+    assert_eq!(pmno.jordan_wigner(), fno);
 
-//     let pmp = PlusMinusProduct::new().plus(0);
-//     pmno.add_operator_product((pmp.clone(), pmp.clone()), CalculatorComplex::new(1.0, 0.0))
-//         .unwrap();
-//     let fp = FermionProduct::new([], [0]).unwrap();
-//     fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
-//         .unwrap();
+    let pmp = PlusMinusProduct::new().plus(0);
+    pmno.add_operator_product((pmp.clone(), pmp.clone()), CalculatorComplex::new(1.0, 0.0))
+        .unwrap();
+    let fp = FermionProduct::new([], [0]).unwrap();
+    fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
+        .unwrap();
 
-//     assert_eq!(pmno.jordan_wigner(), fno);
-// }
+    assert_eq!(pmno.jordan_wigner(), fno);
+}
 
 // #[test]
 // fn test_jw_pauli_product() {
