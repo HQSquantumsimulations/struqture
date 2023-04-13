@@ -83,50 +83,65 @@ fn test_jw_plusminus_noise_operator() {
     assert_eq!(pmno.jordan_wigner(), fno);
 }
 
-// #[test]
-// fn test_jw_pauli_product() {
-//     let mut pp = PauliProduct::new();
-//     let mut fo = FermionOperator::new();
+#[test]
+fn test_jw_pauli_product() {
+    let mut pp = PauliProduct::new();
+    let mut fo = FermionOperator::new();
+    fo.add_operator_product(
+        FermionProduct::new([], [])
+            .expect("Internal bug in add_operator_product for FermionOperator."),
+        1.0.into(),
+    )
+    .expect("Internal bug in FermionProduct::new");
 
-//     assert_eq!(pp.jordan_wigner, fo);
+    assert_eq!(pp.jordan_wigner(), fo);
 
-//     pp = pp.x(1).y(2).z(3);
+    fo = FermionOperator::new();
+    pp = pp.x(0).y(1).z(2);
 
-//     fo.add_operator_product(
-//         FermionProduct::new([], [0, 1]).unwrap(),
-//         CalculatorComplex::new(0.0, 1.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([1], [0]).unwrap(),
-//         CalculatorComplex::new(0.0, 1.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([0], [1]).unwrap(),
-//         CalculatorComplex::new(0.0, -1.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([0, 1], []).unwrap(),
-//         CalculatorComplex::new(0.0, 1.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([2], [0, 1, 2]).unwrap(),
-//         CalculatorComplex::new(0.0, -2.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([1, 2], [0, 2]).unwrap(),
-//         CalculatorComplex::new(0.0, 2.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([0, 2], [1, 2]).unwrap(),
-//         CalculatorComplex::new(0.0, -2.0),
-//     );
-//     fo.add_operator_product(
-//         FermionProduct::new([0, 1, 2], [2]).unwrap(),
-//         CalculatorComplex::new(0.0, -2.0),
-//     );
+    fo.add_operator_product(
+        FermionProduct::new([], [0, 1]).unwrap(),
+        CalculatorComplex::new(0.0, 1.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([1], [0]).unwrap(),
+        CalculatorComplex::new(0.0, 1.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([0], [1]).unwrap(),
+        CalculatorComplex::new(0.0, -1.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([0, 1], []).unwrap(),
+        CalculatorComplex::new(0.0, 1.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([2], [0, 1, 2]).unwrap(),
+        CalculatorComplex::new(0.0, -2.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([1, 2], [0, 2]).unwrap(),
+        CalculatorComplex::new(0.0, 2.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([0, 2], [1, 2]).unwrap(),
+        CalculatorComplex::new(0.0, -2.0),
+    )
+    .unwrap();
+    fo.add_operator_product(
+        FermionProduct::new([0, 1, 2], [2]).unwrap(),
+        CalculatorComplex::new(0.0, -2.0),
+    )
+    .unwrap();
 
-//     assert_eq!(pp.jordan_wigner(), fo);
-// }
+    assert_eq!(pp.jordan_wigner(), fo);
+}
 
 // #[test]
 // fn test_jw_spin_operator() {
