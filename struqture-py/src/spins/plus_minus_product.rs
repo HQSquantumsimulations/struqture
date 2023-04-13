@@ -252,19 +252,21 @@ impl PlusMinusProductWrapper {
         }
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// DEPRECATED: Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
     ///
-    /// Args:
-    ///     other (self): The object to concatenate self with.
+    /// This function is deprecated, please use `to_pauli_product_list`
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    pub fn to_pauli_product(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
+        self.to_pauli_product_list()
+    }
+
+    /// Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
     ///
-    /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
-    pub fn to_pauli_product(
-        &self,
-    ) -> PyResult<Vec<(PauliProductWrapper, CalculatorComplexWrapper)>> {
+    /// Returns:
+    ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    pub fn to_pauli_product_list(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
         let result: Vec<(PauliProduct, Complex64)> =
             Vec::<(PauliProduct, Complex64)>::from(self.internal.clone());
         let result_pyo3: Vec<(PauliProductWrapper, CalculatorComplexWrapper)> = result
@@ -280,22 +282,28 @@ impl PlusMinusProductWrapper {
                 )
             })
             .collect();
-        Ok(result_pyo3)
+        result_pyo3
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// DEPRECATED: Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
     ///
-    /// Args:
-    ///     other (self): The object to concatenate self with.
+    /// This function is deprecated, please use `to_decoherence_product_list`
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
-    ///
-    /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
+    ///     list[tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_decoherence_product(
         &self,
-    ) -> PyResult<Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)>> {
+    ) -> Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> {
+        self.to_decoherence_product_list()
+    }
+
+    /// Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
+    ///
+    /// Returns:
+    ///     list[tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    pub fn to_decoherence_product_list(
+        &self,
+    ) -> Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> {
         let result: Vec<(DecoherenceProduct, Complex64)> =
             Vec::<(DecoherenceProduct, Complex64)>::from(self.internal.clone());
         let result_pyo3: Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> = result
@@ -311,6 +319,6 @@ impl PlusMinusProductWrapper {
                 )
             })
             .collect();
-        Ok(result_pyo3)
+        result_pyo3
     }
 }
