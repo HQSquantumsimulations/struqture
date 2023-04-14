@@ -543,7 +543,8 @@ fn test_to_pp() {
         let pp_1 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
         let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "Y")).unwrap();
 
-        let result = pmp.call_method0("to_pauli_product").unwrap();
+        let result = pmp.call_method0("to_pauli_product_list").unwrap();
+        let result_deprecated = pmp.call_method0("to_pauli_product").unwrap();
         let comp = vec![
             (
                 pp_1,
@@ -558,8 +559,11 @@ fn test_to_pp() {
                 },
             ),
         ];
-        let equal = bool::extract(result.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (comp.clone(),)).unwrap()).unwrap();
         assert!(equal);
+        let equal_deprecated =
+            bool::extract(result_deprecated.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        assert!(equal_deprecated);
     })
 }
 
@@ -579,7 +583,8 @@ fn test_to_dp() {
         let pp_1 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
         let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "iY")).unwrap();
 
-        let result = pmp.call_method0("to_decoherence_product").unwrap();
+        let result = pmp.call_method0("to_decoherence_product_list").unwrap();
+        let result_deprecated = pmp.call_method0("to_decoherence_product").unwrap();
         let comp = vec![
             (
                 pp_1,
@@ -594,8 +599,11 @@ fn test_to_dp() {
                 },
             ),
         ];
-        let equal = bool::extract(result.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (comp.clone(),)).unwrap()).unwrap();
         assert!(equal);
+        let equal_deprecated =
+            bool::extract(result_deprecated.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        assert!(equal_deprecated);
     })
 }
 

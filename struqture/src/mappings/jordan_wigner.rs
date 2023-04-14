@@ -39,6 +39,7 @@ pub trait JordanWignerSpinToFermion {
     /// For a SpinHamiltonian it will be a FermionHamiltonian
     /// For a SpinLindbladNoiseOperator it will be a FermionLindbladNoiseOperator
     /// For a SpinLindbladOpenSystem it will be a FermionLindbladOpenSystem
+
     type Output;
 
     /// Transform the given fermionic object into a spin object using
