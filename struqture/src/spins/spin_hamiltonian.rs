@@ -591,17 +591,14 @@ impl JordanWignerSpinToFermion for SpinHamiltonian {
     ///
     /// # Panics
     ///
-    /// * Internal bug in jordan_wigner()
-    /// * Internal bug in add() method for FermionHamiltonian
+    /// * Failed conversion of FermionOperator into FermionHamiltonian. Internal bug in jordan_wigner().
     fn jordan_wigner(&self) -> Self::Output {
         let mut out = FermionOperator::new();
-
         for pp in self.keys() {
             let mut new_term = pp.jordan_wigner();
             new_term = new_term * self.get(pp);
             out = out + new_term;
         }
-
         let filtered_fermion_operator = FermionOperator::from_iter(out.into_iter().filter(|x| {
             x.0.is_natural_hermitian() || x.0.creators().min() < x.0.annihilators().min()
         }));

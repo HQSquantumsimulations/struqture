@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{OperateOnSpins, SpinOperator};
+use crate::fermions::FermionOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::DecoherenceProduct;
 use crate::{
     OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
@@ -512,6 +514,26 @@ impl From<SpinOperator> for DecoherenceOperator {
             let (new_prod, new_coeff) = DecoherenceProduct::spin_to_decoherence(prod.clone());
             out.add_operator_product(new_prod, op.get(prod).clone() * new_coeff)
                 .expect("Internal error in add_operator_product");
+        }
+        out
+    }
+}
+
+impl JordanWignerSpinToFermion for DecoherenceOperator {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a DecoherenceOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermionic operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionOperator::new();
+        for dp in self.keys() {
+            out = out + dp.jordan_wigner() * self.get(dp);
         }
         out
     }

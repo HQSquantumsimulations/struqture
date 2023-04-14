@@ -324,7 +324,7 @@ impl JordanWignerSpinToFermion for SpinLindbladOpenSystem {
     ///
     /// # Panics
     ///
-    /// * Internal error in jordan_wigner transformation for SpinHamiltonian.
+    /// * Internal error in jordan_wigner() for SpinHamiltonianSystem or SpinLindbladNoiseSystem.
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();

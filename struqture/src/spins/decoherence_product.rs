@@ -1020,7 +1020,7 @@ impl JordanWignerSpinToFermion for DecoherenceProduct {
     ///
     /// # Returns
     ///
-    /// `FermionOperator` - The fermionic noise operator that results from the transformation.
+    /// `FermionOperator` - The fermionic operator that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let pp = DecoherenceProduct::decoherence_to_spin(self.clone());
         pp.0.jordan_wigner() * pp.1

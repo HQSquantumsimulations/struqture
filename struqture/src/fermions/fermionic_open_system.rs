@@ -273,6 +273,6 @@ impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
         SpinLindbladOpenSystem::group(jw_system, jw_noise)
-            .expect("Internal bug in jordan_wigner() for FermionHamiltonianSystem or FermionLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of qubits in the spin system.")
+            .expect("Internal bug in jordan_wigner() for FermionHamiltonianSystem or FermionLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

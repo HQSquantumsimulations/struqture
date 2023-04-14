@@ -29,6 +29,10 @@ use tinyvec::{TinyVec, TinyVecIterator};
 
 use super::{DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator};
 
+const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str =
+    "Internal bug in add_operator_product for FermionOperator.";
+const INTERNAL_BUG_NEW_FERMION_PRODUCT: &str = "Internal bug in FermionProduct::new";
+
 /// Single Spin operators for PlusMinusProducts:
 ///
 /// I: identity matrix
@@ -982,18 +986,17 @@ fn _jw_string_term(i: &usize) -> FermionOperator {
     let mut fermion_id = FermionOperator::new();
     fermion_id
         .add_operator_product(
-            FermionProduct::new([], [])
-                .expect("Internal bug in add_operator_product for FermionOperator."),
+            FermionProduct::new([], []).expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT),
             1.0.into(),
         )
-        .expect("Internal bug in FermionProduct::new");
+        .expect(INTERNAL_BUG_NEW_FERMION_PRODUCT);
     let mut jw_string_term = FermionOperator::new();
     jw_string_term
         .add_operator_product(
-            FermionProduct::new([*i], [*i]).expect("Internal bug in FermionProduct::new"),
+            FermionProduct::new([*i], [*i]).expect(INTERNAL_BUG_NEW_FERMION_PRODUCT),
             CalculatorComplex::new(-2.0, 0.0),
         )
-        .expect("Internal bug in add_operator_product for FermionOperator.");
+        .expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT);
     fermion_id + jw_string_term
 }
 
@@ -1017,11 +1020,10 @@ impl JordanWignerSpinToFermion for PlusMinusProduct {
         let mut fermion_operator = FermionOperator::new();
         fermion_operator
             .add_operator_product(
-                FermionProduct::new([], [])
-                    .expect("Internal bug in add_operator_product for FermionOperator."),
+                FermionProduct::new([], []).expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT),
                 1.0.into(),
             )
-            .expect("Internal bug in FermionProduct::new");
+            .expect(INTERNAL_BUG_NEW_FERMION_PRODUCT);
 
         for (index, op) in self.iter() {
             match op {
@@ -1033,10 +1035,10 @@ impl JordanWignerSpinToFermion for PlusMinusProduct {
                     last_term
                         .add_operator_product(
                             FermionProduct::new([], [*index])
-                                .expect("Internal bug in FermionProduct::new"),
+                                .expect(INTERNAL_BUG_NEW_FERMION_PRODUCT),
                             1.0.into(),
                         )
-                        .expect("Internal bug in add_operator_product for FermionOperator.");
+                        .expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT);
                     fermion_operator = fermion_operator * last_term;
                 }
                 SinglePlusMinusOperator::Minus => {
@@ -1047,10 +1049,10 @@ impl JordanWignerSpinToFermion for PlusMinusProduct {
                     last_term
                         .add_operator_product(
                             FermionProduct::new([*index], [])
-                                .expect("Internal bug in FermionProduct::new"),
+                                .expect(INTERNAL_BUG_NEW_FERMION_PRODUCT),
                             1.0.into(),
                         )
-                        .expect("Internal bug in add_operator_product for FermionOperator.");
+                        .expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT);
                     fermion_operator = fermion_operator * last_term;
                 }
                 SinglePlusMinusOperator::Z => {

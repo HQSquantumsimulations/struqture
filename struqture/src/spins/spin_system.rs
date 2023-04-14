@@ -559,13 +559,12 @@ impl JordanWignerSpinToFermion for SpinSystem {
     ///
     /// # Panics
     ///
-    /// * Internal bug in jordan_wigner()
-    /// * Internal bug in add() method for FermionSystem
+    /// * Internal bug in jordan_wigner() for SpinSystem.
     fn jordan_wigner(&self) -> Self::Output {
         FermionSystem::from_operator(
             self.operator().jordan_wigner(),
             Some(self.number_spins()),
         )
-            .expect("Internal bug in jordan_wigner for SpinSystem. The number of modes in the resulting FermionSystem should equal the number of spins of the SpinSystem.")
+            .expect("Internal bug in jordan_wigner() for SpinSystem. The number of modes in the resulting FermionSystem should equal the number of spins of the SpinSystem.")
     }
 }

@@ -11,29 +11,17 @@
 // limitations under the License.
 
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
-use struqture::fermions::{
-    FermionHamiltonian, FermionHamiltonianSystem, FermionLindbladNoiseOperator,
-    FermionLindbladNoiseSystem, FermionLindbladOpenSystem, FermionOperator, FermionProduct,
-    FermionSystem,
-};
+use struqture::fermions::*;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::prelude::*;
-use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator,
-    PlusMinusProduct, SpinHamiltonian, SpinHamiltonianSystem, SpinLindbladNoiseOperator,
-    SpinLindbladNoiseSystem, SpinLindbladOpenSystem, SpinOperator, SpinSystem,
-};
+use struqture::spins::*;
 
 #[test]
 fn test_jw_plusminus_product() {
     let mut pmp = PlusMinusProduct::new();
     let mut fo = FermionOperator::new();
-    fo.add_operator_product(
-        FermionProduct::new([], [])
-            .expect("Internal bug in add_operator_product for FermionOperator."),
-        1.0.into(),
-    )
-    .expect("Internal bug in FermionProduct::new");
+    fo.add_operator_product(FermionProduct::new([], []).unwrap(), 1.0.into())
+        .unwrap();
 
     assert_eq!(pmp.jordan_wigner(), fo);
 
@@ -89,15 +77,16 @@ fn test_jw_decoherence_product() {
 }
 
 #[test]
+fn test_jw_decoherence_operator() {
+    // TODO
+}
+
+#[test]
 fn test_jw_pauli_product() {
     let mut pp = PauliProduct::new();
     let mut fo = FermionOperator::new();
-    fo.add_operator_product(
-        FermionProduct::new([], [])
-            .expect("Internal bug in add_operator_product for FermionOperator."),
-        1.0.into(),
-    )
-    .expect("Internal bug in FermionProduct::new");
+    fo.add_operator_product(FermionProduct::new([], []).unwrap(), 1.0.into())
+        .unwrap();
 
     assert_eq!(pp.jordan_wigner(), fo);
 
@@ -175,12 +164,14 @@ fn test_jw_spin_hamiltonian() {
     let jw_pp1 = pp1.jordan_wigner();
     let jw_pp2 = pp2.jordan_wigner();
 
-    let filtered_jw_pp1 = FermionOperator::from_iter(jw_pp1.into_iter().filter(|x| {
-        (*x).0.is_natural_hermitian() || (*x).0.creators().min() < (*x).0.annihilators().min()
-    }));
-    let filtered_jw_pp2 = FermionOperator::from_iter(jw_pp2.into_iter().filter(|x| {
-        (*x).0.is_natural_hermitian() || (*x).0.creators().min() < (*x).0.annihilators().min()
-    }));
+    let filtered_jw_pp1 =
+        FermionOperator::from_iter(jw_pp1.into_iter().filter(|x| {
+            x.0.is_natural_hermitian() || x.0.creators().min() < x.0.annihilators().min()
+        }));
+    let filtered_jw_pp2 =
+        FermionOperator::from_iter(jw_pp2.into_iter().filter(|x| {
+            x.0.is_natural_hermitian() || x.0.creators().min() < x.0.annihilators().min()
+        }));
     let jw_pp1_hamiltonian = FermionHamiltonian::try_from(filtered_jw_pp1).unwrap();
     let jw_pp2_hamiltonian = FermionHamiltonian::try_from(filtered_jw_pp2).unwrap();
     let res = (jw_pp1_hamiltonian * CalculatorFloat::from(1.0)

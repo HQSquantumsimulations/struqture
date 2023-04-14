@@ -775,7 +775,6 @@ impl JordanWignerSpinToFermion for PauliProduct {
     /// # Panics
     ///
     /// * Internal bug in `add_operator_product`
-    /// * Internal bug in `FermionProduct::new`
     fn jordan_wigner(&self) -> Self::Output {
         let mut spin_operator = SpinOperator::new();
         spin_operator
