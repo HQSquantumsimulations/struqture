@@ -1,4 +1,4 @@
-// Copyright © 2021-2022 HQS Quantum Simulations GmbH. All Rights Reserved.
+// Copyright © 2020-2022 HQS Quantum Simulations GmbH. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License. You may obtain a copy of the License at
@@ -10,6 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::SingleSpinOperator;
 use crate::{CooSparseMatrix, CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
@@ -1005,5 +1007,22 @@ impl Extend<(usize, SingleDecoherenceOperator)> for DecoherenceProduct {
             pp = pp.set_pauli(index, pauli);
         }
         *self = pp;
+    }
+}
+
+impl JordanWignerSpinToFermion for DecoherenceProduct {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a DecoherenceProduct.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermionic noise operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let pp = DecoherenceProduct::decoherence_to_spin(self.clone());
+        pp.0.jordan_wigner() * pp.1
     }
 }

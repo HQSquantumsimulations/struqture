@@ -33,7 +33,7 @@ use test_case::test_case;
 fn new_system() {
     let system = SpinHamiltonianSystem::new(Some(1));
     assert!(system.is_empty());
-    assert_eq!(system.operator(), &SpinHamiltonian::default());
+    assert_eq!(system.hamiltonian(), &SpinHamiltonian::default());
     assert_eq!(system.number_spins(), 1_usize);
 }
 
@@ -41,8 +41,8 @@ fn new_system() {
 #[test]
 fn new_system_none() {
     let system = SpinHamiltonianSystem::new(None);
-    assert!(system.operator().is_empty());
-    assert_eq!(system.operator(), &SpinHamiltonian::default());
+    assert!(system.hamiltonian().is_empty());
+    assert_eq!(system.hamiltonian(), &SpinHamiltonian::default());
     assert_eq!(system.number_spins(), 0_usize);
 }
 
@@ -175,16 +175,16 @@ fn from_spin_hamiltonian_none() {
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), None).unwrap()
     );
     assert_eq!(
-        system.operator(),
+        system.hamiltonian(),
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), None)
             .unwrap()
-            .operator()
+            .hamiltonian()
     );
     assert_eq!(
         &sh,
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), None)
             .unwrap()
-            .operator()
+            .hamiltonian()
     );
 }
 
@@ -205,16 +205,16 @@ fn from_spin_hamiltonian_some() {
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), Some(2)).unwrap()
     );
     assert_eq!(
-        system.operator(),
+        system.hamiltonian(),
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), Some(2))
             .unwrap()
-            .operator()
+            .hamiltonian()
     );
     assert_eq!(
         &sh,
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), Some(2))
             .unwrap()
-            .operator()
+            .hamiltonian()
     );
     assert_eq!(
         SpinHamiltonianSystem::from_hamiltonian(sh.clone(), Some(0)),

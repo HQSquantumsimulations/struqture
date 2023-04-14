@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{OperateOnSpins, SingleDecoherenceOperator, ToSparseMatrixSuperOperator};
+use crate::fermions::FermionLindbladNoiseOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{DecoherenceOperator, DecoherenceProduct};
 use crate::{
     CooSparseMatrix, OperateOnDensityMatrix, SpinIndex, StruqtureError,
@@ -777,6 +779,35 @@ fn add_lindblad_terms(
         }
     }
     Ok(())
+}
+
+impl JordanWignerSpinToFermion for SpinLindbladNoiseOperator {
+    type Output = FermionLindbladNoiseOperator;
+
+    /// Implements JordanWignerSpinToFermion for a SpinLindbladNoiseOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionLindbladNoiseOperator` - The fermionic noise operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionLindbladNoiseOperator::new();
+
+        for key in self.keys() {
+            let fermion_operator_left = key.0.jordan_wigner();
+            let fermion_operator_right = key.1.jordan_wigner();
+
+            out.add_noise_from_full_operators(
+                &fermion_operator_left,
+                &fermion_operator_right,
+                self.get(key).into(),
+            )
+            .expect("Internal bug in add_noise_from_full_operators");
+        }
+        out
+    }
 }
 
 #[cfg(test)]

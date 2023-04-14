@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::SpinLindbladNoiseSystem;
+use crate::fermions::FermionLindbladOpenSystem;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixSuperOperator};
 use crate::{CooSparseMatrix, OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use num_complex::Complex64;
@@ -305,5 +307,28 @@ impl fmt::Display for SpinLindbladOpenSystem {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinLindbladOpenSystem {
+    type Output = FermionLindbladOpenSystem;
+
+    /// Implements JordanWignerSpinToSpin for a SpinLindbladOpenSystem.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionLindbladOpenSystem` - The fermion open system that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner transformation for SpinHamiltonian.
+    fn jordan_wigner(&self) -> Self::Output {
+        let jw_system = self.system().jordan_wigner();
+        let jw_noise = self.noise().jordan_wigner();
+        FermionLindbladOpenSystem::group(jw_system, jw_noise)
+            .expect("Internal bug in jordan_wigner() for SpinHamiltonianSystem or SpinLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

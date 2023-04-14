@@ -538,6 +538,7 @@ impl JordanWignerFermionToSpin for FermionHamiltonianSystem {
     /// # Returns
     ///
     /// `SpinHamiltonianSystem` - The spin noise operator that results from the transformation.
+    ///
     /// # Panics
     ///
     /// * Internal error in jordan_wigner transformation for FermionHamiltonian.

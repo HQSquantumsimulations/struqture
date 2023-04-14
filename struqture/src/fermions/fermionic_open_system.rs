@@ -268,10 +268,11 @@ impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// `SpinLindbladOpenSystem` - The spin noise operator that results from the transformation.
+    /// `SpinLindbladOpenSystem` - The spin open system that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
-        SpinLindbladOpenSystem::group(jw_system, jw_noise).unwrap()
+        SpinLindbladOpenSystem::group(jw_system, jw_noise)
+            .expect("Internal bug in jordan_wigner() for FermionHamiltonianSystem or FermionLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of qubits in the spin system.")
     }
 }

@@ -1067,7 +1067,6 @@ impl JordanWignerSpinToFermion for PlusMinusProduct {
 mod test {
     use super::*;
     use crate::fermions::{FermionOperator, FermionProduct};
-    use crate::prelude::*;
     use qoqo_calculator::CalculatorComplex;
 
     #[test]
