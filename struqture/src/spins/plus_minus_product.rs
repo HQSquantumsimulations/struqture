@@ -1073,7 +1073,13 @@ mod test {
 
     #[test]
     fn test_jw_string_term() {
-        let fermion_id = FermionOperator::new();
+        let mut fermion_id = FermionOperator::new();
+        fermion_id
+            .add_operator_product(
+                FermionProduct::new([], []).expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT),
+                1.0.into(),
+            )
+            .expect(INTERNAL_BUG_NEW_FERMION_PRODUCT);
         let fermion_number = FermionProduct::new([3], [3]).unwrap();
         let mut res = FermionOperator::new();
         res.add_operator_product(fermion_number, CalculatorComplex::new(-2.0, 0.0))
