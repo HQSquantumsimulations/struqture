@@ -72,17 +72,27 @@ fn test_jw_plusminus_noise_operator() {
 }
 
 #[test]
-fn test_jw_decoherence_product() {
-    // TODO
-}
-
-#[test]
 fn test_jw_decoherence_operator() {
-    // TODO
+    let dp1 = DecoherenceProduct::new().z(0).iy(1).x(2);
+    let dp2 = DecoherenceProduct::new().z(0).iy(1).iy(2);
+    let mut dec_op = DecoherenceOperator::new();
+    let cc1 = CalculatorComplex::new(1.0, 1.0);
+    let cc2 = CalculatorComplex::new(2.0, -1.0);
+    dec_op
+        .add_operator_product(dp1.clone(), cc1.clone())
+        .unwrap();
+    dec_op
+        .add_operator_product(dp2.clone(), cc2.clone())
+        .unwrap();
+    let jw_dp1 = dp1.jordan_wigner();
+    let jw_dp2 = dp2.jordan_wigner();
+    let res = jw_dp1 * cc1 + jw_dp2 * cc2;
+
+    assert_eq!(dec_op.jordan_wigner(), res);
 }
 
 #[test]
-fn test_jw_pauli_product() {
+fn test_jw_pauli_decoherence_product() {
     let mut pp = PauliProduct::new();
     let mut fo = FermionOperator::new();
     fo.add_operator_product(FermionProduct::new([], []).unwrap(), 1.0.into())
@@ -90,6 +100,7 @@ fn test_jw_pauli_product() {
 
     assert_eq!(pp.jordan_wigner(), fo);
 
+    let dp = DecoherenceProduct::new().x(0).iy(1).z(2);
     fo = FermionOperator::new();
     pp = pp.x(0).y(1).z(2);
 
@@ -135,6 +146,7 @@ fn test_jw_pauli_product() {
     .unwrap();
 
     assert_eq!(pp.jordan_wigner(), fo);
+    assert_eq!(dp.jordan_wigner(), fo * CalculatorComplex::new(0.0, 1.0));
 }
 
 #[test]
