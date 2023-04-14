@@ -84,6 +84,11 @@ fn test_jw_plusminus_noise_operator() {
 }
 
 #[test]
+fn test_jw_decoherence_product() {
+    // TODO
+}
+
+#[test]
 fn test_jw_pauli_product() {
     let mut pp = PauliProduct::new();
     let mut fo = FermionOperator::new();
@@ -143,58 +148,64 @@ fn test_jw_pauli_product() {
     assert_eq!(pp.jordan_wigner(), fo);
 }
 
-// #[test]
-// fn test_jw_spin_operator() {
-//     let mut so = SpinOperator::new();
-//     let pp1 = PauliProduct::new().z(0).y(1).x(2);
-//     let pp2 = PauliProduct::new().y(1).x(2).z(3);
-//     let cc1 = CalculatorComplex::new(1.0, 2.0);
-//     let cc2 = CalculatorComplex::new(2.0, 1.0);
-//     so.add_operator_product(pp1.clone(), cc1.clone());
-//     so.add_operator_product(pp2.clone(), cc2.clone());
-//     let jw_pair1 = pp1.jordan_wigner() * cc1;
-//     let jw_pair2 = pp2.jordan_wigner() * cc2;
+#[test]
+fn test_jw_spin_operator() {
+    let mut so = SpinOperator::new();
+    let pp1 = PauliProduct::new().z(0).y(1).x(2);
+    let pp2 = PauliProduct::new().y(1).x(2).z(3);
+    let cc1 = CalculatorComplex::new(1.0, 2.0);
+    let cc2 = CalculatorComplex::new(2.0, 1.0);
+    so.add_operator_product(pp1.clone(), cc1.clone()).unwrap();
+    so.add_operator_product(pp2.clone(), cc2.clone()).unwrap();
+    let jw_pair1 = pp1.jordan_wigner() * cc1;
+    let jw_pair2 = pp2.jordan_wigner() * cc2;
 
-//     assert_eq!(so.jordan_wigner(), jw_pair1 + jw_pair2);
-// }
+    assert_eq!(so.jordan_wigner(), jw_pair1 + jw_pair2);
+}
 
-// #[test]
-// fn test_jw_spin_hamiltonian() {
-//     let mut sh = SpinHamiltonian::new();
+#[test]
+fn test_jw_spin_hamiltonian() {
+    let mut sh = SpinHamiltonian::new();
 
-//     let pp1 = PauliProduct::new().z(0).y(1).x(2);
-//     let pp2 = PauliProduct::new().y(1).x(2).z(3);
-//     sh.add_operator_product(pp1.clone(), 1.0.into());
-//     sh.add_operator_product(pp2.clone(), 2.0.into());
+    let pp1 = PauliProduct::new().z(0).y(1).x(2);
+    let pp2 = PauliProduct::new().y(1).x(2).z(3);
+    sh.add_operator_product(pp1.clone(), 1.0.into()).unwrap();
+    sh.add_operator_product(pp2.clone(), 2.0.into()).unwrap();
 
-//     let jw_pp1 = pp1.jordan_wigner();
-//     let jw_pp2 = pp2.jordan_wigner();
-//     jw_pp1_hamiltonian = FermionHamiltonian::try_from(jw_pp1);
-//     jw_pp2_hamiltonian = FermionHamiltonian::try_from(jw_pp2);
+    let jw_pp1 = pp1.jordan_wigner();
+    let jw_pp2 = pp2.jordan_wigner();
 
-//     assert_eq!(
-//         sh.jordan_wigner(),
-//         jw_pp1_hamiltonian * CalculatorFloat::from(1.0)
-//             + jw_pp2_hamiltonian * CalculatorFloat::from(2.0)
-//     );
-// }
+    let filtered_jw_pp1 = FermionOperator::from_iter(jw_pp1.into_iter().filter(|x| {
+        (*x).0.is_natural_hermitian() || (*x).0.creators().min() < (*x).0.annihilators().min()
+    }));
+    let filtered_jw_pp2 = FermionOperator::from_iter(jw_pp2.into_iter().filter(|x| {
+        (*x).0.is_natural_hermitian() || (*x).0.creators().min() < (*x).0.annihilators().min()
+    }));
+    let jw_pp1_hamiltonian = FermionHamiltonian::try_from(filtered_jw_pp1).unwrap();
+    let jw_pp2_hamiltonian = FermionHamiltonian::try_from(filtered_jw_pp2).unwrap();
+    let res = (jw_pp1_hamiltonian * CalculatorFloat::from(1.0)
+        + jw_pp2_hamiltonian * CalculatorFloat::from(2.0))
+    .unwrap();
 
-// #[test]
-// fn test_jw_spin_noise_operator() {
-//     let mut fno = FermionLindbladNoiseOperator::new();
-//     let mut sno = SpinLindbladNoiseOperator::new();
+    assert_eq!(sh.jordan_wigner(), res);
+}
 
-//     assert_eq!(sno.jordan_wigner(), fno);
+#[test]
+fn test_jw_spin_noise_operator() {
+    let mut fno = FermionLindbladNoiseOperator::new();
+    let mut sno = SpinLindbladNoiseOperator::new();
 
-//     let fp = FermionProduct::new([0], [0]).unwrap();
-//     fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
-//         .unwrap();
-//     let dp = DecoherenceProduct::new().z(0);
-//     sno.add_operator_product((dp.clone(), dp.clone()), CalculatorComplex::new(0.25, 0.0))
-//         .unwrap();
+    assert_eq!(sno.jordan_wigner(), fno);
 
-//     assert_eq!(sno.jordan_wigner(), fno);
-// }
+    let fp = FermionProduct::new([0], [0]).unwrap();
+    fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
+        .unwrap();
+    let dp = DecoherenceProduct::new().z(0);
+    sno.add_operator_product((dp.clone(), dp.clone()), CalculatorComplex::new(0.25, 0.0))
+        .unwrap();
+
+    assert_eq!(sno.jordan_wigner(), fno);
+}
 
 // #[test]
 // fn test_jw_spin_systems() {
