@@ -166,7 +166,6 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
     /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
-
     fn set(
         &mut self,
         key: Self::Index,
