@@ -265,7 +265,7 @@ impl SpinHamiltonianSystem {
     pub fn operator(&self) -> &SpinHamiltonian {
         &self.hamiltonian
     }
-    
+
     /// Returns the SpinHamiltonian of the SpinHamiltonianSystem.
     ///
     /// # Returns
