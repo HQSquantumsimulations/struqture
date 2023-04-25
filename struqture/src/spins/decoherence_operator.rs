@@ -532,8 +532,8 @@ impl JordanWignerSpinToFermion for DecoherenceOperator {
     /// `FermionOperator` - The fermionic operator that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let mut out = FermionOperator::new();
-        for dp in self.keys() {
-            out = out + dp.jordan_wigner() * self.get(dp);
+        for (dp, value) in self.iter() {
+            out = out + dp.jordan_wigner() * value;
         }
         out
     }

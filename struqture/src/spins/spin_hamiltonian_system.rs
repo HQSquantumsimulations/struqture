@@ -261,6 +261,16 @@ impl SpinHamiltonianSystem {
     /// # Returns
     ///
     /// * `&SpinHamiltonian` - The SpinHamiltonian of the SpinHamiltonianSystem.
+    #[deprecated(note = "Use the hamiltonian() method instead.")]
+    pub fn operator(&self) -> &SpinHamiltonian {
+        &self.hamiltonian
+    }
+    
+    /// Returns the SpinHamiltonian of the SpinHamiltonianSystem.
+    ///
+    /// # Returns
+    ///
+    /// * `&SpinHamiltonian` - The SpinHamiltonian of the SpinHamiltonianSystem.
     pub fn hamiltonian(&self) -> &SpinHamiltonian {
         &self.hamiltonian
     }
