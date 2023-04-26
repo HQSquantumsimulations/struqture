@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{DecoherenceProduct, ToSparseMatrixSuperOperator};
+use crate::fermions::FermionLindbladNoiseSystem;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, SpinIndex, SpinLindbladNoiseOperator};
 use crate::{CooSparseMatrix, OperateOnDensityMatrix, StruqtureError};
 use num_complex::Complex64;
@@ -528,5 +530,29 @@ impl fmt::Display for SpinLindbladNoiseSystem {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinLindbladNoiseSystem {
+    type Output = FermionLindbladNoiseSystem;
+
+    /// Implements JordanWignerSpinToSpin for a SpinLindbladNoiseSystem.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionLindbladNoiseSystem` - The fermion noise system that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner() for SpinLindbladNoiseOperator.
+    fn jordan_wigner(&self) -> Self::Output {
+        FermionLindbladNoiseSystem::from_operator(
+            self.operator().jordan_wigner(),
+            Some(self.number_spins()),
+        )
+            .expect("Internal bug in jordan_wigner() for SpinLindbladNoiseOperator. The number of modes in the resulting fermionic noise operator should equal the number of spins of the spin noise operator.")
     }
 }

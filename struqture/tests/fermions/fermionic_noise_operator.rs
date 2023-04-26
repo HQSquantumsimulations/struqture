@@ -17,7 +17,7 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
-use struqture::fermions::{FermionLindbladNoiseOperator, FermionProduct};
+use struqture::fermions::{FermionLindbladNoiseOperator, FermionOperator, FermionProduct};
 use struqture::{ModeIndex, OperateOnDensityMatrix, OperateOnModes};
 use test_case::test_case;
 
@@ -334,6 +334,63 @@ fn mul_so_cf() {
     let _ = so_0_1.add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(6.0));
 
     assert_eq!(so_0 * CalculatorFloat::from(3.0), so_0_1);
+}
+
+// Test the add_noise_from_full_operators function of the FermionLindbladNoiseOperator
+#[test]
+fn internal_map_add_noise_from_full_operators() {
+    let mut left = FermionOperator::new();
+    left.add_operator_product(FermionProduct::new([0], [1]).unwrap(), 2.0.into())
+        .unwrap();
+    left.add_operator_product(FermionProduct::new([1], [2]).unwrap(), 3.0.into())
+        .unwrap();
+
+    let mut right = FermionOperator::new();
+    right
+        .add_operator_product(
+            FermionProduct::new([1], [2]).unwrap(),
+            CalculatorComplex::new(1.0, 1.0),
+        )
+        .unwrap();
+    right
+        .add_operator_product(
+            FermionProduct::new([2], [3]).unwrap(),
+            CalculatorComplex::new(3.0, 1.0),
+        )
+        .unwrap();
+
+    let mut flno = FermionLindbladNoiseOperator::new();
+    flno.add_noise_from_full_operators(&left, &right, 1.0.into())
+        .unwrap();
+
+    assert_eq!(
+        flno.get(&(
+            FermionProduct::new([1], [2]).unwrap(),
+            FermionProduct::new([1], [2]).unwrap(),
+        )),
+        &CalculatorComplex::new(3.0, -3.0)
+    );
+    assert_eq!(
+        flno.get(&(
+            FermionProduct::new([0], [1]).unwrap(),
+            FermionProduct::new([2], [3]).unwrap(),
+        )),
+        &CalculatorComplex::new(6.0, -2.0)
+    );
+    assert_eq!(
+        flno.get(&(
+            FermionProduct::new([0], [1]).unwrap(),
+            FermionProduct::new([1], [2]).unwrap(),
+        )),
+        &CalculatorComplex::new(2.0, -2.0)
+    );
+    assert_eq!(
+        flno.get(&(
+            FermionProduct::new([1], [2]).unwrap(),
+            FermionProduct::new([2], [3]).unwrap(),
+        )),
+        &CalculatorComplex::new(9.0, -3.0)
+    );
 }
 
 // Test the Iter traits of FermionLindbladNoiseOperator: into_iter, from_iter and extend
