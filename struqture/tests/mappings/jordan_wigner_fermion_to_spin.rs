@@ -32,13 +32,13 @@ fn test_jw_fermion_product() {
     let pp_3 = PauliProduct::new().y(1).y(2);
     let pp_4 = PauliProduct::new().x(1).x(2);
     let mut so = SpinOperator::new();
-    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.0, -0.25))
+    so.add_operator_product(pp_1, CalculatorComplex::new(0.0, -0.25))
         .unwrap();
-    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.0, 0.25))
+    so.add_operator_product(pp_2, CalculatorComplex::new(0.0, 0.25))
         .unwrap();
-    so.add_operator_product(pp_3.clone(), CalculatorComplex::new(0.25, 0.0))
+    so.add_operator_product(pp_3, CalculatorComplex::new(0.25, 0.0))
         .unwrap();
-    so.add_operator_product(pp_4.clone(), CalculatorComplex::new(0.25, 0.0))
+    so.add_operator_product(pp_4, CalculatorComplex::new(0.25, 0.0))
         .unwrap();
 
     assert_eq!(fp.jordan_wigner(), so);
@@ -47,7 +47,7 @@ fn test_jw_fermion_product() {
     let mut so = SpinOperator::new();
     let mut id = PauliProduct::new();
     id = id.set_pauli(0, SingleSpinOperator::Identity);
-    so.add_operator_product(id.clone(), CalculatorComplex::new(1.0, 0.0))
+    so.add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
         .unwrap();
 
     assert_eq!(fp.jordan_wigner(), so)
@@ -59,9 +59,9 @@ fn test_jw_hermitian_fermion_product() {
     let pp_1 = PauliProduct::new().y(1).y(2);
     let pp_2 = PauliProduct::new().x(1).x(2);
     let mut so = SpinHamiltonian::new();
-    so.add_operator_product(pp_1.clone(), CalculatorFloat::from(0.5))
+    so.add_operator_product(pp_1, CalculatorFloat::from(0.5))
         .unwrap();
-    so.add_operator_product(pp_2.clone(), CalculatorFloat::from(0.5))
+    so.add_operator_product(pp_2, CalculatorFloat::from(0.5))
         .unwrap();
 
     assert_eq!(hfp.jordan_wigner(), so);
@@ -70,7 +70,7 @@ fn test_jw_hermitian_fermion_product() {
     let mut so = SpinHamiltonian::new();
     let mut id = PauliProduct::new();
     id = id.set_pauli(0, SingleSpinOperator::Identity);
-    so.add_operator_product(id.clone(), 1.0.into()).unwrap();
+    so.add_operator_product(id, 1.0.into()).unwrap();
 
     assert_eq!(hfp.jordan_wigner(), so);
 }
@@ -123,10 +123,10 @@ fn test_jw_fermion_noise_operator() {
     assert_eq!(fno.jordan_wigner(), sno);
 
     let fp = FermionProduct::new([0], [0]).unwrap();
-    fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
+    fno.add_operator_product((fp.clone(), fp), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
     let dp = DecoherenceProduct::new().z(0);
-    sno.add_operator_product((dp.clone(), dp.clone()), CalculatorComplex::new(0.25, 0.0))
+    sno.add_operator_product((dp.clone(), dp), CalculatorComplex::new(0.25, 0.0))
         .unwrap();
 
     assert_eq!(fno.jordan_wigner(), sno);

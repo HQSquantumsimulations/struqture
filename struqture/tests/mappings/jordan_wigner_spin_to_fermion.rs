@@ -62,10 +62,10 @@ fn test_jw_plusminus_noise_operator() {
     assert_eq!(pmno.jordan_wigner(), fno);
 
     let pmp = PlusMinusProduct::new().plus(0);
-    pmno.add_operator_product((pmp.clone(), pmp.clone()), CalculatorComplex::new(1.0, 0.0))
+    pmno.add_operator_product((pmp.clone(), pmp), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
     let fp = FermionProduct::new([], [0]).unwrap();
-    fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
+    fno.add_operator_product((fp.clone(), fp), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
 
     assert_eq!(pmno.jordan_wigner(), fno);
@@ -201,10 +201,10 @@ fn test_jw_spin_noise_operator() {
     assert_eq!(sno.jordan_wigner(), fno);
 
     let fp = FermionProduct::new([0], [0]).unwrap();
-    fno.add_operator_product((fp.clone(), fp.clone()), CalculatorComplex::new(1.0, 0.0))
+    fno.add_operator_product((fp.clone(), fp), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
     let dp = DecoherenceProduct::new().z(0);
-    sno.add_operator_product((dp.clone(), dp.clone()), CalculatorComplex::new(0.25, 0.0))
+    sno.add_operator_product((dp.clone(), dp), CalculatorComplex::new(0.25, 0.0))
         .unwrap();
 
     assert_eq!(sno.jordan_wigner(), fno);

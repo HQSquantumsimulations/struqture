@@ -125,7 +125,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
             .enumerate()
         {
             if system_spins != noise_spins {
-                match (system_spins.clone(), noise_spins) {
+                match (*system_spins, noise_spins) {
                     (Some(n), None) => {
                         if n < noise_number_current_spins[index] {
                             return Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -183,7 +183,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
             .enumerate()
         {
             if system_bosons != noise_bosons {
-                match (system_bosons.clone(), noise_bosons) {
+                match (*system_bosons, noise_bosons) {
                     (Some(n), None) => {
                         if n < noise_number_current_bosons[index] {
                             return Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -240,7 +240,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
             .enumerate()
         {
             if system_fermions != noise_fermions {
-                match (system_fermions.clone(), noise_fermions) {
+                match (*system_fermions, noise_fermions) {
                     (Some(n), None) => {
                         if n < noise_number_current_fermions[index] {
                             return Err(StruqtureError::MissmatchedNumberSubsystems {
