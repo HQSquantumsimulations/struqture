@@ -86,9 +86,52 @@ fn group() {
 
 // Test the group function of the MixedLindbladOpenSystem
 #[test]
-fn group_failing() {
+fn group_with_none() {
     let slos = MixedLindbladOpenSystem::group(
         MixedHamiltonianSystem::new([None], [None], [None]),
+        MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
+    );
+    assert!(slos.is_ok());
+    let os = slos.unwrap();
+    let (system, noise) = os.ungroup();
+    assert_eq!(noise.number_bosonic_modes(), vec![2]);
+    assert_eq!(noise.number_fermionic_modes(), vec![2]);
+    assert_eq!(noise.number_spins(), vec![2]);
+    assert_eq!(system.number_bosonic_modes(), vec![2]);
+    assert_eq!(system.number_fermionic_modes(), vec![2]);
+    assert_eq!(system.number_spins(), vec![2]);
+
+    let slos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([Some(2)], [Some(2)], [Some(2)]),
+        MixedLindbladNoiseSystem::new([None], [None], [None]),
+    );
+    assert!(slos.is_ok());
+    let os = slos.unwrap();
+    let (system, noise) = os.ungroup();
+    assert_eq!(noise.number_bosonic_modes(), vec![2]);
+    assert_eq!(noise.number_fermionic_modes(), vec![2]);
+    assert_eq!(noise.number_spins(), vec![2]);
+    assert_eq!(system.number_bosonic_modes(), vec![2]);
+    assert_eq!(system.number_fermionic_modes(), vec![2]);
+    assert_eq!(system.number_spins(), vec![2]);
+}
+
+// Test the group function of the MixedLindbladOpenSystem
+#[test]
+fn group_failing() {
+    let slos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([None], [None], [Some(3)]),
+        MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
+    );
+    assert!(slos.is_err());
+
+    let slos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([None], [Some(3)], [None]),
+        MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
+    );
+    assert!(slos.is_err());
+    let slos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([None], [None], [Some(3)]),
         MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
     );
     assert!(slos.is_err());

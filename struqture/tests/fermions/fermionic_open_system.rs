@@ -62,11 +62,38 @@ fn group() {
     assert_eq!(slos, FermionLindbladOpenSystem::default())
 }
 
+#[test]
+fn group_with_none() {
+    let slos = FermionLindbladOpenSystem::group(
+        FermionHamiltonianSystem::new(None),
+        FermionLindbladNoiseSystem::new(Some(2)),
+    );
+
+    assert!(slos.is_ok());
+    let os = slos.unwrap();
+    let (system, noise) = os.ungroup();
+
+    assert_eq!(noise.number_modes(), 2);
+    assert_eq!(system.number_modes(), 2);
+
+    let slos = FermionLindbladOpenSystem::group(
+        FermionHamiltonianSystem::new(Some(2)),
+        FermionLindbladNoiseSystem::new(None),
+    );
+
+    assert!(slos.is_ok());
+    let os = slos.unwrap();
+    let (system, noise) = os.ungroup();
+
+    assert_eq!(noise.number_modes(), 2);
+    assert_eq!(system.number_modes(), 2);
+}
+
 // Test the group function of the FermionLindbladOpenSystem
 #[test]
 fn group_failing() {
     let slos = FermionLindbladOpenSystem::group(
-        FermionHamiltonianSystem::new(None),
+        FermionHamiltonianSystem::new(Some(3)),
         FermionLindbladNoiseSystem::new(Some(2)),
     );
     assert!(slos.is_err());

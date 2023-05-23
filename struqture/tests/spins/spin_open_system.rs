@@ -61,11 +61,38 @@ fn group() {
     assert_eq!(slos, SpinLindbladOpenSystem::default())
 }
 
+#[test]
+fn group_with_none() {
+    let slos = SpinLindbladOpenSystem::group(
+        SpinHamiltonianSystem::new(None),
+        SpinLindbladNoiseSystem::new(Some(2)),
+    );
+
+    assert!(slos.is_ok());
+    let os = slos.unwrap();
+    let (system, noise) = os.ungroup();
+
+    assert_eq!(noise.number_spins(), 2);
+    assert_eq!(system.number_spins(), 2);
+
+    let slos = SpinLindbladOpenSystem::group(
+        SpinHamiltonianSystem::new(Some(2)),
+        SpinLindbladNoiseSystem::new(None),
+    );
+
+    assert!(slos.is_ok());
+    let os = slos.unwrap();
+    let (system, noise) = os.ungroup();
+
+    assert_eq!(noise.number_spins(), 2);
+    assert_eq!(system.number_spins(), 2);
+}
+
 // Test the group function of the SpinLindbladOpenSystem
 #[test]
 fn group_failing() {
     let slos = SpinLindbladOpenSystem::group(
-        SpinHamiltonianSystem::new(None),
+        SpinHamiltonianSystem::new(Some(3)),
         SpinLindbladNoiseSystem::new(Some(2)),
     );
     assert!(slos.is_err());

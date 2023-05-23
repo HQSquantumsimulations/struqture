@@ -89,9 +89,34 @@ impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     /// * `Ok(Self)` - The FermionLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberModes)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        if system.number_modes != noise.number_modes {
-            return Err(StruqtureError::MissmatchedNumberModes);
-        }
+        let (system, noise) = if system.number_modes != noise.number_modes {
+            match (system.number_modes, noise.number_modes) {
+                (Some(n), None) => {
+                    if n >= noise.number_modes() {
+                        let mut noise = noise;
+                        noise.number_modes = Some(n);
+                        (system, noise)
+                    } else {
+                        return Err(StruqtureError::MissmatchedNumberModes);
+                    }
+                }
+                (None, Some(n)) => {
+                    if n >= system.number_modes() {
+                        let mut system = system;
+                        system.number_modes = Some(n);
+                        (system, noise)
+                    } else {
+                        return Err(StruqtureError::MissmatchedNumberModes);
+                    }
+                }
+                (Some(_), Some(_)) => {
+                    return Err(StruqtureError::MissmatchedNumberModes);
+                }
+                _ => panic!("Unexpected missmatch of number modes"),
+            }
+        } else {
+            (system, noise)
+        };
         Ok(Self { system, noise })
     }
 
