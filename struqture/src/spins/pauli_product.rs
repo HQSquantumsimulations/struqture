@@ -28,7 +28,6 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::Mul;
 use std::str::FromStr;
 use tinyvec::{TinyVec, TinyVecIterator};
-
 const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_product.";
 
 /// Single Spin operators for PauliProducts:
@@ -66,6 +65,7 @@ const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_pr
 /// $$
 ///
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 pub enum SingleSpinOperator {
     Identity,
     X,
@@ -221,6 +221,24 @@ impl Serialize for PauliProduct {
             }
             sequence.end()
         }
+    }
+}
+
+#[cfg(feature = "schema")]
+use schemars;
+
+#[cfg(feature = "schema")]
+impl schemars::JsonSchema for PauliProduct {
+    fn schema_name() -> String {
+        "struqture::spins::PauliProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X.".to_string());
+        let new_schema = schemars::schema::Schema::Object(obj);
+        new_schema
     }
 }
 

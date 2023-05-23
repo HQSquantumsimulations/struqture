@@ -52,6 +52,7 @@ use std::{
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 pub struct SpinSystem {
     /// The number of spins in the SpinSystem.
     pub(crate) number_spins: Option<usize>,

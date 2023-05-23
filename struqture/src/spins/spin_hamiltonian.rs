@@ -61,8 +61,27 @@ pub struct SpinHamiltonian {
     internal_map: HashMap<PauliProduct, CalculatorFloat>,
 }
 
+
+#[cfg(feature = "schema")]
+impl schemars::JsonSchema for SpinHamiltonian {
+    fn schema_name() -> String {
+        "struqture::spins::SpinHamiltonian".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <SpinHamiltonianSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+/// # SpinHamiltonian
+/// SpinHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
+///
+/// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
+/// SpinHamiltonian is the hermitian equivalent of SpinOperator.
 struct SpinHamiltonianSerialize {
+    /// List of all non-zero entries in the SpinOperator in the form (PauliProduct, real weight).
     items: Vec<(PauliProduct, CalculatorFloat)>,
     _struqture_version: StruqtureVersionSerializable,
 }

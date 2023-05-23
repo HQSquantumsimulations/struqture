@@ -541,3 +541,21 @@ fn test_singlespinoperator_product() {
         assert_eq!(test_mat, direct_matrix_multiplication)
     }
 }
+
+#[cfg(feature = "schema")]
+use jsonschema;
+#[cfg(feature = "schema")]
+use schemars;
+
+#[cfg(feature = "schema")]
+#[test]
+fn test_pauli_product_schema() {
+    let pp = PauliProduct::new();
+    let schema = schemars::schema_for!(PauliProduct);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&pp).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+    println!("{}", serde_json::to_string_pretty(&schema).unwrap());
+}

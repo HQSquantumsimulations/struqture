@@ -435,6 +435,22 @@ pub struct PlusMinusProduct {
     /// The internal dictionary of pauli matrices (I, Plus, Minus, Z) and qubits
     items: TinyVec<[(usize, SinglePlusMinusOperator); 5]>,
 }
+
+#[cfg(feature = "schema")]
+impl schemars::JsonSchema for PlusMinusProduct {
+    fn schema_name() -> String {
+        "struqture::spins::PlusMinusProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Plus Minus Spin Operators (Plus, Minus, Z) by a string of spin numbers followed by pauli operators. E.g. 0+10-13Z14+.".to_string());
+        let new_schema = schemars::schema::Schema::Object(obj);
+        new_schema
+    }
+}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for PlusMinusProduct {

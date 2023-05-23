@@ -59,6 +59,10 @@ struct StruqtureVersion;
     serde::Serialize,
     serde::Deserialize,
 )]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+/// # StruqtureVersion
+///
+/// The minimal version of struqture needed to deserialize this object.
 struct StruqtureVersionSerializable {
     /// The semver major version of struqture
     major_version: u32,

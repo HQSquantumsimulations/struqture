@@ -49,6 +49,7 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 pub struct SpinHamiltonianSystem {
     /// The number of spins in the SpinHamiltonianSystem
     pub(crate) number_spins: Option<usize>,
