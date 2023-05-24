@@ -11,6 +11,8 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
@@ -1725,19 +1727,28 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.to_decoherence_product">
 <span class="sig-name descname"><span class="pre">to_decoherence_product</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.to_decoherence_product" title="Permalink to this definition"></a></dt>
-<dd><p>Return the concatenation of two objects of type <cite>self</cite> with no overlapping qubits.</p>
+<dd><p>DEPRECATED: Convert <cite>self</cite> into a list of (DecoherenceProduct, CalculatorComplex) tuples.</p>
+<p>This function is deprecated, please use <cite>to_decoherence_product_list</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>self</em>) -- The object to concatenate self with.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the terms <cite>self</cite> corresponds to.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of the corresponding creator indices.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[(<a class="reference internal" href="#struqture_py.spins.DecoherenceProduct" title="struqture_py.spins.DecoherenceProduct">DecoherenceProduct</a>, CalculatorComplex)]]</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[int]</p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.to_decoherence_product_list">
+<span class="sig-name descname"><span class="pre">to_decoherence_product_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.to_decoherence_product_list" title="Permalink to this definition"></a></dt>
+<dd><p>Convert <cite>self</cite> into a list of (DecoherenceProduct, CalculatorComplex) tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the terms <cite>self</cite> corresponds to.</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> -- The two objects could not be concatenated.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[(<a class="reference internal" href="#struqture_py.spins.DecoherenceProduct" title="struqture_py.spins.DecoherenceProduct">DecoherenceProduct</a>, CalculatorComplex)]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1762,19 +1773,28 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.to_pauli_product">
 <span class="sig-name descname"><span class="pre">to_pauli_product</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.to_pauli_product" title="Permalink to this definition"></a></dt>
-<dd><p>Return the concatenation of two objects of type <cite>self</cite> with no overlapping qubits.</p>
+<dd><p>DEPRECATED: Convert <cite>self</cite> into a list of (PauliProduct, CalculatorComplex) tuples.</p>
+<p>This function is deprecated, please use <cite>to_pauli_product_list</cite></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>self</em>) -- The object to concatenate self with.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the terms <cite>self</cite> corresponds to.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of the corresponding creator indices.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[(<a class="reference internal" href="#struqture_py.spins.PauliProduct" title="struqture_py.spins.PauliProduct">PauliProduct</a>, CalculatorComplex)]]</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[int]</p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.to_pauli_product_list">
+<span class="sig-name descname"><span class="pre">to_pauli_product_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.to_pauli_product_list" title="Permalink to this definition"></a></dt>
+<dd><p>Convert <cite>self</cite> into a list of (PauliProduct, CalculatorComplex) tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the terms <cite>self</cite> corresponds to.</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> -- The two objects could not be concatenated.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[tuple[(<a class="reference internal" href="#struqture_py.spins.PauliProduct" title="struqture_py.spins.PauliProduct">PauliProduct</a>, CalculatorComplex)]]</p>
 </dd>
 </dl>
 </dd></dl>
