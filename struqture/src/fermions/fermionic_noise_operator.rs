@@ -10,11 +10,14 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{FermionProduct, OperateOnFermions};
+use super::{FermionOperator, FermionProduct, OperateOnFermions};
+use crate::mappings::JordanWignerFermionToSpin;
+use crate::spins::{DecoherenceOperator, SpinLindbladNoiseOperator};
 use crate::{
     ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
     StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
+use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
@@ -159,11 +162,20 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in FermionProduct::new
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
+        if key.0 == FermionProduct::new([], [])? || key.1 == FermionProduct::new([], [])? {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         if value != CalculatorComplex::ZERO {
             Ok(self.internal_map.insert(key, value))
         } else {
@@ -240,6 +252,48 @@ impl FermionLindbladNoiseOperator {
         FermionLindbladNoiseOperator {
             internal_map: HashMap::with_capacity(capacity),
         }
+    }
+
+    /// Adds all noise entries corresponding to a ((FermionOperator, FermionOperator), CalculatorFloat).
+    ///
+    /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::spins::FermionProduct] style operators.
+    /// We use ([crate::spins::FermionProduct], [crate::spins::FermionProduct]) as a unique basis.
+    /// This function adds a Linblad-Term defined by a combination of Lindblad operators given as general [crate::spins::FermionOperator]
+    ///
+    /// # Arguments
+    ///
+    /// * `left` - FermionOperator that acts on the density matrix from the left in the Lindblad equation.
+    /// * `right` -  FermionOperator that acts on the density matrix from the right and in hermitian conjugated form in the Lindblad equation.
+    /// * `value` - CalculatorComplex value representing the global coefficient of the noise term.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - The noise was correctly added.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
+    pub fn add_noise_from_full_operators(
+        &mut self,
+        left: &FermionOperator,
+        right: &FermionOperator,
+        value: CalculatorComplex,
+    ) -> Result<(), StruqtureError> {
+        if left.is_empty() || right.is_empty() {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
+        for ((fermion_product_left, value_left), (fermion_product_right, value_right)) in
+            left.iter().cartesian_product(right.iter())
+        {
+            if !(*fermion_product_left == FermionProduct::new([], [])?
+                || *fermion_product_right == FermionProduct::new([], [])?)
+            {
+                let value_complex = value_right.conj() * value_left;
+                self.add_operator_product(
+                    (fermion_product_left.clone(), fermion_product_right.clone()),
+                    value_complex * value.clone(),
+                )?;
+            }
+        }
+        Ok(())
     }
 
     /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
@@ -489,6 +543,39 @@ impl fmt::Display for FermionLindbladNoiseOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
+    type Output = SpinLindbladNoiseOperator;
+
+    /// Implements JordanWignerFermionToSpin for a FermionLindbladNoiseOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// * `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal bug in add_noise_from_full_operators.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = SpinLindbladNoiseOperator::new();
+
+        for key in self.keys() {
+            let decoherence_operator_left = DecoherenceOperator::from(key.0.jordan_wigner());
+            let decoherence_operator_right = DecoherenceOperator::from(key.1.jordan_wigner());
+
+            out.add_noise_from_full_operators(
+                &decoherence_operator_left,
+                &decoherence_operator_right,
+                self.get(key).into(),
+            )
+            .expect("Internal bug in add_noise_from_full_operators");
+        }
+        out
     }
 }
 

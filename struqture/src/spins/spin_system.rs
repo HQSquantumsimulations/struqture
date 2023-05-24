@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
+use crate::fermions::FermionSystem;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, PauliProduct, SpinIndex, SpinOperator};
 use crate::{
     CooSparseMatrix, OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex,
@@ -540,5 +542,29 @@ impl fmt::Display for SpinSystem {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinSystem {
+    type Output = FermionSystem;
+
+    /// Implements JordanWignerSpinToFermion for a SpinSystem.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionSystem` - The fermionic system that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal bug in jordan_wigner() for SpinSystem.
+    fn jordan_wigner(&self) -> Self::Output {
+        FermionSystem::from_operator(
+            self.operator().jordan_wigner(),
+            Some(self.number_spins()),
+        )
+            .expect("Internal bug in jordan_wigner() for SpinSystem. The number of modes in the resulting FermionSystem should equal the number of spins of the SpinSystem.")
     }
 }

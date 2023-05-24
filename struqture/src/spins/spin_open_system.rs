@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::SpinLindbladNoiseSystem;
+use crate::fermions::FermionLindbladOpenSystem;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixSuperOperator};
 use crate::{CooSparseMatrix, OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use num_complex::Complex64;
@@ -91,9 +93,34 @@ impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
     /// * `Ok(Self)` - The SpinLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberSpins)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        if system.number_spins != noise.number_spins {
-            return Err(StruqtureError::MissmatchedNumberSpins);
-        }
+        let (system, noise) = if system.number_spins != noise.number_spins {
+            match (system.number_spins, noise.number_spins) {
+                (Some(n), None) => {
+                    if n >= noise.number_spins() {
+                        let mut noise = noise;
+                        noise.number_spins = Some(n);
+                        (system, noise)
+                    } else {
+                        return Err(StruqtureError::MissmatchedNumberSpins);
+                    }
+                }
+                (None, Some(n)) => {
+                    if n >= system.number_spins() {
+                        let mut system = system;
+                        system.number_spins = Some(n);
+                        (system, noise)
+                    } else {
+                        return Err(StruqtureError::MissmatchedNumberSpins);
+                    }
+                }
+                (Some(_), Some(_)) => {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+                _ => panic!("Unexpected missmatch of number spins"),
+            }
+        } else {
+            (system, noise)
+        };
         Ok(Self { system, noise })
     }
 
@@ -305,5 +332,28 @@ impl fmt::Display for SpinLindbladOpenSystem {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinLindbladOpenSystem {
+    type Output = FermionLindbladOpenSystem;
+
+    /// Implements JordanWignerSpinToSpin for a SpinLindbladOpenSystem.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionLindbladOpenSystem` - The fermion open system that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner() for SpinHamiltonianSystem or SpinLindbladNoiseSystem.
+    fn jordan_wigner(&self) -> Self::Output {
+        let jw_system = self.system().jordan_wigner();
+        let jw_noise = self.noise().jordan_wigner();
+        FermionLindbladOpenSystem::group(jw_system, jw_noise)
+            .expect("Internal bug in jordan_wigner() for SpinHamiltonianSystem or SpinLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

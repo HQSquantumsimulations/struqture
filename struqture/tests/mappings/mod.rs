@@ -10,21 +10,5 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use tinyvec::TinyVec;
-
-type BosonTinyVec = TinyVec<[usize; 2]>;
-
-#[cfg(test)]
-mod bosons;
-
-#[cfg(test)]
-mod fermions;
-
-#[cfg(test)]
-mod spins;
-
-#[cfg(test)]
-mod mixed_systems;
-
-#[cfg(test)]
-mod mappings;
+mod jordan_wigner_fermion_to_spin;
+mod jordan_wigner_spin_to_fermion;

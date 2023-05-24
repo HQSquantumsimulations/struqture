@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
+use crate::fermions::FermionOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, PauliProduct, SpinHamiltonian, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
@@ -617,6 +619,26 @@ impl fmt::Display for SpinOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinOperator {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a SpinOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermionic operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionOperator::new();
+        for pp in self.keys() {
+            out = out + pp.jordan_wigner() * self.get(pp);
+        }
+        out
     }
 }
 

@@ -4,3 +4,4 @@ documentation/_build*
 documentation/generated*
 .vscode
 */__pycache__/*
+*.~undo-tree~

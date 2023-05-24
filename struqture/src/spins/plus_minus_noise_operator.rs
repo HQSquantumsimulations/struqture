@@ -10,6 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionLindbladNoiseOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
 use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
 use itertools::Itertools;
@@ -595,6 +597,35 @@ impl fmt::Display for PlusMinusLindbladNoiseOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for PlusMinusLindbladNoiseOperator {
+    type Output = FermionLindbladNoiseOperator;
+
+    /// Implements JordanWignerSpinToFermion for a PlusMinusLindbladNoiseOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionLindbladNoiseOperator` - The fermionic noise operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionLindbladNoiseOperator::new();
+
+        for key in self.keys() {
+            let fermion_operator_left = key.0.jordan_wigner();
+            let fermion_operator_right = key.1.jordan_wigner();
+
+            out.add_noise_from_full_operators(
+                &fermion_operator_left,
+                &fermion_operator_right,
+                self.get(key).into(),
+            )
+            .expect("Internal bug in add_noise_from_full_operators");
+        }
+        out
     }
 }
 

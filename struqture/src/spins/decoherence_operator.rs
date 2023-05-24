@@ -10,7 +10,9 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::OperateOnSpins;
+use super::{OperateOnSpins, SpinOperator};
+use crate::fermions::FermionOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::DecoherenceProduct;
 use crate::{
     OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
@@ -489,6 +491,51 @@ impl fmt::Display for DecoherenceOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl From<SpinOperator> for DecoherenceOperator {
+    /// Converts a SpinOperator into a DecoherenceProduct.
+    ///
+    /// # Arguments
+    ///
+    /// * `op` - The SpinOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SpinOperator converted into a DecoherenceProduct.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in add_operator_product.
+    fn from(op: SpinOperator) -> Self {
+        let mut out = DecoherenceOperator::new();
+        for prod in op.keys() {
+            let (new_prod, new_coeff) = DecoherenceProduct::spin_to_decoherence(prod.clone());
+            out.add_operator_product(new_prod, op.get(prod).clone() * new_coeff)
+                .expect("Internal error in add_operator_product");
+        }
+        out
+    }
+}
+
+impl JordanWignerSpinToFermion for DecoherenceOperator {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a DecoherenceOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermionic operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionOperator::new();
+        for (dp, value) in self.iter() {
+            out = out + dp.jordan_wigner() * value;
+        }
+        out
     }
 }
 

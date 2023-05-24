@@ -150,11 +150,20 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
+    /// * `Err(StruqtureError::InvalidLindbladTerms)` - The input contained identities, which are not allowed as Lindblad operators.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in BosonProduct::new
     fn set(
         &mut self,
         key: Self::Index,
         value: Self::Value,
     ) -> Result<Option<Self::Value>, StruqtureError> {
+        if key.0 == BosonProduct::new([], [])? || key.1 == BosonProduct::new([], [])? {
+            return Err(StruqtureError::InvalidLindbladTerms);
+        }
+
         if value != CalculatorComplex::ZERO {
             Ok(self.internal_map.insert(key, value))
         } else {

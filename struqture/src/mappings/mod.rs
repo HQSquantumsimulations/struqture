@@ -10,21 +10,9 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use tinyvec::TinyVec;
+//! Module for representing mappings between systems of bosons, fermions and spins.
 
-type BosonTinyVec = TinyVec<[usize; 2]>;
+pub mod jordan_wigner;
 
-#[cfg(test)]
-mod bosons;
-
-#[cfg(test)]
-mod fermions;
-
-#[cfg(test)]
-mod spins;
-
-#[cfg(test)]
-mod mixed_systems;
-
-#[cfg(test)]
-mod mappings;
+pub use jordan_wigner::JordanWignerFermionToSpin;
+pub use jordan_wigner::JordanWignerSpinToFermion;

@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{HermitianOperateOnSpins, OperateOnSpins, SpinSystem};
+use crate::fermions::FermionHamiltonianSystem;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{
     PauliProduct, SpinHamiltonian, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
@@ -259,7 +261,17 @@ impl SpinHamiltonianSystem {
     /// # Returns
     ///
     /// * `&SpinHamiltonian` - The SpinHamiltonian of the SpinHamiltonianSystem.
+    #[deprecated(note = "Use the hamiltonian() method instead.")]
     pub fn operator(&self) -> &SpinHamiltonian {
+        &self.hamiltonian
+    }
+
+    /// Returns the SpinHamiltonian of the SpinHamiltonianSystem.
+    ///
+    /// # Returns
+    ///
+    /// * `&SpinHamiltonian` - The SpinHamiltonian of the SpinHamiltonianSystem.
+    pub fn hamiltonian(&self) -> &SpinHamiltonian {
         &self.hamiltonian
     }
 
@@ -547,5 +559,29 @@ impl fmt::Display for SpinHamiltonianSystem {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinHamiltonianSystem {
+    type Output = FermionHamiltonianSystem;
+
+    /// Implements JordanWignerSpinToSpin for a SpinHamiltonianSystem.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionHamiltonianSystem` - The fermion hamiltonian system that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal error in jordan_wigner() for SpinHamiltonian.
+    fn jordan_wigner(&self) -> Self::Output {
+        FermionHamiltonianSystem::from_hamiltonian(
+            self.hamiltonian().jordan_wigner(),
+            Some(self.number_spins()),
+        )
+            .expect("Internal bug in jordan_wigner() for SpinHamiltonian. The number of modes in the resulting fermionic Hamiltonian should equal the number of spins of the spin Hamiltonian.")
     }
 }

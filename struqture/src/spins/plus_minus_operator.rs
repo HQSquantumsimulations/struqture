@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
+use crate::fermions::FermionOperator;
+use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusProduct, SpinHamiltonian};
 use crate::{
     OperateOnDensityMatrix, OperateOnState, StruqtureError, StruqtureVersionSerializable,
@@ -558,6 +560,26 @@ impl fmt::Display for PlusMinusOperator {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for PlusMinusOperator {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a PlusMinusOperator.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermion operator that results from the transformation.
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionOperator::new();
+        for pmp in self.keys() {
+            out = out + pmp.jordan_wigner() * self.get(pmp);
+        }
+        out
     }
 }
 
