@@ -86,12 +86,55 @@ fn group() {
 
 // Test the group function of the MixedLindbladOpenSystem
 #[test]
-fn group_failing() {
-    let slos = MixedLindbladOpenSystem::group(
+fn group_with_none() {
+    let mlos = MixedLindbladOpenSystem::group(
         MixedHamiltonianSystem::new([None], [None], [None]),
         MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
     );
-    assert!(slos.is_err());
+    assert!(mlos.is_ok());
+    let os = mlos.unwrap();
+    let (system, noise) = os.ungroup();
+    assert_eq!(noise.number_bosonic_modes(), vec![2]);
+    assert_eq!(noise.number_fermionic_modes(), vec![2]);
+    assert_eq!(noise.number_spins(), vec![2]);
+    assert_eq!(system.number_bosonic_modes(), vec![2]);
+    assert_eq!(system.number_fermionic_modes(), vec![2]);
+    assert_eq!(system.number_spins(), vec![2]);
+
+    let mlos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([Some(2)], [Some(2)], [Some(2)]),
+        MixedLindbladNoiseSystem::new([None], [None], [None]),
+    );
+    assert!(mlos.is_ok());
+    let os = mlos.unwrap();
+    let (system, noise) = os.ungroup();
+    assert_eq!(noise.number_bosonic_modes(), vec![2]);
+    assert_eq!(noise.number_fermionic_modes(), vec![2]);
+    assert_eq!(noise.number_spins(), vec![2]);
+    assert_eq!(system.number_bosonic_modes(), vec![2]);
+    assert_eq!(system.number_fermionic_modes(), vec![2]);
+    assert_eq!(system.number_spins(), vec![2]);
+}
+
+// Test the group function of the MixedLindbladOpenSystem
+#[test]
+fn group_failing() {
+    let mlos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([None], [None], [Some(3)]),
+        MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
+    );
+    assert!(mlos.is_err());
+
+    let mlos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([None], [Some(3)], [None]),
+        MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
+    );
+    assert!(mlos.is_err());
+    let mlos = MixedLindbladOpenSystem::group(
+        MixedHamiltonianSystem::new([Some(3)], [None], [None]),
+        MixedLindbladNoiseSystem::new([Some(2)], [Some(2)], [Some(2)]),
+    );
+    assert!(mlos.is_err());
 }
 
 #[test]

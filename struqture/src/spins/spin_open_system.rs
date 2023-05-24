@@ -93,9 +93,34 @@ impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
     /// * `Ok(Self)` - The SpinLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberSpins)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        if system.number_spins != noise.number_spins {
-            return Err(StruqtureError::MissmatchedNumberSpins);
-        }
+        let (system, noise) = if system.number_spins != noise.number_spins {
+            match (system.number_spins, noise.number_spins) {
+                (Some(n), None) => {
+                    if n >= noise.number_spins() {
+                        let mut noise = noise;
+                        noise.number_spins = Some(n);
+                        (system, noise)
+                    } else {
+                        return Err(StruqtureError::MissmatchedNumberSpins);
+                    }
+                }
+                (None, Some(n)) => {
+                    if n >= system.number_spins() {
+                        let mut system = system;
+                        system.number_spins = Some(n);
+                        (system, noise)
+                    } else {
+                        return Err(StruqtureError::MissmatchedNumberSpins);
+                    }
+                }
+                (Some(_), Some(_)) => {
+                    return Err(StruqtureError::MissmatchedNumberSpins);
+                }
+                _ => panic!("Unexpected missmatch of number spins"),
+            }
+        } else {
+            (system, noise)
+        };
         Ok(Self { system, noise })
     }
 
