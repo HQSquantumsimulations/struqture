@@ -11,6 +11,9 @@
 // limitations under the License.
 
 use super::{OperateOnSpins, SpinOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
+use crate::fermions::{FermionHamiltonian, FermionOperator};
+use crate::mappings::JordanWignerSpinToFermion;
+use crate::prelude::*;
 use crate::spins::{HermitianOperateOnSpins, PauliProduct, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
@@ -571,6 +574,36 @@ impl fmt::Display for SpinHamiltonian {
         output.push('}');
 
         write!(f, "{}", output)
+    }
+}
+
+impl JordanWignerSpinToFermion for SpinHamiltonian {
+    type Output = FermionHamiltonian;
+
+    /// Implements JordanWignerSpinToFermion for a SpinHamiltonian.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionHamiltonian` - The fermionic Hamiltonian that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Failed conversion of FermionOperator into FermionHamiltonian. Internal bug in jordan_wigner().
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut out = FermionOperator::new();
+        for pp in self.keys() {
+            let mut new_term = pp.jordan_wigner();
+            new_term = new_term * self.get(pp);
+            out = out + new_term;
+        }
+        let filtered_fermion_operator = FermionOperator::from_iter(out.into_iter().filter(|x| {
+            x.0.is_natural_hermitian() || x.0.creators().min() < x.0.annihilators().min()
+        }));
+        FermionHamiltonian::try_from(filtered_fermion_operator)
+            .expect("Failed to convert FermionOperator into FermionHamiltonian.")
     }
 }
 

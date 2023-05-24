@@ -10,6 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionOperator;
+use crate::mappings::JordanWignerSpinToFermion;
+use crate::prelude::*;
+use crate::spins::{PlusMinusOperator, SpinOperator};
 use crate::{CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
@@ -24,6 +28,8 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::Mul;
 use std::str::FromStr;
 use tinyvec::{TinyVec, TinyVecIterator};
+
+const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_product.";
 
 /// Single Spin operators for PauliProducts:
 ///
@@ -751,5 +757,31 @@ impl Extend<(usize, SingleSpinOperator)> for PauliProduct {
             pp = pp.set_pauli(index, pauli);
         }
         *self = pp;
+    }
+}
+
+impl JordanWignerSpinToFermion for PauliProduct {
+    type Output = FermionOperator;
+
+    /// Implements JordanWignerSpinToFermion for a PauliProduct.
+    ///
+    /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
+    /// and |1> represents an occupied fermionic state.
+    ///
+    /// # Returns
+    ///
+    /// `FermionOperator` - The fermion operator that results from the transformation.
+    ///
+    /// # Panics
+    ///
+    /// * Internal bug in `add_operator_product`
+    fn jordan_wigner(&self) -> Self::Output {
+        let mut spin_operator = SpinOperator::new();
+        spin_operator
+            .add_operator_product(self.clone(), 1.0.into())
+            .expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT);
+
+        let plus_minus_operator = PlusMinusOperator::from(spin_operator);
+        plus_minus_operator.jordan_wigner()
     }
 }
