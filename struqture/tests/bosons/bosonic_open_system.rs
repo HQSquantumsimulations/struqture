@@ -59,25 +59,25 @@ fn group() {
 
 #[test]
 fn group_with_none() {
-    let slos = BosonLindbladOpenSystem::group(
+    let blos = BosonLindbladOpenSystem::group(
         BosonHamiltonianSystem::new(None),
         BosonLindbladNoiseSystem::new(Some(2)),
     );
 
-    assert!(slos.is_ok());
-    let os = slos.unwrap();
+    assert!(blos.is_ok());
+    let os = blos.unwrap();
     let (system, noise) = os.ungroup();
 
     assert_eq!(noise.number_modes(), 2);
     assert_eq!(system.number_modes(), 2);
 
-    let slos = BosonLindbladOpenSystem::group(
+    let blos = BosonLindbladOpenSystem::group(
         BosonHamiltonianSystem::new(Some(2)),
         BosonLindbladNoiseSystem::new(None),
     );
 
-    assert!(slos.is_ok());
-    let os = slos.unwrap();
+    assert!(blos.is_ok());
+    let os = blos.unwrap();
     let (system, noise) = os.ungroup();
 
     assert_eq!(noise.number_modes(), 2);

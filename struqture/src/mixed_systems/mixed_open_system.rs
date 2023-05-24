@@ -115,11 +115,11 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
             });
         }
 
-        let mut current_number_spins = system.number_spins.clone();
+        let mut variable_number_spins = system.number_spins.clone();
         let noise_number_spins = noise.number_spins.clone();
         let noise_number_current_spins = noise.number_spins();
         let system_number_current_spins = system.number_spins();
-        for (index, (system_spins, noise_spins)) in current_number_spins
+        for (index, (system_spins, noise_spins)) in variable_number_spins
             .iter_mut()
             .zip(noise_number_spins.iter())
             .enumerate()
@@ -128,39 +128,18 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
                 match (*system_spins, noise_spins) {
                     (Some(n), None) => {
                         if n < noise_number_current_spins[index] {
-                            return Err(StruqtureError::MissmatchedNumberSubsystems {
-                                target_number_spin_subsystems: system.number_spins.len(),
-                                target_number_boson_subsystems: system.number_bosons.len(),
-                                target_number_fermion_subsystems: system.number_fermions.len(),
-                                actual_number_spin_subsystems: noise.number_spins.len(),
-                                actual_number_boson_subsystems: noise.number_bosons.len(),
-                                actual_number_fermion_subsystems: noise.number_fermions.len(),
-                            });
+                            return Err(StruqtureError::MissmatchedNumberSpins);
                         }
                     }
                     (None, Some(n)) => {
                         if *n >= system_number_current_spins[index] {
                             *system_spins = Some(*n);
                         } else {
-                            return Err(StruqtureError::MissmatchedNumberSubsystems {
-                                target_number_spin_subsystems: system.number_spins.len(),
-                                target_number_boson_subsystems: system.number_bosons.len(),
-                                target_number_fermion_subsystems: system.number_fermions.len(),
-                                actual_number_spin_subsystems: noise.number_spins.len(),
-                                actual_number_boson_subsystems: noise.number_bosons.len(),
-                                actual_number_fermion_subsystems: noise.number_fermions.len(),
-                            });
+                            return Err(StruqtureError::MissmatchedNumberSpins);
                         }
                     }
                     (Some(_), Some(_)) => {
-                        return Err(StruqtureError::MissmatchedNumberSubsystems {
-                            target_number_spin_subsystems: system.number_spins.len(),
-                            target_number_boson_subsystems: system.number_bosons.len(),
-                            target_number_fermion_subsystems: system.number_fermions.len(),
-                            actual_number_spin_subsystems: noise.number_spins.len(),
-                            actual_number_boson_subsystems: noise.number_bosons.len(),
-                            actual_number_fermion_subsystems: noise.number_fermions.len(),
-                        });
+                        return Err(StruqtureError::MissmatchedNumberSpins);
                     }
                     _ => panic!("Unexpected missmatch of number modes"),
                 }
@@ -168,16 +147,16 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
         }
         let mut system = system;
         let mut noise = noise;
-        system.number_spins = current_number_spins.clone();
-        noise.number_spins = current_number_spins;
+        system.number_spins = variable_number_spins.clone();
+        noise.number_spins = variable_number_spins;
 
-        // Checking boson compatability
+        // Checking boson compatibility
 
-        let mut current_number_bosons = system.number_bosons.clone();
+        let mut variable_number_bosons = system.number_bosons.clone();
         let noise_number_bosons = noise.number_bosons.clone();
         let noise_number_current_bosons = noise.number_bosonic_modes();
         let system_number_current_bosons = system.number_bosonic_modes();
-        for (index, (system_bosons, noise_bosons)) in current_number_bosons
+        for (index, (system_bosons, noise_bosons)) in variable_number_bosons
             .iter_mut()
             .zip(noise_number_bosons.iter())
             .enumerate()
@@ -186,55 +165,34 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
                 match (*system_bosons, noise_bosons) {
                     (Some(n), None) => {
                         if n < noise_number_current_bosons[index] {
-                            return Err(StruqtureError::MissmatchedNumberSubsystems {
-                                target_number_spin_subsystems: system.number_spins.len(),
-                                target_number_boson_subsystems: system.number_bosons.len(),
-                                target_number_fermion_subsystems: system.number_fermions.len(),
-                                actual_number_spin_subsystems: noise.number_spins.len(),
-                                actual_number_boson_subsystems: noise.number_bosons.len(),
-                                actual_number_fermion_subsystems: noise.number_fermions.len(),
-                            });
+                            return Err(StruqtureError::MissmatchedNumberModes);
                         }
                     }
                     (None, Some(n)) => {
                         if *n >= system_number_current_bosons[index] {
                             *system_bosons = Some(*n);
                         } else {
-                            return Err(StruqtureError::MissmatchedNumberSubsystems {
-                                target_number_spin_subsystems: system.number_spins.len(),
-                                target_number_boson_subsystems: system.number_bosons.len(),
-                                target_number_fermion_subsystems: system.number_fermions.len(),
-                                actual_number_spin_subsystems: noise.number_spins.len(),
-                                actual_number_boson_subsystems: noise.number_bosons.len(),
-                                actual_number_fermion_subsystems: noise.number_fermions.len(),
-                            });
+                            return Err(StruqtureError::MissmatchedNumberModes);
                         }
                     }
                     (Some(_), Some(_)) => {
-                        return Err(StruqtureError::MissmatchedNumberSubsystems {
-                            target_number_spin_subsystems: system.number_spins.len(),
-                            target_number_boson_subsystems: system.number_bosons.len(),
-                            target_number_fermion_subsystems: system.number_fermions.len(),
-                            actual_number_spin_subsystems: noise.number_spins.len(),
-                            actual_number_boson_subsystems: noise.number_bosons.len(),
-                            actual_number_fermion_subsystems: noise.number_fermions.len(),
-                        });
+                        return Err(StruqtureError::MissmatchedNumberModes);
                     }
                     _ => panic!("Unexpected missmatch of number modes"),
                 }
             }
         }
 
-        system.number_bosons = current_number_bosons.clone();
-        noise.number_bosons = current_number_bosons;
+        system.number_bosons = variable_number_bosons.clone();
+        noise.number_bosons = variable_number_bosons;
 
-        // Checking Fermion compatability
+        // Checking Fermion compatibility
 
-        let mut current_number_fermions = system.number_fermions.clone();
+        let mut variable_number_fermions = system.number_fermions.clone();
         let noise_number_fermions = noise.number_fermions.clone();
         let noise_number_current_fermions = noise.number_bosonic_modes();
         let system_number_current_fermions = system.number_bosonic_modes();
-        for (index, (system_fermions, noise_fermions)) in current_number_fermions
+        for (index, (system_fermions, noise_fermions)) in variable_number_fermions
             .iter_mut()
             .zip(noise_number_fermions.iter())
             .enumerate()
@@ -243,47 +201,26 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
                 match (*system_fermions, noise_fermions) {
                     (Some(n), None) => {
                         if n < noise_number_current_fermions[index] {
-                            return Err(StruqtureError::MissmatchedNumberSubsystems {
-                                target_number_spin_subsystems: system.number_spins.len(),
-                                target_number_boson_subsystems: system.number_bosons.len(),
-                                target_number_fermion_subsystems: system.number_fermions.len(),
-                                actual_number_spin_subsystems: noise.number_spins.len(),
-                                actual_number_boson_subsystems: noise.number_bosons.len(),
-                                actual_number_fermion_subsystems: noise.number_fermions.len(),
-                            });
+                            return Err(StruqtureError::MissmatchedNumberModes);
                         }
                     }
                     (None, Some(n)) => {
                         if *n >= system_number_current_fermions[index] {
                             *system_fermions = Some(*n);
                         } else {
-                            return Err(StruqtureError::MissmatchedNumberSubsystems {
-                                target_number_spin_subsystems: system.number_spins.len(),
-                                target_number_boson_subsystems: system.number_bosons.len(),
-                                target_number_fermion_subsystems: system.number_fermions.len(),
-                                actual_number_spin_subsystems: noise.number_spins.len(),
-                                actual_number_boson_subsystems: noise.number_bosons.len(),
-                                actual_number_fermion_subsystems: noise.number_fermions.len(),
-                            });
+                            return Err(StruqtureError::MissmatchedNumberModes);
                         }
                     }
                     (Some(_), Some(_)) => {
-                        return Err(StruqtureError::MissmatchedNumberSubsystems {
-                            target_number_spin_subsystems: system.number_spins.len(),
-                            target_number_boson_subsystems: system.number_bosons.len(),
-                            target_number_fermion_subsystems: system.number_fermions.len(),
-                            actual_number_spin_subsystems: noise.number_spins.len(),
-                            actual_number_boson_subsystems: noise.number_bosons.len(),
-                            actual_number_fermion_subsystems: noise.number_fermions.len(),
-                        });
+                        return Err(StruqtureError::MissmatchedNumberModes);
                     }
                     _ => panic!("Unexpected missmatch of number modes"),
                 }
             }
         }
 
-        system.number_fermions = current_number_fermions.clone();
-        noise.number_fermions = current_number_fermions;
+        system.number_fermions = variable_number_fermions.clone();
+        noise.number_fermions = variable_number_fermions;
 
         Ok(Self { system, noise })
     }
