@@ -57,11 +57,38 @@ fn group() {
     assert_eq!(slos, BosonLindbladOpenSystem::default())
 }
 
+#[test]
+fn group_with_none() {
+    let blos = BosonLindbladOpenSystem::group(
+        BosonHamiltonianSystem::new(None),
+        BosonLindbladNoiseSystem::new(Some(2)),
+    );
+
+    assert!(blos.is_ok());
+    let os = blos.unwrap();
+    let (system, noise) = os.ungroup();
+
+    assert_eq!(noise.number_modes(), 2);
+    assert_eq!(system.number_modes(), 2);
+
+    let blos = BosonLindbladOpenSystem::group(
+        BosonHamiltonianSystem::new(Some(2)),
+        BosonLindbladNoiseSystem::new(None),
+    );
+
+    assert!(blos.is_ok());
+    let os = blos.unwrap();
+    let (system, noise) = os.ungroup();
+
+    assert_eq!(noise.number_modes(), 2);
+    assert_eq!(system.number_modes(), 2);
+}
+
 // Test the group function of the BosonLindbladOpenSystem
 #[test]
 fn group_failing() {
     let slos = BosonLindbladOpenSystem::group(
-        BosonHamiltonianSystem::new(None),
+        BosonHamiltonianSystem::new(Some(3)),
         BosonLindbladNoiseSystem::new(Some(2)),
     );
     assert!(slos.is_err());

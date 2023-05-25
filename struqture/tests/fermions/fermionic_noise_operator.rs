@@ -433,12 +433,12 @@ fn illegal_identity_operators() {
     assert!(ok);
     let mut fno_right_identity = FermionLindbladNoiseOperator::new();
     let ok = fno_right_identity
-        .add_operator_product((fp.clone(), empty_fp.clone()), cc.clone())
+        .add_operator_product((fp, empty_fp.clone()), cc.clone())
         .is_err();
     assert!(ok);
     let mut fno_both_identity = FermionLindbladNoiseOperator::new();
     let ok = fno_both_identity
-        .add_operator_product((empty_fp.clone(), empty_fp.clone()), cc)
+        .add_operator_product((empty_fp.clone(), empty_fp), cc)
         .is_err();
     assert!(ok);
 }
