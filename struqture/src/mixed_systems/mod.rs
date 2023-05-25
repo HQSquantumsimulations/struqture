@@ -32,6 +32,8 @@ mod mixed_noise_operator;
 mod mixed_noise_system;
 mod mixed_open_system;
 mod mixed_operator;
+mod mixed_plus_minus_operator;
+mod mixed_plus_minus_product;
 mod mixed_product;
 mod mixed_system;
 
@@ -50,6 +52,8 @@ pub use mixed_noise_operator::MixedLindbladNoiseOperator;
 pub use mixed_noise_system::MixedLindbladNoiseSystem;
 pub use mixed_open_system::MixedLindbladOpenSystem;
 pub use mixed_operator::MixedOperator;
+pub use mixed_plus_minus_operator::MixedPlusMinusOperator;
+pub use mixed_plus_minus_product::MixedPlusMinusProduct;
 pub use mixed_product::MixedProduct;
 pub use mixed_system::MixedSystem;
 
