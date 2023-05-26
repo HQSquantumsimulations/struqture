@@ -437,7 +437,7 @@ impl FromStr for MixedPlusMinusProduct {
                 fermions.push(FermionProduct::from_str(rest)?);
             } else {
                 return Err(StruqtureError::ParsingError {
-                    target_type: "MixedIndex".to_string(),
+                    target_type: "MixedPlusMinusProduct".to_string(),
                     msg: format!(
                         "Encountered subsystem that is neither spin, nor boson, nor fermion: {}",
                         subsystem

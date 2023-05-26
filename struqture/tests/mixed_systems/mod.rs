@@ -13,6 +13,9 @@
 mod mixed_product;
 pub use mixed_product::*;
 
+mod mixed_plus_minus_product;
+pub use mixed_plus_minus_product::*;
+
 mod mixed_hermitian_product;
 pub use mixed_hermitian_product::*;
 
