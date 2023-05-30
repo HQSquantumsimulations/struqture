@@ -10,10 +10,12 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::{MixedIndex, MixedProduct};
 use crate::bosons::BosonProduct;
 use crate::fermions::FermionProduct;
 use crate::spins::{PauliProduct, PlusMinusProduct};
 use crate::{ModeIndex, StruqtureError, SymmetricIndex};
+use itertools::Itertools;
 use num_complex::Complex64;
 use serde::{
     de::{Error, SeqAccess, Visitor},
@@ -22,8 +24,6 @@ use serde::{
 };
 use std::str::FromStr;
 use tinyvec::TinyVec;
-
-use super::{MixedIndex, MixedProduct};
 
 /// A mixed product of pauli products, boson products and fermion products.
 ///
@@ -271,38 +271,41 @@ impl From<MixedProduct> for Vec<(MixedPlusMinusProduct, Complex64)> {
     ///
     /// * `Self` - The MixedProduct converted into a vector of tuples of (MixedPlusMinusProduct, Complex64).
     fn from(value: MixedProduct) -> Self {
-        let mut new_vec: Vec<(MixedPlusMinusProduct, Complex64)> = Vec::new();
+        let mut return_vec: Vec<(MixedPlusMinusProduct, Complex64)> = Vec::new();
         let mut spins_vec: Vec<Vec<(PlusMinusProduct, Complex64)>> = Vec::new();
-        let mut total_length = 1;
         for pauli_product in value.spins() {
             let conversion = Vec::<(PlusMinusProduct, Complex64)>::from(pauli_product.clone());
-            total_length *= conversion.len();
             spins_vec.push(conversion);
         }
-        let mut result_spins: Vec<(Vec<PlusMinusProduct>, Complex64)> = Vec::new();
-        for _ in 0..total_length {
-            result_spins.push((Vec::new(), 1.0.into()))
+
+        // converted: list of entries with n subsystem PP (in vec) and prefactor
+        let mut converted: Vec<(Vec<PlusMinusProduct>, Complex64)> = Vec::new();
+        for (pp, prefactor) in spins_vec[0].clone() {
+            converted.push((vec![pp], prefactor))
         }
-        for subsystem in spins_vec {
-            for (pmp, cc) in subsystem {
-                for (mut converted_pm_vec, mut converted_complex) in result_spins.clone() {
-                    converted_pm_vec.push(pmp.clone());
-                    converted_complex *= cc;
-                }
+        for element in spins_vec.iter().skip(1) {
+            let mut new_converted = Vec::new();
+            for ((left, prefactor), (right, right_factor)) in
+                converted.iter().cartesian_product(element)
+            {
+                let mut new_vec = left.clone();
+                new_vec.push(right.clone());
+                new_converted.push((new_vec, prefactor * right_factor))
             }
+            converted = new_converted;
         }
 
-        for (converted, cc) in result_spins {
-            new_vec.push((
+        for (vec_pp, cc) in converted {
+            return_vec.push((
                 MixedPlusMinusProduct::new(
-                    converted,
+                    vec_pp,
                     value.bosons().cloned(),
                     value.fermions().cloned(),
                 ),
                 cc,
             ));
         }
-        new_vec
+        return_vec
     }
 }
 
@@ -346,38 +349,37 @@ impl TryFrom<MixedPlusMinusProduct> for Vec<(MixedProduct, Complex64)> {
     ///
     /// * `Self` - The MixedPlusMinusProduct converted into a vector of tuples of (MixedProduct, Complex64).
     fn try_from(value: MixedPlusMinusProduct) -> Result<Self, Self::Error> {
-        let mut new_vec: Vec<(MixedProduct, Complex64)> = Vec::new();
+        let mut return_vec: Vec<(MixedProduct, Complex64)> = Vec::new();
         let mut spins_vec: Vec<Vec<(PauliProduct, Complex64)>> = Vec::new();
-        let mut total_length = 1;
         for pauli_product in value.spins() {
             let conversion = Vec::<(PauliProduct, Complex64)>::from(pauli_product.clone());
-            total_length *= conversion.len();
             spins_vec.push(conversion);
         }
-        let mut result_spins: Vec<(Vec<PauliProduct>, Complex64)> = Vec::new();
-        for _ in 0..total_length {
-            result_spins.push((Vec::new(), 1.0.into()))
+
+        // converted: list of entries with n subsystem PP (in vec) and prefactor
+        let mut converted: Vec<(Vec<PauliProduct>, Complex64)> = Vec::new();
+        for (pp, prefactor) in spins_vec[0].clone() {
+            converted.push((vec![pp], prefactor))
         }
-        for subsystem in spins_vec {
-            for (pmp, cc) in subsystem {
-                for (mut converted_pm_vec, mut converted_complex) in result_spins.clone() {
-                    converted_pm_vec.push(pmp.clone());
-                    converted_complex *= cc;
-                }
+        for element in spins_vec.iter().skip(1) {
+            let mut new_converted = Vec::new();
+            for ((left, prefactor), (right, right_factor)) in
+                converted.iter().cartesian_product(element)
+            {
+                let mut new_vec = left.clone();
+                new_vec.push(right.clone());
+                new_converted.push((new_vec, prefactor * right_factor))
             }
+            converted = new_converted;
         }
 
-        for (converted, cc) in result_spins {
-            new_vec.push((
-                MixedProduct::new(
-                    converted,
-                    value.bosons().cloned(),
-                    value.fermions().cloned(),
-                )?,
+        for (vec_pp, cc) in converted {
+            return_vec.push((
+                MixedProduct::new(vec_pp, value.bosons().cloned(), value.fermions().cloned())?,
                 cc,
             ));
         }
-        Ok(new_vec)
+        Ok(return_vec)
     }
 }
 

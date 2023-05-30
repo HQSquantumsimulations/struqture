@@ -24,7 +24,7 @@ use struqture::bosons::*;
 use struqture::fermions::*;
 use struqture::mixed_systems::*;
 use struqture::prelude::*;
-use struqture::spins::{PlusMinusProduct, PauliProduct};
+use struqture::spins::{PauliProduct, PlusMinusProduct};
 use test_case::test_case;
 
 #[test_case(PlusMinusProduct::from_str("").unwrap(), &[], &[], &[], &[]; "empty")]
@@ -218,29 +218,353 @@ fn hermitian_test() {
 
 // Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
 #[test]
-fn from_mixed_operator() {
+fn to_mixed_product_1() {
+    let spins_1 = PlusMinusProduct::from_str("0+").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new = MixedPlusMinusProduct::new([spins_1], [bosons.clone()], [fermions.clone()]);
+
+    let spins_1_c = PauliProduct::from_str("0X").unwrap();
+    let spins_2_c = PauliProduct::from_str("0Y").unwrap();
+    let mixed_1 = MixedProduct::new([spins_1_c], [bosons.clone()], [fermions.clone()]).unwrap();
+    let mixed_2 = MixedProduct::new([spins_2_c], [bosons], [fermions]).unwrap();
+
+    let res: Vec<(MixedProduct, Complex64)> = test_new.try_into().unwrap();
+    assert_eq!(res.len(), 2);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, 0.5.into()),
+        (mixed_2, Complex64::new(0.0, 0.5)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn to_mixed_product_2() {
     let spins_1 = PlusMinusProduct::from_str("0+").unwrap();
     let spins_2 = PlusMinusProduct::from_str("0-").unwrap();
     let creators = &[0];
     let annihilators = &[3];
     let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
     let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
-    let test_new = MixedPlusMinusProduct::new([spins_1, spins_2], [bosons], [fermions]);
+    let test_new =
+        MixedPlusMinusProduct::new([spins_1, spins_2], [bosons.clone()], [fermions.clone()]);
 
     let spins_1_c = PauliProduct::from_str("0X").unwrap();
     let spins_2_c = PauliProduct::from_str("0Y").unwrap();
-    let creators_h = &[3];
-    let annihilators_h = &[0];
-    let bosons_h = BosonProduct::new(creators_h.to_vec(), annihilators_h.to_vec()).unwrap();
-    let fermions_h = FermionProduct::new(creators_h.to_vec(), annihilators_h.to_vec()).unwrap();
-    let mixed_1 = MixedProduct::new([spins_1_c.clone(), spins_1_c.clone()], [bosons_h.clone()], [fermions_h.clone()]).unwrap();
-    let mixed_2 = MixedProduct::new([spins_1_c.clone(), spins_2_c.clone()], [bosons_h.clone()], [fermions_h.clone()]).unwrap();
-    let mixed_3 = MixedProduct::new([spins_2_c.clone(), spins_1_c], [bosons_h.clone()], [fermions_h.clone()]).unwrap();
-    let mixed_4 = MixedProduct::new([spins_2_c.clone(), spins_2_c], [bosons_h], [fermions_h]).unwrap();
+    let mixed_1 = MixedProduct::new(
+        [spins_1_c.clone(), spins_1_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_2 = MixedProduct::new(
+        [spins_1_c.clone(), spins_2_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_3 = MixedProduct::new(
+        [spins_2_c.clone(), spins_1_c],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_4 = MixedProduct::new([spins_2_c.clone(), spins_2_c], [bosons], [fermions]).unwrap();
 
     let res: Vec<(MixedProduct, Complex64)> = test_new.try_into().unwrap();
-    println!("{:?}", res);
-    for (left, right) in res.iter().zip(vec![(mixed_1, 1.0.into()), (mixed_2, Complex64::new(0.0, 1.0)), (mixed_3, Complex64::new(0.0, -1.0)), (mixed_4, Complex64::new(1.0, 0.0))]) {
+    assert_eq!(res.len(), 4);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, 0.25.into()),
+        (mixed_2, Complex64::new(0.0, -0.25)),
+        (mixed_3, Complex64::new(0.0, 0.25)),
+        (mixed_4, Complex64::new(0.25, 0.0)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn to_mixed_product_3() {
+    let spins_1 = PlusMinusProduct::from_str("0+").unwrap();
+    let spins_2 = PlusMinusProduct::from_str("0Z").unwrap();
+    let spins_3 = PlusMinusProduct::from_str("0-").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new = MixedPlusMinusProduct::new(
+        [spins_1, spins_2, spins_3],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+
+    let spins_1_c = PauliProduct::from_str("0X").unwrap();
+    let spins_2_c = PauliProduct::from_str("0Z").unwrap();
+    let spins_3_c = PauliProduct::from_str("0Y").unwrap();
+    let mixed_1 = MixedProduct::new(
+        [spins_1_c.clone(), spins_2_c.clone(), spins_1_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_2 = MixedProduct::new(
+        [spins_1_c.clone(), spins_2_c.clone(), spins_3_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_3 = MixedProduct::new(
+        [spins_3_c.clone(), spins_2_c.clone(), spins_1_c],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_4 = MixedProduct::new(
+        [spins_3_c.clone(), spins_2_c, spins_3_c],
+        [bosons],
+        [fermions],
+    )
+    .unwrap();
+
+    let res: Vec<(MixedProduct, Complex64)> = test_new.try_into().unwrap();
+    assert_eq!(res.len(), 4);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, 0.25.into()),
+        (mixed_2, Complex64::new(0.0, -0.25)),
+        (mixed_3, Complex64::new(0.0, 0.25)),
+        (mixed_4, Complex64::new(0.25, 0.0)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn to_mixed_product_longer() {
+    let spins_1 = PlusMinusProduct::from_str("2Z3Z").unwrap();
+    let spins_2 = PlusMinusProduct::from_str("1+2-3Z").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new =
+        MixedPlusMinusProduct::new([spins_1, spins_2], [bosons.clone()], [fermions.clone()]);
+
+    let spins_1_c = PauliProduct::from_str("2Z3Z").unwrap();
+    let mixed_1 = MixedProduct::new(
+        [spins_1_c.clone(), PauliProduct::from_str("1X2X3Z").unwrap()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_2 = MixedProduct::new(
+        [spins_1_c.clone(), PauliProduct::from_str("1Y2X3Z").unwrap()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_3 = MixedProduct::new(
+        [spins_1_c.clone(), PauliProduct::from_str("1X2Y3Z").unwrap()],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+    let mixed_4 = MixedProduct::new(
+        [spins_1_c, PauliProduct::from_str("1Y2Y3Z").unwrap()],
+        [bosons],
+        [fermions],
+    )
+    .unwrap();
+
+    let res: Vec<(MixedProduct, Complex64)> = test_new.try_into().unwrap();
+    assert_eq!(res.len(), 4);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, 0.25.into()),
+        (mixed_2, Complex64::new(0.0, 0.25)),
+        (mixed_3, Complex64::new(0.0, -0.25)),
+        (mixed_4, Complex64::new(0.25, 0.0)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn from_mixed_product_1() {
+    let spins_1 = PauliProduct::from_str("0X").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new = MixedProduct::new([spins_1], [bosons.clone()], [fermions.clone()]).unwrap();
+
+    let spins_1_c = PlusMinusProduct::from_str("0+").unwrap();
+    let spins_2_c = PlusMinusProduct::from_str("0-").unwrap();
+    let mixed_1 = MixedPlusMinusProduct::new([spins_1_c], [bosons.clone()], [fermions.clone()]);
+    let mixed_2 = MixedPlusMinusProduct::new([spins_2_c], [bosons], [fermions]);
+
+    let res: Vec<(MixedPlusMinusProduct, Complex64)> = test_new.into();
+    assert_eq!(res.len(), 2);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, 1.0.into()),
+        (mixed_2, Complex64::new(1.0, 0.0)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn from_mixed_product_2() {
+    let spins_1 = PauliProduct::from_str("0X").unwrap();
+    let spins_2 = PauliProduct::from_str("0Y").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new =
+        MixedProduct::new([spins_1, spins_2], [bosons.clone()], [fermions.clone()]).unwrap();
+
+    let spins_1_c = PlusMinusProduct::from_str("0+").unwrap();
+    let spins_2_c = PlusMinusProduct::from_str("0-").unwrap();
+    let mixed_1 = MixedPlusMinusProduct::new(
+        [spins_1_c.clone(), spins_1_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_2 = MixedPlusMinusProduct::new(
+        [spins_1_c.clone(), spins_2_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_3 = MixedPlusMinusProduct::new(
+        [spins_2_c.clone(), spins_1_c],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_4 = MixedPlusMinusProduct::new([spins_2_c.clone(), spins_2_c], [bosons], [fermions]);
+
+    let res: Vec<(MixedPlusMinusProduct, Complex64)> = test_new.into();
+    assert_eq!(res.len(), 4);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, Complex64::new(0.0, -1.0)),
+        (mixed_2, Complex64::new(0.0, 1.0)),
+        (mixed_3, Complex64::new(0.0, -1.0)),
+        (mixed_4, Complex64::new(0.0, 1.0)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn from_mixed_product_3() {
+    let spins_1 = PauliProduct::from_str("0X").unwrap();
+    let spins_2 = PauliProduct::from_str("0Z").unwrap();
+    let spins_3 = PauliProduct::from_str("0Y").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new = MixedProduct::new(
+        [spins_1, spins_2, spins_3],
+        [bosons.clone()],
+        [fermions.clone()],
+    )
+    .unwrap();
+
+    let spins_1_c = PlusMinusProduct::from_str("0+").unwrap();
+    let spins_2_c = PlusMinusProduct::from_str("0Z").unwrap();
+    let spins_3_c = PlusMinusProduct::from_str("0-").unwrap();
+    let mixed_1 = MixedPlusMinusProduct::new(
+        [spins_1_c.clone(), spins_2_c.clone(), spins_1_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_2 = MixedPlusMinusProduct::new(
+        [spins_1_c.clone(), spins_2_c.clone(), spins_3_c.clone()],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_3 = MixedPlusMinusProduct::new(
+        [spins_3_c.clone(), spins_2_c.clone(), spins_1_c],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_4 = MixedPlusMinusProduct::new(
+        [spins_3_c.clone(), spins_2_c, spins_3_c],
+        [bosons],
+        [fermions],
+    );
+
+    let res: Vec<(MixedPlusMinusProduct, Complex64)> = test_new.into();
+    assert_eq!(res.len(), 4);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, Complex64::new(0.0, -1.0)),
+        (mixed_2, Complex64::new(0.0, 1.0)),
+        (mixed_3, Complex64::new(0.0, -1.0)),
+        (mixed_4, Complex64::new(0.0, 1.0)),
+    ]) {
+        assert_eq!(left, &right);
+    }
+}
+
+// Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
+#[test]
+fn from_mixed_product_longer() {
+    let spins_1 = PauliProduct::from_str("2Z3Z").unwrap();
+    let spins_2 = PauliProduct::from_str("1X2Y3Z").unwrap();
+    let creators = &[0];
+    let annihilators = &[3];
+    let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
+    let test_new =
+        MixedProduct::new([spins_1, spins_2], [bosons.clone()], [fermions.clone()]).unwrap();
+
+    let spins_1_c = PlusMinusProduct::from_str("2Z3Z").unwrap();
+    let mixed_1 = MixedPlusMinusProduct::new(
+        [
+            spins_1_c.clone(),
+            PlusMinusProduct::from_str("1+2+3Z").unwrap(),
+        ],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_2 = MixedPlusMinusProduct::new(
+        [
+            spins_1_c.clone(),
+            PlusMinusProduct::from_str("1-2+3Z").unwrap(),
+        ],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_3 = MixedPlusMinusProduct::new(
+        [
+            spins_1_c.clone(),
+            PlusMinusProduct::from_str("1+2-3Z").unwrap(),
+        ],
+        [bosons.clone()],
+        [fermions.clone()],
+    );
+    let mixed_4 = MixedPlusMinusProduct::new(
+        [spins_1_c, PlusMinusProduct::from_str("1-2-3Z").unwrap()],
+        [bosons],
+        [fermions],
+    );
+
+    let res: Vec<(MixedPlusMinusProduct, Complex64)> = test_new.into();
+    assert_eq!(res.len(), 4);
+    for (left, right) in res.iter().zip(vec![
+        (mixed_1, Complex64::new(0.0, -1.0)),
+        (mixed_2, Complex64::new(0.0, -1.0)),
+        (mixed_3, Complex64::new(0.0, 1.0)),
+        (mixed_4, Complex64::new(0.0, 1.0)),
+    ]) {
         assert_eq!(left, &right);
     }
 }
@@ -253,7 +577,11 @@ fn current_number_particles() {
     let annihilators = &[3];
     let bosons = BosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
     let fermions = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
-    let test_new = MixedPlusMinusProduct::new([spins, PlusMinusProduct::new()], [BosonProduct::new([], []).unwrap(), bosons], [fermions]);
+    let test_new = MixedPlusMinusProduct::new(
+        [spins, PlusMinusProduct::new()],
+        [BosonProduct::new([], []).unwrap(), bosons],
+        [fermions],
+    );
 
     assert_eq!(test_new.current_number_spins(), vec![1, 0]);
     assert_eq!(test_new.current_number_bosonic_modes(), vec![0, 4]);
