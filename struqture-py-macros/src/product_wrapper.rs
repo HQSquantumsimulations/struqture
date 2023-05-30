@@ -230,9 +230,11 @@ pub fn productwrapper(
     } else {
         TokenStream::new()
     };
-    let mixed_index_quote = if attribute_arguments.contains("MixedIndex") {
+    let mixed_index_quote = if struct_name.contains("Mixed") {
         let spin_type = if struct_name.contains("Decoherence") {
             quote::format_ident!("DecoherenceProductWrapper")
+        } else if struct_name.contains("PlusMinus") {
+            quote::format_ident!("PlusMinusProductWrapper")
         } else {
             quote::format_ident!("PauliProductWrapper")
         };
