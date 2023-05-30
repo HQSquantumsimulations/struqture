@@ -49,8 +49,8 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "MixedOperatorSerialize")]
-#[serde(into = "MixedOperatorSerialize")]
+#[serde(from = "MixedPlusMinusOperatorSerialize")]
+#[serde(into = "MixedPlusMinusOperatorSerialize")]
 pub struct MixedPlusMinusOperator {
     /// The internal HashMap of MixedProducts and coefficients (CalculatorComplex)
     internal_map: HashMap<MixedPlusMinusProduct, CalculatorComplex>,
@@ -63,7 +63,7 @@ pub struct MixedPlusMinusOperator {
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-struct MixedOperatorSerialize {
+struct MixedPlusMinusOperatorSerialize {
     items: Vec<(MixedPlusMinusProduct, CalculatorFloat, CalculatorFloat)>,
     n_spins: usize,
     n_bosons: usize,
@@ -71,8 +71,8 @@ struct MixedOperatorSerialize {
     _struqture_version: StruqtureVersionSerializable,
 }
 
-impl From<MixedOperatorSerialize> for MixedPlusMinusOperator {
-    fn from(value: MixedOperatorSerialize) -> Self {
+impl From<MixedPlusMinusOperatorSerialize> for MixedPlusMinusOperator {
+    fn from(value: MixedPlusMinusOperatorSerialize) -> Self {
         let mut new_noise_op =
             MixedPlusMinusOperator::new(value.n_spins, value.n_bosons, value.n_fermions);
         for (key, real, imag) in value.items.iter() {
@@ -83,7 +83,7 @@ impl From<MixedOperatorSerialize> for MixedPlusMinusOperator {
     }
 }
 
-impl From<MixedPlusMinusOperator> for MixedOperatorSerialize {
+impl From<MixedPlusMinusOperator> for MixedPlusMinusOperatorSerialize {
     fn from(value: MixedPlusMinusOperator) -> Self {
         let new_noise_op: Vec<(MixedPlusMinusProduct, CalculatorFloat, CalculatorFloat)> = value
             .clone()
@@ -666,7 +666,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedOperatorSerialize {
+        let sos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -680,7 +680,7 @@ mod test {
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
         assert_eq!(MixedPlusMinusOperator::from(sos.clone()), so);
-        assert_eq!(MixedOperatorSerialize::from(so), sos);
+        assert_eq!(MixedPlusMinusOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of MixedOperator
     #[test]
@@ -690,7 +690,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedOperatorSerialize {
+        let sos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -710,7 +710,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos_1 = MixedOperatorSerialize {
+        let sos_1 = MixedPlusMinusOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -725,7 +725,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos_2 = MixedOperatorSerialize {
+        let sos_2 = MixedPlusMinusOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -749,7 +749,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedOperatorSerialize {
+        let sos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -762,7 +762,7 @@ mod test {
 
         assert_eq!(
             format!("{:?}", sos),
-            "MixedOperatorSerialize { items: [(MixedPlusMinusProduct { spins: [PlusMinusProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "MixedPlusMinusOperatorSerialize { items: [(MixedPlusMinusProduct { spins: [PlusMinusProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
@@ -774,7 +774,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedOperatorSerialize {
+        let sos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -789,7 +789,7 @@ mod test {
             &sos.readable(),
             &[
                 Token::Struct {
-                    name: "MixedOperatorSerialize",
+                    name: "MixedPlusMinusOperatorSerialize",
                     len: 5,
                 },
                 Token::Str("items"),
@@ -829,7 +829,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedOperatorSerialize {
+        let sos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -844,7 +844,7 @@ mod test {
             &sos.compact(),
             &[
                 Token::Struct {
-                    name: "MixedOperatorSerialize",
+                    name: "MixedPlusMinusOperatorSerialize",
                     len: 5,
                 },
                 Token::Str("items"),

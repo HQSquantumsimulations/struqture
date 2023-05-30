@@ -291,7 +291,7 @@ impl MixedOperator {
     /// * `n_spins` - The number of spin sub-systems.
     /// * `n_bosons` - The number of boson sub-systems.
     /// * `n_fermions` - The number of fermion sub-systems.
-    /// * `capacity` - The pre-allocated capacity of the hamiltonian.
+    /// * `capacity` - The pre-allocated capacity of the operator.
     ///
     /// # Returns
     ///
