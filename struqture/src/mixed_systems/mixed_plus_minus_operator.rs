@@ -293,7 +293,7 @@ impl MixedPlusMinusOperator {
     /// * `n_spins` - The number of spin sub-systems.
     /// * `n_bosons` - The number of boson sub-systems.
     /// * `n_fermions` - The number of fermion sub-systems.
-    /// * `capacity` - The pre-allocated capacity of the hamiltonian.
+    /// * `capacity` - The pre-allocated capacity of the operator.
     ///
     /// # Returns
     ///
@@ -401,25 +401,6 @@ impl From<MixedOperator> for MixedPlusMinusOperator {
         new_operator
     }
 }
-
-// impl TryFrom<MixedPlusMinusOperator> for MixedHamiltonian { ASK NICO
-//     type Error = StruqtureError;
-
-//     /// Tries to converts a MixedPlusMinusOperator into a MixedHamiltonian.
-//     ///
-//     /// # Arguments
-//     ///
-//     /// * `value` - The MixedPlusMinusOperator to try to convert.
-//     ///
-//     /// # Returns
-//     ///
-//     /// * `Ok(Self)` - The MixedPlusMinusOperator converted into a MixedHamiltonian.
-//     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
-//     fn try_from(value: MixedPlusMinusOperator) -> Result<Self, Self::Error> {
-//         let tmp_operator = MixedOperator::from(value);
-//         MixedHamiltonian::try_from(tmp_operator)
-//     }
-// }
 
 /// Implements the negative sign function of MixedPlusMinusOperator.
 ///
