@@ -660,13 +660,13 @@ mod test {
 
     // Test the Clone and PartialEq traits of MixedOperator
     #[test]
-    fn so_from_sos() {
+    fn mpmo_from_mpmos() {
         let pp: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
             [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedPlusMinusOperatorSerialize {
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -676,11 +676,11 @@ mod test {
                 minor_version: 0,
             },
         };
-        let mut so = MixedPlusMinusOperator::new(1, 1, 1);
-        so.set(pp, CalculatorComplex::from(0.5)).unwrap();
+        let mut mpmo = MixedPlusMinusOperator::new(1, 1, 1);
+        mpmo.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(MixedPlusMinusOperator::from(sos.clone()), so);
-        assert_eq!(MixedPlusMinusOperatorSerialize::from(so), sos);
+        assert_eq!(MixedPlusMinusOperator::from(mpmos.clone()), mpmo);
+        assert_eq!(MixedPlusMinusOperatorSerialize::from(mpmo), mpmos);
     }
     // Test the Clone and PartialEq traits of MixedOperator
     #[test]
@@ -690,7 +690,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedPlusMinusOperatorSerialize {
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -702,7 +702,7 @@ mod test {
         };
 
         // Test Clone trait
-        assert_eq!(sos.clone(), sos);
+        assert_eq!(mpmos.clone(), mpmos);
 
         // Test PartialEq trait
         let pp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
@@ -710,7 +710,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos_1 = MixedPlusMinusOperatorSerialize {
+        let mpmos_1 = MixedPlusMinusOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -725,7 +725,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos_2 = MixedPlusMinusOperatorSerialize {
+        let mpmos_2 = MixedPlusMinusOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -735,10 +735,10 @@ mod test {
                 minor_version: 0,
             },
         };
-        assert!(sos_1 == sos);
-        assert!(sos == sos_1);
-        assert!(sos_2 != sos);
-        assert!(sos != sos_2);
+        assert!(mpmos_1 == mpmos);
+        assert!(mpmos == mpmos_1);
+        assert!(mpmos_2 != mpmos);
+        assert!(mpmos != mpmos_2);
     }
 
     // Test the Debug trait of MixedOperator
@@ -749,7 +749,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedPlusMinusOperatorSerialize {
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -761,7 +761,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{:?}", mpmos),
             "MixedPlusMinusOperatorSerialize { items: [(MixedPlusMinusProduct { spins: [PlusMinusProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
@@ -774,7 +774,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedPlusMinusOperatorSerialize {
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -786,7 +786,7 @@ mod test {
         };
 
         assert_tokens(
-            &sos.readable(),
+            &mpmos.readable(),
             &[
                 Token::Struct {
                     name: "MixedPlusMinusOperatorSerialize",
@@ -829,7 +829,7 @@ mod test {
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
         );
-        let sos = MixedPlusMinusOperatorSerialize {
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -841,7 +841,7 @@ mod test {
         };
 
         assert_tokens(
-            &sos.compact(),
+            &mpmos.compact(),
             &[
                 Token::Struct {
                     name: "MixedPlusMinusOperatorSerialize",
