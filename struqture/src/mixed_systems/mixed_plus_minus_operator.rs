@@ -590,14 +590,14 @@ impl FromIterator<(MixedPlusMinusProduct, CalculatorComplex)> for MixedPlusMinus
                 let spins = first_element.0.spins().len();
                 let bosons = first_element.0.bosons().len();
                 let fermions = first_element.0.fermions().len();
-                let mut slno = MixedPlusMinusOperator::new(spins, bosons, fermions);
-                slno.set(first_element.0, first_element.1)
+                let mut mpmo = MixedPlusMinusOperator::new(spins, bosons, fermions);
+                mpmo.set(first_element.0, first_element.1)
                     .expect("Internal error in set");
                 for (pair, cc) in iterator {
-                    slno.add_operator_product(pair, cc)
+                    mpmo.add_operator_product(pair, cc)
                         .expect("Internal error in add_operator_product");
                 }
-                slno
+                mpmo
             }
             None => MixedPlusMinusOperator::new(0, 0, 0),
         }
