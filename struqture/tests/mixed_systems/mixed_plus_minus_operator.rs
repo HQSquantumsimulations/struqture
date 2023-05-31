@@ -56,38 +56,15 @@ fn new(
     assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
-// Test the new function of the MixedPlusMinusOperator
-#[test_case(0_usize, 0_usize, 0_usize, vec![], vec![], vec![]; "0, 0, 0")]
-#[test_case(1_usize, 2_usize, 1_usize, vec![0], vec![0, 0], vec![0]; "1, 2, 1")]
-#[test_case(2_usize, 1_usize, 2_usize, vec![0, 0], vec![0], vec![0, 0]; "2, 1, 2")]
-#[test_case(10_usize, 10_usize, 10_usize, vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0], vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0], vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; "10, 10, 10")]
-fn new_with_capacity(
-    n_pauli: usize,
-    n_bosons: usize,
-    n_fermions: usize,
-    number_spins: Vec<usize>,
-    number_bosonic_modes: Vec<usize>,
-    number_fermionic_modes: Vec<usize>,
-) {
-    let mo = MixedPlusMinusOperator::new(n_pauli, n_bosons, n_fermions);
-    assert!(mo.is_empty());
-    assert_eq!(number_spins, mo.number_spins());
-    assert_eq!(number_spins, mo.current_number_spins());
-    assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
-    assert_eq!(number_bosonic_modes, mo.current_number_bosonic_modes());
-    assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
-    assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
-}
-
 #[test]
 fn empty_clone_options() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(0)],
         [BosonProduct::new([0], [1]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
-    mo.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
+    mo.set(mp_0, CalculatorComplex::from(0.5)).unwrap();
 
     let empty: Option<usize> = None;
     let full: Option<usize> = Some(2);
@@ -100,12 +77,12 @@ fn empty_clone_options() {
 // Test the current_number_spins function of the MixedPlusMinusOperator
 #[test]
 fn internal_map_current_number_spins_and_modes() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(0)],
         [BosonProduct::new([0], [1]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
-    let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [3]).unwrap()],
@@ -115,12 +92,12 @@ fn internal_map_current_number_spins_and_modes() {
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
-    mo.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
+    mo.set(mp_0, CalculatorComplex::from(0.5)).unwrap();
     assert_eq!(mo.current_number_spins(), vec![1_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), vec![2_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![3_usize]);
 
-    mo.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
+    mo.set(mp_2, CalculatorComplex::from(0.5)).unwrap();
     assert_eq!(mo.current_number_spins(), vec![3_usize]);
     assert_eq!(mo.current_number_bosonic_modes(), vec![4_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![4_usize]);
@@ -129,31 +106,31 @@ fn internal_map_current_number_spins_and_modes() {
 // Test the len function of the SpinOperator
 #[test]
 fn internal_map_len() {
-    let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
-    mo.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
+    mo.set(mp_2, CalculatorComplex::from(0.5)).unwrap();
     assert_eq!(mo.len(), 1_usize);
 }
 
 // Test the iter, keys and values functions of the MixedPlusMinusOperator
 #[test]
 fn internal_map_keys() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(1)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
     let pp_0_vec: Vec<(MixedPlusMinusProduct, CalculatorComplex)> =
-        vec![(pp_0.clone(), 0.3.into())];
+        vec![(mp_0.clone(), 0.3.into())];
     mo.extend(pp_0_vec.iter().cloned());
 
     let mut map: BTreeMap<MixedPlusMinusProduct, CalculatorComplex> = BTreeMap::new();
-    map.insert(pp_0, CalculatorComplex::from(0.3));
+    map.insert(mp_0, CalculatorComplex::from(0.3));
 
     // iter
     let dict = mo.iter();
@@ -180,7 +157,7 @@ fn internal_map_keys() {
 // Test the set, get and remove functions of the SpinOperator
 #[test]
 fn internal_map_set_get_remove() {
-    let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
@@ -189,26 +166,26 @@ fn internal_map_set_get_remove() {
 
     // 1) Test try_set_pauli_product and get functions
     // Vacant
-    assert_eq!(mo.set(pp_2.clone(), 0.0.into()), Ok(None));
-    mo.set(pp_2.clone(), CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(mo.get(&pp_2.clone()), &CalculatorComplex::from(0.5));
+    assert_eq!(mo.set(mp_2.clone(), 0.0.into()), Ok(None));
+    mo.set(mp_2.clone(), CalculatorComplex::from(0.5)).unwrap();
+    assert_eq!(mo.get(&mp_2.clone()), &CalculatorComplex::from(0.5));
     assert_eq!(
-        mo.set(pp_2.clone(), 0.0.into()),
+        mo.set(mp_2.clone(), 0.0.into()),
         Ok(Some(CalculatorComplex::new(0.5, 0.0)))
     );
     // 2) Test remove function
-    mo.remove(&pp_2);
+    mo.remove(&mp_2);
     assert_eq!(mo, MixedPlusMinusOperator::new(1, 1, 1));
 }
 
 #[test]
 fn set_fail() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(0)],
         [BosonProduct::new([0], [1]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
-    let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
@@ -218,7 +195,7 @@ fn set_fail() {
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
-    let err = mo.set(pp_0, CalculatorComplex::from(0.5));
+    let err = mo.set(mp_0, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
         Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -236,7 +213,7 @@ fn set_fail() {
     assert_eq!(mo.current_number_bosonic_modes(), Vec::<usize>::new());
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
-    let err = mo.set(pp_2.clone(), CalculatorComplex::from(0.5));
+    let err = mo.set(mp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
         Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -254,7 +231,7 @@ fn set_fail() {
     assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), Vec::<usize>::new());
 
-    let err = mo.set(pp_2, CalculatorComplex::from(0.5));
+    let err = mo.set(mp_2, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
         Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -271,31 +248,31 @@ fn set_fail() {
 // Test the add_operator_product function of the MixedPlusMinusOperator
 #[test]
 fn internal_map_add_operator_product() {
-    let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
 
-    mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5))
+    mo.add_operator_product(mp_2.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    assert_eq!(mo.get(&pp_2), &CalculatorComplex::from(0.5));
-    mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(-0.5))
+    assert_eq!(mo.get(&mp_2), &CalculatorComplex::from(0.5));
+    mo.add_operator_product(mp_2.clone(), CalculatorComplex::from(-0.5))
         .unwrap();
-    assert_eq!(mo.get(&pp_2), &CalculatorComplex::from(0.0));
+    assert_eq!(mo.get(&mp_2), &CalculatorComplex::from(0.0));
 }
 
 #[test]
 fn fail_add_operator_product() {
-    let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
 
     let mut mo = MixedPlusMinusOperator::new(0, 1, 1);
-    let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
+    let err = mo.add_operator_product(mp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
         Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -309,7 +286,7 @@ fn fail_add_operator_product() {
     );
 
     let mut mo = MixedPlusMinusOperator::new(1, 0, 1);
-    let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
+    let err = mo.add_operator_product(mp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
         Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -323,7 +300,7 @@ fn fail_add_operator_product() {
     );
 
     let mut mo = MixedPlusMinusOperator::new(1, 1, 0);
-    let err = mo.add_operator_product(pp_2, CalculatorComplex::from(0.5));
+    let err = mo.add_operator_product(mp_2, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
         Err(StruqtureError::MissmatchedNumberSubsystems {
@@ -340,13 +317,13 @@ fn fail_add_operator_product() {
 // Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
 #[test]
 fn hermitian_test() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(0)],
         [BosonProduct::new([0], [1]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut test_new = MixedPlusMinusOperator::new(1, 1, 1);
-    test_new.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
+    test_new.set(mp_0, CalculatorComplex::from(0.5)).unwrap();
 
     assert_eq!(test_new.hermitian_conjugate(), test_new.clone());
 }
@@ -354,77 +331,77 @@ fn hermitian_test() {
 // Test the negative operation: -MixedPlusMinusOperator
 #[test]
 fn negative_mo() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
     let mut mo_0_minus = MixedPlusMinusOperator::new(1, 1, 1);
     mo_0_minus
-        .add_operator_product(pp_0, CalculatorComplex::from(-1.0))
+        .add_operator_product(mp_0, CalculatorComplex::from(-1.0))
         .unwrap();
 
     assert_eq!(-mo_0, mo_0_minus);
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the addition: MixedPMOperator + MixedPMOperator
 #[test]
-fn add_so_so() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+fn add_mpmo_mpmo() {
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
-    let pp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(1)],
         [BosonProduct::new([1], [2]).unwrap()],
         [FermionProduct::new([1], [3]).unwrap()],
     );
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
     let mut mo_1 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(-1.0))
+    mo_1.add_operator_product(mp_1.clone(), CalculatorComplex::from(-1.0))
         .unwrap();
     let mut mo_0_1 = MixedPlusMinusOperator::new(1, 1, 1);
     mo_0_1
-        .add_operator_product(pp_0, CalculatorComplex::from(1.0))
+        .add_operator_product(mp_0, CalculatorComplex::from(1.0))
         .unwrap();
     mo_0_1
-        .add_operator_product(pp_1, CalculatorComplex::from(-1.0))
+        .add_operator_product(mp_1, CalculatorComplex::from(-1.0))
         .unwrap();
 
     assert_eq!(mo_0 + mo_1, Ok(mo_0_1));
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the sutraction: MixedPMOperator + MixedPMOperator
 #[test]
-fn sub_so_so() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+fn sub_mpmo_mpmo() {
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
-    let pp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(1)],
         [BosonProduct::new([1], [2]).unwrap()],
         [FermionProduct::new([1], [3]).unwrap()],
     );
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
     let mut mo_1 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(-1.0))
+    mo_1.add_operator_product(mp_1.clone(), CalculatorComplex::from(-1.0))
         .unwrap();
     let mut mo_0_1 = MixedPlusMinusOperator::new(1, 1, 1);
     mo_0_1
-        .add_operator_product(pp_0, CalculatorComplex::from(1.0))
+        .add_operator_product(mp_0, CalculatorComplex::from(1.0))
         .unwrap();
     mo_0_1
-        .add_operator_product(pp_1, CalculatorComplex::from(1.0))
+        .add_operator_product(mp_1, CalculatorComplex::from(1.0))
         .unwrap();
 
     assert_eq!(mo_0 - mo_1, Ok(mo_0_1));
@@ -433,17 +410,17 @@ fn sub_so_so() {
 // Test the multiplication: SpinOperator * Calculatorcomplex
 #[test]
 fn mul_so_cf() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(2.0))
         .unwrap();
     let mut mo_0_1 = MixedPlusMinusOperator::new(1, 1, 1);
     mo_0_1
-        .add_operator_product(pp_0, CalculatorComplex::from(6.0))
+        .add_operator_product(mp_0, CalculatorComplex::from(6.0))
         .unwrap();
 
     assert_eq!(mo_0 * CalculatorFloat::from(3.0), mo_0_1);
@@ -452,17 +429,17 @@ fn mul_so_cf() {
 // Test the multiplication: SpinOperator * Calculatorcomplex
 #[test]
 fn mul_so_cc() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(2.0))
         .unwrap();
     let mut mo_0_1 = MixedPlusMinusOperator::new(1, 1, 1);
     mo_0_1
-        .add_operator_product(pp_0, CalculatorComplex::from(6.0))
+        .add_operator_product(mp_0, CalculatorComplex::from(6.0))
         .unwrap();
 
     assert_eq!(mo_0 * CalculatorComplex::from(3.0), mo_0_1);
@@ -708,18 +685,18 @@ fn to_mixed_product_3() {
 // Test the Iter traits of FermionOperator: into_iter, from_iter and extend
 #[test]
 fn into_iter_from_iter_extend() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [2]).unwrap()],
     );
-    let pp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(1)],
         [BosonProduct::new([1], [2]).unwrap()],
         [FermionProduct::new([1], [3]).unwrap()],
     );
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(2.0))
         .unwrap();
 
     let mo_iter = mo_0.clone().into_iter();
@@ -729,13 +706,13 @@ fn into_iter_from_iter_extend() {
         .map(|(key, value)| (key.clone(), value.clone()));
     assert_eq!(MixedPlusMinusOperator::from_iter(mo_iter), mo_0);
     let mut mapping: BTreeMap<MixedPlusMinusProduct, CalculatorComplex> = BTreeMap::new();
-    mapping.insert(pp_1.clone(), CalculatorComplex::from(0.5));
+    mapping.insert(mp_1.clone(), CalculatorComplex::from(0.5));
     let mapping_iter = mapping.into_iter();
     mo_0.extend(mapping_iter);
 
     let mut mo_0_1 = MixedPlusMinusOperator::new(1, 1, 1);
-    let _ = mo_0_1.add_operator_product(pp_0, CalculatorComplex::from(2.0));
-    let _ = mo_0_1.add_operator_product(pp_1, CalculatorComplex::from(0.5));
+    let _ = mo_0_1.add_operator_product(mp_0, CalculatorComplex::from(2.0));
+    let _ = mo_0_1.add_operator_product(mp_1, CalculatorComplex::from(0.5));
 
     assert_eq!(mo_0, mo_0_1);
 }
@@ -743,12 +720,12 @@ fn into_iter_from_iter_extend() {
 // Test the from_iter function of the MixedPlusMinusOperator
 #[test]
 fn from_iterator() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [3]).unwrap()],
     );
-    let pp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(1)],
         [BosonProduct::new([1], [2]).unwrap()],
         [FermionProduct::new([1], [3]).unwrap()],
@@ -756,13 +733,13 @@ fn from_iterator() {
 
     // iterator with two items
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
+    mo_0.add_operator_product(mp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    mo_0.add_operator_product(pp_1.clone(), CalculatorComplex::from(2.0))
+    mo_0.add_operator_product(mp_1.clone(), CalculatorComplex::from(2.0))
         .unwrap();
     let mut iterator: HashMap<MixedPlusMinusProduct, CalculatorComplex> = HashMap::new();
-    iterator.insert(pp_0, 1.0.into());
-    iterator.insert(pp_1, 2.0.into());
+    iterator.insert(mp_0, 1.0.into());
+    iterator.insert(mp_1, 2.0.into());
     assert_eq!(
         MixedPlusMinusOperator::from_iter(iterator.iter().map(|(x, y)| (x.clone(), y.clone()))),
         mo_0
@@ -788,13 +765,13 @@ fn default() {
 // Test the Hash, Debug and Display traits of PlusMinusProduct
 #[test]
 fn debug() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [3]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
-    mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
+    mo.add_operator_product(mp_0, CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
         format!("{:?}", mo),
@@ -805,13 +782,13 @@ fn debug() {
 // Test the Hash, Debug and Display traits of PlusMinusProduct
 #[test]
 fn display() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [3]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
-    mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
+    mo.add_operator_product(mp_0, CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
         format!("{}", mo),
@@ -825,13 +802,13 @@ fn display() {
 // Test the Clone, PartialEq, PartialOrd and Ord traits of PlusMinusProduct
 #[test]
 fn clone_partial_eq_partial_ord() {
-    let pp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
         [FermionProduct::new([0], [3]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
-    mo.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
+    mo.add_operator_product(mp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
 
     // Test Clone trait
@@ -839,10 +816,10 @@ fn clone_partial_eq_partial_ord() {
 
     // Test PartialEq trait
     let mut mo_0 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_0.set(pp_0.clone(), CalculatorComplex::from(1.0))
+    mo_0.set(mp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
     let mut mo_1 = MixedPlusMinusOperator::new(1, 1, 1);
-    mo_1.set(pp_0, CalculatorComplex::from(2.0)).unwrap();
+    mo_1.set(mp_0, CalculatorComplex::from(2.0)).unwrap();
     assert!(mo_0 == mo);
     assert!(mo == mo_0);
     assert!(mo_1 != mo);
