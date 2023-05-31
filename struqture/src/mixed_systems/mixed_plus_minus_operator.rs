@@ -31,15 +31,15 @@ use std::ops;
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
-/// use struqture::spins::MixedPlusMinusProduct;
+/// use struqture::spins::PlusMinusProduct;
 /// use struqture::bosons::BosonProduct;
 /// use struqture::fermions::FermionProduct;
 /// use struqture::mixed_systems::{MixedPlusMinusProduct, MixedPlusMinusOperator};
 ///
 /// let mut sh = MixedPlusMinusOperator::new(1, 1, 1);
 ///
-/// let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new([MixedPlusMinusProduct::new().x(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]).unwrap();
-/// let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new([MixedPlusMinusProduct::new().z(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]).unwrap();
+/// let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new([PlusMinusProduct::new().plus(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]);
+/// let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new([PlusMinusProduct::new().z(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]);
 /// sh.set(mp_1.clone(), CalculatorComplex::from(0.5)).unwrap();
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
