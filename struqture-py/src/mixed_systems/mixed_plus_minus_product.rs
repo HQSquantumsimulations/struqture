@@ -13,9 +13,12 @@
 use crate::bosons::*;
 use crate::fermions::*;
 use crate::spins::*;
+use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
+use qoqo_calculator::CalculatorComplex;
+use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
@@ -25,6 +28,8 @@ use struqture::mixed_systems::*;
 use struqture::spins::PlusMinusProduct;
 use struqture::SymmetricIndex;
 use struqture_py_macros::product_wrapper;
+
+use super::MixedProductWrapper;
 
 /// A mixed product of pauli products and boson products.
 ///
@@ -103,5 +108,73 @@ impl MixedPlusMinusProductWrapper {
         Ok(Self {
             internal: MixedPlusMinusProduct::new(spinsv, bosonsv, fermionsv),
         })
+    }
+
+    /// Creates a list of corresponding (MixedPlusMinusProduct, CalculatorComplex) tuples from the input MixedProduct.
+    ///
+    /// Args:
+    ///     value (MixedProduct): The MixedProduct object to convert.
+    ///
+    /// Returns:
+    ///     list[tuple[(MixedPlusMinusProduct, CalculatorComplex)]]: The converted input.
+    ///
+    /// Raises:
+    ///     ValueError: Input is not a MixedProduct.
+    #[staticmethod]
+    pub fn from_mixed_product(
+        value: Py<PyAny>,
+    ) -> PyResult<Vec<(MixedPlusMinusProductWrapper, CalculatorComplexWrapper)>> {
+        match MixedProductWrapper::from_pyany(value) {
+            Ok(x) => {
+                let result: Vec<(MixedPlusMinusProduct, Complex64)> =
+                    Vec::<(MixedPlusMinusProduct, Complex64)>::from(x);
+                let result_pyo3: Vec<(MixedPlusMinusProductWrapper, CalculatorComplexWrapper)> =
+                    result
+                        .iter()
+                        .map(|(key, val)| {
+                            (
+                                MixedPlusMinusProductWrapper {
+                                    internal: key.clone(),
+                                },
+                                CalculatorComplexWrapper {
+                                    internal: CalculatorComplex::new(val.re, val.im),
+                                },
+                            )
+                        })
+                        .collect();
+                Ok(result_pyo3)
+            }
+            Err(_) => Err(PyValueError::new_err("Input is not a MixedProduct")),
+        }
+    }
+
+    /// Convert the `self` instance to the corresponding list of (MixedProduct, CalculatorComplex) instances.
+    ///
+    /// Returns:
+    ///     list[tuple[(MixedProduct, CalculatorComplex)]]: The converted MixedPlusMinusProduct.
+    ///
+    /// Raises:
+    ///     ValueError: The conversion was not successful.
+    pub fn to_mixed_product_list(
+        &self,
+    ) -> PyResult<Vec<(MixedProductWrapper, CalculatorComplexWrapper)>> {
+        let result: Vec<(MixedProduct, Complex64)> =
+            Vec::<(MixedProduct, Complex64)>::try_from(self.internal.clone()).map_err(|err| {
+                PyValueError::new_err(format!("The conversion was not successful: {:?}", err))
+            })?;
+        let result_pyo3: Vec<(MixedProductWrapper, CalculatorComplexWrapper)> = result
+            .iter()
+            .map(|(key, val)| {
+                (
+                    MixedProductWrapper {
+                        internal: key.clone(),
+                    },
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(val.re, val.im),
+                    },
+                )
+            })
+            .collect();
+        Ok(result_pyo3)
     }
 }

@@ -309,34 +309,6 @@ impl From<MixedProduct> for Vec<(MixedPlusMinusProduct, Complex64)> {
     }
 }
 
-// impl From<DecoherenceProduct> for Vec<(MixedPlusMinusProduct, Complex64)> { ASK NICO
-//     /// Converts a DecoherenceProduct into a vector of tuples of (MixedPlusMinusProduct, Complex64).
-//     ///
-//     /// # Arguments
-//     ///
-//     /// * `value` - The DecoherenceProduct to convert.
-//     ///
-//     /// # Returns
-//     ///
-//     /// * `Self` - The DecoherenceProduct converted into a vector of tuples of (MixedPlusMinusProduct, Complex64).
-//     fn from(value: DecoherenceProduct) -> Self {
-//         let mut new_vec: Vec<(MixedPlusMinusProduct, Complex64)> =
-//             vec![(MixedPlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
-//         for (index, single) in value.iter() {
-//             let temp_vec: Vec<(SinglePlusMinusOperator, Complex64)> = (*single).into();
-//             let mut temp_new_vec: Vec<(MixedPlusMinusProduct, Complex64)> = Vec::new();
-//             for (new_op, new_prefactor) in temp_vec {
-//                 for (product, prefactor) in new_vec.iter() {
-//                     let product = product.clone().set_pauli(*index, new_op);
-//                     temp_new_vec.push((product, new_prefactor * prefactor))
-//                 }
-//             }
-//             new_vec = temp_new_vec;
-//         }
-//         new_vec
-//     }
-// }
-
 impl TryFrom<MixedPlusMinusProduct> for Vec<(MixedProduct, Complex64)> {
     type Error = StruqtureError;
     /// Converts a MixedPlusMinusProduct into a vector of tuples of (MixedProduct, Complex64).
@@ -382,34 +354,6 @@ impl TryFrom<MixedPlusMinusProduct> for Vec<(MixedProduct, Complex64)> {
         Ok(return_vec)
     }
 }
-
-// impl From<MixedPlusMinusProduct> for Vec<(DecoherenceProduct, Complex64)> {  ASK NICO
-//     /// Converts a MixedPlusMinusProduct into a vector of tuples of (DecoherenceProduct, Complex64).
-//     ///
-//     /// # Arguments
-//     ///
-//     /// * `value` - The MixedPlusMinusProduct to convert.
-//     ///
-//     /// # Returns
-//     ///
-//     /// * `Self` - The MixedPlusMinusProduct converted into a vector of tuples of (DecoherenceProduct, Complex64).
-//     fn from(value: MixedPlusMinusProduct) -> Self {
-//         let mut new_vec: Vec<(DecoherenceProduct, Complex64)> =
-//             vec![(DecoherenceProduct::new(), Complex64::new(1.0, 0.0))];
-//         for (index, single) in value.iter() {
-//             let temp_vec: Vec<(SingleDecoherenceOperator, Complex64)> = (*single).into();
-//             let mut temp_new_vec: Vec<(DecoherenceProduct, Complex64)> = Vec::new();
-//             for (new_op, new_prefactor) in temp_vec {
-//                 for (product, prefactor) in new_vec.iter() {
-//                     let product = product.clone().set_pauli(*index, new_op);
-//                     temp_new_vec.push((product, new_prefactor * prefactor))
-//                 }
-//             }
-//             new_vec = temp_new_vec;
-//         }
-//         new_vec
-//     }
-// }
 
 impl FromStr for MixedPlusMinusProduct {
     type Err = StruqtureError;
