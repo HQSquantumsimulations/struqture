@@ -44,7 +44,7 @@ use tinyvec::TinyVec;
 /// use struqture::fermions::FermionProduct;
 /// use struqture::mixed_systems::MixedPlusMinusProduct;
 ///
-/// let m_product = MixedPlusMinusProduct::new([PlusMinusProduct::new().z(0)], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [0]).unwrap()]).unwrap();
+/// let m_product = MixedPlusMinusProduct::new([PlusMinusProduct::new().z(0)], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [0]).unwrap()]);
 /// println!("{}", m_product);
 ///
 /// ```
