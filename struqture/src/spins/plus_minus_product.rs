@@ -13,7 +13,7 @@
 use crate::fermions::{FermionOperator, FermionProduct};
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::prelude::*;
-use crate::{SpinIndex, StruqtureError, SymmetricIndex};
+use crate::{StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::*;
 use serde::de::{Deserializer, Error, SeqAccess, Visitor};
@@ -628,6 +628,37 @@ impl PlusMinusProduct {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
         };
+    }
+
+    /// Returns maximum index in Self.
+    ///
+    /// # Returns
+    ///
+    /// * `usize` - Maximum index.
+    pub fn current_number_spins(&self) -> usize {
+        if let Some((max, _)) = self.iter().last() {
+            *max + 1
+        } else {
+            0
+        }
+    }
+
+    /// Returns the length of the PlusMinusProduct object.
+    ///
+    /// # Returns
+    ///
+    /// * `usize` - The length of the PlusMinusProduct object.
+    pub fn len(&self) -> usize {
+        self.iter().len()
+    }
+
+    /// Returns whether the PlusMinusProduct object is empty or not.
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - Whether the PlusMinusProduct object is empty or not.
+    pub fn is_empty(&self) -> bool {
+        self.iter().len() == 0
     }
 
     /// Remaps the qubits in a clone instance of Self.

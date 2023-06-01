@@ -10,11 +10,12 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{MixedIndex, MixedProduct, OperateOnMixedSystems};
+use super::{MixedOperator, MixedPlusMinusProduct, MixedProduct, OperateOnMixedSystems};
 use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
+    ModeIndex, OperateOnDensityMatrix, OperateOnState, StruqtureError,
     StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
+use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
@@ -30,15 +31,15 @@ use std::ops;
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
-/// use struqture::spins::PauliProduct;
+/// use struqture::spins::PlusMinusProduct;
 /// use struqture::bosons::BosonProduct;
 /// use struqture::fermions::FermionProduct;
-/// use struqture::mixed_systems::{MixedProduct, MixedOperator};
+/// use struqture::mixed_systems::{MixedPlusMinusProduct, MixedPlusMinusOperator};
 ///
-/// let mut sh = MixedOperator::new(1, 1, 1);
+/// let mut sh = MixedPlusMinusOperator::new(1, 1, 1);
 ///
-/// let mp_1: MixedProduct = MixedProduct::new([PauliProduct::new().x(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]).unwrap();
-/// let mp_0: MixedProduct = MixedProduct::new([PauliProduct::new().z(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]).unwrap();
+/// let mp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new([PlusMinusProduct::new().plus(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]);
+/// let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new([PlusMinusProduct::new().z(0),], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [1]).unwrap()]);
 /// sh.set(mp_1.clone(), CalculatorComplex::from(0.5)).unwrap();
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
@@ -48,11 +49,11 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "MixedOperatorSerialize")]
-#[serde(into = "MixedOperatorSerialize")]
-pub struct MixedOperator {
+#[serde(from = "MixedPlusMinusOperatorSerialize")]
+#[serde(into = "MixedPlusMinusOperatorSerialize")]
+pub struct MixedPlusMinusOperator {
     /// The internal HashMap of MixedProducts and coefficients (CalculatorComplex)
-    internal_map: HashMap<MixedProduct, CalculatorComplex>,
+    internal_map: HashMap<MixedPlusMinusProduct, CalculatorComplex>,
     /// Number of Spin subsystems
     n_spins: usize,
     /// Number of Boson subsystems
@@ -62,17 +63,18 @@ pub struct MixedOperator {
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-struct MixedOperatorSerialize {
-    items: Vec<(MixedProduct, CalculatorFloat, CalculatorFloat)>,
+struct MixedPlusMinusOperatorSerialize {
+    items: Vec<(MixedPlusMinusProduct, CalculatorFloat, CalculatorFloat)>,
     n_spins: usize,
     n_bosons: usize,
     n_fermions: usize,
     _struqture_version: StruqtureVersionSerializable,
 }
 
-impl From<MixedOperatorSerialize> for MixedOperator {
-    fn from(value: MixedOperatorSerialize) -> Self {
-        let mut new_noise_op = MixedOperator::new(value.n_spins, value.n_bosons, value.n_fermions);
+impl From<MixedPlusMinusOperatorSerialize> for MixedPlusMinusOperator {
+    fn from(value: MixedPlusMinusOperatorSerialize) -> Self {
+        let mut new_noise_op =
+            MixedPlusMinusOperator::new(value.n_spins, value.n_bosons, value.n_fermions);
         for (key, real, imag) in value.items.iter() {
             let _ =
                 new_noise_op.add_operator_product(key.clone(), CalculatorComplex::new(real, imag));
@@ -81,9 +83,9 @@ impl From<MixedOperatorSerialize> for MixedOperator {
     }
 }
 
-impl From<MixedOperator> for MixedOperatorSerialize {
-    fn from(value: MixedOperator) -> Self {
-        let new_noise_op: Vec<(MixedProduct, CalculatorFloat, CalculatorFloat)> = value
+impl From<MixedPlusMinusOperator> for MixedPlusMinusOperatorSerialize {
+    fn from(value: MixedPlusMinusOperator) -> Self {
+        let new_noise_op: Vec<(MixedPlusMinusProduct, CalculatorFloat, CalculatorFloat)> = value
             .clone()
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
@@ -102,8 +104,8 @@ impl From<MixedOperator> for MixedOperatorSerialize {
     }
 }
 
-impl<'a> OperateOnDensityMatrix<'a> for MixedOperator {
-    type Index = MixedProduct;
+impl<'a> OperateOnDensityMatrix<'a> for MixedPlusMinusOperator {
+    type Index = MixedPlusMinusProduct;
     type Value = CalculatorComplex;
     type IteratorType = Iter<'a, Self::Index, Self::Value>;
     type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
@@ -133,7 +135,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedOperator {
     }
 
     // From trait
-    fn remove(&mut self, key: &MixedProduct) -> Option<CalculatorComplex> {
+    fn remove(&mut self, key: &MixedPlusMinusProduct) -> Option<CalculatorComplex> {
         self.internal_map.remove(key)
     }
 
@@ -145,12 +147,12 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedOperator {
         }
     }
 
-    /// Overwrites an existing entry or sets a new entry in the MixedOperator with the given (MixedProduct key, CalculatorComplex value) pair.
+    /// Overwrites an existing entry or sets a new entry in the MixedPlusMinusOperator with the given (MixedPlusMinusProduct key, CalculatorComplex value) pair.
     ///
     /// # Arguments
     ///
-    /// * `key` - The MixedProduct key to set in the MixedOperator.
-    /// * `value` - The corresponding CalculatorComplex value to set for the key in the MixedOperator.
+    /// * `key` - The MixedPlusMinusProduct key to set in the MixedPlusMinusOperator.
+    /// * `value` - The corresponding CalculatorComplex value to set for the key in the MixedPlusMinusOperator.
     ///
     /// # Returns
     ///
@@ -187,14 +189,14 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for MixedOperator {
+impl<'a> OperateOnState<'a> for MixedPlusMinusOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl<'a> OperateOnMixedSystems<'a> for MixedOperator {
+impl<'a> OperateOnMixedSystems<'a> for MixedPlusMinusOperator {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
         self.current_number_spins()
@@ -253,18 +255,18 @@ impl<'a> OperateOnMixedSystems<'a> for MixedOperator {
     }
 }
 
-/// Implements the default function (Default trait) of MixedOperator (an empty MixedOperator).
+/// Implements the default function (Default trait) of MixedPlusMinusOperator (an empty MixedPlusMinusOperator).
 ///
-impl Default for MixedOperator {
+impl Default for MixedPlusMinusOperator {
     fn default() -> Self {
         Self::new(0, 0, 0)
     }
 }
 
-/// Functions for the MixedOperator
+/// Functions for the MixedPlusMinusOperator
 ///
-impl MixedOperator {
-    /// Creates a new MixedOperator.
+impl MixedPlusMinusOperator {
+    /// Creates a new MixedPlusMinusOperator.
     ///
     /// # Arguments:
     ///
@@ -274,9 +276,9 @@ impl MixedOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) MixedOperator.
+    /// * `Self` - The new (empty) MixedPlusMinusOperator.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
-        MixedOperator {
+        MixedPlusMinusOperator {
             internal_map: HashMap::new(),
             n_spins,
             n_bosons,
@@ -284,7 +286,7 @@ impl MixedOperator {
         }
     }
 
-    /// Creates a new MixedOperator with capacity.
+    /// Creates a new MixedPlusMinusOperator with capacity.
     ///
     /// # Arguments
     ///
@@ -295,7 +297,7 @@ impl MixedOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) MixedOperator.
+    /// * `Self` - The new (empty) MixedPlusMinusOperator.
     pub fn with_capacity(
         n_spins: usize,
         n_bosons: usize,
@@ -341,15 +343,74 @@ impl MixedOperator {
     // }
 }
 
-/// Implements the negative sign function of MixedOperator.
-///
-impl ops::Neg for MixedOperator {
-    type Output = MixedOperator;
-    /// Implement minus sign for MixedOperator.
+impl TryFrom<MixedPlusMinusOperator> for MixedOperator {
+    type Error = StruqtureError;
+    /// Converts a MixedPlusMinusOperator into a MixedOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The MixedPlusMinusOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The MixedOperator * -1.
+    /// * `Self` - The MixedPlusMinusOperator converted into a MixedOperator.
+    fn try_from(value: MixedPlusMinusOperator) -> Result<Self, Self::Error> {
+        let mut new_operator = MixedOperator::with_capacity(
+            value.n_spins,
+            value.n_bosons,
+            value.n_fermions,
+            2 * value.len(),
+        );
+        for (product, val) in value.into_iter() {
+            let transscribed_vector: Vec<(MixedProduct, Complex64)> = product.try_into()?;
+            for (transscribed_product, prefactor) in transscribed_vector {
+                new_operator
+                    .add_operator_product(transscribed_product, val.clone() * prefactor)
+                    .expect("Unexpected error adding operators. Internal struqture error");
+            }
+        }
+        Ok(new_operator)
+    }
+}
+
+impl From<MixedOperator> for MixedPlusMinusOperator {
+    /// Converts a MixedOperator into a MixedPlusMinusOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The MixedOperator to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The MixedOperator converted into a MixedPlusMinusOperator.
+    fn from(value: MixedOperator) -> Self {
+        let mut new_operator = MixedPlusMinusOperator::with_capacity(
+            value.current_number_spins().len(),
+            value.current_number_bosonic_modes().len(),
+            value.current_number_fermionic_modes().len(),
+            2 * value.len(),
+        );
+        for (product, val) in value.into_iter() {
+            let transscribed_vector: Vec<(MixedPlusMinusProduct, Complex64)> = product.into();
+            for (transscribed_product, prefactor) in transscribed_vector {
+                new_operator
+                    .add_operator_product(transscribed_product, val.clone() * prefactor)
+                    .expect("Unexpected error adding operators. Internal struqture error");
+            }
+        }
+        new_operator
+    }
+}
+
+/// Implements the negative sign function of MixedPlusMinusOperator.
+///
+impl ops::Neg for MixedPlusMinusOperator {
+    type Output = MixedPlusMinusOperator;
+    /// Implement minus sign for MixedPlusMinusOperator.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The MixedPlusMinusOperator * -1.
     fn neg(self) -> Self {
         let mut internal = self.internal_map.clone();
         let n_spins = self.n_spins;
@@ -358,7 +419,7 @@ impl ops::Neg for MixedOperator {
         for key in self.keys() {
             internal.insert(key.clone(), internal[key].clone() * -1.0);
         }
-        MixedOperator {
+        MixedPlusMinusOperator {
             internal_map: internal,
             n_spins,
             n_bosons,
@@ -367,11 +428,11 @@ impl ops::Neg for MixedOperator {
     }
 }
 
-/// Implements the plus function of MixedOperator by MixedOperator.
+/// Implements the plus function of MixedPlusMinusOperator by MixedPlusMinusOperator.
 ///
-impl<T, V> ops::Add<T> for MixedOperator
+impl<T, V> ops::Add<T> for MixedPlusMinusOperator
 where
-    T: IntoIterator<Item = (MixedProduct, V)>,
+    T: IntoIterator<Item = (MixedPlusMinusProduct, V)>,
     V: Into<CalculatorComplex>,
 {
     type Output = Result<Self, StruqtureError>;
@@ -379,7 +440,7 @@ where
     ///
     /// # Arguments
     ///
-    /// * `other` - The MixedOperator to be added.
+    /// * `other` - The MixedPlusMinusOperator to be added.
     ///
     /// # Returns
     ///
@@ -393,11 +454,11 @@ where
     }
 }
 
-/// Implements the minus function of MixedOperator by MixedOperator.
+/// Implements the minus function of MixedPlusMinusOperator by MixedPlusMinusOperator.
 ///
-impl<T, V> ops::Sub<T> for MixedOperator
+impl<T, V> ops::Sub<T> for MixedPlusMinusOperator
 where
-    T: IntoIterator<Item = (MixedProduct, V)>,
+    T: IntoIterator<Item = (MixedPlusMinusProduct, V)>,
     V: Into<CalculatorComplex>,
 {
     type Output = Result<Self, StruqtureError>;
@@ -405,7 +466,7 @@ where
     ///
     /// # Arguments
     ///
-    /// * `other` - The MixedOperator to be subtracted.
+    /// * `other` - The MixedPlusMinusOperator to be subtracted.
     ///
     /// # Returns
     ///
@@ -419,14 +480,14 @@ where
     }
 }
 
-/// Implements the multiplication function of MixedOperator by CalculatorComplex/CalculatorFloat.
+/// Implements the multiplication function of MixedPlusMinusOperator by CalculatorComplex/CalculatorFloat.
 ///
-impl<T> ops::Mul<T> for MixedOperator
+impl<T> ops::Mul<T> for MixedPlusMinusOperator
 where
     T: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implement `*` for MixedOperator and CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for MixedPlusMinusOperator and CalculatorComplex/CalculatorFloat.
     ///
     /// # Arguments
     ///
@@ -434,7 +495,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Self` - The MixedOperator multiplied by the CalculatorComplex/CalculatorFloat.
+    /// * `Self` - The MixedPlusMinusOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
         let mut internal = self.internal_map.clone();
@@ -444,7 +505,7 @@ where
         for key in self.keys() {
             internal.insert(key.clone(), internal[key].clone() * other_cc.clone());
         }
-        MixedOperator {
+        MixedPlusMinusOperator {
             internal_map: internal,
             n_spins,
             n_bosons,
@@ -453,122 +514,93 @@ where
     }
 }
 
-/// Implements the multiplication function of MixedOperator by MixedOperator.
+/// Implements the into_iter function (IntoIterator trait) of MixedPlusMinusOperator.
 ///
-impl ops::Mul<MixedOperator> for MixedOperator {
-    type Output = Result<MixedOperator, StruqtureError>;
-    /// Implement `*` for MixedOperator and MixedOperator.
-    ///
-    /// # Arguments
-    ///
-    /// * `other` - The MixedOperator to multiply by.
+impl IntoIterator for MixedPlusMinusOperator {
+    type Item = (MixedPlusMinusProduct, CalculatorComplex);
+    type IntoIter = std::collections::hash_map::IntoIter<MixedPlusMinusProduct, CalculatorComplex>;
+    /// Returns the MixedPlusMinusOperator in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Ok(Self)` - The two MixedOperators multiplied.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
-    fn mul(self, other: MixedOperator) -> Self::Output {
-        let mut op = MixedOperator::with_capacity(
-            self.n_spins,
-            self.n_bosons,
-            self.n_fermions,
-            self.len() * other.len(),
-        );
-        for (bps, vals) in self {
-            for (bpo, valo) in other.iter() {
-                let mixed_products = (bps.clone() * bpo.clone())?;
-                let coefficient = Into::<CalculatorComplex>::into(valo) * vals.clone();
-                for (b, coeff) in mixed_products {
-                    op.add_operator_product(b, coefficient.clone() * coeff)?;
-                }
-            }
-        }
-        Ok(op)
-    }
-}
-
-/// Implements the into_iter function (IntoIterator trait) of MixedOperator.
-///
-impl IntoIterator for MixedOperator {
-    type Item = (MixedProduct, CalculatorComplex);
-    type IntoIter = std::collections::hash_map::IntoIter<MixedProduct, CalculatorComplex>;
-    /// Returns the MixedOperator in Iterator form.
-    ///
-    /// # Returns
-    ///
-    /// * `Self::IntoIter` - The MixedOperator in Iterator form.
+    /// * `Self::IntoIter` - The MixedPlusMinusOperator in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.into_iter()
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of reference MixedOperator.
+/// Implements the into_iter function (IntoIterator trait) of reference MixedPlusMinusOperator.
 ///
-impl<'a> IntoIterator for &'a MixedOperator {
-    type Item = (&'a MixedProduct, &'a CalculatorComplex);
-    type IntoIter = Iter<'a, MixedProduct, CalculatorComplex>;
+impl<'a> IntoIterator for &'a MixedPlusMinusOperator {
+    type Item = (&'a MixedPlusMinusProduct, &'a CalculatorComplex);
+    type IntoIter = Iter<'a, MixedPlusMinusProduct, CalculatorComplex>;
 
-    /// Returns the reference MixedOperator in Iterator form.
+    /// Returns the reference MixedPlusMinusOperator in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The reference MixedOperator in Iterator form.
+    /// * `Self::IntoIter` - The reference MixedPlusMinusOperator in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.iter()
     }
 }
 
-/// Implements the from_iter function (FromIterator trait) of MixedOperator.
+/// Implements the from_iter function (FromIterator trait) of MixedPlusMinusOperator.
 ///
-impl FromIterator<(MixedProduct, CalculatorComplex)> for MixedOperator {
-    /// Returns the object in MixedOperator form, from an Iterator form of the object.
+impl FromIterator<(MixedPlusMinusProduct, CalculatorComplex)> for MixedPlusMinusOperator {
+    /// Returns the object in MixedPlusMinusOperator form, from an Iterator form of the object.
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the information from which to create the MixedOperator.
+    /// * `iter` - The iterator containing the information from which to create the MixedPlusMinusOperator.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The iterator in MixedOperator form.
+    /// * `Self::IntoIter` - The iterator in MixedPlusMinusOperator form.
     ///
     /// # Panics
     ///
     /// * Internal error in set.
     /// * Internal error in add_operator_product.
-    fn from_iter<I: IntoIterator<Item = (MixedProduct, CalculatorComplex)>>(iter: I) -> Self {
+    fn from_iter<I: IntoIterator<Item = (MixedPlusMinusProduct, CalculatorComplex)>>(
+        iter: I,
+    ) -> Self {
         let mut iterator = iter.into_iter();
         match iterator.next() {
             Some(first_element) => {
                 let spins = first_element.0.spins().len();
                 let bosons = first_element.0.bosons().len();
                 let fermions = first_element.0.fermions().len();
-                let mut slno = MixedOperator::new(spins, bosons, fermions);
-                slno.set(first_element.0, first_element.1)
+                let mut mpmo = MixedPlusMinusOperator::new(spins, bosons, fermions);
+                mpmo.set(first_element.0, first_element.1)
                     .expect("Internal error in set");
                 for (pair, cc) in iterator {
-                    slno.add_operator_product(pair, cc)
+                    mpmo.add_operator_product(pair, cc)
                         .expect("Internal error in add_operator_product");
                 }
-                slno
+                mpmo
             }
-            None => MixedOperator::new(0, 0, 0),
+            None => MixedPlusMinusOperator::new(0, 0, 0),
         }
     }
 }
 
-/// Implements the extend function (Extend trait) of MixedOperator.
+/// Implements the extend function (Extend trait) of MixedPlusMinusOperator.
 ///
-impl Extend<(MixedProduct, CalculatorComplex)> for MixedOperator {
-    /// Extends the MixedOperator by the specified operations (in Iterator form).
+impl Extend<(MixedPlusMinusProduct, CalculatorComplex)> for MixedPlusMinusOperator {
+    /// Extends the MixedPlusMinusOperator by the specified operations (in Iterator form).
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the operations by which to extend the MixedOperator.
+    /// * `iter` - The iterator containing the operations by which to extend the MixedPlusMinusOperator.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
-    fn extend<I: IntoIterator<Item = (MixedProduct, CalculatorComplex)>>(&mut self, iter: I) {
+    fn extend<I: IntoIterator<Item = (MixedPlusMinusProduct, CalculatorComplex)>>(
+        &mut self,
+        iter: I,
+    ) {
         for (pp, cc) in iter {
             self.add_operator_product(pp, cc)
                 .expect("Internal error in add_operator_product");
@@ -576,10 +608,10 @@ impl Extend<(MixedProduct, CalculatorComplex)> for MixedOperator {
     }
 }
 
-/// Implements the format function (Display trait) of MixedOperator.
+/// Implements the format function (Display trait) of MixedPlusMinusOperator.
 ///
-impl fmt::Display for MixedOperator {
-    /// Formats the MixedOperator using the given formatter.
+impl fmt::Display for MixedPlusMinusOperator {
+    /// Formats the MixedPlusMinusOperator using the given formatter.
     ///
     /// # Arguments
     ///
@@ -587,9 +619,9 @@ impl fmt::Display for MixedOperator {
     ///
     /// # Returns
     ///
-    /// * `std::fmt::Result` - The formatted MixedOperator.
+    /// * `std::fmt::Result` - The formatted MixedPlusMinusOperator.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = "MixedOperator{\n".to_string();
+        let mut output = "MixedPlusMinusOperator{\n".to_string();
         for (key, val) in self.iter() {
             writeln!(output, "{}: {},", key, val)?;
         }
@@ -604,19 +636,18 @@ mod test {
     use super::*;
     use crate::bosons::BosonProduct;
     use crate::fermions::FermionProduct;
-    use crate::spins::PauliProduct;
+    use crate::spins::PlusMinusProduct;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of MixedOperator
     #[test]
-    fn so_from_sos() {
-        let pp: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(2)],
+    fn mpmo_from_mpmos() {
+        let pp: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos = MixedOperatorSerialize {
+        );
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -626,22 +657,21 @@ mod test {
                 minor_version: 0,
             },
         };
-        let mut so = MixedOperator::new(1, 1, 1);
-        so.set(pp, CalculatorComplex::from(0.5)).unwrap();
+        let mut mpmo = MixedPlusMinusOperator::new(1, 1, 1);
+        mpmo.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(MixedOperator::from(sos.clone()), so);
-        assert_eq!(MixedOperatorSerialize::from(so), sos);
+        assert_eq!(MixedPlusMinusOperator::from(mpmos.clone()), mpmo);
+        assert_eq!(MixedPlusMinusOperatorSerialize::from(mpmo), mpmos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of MixedOperator
     #[test]
     fn clone_partial_eq() {
-        let pp: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(2)],
+        let pp: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos = MixedOperatorSerialize {
+        );
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -653,16 +683,15 @@ mod test {
         };
 
         // Test Clone trait
-        assert_eq!(sos.clone(), sos);
+        assert_eq!(mpmos.clone(), mpmos);
 
         // Test PartialEq trait
-        let pp_1: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(2)],
+        let pp_1: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos_1 = MixedOperatorSerialize {
+        );
+        let mpmos_1 = MixedPlusMinusOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -672,13 +701,12 @@ mod test {
                 minor_version: 0,
             },
         };
-        let pp_2: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(0)],
+        let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(0)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos_2 = MixedOperatorSerialize {
+        );
+        let mpmos_2 = MixedPlusMinusOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -688,22 +716,21 @@ mod test {
                 minor_version: 0,
             },
         };
-        assert!(sos_1 == sos);
-        assert!(sos == sos_1);
-        assert!(sos_2 != sos);
-        assert!(sos != sos_2);
+        assert!(mpmos_1 == mpmos);
+        assert!(mpmos == mpmos_1);
+        assert!(mpmos_2 != mpmos);
+        assert!(mpmos != mpmos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of MixedOperator
     #[test]
     fn debug() {
-        let pp: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(2)],
+        let pp: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos = MixedOperatorSerialize {
+        );
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -715,21 +742,20 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
-            "MixedOperatorSerialize { items: [(MixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            format!("{:?}", mpmos),
+            "MixedPlusMinusOperatorSerialize { items: [(MixedPlusMinusProduct { spins: [PlusMinusProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test MixedOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
-        let pp: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(2)],
+        let pp: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos = MixedOperatorSerialize {
+        );
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -741,10 +767,10 @@ mod test {
         };
 
         assert_tokens(
-            &sos.readable(),
+            &mpmos.readable(),
             &[
                 Token::Struct {
-                    name: "MixedOperatorSerialize",
+                    name: "MixedPlusMinusOperatorSerialize",
                     len: 5,
                 },
                 Token::Str("items"),
@@ -776,16 +802,15 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test MixedOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
-        let pp: MixedProduct = MixedProduct::new(
-            [PauliProduct::new().z(2)],
+        let pp: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
+            [PlusMinusProduct::new().z(2)],
             [BosonProduct::new([0], [3]).unwrap()],
             [FermionProduct::new([0], [2]).unwrap()],
-        )
-        .unwrap();
-        let sos = MixedOperatorSerialize {
+        );
+        let mpmos = MixedPlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             n_spins: 1,
             n_bosons: 1,
@@ -797,10 +822,10 @@ mod test {
         };
 
         assert_tokens(
-            &sos.compact(),
+            &mpmos.compact(),
             &[
                 Token::Struct {
-                    name: "MixedOperatorSerialize",
+                    name: "MixedPlusMinusOperatorSerialize",
                     len: 5,
                 },
                 Token::Str("items"),
@@ -812,7 +837,7 @@ mod test {
                 Token::Tuple { len: 2 },
                 Token::U64(2),
                 Token::UnitVariant {
-                    name: "SingleSpinOperator",
+                    name: "SinglePlusMinusOperator",
                     variant: "Z",
                 },
                 Token::TupleEnd,

@@ -105,13 +105,10 @@ fn test_jw_fermion_hamiltonian() {
         .unwrap();
     let jw_hfp1 = hfp1.jordan_wigner();
     let jw_hfp2 = hfp2.jordan_wigner();
-    let jw_hfp1_hamiltonian = SpinHamiltonian::try_from(jw_hfp1).unwrap();
-    let jw_hfp2_hamiltonian = SpinHamiltonian::try_from(jw_hfp2).unwrap();
 
     assert_eq!(
         fh.jordan_wigner(),
-        jw_hfp1_hamiltonian * CalculatorFloat::from(1.0)
-            + jw_hfp2_hamiltonian * CalculatorFloat::from(2.0)
+        jw_hfp1 * CalculatorFloat::from(1.0) + jw_hfp2 * CalculatorFloat::from(2.0)
     );
 }
 
