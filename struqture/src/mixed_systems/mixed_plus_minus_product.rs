@@ -44,7 +44,7 @@ use tinyvec::TinyVec;
 /// use struqture::fermions::FermionProduct;
 /// use struqture::mixed_systems::MixedPlusMinusProduct;
 ///
-/// let m_product = MixedPlusMinusProduct::new([PlusMinusProduct::new().z(0)], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [0]).unwrap()]).unwrap();
+/// let m_product = MixedPlusMinusProduct::new([PlusMinusProduct::new().z(0)], [BosonProduct::new([0], [1]).unwrap()], [FermionProduct::new([0], [0]).unwrap()]);
 /// println!("{}", m_product);
 ///
 /// ```
@@ -273,15 +273,15 @@ impl From<MixedProduct> for Vec<(MixedPlusMinusProduct, Complex64)> {
     fn from(value: MixedProduct) -> Self {
         let mut return_vec: Vec<(MixedPlusMinusProduct, Complex64)> = Vec::new();
         let mut spins_vec: Vec<Vec<(PlusMinusProduct, Complex64)>> = Vec::new();
-        for pauli_product in value.spins() {
-            let conversion = Vec::<(PlusMinusProduct, Complex64)>::from(pauli_product.clone());
+        for mixed_product in value.spins() {
+            let conversion = Vec::<(PlusMinusProduct, Complex64)>::from(mixed_product.clone());
             spins_vec.push(conversion);
         }
 
         // converted: list of entries with n subsystem PP (in vec) and prefactor
         let mut converted: Vec<(Vec<PlusMinusProduct>, Complex64)> = Vec::new();
-        for (pp, prefactor) in spins_vec[0].clone() {
-            converted.push((vec![pp], prefactor))
+        for (mp, prefactor) in spins_vec[0].clone() {
+            converted.push((vec![mp], prefactor))
         }
         for element in spins_vec.iter().skip(1) {
             let mut new_converted = Vec::new();
@@ -295,10 +295,10 @@ impl From<MixedProduct> for Vec<(MixedPlusMinusProduct, Complex64)> {
             converted = new_converted;
         }
 
-        for (vec_pp, cc) in converted {
+        for (vec_mp, cc) in converted {
             return_vec.push((
                 MixedPlusMinusProduct::new(
-                    vec_pp,
+                    vec_mp,
                     value.bosons().cloned(),
                     value.fermions().cloned(),
                 ),
@@ -308,34 +308,6 @@ impl From<MixedProduct> for Vec<(MixedPlusMinusProduct, Complex64)> {
         return_vec
     }
 }
-
-// impl From<DecoherenceProduct> for Vec<(MixedPlusMinusProduct, Complex64)> { ASK NICO
-//     /// Converts a DecoherenceProduct into a vector of tuples of (MixedPlusMinusProduct, Complex64).
-//     ///
-//     /// # Arguments
-//     ///
-//     /// * `value` - The DecoherenceProduct to convert.
-//     ///
-//     /// # Returns
-//     ///
-//     /// * `Self` - The DecoherenceProduct converted into a vector of tuples of (MixedPlusMinusProduct, Complex64).
-//     fn from(value: DecoherenceProduct) -> Self {
-//         let mut new_vec: Vec<(MixedPlusMinusProduct, Complex64)> =
-//             vec![(MixedPlusMinusProduct::new(), Complex64::new(1.0, 0.0))];
-//         for (index, single) in value.iter() {
-//             let temp_vec: Vec<(SinglePlusMinusOperator, Complex64)> = (*single).into();
-//             let mut temp_new_vec: Vec<(MixedPlusMinusProduct, Complex64)> = Vec::new();
-//             for (new_op, new_prefactor) in temp_vec {
-//                 for (product, prefactor) in new_vec.iter() {
-//                     let product = product.clone().set_pauli(*index, new_op);
-//                     temp_new_vec.push((product, new_prefactor * prefactor))
-//                 }
-//             }
-//             new_vec = temp_new_vec;
-//         }
-//         new_vec
-//     }
-// }
 
 impl TryFrom<MixedPlusMinusProduct> for Vec<(MixedProduct, Complex64)> {
     type Error = StruqtureError;
@@ -351,15 +323,15 @@ impl TryFrom<MixedPlusMinusProduct> for Vec<(MixedProduct, Complex64)> {
     fn try_from(value: MixedPlusMinusProduct) -> Result<Self, Self::Error> {
         let mut return_vec: Vec<(MixedProduct, Complex64)> = Vec::new();
         let mut spins_vec: Vec<Vec<(PauliProduct, Complex64)>> = Vec::new();
-        for pauli_product in value.spins() {
-            let conversion = Vec::<(PauliProduct, Complex64)>::from(pauli_product.clone());
+        for mixed_product in value.spins() {
+            let conversion = Vec::<(PauliProduct, Complex64)>::from(mixed_product.clone());
             spins_vec.push(conversion);
         }
 
         // converted: list of entries with n subsystem PP (in vec) and prefactor
         let mut converted: Vec<(Vec<PauliProduct>, Complex64)> = Vec::new();
-        for (pp, prefactor) in spins_vec[0].clone() {
-            converted.push((vec![pp], prefactor))
+        for (mp, prefactor) in spins_vec[0].clone() {
+            converted.push((vec![mp], prefactor))
         }
         for element in spins_vec.iter().skip(1) {
             let mut new_converted = Vec::new();
@@ -373,43 +345,15 @@ impl TryFrom<MixedPlusMinusProduct> for Vec<(MixedProduct, Complex64)> {
             converted = new_converted;
         }
 
-        for (vec_pp, cc) in converted {
+        for (vec_mp, cc) in converted {
             return_vec.push((
-                MixedProduct::new(vec_pp, value.bosons().cloned(), value.fermions().cloned())?,
+                MixedProduct::new(vec_mp, value.bosons().cloned(), value.fermions().cloned())?,
                 cc,
             ));
         }
         Ok(return_vec)
     }
 }
-
-// impl From<MixedPlusMinusProduct> for Vec<(DecoherenceProduct, Complex64)> {  ASK NICO
-//     /// Converts a MixedPlusMinusProduct into a vector of tuples of (DecoherenceProduct, Complex64).
-//     ///
-//     /// # Arguments
-//     ///
-//     /// * `value` - The MixedPlusMinusProduct to convert.
-//     ///
-//     /// # Returns
-//     ///
-//     /// * `Self` - The MixedPlusMinusProduct converted into a vector of tuples of (DecoherenceProduct, Complex64).
-//     fn from(value: MixedPlusMinusProduct) -> Self {
-//         let mut new_vec: Vec<(DecoherenceProduct, Complex64)> =
-//             vec![(DecoherenceProduct::new(), Complex64::new(1.0, 0.0))];
-//         for (index, single) in value.iter() {
-//             let temp_vec: Vec<(SingleDecoherenceOperator, Complex64)> = (*single).into();
-//             let mut temp_new_vec: Vec<(DecoherenceProduct, Complex64)> = Vec::new();
-//             for (new_op, new_prefactor) in temp_vec {
-//                 for (product, prefactor) in new_vec.iter() {
-//                     let product = product.clone().set_pauli(*index, new_op);
-//                     temp_new_vec.push((product, new_prefactor * prefactor))
-//                 }
-//             }
-//             new_vec = temp_new_vec;
-//         }
-//         new_vec
-//     }
-// }
 
 impl FromStr for MixedPlusMinusProduct {
     type Err = StruqtureError;
