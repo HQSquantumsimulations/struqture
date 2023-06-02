@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.2.0
+
+* Added MixedPlusMinusProduct and MixedPlusMinusOperator to both struqture and struqture-py.
+
 ## 1.1.1
 
 * Fixed failing group when system and noise have the same number of current spins or modes put one of them has not fixed number of spins/modes.
