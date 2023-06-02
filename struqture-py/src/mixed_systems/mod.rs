@@ -15,6 +15,9 @@ use pyo3::prelude::*;
 mod mixed_product;
 pub use mixed_product::MixedProductWrapper;
 
+mod mixed_plus_minus_product;
+pub use mixed_plus_minus_product::MixedPlusMinusProductWrapper;
+
 mod mixed_hermitian_product;
 pub use mixed_hermitian_product::HermitianMixedProductWrapper;
 
@@ -23,6 +26,9 @@ pub use mixed_decoherence_product::MixedDecoherenceProductWrapper;
 
 mod mixed_system;
 pub use mixed_system::MixedSystemWrapper;
+
+mod mixed_plus_minus_operator;
+pub use mixed_plus_minus_operator::MixedPlusMinusOperatorWrapper;
 
 mod mixed_hamiltonian_system;
 pub use mixed_hamiltonian_system::MixedHamiltonianSystemWrapper;

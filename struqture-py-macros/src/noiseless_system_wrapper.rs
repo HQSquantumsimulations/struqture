@@ -29,6 +29,8 @@ pub fn noiselesswrapper(
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
     let index_type = if struct_name.contains("Spin") {
         quote::format_ident!("PauliProductWrapper")
+    } else if struct_name.contains("MixedPlusMinusOperator") {
+        quote::format_ident!("MixedPlusMinusProductWrapper")
     } else if struct_name.contains("PlusMinusOperator") {
         quote::format_ident!("PlusMinusProductWrapper")
     } else if struct_name.contains("BosonHamiltonian") {
