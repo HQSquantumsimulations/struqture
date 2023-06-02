@@ -192,16 +192,16 @@ impl PlusMinusProductWrapper {
         })
     }
 
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
+    /// Creates a list of corresponding (PlusMinusProduct, CalculatorComplex) tuples from the input PauliProduct or DecoherenceProduct.
     ///
     /// Args:
-    ///     other (self): The object to concatenate self with.
+    ///     value (PauliProduct or DecoherenceProduct): The input object to convert.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     list[tuple[(PlusMinusProduct, CalculatorComplex)]]: The converted input.
     ///
     /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
+    ///     ValueError: Input is neither a PauliProduct nor a DecoherenceProduct.
     #[staticmethod]
     pub fn from_product(
         value: Py<PyAny>,
