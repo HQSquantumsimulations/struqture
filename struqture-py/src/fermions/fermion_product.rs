@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::spins::SpinSystemWrapper;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -18,7 +19,9 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use struqture::fermions::*;
+use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
+use struqture::spins::*;
 use struqture_py_macros::product_wrapper;
 
 /// A product of fermionic creation and annihilation operators.
@@ -46,7 +49,7 @@ pub struct FermionProductWrapper {
     pub internal: FermionProduct,
 }
 
-#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex)]
+#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex, JordanWignerFermionToSpin)]
 impl FermionProductWrapper {
     /// Create a new FermionProduct.
     ///

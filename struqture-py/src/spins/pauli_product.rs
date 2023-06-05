@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionSystemWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -18,6 +19,8 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
+use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{PauliProduct, SingleSpinOperator};
 use struqture::{SpinIndex, SymmetricIndex};
 use struqture_py_macros::product_wrapper;
@@ -55,7 +58,7 @@ pub struct PauliProductWrapper {
     pub internal: PauliProduct,
 }
 
-#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[product_wrapper(SpinIndex, SymmetricIndex, JordanWignerSpinToFermion)]
 impl PauliProductWrapper {
     /// Create an empty PauliProduct.
     ///

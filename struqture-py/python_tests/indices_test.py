@@ -1,8 +1,6 @@
 """Just a simple test"""
 from struqture_py import (spins, bosons, fermions, mixed_systems)
 
-
-
 def test_simple():
     # testing Mixed products
     a = bosons.BosonProduct([0], [0])

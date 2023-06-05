@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use super::FermionProductWrapper;
+use crate::spins::SpinHamiltonianSystemWrapper;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -19,7 +20,9 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use struqture::fermions::*;
+use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
+use struqture::spins::*;
 use struqture_py_macros::product_wrapper;
 
 /// A product of fermionic creation and annihilation operators.
@@ -47,7 +50,7 @@ pub struct HermitianFermionProductWrapper {
     pub internal: HermitianFermionProduct,
 }
 
-#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex)]
+#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex, JordanWignerFermionToSpin)]
 impl HermitianFermionProductWrapper {
     /// Create a new HermitianFermionProduct.
     ///
