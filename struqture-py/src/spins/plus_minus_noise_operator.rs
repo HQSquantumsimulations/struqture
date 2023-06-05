@@ -20,7 +20,7 @@ use struqture::spins::{
     PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
 };
 use struqture::OperateOnDensityMatrix;
-use struqture_py_macros::noisy_system_wrapper;
+use struqture_py_macros::{noisy_system_wrapper, mappings};
 
 use super::SpinLindbladNoiseSystemWrapper;
 
@@ -51,6 +51,7 @@ pub struct PlusMinusLindbladNoiseOperatorWrapper {
 }
 
 #[noisy_system_wrapper(OperateOnDensityMatrix)]
+#[mappings(JordanWignerSpinToFermion)]
 impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Create a new PlusMinusLindbladNoiseOperator.
     ///

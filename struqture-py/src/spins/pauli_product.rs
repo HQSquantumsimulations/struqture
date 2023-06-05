@@ -23,7 +23,7 @@ use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{PauliProduct, SingleSpinOperator};
 use struqture::{SpinIndex, SymmetricIndex};
-use struqture_py_macros::product_wrapper;
+use struqture_py_macros::{product_wrapper, mappings};
 
 /// PauliProducts are combinations of SingleSpinOperators on specific qubits.
 ///
@@ -58,7 +58,8 @@ pub struct PauliProductWrapper {
     pub internal: PauliProduct,
 }
 
-#[product_wrapper(SpinIndex, SymmetricIndex, JordanWignerSpinToFermion)]
+#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[mappings(JordanWignerSpinToFermion)]
 impl PauliProductWrapper {
     /// Create an empty PauliProduct.
     ///

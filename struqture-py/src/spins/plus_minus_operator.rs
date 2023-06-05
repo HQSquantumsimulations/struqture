@@ -21,7 +21,7 @@ use struqture::spins::{
     PlusMinusOperator, SpinHamiltonian, SpinHamiltonianSystem, SpinOperator, SpinSystem,
 };
 use struqture::{OperateOnDensityMatrix, OperateOnState};
-use struqture_py_macros::noiseless_system_wrapper;
+use struqture_py_macros::{noiseless_system_wrapper, mappings};
 
 use super::SpinHamiltonianSystemWrapper;
 
@@ -53,6 +53,7 @@ pub struct PlusMinusOperatorWrapper {
 }
 
 #[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix)]
+#[mappings(JordanWignerSpinToFermion)]
 impl PlusMinusOperatorWrapper {
     /// Create an empty PlusMinusOperator.
     ///

@@ -31,7 +31,7 @@ pub fn product_wrapper(
 mod noiseless_system_wrapper;
 use noiseless_system_wrapper::noiselesswrapper;
 
-/// Attribute macro for constructing the pyo3 implementation for mixed indices.
+/// Attribute macro for constructing the pyo3 implementation for noiseless systems.
 #[proc_macro_attribute]
 pub fn noiseless_system_wrapper(
     metadata: proc_macro::TokenStream,
@@ -43,7 +43,7 @@ pub fn noiseless_system_wrapper(
 mod noisy_system_wrapper;
 use noisy_system_wrapper::noisywrapper;
 
-/// Attribute macro for constructing the pyo3 implementation for mixed indices.
+/// Attribute macro for constructing the pyo3 implementation for noisy systems.
 #[proc_macro_attribute]
 pub fn noisy_system_wrapper(
     metadata: proc_macro::TokenStream,
@@ -51,6 +51,19 @@ pub fn noisy_system_wrapper(
 ) -> proc_macro::TokenStream {
     noisywrapper(metadata, input)
 }
+
+mod mappings;
+use mappings::mappings_quotes;
+
+/// Attribute macro for constructing the pyo3 implementation for mappings.
+#[proc_macro_attribute]
+pub fn mappings(
+    metadata: proc_macro::TokenStream,
+    input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    mappings_quotes(metadata, input)
+}
+
 
 // Helper functions
 // Struct for parsed derive macro arguments. Used to identify structs belonging to enums

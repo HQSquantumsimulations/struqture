@@ -24,7 +24,7 @@ use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
 use struqture::SymmetricIndex;
-use struqture_py_macros::product_wrapper;
+use struqture_py_macros::{product_wrapper, mappings};
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
 
@@ -58,6 +58,7 @@ pub struct PlusMinusProductWrapper {
 }
 
 #[product_wrapper(SymmetricIndex)]
+#[mappings(JordanWignerSpinToFermion)]
 impl PlusMinusProductWrapper {
     /// Create an empty PlusMinusProduct.
     ///

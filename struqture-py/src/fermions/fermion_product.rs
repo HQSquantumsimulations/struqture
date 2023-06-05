@@ -22,7 +22,7 @@ use struqture::fermions::*;
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::*;
-use struqture_py_macros::product_wrapper;
+use struqture_py_macros::{product_wrapper, mappings};
 
 /// A product of fermionic creation and annihilation operators.
 ///
@@ -49,7 +49,8 @@ pub struct FermionProductWrapper {
     pub internal: FermionProduct,
 }
 
-#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex, JordanWignerFermionToSpin)]
+#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex)]
+#[mappings(JordanWignerFermionToSpin)]
 impl FermionProductWrapper {
     /// Create a new FermionProduct.
     ///
