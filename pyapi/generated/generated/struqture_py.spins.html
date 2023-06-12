@@ -1537,19 +1537,19 @@ For instance, to represent the term <span class="math notranslate nohighlight">\
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.from_product">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_product" title="Permalink to this definition"></a></dt>
-<dd><p>Return the concatenation of two objects of type <cite>self</cite> with no overlapping qubits.</p>
+<dd><p>Creates a list of corresponding (PlusMinusProduct, CalculatorComplex) tuples from the input PauliProduct or DecoherenceProduct.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other</strong> (<em>self</em>) -- The object to concatenate self with.</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference internal" href="#struqture_py.spins.PauliProduct" title="struqture_py.spins.PauliProduct"><em>PauliProduct</em></a><em> or </em><a class="reference internal" href="#struqture_py.spins.DecoherenceProduct" title="struqture_py.spins.DecoherenceProduct"><em>DecoherenceProduct</em></a>) -- The input object to convert.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of the corresponding creator indices.</p>
+<dd class="field-even"><p>The converted input.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[int]</p>
+<dd class="field-odd"><p>list[tuple[(<a class="reference internal" href="#struqture_py.spins.PlusMinusProduct" title="struqture_py.spins.PlusMinusProduct">PlusMinusProduct</a>, CalculatorComplex)]]</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> -- The two objects could not be concatenated.</p>
+<dd class="field-even"><p><strong>ValueError</strong> -- Input is neither a PauliProduct nor a DecoherenceProduct.</p>
 </dd>
 </dl>
 </dd></dl>
