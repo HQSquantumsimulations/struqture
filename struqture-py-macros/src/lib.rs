@@ -53,7 +53,7 @@ pub fn noisy_system_wrapper(
 }
 
 mod mappings;
-use mappings::mappings_quotes;
+use mappings::mappings_macro;
 
 /// Attribute macro for constructing the pyo3 implementation for mappings.
 #[proc_macro_attribute]
@@ -61,9 +61,8 @@ pub fn mappings(
     metadata: proc_macro::TokenStream,
     input: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {
-    mappings_quotes(metadata, input)
+    mappings_macro(metadata, input)
 }
-
 
 // Helper functions
 // Struct for parsed derive macro arguments. Used to identify structs belonging to enums

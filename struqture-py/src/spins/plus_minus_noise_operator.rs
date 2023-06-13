@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use crate::spins::PlusMinusProductWrapper;
+use crate::fermions::FermionLindbladNoiseSystemWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -19,8 +20,10 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::spins::{
     PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
 };
+use struqture::fermions::FermionLindbladNoiseSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::OperateOnDensityMatrix;
-use struqture_py_macros::{noisy_system_wrapper, mappings};
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 use super::SpinLindbladNoiseSystemWrapper;
 
@@ -50,8 +53,8 @@ pub struct PlusMinusLindbladNoiseOperatorWrapper {
     pub internal: PlusMinusLindbladNoiseOperator,
 }
 
-#[noisy_system_wrapper(OperateOnDensityMatrix)]
 #[mappings(JordanWignerSpinToFermion)]
+#[noisy_system_wrapper(OperateOnDensityMatrix)]
 impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Create a new PlusMinusLindbladNoiseOperator.
     ///

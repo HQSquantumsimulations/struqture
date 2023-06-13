@@ -22,7 +22,7 @@ use struqture::fermions::*;
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::*;
-use struqture_py_macros::{product_wrapper, mappings};
+use struqture_py_macros::{mappings, product_wrapper};
 
 /// A product of fermionic creation and annihilation operators.
 ///

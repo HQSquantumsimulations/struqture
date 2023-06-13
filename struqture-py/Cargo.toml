@@ -17,7 +17,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
 version = "0.18"
-features = ["num-complex"]
+features = ["num-complex", "multiple-pymethods"]
 
 [dependencies]
 struqture = {version="1.1.1", path="../struqture", default-features=false}

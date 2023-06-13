@@ -12,6 +12,7 @@
 
 use crate::spins::DecoherenceProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
+use crate::fermions::FermionLindbladNoiseSystemWrapper;
 use bincode::deserialize;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
@@ -19,8 +20,9 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::spins::{OperateOnSpins, SpinLindbladNoiseSystem, ToSparseMatrixSuperOperator};
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::{OperateOnDensityMatrix, StruqtureError};
-use struqture_py_macros::noisy_system_wrapper;
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
@@ -52,6 +54,7 @@ pub struct SpinLindbladNoiseSystemWrapper {
     pub internal: SpinLindbladNoiseSystem,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[noisy_system_wrapper(
     OperateOnSpins,
     OperateOnDensityMatrix,

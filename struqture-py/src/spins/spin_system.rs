@@ -12,6 +12,7 @@
 
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
+use crate::fermions::FermionSystemWrapper;
 use bincode::deserialize;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
@@ -22,9 +23,10 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::spins::{
     OperateOnSpins, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::StruqtureError;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
-use struqture_py_macros::noiseless_system_wrapper;
+use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of spins.
 ///
@@ -57,6 +59,7 @@ pub struct SpinSystemWrapper {
     pub internal: SpinSystem,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[noiseless_system_wrapper(
     OperateOnSpins,
     OperateOnState,

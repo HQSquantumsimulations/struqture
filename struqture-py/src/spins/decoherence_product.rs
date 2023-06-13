@@ -23,7 +23,7 @@ use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{DecoherenceProduct, SingleDecoherenceOperator};
 use struqture::{SpinIndex, SymmetricIndex};
-use struqture_py_macros::{product_wrapper, mappings};
+use struqture_py_macros::{mappings, product_wrapper};
 
 /// These are combinations of SingleDecoherenceOperators on specific qubits.
 ///
@@ -56,8 +56,8 @@ pub struct DecoherenceProductWrapper {
     pub internal: DecoherenceProduct,
 }
 
-#[product_wrapper(SpinIndex, SymmetricIndex)]
 #[mappings(JordanWignerSpinToFermion)]
+#[product_wrapper(SpinIndex, SymmetricIndex)]
 impl DecoherenceProductWrapper {
     /// Create an empty DecoherenceProduct.
     ///

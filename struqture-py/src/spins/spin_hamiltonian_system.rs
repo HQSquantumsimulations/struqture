@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use super::SpinSystemWrapper;
+use crate::fermions::FermionHamiltonianSystemWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -23,9 +24,10 @@ use qoqo_calculator_pyo3::CalculatorFloatWrapper;
 use struqture::spins::{
     OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::StruqtureError;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
-use struqture_py_macros::noiseless_system_wrapper;
+use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of spins.
 ///
@@ -58,6 +60,7 @@ pub struct SpinHamiltonianSystemWrapper {
     pub internal: SpinHamiltonianSystem,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[noiseless_system_wrapper(
     OperateOnSpins,
     OperateOnState,

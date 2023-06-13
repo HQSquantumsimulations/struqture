@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionSystemWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -23,8 +24,10 @@ use std::str::FromStr;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
+use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::SymmetricIndex;
-use struqture_py_macros::{product_wrapper, mappings};
+use struqture_py_macros::{mappings, product_wrapper};
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
 
@@ -57,8 +60,8 @@ pub struct PlusMinusProductWrapper {
     pub internal: PlusMinusProduct,
 }
 
-#[product_wrapper(SymmetricIndex)]
 #[mappings(JordanWignerSpinToFermion)]
+#[product_wrapper(SymmetricIndex)]
 impl PlusMinusProductWrapper {
     /// Create an empty PlusMinusProduct.
     ///

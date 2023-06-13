@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionSystemWrapper;
 use crate::spins::{PlusMinusProductWrapper, SpinSystemWrapper};
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -20,8 +21,10 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::spins::{
     PlusMinusOperator, SpinHamiltonian, SpinHamiltonianSystem, SpinOperator, SpinSystem,
 };
+use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
-use struqture_py_macros::{noiseless_system_wrapper, mappings};
+use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 use super::SpinHamiltonianSystemWrapper;
 
@@ -52,8 +55,8 @@ pub struct PlusMinusOperatorWrapper {
     pub internal: PlusMinusOperator,
 }
 
-#[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix)]
 #[mappings(JordanWignerSpinToFermion)]
+#[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix)]
 impl PlusMinusOperatorWrapper {
     /// Create an empty PlusMinusOperator.
     ///

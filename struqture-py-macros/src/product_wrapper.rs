@@ -338,6 +338,7 @@ pub fn productwrapper(
             )
         }
     }
+
         #[pymethods]
         impl #ident {
 
