@@ -69,7 +69,7 @@ checksum = "e77ac7b51b8e6313251737fcef4b1c01a2ea102bde68415b62c0ee9268fec357"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.16",
+ "syn 2.0.18",
 ]
 
 [[package]]
@@ -535,7 +535,7 @@ checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
 
 [[package]]
 name = "struqture"
-version = "1.2.0"
+version = "1.3.0"
 dependencies = [
  "bincode",
  "itertools",
@@ -554,7 +554,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.2.0"
+version = "1.3.0"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -578,7 +578,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.2.0"
+version = "1.3.0"
 dependencies = [
  "num-complex",
  "proc-macro2",
