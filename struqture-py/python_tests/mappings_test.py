@@ -1,10 +1,10 @@
 "Tests for the mappings python interface."
 
-from struqture_py.spins import *; 
-from struqture_py.fermions import *;
+from struqture_py.spins import *
+from struqture_py.fermions import *
+
 
 def test_jordan_wigner_spin_to_fermion():
-
     pp = PauliProduct().x(0).z(1).y(2)
     pp.jordan_wigner()
 
@@ -14,7 +14,7 @@ def test_jordan_wigner_spin_to_fermion():
     pmp = PlusMinusProduct().plus(0).minus(1)
     print(pmp.jordan_wigner())
 
-    pmo  = PlusMinusOperator()
+    pmo = PlusMinusOperator()
     pmo.add_operator_product(pmp, 1.0)
     print(pmo.jordan_wigner())
 
@@ -38,8 +38,8 @@ def test_jordan_wigner_spin_to_fermion():
     slos.noise_add_operator_product((dp, dp), 2.0)
     print(slos.jordan_wigner())
 
-def test_jordan_wigner_fermion_to_spin():
 
+def test_jordan_wigner_fermion_to_spin():
     fp = FermionProduct([0], [2, 3])
     print(fp.jordan_wigner())
 

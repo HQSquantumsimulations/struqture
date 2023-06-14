@@ -27,7 +27,7 @@ pub fn mappings_macro(
 
     let ident = &impl_item.self_ty;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
-    let (struct_name, _struct_ident) = strip_python_wrapper_name(&ident);
+    let (struct_name, _struct_ident) = strip_python_wrapper_name(ident);
 
     let jordan_wigner_spin_to_fermion_quote =
         jordan_wigner_spin_to_fermion_quote(&attribute_arguments, &struct_name);
@@ -47,7 +47,6 @@ pub fn mappings_macro(
     };
     q.into()
 }
-
 
 fn jordan_wigner_spin_to_fermion_quote(
     attribute_arguments: &AttributeMacroArguments,
