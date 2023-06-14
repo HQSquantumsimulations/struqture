@@ -37,7 +37,7 @@ pip install struqture-py
 You can use struqture in your Rust project by adding
 
 ```TOML
-struqture = { version = "1.1" }
+struqture = { version = "1.2" }
 ```
 
  to your Cargo.toml file.
