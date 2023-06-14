@@ -14,14 +14,16 @@ use super::{
     FermionHamiltonianSystemWrapper, FermionLindbladNoiseSystemWrapper, FermionProductWrapper,
     HermitianFermionProductWrapper,
 };
+use crate::spins::SpinLindbladOpenSystemWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionLindbladOpenSystem;
+use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::{OpenSystem, OperateOnDensityMatrix, OperateOnModes};
-use struqture_py_macros::noisy_system_wrapper;
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of fermions.
 ///
@@ -50,6 +52,7 @@ pub struct FermionLindbladOpenSystemWrapper {
     pub internal: FermionLindbladOpenSystem,
 }
 
+#[mappings(JordanWignerFermionToSpin)]
 #[noisy_system_wrapper(OpenSystem, OperateOnModes, Calculus)]
 impl FermionLindbladOpenSystemWrapper {
     /// Create a new FermionLindbladOpenSystem.

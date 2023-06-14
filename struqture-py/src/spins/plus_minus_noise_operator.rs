@@ -10,18 +10,18 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::spins::PlusMinusProductWrapper;
 use crate::fermions::FermionLindbladNoiseSystemWrapper;
+use crate::spins::PlusMinusProductWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use struqture::fermions::FermionLindbladNoiseSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
 };
-use struqture::fermions::FermionLindbladNoiseSystem;
-use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::OperateOnDensityMatrix;
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 

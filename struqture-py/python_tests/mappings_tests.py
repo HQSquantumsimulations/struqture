@@ -37,3 +37,28 @@ def test_jordan_wigner_spin_to_fermion():
     slos.system_add_operator_product(pp, 2.0)
     slos.noise_add_operator_product((dp, dp), 2.0)
     print(slos.jordan_wigner())
+
+def test_jordan_wigner_fermion_to_spin():
+
+    fp = FermionProduct([0], [2, 3])
+    print(fp.jordan_wigner())
+
+    hfp = HermitianFermionProduct([0], [2, 3])
+    print(hfp.jordan_wigner())
+
+    fs = FermionSystem(4)
+    fs.add_operator_product(fp, 1.0)
+    print(fs.jordan_wigner())
+
+    fh = FermionHamiltonianSystem(5)
+    fh.add_operator_product(hfp, 1.0)
+    print(fh.jordan_wigner())
+
+    flns = FermionLindbladNoiseSystem()
+    flns.add_operator_product((fp, fp), 1.0)
+    print(flns.jordan_wigner())
+
+    flos = FermionLindbladOpenSystem()
+    flos.system_add_operator_product(fp, 2.0)
+    flos.noise_add_operator_product((fp, fp), 2.0)
+    print(flos.jordan_wigner())

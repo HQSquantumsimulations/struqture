@@ -49,8 +49,8 @@ pub struct FermionProductWrapper {
     pub internal: FermionProduct,
 }
 
-#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex)]
 #[mappings(JordanWignerFermionToSpin)]
+#[product_wrapper(FermionIndex, ModeIndex, SymmetricIndex)]
 impl FermionProductWrapper {
     /// Create a new FermionProduct.
     ///

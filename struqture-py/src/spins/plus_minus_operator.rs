@@ -18,11 +18,11 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     PlusMinusOperator, SpinHamiltonian, SpinHamiltonianSystem, SpinOperator, SpinSystem,
 };
-use struqture::fermions::FermionSystem;
-use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 

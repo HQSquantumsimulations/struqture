@@ -21,11 +21,11 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
+use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
-use struqture::fermions::FermionSystem;
-use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::SymmetricIndex;
 use struqture_py_macros::{mappings, product_wrapper};
 

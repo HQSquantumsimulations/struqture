@@ -21,10 +21,10 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorFloatWrapper;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
-use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::StruqtureError;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
