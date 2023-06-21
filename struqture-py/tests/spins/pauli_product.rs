@@ -483,7 +483,7 @@ fn test_hash() {
     });
 }
 
-/// Test jordan_wigner() method of PauliProduct 
+/// Test jordan_wigner() method of PauliProduct
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -492,6 +492,5 @@ fn test_jordan_wigner() {
         let pp = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
         let fo = pp.call_method0("jordan_wigner").unwrap();
         assert!(!fo.is_empty().unwrap());
-
     });
 }
