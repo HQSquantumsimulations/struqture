@@ -3,5 +3,6 @@ documentation/book/*
 documentation/_build*
 documentation/generated*
 .vscode
-*/__pycache__/*
+*__pycache__*
 *.~undo-tree~
+*.so
