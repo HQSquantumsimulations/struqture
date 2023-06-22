@@ -848,3 +848,24 @@ fn test_richcmp() {
         assert!(comparison.is_err());
     });
 }
+
+/// Test jordan_wigner() method of FermionHamiltonianSystem
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let number_fermions: Option<usize> = None;
+        let fhs = new_system(py, number_fermions);
+        fhs
+            .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
+            .unwrap();
+        let shs = fhs.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(shs.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let number_modes = usize::extract(fhs.call_method0("current_number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(shs.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}

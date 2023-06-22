@@ -412,3 +412,20 @@ fn test_hash() {
         assert!(!not_equal);
     });
 }
+
+/// Test jordan_wigner() method of HermitianFermionProduct
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let hfp = new_pp(py, vec![0, 1], vec![1, 2]);
+        let sh = hfp.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(sh.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let number_modes = usize::extract(hfp.call_method0("current_number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(sh.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}
