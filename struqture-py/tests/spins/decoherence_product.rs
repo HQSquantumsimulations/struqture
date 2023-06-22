@@ -485,3 +485,22 @@ fn test_hash() {
         assert!(!not_equal);
     });
 }
+
+/// Test jordan_wigner() method of DecoherenceProduct
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_dp = new_pp(py);
+        let dp = new_dp.call_method1("set_pauli", (0_u64, "iY")).unwrap();
+        let fo = dp.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(fo.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(dp.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}

@@ -1495,3 +1495,22 @@ fn test_richcmp() {
         assert!(comparison.is_err());
     });
 }
+
+/// Test jordan_wigner() method of SpinLindbladOpenSystem
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let slos = new_system(py);
+        slos.call_method1("system_add_operator_product", ("0X", 0.1))
+            .unwrap();
+        slos.call_method1("noise_add_operator_product", (("0X", "0iY"), 0.1))
+            .unwrap();
+        let flos = slos.call_method0("jordan_wigner").unwrap();
+
+        let number_modes = usize::extract(flos.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(slos.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}
