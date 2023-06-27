@@ -1504,7 +1504,7 @@ fn test_jordan_wigner() {
         let slos = new_system(py);
         slos.call_method1("system_add_operator_product", ("0X", 0.1))
             .unwrap();
-        slos.call_method1("noise_add_operator_product", (("0X", "0iY"), 0.1))
+        slos.call_method1("noise_add_operator_product", (("0X", "1iY"), 0.1))
             .unwrap();
         let flos = slos.call_method0("jordan_wigner").unwrap();
 

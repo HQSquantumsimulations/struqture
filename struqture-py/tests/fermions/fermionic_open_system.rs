@@ -1578,7 +1578,7 @@ fn test_jordan_wigner() {
     pyo3::Python::with_gil(|py| {
         let new_flos = new_system(py);
         let mut flos = new_flos
-            .call_method1("system_add_operator_product", ("c1a1", 0.1))
+            .call_method1("system_add_operator_product", ("c0a0", 0.1))
             .unwrap();
         flos = flos
             .call_method1("noise_add_operator_product", (("c1a1", "a1"), 0.1))

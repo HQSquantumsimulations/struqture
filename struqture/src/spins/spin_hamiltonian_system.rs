@@ -580,7 +580,7 @@ impl JordanWignerSpinToFermion for SpinHamiltonianSystem {
     fn jordan_wigner(&self) -> Self::Output {
         FermionHamiltonianSystem::from_hamiltonian(
             self.hamiltonian().jordan_wigner(),
-            Some(self.number_spins()),
+            self.number_spins,
         )
             .expect("Internal bug in jordan_wigner() for SpinHamiltonian. The number of modes in the resulting fermionic Hamiltonian should equal the number of spins of the spin Hamiltonian.")
     }
