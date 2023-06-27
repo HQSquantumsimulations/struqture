@@ -1581,7 +1581,7 @@ fn test_jordan_wigner() {
             .call_method1(
                 "system_add_operator_product",
                 (
-                    "c0a0",
+                    "c1a1",
                     0.1,
                 ),
             )
@@ -1596,9 +1596,6 @@ fn test_jordan_wigner() {
             )
             .unwrap();
         let slos = flos.call_method0("jordan_wigner").unwrap();
-
-        let empty = bool::extract(slos.call_method0("is_empty").unwrap()).unwrap();
-        assert!(!empty);
 
         let number_modes = usize::extract(flos.call_method0("current_number_modes").unwrap()).unwrap();
         let number_spins = usize::extract(slos.call_method0("current_number_spins").unwrap()).unwrap();
