@@ -828,16 +828,17 @@ fn test_jordan_wigner() {
     pyo3::Python::with_gil(|py| {
         let number_fermions: Option<usize> = None;
         let fs = new_system(py, number_fermions);
-        fs
-            .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
+        fs.call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
         let ss = fs.call_method0("jordan_wigner").unwrap();
 
         let empty = bool::extract(ss.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes = usize::extract(fs.call_method0("current_number_modes").unwrap()).unwrap();
-        let number_spins = usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes =
+            usize::extract(fs.call_method0("current_number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
