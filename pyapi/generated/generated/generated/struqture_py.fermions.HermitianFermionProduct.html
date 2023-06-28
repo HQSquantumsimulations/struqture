@@ -158,16 +158,19 @@ weight of a product of operators in the sum.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.is_natural_hermitian" title="struqture_py.fermions.HermitianFermionProduct.is_natural_hermitian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_natural_hermitian</span></code></a>()</p></td>
 <td><p>Return whether self is naturally hermitian.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.number_annihilators" title="struqture_py.fermions.HermitianFermionProduct.number_annihilators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_annihilators</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.jordan_wigner" title="struqture_py.fermions.HermitianFermionProduct.jordan_wigner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jordan_wigner</span></code></a>()</p></td>
+<td><p>Transform the given fermionic object into a spin object using the Jordan Wigner mapping.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.number_annihilators" title="struqture_py.fermions.HermitianFermionProduct.number_annihilators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_annihilators</span></code></a>()</p></td>
 <td><p>Get the number of annihilator indices of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.number_creators" title="struqture_py.fermions.HermitianFermionProduct.number_creators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_creators</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.number_creators" title="struqture_py.fermions.HermitianFermionProduct.number_creators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_creators</span></code></a>()</p></td>
 <td><p>Get the number of creator indices of self.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.to_bincode" title="struqture_py.fermions.HermitianFermionProduct.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.to_bincode" title="struqture_py.fermions.HermitianFermionProduct.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.to_json" title="struqture_py.fermions.HermitianFermionProduct.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct.to_json" title="struqture_py.fermions.HermitianFermionProduct.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of the object.</p></td>
 </tr>
 </tbody>
@@ -335,6 +338,13 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.HermitianFermionProduct.jordan_wigner">
+<span class="sig-name descname"><span class="pre">jordan_wigner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.HermitianFermionProduct.jordan_wigner" title="Permalink to this definition"></a></dt>
+<dd><p>Transform the given fermionic object into a spin object using
+the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">

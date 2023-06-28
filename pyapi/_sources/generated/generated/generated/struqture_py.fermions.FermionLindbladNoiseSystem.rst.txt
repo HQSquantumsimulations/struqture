@@ -21,6 +21,7 @@ struqture\_py.fermions.FermionLindbladNoiseSystem
       ~FermionLindbladNoiseSystem.from_json
       ~FermionLindbladNoiseSystem.get
       ~FermionLindbladNoiseSystem.is_empty
+      ~FermionLindbladNoiseSystem.jordan_wigner
       ~FermionLindbladNoiseSystem.keys
       ~FermionLindbladNoiseSystem.number_modes
       ~FermionLindbladNoiseSystem.remove

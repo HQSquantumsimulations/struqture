@@ -23,6 +23,7 @@ struqture\_py.spins.PauliProduct
       ~PauliProduct.hermitian_conjugate
       ~PauliProduct.is_empty
       ~PauliProduct.is_natural_hermitian
+      ~PauliProduct.jordan_wigner
       ~PauliProduct.keys
       ~PauliProduct.multiply
       ~PauliProduct.remap_qubits

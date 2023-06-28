@@ -19,6 +19,7 @@ struqture\_py.spins.SpinLindbladOpenSystem
       ~SpinLindbladOpenSystem.from_bincode
       ~SpinLindbladOpenSystem.from_json
       ~SpinLindbladOpenSystem.group
+      ~SpinLindbladOpenSystem.jordan_wigner
       ~SpinLindbladOpenSystem.noise
       ~SpinLindbladOpenSystem.noise_add_operator_product
       ~SpinLindbladOpenSystem.noise_get

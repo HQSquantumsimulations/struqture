@@ -21,6 +21,7 @@ struqture\_py.spins.SpinLindbladNoiseSystem
       ~SpinLindbladNoiseSystem.from_json
       ~SpinLindbladNoiseSystem.get
       ~SpinLindbladNoiseSystem.is_empty
+      ~SpinLindbladNoiseSystem.jordan_wigner
       ~SpinLindbladNoiseSystem.keys
       ~SpinLindbladNoiseSystem.number_spins
       ~SpinLindbladNoiseSystem.remove

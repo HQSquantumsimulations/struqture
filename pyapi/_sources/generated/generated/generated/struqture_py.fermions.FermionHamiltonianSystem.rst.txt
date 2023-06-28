@@ -22,6 +22,7 @@ struqture\_py.fermions.FermionHamiltonianSystem
       ~FermionHamiltonianSystem.get
       ~FermionHamiltonianSystem.hermitian_conjugate
       ~FermionHamiltonianSystem.is_empty
+      ~FermionHamiltonianSystem.jordan_wigner
       ~FermionHamiltonianSystem.keys
       ~FermionHamiltonianSystem.number_modes
       ~FermionHamiltonianSystem.remove

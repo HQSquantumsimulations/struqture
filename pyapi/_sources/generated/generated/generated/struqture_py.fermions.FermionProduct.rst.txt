@@ -23,6 +23,7 @@ struqture\_py.fermions.FermionProduct
       ~FermionProduct.from_string
       ~FermionProduct.hermitian_conjugate
       ~FermionProduct.is_natural_hermitian
+      ~FermionProduct.jordan_wigner
       ~FermionProduct.number_annihilators
       ~FermionProduct.number_creators
       ~FermionProduct.to_bincode

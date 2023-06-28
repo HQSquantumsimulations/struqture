@@ -24,6 +24,7 @@ struqture\_py.spins.DecoherenceProduct
       ~DecoherenceProduct.is_empty
       ~DecoherenceProduct.is_natural_hermitian
       ~DecoherenceProduct.iy
+      ~DecoherenceProduct.jordan_wigner
       ~DecoherenceProduct.keys
       ~DecoherenceProduct.multiply
       ~DecoherenceProduct.remap_qubits

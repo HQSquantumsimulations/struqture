@@ -22,6 +22,7 @@ struqture\_py.spins.SpinSystem
       ~SpinSystem.get
       ~SpinSystem.hermitian_conjugate
       ~SpinSystem.is_empty
+      ~SpinSystem.jordan_wigner
       ~SpinSystem.keys
       ~SpinSystem.number_spins
       ~SpinSystem.remove

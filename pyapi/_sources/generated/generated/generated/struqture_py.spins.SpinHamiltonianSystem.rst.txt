@@ -22,6 +22,7 @@ struqture\_py.spins.SpinHamiltonianSystem
       ~SpinHamiltonianSystem.get
       ~SpinHamiltonianSystem.hermitian_conjugate
       ~SpinHamiltonianSystem.is_empty
+      ~SpinHamiltonianSystem.jordan_wigner
       ~SpinHamiltonianSystem.keys
       ~SpinHamiltonianSystem.number_spins
       ~SpinHamiltonianSystem.remove

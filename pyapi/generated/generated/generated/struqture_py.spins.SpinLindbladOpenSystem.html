@@ -152,52 +152,55 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.group" title="struqture_py.spins.SpinLindbladOpenSystem.group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">group</span></code></a>(system, noise)</p></td>
 <td><p>Take a tuple of a system term and a noise term and combines them to be a OpenSystem.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise" title="struqture_py.spins.SpinLindbladOpenSystem.noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.jordan_wigner" title="struqture_py.spins.SpinLindbladOpenSystem.jordan_wigner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jordan_wigner</span></code></a>()</p></td>
+<td><p>Transform the given spin object into a fermionic object using the Jordan Wigner mapping.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise" title="struqture_py.spins.SpinLindbladOpenSystem.noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise</span></code></a>()</p></td>
 <td><p>Return the noise part of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise_add_operator_product" title="struqture_py.spins.SpinLindbladOpenSystem.noise_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_add_operator_product</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise_add_operator_product" title="struqture_py.spins.SpinLindbladOpenSystem.noise_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_add_operator_product</span></code></a>(key, value)</p></td>
 <td><p>Add a new entry to the system of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise_get" title="struqture_py.spins.SpinLindbladOpenSystem.noise_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_get</span></code></a>(key)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise_get" title="struqture_py.spins.SpinLindbladOpenSystem.noise_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_get</span></code></a>(key)</p></td>
 <td><p>Get the CalculatorComplex coefficient corresponding to the key.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise_set" title="struqture_py.spins.SpinLindbladOpenSystem.noise_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_set</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.noise_set" title="struqture_py.spins.SpinLindbladOpenSystem.noise_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_set</span></code></a>(key, value)</p></td>
 <td><p>Set a new entry in the noise of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.number_spins" title="struqture_py.spins.SpinLindbladOpenSystem.number_spins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_spins</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.number_spins" title="struqture_py.spins.SpinLindbladOpenSystem.number_spins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_spins</span></code></a>()</p></td>
 <td><p>Return the number_spins input of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.sparse_lindblad_entries" title="struqture_py.spins.SpinLindbladOpenSystem.sparse_lindblad_entries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_lindblad_entries</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.sparse_lindblad_entries" title="struqture_py.spins.SpinLindbladOpenSystem.sparse_lindblad_entries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_lindblad_entries</span></code></a>()</p></td>
 <td><p>Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo" title="struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_matrix_superoperator_coo</span></code></a>([number_spins])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo" title="struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_matrix_superoperator_coo</span></code></a>([number_spins])</p></td>
 <td><p>Construct the sparse matrix representation of the superoperator in COO representation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system" title="struqture_py.spins.SpinLindbladOpenSystem.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system" title="struqture_py.spins.SpinLindbladOpenSystem.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>()</p></td>
 <td><p>Return the system part of self.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system_add_operator_product" title="struqture_py.spins.SpinLindbladOpenSystem.system_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_add_operator_product</span></code></a>(key, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system_add_operator_product" title="struqture_py.spins.SpinLindbladOpenSystem.system_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_add_operator_product</span></code></a>(key, value)</p></td>
 <td><p>Add a new entry to the system of the open system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system_get" title="struqture_py.spins.SpinLindbladOpenSystem.system_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_get</span></code></a>(key)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system_get" title="struqture_py.spins.SpinLindbladOpenSystem.system_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_get</span></code></a>(key)</p></td>
 <td><p>Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system_set" title="struqture_py.spins.SpinLindbladOpenSystem.system_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_set</span></code></a>(key, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.system_set" title="struqture_py.spins.SpinLindbladOpenSystem.system_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_set</span></code></a>(key, value)</p></td>
 <td><p>Set a new entry in the system of the open system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.to_bincode" title="struqture_py.spins.SpinLindbladOpenSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.to_bincode" title="struqture_py.spins.SpinLindbladOpenSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.to_json" title="struqture_py.spins.SpinLindbladOpenSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.to_json" title="struqture_py.spins.SpinLindbladOpenSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of the object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.truncate" title="struqture_py.spins.SpinLindbladOpenSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.truncate" title="struqture_py.spins.SpinLindbladOpenSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
 <td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.ungroup" title="struqture_py.spins.SpinLindbladOpenSystem.ungroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ungroup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.ungroup" title="struqture_py.spins.SpinLindbladOpenSystem.ungroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ungroup</span></code></a>()</p></td>
 <td><p>Return a tuple of the system and the noise of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.unitary_sparse_matrix_coo" title="struqture_py.spins.SpinLindbladOpenSystem.unitary_sparse_matrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unitary_sparse_matrix_coo</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem.unitary_sparse_matrix_coo" title="struqture_py.spins.SpinLindbladOpenSystem.unitary_sparse_matrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unitary_sparse_matrix_coo</span></code></a>()</p></td>
 <td><p>Return the unitary part of the superoperator in the sparse COO format.</p></td>
 </tr>
 </tbody>
@@ -292,6 +295,13 @@
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.spins.SpinLindbladOpenSystem.jordan_wigner">
+<span class="sig-name descname"><span class="pre">jordan_wigner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.SpinLindbladOpenSystem.jordan_wigner" title="Permalink to this definition"></a></dt>
+<dd><p>Transform the given spin object into a fermionic object using
+the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
