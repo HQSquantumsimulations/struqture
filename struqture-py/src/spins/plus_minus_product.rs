@@ -153,6 +153,14 @@ impl PlusMinusProductWrapper {
         keys
     }
 
+    /// Return maximum index in self.
+    ///
+    /// Returns:
+    ///     int: Maximum index.
+    pub fn current_number_spins(&self) -> usize {
+        self.internal.current_number_spins()
+    }
+
     /// Return number of entries in object.
     ///
     /// Returns:

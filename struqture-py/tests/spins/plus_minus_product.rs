@@ -199,6 +199,24 @@ fn test_keys_len() {
     });
 }
 
+/// Test current_number_spins function of PlusMinusProduct
+#[test]
+fn test_current_number_spins() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_pp_1 = new_pp(py);
+        let mut pp = new_pp_1.call_method1("set_pauli", (0_u64, "+")).unwrap();
+
+        pp = pp.call_method1("set_pauli", (2_u64, "Z")).unwrap();
+        pp = pp.call_method1("set_pauli", (5_u64, "-")).unwrap();
+
+        let current_number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+
+        assert_eq!(current_number_spins, 6);
+    });
+}
+
 /// Test hermitian_conjugate and is_natural_hermitian functions of PlusMinusProduct
 #[test]
 fn test_hermitian_conj() {
