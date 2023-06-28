@@ -551,7 +551,7 @@ impl JordanWignerSpinToFermion for SpinLindbladNoiseSystem {
     fn jordan_wigner(&self) -> Self::Output {
         FermionLindbladNoiseSystem::from_operator(
             self.operator().jordan_wigner(),
-            Some(self.number_spins()),
+            self.number_spins,
         )
             .expect("Internal bug in jordan_wigner() for SpinLindbladNoiseOperator. The number of modes in the resulting fermionic noise operator should equal the number of spins of the spin noise operator.")
     }

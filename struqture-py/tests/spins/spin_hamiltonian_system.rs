@@ -857,3 +857,23 @@ fn test_richcmp() {
         assert!(comparison.is_err());
     });
 }
+
+/// Test jordan_wigner() method of SpinHamiltonianSystem
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let shs = new_system(py, Some(1));
+        shs.call_method1("add_operator_product", ("0X", 0.1))
+            .unwrap();
+        let fhs = shs.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(fhs.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let number_modes = usize::extract(fhs.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(shs.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}

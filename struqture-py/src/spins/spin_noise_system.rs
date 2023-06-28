@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionLindbladNoiseSystemWrapper;
 use crate::spins::DecoherenceProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -18,9 +19,10 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{OperateOnSpins, SpinLindbladNoiseSystem, ToSparseMatrixSuperOperator};
 use struqture::{OperateOnDensityMatrix, StruqtureError};
-use struqture_py_macros::noisy_system_wrapper;
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
@@ -52,6 +54,7 @@ pub struct SpinLindbladNoiseSystemWrapper {
     pub internal: SpinLindbladNoiseSystem,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[noisy_system_wrapper(
     OperateOnSpins,
     OperateOnDensityMatrix,

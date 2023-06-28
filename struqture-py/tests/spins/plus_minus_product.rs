@@ -10,7 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use pyo3::prelude::*;
+use pyo3::{
+    prelude::*,
+    types::{PyList, PyTuple},
+};
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use std::{cmp::Ordering, collections::HashMap};
@@ -193,6 +196,24 @@ fn test_keys_len() {
         let comparison =
             bool::extract(keys_pp.call_method1("__eq__", (vec![0, 1, 3],)).unwrap()).unwrap();
         assert!(comparison);
+    });
+}
+
+/// Test current_number_spins function of PlusMinusProduct
+#[test]
+fn test_current_number_spins() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_pp_1 = new_pp(py);
+        let mut pp = new_pp_1.call_method1("set_pauli", (0_u64, "+")).unwrap();
+
+        pp = pp.call_method1("set_pauli", (2_u64, "Z")).unwrap();
+        pp = pp.call_method1("set_pauli", (5_u64, "-")).unwrap();
+
+        let current_number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+
+        assert_eq!(current_number_spins, 6);
     });
 }
 
@@ -616,4 +637,35 @@ fn test_from_error() {
             .call_method1("from_product", ("0J",));
         assert!(result.is_err());
     })
+}
+
+/// Test jordan_wigner() method of PlusMinusProduct
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_pmp = new_pp(py);
+        let pmp = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
+        let fo = pmp.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(fo.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let pp = pmp
+            .call_method0("to_pauli_product_list")
+            .unwrap()
+            .downcast::<PyList>()
+            .unwrap()
+            .get_item(0)
+            .unwrap()
+            .downcast::<PyTuple>()
+            .unwrap()
+            .get_item(0)
+            .unwrap();
+
+        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
 }

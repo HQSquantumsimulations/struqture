@@ -62,10 +62,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "ghost"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e77ac7b51b8e6313251737fcef4b1c01a2ea102bde68415b62c0ee9268fec357"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.18",
+]
+
+[[package]]
 name = "indoc"
 version = "1.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bfa799dd5ed20a7e349f3b4639aa80d74549c81716d9ec4f994c9b5815598306"
+
+[[package]]
+name = "inventory"
+version = "0.3.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e0539b5de9241582ce6bd6b0ba7399313560151e58c9aaf8b74b711b1bdce644"
+dependencies = [
+ "ghost",
+]
 
 [[package]]
 name = "itertools"
@@ -294,6 +314,7 @@ checksum = "e3b1ac5b3731ba34fdaa9785f8d74d17448cd18f30cf19e0c7e7b1fdb5272109"
 dependencies = [
  "cfg-if",
  "indoc",
+ "inventory",
  "libc",
  "memoffset",
  "num-complex",
@@ -514,7 +535,7 @@ checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
 
 [[package]]
 name = "struqture"
-version = "1.2.0"
+version = "1.3.0"
 dependencies = [
  "bincode",
  "itertools",
@@ -533,7 +554,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.2.0"
+version = "1.3.0"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -557,7 +578,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.2.0"
+version = "1.3.0"
 dependencies = [
  "num-complex",
  "proc-macro2",
