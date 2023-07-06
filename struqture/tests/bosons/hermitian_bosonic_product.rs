@@ -88,20 +88,64 @@ fn new_normal_ordered_passing(
     assert_eq!(avec, annihilators);
 
     let (res, prefac) = HermitianBosonProduct::create_valid_pair(
-        annihilators.clone(),
         creators.clone(),
+        annihilators.clone(),
         CalculatorComplex::new(1.0, 2.0),
     )
     .unwrap();
-    if creators.is_empty() && annihilators.is_empty() {
-        assert_eq!(prefac, CalculatorComplex::new(1.0, 2.0));
-    } else {
-        assert_eq!(prefac, CalculatorComplex::new(1.0, -2.0));
-    }
+    assert_eq!(prefac, CalculatorComplex::new(1.0, 2.0));
     let cvec: Vec<usize> = res.creators().copied().collect();
     let avec: Vec<usize> = res.annihilators().copied().collect();
     assert_eq!(cvec, creators);
     assert_eq!(avec, annihilators);
+}
+
+#[test_case(&[1], &[0], 1.0,3.0, true; "conjugate")]
+#[test_case(&[0], &[1], 1.0,3.0, false; "not conjugate")]
+#[test_case(&[0,2], &[0,1], 1.0,3.0, true; " conjugate second")]
+#[test_case(&[2000], &[], 1.0,3.0, true; "empty 2000")]
+#[test_case(&[0,2000], &[0], 1.0,3.0, true; "0 2000")]
+
+fn test_conjugation_in_valid_product(
+    creators: &[usize],
+    annihilators: &[usize],
+    real: f64,
+    imag: f64,
+    conjugated: bool,
+) {
+    let creators = creators.to_vec();
+    let annihilators = annihilators.to_vec();
+    let (res, prefac) = HermitianBosonProduct::create_valid_pair(
+        creators.clone(),
+        annihilators.clone(),
+        CalculatorComplex::new(real, imag),
+    )
+    .unwrap();
+    if conjugated {
+        assert_eq!(prefac, CalculatorComplex::new(real, -imag));
+        assert_eq!(
+            res,
+            HermitianBosonProduct::new(annihilators, creators).unwrap()
+        );
+    } else {
+        assert_eq!(prefac, CalculatorComplex::new(real, imag));
+        assert_eq!(
+            res,
+            HermitianBosonProduct::new(creators, annihilators).unwrap()
+        );
+    }
+}
+
+#[test_case(&[1], &[]; "1-empty")]
+#[test_case(&[2], &[1]; "2 - 1")]
+#[test_case(&[0,2], &[0,1]; "0,2 - 0,1")]
+#[test_case(&[0,2], &[0]; "0,2 - 0")]
+
+fn hermitian_error(creators: &[usize], annihilators: &[usize]) {
+    let creators = creators.to_vec();
+    let annihilators = annihilators.to_vec();
+    let test_new = HermitianBosonProduct::new(creators, annihilators);
+    assert!(test_new.is_err());
 }
 
 #[test_case(&[2,1], &[1,2], &[1,2], &[1,2]; "2,1 - 1,2")]

@@ -671,10 +671,27 @@ impl ModeIndex for HermitianBosonProduct {
         creators.sort_unstable();
         let mut annihilators: TinyVec<[usize; 2]> = annihilators.into_iter().collect();
         annihilators.sort_unstable();
-        if creators.iter().min() > annihilators.iter().min() {
+        let mut number_equal_indices = 0;
+        for (creator, annihilator) in creators.iter().zip(annihilators.iter()) {
+            match annihilator.cmp(creator) {
+                std::cmp::Ordering::Less => {
+                    return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
+                        creators_min: Some(*creator),
+                        annihilators_min: Some(*annihilator),
+                    });
+                }
+                std::cmp::Ordering::Greater => {
+                    break;
+                }
+                _ => {
+                    number_equal_indices += 1;
+                }
+            }
+        }
+        if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
             return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                creators_min: creators.iter().min().copied(),
-                annihilators_min: annihilators.iter().min().copied(),
+                creators_min: creators.iter().nth(number_equal_indices).copied(),
+                annihilators_min: None,
             });
         }
         Ok(Self {
@@ -724,7 +741,25 @@ impl ModeIndex for HermitianBosonProduct {
         creators.sort_unstable();
         let mut annihilators: TinyVec<[usize; 2]> = annihilators.into_iter().collect();
         annihilators.sort_unstable();
-        if creators.iter().min() > annihilators.iter().min() {
+        let mut hermitian_conjugate = false;
+        let mut number_equal_indices = 0;
+        for (creator, annihilator) in creators.iter().zip(annihilators.iter()) {
+            match annihilator.cmp(creator) {
+                std::cmp::Ordering::Less => {
+                    hermitian_conjugate = true;
+                    break;
+                }
+                std::cmp::Ordering::Greater => break,
+                _ => {
+                    number_equal_indices += 1;
+                }
+            }
+        }
+
+        if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
+            hermitian_conjugate = true;
+        }
+        if hermitian_conjugate {
             Ok((
                 Self {
                     creators: annihilators,

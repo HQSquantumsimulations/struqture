@@ -38,6 +38,21 @@ fn new_system(
         .unwrap()
 }
 
+// helper functions
+fn new_operator(
+    py: Python,
+    number_spins: Vec<Option<usize>>,
+    number_bosons: Vec<Option<usize>>,
+    number_fermions: Vec<Option<usize>>,
+) -> &PyCell<MixedSystemWrapper> {
+    let system_type = py.get_type::<MixedSystemWrapper>();
+    system_type
+        .call1((number_spins, number_bosons, number_fermions))
+        .unwrap()
+        .downcast::<PyCell<MixedSystemWrapper>>()
+        .unwrap()
+}
+
 /// Test default function of MixedHamiltonianSystemWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
@@ -207,10 +222,10 @@ fn boson_system_test_set_get() {
             .call_method1("set", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
         system
-            .call_method1("set", ("S0Z:Bc2c3a2:Fc0a0:", 0.2))
+            .call_method1("set", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
         system
-            .call_method1("set", ("S0Z:Bc2c3a2:Fc0a2a3:", 0.05))
+            .call_method1("set", ("S0Z:Bc2a2a3:Fc0a2a3:", 0.05))
             .unwrap();
 
         // test access at index 0
@@ -220,12 +235,12 @@ fn boson_system_test_set_get() {
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
-        let comp_op = system.call_method1("get", ("S0Z:Bc2c3a2:Fc0a0:",)).unwrap();
+        let comp_op = system.call_method1("get", ("S0Z:Bc2a2a3:Fc0a0:",)).unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method1("get", ("S0Z:Bc2c3a2:Fc0a2a3:",))
+            .call_method1("get", ("S0Z:Bc2a2a3:Fc0a2a3:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
@@ -242,11 +257,11 @@ fn boson_system_test_set_get() {
         assert!(error.is_err());
 
         // Try_set error 2: Value cannot be converted to CalculatorComplex
-        let error = system.call_method1("set", ("S0Z:Bc2c3a2:Fc0a0:", vec![0.0]));
+        let error = system.call_method1("set", ("S0Z:Bc2a2a3:Fc0a0:", vec![0.0]));
         assert!(error.is_err());
 
         // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("set", ("S5X:S7Y:Bc2c3a2:Fc0a2a3:", 0.1));
+        let error = system.call_method1("set", ("S5X:S7Y:Bc2a2a3:Fc0a2a3:", 0.1));
         assert!(error.is_err());
 
         // Try_set error 4: Generic error
@@ -273,10 +288,10 @@ fn boson_system_test_add_operator_product_remove() {
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
         system
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", 0.2))
+            .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
         system
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a2a3:", 0.05))
+            .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a2a3:", 0.05))
             .unwrap();
 
         // test access at index 0
@@ -294,19 +309,19 @@ fn boson_system_test_add_operator_product_remove() {
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
-        let comp_op = system.call_method1("get", ("S0Z:Bc2c3a2:Fc0a0:",)).unwrap();
+        let comp_op = system.call_method1("get", ("S0Z:Bc2a2a3:Fc0a0:",)).unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system
-            .call_method1("get", ("S0Z:Bc2c3a2:Fc0a2a3:",))
+            .call_method1("get", ("S0Z:Bc2a2a3:Fc0a2a3:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system
-            .call_method1("get", ("S0Z1Y:Bc2c3a2:Fc0a2a3:",))
+            .call_method1("get", ("S0Z1Y:Bc2a2a3:Fc0a2a3:",))
             .unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
@@ -572,14 +587,14 @@ fn test_add() {
             number_fermions.clone(),
         );
         system_1
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", 0.2))
+            .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
         let system_0_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0_1
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
         system_0_1
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", 0.2))
+            .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
 
         let added = system_0.call_method1("__add__", (system_1,)).unwrap();
@@ -613,14 +628,14 @@ fn test_sub() {
             number_fermions.clone(),
         );
         system_1
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", 0.2))
+            .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
         let system_0_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0_1
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
         system_0_1
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", -0.2))
+            .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", -0.2))
             .unwrap();
 
         let added = system_0.call_method1("__sub__", (system_1,)).unwrap();
@@ -814,7 +829,7 @@ fn test_mul_self() {
             number_fermions.clone(),
         );
         system_0
-            .call_method1("add_operator_product", ("S1X:Bc0a0:Fc2a2", 0.1))
+            .call_method1("add_operator_product", ("S1X:Ba0:Fa2", 0.1))
             .unwrap();
         let system_1 = new_system(
             py,
@@ -823,20 +838,20 @@ fn test_mul_self() {
             number_fermions.clone(),
         );
         system_1
-            .call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", 1.0))
+            .call_method1("add_operator_product", ("S0Z:Ba1:Fa3:", 1.0))
             .unwrap();
-        let system_0_1 = new_system(py, number_spins, number_bosons, number_fermions);
+        let system_0_1 = new_operator(py, number_spins, number_bosons, number_fermions);
         system_0_1
-            .call_method1(
-                "add_operator_product",
-                ("S0Z1X:Bc0c2c3a0a2:Fc0c2a0a2", -0.1),
-            )
+            .call_method1("add_operator_product", ("S0Z1X:Ba0a1:Fa2a3", 0.1))
             .unwrap();
         system_0_1
-            .call_method1(
-                "add_operator_product",
-                ("S0Z1X:Bc0c2a0a2a3:Fc0c2a0a2", -0.1),
-            )
+            .call_method1("add_operator_product", ("S0Z1X:Bc0c1:Fc2c3", 0.1))
+            .unwrap();
+        system_0_1
+            .call_method1("add_operator_product", ("S0Z1X:Bc0a1:Fc2a3", 0.1))
+            .unwrap();
+        system_0_1
+            .call_method1("add_operator_product", ("S0Z1X:Bc1a0:Fc3a2", -0.1))
             .unwrap();
 
         let added = system_0.call_method1("__mul__", (system_1,)).unwrap();
