@@ -745,8 +745,8 @@ impl ModeIndex for HermitianFermionProduct {
         }
         if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
             return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                creators_min: None,
-                annihilators_min: annihilators.iter().nth(number_equal_indices + 1).copied(),
+                creators_min: creators.iter().nth(number_equal_indices).copied(),
+                annihilators_min: None,
             });
         }
 
@@ -817,6 +817,7 @@ impl ModeIndex for HermitianFermionProduct {
             match annihilator.cmp(creator) {
                 std::cmp::Ordering::Less => {
                     hermitian_conjugate = true;
+                    break;
                 }
                 std::cmp::Ordering::Greater => break,
                 _ => {

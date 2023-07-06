@@ -214,11 +214,13 @@ impl MixedIndex for HermitianMixedProduct {
         // We need to determine a hierarchy for deciding which of the hermitian
         // conjugated pairs of operators we are going to store.
         // The decision tree is the following:
-        // If bosons are not empty the operator product where the minimum of the
-        // creators of the first boson subsystem is smaller than the minimum of the
-        // annihilators of the first boson subsystem (disregarding leading equal indices) is stored.
-        // If there are no boson subsystems  the choice is based on the fermionic subsystems
-        // in the same way
+        // If bosons are not empty we search through all boson products in order to find the first that
+        // decides which of the two hermitian conjugtes is stored. A BosonProduct decides which variant is
+        // stored when there is at least one annihilator or creator in the BosonProduct that is not paired with
+        // a creator or annihilator acting on the same index. In that case the variant with the annihilator acting on the higher
+        // index is stored.
+        // If no boson subsystem can choose which variant is stored, the choice is based on the fermionic subsystems
+        // in the same way.
         let mut hermitian_decision_made = false;
         for b in bosons.iter() {
             let mut number_equal_indices = 0;
@@ -341,6 +343,8 @@ impl MixedIndex for HermitianMixedProduct {
                 match annihilator.cmp(creator) {
                     std::cmp::Ordering::Less => {
                         hermitian_conjugate = true;
+                        hermitian_decision_made = true;
+                        break;
                     }
                     std::cmp::Ordering::Greater => {
                         hermitian_decision_made = true;
@@ -368,6 +372,7 @@ impl MixedIndex for HermitianMixedProduct {
                     match annihilator.cmp(creator) {
                         std::cmp::Ordering::Less => {
                             hermitian_conjugate = true;
+                            break;
                         }
                         std::cmp::Ordering::Greater => {
                             hermitian_decision_made = true;
