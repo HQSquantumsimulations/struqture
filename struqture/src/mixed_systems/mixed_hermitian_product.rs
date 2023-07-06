@@ -215,7 +215,7 @@ impl MixedIndex for HermitianMixedProduct {
         // conjugated pairs of operators we are going to store.
         // The decision tree is the following:
         // If bosons are not empty we search through all boson products in order to find the first that
-        // decides which of the two hermitian conjugtes is stored. A BosonProduct decides which variant is
+        // decides which of the two hermitian conjugates is stored. A BosonProduct decides which variant is
         // stored when there is at least one annihilator or creator in the BosonProduct that is not paired with
         // a creator or annihilator acting on the same index. In that case the variant with the annihilator acting on the higher
         // index is stored.
