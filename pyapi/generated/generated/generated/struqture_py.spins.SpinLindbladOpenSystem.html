@@ -108,7 +108,7 @@
 <h1>struqture_py.spins.SpinLindbladOpenSystem<a class="headerlink" href="#struqture-py-spins-spinlindbladopensystem" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.SpinLindbladOpenSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">SpinLindbladOpenSystem</span></span><a class="headerlink" href="#struqture_py.spins.SpinLindbladOpenSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">SpinLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.SpinLindbladOpenSystem" title="Permalink to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of spins.</p>
 <p>In a SpinLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.</p>
 <p class="rubric">Examples</p>
@@ -431,7 +431,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.SpinLindbladOpenSystem.sparse_matrix_superoperator_coo" title="Permalink to this definition"></a></dt>
 <dd><p>Construct the sparse matrix representation of the superoperator in COO representation.</p>
 <p>The superoperator for the operator O is defined as the Matrix S so that
 <cite>flatten(-i [O, p]) = S flatten(p)</cite> wher <cite>[,]</cite> is the commutator, <cite>p</cite> is a matrix
