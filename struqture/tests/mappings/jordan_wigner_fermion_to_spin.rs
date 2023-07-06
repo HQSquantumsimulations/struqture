@@ -98,7 +98,7 @@ fn test_jw_fermion_operator() {
 fn test_jw_fermion_hamiltonian() {
     let mut fh = FermionHamiltonian::new();
     let hfp1 = HermitianFermionProduct::new([1, 2], [2, 4]).unwrap();
-    let hfp2 = HermitianFermionProduct::new([1, 3], [1, 2]).unwrap();
+    let hfp2 = HermitianFermionProduct::new([1, 3], [1, 5]).unwrap();
     fh.add_operator_product(hfp1.clone(), CalculatorComplex::new(1.0, 2.0))
         .unwrap();
     fh.add_operator_product(hfp2.clone(), CalculatorComplex::new(2.0, 1.0))

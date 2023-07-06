@@ -366,19 +366,19 @@ fn test_multiply() {
         let pp_0 = new_pp(
             py,
             vec!["1X".into()],
-            vec!["c0c1a0".into(), "c0a0a1".into()],
-            vec!["c0c1a0".into(), "c0a0a1".into()],
+            vec!["c0a0a1".into(), "c0a0a1".into()],
+            vec!["c0a0a1".into(), "c0a0a1".into()],
         );
         let pp_1 = new_pp(
             py,
             vec!["0Z".into()],
-            vec!["c0a0a1".into(), "c0c1a0".into()],
-            vec!["c0a0a1".into(), "c0c1a0".into()],
+            vec!["c0a0a1".into(), "c0a0a1".into()],
+            vec!["c0a0a1".into(), "c0a0a1".into()],
         );
 
         // Comparison
-        let creators_left: &[usize] = &[0, 1];
-        let annihilators_left: &[usize] = &[0];
+        let creators_left: &[usize] = &[0];
+        let annihilators_left: &[usize] = &[0, 1];
         let spins_left = PauliProduct::new().x(1);
         let bosons_left =
             BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
