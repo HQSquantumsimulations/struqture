@@ -446,8 +446,8 @@ impl schemars::JsonSchema for PlusMinusProduct {
         let mut obj = tmp_schema.into_object();
         let meta = obj.metadata();
         meta.description = Some("Represents products of Plus Minus Spin Operators (Plus, Minus, Z) by a string of spin numbers followed by pauli operators. E.g. 0+10-13Z14+.".to_string());
-        let new_schema = schemars::schema::Schema::Object(obj);
-        new_schema
+
+        schemars::schema::Schema::Object(obj)
     }
 }
 

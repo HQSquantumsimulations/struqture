@@ -69,8 +69,8 @@ impl schemars::JsonSchema for MixedDecoherenceProduct {
         let mut obj = tmp_schema.into_object();
         let meta = obj.metadata();
         meta.description = Some("Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  X, iY and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0X1iY:Bc0a0:Fc0a0:.".to_string());
-        let new_schema = schemars::schema::Schema::Object(obj);
-        new_schema
+
+        schemars::schema::Schema::Object(obj)
     }
 }
 

@@ -875,7 +875,7 @@ fn test_pauli_product_schema() {
         serde_json::Value::Object(ob) => ob,
         _ => panic!(),
     };
-    let value: serde_json::Value = serde_json::to_value(&val).unwrap();
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
 }

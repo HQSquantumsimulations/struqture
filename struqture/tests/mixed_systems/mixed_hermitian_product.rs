@@ -95,8 +95,7 @@ fn hermitian_error(
     let bosons = BosonProduct::new(boson_creators.to_vec(), boson_annihilators.to_vec()).unwrap();
     let fermions =
         FermionProduct::new(fermion_creators.to_vec(), fermion_annihilators.to_vec()).unwrap();
-    let test_new =
-        HermitianMixedProduct::new([spins.clone()], [bosons.clone()], [fermions.clone()]);
+    let test_new = HermitianMixedProduct::new([spins], [bosons], [fermions]);
     assert!(test_new.is_err());
 }
 

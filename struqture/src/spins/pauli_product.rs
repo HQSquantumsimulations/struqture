@@ -237,8 +237,8 @@ impl schemars::JsonSchema for PauliProduct {
         let mut obj = tmp_schema.into_object();
         let meta = obj.metadata();
         meta.description = Some("Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X.".to_string());
-        let new_schema = schemars::schema::Schema::Object(obj);
-        new_schema
+
+        schemars::schema::Schema::Object(obj)
     }
 }
 

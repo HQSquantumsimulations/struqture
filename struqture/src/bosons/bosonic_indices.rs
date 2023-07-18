@@ -58,8 +58,8 @@ impl schemars::JsonSchema for BosonProduct {
         let mut obj = tmp_schema.into_object();
         let meta = obj.metadata();
         meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
-        let new_schema = schemars::schema::Schema::Object(obj);
-        new_schema
+
+        schemars::schema::Schema::Object(obj)
     }
 }
 
@@ -561,8 +561,8 @@ impl schemars::JsonSchema for HermitianBosonProduct {
         let mut obj = tmp_schema.into_object();
         let meta = obj.metadata();
         meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
-        let new_schema = schemars::schema::Schema::Object(obj);
-        new_schema
+
+        schemars::schema::Schema::Object(obj)
     }
 }
 

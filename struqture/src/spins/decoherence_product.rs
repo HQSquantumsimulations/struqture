@@ -265,8 +265,8 @@ impl schemars::JsonSchema for DecoherenceProduct {
         let mut obj = tmp_schema.into_object();
         let meta = obj.metadata();
         meta.description = Some("Represents products of Decoherence Operators (X, iY, Z) by a string of spin numbers followed by pauli operators. E.g. 0X10iY13Z14X.".to_string());
-        let new_schema = schemars::schema::Schema::Object(obj);
-        new_schema
+
+        schemars::schema::Schema::Object(obj)
     }
 }
 

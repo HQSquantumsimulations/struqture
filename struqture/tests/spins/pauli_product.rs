@@ -543,10 +543,7 @@ fn test_singlespinoperator_product() {
 }
 
 #[cfg(feature = "json_schema")]
-use jsonschema;
 #[cfg(feature = "json_schema")]
-use schemars;
-
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_pauli_product_schema() {
@@ -554,7 +551,7 @@ fn test_pauli_product_schema() {
     let schema = schemars::schema_for!(PauliProduct);
     let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
-    let value = serde_json::to_value(&pp).unwrap();
+    let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
     println!("{}", serde_json::to_string_pretty(&schema).unwrap());
