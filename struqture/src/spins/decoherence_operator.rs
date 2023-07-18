@@ -53,12 +53,28 @@ use std::ops;
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(from = "DecoherenceOperatorSerialize")]
 #[serde(into = "DecoherenceOperatorSerialize")]
+
 pub struct DecoherenceOperator {
     /// The internal HashMap of DecoherenceProducts and coefficients (CalculatorComplex)
     internal_map: HashMap<DecoherenceProduct, CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for DecoherenceOperator {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for DecoherenceOperator {
+    fn schema_name() -> String {
+        "DecoherenceOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <DecoherenceOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct DecoherenceOperatorSerialize {
     /// The internal map representing the noise terms
     items: Vec<(DecoherenceProduct, CalculatorFloat, CalculatorFloat)>,

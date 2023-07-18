@@ -59,7 +59,26 @@ pub struct PlusMinusOperator {
     internal_map: HashMap<PlusMinusProduct, CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for PlusMinusOperator {
+    fn min_supported_version() -> (usize, usize, usize) {
+        (1, 1, 0)
+    }
+}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for PlusMinusOperator {
+    fn schema_name() -> String {
+        "PlusMinusOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <PlusMinusOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct PlusMinusOperatorSerialize {
     items: Vec<(PlusMinusProduct, CalculatorFloat, CalculatorFloat)>,
     _struqture_version: StruqtureVersionSerializable,

@@ -48,12 +48,16 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct FermionSystem {
     /// The number of modes in the FermionSystem.
     pub(crate) number_modes: Option<usize>,
     /// The FermionOperator representing the operator of the FermionSystem.
     pub(crate) operator: FermionOperator,
 }
+
+impl crate::MinSupportedVersion for FermionSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for FermionSystem {
     type Index = FermionProduct;

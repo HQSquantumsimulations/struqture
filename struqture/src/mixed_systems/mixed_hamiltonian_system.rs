@@ -68,6 +68,8 @@ pub struct MixedHamiltonianSystem {
     pub(crate) hamiltonian: MixedHamiltonian,
 }
 
+impl crate::MinSupportedVersion for MixedHamiltonianSystem {}
+
 impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonianSystem {
     type Index = HermitianMixedProduct;
     type Value = CalculatorComplex;

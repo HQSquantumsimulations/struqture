@@ -63,7 +63,22 @@ pub struct MixedHamiltonian {
     n_fermions: usize,
 }
 
+impl crate::MinSupportedVersion for MixedHamiltonian {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for MixedHamiltonian {
+    fn schema_name() -> String {
+        "MixedHamiltonian".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <MixedHamiltonianSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct MixedHamiltonianSerialize {
     items: Vec<(HermitianMixedProduct, CalculatorFloat, CalculatorFloat)>,
     n_spins: usize,

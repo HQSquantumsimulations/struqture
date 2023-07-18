@@ -811,7 +811,7 @@ fn sparse_lindblad_entries() {
     );
 }
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 #[test]
 fn test_pauli_product_schema() {
     let mut op = SpinHamiltonian::new();

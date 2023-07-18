@@ -51,4 +51,4 @@ no-default-features = true
 [features]
 extension-module = ["pyo3/extension-module"]#, "qoqo_calculator_pyo3/extension-module"]
 default = ["extension-module"]
-schema = ["struqture/schema"]
+json_schema = ["struqture/json_schema"]

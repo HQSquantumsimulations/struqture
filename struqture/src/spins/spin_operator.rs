@@ -60,10 +60,12 @@ pub struct SpinOperator {
     internal_map: HashMap<PauliProduct, CalculatorComplex>,
 }
 
-#[cfg(feature = "schema")]
+impl crate::MinSupportedVersion for SpinOperator {}
+
+#[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinOperator {
     fn schema_name() -> String {
-        "struqture::spins::SpinOperator".to_string()
+        "SpinOperator".to_string()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
@@ -72,8 +74,8 @@ impl schemars::JsonSchema for SpinOperator {
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "schema", schemars(deny_unknown_fields))]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 ///# SpinOperator
 ///
 /// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.

@@ -57,6 +57,8 @@ pub struct BosonLindbladNoiseSystem {
     pub(crate) operator: BosonLindbladNoiseOperator,
 }
 
+impl crate::MinSupportedVersion for BosonLindbladNoiseSystem {}
+
 impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseSystem {
     type Value = CalculatorComplex;
     type Index = (BosonProduct, BosonProduct);

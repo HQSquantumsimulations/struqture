@@ -73,6 +73,8 @@ pub struct MixedSystem {
     pub(crate) operator: MixedOperator,
 }
 
+impl crate::MinSupportedVersion for MixedSystem {}
+
 impl<'a> OperateOnDensityMatrix<'a> for MixedSystem {
     type Index = MixedProduct;
     type Value = CalculatorComplex;

@@ -61,8 +61,9 @@ pub struct SpinHamiltonian {
     internal_map: HashMap<PauliProduct, CalculatorFloat>,
 }
 
+impl crate::MinSupportedVersion for SpinHamiltonian {}
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinHamiltonian {
     fn schema_name() -> String {
         "struqture::spins::SpinHamiltonian".to_string()
@@ -74,7 +75,7 @@ impl schemars::JsonSchema for SpinHamiltonian {
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 /// # SpinHamiltonian
 /// SpinHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
 ///

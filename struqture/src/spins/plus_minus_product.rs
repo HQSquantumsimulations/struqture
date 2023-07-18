@@ -436,7 +436,7 @@ pub struct PlusMinusProduct {
     items: TinyVec<[(usize, SinglePlusMinusOperator); 5]>,
 }
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PlusMinusProduct {
     fn schema_name() -> String {
         "struqture::spins::PlusMinusProduct".to_string()

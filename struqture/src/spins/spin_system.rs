@@ -52,13 +52,15 @@ use std::{
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
-#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub struct SpinSystem {
     /// The number of spins in the SpinSystem.
     pub(crate) number_spins: Option<usize>,
     /// The SpinOperator representing the Hamiltonian of the SpinSystem.
     pub(crate) operator: SpinOperator,
 }
+
+impl crate::MinSupportedVersion for SpinSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for SpinSystem {
     type Value = CalculatorComplex;

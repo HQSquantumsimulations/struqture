@@ -65,7 +65,7 @@ use super::PauliProduct;
 /// $$
 ///
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-#[cfg_attr(feature = "schmea", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleDecoherenceOperator {
     Identity,
     X,
@@ -255,7 +255,7 @@ pub struct DecoherenceProduct {
     items: TinyVec<[(usize, SingleDecoherenceOperator); 5]>,
 }
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceProduct {
     fn schema_name() -> String {
         "struqture::spins::DecoherenceProduct".to_string()

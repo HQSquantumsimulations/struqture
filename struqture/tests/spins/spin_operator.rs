@@ -861,7 +861,7 @@ fn test_spin_operator_pauli_multiplication() {
     assert_eq!(prod_3, spin_op_4 * CalculatorComplex::from((0.0, 1.0)));
 }
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 #[test]
 fn test_pauli_product_schema() {
     let mut op = SpinOperator::new();
@@ -871,16 +871,11 @@ fn test_pauli_product_schema() {
     let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
-    let mut val = match value{
+    let val = match value {
         serde_json::Value::Object(ob) => ob,
-        _ => panic!()
+        _ => panic!(),
     };
-    let inserted_value = serde_json::to_value(HashMap::<String, bool>::new()).unwrap();
-    val.insert("_hqschema".to_string(), inserted_value);
     let value: serde_json::Value = serde_json::to_value(&val).unwrap();
     let validation = schema_checker.validate(&value);
-    println!("{}", serde_json::to_string_pretty(&schema).unwrap());
-    println!("{}", serde_json::to_string_pretty(&op).unwrap());
-
     assert!(validation.is_ok());
 }

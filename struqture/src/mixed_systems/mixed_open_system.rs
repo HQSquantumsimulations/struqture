@@ -60,6 +60,8 @@ pub struct MixedLindbladOpenSystem {
     noise: MixedLindbladNoiseSystem,
 }
 
+impl crate::MinSupportedVersion for MixedLindbladOpenSystem {}
+
 impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
     type System = MixedHamiltonianSystem;
     type Noise = MixedLindbladNoiseSystem;

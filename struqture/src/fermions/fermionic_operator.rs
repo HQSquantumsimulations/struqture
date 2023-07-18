@@ -58,8 +58,22 @@ pub struct FermionOperator {
     /// The internal HashMap of FermionProducts and coefficients (CalculatorComplex)
     internal_map: HashMap<FermionProduct, CalculatorComplex>,
 }
+impl crate::MinSupportedVersion for FermionOperator {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for FermionOperator {
+    fn schema_name() -> String {
+        "FermionOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <FermionOperatorSerialize>::json_schema(gen)
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct FermionOperatorSerialize {
     items: Vec<(FermionProduct, CalculatorFloat, CalculatorFloat)>,
     _struqture_version: StruqtureVersionSerializable,

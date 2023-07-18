@@ -60,7 +60,22 @@ pub struct FermionHamiltonian {
     internal_map: HashMap<HermitianFermionProduct, CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for FermionHamiltonian {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for FermionHamiltonian {
+    fn schema_name() -> String {
+        "FermionHamiltonian".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <FermionHamiltonianSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct FermionHamiltonianSerialize {
     items: Vec<(HermitianFermionProduct, CalculatorFloat, CalculatorFloat)>,
     _struqture_version: StruqtureVersionSerializable,

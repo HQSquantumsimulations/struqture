@@ -542,12 +542,12 @@ fn test_singlespinoperator_product() {
     }
 }
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 use jsonschema;
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 use schemars;
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 #[test]
 fn test_pauli_product_schema() {
     let pp = PauliProduct::new();

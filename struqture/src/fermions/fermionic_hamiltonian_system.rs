@@ -49,12 +49,16 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct FermionHamiltonianSystem {
     /// The number of fermions in the FermionHamiltonianSystem
     pub(crate) number_modes: Option<usize>,
     /// The FermionHamiltonian representing the Hamiltonian of the FermionHamiltonianSystem
     pub(crate) hamiltonian: FermionHamiltonian,
 }
+
+impl crate::MinSupportedVersion for FermionHamiltonianSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonianSystem {
     type Index = HermitianFermionProduct;

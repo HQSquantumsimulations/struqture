@@ -53,6 +53,8 @@ pub struct BosonHamiltonianSystem {
     pub(crate) hamiltonian: BosonHamiltonian,
 }
 
+impl crate::MinSupportedVersion for BosonHamiltonianSystem {}
+
 impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonianSystem {
     type Index = HermitianBosonProduct;
     type Value = CalculatorComplex;

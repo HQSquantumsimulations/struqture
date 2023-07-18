@@ -60,7 +60,22 @@ pub struct FermionLindbladNoiseOperator {
     internal_map: HashMap<(FermionProduct, FermionProduct), CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for FermionLindbladNoiseOperator {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for FermionLindbladNoiseOperator {
+    fn schema_name() -> String {
+        "FermionLindbladNoiseOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <FermionLindbladNoiseOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct FermionLindbladNoiseOperatorSerialize {
     /// The vector representing the internal map of the FermionLindbladNoiseOperator
     items: Vec<(

@@ -65,7 +65,7 @@ const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_pr
 /// $$
 ///
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleSpinOperator {
     Identity,
     X,
@@ -224,10 +224,10 @@ impl Serialize for PauliProduct {
     }
 }
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 use schemars;
 
-#[cfg(feature = "schema")]
+#[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliProduct {
     fn schema_name() -> String {
         "struqture::spins::PauliProduct".to_string()

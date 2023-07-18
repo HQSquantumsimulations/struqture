@@ -53,6 +53,8 @@ pub struct BosonSystem {
     pub(crate) operator: BosonOperator,
 }
 
+impl crate::MinSupportedVersion for BosonSystem {}
+
 impl<'a> OperateOnDensityMatrix<'a> for BosonSystem {
     type Index = BosonProduct;
 

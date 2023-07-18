@@ -57,7 +57,22 @@ pub struct BosonLindbladNoiseOperator {
     internal_map: HashMap<(BosonProduct, BosonProduct), CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for BosonLindbladNoiseOperator {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for BosonLindbladNoiseOperator {
+    fn schema_name() -> String {
+        "BosonLindbladNoiseOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <BosonLindbladNoiseOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct BosonLindbladNoiseOperatorSerialize {
     /// The vector representing the internal map of the BosonLindbladNoiseOperator
     items: Vec<(BosonProduct, BosonProduct, CalculatorFloat, CalculatorFloat)>,

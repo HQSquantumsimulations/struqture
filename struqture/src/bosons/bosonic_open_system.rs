@@ -46,6 +46,8 @@ pub struct BosonLindbladOpenSystem {
     noise: BosonLindbladNoiseSystem,
 }
 
+impl crate::MinSupportedVersion for BosonLindbladOpenSystem {}
+
 impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
     type System = BosonHamiltonianSystem;
     type Noise = BosonLindbladNoiseSystem;
