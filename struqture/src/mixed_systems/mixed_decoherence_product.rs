@@ -59,6 +59,21 @@ pub struct MixedDecoherenceProduct {
     fermions: TinyVec<[FermionProduct; 2]>,
 }
 
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for MixedDecoherenceProduct {
+    fn schema_name() -> String {
+        "MixedDecoherenceProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  X, iY and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0X1iY:Bc0a0:Fc0a0:.".to_string());
+
+        schemars::schema::Schema::Object(obj)
+    }
+}
+
 impl Serialize for MixedDecoherenceProduct {
     /// Serialization function for MixedDecoherenceProduct according to string type.
     ///

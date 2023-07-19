@@ -51,12 +51,16 @@ use super::FermionProduct;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct FermionLindbladNoiseSystem {
     /// The number of fermions in the FermionLindbladNoiseSystem.
     pub(crate) number_modes: Option<usize>,
     /// The FermionLindbladNoiseOperator representing the Lindblad noise terms of the FermionLindbladNoiseSystem.
     pub(crate) operator: FermionLindbladNoiseOperator,
 }
+
+impl crate::MinSupportedVersion for FermionLindbladNoiseSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseSystem {
     type Value = CalculatorComplex;

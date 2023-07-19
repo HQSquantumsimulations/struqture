@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.4.0-alpha.1
+
+* Added support for jsonschema in spins.
+
 ## 1.3.1
 
 * Fixed bug allowing the construction of Hermitian operator products with annihilator index lower than creator index when there are leading equal indices.

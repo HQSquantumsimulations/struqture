@@ -59,6 +59,10 @@ struct StruqtureVersion;
     serde::Serialize,
     serde::Deserialize,
 )]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+/// # StruqtureVersion
+///
+/// The minimal version of struqture needed to deserialize this object.
 struct StruqtureVersionSerializable {
     /// The semver major version of struqture
     major_version: u32,
@@ -1011,3 +1015,14 @@ pub mod spins;
 /// Shorhand type for TinyVec representation of creators or annihilators
 #[cfg(test)]
 type ModeTinyVec = TinyVec<[usize; 2]>;
+
+/// Trait for implementing a function to determine the minimum supported version of struqture required.
+pub trait MinSupportedVersion {
+    /// Returns the minimum version of struqture required to deserialize this object.
+    ///
+    /// # Returns
+    /// (majon_verision, minor_version, patch_version)
+    fn min_supported_version() -> (usize, usize, usize) {
+        (1, 0, 0)
+    }
+}

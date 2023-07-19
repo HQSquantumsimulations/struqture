@@ -41,12 +41,16 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct FermionLindbladOpenSystem {
     /// The FermionHamiltonianSystem representing the system terms of the open system
     system: FermionHamiltonianSystem,
     /// The FermionLindbladNoiseSystem representing the noise terms of the open system
     noise: FermionLindbladNoiseSystem,
 }
+
+impl crate::MinSupportedVersion for FermionLindbladOpenSystem {}
 
 impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     type System = FermionHamiltonianSystem;

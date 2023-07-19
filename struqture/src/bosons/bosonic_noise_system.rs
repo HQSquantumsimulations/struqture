@@ -50,12 +50,16 @@ use super::BosonProduct;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct BosonLindbladNoiseSystem {
     /// The number of modes in the BosonLindbladNoiseSystem.
     pub(crate) number_modes: Option<usize>,
     /// The BosonLindbladNoiseOperator representing the Lindblad terms of the BosonLindbladNoiseSystem.
     pub(crate) operator: BosonLindbladNoiseOperator,
 }
+
+impl crate::MinSupportedVersion for BosonLindbladNoiseSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseSystem {
     type Value = CalculatorComplex;

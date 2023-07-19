@@ -52,12 +52,16 @@ use std::{
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct SpinLindbladNoiseSystem {
     /// The number of spins in the SpinLindbladNoiseSystem.
     pub(crate) number_spins: Option<usize>,
     /// The SpinLindbladNoiseOperator representing the Lindblad noise terms of the SpinLindbladNoiseSystem.
     pub(crate) operator: SpinLindbladNoiseOperator,
 }
+
+impl crate::MinSupportedVersion for SpinLindbladNoiseSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseSystem {
     type Value = CalculatorComplex;

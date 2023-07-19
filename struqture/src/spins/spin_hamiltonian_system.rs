@@ -49,12 +49,15 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub struct SpinHamiltonianSystem {
     /// The number of spins in the SpinHamiltonianSystem
     pub(crate) number_spins: Option<usize>,
     /// The SpinHamiltonian representing the Hamiltonian of the SpinHamiltonianSystem
     pub(crate) hamiltonian: SpinHamiltonian,
 }
+
+impl crate::MinSupportedVersion for SpinHamiltonianSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonianSystem {
     type Index = PauliProduct;

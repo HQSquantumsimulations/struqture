@@ -25,6 +25,12 @@ use std::{
 };
 use tinyvec::TinyVec;
 
+#[cfg(feature = "json_schema")]
+#[derive(schemars::JsonSchema)]
+#[serde(remote = "TinyVec<[Option<usize>; 2]>")]
+#[serde(transparent)]
+pub(crate) struct TinyVecDef(Vec<Option<usize>>);
+
 /// MixedLindbladNoiseSystems are representations of systems of spins, with a MixedLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
 /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::mixed_systems::MixedDecoherenceProduct] style operators.
@@ -73,6 +79,37 @@ pub struct MixedLindbladNoiseSystem {
     /// The MixedLindbladNoiseOperator representing the Lindblad noise terms of the MixedLindbladNoiseSystem.
     pub(crate) operator: MixedLindbladNoiseOperator,
 }
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for MixedLindbladNoiseSystem {
+    fn schema_name() -> String {
+        "MixedLindbladNoiseSystem".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <SchemaHelperMixedLindbladNoiseSystem>::json_schema(gen)
+    }
+}
+
+#[cfg(feature = "json_schema")]
+#[derive(schemars::JsonSchema)]
+#[schemars(deny_unknown_fields)]
+#[allow(dead_code)]
+struct SchemaHelperMixedLindbladNoiseSystem {
+    /// The number of spins in each subsystem
+    #[serde(with = "TinyVecDef")]
+    number_spins: TinyVec<[Option<usize>; 2]>,
+    /// The number of bosons in each subsystem
+    #[serde(with = "TinyVecDef")]
+    number_bosons: TinyVec<[Option<usize>; 2]>,
+    /// The number of fermions in each subsystem
+    #[serde(with = "TinyVecDef")]
+    number_fermions: TinyVec<[Option<usize>; 2]>,
+    /// The MixedLindbladNoiseOperator representing the Lindblad noise terms of the MixedLindbladNoiseSystem.
+    pub(crate) operator: MixedLindbladNoiseOperator,
+}
+
+impl crate::MinSupportedVersion for MixedLindbladNoiseSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseSystem {
     type Value = CalculatorComplex;

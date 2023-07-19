@@ -48,6 +48,21 @@ pub struct BosonProduct {
     annihilators: TinyVec<[usize; 2]>,
 }
 
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for BosonProduct {
+    fn schema_name() -> String {
+        "BosonProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
+
+        schemars::schema::Schema::Object(obj)
+    }
+}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for BosonProduct {
@@ -534,6 +549,21 @@ pub struct HermitianBosonProduct {
     creators: TinyVec<[usize; 2]>,
     /// The ordered list of annihilator indices.
     annihilators: TinyVec<[usize; 2]>,
+}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for HermitianBosonProduct {
+    fn schema_name() -> String {
+        "HermitianBosonProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
+
+        schemars::schema::Schema::Object(obj)
+    }
 }
 
 /// Implementing serde serialization writing directly to string.
