@@ -58,12 +58,6 @@ pub struct MixedPlusMinusProduct {
     pub(crate) fermions: TinyVec<[FermionProduct; 2]>,
 }
 
-impl crate::MinSupportedVersion for MixedPlusMinusProduct {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 2, 0)
-    }
-}
-
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedPlusMinusProduct {
     fn schema_name() -> String {

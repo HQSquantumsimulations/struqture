@@ -53,6 +53,8 @@ use tinyvec::TinyVec;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct MixedLindbladOpenSystem {
     /// The MixedHamiltonianSystem representing the system terms of the open system
     system: MixedHamiltonianSystem,

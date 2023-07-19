@@ -39,6 +39,8 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct BosonLindbladOpenSystem {
     /// The BosonHamiltonianSystem representing the system terms of the open system
     system: BosonHamiltonianSystem,

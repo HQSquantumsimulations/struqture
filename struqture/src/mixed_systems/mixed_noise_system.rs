@@ -29,7 +29,7 @@ use tinyvec::TinyVec;
 #[derive(schemars::JsonSchema)]
 #[serde(remote = "TinyVec<[Option<usize>; 2]>")]
 #[serde(transparent)]
-struct TinyVecDef(Vec<Option<usize>>);
+pub(crate) struct TinyVecDef(Vec<Option<usize>>);
 
 /// MixedLindbladNoiseSystems are representations of systems of spins, with a MixedLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///

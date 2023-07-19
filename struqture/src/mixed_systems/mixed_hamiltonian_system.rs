@@ -14,6 +14,7 @@ use super::{
     HermitianMixedProduct, HermitianOperateOnMixedSystems, MixedHamiltonian, MixedSystem,
     OperateOnMixedSystems,
 };
+use crate::mixed_systems::TinyVecDef;
 use crate::prelude::*;
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
@@ -64,6 +65,35 @@ pub struct MixedHamiltonianSystem {
     pub(crate) number_bosons: TinyVec<[Option<usize>; 2]>,
     /// The number of fermions in each subsystem
     pub(crate) number_fermions: TinyVec<[Option<usize>; 2]>,
+    /// The MixedHamiltonian representing the Hamiltonian of the MixedHamiltonianSystem
+    pub(crate) hamiltonian: MixedHamiltonian,
+}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for MixedHamiltonianSystem {
+    fn schema_name() -> String {
+        "MixedHamiltonianSystem".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <SchemaHelperMixedHamiltonianSystem>::json_schema(gen)
+    }
+}
+
+#[cfg(feature = "json_schema")]
+#[derive(schemars::JsonSchema)]
+#[schemars(deny_unknown_fields)]
+#[allow(dead_code)]
+struct SchemaHelperMixedHamiltonianSystem {
+    /// The number of spins in each subsystem
+    #[serde(with = "TinyVecDef")]
+    number_spins: TinyVec<[Option<usize>; 2]>,
+    /// The number of bosons in each subsystem
+    #[serde(with = "TinyVecDef")]
+    number_bosons: TinyVec<[Option<usize>; 2]>,
+    /// The number of fermions in each subsystem
+    #[serde(with = "TinyVecDef")]
+    number_fermions: TinyVec<[Option<usize>; 2]>,
     /// The MixedHamiltonian representing the Hamiltonian of the MixedHamiltonianSystem
     pub(crate) hamiltonian: MixedHamiltonian,
 }

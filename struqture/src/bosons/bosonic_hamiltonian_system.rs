@@ -46,6 +46,8 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct BosonHamiltonianSystem {
     /// The number of modes in the BosonHamiltonianSystem
     pub(crate) number_modes: Option<usize>,
