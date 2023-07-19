@@ -52,7 +52,6 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-// #[cfg_attr(feature="schema", derive(schemars::JsonSchema))]
 #[serde(from = "SpinOperatorSerialize")]
 #[serde(into = "SpinOperatorSerialize")]
 pub struct SpinOperator {

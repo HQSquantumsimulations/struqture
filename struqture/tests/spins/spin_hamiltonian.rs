@@ -822,8 +822,6 @@ fn test_pauli_product_schema() {
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let validation = schema_checker.validate(&value);
-    println!("{}", serde_json::to_string_pretty(&schema).unwrap());
-    println!("{}", serde_json::to_string_pretty(&op).unwrap());
 
     assert!(validation.is_ok());
 }
