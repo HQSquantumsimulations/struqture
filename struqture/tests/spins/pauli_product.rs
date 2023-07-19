@@ -542,7 +542,6 @@ fn test_singlespinoperator_product() {
     }
 }
 
-
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_pauli_product_schema() {

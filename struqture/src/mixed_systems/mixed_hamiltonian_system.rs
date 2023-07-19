@@ -14,6 +14,7 @@ use super::{
     HermitianMixedProduct, HermitianOperateOnMixedSystems, MixedHamiltonian, MixedSystem,
     OperateOnMixedSystems,
 };
+#[cfg(feature = "json_schema")]
 use crate::mixed_systems::TinyVecDef;
 use crate::prelude::*;
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError};

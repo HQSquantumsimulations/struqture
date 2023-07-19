@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use super::{HermitianOperateOnMixedSystems, MixedOperator, MixedProduct, OperateOnMixedSystems};
+#[cfg(feature = "json_schema")]
 use crate::mixed_systems::TinyVecDef;
 use crate::prelude::*;
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError};

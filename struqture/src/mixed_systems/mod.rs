@@ -41,6 +41,7 @@ use crate::{
     bosons::BosonIndex, fermions::FermionIndex, ModeIndex, OperateOnDensityMatrix, SpinIndex,
     StruqtureError,
 };
+#[cfg(feature = "json_schema")]
 use mixed_noise_system::TinyVecDef;
 use qoqo_calculator::CalculatorComplex;
 use std::str::FromStr;
