@@ -1048,3 +1048,18 @@ fn test_truncate(re: f64, im: f64) {
     let comparison_system2 = system.truncate(50.0);
     assert_eq!(test_system2, comparison_system2);
 }
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_spin_system_schema(number_spins: Option<usize>) {
+    let mut op = SpinSystem::new(number_spins);
+    op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
+    op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
+    let schema = schemars::schema_for!(SpinSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

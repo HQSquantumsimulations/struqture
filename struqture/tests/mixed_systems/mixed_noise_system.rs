@@ -1112,3 +1112,35 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(4))]
+fn test_mixed_noise_system_schema(number_particles: Option<usize>) {
+    let mut op = MixedLindbladNoiseSystem::new(
+        [number_particles, number_particles],
+        [number_particles],
+        [number_particles],
+    );
+    let pp = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().x(0), DecoherenceProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.set((pp.clone(), pp), 1.0.into()).unwrap();
+    let pp = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().x(1), DecoherenceProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.set((pp.clone(), pp), "val".into()).unwrap();
+    let schema = schemars::schema_for!(MixedLindbladNoiseSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

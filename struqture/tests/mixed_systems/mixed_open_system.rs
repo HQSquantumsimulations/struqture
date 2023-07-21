@@ -23,6 +23,7 @@ use struqture::mixed_systems::{
 };
 use struqture::prelude::*;
 use struqture::spins::{DecoherenceProduct, PauliProduct};
+use test_case::test_case;
 
 // Test the new function of the MixedLindbladOpenSystem
 #[test]
@@ -1398,4 +1399,40 @@ fn test_truncate() {
     assert_eq!(test_system1, comparison_system1);
     let comparison_system2 = system.truncate(0.5);
     assert_eq!(test_system2, comparison_system2);
+}
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(4))]
+fn test_mixed_open_system_schema(number_particles: Option<usize>) {
+    let mut op = MixedLindbladOpenSystem::new(
+        [number_particles, number_particles],
+        [number_particles],
+        [number_particles],
+    );
+    let pp: HermitianMixedProduct = HermitianMixedProduct::new(
+        [PauliProduct::new().x(0), PauliProduct::new()],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [FermionProduct::new([0], [1]).unwrap()],
+    )
+    .unwrap();
+    let dp: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().z(2), DecoherenceProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.system_mut()
+        .set(pp, CalculatorComplex::from(0.4))
+        .unwrap();
+    op.noise_mut()
+        .set((dp.clone(), dp), CalculatorComplex::from(0.5))
+        .unwrap();
+    let schema = schemars::schema_for!(MixedLindbladOpenSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
 }

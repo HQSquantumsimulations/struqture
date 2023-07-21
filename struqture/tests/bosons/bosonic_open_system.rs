@@ -21,6 +21,7 @@ use struqture::bosons::{
 };
 use struqture::prelude::*;
 use struqture::ModeIndex;
+use test_case::test_case;
 
 // Test the new function of the BosonLindbladOpenSystem
 #[test]
@@ -857,4 +858,26 @@ fn test_truncate() {
     assert_eq!(test_system1, comparison_system1);
     let comparison_system2 = system.truncate(0.5);
     assert_eq!(test_system2, comparison_system2);
+}
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_boson_open_system_schema(number_bosons: Option<usize>) {
+    let mut op = BosonLindbladOpenSystem::new(number_bosons);
+    let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
+    let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
+    op.system_mut()
+        .set(pp, CalculatorComplex::from(0.4))
+        .unwrap();
+    op.noise_mut()
+        .set((dp.clone(), dp), CalculatorComplex::from("val"))
+        .unwrap();
+    let schema = schemars::schema_for!(BosonLindbladOpenSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
 }
