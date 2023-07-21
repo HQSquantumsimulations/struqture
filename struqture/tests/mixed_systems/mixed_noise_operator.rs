@@ -858,3 +858,30 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_mixed_noise_operator_schema() {
+    let mut op = MixedLindbladNoiseOperator::new(2, 1, 1);
+    let pp = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().x(0), DecoherenceProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.set((pp.clone(), pp), 1.0.into()).unwrap();
+    let pp = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().x(1), DecoherenceProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.set((pp.clone(), pp), "val".into()).unwrap();
+    let schema = schemars::schema_for!(MixedLindbladNoiseOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

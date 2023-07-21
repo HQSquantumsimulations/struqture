@@ -1060,3 +1060,28 @@ fn test_truncate() {
     let comparison_system2 = system.truncate(0.5);
     assert_eq!(test_system2, comparison_system2);
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_spin_hamiltonian_system_schema() {
+    let mut op: SpinHamiltonianSystem = SpinHamiltonianSystem::new(None);
+    op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
+    op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
+    let schema = schemars::schema_for!(SpinHamiltonianSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+
+    let mut op: SpinHamiltonianSystem = SpinHamiltonianSystem::new(Some(3));
+    op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
+    op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
+    let schema = schemars::schema_for!(SpinHamiltonianSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

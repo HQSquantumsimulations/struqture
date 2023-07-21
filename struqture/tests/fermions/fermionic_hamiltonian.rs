@@ -618,3 +618,23 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_fermion_hamiltonian_schema() {
+    let mut op = FermionHamiltonian::new();
+    op.set(HermitianFermionProduct::new([0], [0]).unwrap(), 1.0.into())
+        .unwrap();
+    op.set(
+        HermitianFermionProduct::new([1], [1]).unwrap(),
+        "val".into(),
+    )
+    .unwrap();
+    let schema = schemars::schema_for!(FermionHamiltonian);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

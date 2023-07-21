@@ -600,3 +600,20 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_boson_hamiltonian_schema() {
+    let mut op = BosonHamiltonian::new();
+    op.set(HermitianBosonProduct::new([0], [0]).unwrap(), 1.0.into())
+        .unwrap();
+    op.set(HermitianBosonProduct::new([1], [1]).unwrap(), "val".into())
+        .unwrap();
+    let schema = schemars::schema_for!(BosonHamiltonian);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

@@ -99,23 +99,22 @@ fn hermitian_error(
     assert!(test_new.is_err());
 }
 
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[0], 1.0, 3.0, true; "1-0")]
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[], 1.0, 3.0, true; "1 empty")]
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[2], &[], &[], &[], 1.0, 3.0, true; "2-empty")]
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[2], &[0], &[], &[], 1.0, 3.0, true; "2-0")]
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[0,2], &[0], &[], &[], 1.0, 3.0, true; "0,2-0")]
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[0], &[1], &[0], &[1], 1.0, 3.0, false; "0-1 ;0-1")]
-
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[0], (1.0, 3.0), true; "1-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[], (1.0, 3.0), true; "1 empty")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[2], &[], &[], &[], (1.0, 3.0), true; "2-empty")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[2], &[0], &[], &[], (1.0, 3.0), true; "2-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[0,2], &[0], &[], &[], (1.0, 3.0), true; "0,2-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[0], &[1], &[0], &[1], (1.0, 3.0), false; "0-1 ;0-1")]
 fn test_conjugation_in_valid_product(
     spins: PauliProduct,
     boson_creators: &[usize],
     boson_annihilators: &[usize],
     fermion_creators: &[usize],
     fermion_annihilators: &[usize],
-    real: f64,
-    imag: f64,
+    value: (f64, f64),
     conjugated: bool,
 ) {
+    let (real, imag) = value;
     let bosons = BosonProduct::new(boson_creators.to_vec(), boson_annihilators.to_vec()).unwrap();
     let fermions =
         FermionProduct::new(fermion_creators.to_vec(), fermion_annihilators.to_vec()).unwrap();
@@ -1282,4 +1281,21 @@ fn serde_compact() {
             Token::TupleEnd,
         ],
     );
+}
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_hermitian_mixed_product_schema() {
+    let pp = HermitianMixedProduct::new(
+        [PauliProduct::new().x(0), PauliProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    let schema = schemars::schema_for!(HermitianMixedProduct);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(pp).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
 }

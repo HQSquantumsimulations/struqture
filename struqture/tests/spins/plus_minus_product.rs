@@ -946,3 +946,15 @@ fn dp_from_pm() {
         ]
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_plus_minus_product_schema() {
+    let pp = PlusMinusProduct::new();
+    let schema = schemars::schema_for!(PlusMinusProduct);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(pp).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}
