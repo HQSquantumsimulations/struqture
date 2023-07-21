@@ -759,3 +759,23 @@ fn test_richcmp() {
         assert!(comparison.is_err());
     });
 }
+
+/// Test jordan_wigner() method of SpinLindbladNoiseSystem
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let slns = new_noisesystem(py);
+        slns.call_method1("add_operator_product", (("0X", "0X"), 0.1))
+            .unwrap();
+        let flns = slns.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(flns.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let number_modes = usize::extract(flns.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(slns.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}

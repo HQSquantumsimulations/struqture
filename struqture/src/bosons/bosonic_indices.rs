@@ -48,6 +48,21 @@ pub struct BosonProduct {
     annihilators: TinyVec<[usize; 2]>,
 }
 
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for BosonProduct {
+    fn schema_name() -> String {
+        "BosonProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
+
+        schemars::schema::Schema::Object(obj)
+    }
+}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for BosonProduct {
@@ -536,6 +551,21 @@ pub struct HermitianBosonProduct {
     annihilators: TinyVec<[usize; 2]>,
 }
 
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for HermitianBosonProduct {
+    fn schema_name() -> String {
+        "HermitianBosonProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
+
+        schemars::schema::Schema::Object(obj)
+    }
+}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for HermitianBosonProduct {
@@ -671,10 +701,27 @@ impl ModeIndex for HermitianBosonProduct {
         creators.sort_unstable();
         let mut annihilators: TinyVec<[usize; 2]> = annihilators.into_iter().collect();
         annihilators.sort_unstable();
-        if creators.iter().min() > annihilators.iter().min() {
+        let mut number_equal_indices = 0;
+        for (creator, annihilator) in creators.iter().zip(annihilators.iter()) {
+            match annihilator.cmp(creator) {
+                std::cmp::Ordering::Less => {
+                    return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
+                        creators_min: Some(*creator),
+                        annihilators_min: Some(*annihilator),
+                    });
+                }
+                std::cmp::Ordering::Greater => {
+                    break;
+                }
+                _ => {
+                    number_equal_indices += 1;
+                }
+            }
+        }
+        if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
             return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                creators_min: creators.iter().min().copied(),
-                annihilators_min: annihilators.iter().min().copied(),
+                creators_min: creators.iter().nth(number_equal_indices).copied(),
+                annihilators_min: None,
             });
         }
         Ok(Self {
@@ -724,7 +771,25 @@ impl ModeIndex for HermitianBosonProduct {
         creators.sort_unstable();
         let mut annihilators: TinyVec<[usize; 2]> = annihilators.into_iter().collect();
         annihilators.sort_unstable();
-        if creators.iter().min() > annihilators.iter().min() {
+        let mut hermitian_conjugate = false;
+        let mut number_equal_indices = 0;
+        for (creator, annihilator) in creators.iter().zip(annihilators.iter()) {
+            match annihilator.cmp(creator) {
+                std::cmp::Ordering::Less => {
+                    hermitian_conjugate = true;
+                    break;
+                }
+                std::cmp::Ordering::Greater => break,
+                _ => {
+                    number_equal_indices += 1;
+                }
+            }
+        }
+
+        if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
+            hermitian_conjugate = true;
+        }
+        if hermitian_conjugate {
             Ok((
                 Self {
                     creators: annihilators,

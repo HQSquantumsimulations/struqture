@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionSystemWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -19,12 +20,13 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     OperateOnSpins, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use struqture::StruqtureError;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
-use struqture_py_macros::noiseless_system_wrapper;
+use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of spins.
 ///
@@ -57,6 +59,7 @@ pub struct SpinSystemWrapper {
     pub internal: SpinSystem,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[noiseless_system_wrapper(
     OperateOnSpins,
     OperateOnState,
@@ -79,6 +82,36 @@ impl SpinSystemWrapper {
         Self {
             internal: SpinSystem::new(number_spins),
         }
+    }
+
+    #[cfg(feature = "json_schema")]
+    #[staticmethod]
+    /// Return the JsonSchema for the json serialisation of the SpinHamiltonianSystem class.
+    ///
+    /// Returns:
+    ///     str: The json schema serialized to json
+    pub fn json_schema() -> String {
+        let schema = schemars::schema_for!(SpinSystem);
+        serde_json::to_string_pretty(&schema).expect("Unexpected failure to serialize schema")
+    }
+
+    #[cfg(feature = "json_schema")]
+    /// Return the minimum version of struqture that supports this SpinHamiltonianSystem.
+    ///
+    /// Returns:
+    ///     str: The minimum version of the struqture library to deserialize this object.
+    pub fn min_supported_version(&self) -> String {
+        return "1.0.0".to_string();
+    }
+
+    #[cfg(feature = "json_schema")]
+    /// Returns the current version of the struqture library .
+    ///
+    /// Returns:
+    ///     str: The current version of the library.
+    #[staticmethod]
+    pub fn current_version() -> String {
+        return struqture::STRUQTURE_VERSION.to_string();
     }
 
     /// Implement `*` for SpinSystem and SpinSystem/CalculatorComplex/CalculatorFloat.

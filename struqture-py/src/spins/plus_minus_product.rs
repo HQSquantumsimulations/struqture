@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::fermions::FermionSystemWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -20,11 +21,13 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
+use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
 use struqture::SymmetricIndex;
-use struqture_py_macros::product_wrapper;
+use struqture_py_macros::{mappings, product_wrapper};
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
 
@@ -57,6 +60,7 @@ pub struct PlusMinusProductWrapper {
     pub internal: PlusMinusProduct,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[product_wrapper(SymmetricIndex)]
 impl PlusMinusProductWrapper {
     /// Create an empty PlusMinusProduct.
@@ -147,6 +151,14 @@ impl PlusMinusProductWrapper {
     pub fn keys(&self) -> Vec<usize> {
         let keys: Vec<usize> = self.internal.iter().map(|(k, _)| k).copied().collect();
         keys
+    }
+
+    /// Return maximum index in self.
+    ///
+    /// Returns:
+    ///     int: Maximum index.
+    pub fn current_number_spins(&self) -> usize {
+        self.internal.current_number_spins()
     }
 
     /// Return number of entries in object.

@@ -57,7 +57,22 @@ pub struct BosonOperator {
     internal_map: HashMap<BosonProduct, CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for BosonOperator {}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for BosonOperator {
+    fn schema_name() -> String {
+        "BosonOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <BosonOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct BosonOperatorSerialize {
     items: Vec<(BosonProduct, CalculatorFloat, CalculatorFloat)>,
     _struqture_version: StruqtureVersionSerializable,

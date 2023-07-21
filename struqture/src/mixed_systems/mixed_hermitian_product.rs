@@ -58,6 +58,21 @@ pub struct HermitianMixedProduct {
     pub(crate) fermions: TinyVec<[FermionProduct; 2]>,
 }
 
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for HermitianMixedProduct {
+    fn schema_name() -> String {
+        "HermitianMixedProduct".to_string()
+    }
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let tmp_schema = gen.subschema_for::<String>();
+        let mut obj = tmp_schema.into_object();
+        let meta = obj.metadata();
+        meta.description = Some("Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  X, Y and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0X1Y:Bc0a0:Fc0a0:.".to_string());
+
+        schemars::schema::Schema::Object(obj)
+    }
+}
+
 impl Serialize for HermitianMixedProduct {
     /// Serialization function for HermitianMixedProduct according to string type.
     ///
@@ -214,24 +229,77 @@ impl MixedIndex for HermitianMixedProduct {
         // We need to determine a hierarchy for deciding which of the hermitian
         // conjugated pairs of operators we are going to store.
         // The decision tree is the following:
-        // If bosons are not empty the operator product where the minimum of the
-        // creators of the first boson subsystem is smaller than the minimum of the
-        // annihilators of the first boson subsystem is stored.
-        // If there are no boson subsystems  the choice is based on the first fermionic
-        // in the same way
-        if let Some(b) = bosons.iter().next() {
-            if b.creators().min() > b.annihilators().min() {
+        // If bosons are not empty we search through all boson products in order to find the first that
+        // decides which of the two hermitian conjugates is stored. A BosonProduct decides which variant is
+        // stored when there is at least one annihilator or creator in the BosonProduct that is not paired with
+        // a creator or annihilator acting on the same index. In that case the variant with the annihilator acting on the higher
+        // index is stored.
+        // If no boson subsystem can choose which variant is stored, the choice is based on the fermionic subsystems
+        // in the same way.
+        let mut hermitian_decision_made = false;
+        for b in bosons.iter() {
+            let mut number_equal_indices = 0;
+            for (creator, annihilator) in b.creators().zip(b.annihilators()) {
+                match annihilator.cmp(creator) {
+                    std::cmp::Ordering::Less => {
+                        return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
+                            creators_min: Some(*creator),
+                            annihilators_min: Some(*annihilator),
+                        });
+                    }
+                    std::cmp::Ordering::Greater => {
+                        hermitian_decision_made = true;
+                        break;
+                    }
+                    _ => {
+                        number_equal_indices += 1;
+                    }
+                }
+            }
+            if b.creators().len() > number_equal_indices
+                && b.annihilators().len() == number_equal_indices
+            {
                 return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                    creators_min: b.creators().min().copied(),
-                    annihilators_min: b.annihilators().min().copied(),
+                    creators_min: b.creators().nth(number_equal_indices).copied(),
+                    annihilators_min: None,
                 });
             }
-        } else if let Some(f) = fermions.iter().next() {
-            if f.creators().min() > f.annihilators().min() {
-                return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                    creators_min: f.creators().min().copied(),
-                    annihilators_min: f.annihilators().min().copied(),
-                });
+
+            if hermitian_decision_made {
+                break;
+            }
+        }
+        if !hermitian_decision_made {
+            for f in fermions.iter() {
+                let mut number_equal_indices = 0;
+                for (creator, annihilator) in f.creators().zip(f.annihilators()) {
+                    match annihilator.cmp(creator) {
+                        std::cmp::Ordering::Less => {
+                            return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
+                                creators_min: Some(*creator),
+                                annihilators_min: Some(*annihilator),
+                            });
+                        }
+                        std::cmp::Ordering::Greater => {
+                            hermitian_decision_made = true;
+                            break;
+                        }
+                        _ => {
+                            number_equal_indices += 1;
+                        }
+                    }
+                }
+                if f.creators().len() > number_equal_indices
+                    && f.annihilators().len() == number_equal_indices
+                {
+                    return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
+                        creators_min: f.creators().nth(number_equal_indices).copied(),
+                        annihilators_min: None,
+                    });
+                }
+                if hermitian_decision_made {
+                    break;
+                }
             }
         }
         Ok(Self {
@@ -281,81 +349,95 @@ impl MixedIndex for HermitianMixedProduct {
         let spins: TinyVec<[PauliProduct; 2]> = spins.into_iter().collect();
         let bosons: TinyVec<[BosonProduct; 2]> = bosons.into_iter().collect();
         let fermions: TinyVec<[FermionProduct; 2]> = fermions.into_iter().collect();
-        let (new_index, new_val) = if let Some(b) = bosons.iter().next() {
-            if b.creators().min() > b.annihilators().min() {
-                let mut new_spins: TinyVec<[PauliProduct; 2]> = TinyVec::<[PauliProduct; 2]>::new();
-                let mut prefactor = 1.0;
-                for s in spins {
-                    let (new_s, pf) = s.hermitian_conjugate();
-                    new_spins.push(new_s);
-                    prefactor *= pf;
+
+        let mut hermitian_conjugate = false;
+        let mut hermitian_decision_made = false;
+        for b in bosons.iter() {
+            let mut number_equal_indices = 0;
+            for (creator, annihilator) in b.creators().zip(b.annihilators()) {
+                match annihilator.cmp(creator) {
+                    std::cmp::Ordering::Less => {
+                        hermitian_conjugate = true;
+                        hermitian_decision_made = true;
+                        break;
+                    }
+                    std::cmp::Ordering::Greater => {
+                        hermitian_decision_made = true;
+                        break;
+                    }
+                    _ => {
+                        number_equal_indices += 1;
+                    }
                 }
-                let mut new_bosons: TinyVec<[BosonProduct; 2]> =
-                    TinyVec::<[BosonProduct; 2]>::new();
-                for b in bosons {
-                    let (new_b, pf) = b.hermitian_conjugate();
-                    new_bosons.push(new_b);
-                    prefactor *= pf;
-                }
-                let mut new_fermions: TinyVec<[FermionProduct; 2]> =
-                    TinyVec::<[FermionProduct; 2]>::new();
-                for f in fermions {
-                    let (new_f, pf) = f.hermitian_conjugate();
-                    new_fermions.push(new_f);
-                    prefactor *= pf;
-                }
-                (
-                    Self {
-                        spins: new_spins,
-                        bosons: new_bosons,
-                        fermions: new_fermions,
-                    },
-                    value.conj() * prefactor,
-                )
-            } else {
-                (
-                    Self {
-                        spins,
-                        bosons,
-                        fermions,
-                    },
-                    value,
-                )
             }
-        } else if let Some(f) = fermions.iter().next() {
-            if f.creators().min() > f.annihilators().min() {
-                let mut new_spins: TinyVec<[PauliProduct; 2]> = TinyVec::<[PauliProduct; 2]>::new();
-                let mut prefactor = 1.0;
-                for s in spins {
-                    let (new_s, pf) = s.hermitian_conjugate();
-                    new_spins.push(new_s);
-                    prefactor *= pf;
-                }
-                let mut new_fermions: TinyVec<[FermionProduct; 2]> =
-                    TinyVec::<[FermionProduct; 2]>::new();
-                for f in fermions {
-                    let (new_f, pf) = f.hermitian_conjugate();
-                    new_fermions.push(new_f);
-                    prefactor *= pf;
-                }
-                (
-                    Self {
-                        spins: new_spins,
-                        bosons,
-                        fermions: new_fermions,
-                    },
-                    value.conj() * prefactor,
-                )
-            } else {
-                (
-                    Self {
-                        spins,
-                        bosons,
-                        fermions,
-                    },
-                    value,
-                )
+            if b.creators().len() > number_equal_indices
+                && b.annihilators().len() == number_equal_indices
+            {
+                hermitian_conjugate = true;
+                hermitian_decision_made = true;
             }
+            if hermitian_decision_made {
+                break;
+            }
+        }
+        if !hermitian_decision_made {
+            for f in fermions.iter() {
+                let mut number_equal_indices = 0;
+                for (creator, annihilator) in f.creators().zip(f.annihilators()) {
+                    match annihilator.cmp(creator) {
+                        std::cmp::Ordering::Less => {
+                            hermitian_conjugate = true;
+                            break;
+                        }
+                        std::cmp::Ordering::Greater => {
+                            hermitian_decision_made = true;
+                            break;
+                        }
+                        _ => {
+                            number_equal_indices += 1;
+                        }
+                    }
+                }
+                if f.creators().len() > number_equal_indices
+                    && f.annihilators().len() == number_equal_indices
+                {
+                    hermitian_conjugate = true;
+                    hermitian_decision_made = true;
+                }
+                if hermitian_decision_made {
+                    break;
+                }
+            }
+        }
+        let (new_index, new_val) = if hermitian_conjugate {
+            let mut new_spins: TinyVec<[PauliProduct; 2]> = TinyVec::<[PauliProduct; 2]>::new();
+            let mut prefactor = 1.0;
+            for s in spins {
+                let (new_s, pf) = s.hermitian_conjugate();
+                new_spins.push(new_s);
+                prefactor *= pf;
+            }
+            let mut new_bosons: TinyVec<[BosonProduct; 2]> = TinyVec::<[BosonProduct; 2]>::new();
+            for b in bosons {
+                let (new_b, pf) = b.hermitian_conjugate();
+                new_bosons.push(new_b);
+                prefactor *= pf;
+            }
+            let mut new_fermions: TinyVec<[FermionProduct; 2]> =
+                TinyVec::<[FermionProduct; 2]>::new();
+            for f in fermions {
+                let (new_f, pf) = f.hermitian_conjugate();
+                new_fermions.push(new_f);
+                prefactor *= pf;
+            }
+            (
+                Self {
+                    spins: new_spins,
+                    bosons: new_bosons,
+                    fermions: new_fermions,
+                },
+                value.conj() * prefactor,
+            )
         } else {
             (
                 Self {
@@ -366,6 +448,7 @@ impl MixedIndex for HermitianMixedProduct {
                 value,
             )
         };
+
         if new_index.is_natural_hermitian() && new_val.im != CalculatorFloat::ZERO {
             Err(StruqtureError::NonHermitianOperator)
         } else {

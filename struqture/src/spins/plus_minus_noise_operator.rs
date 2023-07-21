@@ -59,7 +59,26 @@ pub struct PlusMinusLindbladNoiseOperator {
     internal_map: HashMap<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>,
 }
 
+impl crate::MinSupportedVersion for PlusMinusLindbladNoiseOperator {
+    fn min_supported_version() -> (usize, usize, usize) {
+        (1, 1, 0)
+    }
+}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for PlusMinusLindbladNoiseOperator {
+    fn schema_name() -> String {
+        "PlusMinusLindbladNoiseOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <PlusMinusLindbladNoiseOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct PlusMinusLindbladNoiseOperatorSerialize {
     /// The vector representing the internal map of the PlusMinusLindbladNoiseOperator
     items: Vec<(

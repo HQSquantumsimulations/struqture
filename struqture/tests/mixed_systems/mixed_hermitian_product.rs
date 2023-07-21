@@ -31,7 +31,6 @@ use test_case::test_case;
 
 #[test_case(PauliProduct::from_str("").unwrap(), &[], &[], &[], &[]; "empty empty")]
 #[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[0], &[1]; "empty 0 - 1")]
-#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[0]; "empty flipped 0 - 1")]
 #[test_case(PauliProduct::from_str("0X").unwrap(), &[0], &[1], &[0], &[1]; "flipped 0 - 1")]
 #[test_case(PauliProduct::from_str("0Z").unwrap(), &[], &[1], &[], &[1]; "1 - empty")]
 #[test_case(PauliProduct::from_str("4Z").unwrap(), &[], &[2000], &[], &[2000]; "empty - 2000")]
@@ -76,6 +75,61 @@ fn new_normal_ordered_passing(
     }
     for (left, right) in valid_pair.fermions().zip([fermions].iter()) {
         assert_eq!(left, right);
+    }
+}
+
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[0]; "empty flipped 0 - 1")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[1], &[0], &[0], &[1]; "1-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[0,2], &[0,1], &[], &[]; "0,2 - 0,1")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[0,2], &[0,1]; "0,2 - 0,1 fermions")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[1], &[], &[], &[]; "empty 1")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[2], &[]; "empty 2")]
+
+fn hermitian_error(
+    spins: PauliProduct,
+    boson_creators: &[usize],
+    boson_annihilators: &[usize],
+    fermion_creators: &[usize],
+    fermion_annihilators: &[usize],
+) {
+    let bosons = BosonProduct::new(boson_creators.to_vec(), boson_annihilators.to_vec()).unwrap();
+    let fermions =
+        FermionProduct::new(fermion_creators.to_vec(), fermion_annihilators.to_vec()).unwrap();
+    let test_new = HermitianMixedProduct::new([spins], [bosons], [fermions]);
+    assert!(test_new.is_err());
+}
+
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[0], 1.0, 3.0, true; "1-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[], &[], &[1], &[], 1.0, 3.0, true; "1 empty")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[2], &[], &[], &[], 1.0, 3.0, true; "2-empty")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[2], &[0], &[], &[], 1.0, 3.0, true; "2-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[0,2], &[0], &[], &[], 1.0, 3.0, true; "0,2-0")]
+#[test_case(PauliProduct::from_str("0X").unwrap(), &[0], &[1], &[0], &[1], 1.0, 3.0, false; "0-1 ;0-1")]
+
+fn test_conjugation_in_valid_product(
+    spins: PauliProduct,
+    boson_creators: &[usize],
+    boson_annihilators: &[usize],
+    fermion_creators: &[usize],
+    fermion_annihilators: &[usize],
+    real: f64,
+    imag: f64,
+    conjugated: bool,
+) {
+    let bosons = BosonProduct::new(boson_creators.to_vec(), boson_annihilators.to_vec()).unwrap();
+    let fermions =
+        FermionProduct::new(fermion_creators.to_vec(), fermion_annihilators.to_vec()).unwrap();
+    let (_res, prefac) = HermitianMixedProduct::create_valid_pair(
+        vec![spins],
+        vec![bosons],
+        vec![fermions],
+        CalculatorComplex::new(real, imag),
+    )
+    .unwrap();
+    if conjugated {
+        assert_eq!(prefac, CalculatorComplex::new(real, -imag));
+    } else {
+        assert_eq!(prefac, CalculatorComplex::new(real, imag));
     }
 }
 
@@ -332,8 +386,8 @@ fn multiply_spins() {
 
 #[test]
 fn multiply_spins_bosons() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let bosons_left =
         BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -406,8 +460,8 @@ fn multiply_spins_bosons() {
 
 #[test]
 fn multiply_spins_fermions() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let fermions_left =
         FermionProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -480,8 +534,8 @@ fn multiply_spins_fermions() {
 
 #[test]
 fn multiply_spins_bosons_fermions() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let bosons_left =
         BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -604,8 +658,8 @@ fn multiply_spins_fp_right() {
 
 #[test]
 fn multiply_spins_bosons_fp_right() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let bosons_left =
         BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -661,8 +715,8 @@ fn multiply_spins_bosons_fp_right() {
 
 #[test]
 fn multiply_spins_fermions_fp_right() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let fermions_left =
         FermionProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -718,8 +772,8 @@ fn multiply_spins_fermions_fp_right() {
 
 #[test]
 fn multiply_spins_bosons_fermions_fp_right() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let bosons_left =
         BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -844,8 +898,8 @@ fn multiply_spins_fp_left() {
 
 #[test]
 fn multiply_spins_bosons_fp_left() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let bosons_left =
         BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -901,8 +955,8 @@ fn multiply_spins_bosons_fp_left() {
 
 #[test]
 fn multiply_spins_fermions_fp_left() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let fermions_left =
         FermionProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();
@@ -958,8 +1012,8 @@ fn multiply_spins_fermions_fp_left() {
 
 #[test]
 fn multiply_spins_bosons_fermions_fp_left() {
-    let creators_left: &[usize] = &[0, 1];
-    let annihilators_left: &[usize] = &[0];
+    let creators_left: &[usize] = &[0];
+    let annihilators_left: &[usize] = &[0, 1];
     let spins_left = PauliProduct::new().x(1);
     let bosons_left =
         BosonProduct::new(creators_left.to_vec(), annihilators_left.to_vec()).unwrap();

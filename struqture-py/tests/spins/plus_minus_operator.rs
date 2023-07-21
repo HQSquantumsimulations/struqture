@@ -851,3 +851,25 @@ fn test_richcmp() {
         assert!(comparison.is_err());
     });
 }
+
+/// Test jordan_wigner() method of PlusMinusOperator
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pmo = new_system(py);
+        pmo.call_method1("add_operator_product", ("1+", 0.1))
+            .unwrap();
+        let fo = pmo.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(fo.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let ss = pmo.call_method0("to_spin_system").unwrap();
+
+        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
+}

@@ -12,6 +12,7 @@
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
 use super::{SpinHamiltonianSystemWrapper, SpinLindbladNoiseSystemWrapper};
+use crate::fermions::FermionLindbladOpenSystemWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
 use num_complex::Complex64;
@@ -19,9 +20,10 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
+use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{OperateOnSpins, SpinLindbladOpenSystem, ToSparseMatrixSuperOperator};
 use struqture::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
-use struqture_py_macros::noisy_system_wrapper;
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
@@ -52,6 +54,7 @@ pub struct SpinLindbladOpenSystemWrapper {
     pub internal: SpinLindbladOpenSystem,
 }
 
+#[mappings(JordanWignerSpinToFermion)]
 #[noisy_system_wrapper(OpenSystem, OperateOnSpins, ToSparseMatrixSuperOperator, Calculus)]
 impl SpinLindbladOpenSystemWrapper {
     /// Create a new SpinLindbladOpenSystem.

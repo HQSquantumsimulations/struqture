@@ -48,6 +48,7 @@ fn new_error() {
 
 #[test_case(&[], &[], 0, 0, 0; "empty")]
 #[test_case(&[0], &[1], 1, 1, 2; "0 - 1")]
+#[test_case(&[0,1], &[0,2], 2, 2, 3; "0,1 - 0,2")]
 #[test_case(&[], &[2000], 0, 1, 2001; "empty - 2000")]
 fn new_normal_ordered_passing(
     creators: &[usize],
@@ -112,6 +113,55 @@ fn new_normal_ordered_normal_order_error(creators: &[usize], annihilators: &[usi
     let test_new = HermitianFermionProduct::new(creators, annihilators);
     assert!(test_new.is_err());
     assert_eq!(test_new, Err(StruqtureError::IncorrectlyOrderedIndices));
+}
+
+#[test_case(&[1], &[0], 1.0,3.0, true; "conjugate")]
+#[test_case(&[0], &[1], 1.0,3.0, false; "not conjugate")]
+#[test_case(&[0,2], &[0,1], 1.0,3.0, true; " conjugate second")]
+#[test_case(&[2000], &[], 1.0,3.0, true; "empty 2000")]
+#[test_case(&[0,2000], &[0], 1.0,3.0, true; "0 2000")]
+#[test_case(&[0,2000], &[0,3000], 1.0,3.0, false; "0 3000")]
+
+fn test_conjugation_in_valid_product(
+    creators: &[usize],
+    annihilators: &[usize],
+    real: f64,
+    imag: f64,
+    conjugated: bool,
+) {
+    let creators = creators.to_vec();
+    let annihilators = annihilators.to_vec();
+    let (res, prefac) = HermitianFermionProduct::create_valid_pair(
+        creators.clone(),
+        annihilators.clone(),
+        CalculatorComplex::new(real, imag),
+    )
+    .unwrap();
+    if conjugated {
+        assert_eq!(prefac, CalculatorComplex::new(real, -imag));
+        assert_eq!(
+            res,
+            HermitianFermionProduct::new(annihilators, creators).unwrap()
+        );
+    } else {
+        assert_eq!(prefac, CalculatorComplex::new(real, imag));
+        assert_eq!(
+            res,
+            HermitianFermionProduct::new(creators, annihilators).unwrap()
+        );
+    }
+}
+
+#[test_case(&[1], &[]; "1-empty")]
+#[test_case(&[2], &[1]; "2 - 1")]
+#[test_case(&[0,2], &[0,1]; "0,2 - 0,1")]
+#[test_case(&[0,1], &[0]; "0,1 - 0,empty")]
+
+fn hermitian_error(creators: &[usize], annihilators: &[usize]) {
+    let creators = creators.to_vec();
+    let annihilators = annihilators.to_vec();
+    let test_new = HermitianFermionProduct::new(creators, annihilators);
+    assert!(test_new.is_err());
 }
 
 #[test_case(&[1, 2, 2], &[1, 2]; "creators")]

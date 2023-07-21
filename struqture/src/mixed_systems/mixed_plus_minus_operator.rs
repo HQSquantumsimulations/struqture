@@ -62,7 +62,26 @@ pub struct MixedPlusMinusOperator {
     n_fermions: usize,
 }
 
+impl crate::MinSupportedVersion for MixedPlusMinusOperator {
+    fn min_supported_version() -> (usize, usize, usize) {
+        (1, 2, 0)
+    }
+}
+
+#[cfg(feature = "json_schema")]
+impl schemars::JsonSchema for MixedPlusMinusOperator {
+    fn schema_name() -> String {
+        "MixedPlusMinusOperator".to_string()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        <MixedPlusMinusOperatorSerialize>::json_schema(gen)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct MixedPlusMinusOperatorSerialize {
     items: Vec<(MixedPlusMinusProduct, CalculatorFloat, CalculatorFloat)>,
     n_spins: usize,

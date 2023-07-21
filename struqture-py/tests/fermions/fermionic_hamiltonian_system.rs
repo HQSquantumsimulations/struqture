@@ -357,7 +357,7 @@ fn test_truncate(re: f64, im: f64) {
             .call_method1(
                 "add_operator_product",
                 (
-                    "c0c1c2c3a0a1a2",
+                    "c0c1c2a0a1a2a3",
                     CalculatorComplexWrapper {
                         internal: CalculatorComplex::from("test"),
                     },
@@ -392,7 +392,7 @@ fn test_truncate(re: f64, im: f64) {
             .call_method1(
                 "add_operator_product",
                 (
-                    "c0c1c2c3a0a1a2",
+                    "c0c1c2a0a1a2a3",
                     CalculatorComplexWrapper {
                         internal: CalculatorComplex::from("test"),
                     },
@@ -416,7 +416,7 @@ fn test_truncate(re: f64, im: f64) {
             .call_method1(
                 "add_operator_product",
                 (
-                    "c0c1c2c3a0a1a2",
+                    "c0c1c2a0a1a2a3",
                     CalculatorComplexWrapper {
                         internal: CalculatorComplex::from("test"),
                     },
@@ -451,9 +451,9 @@ fn test_separate() {
         let pmp = new_system(py, None);
         pmp.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
-        pmp.call_method1("add_operator_product", ("c0c1a0", 1.0))
+        pmp.call_method1("add_operator_product", ("c0a0a1", 1.0))
             .unwrap();
-        pmp.call_method1("add_operator_product", ("c0c2a0", 1.0))
+        pmp.call_method1("add_operator_product", ("c0a0a2", 1.0))
             .unwrap();
 
         let pmp_rem = new_system(py, None);
@@ -463,14 +463,14 @@ fn test_separate() {
 
         let pmp_sys = new_system(py, None);
         pmp_sys
-            .call_method1("add_operator_product", ("c0c1a0", 1.0))
+            .call_method1("add_operator_product", ("c0a0a1", 1.0))
             .unwrap();
         pmp_sys
-            .call_method1("add_operator_product", ("c0c2a0", 1.0))
+            .call_method1("add_operator_product", ("c0a0a2", 1.0))
             .unwrap();
 
         let result = pmp
-            .call_method1("separate_into_n_terms", ((2, 1),))
+            .call_method1("separate_into_n_terms", ((1, 2),))
             .unwrap();
         let equal = bool::extract(
             result
@@ -626,7 +626,7 @@ fn test_mul_self() {
         let number_fermions: Option<usize> = Some(4);
         let system_0 = new_system(py, number_fermions);
         system_0
-            .call_method1("add_operator_product", ("c0c1a0", 0.1))
+            .call_method1("add_operator_product", ("c0a0a1", 0.1))
             .unwrap();
         let system_1 = new_system(py, number_fermions);
         system_1
@@ -634,16 +634,16 @@ fn test_mul_self() {
             .unwrap();
         let system_0_1 = new_fermionic_system(py, number_fermions);
         system_0_1
-            .call_method1("add_operator_product", ("c0c1c2a0a3", -0.1))
+            .call_method1("add_operator_product", ("c0c2a0a1a3", 0.1))
             .unwrap();
         system_0_1
-            .call_method1("add_operator_product", ("c0c1c3a0a2", -0.1))
+            .call_method1("add_operator_product", ("c0c3a0a1a2", 0.1))
             .unwrap();
         system_0_1
-            .call_method1("add_operator_product", ("c0c2a0a1a3", -0.1))
+            .call_method1("add_operator_product", ("c0c1c2a0a3", 0.1))
             .unwrap();
         system_0_1
-            .call_method1("add_operator_product", ("c0c3a0a1a2", -0.1))
+            .call_method1("add_operator_product", ("c0c1c3a0a2", 0.1))
             .unwrap();
 
         let added = system_0.call_method1("__mul__", (system_1,)).unwrap();
@@ -846,5 +846,27 @@ fn test_richcmp() {
 
         let comparison = system_one.call_method1("__ge__", ("c0c1a0a1",));
         assert!(comparison.is_err());
+    });
+}
+
+/// Test jordan_wigner() method of FermionHamiltonianSystem
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let number_fermions: Option<usize> = None;
+        let fhs = new_system(py, number_fermions);
+        fhs.call_method1("add_operator_product", ("c0c1a0a1", 0.1))
+            .unwrap();
+        let shs = fhs.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(shs.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let number_modes =
+            usize::extract(fhs.call_method0("current_number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(shs.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
     });
 }

@@ -863,8 +863,29 @@ fn test_to_spin_sys() {
         let result = pmp
             .call_method1("to_spin_noise_system", (number_spins,))
             .unwrap();
-        println!("{:?}", result);
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
+}
+
+/// Test jordan_wigner() method of PlusMinusNoiseOperator
+#[test]
+fn test_jordan_wigner() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pmno = new_noisesystem(py);
+        pmno.call_method1("add_operator_product", (("0+", "0+"), 0.1))
+            .unwrap();
+        let flno = pmno.call_method0("jordan_wigner").unwrap();
+
+        let empty = bool::extract(flno.call_method0("is_empty").unwrap()).unwrap();
+        assert!(!empty);
+
+        let slno = pmno.call_method0("to_spin_noise_system").unwrap();
+
+        let number_modes = usize::extract(flno.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins =
+            usize::extract(slno.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, number_spins)
+    });
 }

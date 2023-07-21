@@ -49,12 +49,15 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub struct SpinHamiltonianSystem {
     /// The number of spins in the SpinHamiltonianSystem
     pub(crate) number_spins: Option<usize>,
     /// The SpinHamiltonian representing the Hamiltonian of the SpinHamiltonianSystem
     pub(crate) hamiltonian: SpinHamiltonian,
 }
+
+impl crate::MinSupportedVersion for SpinHamiltonianSystem {}
 
 impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonianSystem {
     type Index = PauliProduct;
@@ -580,7 +583,7 @@ impl JordanWignerSpinToFermion for SpinHamiltonianSystem {
     fn jordan_wigner(&self) -> Self::Output {
         FermionHamiltonianSystem::from_hamiltonian(
             self.hamiltonian().jordan_wigner(),
-            Some(self.number_spins()),
+            self.number_spins,
         )
             .expect("Internal bug in jordan_wigner() for SpinHamiltonian. The number of modes in the resulting fermionic Hamiltonian should equal the number of spins of the spin Hamiltonian.")
     }

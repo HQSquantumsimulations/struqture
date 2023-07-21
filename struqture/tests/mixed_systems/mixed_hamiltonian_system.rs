@@ -124,7 +124,6 @@ fn empty_clone_options() {
     )
     .unwrap();
     let mut mo = MixedHamiltonianSystem::new([Some(1)], [Some(2)], [Some(3)]);
-    println!("{:?}", mo.number_bosonic_modes());
     mo.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
 
     let empty: Option<usize> = None;

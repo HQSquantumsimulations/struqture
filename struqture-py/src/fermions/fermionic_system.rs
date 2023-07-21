@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use crate::fermions::FermionProductWrapper;
+use crate::spins::SpinSystemWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -18,8 +19,9 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionSystem;
+use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
-use struqture_py_macros::noiseless_system_wrapper;
+use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of fermions.
 ///
@@ -50,6 +52,7 @@ pub struct FermionSystemWrapper {
     pub internal: FermionSystem,
 }
 
+#[mappings(JordanWignerFermionToSpin)]
 #[noiseless_system_wrapper(
     OperateOnFermions,
     OperateOnState,

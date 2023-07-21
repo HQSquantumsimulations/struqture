@@ -103,7 +103,6 @@ fn new_normal_ordered_doubles_error(creators: &[usize], annihilators: &[usize]) 
 #[test_case("c0a0a30", &[0], &[0, 30]; "0 - 0,30")]
 fn from_string(stringformat: &str, creators_sorted: &[usize], annihilators_sorted: &[usize]) {
     let test_new = <FermionProduct as std::str::FromStr>::from_str(stringformat);
-    dbg!(&test_new);
     assert!(test_new.is_ok());
     let res = test_new.unwrap();
     let cvec: Vec<usize> = res.creators().copied().collect();

@@ -2,6 +2,20 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.4.0-alpha.1
+
+* Added support for jsonschema in spins.
+
+## 1.3.1
+
+* Fixed bug allowing the construction of Hermitian operator products with annihilator index lower than creator index when there are leading equal indices.
+* Updated pyo3 dependency to 0.19
+
+## 1.3.0
+
+* Added Jordan-Wigner transform to both struqture and struqture-py.
+
+
 ## 1.2.0
 
 * Added MixedPlusMinusProduct and MixedPlusMinusOperator to both struqture and struqture-py.
