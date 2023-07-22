@@ -20,6 +20,8 @@ use struqture_py::spins::{
     PlusMinusOperatorWrapper, SpinHamiltonianSystemWrapper, SpinSystemWrapper,
 };
 use test_case::test_case;
+#[cfg(feature = "json_schema")]
+use struqture::STRUQTURE_VERSION;
 
 // helper functions
 fn new_system(py: Python) -> &PyCell<PlusMinusOperatorWrapper> {
@@ -871,5 +873,30 @@ fn test_jordan_wigner() {
         let number_spins =
             usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
+    });
+}
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_json_schema() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_system(py);
+
+        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let rust_schema =
+            serde_json::to_string_pretty(&schemars::schema_for!(PlusMinusOperator)).unwrap();
+        assert_eq!(schema, rust_schema);
+
+        let version: String =
+            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+        let rust_version = STRUQTURE_VERSION.to_string();
+        assert_eq!(version, rust_version);
+
+        new.call_method1("add_operator_product", ("0Z", 1.0)).unwrap();
+        let min_version: String =
+            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+        let rust_min_version = String::from("1.1.0");
+        assert_eq!(min_version, rust_min_version);
     });
 }

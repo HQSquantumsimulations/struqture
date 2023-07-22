@@ -10,7 +10,6 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-// use pyo3::exceptions::PyIndexError;
 use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
@@ -23,6 +22,8 @@ use struqture_py::spins::{
     SpinHamiltonianSystemWrapper, SpinLindbladNoiseSystemWrapper, SpinLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
+#[cfg(feature = "json_schema")]
+use struqture::STRUQTURE_VERSION;
 
 // helper functions
 fn new_system(py: Python) -> &PyCell<SpinLindbladOpenSystemWrapper> {
@@ -1512,5 +1513,30 @@ fn test_jordan_wigner() {
         let number_spins =
             usize::extract(slos.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
+    });
+}
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_json_schema() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_system(py);
+
+        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let rust_schema =
+            serde_json::to_string_pretty(&schemars::schema_for!(SpinLindbladOpenSystem)).unwrap();
+        assert_eq!(schema, rust_schema);
+
+        let version: String =
+            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+        let rust_version = STRUQTURE_VERSION.to_string();
+        assert_eq!(version, rust_version);
+
+        new.call_method1("noise_add_operator_product", (("0Z", "1Z"), 1.0)).unwrap();
+        let min_version: String =
+            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+        let rust_min_version = String::from("1.0.0");
+        assert_eq!(min_version, rust_min_version);
     });
 }
