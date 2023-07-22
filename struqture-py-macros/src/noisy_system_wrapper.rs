@@ -1036,7 +1036,7 @@ pub fn noisywrapper(
             pub fn min_supported_version(&self) -> String {
                 let min_version: (usize, usize, usize) = #struct_ident::min_supported_version();
                 return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
-            }  
+            }
 
             #[cfg(feature = "json_schema")]
             /// Return the JsonSchema for the json serialisation of the class.

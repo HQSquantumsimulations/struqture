@@ -16,12 +16,12 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::spins::{PlusMinusOperator, PlusMinusProduct};
 use struqture::OperateOnDensityMatrix;
+#[cfg(feature = "json_schema")]
+use struqture::STRUQTURE_VERSION;
 use struqture_py::spins::{
     PlusMinusOperatorWrapper, SpinHamiltonianSystemWrapper, SpinSystemWrapper,
 };
 use test_case::test_case;
-#[cfg(feature = "json_schema")]
-use struqture::STRUQTURE_VERSION;
 
 // helper functions
 fn new_system(py: Python) -> &PyCell<PlusMinusOperatorWrapper> {
@@ -893,7 +893,8 @@ fn test_json_schema() {
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
-        new.call_method1("add_operator_product", ("0Z", 1.0)).unwrap();
+        new.call_method1("add_operator_product", ("0Z", 1.0))
+            .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("1.1.0");

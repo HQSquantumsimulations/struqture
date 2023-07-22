@@ -13,9 +13,9 @@
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use std::cmp::Ordering;
-use struqture_py::bosons::BosonProductWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{bosons::BosonProduct, STRUQTURE_VERSION};
+use struqture_py::bosons::BosonProductWrapper;
 
 // helper functions
 fn new_pp(

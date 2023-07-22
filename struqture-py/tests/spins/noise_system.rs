@@ -14,10 +14,10 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
-use struqture_py::spins::{DecoherenceProductWrapper, SpinLindbladNoiseSystemWrapper};
-use test_case::test_case;
 #[cfg(feature = "json_schema")]
 use struqture::{spins::SpinLindbladNoiseSystem, STRUQTURE_VERSION};
+use struqture_py::spins::{DecoherenceProductWrapper, SpinLindbladNoiseSystemWrapper};
+use test_case::test_case;
 
 // helper functions
 fn new_noisesystem(py: Python) -> &PyCell<SpinLindbladNoiseSystemWrapper> {
@@ -799,7 +799,8 @@ fn test_json_schema() {
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
-        new.call_method1("add_operator_product", (("0Z", "1Z"), 1.0)).unwrap();
+        new.call_method1("add_operator_product", (("0Z", "1Z"), 1.0))
+            .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("1.0.0");

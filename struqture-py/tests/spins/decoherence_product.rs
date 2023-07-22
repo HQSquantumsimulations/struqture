@@ -13,9 +13,9 @@
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use std::{cmp::Ordering, collections::HashMap};
-use struqture_py::spins::DecoherenceProductWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{spins::DecoherenceProduct, STRUQTURE_VERSION};
+use struqture_py::spins::DecoherenceProductWrapper;
 
 // helper functions
 fn new_pp(py: Python) -> &PyCell<DecoherenceProductWrapper> {

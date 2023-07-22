@@ -13,9 +13,9 @@
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use std::cmp::Ordering;
-use struqture_py::fermions::FermionProductWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{fermions::FermionProduct, STRUQTURE_VERSION};
+use struqture_py::fermions::FermionProductWrapper;
 
 // helper functions
 fn new_pp(

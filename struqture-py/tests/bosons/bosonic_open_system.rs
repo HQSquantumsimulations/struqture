@@ -18,13 +18,13 @@ use struqture::bosons::{
     BosonHamiltonianSystem, BosonLindbladNoiseSystem, BosonLindbladOpenSystem, BosonProduct,
     HermitianBosonProduct,
 };
+#[cfg(feature = "json_schema")]
+use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OpenSystem, OperateOnDensityMatrix};
 use struqture_py::bosons::{
     BosonHamiltonianSystemWrapper, BosonLindbladNoiseSystemWrapper, BosonLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
-#[cfg(feature = "json_schema")]
-use struqture::STRUQTURE_VERSION;
 
 // helper functions
 fn new_system(py: Python) -> &PyCell<BosonLindbladOpenSystemWrapper> {
@@ -1587,7 +1587,8 @@ fn test_json_schema() {
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
-        new.call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 1.0)).unwrap();
+        new.call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 1.0))
+            .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("1.0.0");

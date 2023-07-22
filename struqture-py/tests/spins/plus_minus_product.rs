@@ -17,11 +17,11 @@ use pyo3::{
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use std::{cmp::Ordering, collections::HashMap};
+#[cfg(feature = "json_schema")]
+use struqture::{spins::PlusMinusProduct, STRUQTURE_VERSION};
 use struqture_py::spins::{
     DecoherenceProductWrapper, PauliProductWrapper, PlusMinusProductWrapper,
 };
-#[cfg(feature = "json_schema")]
-use struqture::{spins::PlusMinusProduct, STRUQTURE_VERSION};
 
 // helper functions
 fn new_pp(py: Python) -> &PyCell<PlusMinusProductWrapper> {
