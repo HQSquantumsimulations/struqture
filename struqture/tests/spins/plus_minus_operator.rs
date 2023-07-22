@@ -841,3 +841,19 @@ fn pmo_from_so() {
 
     assert_eq!(PlusMinusOperator::from(spin_op), pm_op);
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_plus_minus_operator_schema() {
+    let mut op = PlusMinusOperator::new();
+    op.set(PlusMinusProduct::new().plus(0), 1.0.into()).unwrap();
+    op.set(PlusMinusProduct::new().minus(1).z(2), "val".into())
+        .unwrap();
+    let schema = schemars::schema_for!(PlusMinusOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

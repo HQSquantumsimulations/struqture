@@ -622,3 +622,15 @@ fn test_to_decoherence_and_back(pp: &str, dp: &str, factor: Complex64) {
     assert_eq!(factor, dp_factor);
     assert_eq!(factor, pp_factor.conj());
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_decoherence_product_schema() {
+    let pp = DecoherenceProduct::new();
+    let schema = schemars::schema_for!(DecoherenceProduct);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(pp).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

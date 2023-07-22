@@ -861,3 +861,37 @@ fn unitary_matrix() {
     let unitary_matrix: CooSparseMatrix = (vec![], (vec![], vec![]));
     assert_eq!(system.unitary_sparse_matrix_coo().unwrap(), unitary_matrix);
 }
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_spin_noise_system_schema(number_spins: Option<usize>) {
+    let mut op = SpinLindbladNoiseSystem::new(number_spins);
+    op.set(
+        (
+            DecoherenceProduct::new().x(0),
+            DecoherenceProduct::new().x(0),
+        ),
+        1.0.into(),
+    )
+    .unwrap();
+    op.set(
+        (
+            DecoherenceProduct::new().x(0),
+            DecoherenceProduct::new().iy(1).z(2),
+        ),
+        "val".into(),
+    )
+    .unwrap();
+    let schema = schemars::schema_for!(SpinLindbladNoiseSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let val = match value {
+        serde_json::Value::Object(ob) => ob,
+        _ => panic!(),
+    };
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

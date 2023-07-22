@@ -631,3 +631,36 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_fermion_noise_operator_schema() {
+    let mut op = FermionLindbladNoiseOperator::new();
+    op.set(
+        (
+            FermionProduct::new([0], [1]).unwrap(),
+            FermionProduct::new([0], [0]).unwrap(),
+        ),
+        1.0.into(),
+    )
+    .unwrap();
+    op.set(
+        (
+            FermionProduct::new([1], [1]).unwrap(),
+            FermionProduct::new([1], [1]).unwrap(),
+        ),
+        "val".into(),
+    )
+    .unwrap();
+    let schema = schemars::schema_for!(FermionLindbladNoiseOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let val = match value {
+        serde_json::Value::Object(ob) => ob,
+        _ => panic!(),
+    };
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

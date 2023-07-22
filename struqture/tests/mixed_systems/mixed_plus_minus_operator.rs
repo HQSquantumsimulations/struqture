@@ -999,3 +999,28 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_mixed_plus_minus_operator_schema() {
+    let mut op = MixedPlusMinusOperator::new(2, 1, 1);
+    let pp = MixedPlusMinusProduct::new(
+        [PlusMinusProduct::new().plus(0), PlusMinusProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    );
+    op.set(pp, 1.0.into()).unwrap();
+    let pp = MixedPlusMinusProduct::new(
+        [PlusMinusProduct::new().plus(1), PlusMinusProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    );
+    op.set(pp, "val".into()).unwrap();
+    let schema = schemars::schema_for!(MixedPlusMinusOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

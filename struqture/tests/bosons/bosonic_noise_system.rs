@@ -616,3 +616,37 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_boson_noise_system_schema(number_bosons: Option<usize>) {
+    let mut op = BosonLindbladNoiseSystem::new(number_bosons);
+    op.set(
+        (
+            BosonProduct::new([0], [1]).unwrap(),
+            BosonProduct::new([0], [0]).unwrap(),
+        ),
+        1.0.into(),
+    )
+    .unwrap();
+    op.set(
+        (
+            BosonProduct::new([1], [1]).unwrap(),
+            BosonProduct::new([1], [1]).unwrap(),
+        ),
+        "val".into(),
+    )
+    .unwrap();
+    let schema = schemars::schema_for!(BosonLindbladNoiseSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let val = match value {
+        serde_json::Value::Object(ob) => ob,
+        _ => panic!(),
+    };
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

@@ -670,3 +670,21 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_fermion_system_schema(number_fermions: Option<usize>) {
+    let mut op = FermionSystem::new(number_fermions);
+    op.set(FermionProduct::new([0], [0]).unwrap(), 1.0.into())
+        .unwrap();
+    op.set(FermionProduct::new([1], [1]).unwrap(), "val".into())
+        .unwrap();
+    let schema = schemars::schema_for!(FermionSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

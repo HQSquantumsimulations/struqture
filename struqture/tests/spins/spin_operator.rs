@@ -863,7 +863,7 @@ fn test_spin_operator_pauli_multiplication() {
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_pauli_product_schema() {
+fn test_spin_operator_schema() {
     let mut op = SpinOperator::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();

@@ -21,6 +21,7 @@ use struqture::fermions::{
 };
 use struqture::prelude::*;
 use struqture::ModeIndex;
+use test_case::test_case;
 
 // Test the new function of the FermionLindbladOpenSystem
 #[test]
@@ -864,4 +865,30 @@ fn test_truncate() {
     assert_eq!(test_system1, comparison_system1);
     let comparison_system2 = system.truncate(0.5);
     assert_eq!(test_system2, comparison_system2);
+}
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_fermion_noise_system_schema(number_fermions: Option<usize>) {
+    let mut op = FermionLindbladOpenSystem::new(number_fermions);
+    let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
+    let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
+    op.system_mut()
+        .set(pp, CalculatorComplex::from(0.4))
+        .unwrap();
+    op.noise_mut()
+        .set((dp.clone(), dp), CalculatorComplex::from("val"))
+        .unwrap();
+    let schema = schemars::schema_for!(FermionLindbladOpenSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let val = match value {
+        serde_json::Value::Object(ob) => ob,
+        _ => panic!(),
+    };
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
 }

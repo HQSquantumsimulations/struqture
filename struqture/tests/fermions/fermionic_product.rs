@@ -536,3 +536,15 @@ fn clone_partial_eq_partial_ord() {
     assert_eq!(bp_1.cmp(&bp), Ordering::Greater);
     assert_eq!(bp.cmp(&bp_1), Ordering::Less);
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_fermion_product_schema() {
+    let pp = FermionProduct::new([0], [0]).unwrap();
+    let schema = schemars::schema_for!(FermionProduct);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(pp).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}
