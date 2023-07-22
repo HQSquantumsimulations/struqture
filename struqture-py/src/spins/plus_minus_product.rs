@@ -30,6 +30,8 @@ use struqture::SymmetricIndex;
 use struqture_py_macros::{mappings, product_wrapper};
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
 /// PlusMinusProducts are combinations of SinglePlusMinusOperators on specific qubits.
 ///

@@ -21,6 +21,8 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionHamiltonianSystem;
 use struqture::mappings::JordanWignerFermionToSpin;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
