@@ -1029,7 +1029,7 @@ pub fn noisywrapper(
             }
 
             #[cfg(feature = "json_schema")]
-            /// Return the minimum version of struqture that supports this SpinHamiltonianSystem.
+            /// Return the minimum version of struqture that supports this object.
             ///
             /// Returns:
             ///     str: The minimum version of the struqture library to deserialize this object.
@@ -1039,7 +1039,7 @@ pub fn noisywrapper(
             }  
 
             #[cfg(feature = "json_schema")]
-            /// Return the JsonSchema for the json serialisation of the SpinHamiltonianSystem class.
+            /// Return the JsonSchema for the json serialisation of the class.
             ///
             /// Returns:
             ///     str: The json schema serialized to json
