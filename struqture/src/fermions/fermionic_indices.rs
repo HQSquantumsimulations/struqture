@@ -68,6 +68,8 @@ impl schemars::JsonSchema for FermionProduct {
     }
 }
 
+impl crate::MinSupportedVersion for FermionProduct {}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for FermionProduct {
@@ -611,6 +613,8 @@ impl schemars::JsonSchema for HermitianFermionProduct {
         schemars::schema::Schema::Object(obj)
     }
 }
+
+impl crate::MinSupportedVersion for HermitianFermionProduct {}
 
 /// Implementing serde serialization writing directly to string.
 ///

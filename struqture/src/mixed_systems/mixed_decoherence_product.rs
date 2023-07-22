@@ -74,6 +74,8 @@ impl schemars::JsonSchema for MixedDecoherenceProduct {
     }
 }
 
+impl crate::MinSupportedVersion for MixedDecoherenceProduct {}
+
 impl Serialize for MixedDecoherenceProduct {
     /// Serialization function for MixedDecoherenceProduct according to string type.
     ///

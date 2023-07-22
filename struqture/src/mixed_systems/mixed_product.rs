@@ -72,6 +72,8 @@ impl schemars::JsonSchema for MixedProduct {
     }
 }
 
+impl crate::MinSupportedVersion for MixedProduct {}
+
 impl Serialize for MixedProduct {
     /// Serialization function for MixedProduct according to string type.
     ///
