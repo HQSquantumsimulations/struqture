@@ -27,7 +27,7 @@ use struqture::spins::{
 };
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
-use struqture::STRUQTURE_VERSION;
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// These are representations of systems of spins.
@@ -86,35 +86,26 @@ impl SpinHamiltonianSystemWrapper {
         }
     }
 
-    #[cfg(feature = "json_schema")]
-    #[staticmethod]
-    /// Return the JsonSchema for the json serialisation of the SpinHamiltonianSystem class.
-    ///
-    /// Returns:
-    ///     str: The json schema serialized to json
-    pub fn json_schema() -> String {
-        let schema = schemars::schema_for!(SpinHamiltonianSystem);
-        serde_json::to_string_pretty(&schema).expect("Unexpected failure to serialize schema")
-    }
+    // #[cfg(feature = "json_schema")]
+    // #[staticmethod]
+    // /// Return the JsonSchema for the json serialisation of the SpinHamiltonianSystem class.
+    // ///
+    // /// Returns:
+    // ///     str: The json schema serialized to json
+    // pub fn json_schema() -> String {
+    //     let schema = schemars::schema_for!(SpinHamiltonianSystem);
+    //     serde_json::to_string_pretty(&schema).expect("Unexpected failure to serialize schema")
+    // }
 
-    #[cfg(feature = "json_schema")]
-    /// Return the minimum version of struqture that supports this SpinHamiltonianSystem.
-    ///
-    /// Returns:
-    ///     str: The minimum version of the struqture library to deserialize this object.
-    pub fn min_supported_version(&self) -> String {
-        return "1.0.0".to_string();
-    }
-
-    #[cfg(feature = "json_schema")]
-    /// Returns the current version of the struqture library .
-    ///
-    /// Returns:
-    ///     str: The current version of the library.
-    #[staticmethod]
-    pub fn current_version() -> String {
-        return STRUQTURE_VERSION.to_string();
-    }
+    // #[cfg(feature = "json_schema")]
+    // /// Return the minimum version of struqture that supports this SpinHamiltonianSystem.
+    // ///
+    // /// Returns:
+    // ///     str: The minimum version of the struqture library to deserialize this object.
+    // pub fn min_supported_version(&self) -> String {
+    //     let min_version: (usize, usize, usize) = SpinHamiltonianSystem::min_supported_version();
+    //     return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
+    // }
 
     /// Implement `*` for SpinHamiltonianSystem and SpinHamiltonianSystem/CalculatorComplex/CalculatorFloat.
     ///

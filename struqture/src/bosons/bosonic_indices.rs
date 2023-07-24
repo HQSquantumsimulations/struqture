@@ -63,6 +63,8 @@ impl schemars::JsonSchema for BosonProduct {
     }
 }
 
+impl crate::MinSupportedVersion for BosonProduct {}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for BosonProduct {
@@ -565,6 +567,8 @@ impl schemars::JsonSchema for HermitianBosonProduct {
         schemars::schema::Schema::Object(obj)
     }
 }
+
+impl crate::MinSupportedVersion for HermitianBosonProduct {}
 
 /// Implementing serde serialization writing directly to string.
 ///

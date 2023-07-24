@@ -451,6 +451,12 @@ impl schemars::JsonSchema for PlusMinusProduct {
     }
 }
 
+impl crate::MinSupportedVersion for PlusMinusProduct {
+    fn min_supported_version() -> (usize, usize, usize) {
+        (1, 1, 0)
+    }
+}
+
 /// Implementing serde serialization writing directly to string.
 ///
 impl Serialize for PlusMinusProduct {

@@ -5233,7 +5233,7 @@ limitations under the License.
 
 
 ====================================================
-clap 4.3.17
+clap 4.3.19
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -5469,7 +5469,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-clap_builder 4.3.17
+clap_builder 4.3.19
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -6630,7 +6630,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-either 1.8.1
+either 1.9.0
 https://github.com/bluss/either
 by bluss
 The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.
@@ -12352,7 +12352,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-inventory 0.3.9
+inventory 0.3.10
 https://github.com/dtolnay/inventory
 by David Tolnay <dtolnay@gmail.com>
 Typed distributed plugin registration
@@ -29224,7 +29224,7 @@ SOFTWARE.
 
 
 ====================================================
-struqture 1.4.0-alpha.1
+struqture 1.4.0-alpha.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -29435,7 +29435,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 1.4.0-alpha.1
+struqture-py 1.4.0-alpha.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -29646,7 +29646,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 1.4.0-alpha.1
+struqture-py-macros 1.4.0-alpha.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0

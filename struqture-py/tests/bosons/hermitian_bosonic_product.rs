@@ -13,6 +13,8 @@
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use std::cmp::Ordering;
+#[cfg(feature = "json_schema")]
+use struqture::{bosons::HermitianBosonProduct, STRUQTURE_VERSION};
 use struqture_py::bosons::{BosonProductWrapper, HermitianBosonProductWrapper};
 
 // helper functions
@@ -411,5 +413,29 @@ fn test_hash() {
         let not_equal =
             bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap()).unwrap();
         assert!(!not_equal);
+    });
+}
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_json_schema() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_pp(py, vec![0], vec![0]);
+
+        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let rust_schema =
+            serde_json::to_string_pretty(&schemars::schema_for!(HermitianBosonProduct)).unwrap();
+        assert_eq!(schema, rust_schema);
+
+        let version: String =
+            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+        let rust_version = STRUQTURE_VERSION.to_string();
+        assert_eq!(version, rust_version);
+
+        let min_version: String =
+            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+        let rust_min_version = String::from("1.0.0");
+        assert_eq!(min_version, rust_min_version);
     });
 }

@@ -20,6 +20,8 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonLindbladOpenSystem;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OpenSystem, OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::noisy_system_wrapper;
 

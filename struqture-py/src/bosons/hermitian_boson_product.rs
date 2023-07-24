@@ -20,6 +20,8 @@ use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use struqture::bosons::*;
 use struqture::prelude::*;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture_py_macros::product_wrapper;
 
 /// A product of bosonic creation and annihilation operators.

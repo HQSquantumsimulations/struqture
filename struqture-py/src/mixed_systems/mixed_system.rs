@@ -18,6 +18,8 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mixed_systems::{MixedSystem, OperateOnMixedSystems};
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
 

@@ -26,6 +26,8 @@ use struqture::OperateOnDensityMatrix;
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 use super::SpinLindbladNoiseSystemWrapper;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
 /// These are representations of noisy systems of spins.
 ///
