@@ -8,7 +8,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.4.0-alpha.1
 
-* Added support for json_schema in struqture and struqture-py.
+* Added support for jsonschema in spins.
 
 ## 1.3.1
 
