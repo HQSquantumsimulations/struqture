@@ -82,7 +82,7 @@ impl schemars::JsonSchema for SpinHamiltonian {
 /// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
 /// SpinHamiltonian is the hermitian equivalent of SpinOperator.
 struct SpinHamiltonianSerialize {
-    /// List of all non-zero entries in the SpinOperator in the form (PauliProduct, real weight).
+    /// List of all non-zero entries in the SpinHamiltonian in the form (PauliProduct, real weight).
     items: Vec<(PauliProduct, CalculatorFloat)>,
     _struqture_version: StruqtureVersionSerializable,
 }

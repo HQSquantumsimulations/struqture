@@ -184,6 +184,25 @@ impl PlusMinusOperatorWrapper {
         })
     }
 
+    /// Convert a SpinHamiltonianSystem into a PlusMinusOperator.
+    ///
+    /// Args:
+    ///     value (SpinHamiltonianSystem): The SpinHamiltonianSystem to create the PlusMinusOperator from.
+    ///
+    /// Returns:
+    ///     PlusMinusOperator: The operator created from the input SpinSystem.
+    ///
+    /// Raises:
+    ///     ValueError: Could not create SpinHamiltonianSystem from input.
+    #[staticmethod]
+    pub fn from_spin_hamiltonian_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+        let system = SpinHamiltonianSystemWrapper::from_pyany(value)
+            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+        Ok(PlusMinusOperatorWrapper {
+            internal: PlusMinusOperator::from(system.hamiltonian().clone()),
+        })
+    }
+
     /// Convert a PlusMinusOperator into a SpinSystem.
     ///
     /// Args:
