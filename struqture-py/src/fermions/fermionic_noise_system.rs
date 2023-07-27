@@ -19,6 +19,8 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionLindbladNoiseSystem;
 use struqture::mappings::JordanWignerFermionToSpin;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 

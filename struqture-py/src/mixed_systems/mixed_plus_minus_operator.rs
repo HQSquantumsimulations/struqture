@@ -24,6 +24,8 @@ use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
 
 use super::MixedSystemWrapper;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
 /// These are representations of systems of mixed_systems.
 ///

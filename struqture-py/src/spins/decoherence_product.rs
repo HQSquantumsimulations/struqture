@@ -22,6 +22,8 @@ use std::str::FromStr;
 use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{DecoherenceProduct, SingleDecoherenceOperator};
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{SpinIndex, SymmetricIndex};
 use struqture_py_macros::{mappings, product_wrapper};
 

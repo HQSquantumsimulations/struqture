@@ -1109,3 +1109,27 @@ fn test_truncate() {
     let comparison_system2 = system.truncate(0.5);
     assert_eq!(test_system2, comparison_system2);
 }
+
+#[cfg(feature = "json_schema")]
+#[test_case(None)]
+#[test_case(Some(3))]
+fn test_spin_noise_system_schema(number_spins: Option<usize>) {
+    let mut op = SpinLindbladOpenSystem::new(number_spins);
+    let pp: PauliProduct = PauliProduct::new().x(1);
+    let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
+    op.system_mut().set(pp, CalculatorFloat::from(0.4)).unwrap();
+    op.noise_mut()
+        .set((dp.clone(), dp), CalculatorComplex::from(0.5))
+        .unwrap();
+    let schema = schemars::schema_for!(SpinLindbladOpenSystem);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let val = match value {
+        serde_json::Value::Object(ob) => ob,
+        _ => panic!(),
+    };
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

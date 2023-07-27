@@ -20,6 +20,8 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mixed_systems::{
     GetValueMixed, MixedHamiltonianSystem, MixedProduct, MixedSystem, OperateOnMixedSystems,
 };
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState, SymmetricIndex};
 use struqture_py_macros::noiseless_system_wrapper;
 

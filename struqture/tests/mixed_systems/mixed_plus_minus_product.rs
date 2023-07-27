@@ -747,3 +747,19 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_mixed_plus_minus_product_schema() {
+    let pp = MixedPlusMinusProduct::new(
+        [PlusMinusProduct::new().plus(0), PlusMinusProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    );
+    let schema = schemars::schema_for!(MixedPlusMinusProduct);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(pp).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}

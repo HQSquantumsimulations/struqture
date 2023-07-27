@@ -22,6 +22,8 @@ use struqture::fermions::*;
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::*;
+#[cfg(feature = "json_schema")]
+use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture_py_macros::{mappings, product_wrapper};
 
 /// A product of fermionic creation and annihilation operators.

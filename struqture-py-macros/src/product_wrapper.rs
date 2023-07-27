@@ -526,6 +526,36 @@ pub fn productwrapper(
                 Ok(hasher.finish() as isize)
             }
 
+            #[cfg(feature = "json_schema")]
+            /// Returns the current version of the struqture library .
+            ///
+            /// Returns:
+            ///     str: The current version of the library.
+            #[staticmethod]
+            pub fn current_version() -> String {
+                return STRUQTURE_VERSION.to_string();
+            }
+
+            #[cfg(feature = "json_schema")]
+            /// Return the minimum version of struqture that supports this object.
+            ///
+            /// Returns:
+            ///     str: The minimum version of the struqture library to deserialize this object.
+            pub fn min_supported_version(&self) -> String {
+                let min_version: (usize, usize, usize) = #struct_ident::min_supported_version();
+                return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
+            }
+
+            #[cfg(feature = "json_schema")]
+            /// Return the JsonSchema for the json serialisation of the class.
+            ///
+            /// Returns:
+            ///     str: The json schema serialized to json
+            #[staticmethod]
+            pub fn json_schema() -> String {
+                let schema = schemars::schema_for!(#struct_ident);
+                serde_json::to_string_pretty(&schema).expect("Unexpected failure to serialize schema")
+            }
         }
 
     };

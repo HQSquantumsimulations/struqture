@@ -839,3 +839,30 @@ fn serde_compact() {
         ],
     );
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_mixed_operator_schema() {
+    let mut op = MixedOperator::new(2, 1, 1);
+    let pp = MixedProduct::new(
+        [PauliProduct::new().x(0), PauliProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.set(pp, 1.0.into()).unwrap();
+    let pp = MixedProduct::new(
+        [PauliProduct::new().x(1), PauliProduct::new()],
+        [BosonProduct::new([0], [3]).unwrap()],
+        [FermionProduct::new([0], [3]).unwrap()],
+    )
+    .unwrap();
+    op.set(pp, "val".into()).unwrap();
+    let schema = schemars::schema_for!(MixedOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let validation = schema_checker.validate(&value);
+
+    assert!(validation.is_ok());
+}

@@ -827,3 +827,36 @@ fn pmo_from_so() {
 
     assert_eq!(PlusMinusLindbladNoiseOperator::from(spin_op), pm_op);
 }
+
+#[cfg(feature = "json_schema")]
+#[test]
+fn test_plus_minus_noise_operator_schema() {
+    let mut op = PlusMinusLindbladNoiseOperator::new();
+    op.set(
+        (
+            PlusMinusProduct::new().plus(0),
+            PlusMinusProduct::new().plus(0),
+        ),
+        1.0.into(),
+    )
+    .unwrap();
+    op.set(
+        (
+            PlusMinusProduct::new().plus(0),
+            PlusMinusProduct::new().minus(1).z(2),
+        ),
+        "val".into(),
+    )
+    .unwrap();
+    let schema = schemars::schema_for!(PlusMinusLindbladNoiseOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+        .expect("schema is valid");
+    let value = serde_json::to_value(&op).unwrap();
+    let val = match value {
+        serde_json::Value::Object(ob) => ob,
+        _ => panic!(),
+    };
+    let value: serde_json::Value = serde_json::to_value(val).unwrap();
+    let validation = schema_checker.validate(&value);
+    assert!(validation.is_ok());
+}
