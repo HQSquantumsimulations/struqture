@@ -48,6 +48,6 @@ pyo3-build-config="0.19"
 no-default-features = true
 
 [features]
-extension-module = ["pyo3/extension-module"]#, "qoqo_calculator_pyo3/extension-module"
+extension-module = ["pyo3/extension-module"]#, "qoqo_calculator_pyo3/extension-module"]
 default = ["extension-module", "json_schema"]
 json_schema = ["struqture/json_schema"]
