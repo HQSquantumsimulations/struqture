@@ -16,6 +16,7 @@ struqture\_py.fermions.FermionHamiltonianSystem
       ~FermionHamiltonianSystem.__init__
       ~FermionHamiltonianSystem.add_operator_product
       ~FermionHamiltonianSystem.current_number_modes
+      ~FermionHamiltonianSystem.current_version
       ~FermionHamiltonianSystem.empty_clone
       ~FermionHamiltonianSystem.from_bincode
       ~FermionHamiltonianSystem.from_json
@@ -23,7 +24,9 @@ struqture\_py.fermions.FermionHamiltonianSystem
       ~FermionHamiltonianSystem.hermitian_conjugate
       ~FermionHamiltonianSystem.is_empty
       ~FermionHamiltonianSystem.jordan_wigner
+      ~FermionHamiltonianSystem.json_schema
       ~FermionHamiltonianSystem.keys
+      ~FermionHamiltonianSystem.min_supported_version
       ~FermionHamiltonianSystem.number_modes
       ~FermionHamiltonianSystem.remove
       ~FermionHamiltonianSystem.separate_into_n_terms

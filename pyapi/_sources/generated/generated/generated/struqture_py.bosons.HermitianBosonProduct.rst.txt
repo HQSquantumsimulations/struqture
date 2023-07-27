@@ -18,11 +18,14 @@ struqture\_py.bosons.HermitianBosonProduct
       ~HermitianBosonProduct.create_valid_pair
       ~HermitianBosonProduct.creators
       ~HermitianBosonProduct.current_number_modes
+      ~HermitianBosonProduct.current_version
       ~HermitianBosonProduct.from_bincode
       ~HermitianBosonProduct.from_json
       ~HermitianBosonProduct.from_string
       ~HermitianBosonProduct.hermitian_conjugate
       ~HermitianBosonProduct.is_natural_hermitian
+      ~HermitianBosonProduct.json_schema
+      ~HermitianBosonProduct.min_supported_version
       ~HermitianBosonProduct.number_annihilators
       ~HermitianBosonProduct.number_creators
       ~HermitianBosonProduct.to_bincode

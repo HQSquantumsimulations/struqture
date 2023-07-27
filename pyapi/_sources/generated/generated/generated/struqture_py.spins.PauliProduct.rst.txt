@@ -16,6 +16,7 @@ struqture\_py.spins.PauliProduct
       ~PauliProduct.__init__
       ~PauliProduct.concatenate
       ~PauliProduct.current_number_spins
+      ~PauliProduct.current_version
       ~PauliProduct.from_bincode
       ~PauliProduct.from_json
       ~PauliProduct.from_string
@@ -24,7 +25,9 @@ struqture\_py.spins.PauliProduct
       ~PauliProduct.is_empty
       ~PauliProduct.is_natural_hermitian
       ~PauliProduct.jordan_wigner
+      ~PauliProduct.json_schema
       ~PauliProduct.keys
+      ~PauliProduct.min_supported_version
       ~PauliProduct.multiply
       ~PauliProduct.remap_qubits
       ~PauliProduct.set_pauli

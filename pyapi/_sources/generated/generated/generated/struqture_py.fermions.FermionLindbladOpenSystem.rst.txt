@@ -15,11 +15,14 @@ struqture\_py.fermions.FermionLindbladOpenSystem
    
       ~FermionLindbladOpenSystem.__init__
       ~FermionLindbladOpenSystem.current_number_modes
+      ~FermionLindbladOpenSystem.current_version
       ~FermionLindbladOpenSystem.empty_clone
       ~FermionLindbladOpenSystem.from_bincode
       ~FermionLindbladOpenSystem.from_json
       ~FermionLindbladOpenSystem.group
       ~FermionLindbladOpenSystem.jordan_wigner
+      ~FermionLindbladOpenSystem.json_schema
+      ~FermionLindbladOpenSystem.min_supported_version
       ~FermionLindbladOpenSystem.noise
       ~FermionLindbladOpenSystem.noise_add_operator_product
       ~FermionLindbladOpenSystem.noise_get

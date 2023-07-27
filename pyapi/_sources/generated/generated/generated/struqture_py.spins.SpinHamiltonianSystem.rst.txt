@@ -16,6 +16,7 @@ struqture\_py.spins.SpinHamiltonianSystem
       ~SpinHamiltonianSystem.__init__
       ~SpinHamiltonianSystem.add_operator_product
       ~SpinHamiltonianSystem.current_number_spins
+      ~SpinHamiltonianSystem.current_version
       ~SpinHamiltonianSystem.empty_clone
       ~SpinHamiltonianSystem.from_bincode
       ~SpinHamiltonianSystem.from_json
@@ -23,7 +24,9 @@ struqture\_py.spins.SpinHamiltonianSystem
       ~SpinHamiltonianSystem.hermitian_conjugate
       ~SpinHamiltonianSystem.is_empty
       ~SpinHamiltonianSystem.jordan_wigner
+      ~SpinHamiltonianSystem.json_schema
       ~SpinHamiltonianSystem.keys
+      ~SpinHamiltonianSystem.min_supported_version
       ~SpinHamiltonianSystem.number_spins
       ~SpinHamiltonianSystem.remove
       ~SpinHamiltonianSystem.separate_into_n_terms

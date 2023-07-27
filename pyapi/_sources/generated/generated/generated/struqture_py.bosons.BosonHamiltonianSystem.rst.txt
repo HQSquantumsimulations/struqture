@@ -16,13 +16,16 @@ struqture\_py.bosons.BosonHamiltonianSystem
       ~BosonHamiltonianSystem.__init__
       ~BosonHamiltonianSystem.add_operator_product
       ~BosonHamiltonianSystem.current_number_modes
+      ~BosonHamiltonianSystem.current_version
       ~BosonHamiltonianSystem.empty_clone
       ~BosonHamiltonianSystem.from_bincode
       ~BosonHamiltonianSystem.from_json
       ~BosonHamiltonianSystem.get
       ~BosonHamiltonianSystem.hermitian_conjugate
       ~BosonHamiltonianSystem.is_empty
+      ~BosonHamiltonianSystem.json_schema
       ~BosonHamiltonianSystem.keys
+      ~BosonHamiltonianSystem.min_supported_version
       ~BosonHamiltonianSystem.number_modes
       ~BosonHamiltonianSystem.remove
       ~BosonHamiltonianSystem.separate_into_n_terms

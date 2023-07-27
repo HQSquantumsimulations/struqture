@@ -19,12 +19,15 @@ struqture\_py.mixed\_systems.MixedDecoherenceProduct
       ~MixedDecoherenceProduct.current_number_bosonic_modes
       ~MixedDecoherenceProduct.current_number_fermionic_modes
       ~MixedDecoherenceProduct.current_number_spins
+      ~MixedDecoherenceProduct.current_version
       ~MixedDecoherenceProduct.fermions
       ~MixedDecoherenceProduct.from_bincode
       ~MixedDecoherenceProduct.from_json
       ~MixedDecoherenceProduct.from_string
       ~MixedDecoherenceProduct.hermitian_conjugate
       ~MixedDecoherenceProduct.is_natural_hermitian
+      ~MixedDecoherenceProduct.json_schema
+      ~MixedDecoherenceProduct.min_supported_version
       ~MixedDecoherenceProduct.spins
       ~MixedDecoherenceProduct.to_bincode
       ~MixedDecoherenceProduct.to_json

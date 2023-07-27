@@ -18,12 +18,15 @@ struqture\_py.mixed\_systems.MixedLindbladNoiseSystem
       ~MixedLindbladNoiseSystem.current_number_bosonic_modes
       ~MixedLindbladNoiseSystem.current_number_fermionic_modes
       ~MixedLindbladNoiseSystem.current_number_spins
+      ~MixedLindbladNoiseSystem.current_version
       ~MixedLindbladNoiseSystem.empty_clone
       ~MixedLindbladNoiseSystem.from_bincode
       ~MixedLindbladNoiseSystem.from_json
       ~MixedLindbladNoiseSystem.get
       ~MixedLindbladNoiseSystem.is_empty
+      ~MixedLindbladNoiseSystem.json_schema
       ~MixedLindbladNoiseSystem.keys
+      ~MixedLindbladNoiseSystem.min_supported_version
       ~MixedLindbladNoiseSystem.number_bosonic_modes
       ~MixedLindbladNoiseSystem.number_fermionic_modes
       ~MixedLindbladNoiseSystem.number_spins

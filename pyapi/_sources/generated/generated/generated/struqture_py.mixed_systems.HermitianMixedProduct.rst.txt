@@ -19,12 +19,15 @@ struqture\_py.mixed\_systems.HermitianMixedProduct
       ~HermitianMixedProduct.current_number_bosonic_modes
       ~HermitianMixedProduct.current_number_fermionic_modes
       ~HermitianMixedProduct.current_number_spins
+      ~HermitianMixedProduct.current_version
       ~HermitianMixedProduct.fermions
       ~HermitianMixedProduct.from_bincode
       ~HermitianMixedProduct.from_json
       ~HermitianMixedProduct.from_string
       ~HermitianMixedProduct.hermitian_conjugate
       ~HermitianMixedProduct.is_natural_hermitian
+      ~HermitianMixedProduct.json_schema
+      ~HermitianMixedProduct.min_supported_version
       ~HermitianMixedProduct.spins
       ~HermitianMixedProduct.to_bincode
       ~HermitianMixedProduct.to_json

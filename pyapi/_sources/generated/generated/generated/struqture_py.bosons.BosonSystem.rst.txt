@@ -16,13 +16,16 @@ struqture\_py.bosons.BosonSystem
       ~BosonSystem.__init__
       ~BosonSystem.add_operator_product
       ~BosonSystem.current_number_modes
+      ~BosonSystem.current_version
       ~BosonSystem.empty_clone
       ~BosonSystem.from_bincode
       ~BosonSystem.from_json
       ~BosonSystem.get
       ~BosonSystem.hermitian_conjugate
       ~BosonSystem.is_empty
+      ~BosonSystem.json_schema
       ~BosonSystem.keys
+      ~BosonSystem.min_supported_version
       ~BosonSystem.number_modes
       ~BosonSystem.remove
       ~BosonSystem.separate_into_n_terms

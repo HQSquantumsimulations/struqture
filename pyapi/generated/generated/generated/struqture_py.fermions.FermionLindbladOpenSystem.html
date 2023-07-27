@@ -135,58 +135,67 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.current_number_modes" title="struqture_py.fermions.FermionLindbladOpenSystem.current_number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_modes</span></code></a>()</p></td>
 <td><p>Return maximum index in object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.empty_clone" title="struqture_py.fermions.FermionLindbladOpenSystem.empty_clone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">empty_clone</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.current_version" title="struqture_py.fermions.FermionLindbladOpenSystem.current_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_version</span></code></a>()</p></td>
+<td><p>Returns the current version of the struqture library .</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.empty_clone" title="struqture_py.fermions.FermionLindbladOpenSystem.empty_clone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">empty_clone</span></code></a>()</p></td>
 <td><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.from_bincode" title="struqture_py.fermions.FermionLindbladOpenSystem.from_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_bincode</span></code></a>(input)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.from_bincode" title="struqture_py.fermions.FermionLindbladOpenSystem.from_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_bincode</span></code></a>(input)</p></td>
 <td><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.from_json" title="struqture_py.fermions.FermionLindbladOpenSystem.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(input)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.from_json" title="struqture_py.fermions.FermionLindbladOpenSystem.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(input)</p></td>
 <td><p>Convert the json representation of the object to an instance.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.group" title="struqture_py.fermions.FermionLindbladOpenSystem.group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">group</span></code></a>(system, noise)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.group" title="struqture_py.fermions.FermionLindbladOpenSystem.group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">group</span></code></a>(system, noise)</p></td>
 <td><p>Take a tuple of a system term and a noise term and combines them to be a OpenSystem.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.jordan_wigner" title="struqture_py.fermions.FermionLindbladOpenSystem.jordan_wigner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jordan_wigner</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.jordan_wigner" title="struqture_py.fermions.FermionLindbladOpenSystem.jordan_wigner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jordan_wigner</span></code></a>()</p></td>
 <td><p>Transform the given fermionic object into a spin object using the Jordan Wigner mapping.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise" title="struqture_py.fermions.FermionLindbladOpenSystem.noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.json_schema" title="struqture_py.fermions.FermionLindbladOpenSystem.json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">json_schema</span></code></a>()</p></td>
+<td><p>Return the JsonSchema for the json serialisation of the class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.min_supported_version" title="struqture_py.fermions.FermionLindbladOpenSystem.min_supported_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_supported_version</span></code></a>()</p></td>
+<td><p>Return the minimum version of struqture that supports this object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise" title="struqture_py.fermions.FermionLindbladOpenSystem.noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise</span></code></a>()</p></td>
 <td><p>Return the noise part of self.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_add_operator_product" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_add_operator_product</span></code></a>(key, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_add_operator_product" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_add_operator_product</span></code></a>(key, value)</p></td>
 <td><p>Add a new entry to the system of the open system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_get" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_get</span></code></a>(key)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_get" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_get</span></code></a>(key)</p></td>
 <td><p>Get the CalculatorComplex coefficient corresponding to the key.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_set" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_set</span></code></a>(key, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_set" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_set</span></code></a>(key, value)</p></td>
 <td><p>Set a new entry in the noise of the open system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.number_modes" title="struqture_py.fermions.FermionLindbladOpenSystem.number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_modes</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.number_modes" title="struqture_py.fermions.FermionLindbladOpenSystem.number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_modes</span></code></a>()</p></td>
 <td><p>Return the number_modes input of self.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system" title="struqture_py.fermions.FermionLindbladOpenSystem.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system" title="struqture_py.fermions.FermionLindbladOpenSystem.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>()</p></td>
 <td><p>Return the system part of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product" title="struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_add_operator_product</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product" title="struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_add_operator_product</span></code></a>(key, value)</p></td>
 <td><p>Add a new entry to the system of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_get" title="struqture_py.fermions.FermionLindbladOpenSystem.system_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_get</span></code></a>(key)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_get" title="struqture_py.fermions.FermionLindbladOpenSystem.system_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_get</span></code></a>(key)</p></td>
 <td><p>Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_set" title="struqture_py.fermions.FermionLindbladOpenSystem.system_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_set</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_set" title="struqture_py.fermions.FermionLindbladOpenSystem.system_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_set</span></code></a>(key, value)</p></td>
 <td><p>Set a new entry in the system of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_bincode" title="struqture_py.fermions.FermionLindbladOpenSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_bincode" title="struqture_py.fermions.FermionLindbladOpenSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_json" title="struqture_py.fermions.FermionLindbladOpenSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_json" title="struqture_py.fermions.FermionLindbladOpenSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of the object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.truncate" title="struqture_py.fermions.FermionLindbladOpenSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.truncate" title="struqture_py.fermions.FermionLindbladOpenSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
 <td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.ungroup" title="struqture_py.fermions.FermionLindbladOpenSystem.ungroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ungroup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.ungroup" title="struqture_py.fermions.FermionLindbladOpenSystem.ungroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ungroup</span></code></a>()</p></td>
 <td><p>Return a tuple of the system and the noise of self.</p></td>
 </tr>
 </tbody>
@@ -201,6 +210,20 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.current_version" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -288,6 +311,34 @@
 <span class="sig-name descname"><span class="pre">jordan_wigner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.jordan_wigner" title="Permalink to this definition"></a></dt>
 <dd><p>Transform the given fermionic object into a spin object using
 the Jordan Wigner mapping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.json_schema" title="Permalink to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.min_supported_version" title="Permalink to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

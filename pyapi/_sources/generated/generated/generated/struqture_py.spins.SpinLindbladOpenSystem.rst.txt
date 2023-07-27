@@ -15,11 +15,14 @@ struqture\_py.spins.SpinLindbladOpenSystem
    
       ~SpinLindbladOpenSystem.__init__
       ~SpinLindbladOpenSystem.current_number_spins
+      ~SpinLindbladOpenSystem.current_version
       ~SpinLindbladOpenSystem.empty_clone
       ~SpinLindbladOpenSystem.from_bincode
       ~SpinLindbladOpenSystem.from_json
       ~SpinLindbladOpenSystem.group
       ~SpinLindbladOpenSystem.jordan_wigner
+      ~SpinLindbladOpenSystem.json_schema
+      ~SpinLindbladOpenSystem.min_supported_version
       ~SpinLindbladOpenSystem.noise
       ~SpinLindbladOpenSystem.noise_add_operator_product
       ~SpinLindbladOpenSystem.noise_get

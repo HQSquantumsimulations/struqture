@@ -18,13 +18,16 @@ struqture\_py.mixed\_systems.MixedSystem
       ~MixedSystem.current_number_bosonic_modes
       ~MixedSystem.current_number_fermionic_modes
       ~MixedSystem.current_number_spins
+      ~MixedSystem.current_version
       ~MixedSystem.empty_clone
       ~MixedSystem.from_bincode
       ~MixedSystem.from_json
       ~MixedSystem.get
       ~MixedSystem.hermitian_conjugate
       ~MixedSystem.is_empty
+      ~MixedSystem.json_schema
       ~MixedSystem.keys
+      ~MixedSystem.min_supported_version
       ~MixedSystem.number_bosonic_modes
       ~MixedSystem.number_fermionic_modes
       ~MixedSystem.number_spins

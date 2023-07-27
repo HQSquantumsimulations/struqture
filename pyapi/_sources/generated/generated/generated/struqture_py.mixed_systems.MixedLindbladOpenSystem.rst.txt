@@ -17,10 +17,13 @@ struqture\_py.mixed\_systems.MixedLindbladOpenSystem
       ~MixedLindbladOpenSystem.current_number_bosonic_modes
       ~MixedLindbladOpenSystem.current_number_fermionic_modes
       ~MixedLindbladOpenSystem.current_number_spins
+      ~MixedLindbladOpenSystem.current_version
       ~MixedLindbladOpenSystem.empty_clone
       ~MixedLindbladOpenSystem.from_bincode
       ~MixedLindbladOpenSystem.from_json
       ~MixedLindbladOpenSystem.group
+      ~MixedLindbladOpenSystem.json_schema
+      ~MixedLindbladOpenSystem.min_supported_version
       ~MixedLindbladOpenSystem.noise
       ~MixedLindbladOpenSystem.noise_add_operator_product
       ~MixedLindbladOpenSystem.noise_get

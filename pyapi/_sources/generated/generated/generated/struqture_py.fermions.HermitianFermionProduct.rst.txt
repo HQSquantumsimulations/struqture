@@ -18,12 +18,15 @@ struqture\_py.fermions.HermitianFermionProduct
       ~HermitianFermionProduct.create_valid_pair
       ~HermitianFermionProduct.creators
       ~HermitianFermionProduct.current_number_modes
+      ~HermitianFermionProduct.current_version
       ~HermitianFermionProduct.from_bincode
       ~HermitianFermionProduct.from_json
       ~HermitianFermionProduct.from_string
       ~HermitianFermionProduct.hermitian_conjugate
       ~HermitianFermionProduct.is_natural_hermitian
       ~HermitianFermionProduct.jordan_wigner
+      ~HermitianFermionProduct.json_schema
+      ~HermitianFermionProduct.min_supported_version
       ~HermitianFermionProduct.number_annihilators
       ~HermitianFermionProduct.number_creators
       ~HermitianFermionProduct.to_bincode

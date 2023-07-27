@@ -16,13 +16,16 @@ struqture\_py.fermions.FermionLindbladNoiseSystem
       ~FermionLindbladNoiseSystem.__init__
       ~FermionLindbladNoiseSystem.add_operator_product
       ~FermionLindbladNoiseSystem.current_number_modes
+      ~FermionLindbladNoiseSystem.current_version
       ~FermionLindbladNoiseSystem.empty_clone
       ~FermionLindbladNoiseSystem.from_bincode
       ~FermionLindbladNoiseSystem.from_json
       ~FermionLindbladNoiseSystem.get
       ~FermionLindbladNoiseSystem.is_empty
       ~FermionLindbladNoiseSystem.jordan_wigner
+      ~FermionLindbladNoiseSystem.json_schema
       ~FermionLindbladNoiseSystem.keys
+      ~FermionLindbladNoiseSystem.min_supported_version
       ~FermionLindbladNoiseSystem.number_modes
       ~FermionLindbladNoiseSystem.remove
       ~FermionLindbladNoiseSystem.separate_into_n_terms

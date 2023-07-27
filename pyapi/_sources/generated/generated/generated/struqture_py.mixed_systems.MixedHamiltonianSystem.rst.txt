@@ -18,13 +18,16 @@ struqture\_py.mixed\_systems.MixedHamiltonianSystem
       ~MixedHamiltonianSystem.current_number_bosonic_modes
       ~MixedHamiltonianSystem.current_number_fermionic_modes
       ~MixedHamiltonianSystem.current_number_spins
+      ~MixedHamiltonianSystem.current_version
       ~MixedHamiltonianSystem.empty_clone
       ~MixedHamiltonianSystem.from_bincode
       ~MixedHamiltonianSystem.from_json
       ~MixedHamiltonianSystem.get
       ~MixedHamiltonianSystem.hermitian_conjugate
       ~MixedHamiltonianSystem.is_empty
+      ~MixedHamiltonianSystem.json_schema
       ~MixedHamiltonianSystem.keys
+      ~MixedHamiltonianSystem.min_supported_version
       ~MixedHamiltonianSystem.number_bosonic_modes
       ~MixedHamiltonianSystem.number_fermionic_modes
       ~MixedHamiltonianSystem.number_spins

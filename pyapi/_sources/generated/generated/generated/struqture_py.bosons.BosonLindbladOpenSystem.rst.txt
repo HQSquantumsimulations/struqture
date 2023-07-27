@@ -15,10 +15,13 @@ struqture\_py.bosons.BosonLindbladOpenSystem
    
       ~BosonLindbladOpenSystem.__init__
       ~BosonLindbladOpenSystem.current_number_modes
+      ~BosonLindbladOpenSystem.current_version
       ~BosonLindbladOpenSystem.empty_clone
       ~BosonLindbladOpenSystem.from_bincode
       ~BosonLindbladOpenSystem.from_json
       ~BosonLindbladOpenSystem.group
+      ~BosonLindbladOpenSystem.json_schema
+      ~BosonLindbladOpenSystem.min_supported_version
       ~BosonLindbladOpenSystem.noise
       ~BosonLindbladOpenSystem.noise_add_operator_product
       ~BosonLindbladOpenSystem.noise_get
