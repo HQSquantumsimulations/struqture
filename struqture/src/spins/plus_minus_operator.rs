@@ -374,6 +374,33 @@ impl TryFrom<PlusMinusOperator> for SpinHamiltonian {
     }
 }
 
+impl From<SpinHamiltonian> for PlusMinusOperator {
+    /// Converts a SpinHamiltonian into a PlusMinusOperator.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The SpinHamiltonian to convert.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The SpinHamiltonian converted into a PlusMinusOperator.
+    fn from(value: SpinHamiltonian) -> Self {
+        let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
+        for (product, val) in value.into_iter() {
+            let transscribed_vector: Vec<(PlusMinusProduct, Complex64)> = product.into();
+            for (transscribed_product, prefactor) in transscribed_vector {
+                new_operator
+                    .add_operator_product(
+                        transscribed_product,
+                        CalculatorComplex::from(val.clone()) * prefactor,
+                    )
+                    .expect("Unexpected error adding operators. Internal struqture error");
+            }
+        }
+        new_operator
+    }
+}
+
 /// Implements the negative sign function of PlusMinusOperator.
 ///
 impl ops::Neg for PlusMinusOperator {

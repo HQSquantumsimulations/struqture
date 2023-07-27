@@ -774,6 +774,72 @@ fn so_from_pmo() {
 }
 
 #[test]
+fn pmo_from_sh() {
+    let pp_vec: Vec<(PauliProduct, CalculatorFloat)> = vec![
+        (PauliProduct::new().z(0), 1.0.into()),
+        (PauliProduct::new(), 0.5.into()),
+        (PauliProduct::new().x(0), 1.0.into()),
+        (PauliProduct::new().y(0), 2.0.into()),
+        (PauliProduct::new().x(0).y(1).z(2), 1.0.into()),
+    ];
+    let pmp_vec: Vec<(PlusMinusProduct, CalculatorComplex)> = vec![
+        (
+            PlusMinusProduct::new().z(0),
+            CalculatorComplex::new(1.0, 0.0),
+        ),
+        (PlusMinusProduct::new(), CalculatorComplex::new(0.5, 0.0)),
+        (
+            PlusMinusProduct::new().plus(0),
+            CalculatorComplex::new(1.0, 0.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0),
+            CalculatorComplex::new(1.0, 0.0),
+        ),
+        (
+            PlusMinusProduct::new().plus(0),
+            CalculatorComplex::new(0.0, -2.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0),
+            CalculatorComplex::new(0.0, 2.0),
+        ),
+        (
+            PlusMinusProduct::new().plus(0).plus(1).z(2),
+            CalculatorComplex::new(0.0, -1.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0).plus(1).z(2),
+            CalculatorComplex::new(0.0, -1.0),
+        ),
+        (
+            PlusMinusProduct::new().plus(0).minus(1).z(2),
+            CalculatorComplex::new(0.0, 1.0),
+        ),
+        (
+            PlusMinusProduct::new().minus(0).minus(1).z(2),
+            CalculatorComplex::new(0.0, 1.0),
+        ),
+    ];
+
+    let mut spin_op = SpinHamiltonian::new();
+    for (key, val) in pp_vec.iter() {
+        spin_op
+            .add_operator_product(key.clone(), val.clone())
+            .unwrap();
+    }
+
+    let mut pm_op = PlusMinusOperator::new();
+    for (key, val) in pmp_vec.iter() {
+        pm_op
+            .add_operator_product(key.clone(), val.clone())
+            .unwrap();
+    }
+
+    assert_eq!(PlusMinusOperator::from(spin_op), pm_op);
+}
+
+#[test]
 fn pmo_from_so() {
     let pp_vec: Vec<(PauliProduct, CalculatorComplex)> = vec![
         (PauliProduct::new().z(0), 1.0.into()),

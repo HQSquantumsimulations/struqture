@@ -12,8 +12,8 @@
 
 use num_complex::Complex64;
 use pyo3::prelude::*;
-use qoqo_calculator::CalculatorComplex;
-use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
+use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::spins::{PlusMinusOperator, PlusMinusProduct};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
@@ -613,6 +613,64 @@ fn test_to_spin_sys() {
         let result = pmp.call_method1("to_spin_system", (number_spins,)).unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
+    })
+}
+
+#[test]
+fn test_from_spin_ham_sys() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let pmp = new_system(py);
+        pmp.call_method1(
+            "add_operator_product",
+            (
+                "0+",
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.0, -1.0),
+                },
+            ),
+        )
+        .unwrap();
+        pmp.call_method1(
+            "add_operator_product",
+            (
+                "0-",
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.0, 1.0),
+                },
+            ),
+        )
+        .unwrap();
+
+        let number_spins: Option<usize> = Some(1);
+        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let pp = pp_type
+            .call1((number_spins,))
+            .unwrap()
+            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .unwrap();
+        pp.call_method1(
+            "add_operator_product",
+            (
+                "0Y",
+                CalculatorFloatWrapper {
+                    internal: CalculatorFloat::from(1.0),
+                },
+            ),
+        )
+        .unwrap();
+
+        let result = py
+            .get_type::<PlusMinusOperatorWrapper>()
+            .call_method1("from_spin_hamiltonian_system", (pp,))
+            .unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let result = py
+            .get_type::<PlusMinusOperatorWrapper>()
+            .call_method1("from_spin_system", ("No",));
+        assert!(result.is_err())
     })
 }
 
