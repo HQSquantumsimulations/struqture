@@ -22,6 +22,8 @@ struqture\_py.mixed\_systems
       MixedHamiltonianSystem
       MixedLindbladNoiseSystem
       MixedLindbladOpenSystem
+      MixedPlusMinusOperator
+      MixedPlusMinusProduct
       MixedProduct
       MixedSystem
    
