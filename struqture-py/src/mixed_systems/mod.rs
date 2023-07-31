@@ -60,6 +60,8 @@ pub use mixed_open_system::MixedLindbladOpenSystemWrapper;
 ///     MixedHamiltonianSystem
 ///     MixedLindbladNoiseSystem
 ///     MixedLindbladOpenSystem
+///     MixedPlusMinusProduct
+///     MixedPlusMinusOperator
 ///
 #[pymodule]
 pub fn mixed_systems(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -71,6 +73,8 @@ pub fn mixed_systems(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<MixedHamiltonianSystemWrapper>()?;
     m.add_class::<MixedLindbladNoiseSystemWrapper>()?;
     m.add_class::<MixedLindbladOpenSystemWrapper>()?;
+    m.add_class::<MixedPlusMinusProductWrapper>()?;
+    m.add_class::<MixedPlusMinusOperatorWrapper>()?;
 
     Ok(())
 }

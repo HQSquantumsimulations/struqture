@@ -23,6 +23,7 @@ use struqture::mixed_systems::{
 };
 use struqture::prelude::*;
 use struqture::spins::{DecoherenceProduct, PauliProduct};
+#[cfg(feature = "json_schema")]
 use test_case::test_case;
 
 // Test the new function of the MixedLindbladOpenSystem
