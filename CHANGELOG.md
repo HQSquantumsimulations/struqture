@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.4.0-alpha.4
+
+* Added MixedPlusMinusProduct, MixedPlusMinusOperator to mod.rs in struqture-py/src/mixed_systems (fixed import error).
+
 ## 1.4.0-alpha.3
 
 * Added support for jsonschema in struqture and struqture-py.

@@ -21,6 +21,7 @@ use struqture::bosons::{
 };
 use struqture::prelude::*;
 use struqture::ModeIndex;
+#[cfg(feature = "json_schema")]
 use test_case::test_case;
 
 // Test the new function of the BosonLindbladOpenSystem
