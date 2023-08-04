@@ -98,10 +98,10 @@ fn test_jw_fermion_operator() {
 fn test_jw_fermion_hamiltonian() {
     let mut fh = FermionHamiltonian::new();
     let hfp1 = HermitianFermionProduct::new([1, 2], [2, 4]).unwrap();
-    let hfp2 = HermitianFermionProduct::new([1, 3], [1, 5]).unwrap();
-    fh.add_operator_product(hfp1.clone(), CalculatorComplex::new(1.0, 2.0))
+    let hfp2 = HermitianFermionProduct::new([1, 2], [1, 3]).unwrap();
+    fh.add_operator_product(hfp1.clone(), CalculatorComplex::new(1.0, 0.0))
         .unwrap();
-    fh.add_operator_product(hfp2.clone(), CalculatorComplex::new(2.0, 1.0))
+    fh.add_operator_product(hfp2.clone(), CalculatorComplex::new(2.0, 0.0))
         .unwrap();
     let jw_hfp1 = hfp1.jordan_wigner();
     let jw_hfp2 = hfp2.jordan_wigner();
@@ -110,6 +110,27 @@ fn test_jw_fermion_hamiltonian() {
         fh.jordan_wigner(),
         jw_hfp1 * CalculatorFloat::from(1.0) + jw_hfp2 * CalculatorFloat::from(2.0)
     );
+
+    let mut fh = FermionHamiltonian::new();
+    let hfp = HermitianFermionProduct::new([], [1, 2]).unwrap();
+    let coeff = CalculatorComplex::new(1.0, 2.0);
+    fh.add_operator_product(hfp.clone(), coeff.clone()).unwrap();
+
+    let mut so = SpinOperator::new();
+    let xx = PauliProduct::new().x(1).x(2);
+    let xy = PauliProduct::new().x(1).y(2);
+    let yx = PauliProduct::new().y(1).x(2);
+    let yy = PauliProduct::new().y(1).y(2);
+    so.add_operator_product(xx, (coeff.re.clone() * (-1.0)).into())
+        .unwrap();
+    so.add_operator_product(xy, coeff.im.clone().into())
+        .unwrap();
+    so.add_operator_product(yx, coeff.im.into()).unwrap();
+    so.add_operator_product(yy, coeff.re.into()).unwrap();
+
+    let sh = SpinHamiltonian::try_from(so).unwrap() * CalculatorFloat::from(0.5);
+
+    assert_eq!(sh, fh.jordan_wigner());
 }
 
 #[test]
