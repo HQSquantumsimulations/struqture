@@ -131,6 +131,18 @@ fn test_jw_fermion_hamiltonian() {
     let sh = SpinHamiltonian::try_from(so).unwrap() * CalculatorFloat::from(0.5);
 
     assert_eq!(sh, fh.jordan_wigner());
+
+    let mut fh = FermionHamiltonian::new();
+    let hfp = HermitianFermionProduct::new([2], [2]).unwrap();
+    fh.add_operator_product(hfp.clone(), 3.0.into()).unwrap();
+
+    let mut sh = SpinHamiltonian::new();
+    let mut id = PauliProduct::new();
+    id = id.set_pauli(2, SingleSpinOperator::Identity);
+    sh.set(id, 1.5.into()).unwrap();
+    sh.set(PauliProduct::new().z(2), (-1.5).into()).unwrap();
+
+    assert_eq!(sh, fh.jordan_wigner());
 }
 
 #[test]

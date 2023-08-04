@@ -631,14 +631,19 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
             let annihilators: Vec<usize> = hfp.annihilators().cloned().collect();
             let fp = FermionProduct::new(creators, annihilators)
                 .expect("Failed to create FermionProduct from HermitianFermionProduct.");
-            let (fp_conj, conjugate_sign) = fp.hermitian_conjugate();
 
-            let spin_op = fp.jordan_wigner() * coeff.clone()
-                + fp_conj.jordan_wigner() * conjugate_sign * coeff.conj();
-            let spin_hamiltonian = SpinHamiltonian::try_from(spin_op).expect(
-                "Something went wrong when attempting to cast SpinOperator into SpinHamiltonian.",
-            );
-            out = out + spin_hamiltonian;
+            if hfp.is_natural_hermitian() {
+                out = out + hfp.jordan_wigner() * coeff.re.clone();
+            } else {
+                let (fp_conj, conjugate_sign) = fp.hermitian_conjugate();
+
+                let spin_op = fp.jordan_wigner() * coeff.clone()
+                    + fp_conj.jordan_wigner() * conjugate_sign * coeff.conj();
+                let spin_hamiltonian = SpinHamiltonian::try_from(spin_op).expect(
+                    "Something went wrong when attempting to cast SpinOperator into SpinHamiltonian.",
+                );
+                out = out + spin_hamiltonian;
+            }
         }
         out
     }
