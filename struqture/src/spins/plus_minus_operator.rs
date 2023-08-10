@@ -369,7 +369,7 @@ impl TryFrom<PlusMinusOperator> for SpinHamiltonian {
     /// * `Ok(Self)` - The PlusMinusOperator converted into a SpinHamiltonian.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn try_from(value: PlusMinusOperator) -> Result<Self, Self::Error> {
-        let tmp_operator = SpinOperator::from(value);
+        let tmp_operator = SpinOperator::from(value).truncate(1e-16);
         SpinHamiltonian::try_from(tmp_operator)
     }
 }
@@ -397,7 +397,7 @@ impl From<SpinHamiltonian> for PlusMinusOperator {
                     .expect("Unexpected error adding operators. Internal struqture error");
             }
         }
-        new_operator
+        new_operator.truncate(1e-16)
     }
 }
 
