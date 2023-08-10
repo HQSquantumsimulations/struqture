@@ -1,6 +1,6 @@
 [project]
 name = "struqture-py"
-version = "1.4.0-alpha.4"
+version = "1.4.0"
 dependencies = [
   'numpy',
   'qoqo_calculator_pyo3>=1.1.2',
