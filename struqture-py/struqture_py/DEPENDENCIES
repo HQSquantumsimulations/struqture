@@ -29224,7 +29224,7 @@ SOFTWARE.
 
 
 ====================================================
-struqture 1.4.0-alpha.4
+struqture 1.4.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -29419,7 +29419,7 @@ LICENSE:
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 2021-2022 HQS Quantum Simulations GmbH
+   Copyright 2021-2023 HQS Quantum Simulations GmbH
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -29435,7 +29435,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 1.4.0-alpha.4
+struqture-py 1.4.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -29630,7 +29630,7 @@ LICENSE:
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 2021-2022 HQS Quantum Simulations GmbH
+   Copyright 2021-2023 HQS Quantum Simulations GmbH
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -29646,7 +29646,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 1.4.0-alpha.4
+struqture-py-macros 1.4.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -29841,7 +29841,7 @@ LICENSE:
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 2021-2022 HQS Quantum Simulations GmbH
+   Copyright 2021-2023 HQS Quantum Simulations GmbH
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
