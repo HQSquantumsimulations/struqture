@@ -16,6 +16,7 @@ use qoqo_calculator::CalculatorComplex;
 use serde_test::{assert_tokens, Configure, Token};
 use std::cmp::Ordering;
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use struqture::fermions::*;
 use struqture::prelude::*;
@@ -30,6 +31,32 @@ fn default() {
         FermionProduct::default(),
         FermionProduct::new(vec![], vec![]).unwrap()
     );
+}
+
+#[test]
+fn test_remap_modes() {
+    let fp = FermionProduct::new([0, 1], []).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 1), (1, 0)]);
+    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary);
+
+    assert_eq!(remapped_fp, fp);
+    assert_eq!(coeff, (-1.0).into());
+
+    let fp = FermionProduct::new([0, 2], [1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 2), (1, 0), (2, 1)]);
+    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary);
+    let expected_fp = FermionProduct::new([1, 2], [0]).unwrap();
+
+    assert_eq!(remapped_fp, expected_fp);
+    assert_eq!(coeff, (-1.0).into());
+
+    let fp = FermionProduct::new([0, 2], [1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 2), (2, 0)]);
+    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary);
+    let expected_fp = FermionProduct::new([0, 2], [1]).unwrap();
+
+    assert_eq!(remapped_fp, expected_fp);
+    assert_eq!(coeff, (-1.0).into());
 }
 
 #[test_case(&[], &[], 0, 0, 0; "empty")]

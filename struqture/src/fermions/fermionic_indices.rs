@@ -25,6 +25,7 @@ use serde::{
     Deserialize, Deserializer, Serialize, Serializer,
 };
 use std::cmp::Ordering;
+use std::collections::HashMap;
 use std::{ops::Mul, str::FromStr};
 use tinyvec::TinyVec;
 
@@ -571,6 +572,49 @@ impl FromStr for FermionProduct {
             }
             Self::new(creators, annihilators)
         }
+    }
+}
+
+impl FermionProduct {
+    /// Remap the fermionic modes according to an input dictionary.
+    ///
+    /// # Arguments
+    ///
+    /// `reordering_dictionary` - The dictionary specifying the remapping.
+    ///
+    /// # Returns
+    ///
+    /// `(FermionProduct, CalculatorComplex)` - The FermionProduct with modes remapped, and the sign
+    /// resulting from antisymmetry.
+    pub fn remap_modes(
+        &self,
+        reordering_dictionary: &HashMap<usize, usize>,
+    ) -> (FermionProduct, CalculatorComplex) {
+        let mut remapped_creators: Vec<usize> = vec![];
+        let mut remapped_annihilators: Vec<usize> = vec![];
+
+        for creator_index in self.creators() {
+            remapped_creators.push(match reordering_dictionary.get(creator_index) {
+                Some(x) => *x,
+                None => *creator_index,
+            })
+        }
+        for annihilator_index in self.annihilators() {
+            remapped_annihilators.push(match reordering_dictionary.get(annihilator_index) {
+                Some(x) => *x,
+                None => *annihilator_index,
+            })
+        }
+
+        let (remapped_fp, new_coeff) = FermionProduct::create_valid_pair(
+            remapped_creators,
+            remapped_annihilators,
+            1.0.into(),
+        )
+        .expect(
+            "Unexpectedly cannot create valid pair for FermionProduct. Internal bug in struqture.",
+        );
+        (remapped_fp, new_coeff)
     }
 }
 
@@ -1558,4 +1602,29 @@ mod test {
             assert!(result.contains(&pair));
         }
     }
+}
+#[test]
+fn test_remap_modes() {
+    let fp = FermionProduct::new([0, 1], []).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 1), (1, 0)]);
+    let (remapped_fp, coeff) = remap_modes(fp.clone(), &reordering_dictionary);
+
+    assert_eq!(remapped_fp, fp);
+    assert_eq!(coeff, (-1.0).into());
+
+    let fp = FermionProduct::new([0, 2], [1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 2), (1, 0), (2, 1)]);
+    let (remapped_fp, coeff) = remap_modes(fp.clone(), &reordering_dictionary);
+    let expected_fp = FermionProduct::new([1, 2], [0]).unwrap();
+
+    assert_eq!(remapped_fp, expected_fp);
+    assert_eq!(coeff, (-1.0).into());
+
+    let fp = FermionProduct::new([0, 2], [1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 2), (2, 0)]);
+    let (remapped_fp, coeff) = remap_modes(fp.clone(), &reordering_dictionary);
+    let expected_fp = FermionProduct::new([0, 2], [1]).unwrap();
+
+    assert_eq!(remapped_fp, expected_fp);
+    assert_eq!(coeff, (-1.0).into());
 }
