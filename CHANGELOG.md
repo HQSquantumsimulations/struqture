@@ -2,6 +2,9 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.4.1
+* Added remap_modes function to fermionic and bosonic indices.
+
 ## 1.4.0
 * Fixed bug in Jordan-Wigner transformation for FermionHamiltonian and FermionHamiltonianSystem.
 * Added MixedPlusMinusProduct, MixedPlusMinusOperator to mod.rs in struqture-py/src/mixed_systems (fixed import error).
