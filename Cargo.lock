@@ -1334,7 +1334,7 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "struqture"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "bincode",
  "itertools",
@@ -1355,7 +1355,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1380,7 +1380,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "num-complex",
  "proc-macro2",
