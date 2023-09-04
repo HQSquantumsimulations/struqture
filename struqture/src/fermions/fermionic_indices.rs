@@ -25,7 +25,6 @@ use serde::{
     Deserialize, Deserializer, Serialize, Serializer,
 };
 use std::cmp::Ordering;
-use std::collections::HashMap;
 use std::{ops::Mul, str::FromStr};
 use tinyvec::TinyVec;
 
@@ -572,49 +571,6 @@ impl FromStr for FermionProduct {
             }
             Self::new(creators, annihilators)
         }
-    }
-}
-
-impl FermionProduct {
-    /// Remap the fermionic modes according to an input dictionary.
-    ///
-    /// # Arguments
-    ///
-    /// `reordering_dictionary` - The dictionary specifying the remapping.
-    ///
-    /// # Returns
-    ///
-    /// `(FermionProduct, CalculatorComplex)` - The FermionProduct with modes remapped, and the sign
-    /// resulting from antisymmetry.
-    pub fn remap_modes(
-        &self,
-        reordering_dictionary: &HashMap<usize, usize>,
-    ) -> (FermionProduct, CalculatorComplex) {
-        let mut remapped_creators: Vec<usize> = vec![];
-        let mut remapped_annihilators: Vec<usize> = vec![];
-
-        for creator_index in self.creators() {
-            remapped_creators.push(match reordering_dictionary.get(creator_index) {
-                Some(x) => *x,
-                None => *creator_index,
-            })
-        }
-        for annihilator_index in self.annihilators() {
-            remapped_annihilators.push(match reordering_dictionary.get(annihilator_index) {
-                Some(x) => *x,
-                None => *annihilator_index,
-            })
-        }
-
-        let (remapped_fp, new_coeff) = FermionProduct::create_valid_pair(
-            remapped_creators,
-            remapped_annihilators,
-            1.0.into(),
-        )
-        .expect(
-            "Unexpectedly cannot create valid pair for FermionProduct. Internal bug in struqture.",
-        );
-        (remapped_fp, new_coeff)
     }
 }
 

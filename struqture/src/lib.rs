@@ -243,6 +243,12 @@ pub enum StruqtureError {
     /// Error when trying to insert identities into noise operators
     #[error("Lindblad operators need to be traceless.")]
     InvalidLindbladTerms,
+    /// Gerneric Error in struqture.
+    #[error("Error occured: {msg}")]
+    GenericError {
+        /// Error message
+        msg: String,
+    },
 }
 
 /// Complex sparse matrix in coordinate (COO) format.
@@ -481,6 +487,54 @@ pub trait ModeIndex:
             None => 0,
         };
         max_c.max(max_a)
+    }
+
+    /// Remap modes according to an input dictionary.
+    ///
+    /// # Arguments
+    ///
+    /// `reordering_dictionary` - The dictionary specifying the remapping. It must represent a permutation.
+    ///
+    /// # Returns
+    ///
+    /// `(Self, CalculatorComplex)` - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.
+    fn remap_modes(
+        &self,
+        reordering_dictionary: &HashMap<usize, usize>,
+    ) -> Result<(Self, CalculatorComplex), StruqtureError> {
+        let mut keys: Vec<usize> = reordering_dictionary.keys().cloned().collect();
+        keys.sort();
+        let mut values: Vec<usize> = reordering_dictionary.values().cloned().collect();
+        values.sort();
+
+        if keys != values {
+            return Err(StruqtureError::GenericError {
+                msg: "Input dictionary must be a permutation.".to_string(),
+            });
+        }
+
+        let mut remapped_creators: Vec<usize> = vec![];
+        let mut remapped_annihilators: Vec<usize> = vec![];
+
+        for creator_index in self.creators() {
+            remapped_creators.push(match reordering_dictionary.get(creator_index) {
+                Some(x) => *x,
+                None => *creator_index,
+            })
+        }
+        for annihilator_index in self.annihilators() {
+            remapped_annihilators.push(match reordering_dictionary.get(annihilator_index) {
+                Some(x) => *x,
+                None => *annihilator_index,
+            })
+        }
+        let (remapped_index, new_coeff) =
+            Self::create_valid_pair(remapped_creators, remapped_annihilators, 1.0.into()).map_err(
+                |_| StruqtureError::GenericError {
+                    msg: "Remapping dictionary should be a permutation of the indices.".to_string(),
+                },
+            )?;
+        Ok((remapped_index, new_coeff))
     }
 }
 

@@ -34,17 +34,17 @@ fn default() {
 }
 
 #[test]
-fn test_remap_modes() {
+fn test_remap_modes_passing() {
     let fp = FermionProduct::new([0, 1], []).unwrap();
     let reordering_dictionary = HashMap::from([(0, 1), (1, 0)]);
-    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary);
+    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary).unwrap();
 
     assert_eq!(remapped_fp, fp);
     assert_eq!(coeff, (-1.0).into());
 
     let fp = FermionProduct::new([0, 2], [1]).unwrap();
     let reordering_dictionary = HashMap::from([(0, 2), (1, 0), (2, 1)]);
-    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary);
+    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary).unwrap();
     let expected_fp = FermionProduct::new([1, 2], [0]).unwrap();
 
     assert_eq!(remapped_fp, expected_fp);
@@ -52,11 +52,21 @@ fn test_remap_modes() {
 
     let fp = FermionProduct::new([0, 2], [1]).unwrap();
     let reordering_dictionary = HashMap::from([(0, 2), (2, 0)]);
-    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary);
+    let (remapped_fp, coeff) = fp.remap_modes(&reordering_dictionary).unwrap();
     let expected_fp = FermionProduct::new([0, 2], [1]).unwrap();
 
     assert_eq!(remapped_fp, expected_fp);
     assert_eq!(coeff, (-1.0).into());
+}
+
+#[test_case(&[(0, 1), (1, 3), (2, 1)])]
+#[test_case(&[(0, 1), (2, 3)])]
+fn test_remap_modes_error(remap_dict: &[(usize, usize)]) {
+    let fp = FermionProduct::new([0, 2], [1, 3]).unwrap();
+    let reordering_dictionary: HashMap<usize, usize> = remap_dict.iter().cloned().collect();
+    let err = fp.remap_modes(&reordering_dictionary);
+
+    assert!(err.is_err())
 }
 
 #[test_case(&[], &[], 0, 0, 0; "empty")]
