@@ -11,11 +11,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=b193eeef"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -101,7 +101,7 @@
            <div itemprop="articleBody">
              
   <section id="module-struqture_py.bosons">
-<span id="struqture-py-bosons"></span><h1>struqture_py.bosons<a class="headerlink" href="#module-struqture_py.bosons" title="Permalink to this heading"></a></h1>
+<span id="struqture-py-bosons"></span><h1>struqture_py.bosons<a class="headerlink" href="#module-struqture_py.bosons" title="Link to this heading"></a></h1>
 <p>Bosons module of struqture Python interface</p>
 <p>Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonSystem and BosonHamiltonianSystem),
 and Lindblad type bosonic open systems (BosonLindbladNoiseSystem, BosonLindbladOpenSystem).</p>
@@ -152,7 +152,7 @@ and Lindblad type bosonic open systems (BosonLindbladNoiseSystem, BosonLindbladO
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonHamiltonianSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonHamiltonianSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of bosons.</p>
 <p>BosonHamiltonianSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
 and an optional number of bosons.</p>
@@ -172,7 +172,7 @@ and an optional number of bosons.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.add_operator_product">
-<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.add_operator_product" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.add_operator_product" title="Link to this definition"></a></dt>
 <dd><p>Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -187,7 +187,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.current_number_modes">
-<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.current_number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.current_number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return maximum index in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -201,7 +201,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.current_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -215,7 +215,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.empty_clone">
-<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.empty_clone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.empty_clone" title="Link to this definition"></a></dt>
 <dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -232,7 +232,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.from_bincode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -252,7 +252,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.from_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -269,7 +269,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.get" title="Link to this definition"></a></dt>
 <dd><p>Get the coefficient corresponding to the key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -289,7 +289,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.hermitian_conjugate">
-<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.hermitian_conjugate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.hermitian_conjugate" title="Link to this definition"></a></dt>
 <dd><p>Return the hermitian conjugate of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -303,7 +303,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.is_empty">
-<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.is_empty" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.is_empty" title="Link to this definition"></a></dt>
 <dd><p>Return true if self contains no values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -317,7 +317,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.json_schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -331,7 +331,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.keys">
-<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.keys" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.keys" title="Link to this definition"></a></dt>
 <dd><p>Return a list of the unsorted keys in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -345,7 +345,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.min_supported_version">
-<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.min_supported_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.min_supported_version" title="Link to this definition"></a></dt>
 <dd><p>Return the minimum version of struqture that supports this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -359,7 +359,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.number_modes">
-<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return the number_modes input of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -373,7 +373,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.remove" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -390,7 +390,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.separate_into_n_terms">
-<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.separate_into_n_terms" title="Link to this definition"></a></dt>
 <dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -410,7 +410,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.set" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.set" title="Link to this definition"></a></dt>
 <dd><p>Overwrite an existing entry or set a new entry in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -427,7 +427,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.to_bincode">
-<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.to_bincode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.to_bincode" title="Link to this definition"></a></dt>
 <dd><p>Return the bincode representation of self using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -444,7 +444,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return the json representation of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -461,7 +461,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.truncate">
-<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.truncate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.truncate" title="Link to this definition"></a></dt>
 <dd><p>Truncate self by returning a copy without entries under a threshold.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -478,7 +478,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.values">
-<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.values" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.values" title="Link to this definition"></a></dt>
 <dd><p>Return unsorted values in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -494,7 +494,7 @@ and an optional number of bosons.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonLindbladNoiseSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonLindbladNoiseSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of bosons.</p>
 <p>In a BosonLindbladNoiseSystem is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.</p>
 <p class="rubric">Examples</p>
@@ -512,7 +512,7 @@ and an optional number of bosons.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.add_operator_product">
-<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.add_operator_product" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.add_operator_product" title="Link to this definition"></a></dt>
 <dd><p>Adds a new (key object, CalculatorComplex) pair to existing entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -528,7 +528,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.current_number_modes">
-<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.current_number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.current_number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return maximum index in object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -542,7 +542,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.current_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -556,7 +556,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.empty_clone">
-<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.empty_clone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.empty_clone" title="Link to this definition"></a></dt>
 <dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -573,7 +573,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.from_bincode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -593,7 +593,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.from_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -610,7 +610,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.get" title="Link to this definition"></a></dt>
 <dd><p>Get the coefficient corresponding to the key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -633,7 +633,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.is_empty">
-<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.is_empty" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.is_empty" title="Link to this definition"></a></dt>
 <dd><p>Return true if object contains no values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -647,7 +647,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.json_schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -661,7 +661,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.keys">
-<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.keys" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.keys" title="Link to this definition"></a></dt>
 <dd><p>Return unsorted keys in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -675,7 +675,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.min_supported_version">
-<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.min_supported_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.min_supported_version" title="Link to this definition"></a></dt>
 <dd><p>Return the minimum version of struqture that supports this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -689,7 +689,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.number_modes">
-<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return the number_modes input of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -703,7 +703,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.remove" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input object key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -723,7 +723,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.separate_into_n_terms">
-<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.separate_into_n_terms" title="Link to this definition"></a></dt>
 <dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -746,7 +746,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.set" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.set" title="Link to this definition"></a></dt>
 <dd><p>Overwrite an existing entry or set a new entry in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -766,7 +766,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.to_bincode">
-<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.to_bincode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.to_bincode" title="Link to this definition"></a></dt>
 <dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -783,7 +783,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return the json representation of the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -800,7 +800,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.truncate">
-<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.truncate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.truncate" title="Link to this definition"></a></dt>
 <dd><p>Truncate self by returning a copy without entries under a threshold.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -817,7 +817,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.values">
-<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.values" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.values" title="Link to this definition"></a></dt>
 <dd><p>Return unsorted values in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -833,7 +833,7 @@ and an optional number of bosons.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of bosons.</p>
 <p>In a BosonLindbladOpenSystem is characterized by a BosonLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of bosons.</p>
 <p class="rubric">Examples</p>
@@ -851,7 +851,7 @@ and an optional number of bosons.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.current_number_modes">
-<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.current_number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.current_number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return maximum index in object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -865,7 +865,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.current_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -879,7 +879,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.empty_clone">
-<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.empty_clone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.empty_clone" title="Link to this definition"></a></dt>
 <dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -893,7 +893,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.from_bincode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -913,7 +913,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.from_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -930,7 +930,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.group">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.group" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.group" title="Link to this definition"></a></dt>
 <dd><p>Take a tuple of a system term and a noise term and combines them to be a OpenSystem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -957,7 +957,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.json_schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -971,7 +971,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.min_supported_version">
-<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.min_supported_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.min_supported_version" title="Link to this definition"></a></dt>
 <dd><p>Return the minimum version of struqture that supports this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -985,7 +985,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise">
-<span class="sig-name descname"><span class="pre">noise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">noise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise" title="Link to this definition"></a></dt>
 <dd><p>Return the noise part of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -999,7 +999,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_add_operator_product">
-<span class="sig-name descname"><span class="pre">noise_add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_add_operator_product" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">noise_add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_add_operator_product" title="Link to this definition"></a></dt>
 <dd><p>Add a new entry to the system of the open system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1026,7 +1026,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_get">
-<span class="sig-name descname"><span class="pre">noise_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">noise_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_get" title="Link to this definition"></a></dt>
 <dd><p>Get the CalculatorComplex coefficient corresponding to the key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1049,7 +1049,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_set">
-<span class="sig-name descname"><span class="pre">noise_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_set" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">noise_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_set" title="Link to this definition"></a></dt>
 <dd><p>Set a new entry in the noise of the open system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1076,7 +1076,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.number_modes">
-<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return the number_modes input of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1090,7 +1090,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system">
-<span class="sig-name descname"><span class="pre">system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system" title="Link to this definition"></a></dt>
 <dd><p>Return the system part of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1104,7 +1104,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_add_operator_product">
-<span class="sig-name descname"><span class="pre">system_add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_add_operator_product" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">system_add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_add_operator_product" title="Link to this definition"></a></dt>
 <dd><p>Add a new entry to the system of the open system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1130,7 +1130,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_get">
-<span class="sig-name descname"><span class="pre">system_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">system_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_get" title="Link to this definition"></a></dt>
 <dd><p>Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1150,7 +1150,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_set">
-<span class="sig-name descname"><span class="pre">system_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_set" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">system_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_set" title="Link to this definition"></a></dt>
 <dd><p>Set a new entry in the system of the open system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1176,7 +1176,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.to_bincode">
-<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.to_bincode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.to_bincode" title="Link to this definition"></a></dt>
 <dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1193,7 +1193,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return the json representation of the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1210,7 +1210,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.truncate">
-<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.truncate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.truncate" title="Link to this definition"></a></dt>
 <dd><p>Truncate self by returning a copy without entries under a threshold.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1227,7 +1227,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.ungroup">
-<span class="sig-name descname"><span class="pre">ungroup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.ungroup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ungroup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.ungroup" title="Link to this definition"></a></dt>
 <dd><p>Return a tuple of the system and the noise of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1243,14 +1243,14 @@ and an optional number of bosons.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct" title="Link to this definition"></a></dt>
 <dd><p>A product of bosonic creation and annihilation operators.</p>
 <p>The BosonProduct is used as an index for non-hermitian, normal ordered bosonic operators.
 A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
 The BosonProduct is used as an index when setting or adding new summands to a bosonic operator and when querrying the
 weight of a product of operators in the sum.</p>
 <section id="example">
-<h2>Example:<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonProduct</span>
 <span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="c1"># For instance, to represent $c_0a_0$</span>
@@ -1261,7 +1261,7 @@ weight of a product of operators in the sum.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.annihilators">
-<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.annihilators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.annihilators" title="Link to this definition"></a></dt>
 <dd><p>Return list of annihilator indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1275,7 +1275,7 @@ weight of a product of operators in the sum.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.create_valid_pair">
-<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.create_valid_pair" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.create_valid_pair" title="Link to this definition"></a></dt>
 <dd><p>Create valid pair of index and value to be set in an operator.</p>
 <p>The first item is the valid instance of self created from the input creators and annihilators.
 The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
@@ -1304,7 +1304,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.creators">
-<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.creators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.creators" title="Link to this definition"></a></dt>
 <dd><p>Return list of creator indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1318,7 +1318,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.current_number_modes">
-<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_number_modes" title="Link to this definition"></a></dt>
 <dd><p>Returns the maximal number of modes self acts on.</p>
 <p>Self acts on a state space of unknown dimension.
 There is only a lower bound of the dimension or number of modes based on the
@@ -1338,7 +1338,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1352,7 +1352,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_bincode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1372,7 +1372,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1389,7 +1389,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_string" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1409,7 +1409,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.hermitian_conjugate">
-<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.hermitian_conjugate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.hermitian_conjugate" title="Link to this definition"></a></dt>
 <dd><p>Return the hermitian conjugate of self and its prefactor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1423,7 +1423,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.is_natural_hermitian">
-<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.is_natural_hermitian" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.is_natural_hermitian" title="Link to this definition"></a></dt>
 <dd><p>Return whether self is naturally hermitian.</p>
 <p>For spin objects, this is true when applying the hermitian conjugation does not change the sign.
 For bosonic and fermionic objects, this is true when creators == annihilators.
@@ -1440,7 +1440,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.json_schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1454,7 +1454,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.min_supported_version">
-<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.min_supported_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.min_supported_version" title="Link to this definition"></a></dt>
 <dd><p>Return the minimum version of struqture that supports this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1468,7 +1468,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.number_annihilators">
-<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.number_annihilators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.number_annihilators" title="Link to this definition"></a></dt>
 <dd><p>Get the number of annihilator indices of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1482,7 +1482,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.number_creators">
-<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.number_creators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.number_creators" title="Link to this definition"></a></dt>
 <dd><p>Get the number of creator indices of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1496,7 +1496,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.to_bincode">
-<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.to_bincode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.to_bincode" title="Link to this definition"></a></dt>
 <dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1513,7 +1513,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return the json representation of the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1533,7 +1533,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of bosons.</p>
 <p>BosonSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
 and an optional number of bosons.</p>
@@ -1553,7 +1553,7 @@ and an optional number of bosons.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.add_operator_product">
-<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.add_operator_product" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.add_operator_product" title="Link to this definition"></a></dt>
 <dd><p>Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -1568,7 +1568,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.current_number_modes">
-<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.current_number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.current_number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return maximum index in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1582,7 +1582,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.current_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1596,7 +1596,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.empty_clone">
-<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.empty_clone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.empty_clone" title="Link to this definition"></a></dt>
 <dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1613,7 +1613,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.from_bincode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1633,7 +1633,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.from_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1650,7 +1650,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.get" title="Link to this definition"></a></dt>
 <dd><p>Get the coefficient corresponding to the key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1670,7 +1670,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.hermitian_conjugate">
-<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.hermitian_conjugate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.hermitian_conjugate" title="Link to this definition"></a></dt>
 <dd><p>Return the hermitian conjugate of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1684,7 +1684,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.is_empty">
-<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.is_empty" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.is_empty" title="Link to this definition"></a></dt>
 <dd><p>Return true if self contains no values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1698,7 +1698,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.json_schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1712,7 +1712,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.keys">
-<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.keys" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.keys" title="Link to this definition"></a></dt>
 <dd><p>Return a list of the unsorted keys in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1726,7 +1726,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.min_supported_version">
-<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.min_supported_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.min_supported_version" title="Link to this definition"></a></dt>
 <dd><p>Return the minimum version of struqture that supports this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1740,7 +1740,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.number_modes">
-<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.number_modes" title="Link to this definition"></a></dt>
 <dd><p>Return the number_modes input of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1754,7 +1754,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.remove" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1771,7 +1771,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.separate_into_n_terms">
-<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.separate_into_n_terms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.separate_into_n_terms" title="Link to this definition"></a></dt>
 <dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1791,7 +1791,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.set" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.set" title="Link to this definition"></a></dt>
 <dd><p>Overwrite an existing entry or set a new entry in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1808,7 +1808,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.to_bincode">
-<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.to_bincode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.to_bincode" title="Link to this definition"></a></dt>
 <dd><p>Return the bincode representation of self using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1825,7 +1825,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return the json representation of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1842,7 +1842,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.truncate">
-<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.truncate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.truncate" title="Link to this definition"></a></dt>
 <dd><p>Truncate self by returning a copy without entries under a threshold.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1859,7 +1859,7 @@ and an optional number of bosons.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.values">
-<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.values" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.values" title="Link to this definition"></a></dt>
 <dd><p>Return unsorted values in self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1875,7 +1875,7 @@ and an optional number of bosons.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">HermitianBosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">HermitianBosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct" title="Link to this definition"></a></dt>
 <dd><p>A product of bosonic creation and annihilation operators.</p>
 <p>The HermitianBosonProduct is used as an index for non-hermitian, normal ordered bosonic operators.
 A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
@@ -1892,7 +1892,7 @@ weight of a product of operators in the sum.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.annihilators">
-<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.annihilators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.annihilators" title="Link to this definition"></a></dt>
 <dd><p>Return list of annihilator indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1906,7 +1906,7 @@ weight of a product of operators in the sum.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.create_valid_pair">
-<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.create_valid_pair" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.create_valid_pair" title="Link to this definition"></a></dt>
 <dd><p>Create valid pair of index and value to be set in an operator.</p>
 <p>The first item is the valid instance of self created from the input creators and annihilators.
 The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
@@ -1935,7 +1935,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.creators">
-<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.creators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.creators" title="Link to this definition"></a></dt>
 <dd><p>Return list of creator indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1949,7 +1949,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.current_number_modes">
-<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_number_modes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_number_modes" title="Link to this definition"></a></dt>
 <dd><p>Returns the maximal number of modes self acts on.</p>
 <p>Self acts on a state space of unknown dimension.
 There is only a lower bound of the dimension or number of modes based on the
@@ -1969,7 +1969,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1983,7 +1983,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_bincode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2003,7 +2003,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2020,7 +2020,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_string" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2040,7 +2040,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate">
-<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate" title="Link to this definition"></a></dt>
 <dd><p>Return the hermitian conjugate of self and its prefactor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2054,7 +2054,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian">
-<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian" title="Link to this definition"></a></dt>
 <dd><p>Return whether self is naturally hermitian.</p>
 <p>For spin objects, this is true when applying the hermitian conjugation does not change the sign.
 For bosonic and fermionic objects, this is true when creators == annihilators.
@@ -2071,7 +2071,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.json_schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2085,7 +2085,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.min_supported_version">
-<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.min_supported_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.min_supported_version" title="Link to this definition"></a></dt>
 <dd><p>Return the minimum version of struqture that supports this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2099,7 +2099,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.number_annihilators">
-<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_annihilators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_annihilators" title="Link to this definition"></a></dt>
 <dd><p>Get the number of annihilator indices of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2113,7 +2113,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.number_creators">
-<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_creators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_creators" title="Link to this definition"></a></dt>
 <dd><p>Get the number of creator indices of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2127,7 +2127,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.to_bincode">
-<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="Link to this definition"></a></dt>
 <dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2144,7 +2144,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return the json representation of the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
