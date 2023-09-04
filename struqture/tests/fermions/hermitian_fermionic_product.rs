@@ -17,6 +17,7 @@ use qoqo_calculator::CalculatorComplex;
 use serde_test::{assert_tokens, Configure, Token};
 use std::cmp::Ordering;
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use struqture::fermions::*;
 use struqture::prelude::*;
@@ -31,6 +32,42 @@ fn default() {
         HermitianFermionProduct::default(),
         HermitianFermionProduct::new(vec![], vec![]).unwrap()
     );
+}
+
+#[test]
+fn test_remap_modes_passing() {
+    let hfp = HermitianFermionProduct::new([], [0, 1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 1), (1, 0)]);
+    let (remapped_hfp, coeff) = hfp.remap_modes(&reordering_dictionary).unwrap();
+
+    assert_eq!(remapped_hfp, hfp);
+    assert_eq!(coeff, (-1.0).into());
+
+    let hfp = HermitianFermionProduct::new([0, 2], [1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 2), (1, 0), (2, 1)]);
+    let (remapped_hfp, coeff) = hfp.remap_modes(&reordering_dictionary).unwrap();
+    let expected_hfp = HermitianFermionProduct::new([0], [1, 2]).unwrap();
+
+    assert_eq!(remapped_hfp, expected_hfp);
+    assert_eq!(coeff, (-1.0).into());
+
+    let hfp = HermitianFermionProduct::new([0, 2], [1]).unwrap();
+    let reordering_dictionary = HashMap::from([(0, 2), (2, 0)]);
+    let (remapped_hfp, coeff) = hfp.remap_modes(&reordering_dictionary).unwrap();
+    let expected_hfp = HermitianFermionProduct::new([0, 2], [1]).unwrap();
+
+    assert_eq!(remapped_hfp, expected_hfp);
+    assert_eq!(coeff, (-1.0).into());
+}
+
+#[test_case(&[(0, 1), (1, 3), (2, 1)])]
+#[test_case(&[(0, 1), (2, 3)])]
+fn test_remap_modes_error(remap_dict: &[(usize, usize)]) {
+    let hfp = HermitianFermionProduct::new([0, 2], [1, 3]).unwrap();
+    let reordering_dictionary: HashMap<usize, usize> = remap_dict.iter().cloned().collect();
+    let err = hfp.remap_modes(&reordering_dictionary);
+
+    assert!(err.is_err())
 }
 
 #[test]
