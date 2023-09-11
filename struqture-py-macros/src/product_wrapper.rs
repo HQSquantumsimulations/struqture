@@ -108,6 +108,23 @@ pub fn productwrapper(
                     self.internal.annihilators().cloned().collect()
                 }
 
+                /// Remap modes according to an input dictionary.
+                ///
+                /// Args:
+                ///    reordering_dictionary (dict) - The dictionary specifying the remapping. It must represent a permutation.
+                ///
+                /// Returns:
+                ///   (Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.
+                ///
+                /// Raises:
+                ///    ValueError: Input reordering dictionary is not a permutation of the indices.
+                pub fn remap_modes(&self, reordering_dictionary: &PyAny) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
+                    let remap_dict = reordering_dictionary.extract::<HashMap<usize, usize>>()?;
+                    let (index, value) = self.internal.remap_modes(&remap_dict).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+                    Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
+                }
+
+
                 /// Create valid pair of index and value to be set in an operator.
                 ///
                 /// The first item is the valid instance of self created from the input creators and annihilators.
