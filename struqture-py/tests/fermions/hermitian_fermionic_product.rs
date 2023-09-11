@@ -218,8 +218,8 @@ fn test_creators_annihilators_create_valid_pair() {
 fn test_remap_modes() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let hfp = new_pp(py, vec![0, 1], vec![]);
-        let remapped_hfp = new_pp(py, vec![2, 3], vec![]);
+        let hfp = new_pp(py, vec![], vec![0, 1]);
+        let remapped_hfp = new_pp(py, vec![], vec![2, 3]);
         let expected_coeff = CalculatorComplexWrapper {
             internal: (-1.0).into(),
         };

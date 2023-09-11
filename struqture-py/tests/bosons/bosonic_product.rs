@@ -186,16 +186,16 @@ fn test_creators_annihilators_create_valid_pair() {
 fn test_remap_modes() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let fp = new_pp(py, vec![0, 1], vec![]);
-        let remapped_fp = new_pp(py, vec![2, 3], vec![]);
+        let bp = new_pp(py, vec![0, 1], vec![]);
+        let remapped_bp = new_pp(py, vec![2, 3], vec![]);
         let expected_coeff = CalculatorComplexWrapper {
             internal: 1.0.into(),
         };
         let remap_dict = [(0, 3), (1, 2), (2, 0), (3, 1)].into_py_dict(py);
-        let results = fp.call_method1("remap_modes", (remap_dict,)).unwrap();
+        let results = bp.call_method1("remap_modes", (remap_dict,)).unwrap();
         let comparison = bool::extract(
             results
-                .call_method1("__eq__", ((remapped_fp, expected_coeff),))
+                .call_method1("__eq__", ((remapped_bp, expected_coeff),))
                 .unwrap(),
         )
         .unwrap();
