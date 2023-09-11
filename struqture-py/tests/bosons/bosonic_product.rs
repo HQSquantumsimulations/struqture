@@ -12,6 +12,8 @@
 
 use num_complex::Complex64;
 use pyo3::prelude::*;
+use pyo3::types::IntoPyDict;
+use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use std::cmp::Ordering;
 #[cfg(feature = "json_schema")]
 use struqture::{bosons::BosonProduct, STRUQTURE_VERSION};
@@ -175,6 +177,28 @@ fn test_creators_annihilators_create_valid_pair() {
         let nbr_spins = pp.call_method0("annihilators").unwrap();
         let comparison =
             bool::extract(nbr_spins.call_method1("__eq__", (vec![1, 2],)).unwrap()).unwrap();
+        assert!(comparison);
+    });
+}
+
+/// Test remap_modes function of BosonProduct
+#[test]
+fn test_remap_modes() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let fp = new_pp(py, vec![0, 1], vec![]);
+        let remapped_fp = new_pp(py, vec![2, 3], vec![]);
+        let expected_coeff = CalculatorComplexWrapper {
+            internal: 1.0.into(),
+        };
+        let remap_dict = [(0, 3), (1, 2), (2, 0), (3, 1)].into_py_dict(py);
+        let results = fp.call_method1("remap_modes", (remap_dict,)).unwrap();
+        let comparison = bool::extract(
+            results
+                .call_method1("__eq__", ((remapped_fp, expected_coeff),))
+                .unwrap(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
