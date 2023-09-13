@@ -29,6 +29,7 @@ struqture\_py.fermions.FermionProduct
       ~FermionProduct.min_supported_version
       ~FermionProduct.number_annihilators
       ~FermionProduct.number_creators
+      ~FermionProduct.remap_modes
       ~FermionProduct.to_bincode
       ~FermionProduct.to_json
    

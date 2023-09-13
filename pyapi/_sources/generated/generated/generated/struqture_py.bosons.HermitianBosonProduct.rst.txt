@@ -28,6 +28,7 @@ struqture\_py.bosons.HermitianBosonProduct
       ~HermitianBosonProduct.min_supported_version
       ~HermitianBosonProduct.number_annihilators
       ~HermitianBosonProduct.number_creators
+      ~HermitianBosonProduct.remap_modes
       ~HermitianBosonProduct.to_bincode
       ~HermitianBosonProduct.to_json
    

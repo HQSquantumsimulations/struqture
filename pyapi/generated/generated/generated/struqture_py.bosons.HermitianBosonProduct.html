@@ -173,10 +173,13 @@ weight of a product of operators in the sum.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.number_creators" title="struqture_py.bosons.HermitianBosonProduct.number_creators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_creators</span></code></a>()</p></td>
 <td><p>Get the number of creator indices of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="struqture_py.bosons.HermitianBosonProduct.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.remap_modes" title="struqture_py.bosons.HermitianBosonProduct.remap_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap_modes</span></code></a>(reordering_dictionary)</p></td>
+<td><p>Remap modes according to an input dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="struqture_py.bosons.HermitianBosonProduct.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.to_json" title="struqture_py.bosons.HermitianBosonProduct.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct.to_json" title="struqture_py.bosons.HermitianBosonProduct.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of the object.</p></td>
 </tr>
 </tbody>
@@ -412,6 +415,23 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.remap_modes">
+<span class="sig-name descname"><span class="pre">remap_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reordering_dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.remap_modes" title="Link to this definition"></a></dt>
+<dd><p>Remap modes according to an input dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>) -- </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input reordering dictionary is not a permutation of the indices.</p>
 </dd>
 </dl>
 </dd></dl>
