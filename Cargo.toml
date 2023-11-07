@@ -4,6 +4,8 @@ members = [
     "struqture-py",
 ]
 
+resolver = "1"
+
 [profile.release]
 lto = true
 

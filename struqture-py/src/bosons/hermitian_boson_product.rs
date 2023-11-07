@@ -16,6 +16,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use pyo3::types::PyType;
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use struqture::bosons::*;

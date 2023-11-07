@@ -230,7 +230,7 @@ use schemars;
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliProduct {
     fn schema_name() -> String {
-        "struqture::spins::PauliProduct".to_string()
+        "PauliProduct".to_string()
     }
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
         let tmp_schema = gen.subschema_for::<String>();

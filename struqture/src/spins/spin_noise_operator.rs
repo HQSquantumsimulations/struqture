@@ -67,7 +67,7 @@ impl crate::MinSupportedVersion for SpinLindbladNoiseOperator {}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinLindbladNoiseOperator {
     fn schema_name() -> String {
-        "PlusMinusOperator".to_string()
+        "SpinLindbladNoiseOperator".to_string()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
