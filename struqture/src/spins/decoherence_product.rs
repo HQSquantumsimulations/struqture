@@ -258,7 +258,7 @@ pub struct DecoherenceProduct {
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceProduct {
     fn schema_name() -> String {
-        "struqture::spins::DecoherenceProduct".to_string()
+        "DecoherenceProduct".to_string()
     }
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
         let tmp_schema = gen.subschema_for::<String>();

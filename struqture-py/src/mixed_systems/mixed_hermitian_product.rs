@@ -14,6 +14,7 @@ use super::MixedProductWrapper;
 use crate::bosons::*;
 use crate::fermions::*;
 use crate::spins::*;
+use bincode::Options;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;

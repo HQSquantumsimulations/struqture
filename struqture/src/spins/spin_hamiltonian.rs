@@ -66,7 +66,7 @@ impl crate::MinSupportedVersion for SpinHamiltonian {}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinHamiltonian {
     fn schema_name() -> String {
-        "struqture::spins::SpinHamiltonian".to_string()
+        "SpinHamiltonian".to_string()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {

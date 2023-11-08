@@ -12,7 +12,7 @@
 
 use super::MixedSystemWrapper;
 use crate::mixed_systems::HermitianMixedProductWrapper;
-use bincode::deserialize;
+use bincode::{Options, deserialize};
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
