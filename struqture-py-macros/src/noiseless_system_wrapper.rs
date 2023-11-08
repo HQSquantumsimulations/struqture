@@ -577,24 +577,26 @@ pub fn noiselesswrapper(
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
                     let input = input.as_ref(py);
-                    if let Ok(try_downcast) = input.extract::<#ident>() {
-                        return Ok(try_downcast.internal);
-                    } else {
+                    // if let Ok(try_downcast) = input.extract::<#ident>() {
+                    //     return Ok(try_downcast.internal);
+                    // } else {
                     let get_bytes = input.call_method0("to_bincode").map_err(|_| {
                         PyTypeError::new_err("Serialisation failed".to_string())
                     })?;
-                    let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
-                        PyTypeError::new_err("Deserialisation failed".to_string())
-                    })?;
-                    deserialize(&bytes[..]).map_err(|err| {
-                        PyTypeError::new_err(format!(
-                            "Type conversion failed: {}",
-                            err
-                        ))}
-                    )
+                    input.call_method1("from_bincode", (get_bytes,))?
+                    // let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
+                    //     PyTypeError::new_err("Deserialisation failed".to_string())
+                    // })?;
+                    // let my_options = bincode::DefaultOptions::new().with_fixint_encoding();
+                    // Ok(my_options.deserialize(&bytes[..]).map_err(|err| {
+                    //     PyTypeError::new_err(format!(
+                    //         "Type conversion failed: {}",
+                    //         err
+                    //     ))}
+                    // )?)
 
                     }
-                }
+                // }
 
                 )
         }
@@ -645,12 +647,13 @@ pub fn noiselesswrapper(
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
             pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+                let my_options = bincode::DefaultOptions::new().with_fixint_encoding();
                 let bytes = input
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
                 Ok(#ident {
-                    internal: bincode::deserialize(&bytes[..]).map_err(|err| {
+                    internal: my_options.deserialize(&bytes[..]).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from bytes. {}",
                             err
@@ -667,7 +670,8 @@ pub fn noiselesswrapper(
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
             pub fn to_bincode(&self) -> PyResult<Py<PyByteArray>> {
-                let serialized = bincode::serialize(&self.internal).map_err(|_| {
+                let my_options = bincode::DefaultOptions::new().with_fixint_encoding();
+                let serialized = my_options.serialize(&self.internal).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {

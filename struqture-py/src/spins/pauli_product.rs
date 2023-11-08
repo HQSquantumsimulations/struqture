@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use crate::fermions::FermionSystemWrapper;
+use bincode::Options;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;

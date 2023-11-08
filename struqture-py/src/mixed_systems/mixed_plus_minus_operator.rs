@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use crate::mixed_systems::MixedPlusMinusProductWrapper;
-use bincode::deserialize;
+use bincode::{Options, deserialize};
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;

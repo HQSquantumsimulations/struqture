@@ -10,8 +10,9 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use bincode::Options;
 use num_complex::Complex64;
-use pyo3::prelude::*;
+use pyo3::{prelude::*, exceptions::PyTypeError, types::PyByteArray};
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::{FermionHamiltonianSystem, HermitianFermionProduct};
@@ -85,6 +86,40 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
     })
+}
+
+/// Test from_pyany function of FermionHamiltonianSystem
+#[test]
+fn test_from_pyany() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let number_fermions: Option<usize> = None;
+        let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let system = system_type
+            .call1((number_fermions,))
+            .unwrap();
+        let my_options = bincode::DefaultOptions::new().with_fixint_encoding();
+
+        let manual = my_options.serialize(&FermionHamiltonianSystem::new(number_fermions)).unwrap();
+        let serialised: &PyAny = system.call_method0("to_bincode").unwrap();
+        let bytes: Vec<u8> = serialised.extract::<Vec<u8>>().map_err(|_| {
+            PyTypeError::new_err("Deserialisation failed".to_string())
+        }).unwrap();
+        assert!(manual == bytes);
+
+        let manual_internal: FermionHamiltonianSystem = my_options.deserialize(&manual[..]).unwrap();
+        let deserialised = system.call_method1("from_bincode", (serialised,)).unwrap();
+        let from_pyany_sys = FermionHamiltonianSystemWrapper::from_pyany(system.into()).unwrap();
+        dbg!(&manual_internal);
+        dbg!(&deserialised);
+        dbg!(&from_pyany_sys);
+
+        let comparison: bool =
+            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+        assert!(comparison);
+
+        panic!();
+    });
 }
 
 /// Test number_fermions and current_number_fermions functions of FermionHamiltonianSystem
@@ -723,7 +758,7 @@ fn test_to_from_bincode() {
         let serialised_error = serialised.call_method0("to_bincode");
         assert!(serialised_error.is_err());
 
-        let comparison =
+        let comparison: bool =
             bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
