@@ -15,6 +15,5 @@ Copyright © 2021-2023 HQS Quantum Simulations GmbH. All Rights Reserved.
     mixed_systems
 
 """
-print("Struqture python interface\nCopyright © 2021-2023 HQS Quantum Simulations GmbH. All Rights Reserved.\n\n")
 from .struqture_py import *
 __license__ = "Apache-2.0"
