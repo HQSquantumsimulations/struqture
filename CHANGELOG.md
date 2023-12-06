@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.5.2
+
+* Updated to pyo3 0.20
+
 ## 1.5.1
 
 * Removed print statement from __init__.py file.
