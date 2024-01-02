@@ -36,11 +36,6 @@ rand = "0.8"
 jsonschema = {version = "0.17"}
 criterion = {version = "0.5"}
 
-[[bench]]
-name = "struqture_benchmarks"
-harness = false
-path = "benches/benchmark.rs"
-
 [features]
 default = ["json_schema"]
 json_schema = ["schemars", "qoqo_calculator/json_schema"]
