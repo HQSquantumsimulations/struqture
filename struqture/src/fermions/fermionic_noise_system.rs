@@ -24,7 +24,7 @@ use std::{
 
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
 
 use super::FermionProduct;

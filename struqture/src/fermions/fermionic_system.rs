@@ -23,7 +23,7 @@ use std::ops;
 
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
 
 /// FermionSystems are FermionOperators with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore

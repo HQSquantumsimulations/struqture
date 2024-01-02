@@ -64,9 +64,9 @@ use std::collections::HashMap;
 pub struct FermionOperator {
     /// The internal HashMap of FermionProducts and coefficients (CalculatorComplex)
     #[cfg(feature = "indexed_map_iterators")]
-    internal_map: IndexMap<HermitianFermionProduct, CalculatorComplex>,
+    internal_map: IndexMap<FermionProduct, CalculatorComplex>,
     #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<HermitianFermionProduct, CalculatorComplex>,
+    internal_map: HashMap<FermionProduct, CalculatorComplex>,
 }
 impl crate::MinSupportedVersion for FermionOperator {}
 
