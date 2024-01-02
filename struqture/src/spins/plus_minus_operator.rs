@@ -21,8 +21,16 @@ use crate::{
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
+
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
@@ -55,7 +63,10 @@ use std::ops;
 #[serde(from = "PlusMinusOperatorSerialize")]
 #[serde(into = "PlusMinusOperatorSerialize")]
 pub struct PlusMinusOperator {
-    /// The internal HashMap of PlusMinusProducts and coefficients (CalculatorComplex)
+    // The internal HashMap of PlusMinusProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<PlusMinusProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<PlusMinusProduct, CalculatorComplex>,
 }
 
@@ -214,7 +225,10 @@ impl PlusMinusOperator {
     /// * `Self` - The new (empty) PlusMinusOperator.
     pub fn new() -> Self {
         PlusMinusOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -229,7 +243,10 @@ impl PlusMinusOperator {
     /// * `Self` - The new (empty) PlusMinusOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         PlusMinusOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -411,7 +428,10 @@ impl ops::Neg for PlusMinusOperator {
     ///
     /// * `Self` - The PlusMinusOperator * -1.
     fn neg(self) -> Self {
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
@@ -499,7 +519,10 @@ where
     /// * `Self` - The PlusMinusOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
@@ -513,7 +536,11 @@ where
 ///
 impl IntoIterator for PlusMinusOperator {
     type Item = (PlusMinusProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<PlusMinusProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<PlusMinusProduct, CalculatorComplex>;
+
     /// Returns the PlusMinusOperator in Iterator form.
     ///
     /// # Returns

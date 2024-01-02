@@ -422,10 +422,14 @@ where
 ///
 impl IntoIterator for SpinLindbladNoiseSystem {
     type Item = ((DecoherenceProduct, DecoherenceProduct), CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<
         (DecoherenceProduct, DecoherenceProduct),
         CalculatorComplex,
     >;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter =
+        indexmap::map::IntoIter<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
     /// Returns the SpinLindbladNoiseSystem in Iterator form.
     ///
     /// # Returns

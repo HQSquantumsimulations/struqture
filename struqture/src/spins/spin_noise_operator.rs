@@ -22,11 +22,18 @@ use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// SpinLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -58,7 +65,10 @@ use std::ops;
 #[serde(from = "SpinLindbladNoiseOperatorSerialize")]
 #[serde(into = "SpinLindbladNoiseOperatorSerialize")]
 pub struct SpinLindbladNoiseOperator {
-    /// The internal map representing the noise terms
+    // The internal map representing the noise terms
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>,
 }
 
@@ -302,7 +312,10 @@ impl SpinLindbladNoiseOperator {
     /// * `Self` - The new (empty) SpinLindbladNoiseOperator.
     pub fn new() -> Self {
         SpinLindbladNoiseOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -317,7 +330,10 @@ impl SpinLindbladNoiseOperator {
     /// * `Self` - The new (empty) SpinLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         SpinLindbladNoiseOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -424,7 +440,10 @@ impl ops::Neg for SpinLindbladNoiseOperator {
     ///
     /// * `Self` - The SpinLindbladNoiseOperator * -1.
     fn neg(self) -> Self {
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
@@ -512,7 +531,10 @@ where
     /// * `Self` - The SpinLindbladNoiseOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
@@ -526,10 +548,15 @@ where
 ///
 impl IntoIterator for SpinLindbladNoiseOperator {
     type Item = ((DecoherenceProduct, DecoherenceProduct), CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<
         (DecoherenceProduct, DecoherenceProduct),
         CalculatorComplex,
     >;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter =
+        indexmap::map::IntoIter<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
+
     /// Returns the SpinLindbladNoiseOperator in Iterator form.
     ///
     /// # Returns

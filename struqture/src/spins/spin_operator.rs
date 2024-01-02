@@ -18,10 +18,16 @@ use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
     StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
 };
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
@@ -55,7 +61,10 @@ use std::ops;
 #[serde(from = "SpinOperatorSerialize")]
 #[serde(into = "SpinOperatorSerialize")]
 pub struct SpinOperator {
-    /// The internal HashMap of PauliProducts and coefficients (CalculatorComplex)
+    // The internal HashMap of PauliProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<PauliProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<PauliProduct, CalculatorComplex>,
 }
 
@@ -270,7 +279,10 @@ impl SpinOperator {
     /// * `Self` - The new (empty) SpinOperator.
     pub fn new() -> Self {
         SpinOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -285,7 +297,10 @@ impl SpinOperator {
     /// * `Self` - The new (empty) SpinOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         SpinOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -351,7 +366,10 @@ impl ops::Neg for SpinOperator {
     ///
     /// * `Self` - The SpinOperator * -1.
     fn neg(self) -> Self {
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
@@ -439,7 +457,7 @@ where
     /// * `Self` - The SpinOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        let mut internal = HashMap::with_capacity(self.len());
+        let mut internal = self.internal_map.clone();
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
@@ -546,7 +564,10 @@ impl ops::Mul<SpinOperator> for PauliProduct {
 ///
 impl IntoIterator for SpinOperator {
     type Item = (PauliProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<PauliProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<PauliProduct, CalculatorComplex>;
     /// Returns the SpinOperator in Iterator form.
     ///
     /// # Returns
