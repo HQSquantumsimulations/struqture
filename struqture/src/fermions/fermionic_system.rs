@@ -17,10 +17,14 @@ use crate::spins::SpinSystem;
 use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// FermionSystems are FermionOperators with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore
 /// when the user adds a set of FermionProducts with specific CalculatorComplex coefficients, their indices must not exceed the number of modes in the FermionSystem.
@@ -408,7 +412,10 @@ impl ops::Mul<FermionSystem> for FermionSystem {
 ///
 impl IntoIterator for FermionSystem {
     type Item = (FermionProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<FermionProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<FermionProduct, CalculatorComplex>;
     /// Returns the FermionSystem in Iterator form.
     ///
     /// # Returns

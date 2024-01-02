@@ -32,7 +32,6 @@ use std::collections::hash_map::{Entry, Iter, Keys, Values};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 
-
 /// BosonOperators are combinations of BosonProducts with specific CalculatorComplex coefficients.
 ///
 /// # Example

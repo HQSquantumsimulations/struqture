@@ -20,11 +20,18 @@ use crate::{
 use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// FermionLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -57,6 +64,9 @@ use std::ops;
 #[serde(into = "FermionLindbladNoiseOperatorSerialize")]
 pub struct FermionLindbladNoiseOperator {
     /// The internal map representing the noise terms
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<(FermionProduct, FermionProduct), CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<(FermionProduct, FermionProduct), CalculatorComplex>,
 }
 
@@ -250,7 +260,10 @@ impl FermionLindbladNoiseOperator {
     /// * `Self` - The new (empty) FermionLindbladNoiseOperator.
     pub fn new() -> Self {
         FermionLindbladNoiseOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -265,7 +278,10 @@ impl FermionLindbladNoiseOperator {
     /// * `Self` - The new (empty) FermionLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         FermionLindbladNoiseOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -353,7 +369,10 @@ impl ops::Neg for FermionLindbladNoiseOperator {
     ///
     /// * `Self` - The FermionOperator * -1.
     fn neg(self) -> Self {
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
@@ -441,7 +460,10 @@ where
     /// * `Self` - The FermionLindbladNoiseOperator multiplied by the CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
@@ -455,8 +477,11 @@ where
 ///
 impl IntoIterator for FermionLindbladNoiseOperator {
     type Item = ((FermionProduct, FermionProduct), CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter =
         std::collections::hash_map::IntoIter<(FermionProduct, FermionProduct), CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<(FermionProduct, FermionProduct), CalculatorComplex>;
     /// Returns the FermionLindbladNoiseOperator in Iterator form.
     ///
     /// # Returns

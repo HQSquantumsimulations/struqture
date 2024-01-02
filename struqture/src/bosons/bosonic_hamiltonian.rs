@@ -30,7 +30,6 @@ use std::collections::hash_map::{Entry, Iter, Keys, Values};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 
-
 /// BosonHamiltonians are combinations of HermitianBosonProducts with specific CalculatorComplex coefficients.
 ///
 /// This is a representation of sums of creation and annihilation operators with weightings (and their hermitian conjugates), in order to build a full hamiltonian.

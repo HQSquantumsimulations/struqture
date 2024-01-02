@@ -427,8 +427,7 @@ impl IntoIterator for BosonLindbladNoiseOperator {
     type IntoIter =
         std::collections::hash_map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
     #[cfg(feature = "indexed_map_iterators")]
-    type IntoIter =
-        indexmap::map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
+    type IntoIter = indexmap::map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
     /// Returns the BosonLindbladNoiseOperator in Iterator form.
     ///
     /// # Returns

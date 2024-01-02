@@ -25,7 +25,6 @@ use indexmap::map::{Entry, Iter, Keys, Values};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
 
-
 /// BosonLindbladNoiseSystems are BosonLindbladNoiseOperators with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore
 /// when the user adds a set of (BosonProduct, BosonProduct) with specific CalculatorComplex coefficients, their indices must not exceed the number of modes in the BosonLindbladNoiseSystem.
 ///
@@ -399,8 +398,7 @@ impl IntoIterator for BosonLindbladNoiseSystem {
     type IntoIter =
         std::collections::hash_map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
     #[cfg(feature = "indexed_map_iterators")]
-    type IntoIter =
-        indexmap::map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
+    type IntoIter = indexmap::map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
     /// Returns the BosonLindbladNoiseSystem in Iterator form.
     ///
     /// # Returns
