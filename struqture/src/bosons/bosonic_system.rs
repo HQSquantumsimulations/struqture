@@ -15,10 +15,14 @@ use crate::bosons::BosonProduct;
 use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// BosonSystems are BosonOperators with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore
 /// when the user adds a set of BosonProducts with specific CalculatorComplex coefficients, their indices must not exceed the number of modes in the BosonSystem.
@@ -407,7 +411,10 @@ impl ops::Mul<BosonSystem> for BosonSystem {
 ///
 impl IntoIterator for BosonSystem {
     type Item = (BosonProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<BosonProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<BosonProduct, CalculatorComplex>;
     /// Returns the BosonSystem in Iterator form.
     ///
     /// # Returns

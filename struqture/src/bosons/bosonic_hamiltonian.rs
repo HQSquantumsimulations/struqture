@@ -17,11 +17,19 @@ use crate::{
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
+
 
 /// BosonHamiltonians are combinations of HermitianBosonProducts with specific CalculatorComplex coefficients.
 ///
@@ -53,6 +61,9 @@ use std::ops;
 #[serde(into = "BosonHamiltonianSerialize")]
 pub struct BosonHamiltonian {
     /// The internal HashMap of HermitianBosonProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<HermitianBosonProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<HermitianBosonProduct, CalculatorComplex>,
 }
 
@@ -262,7 +273,10 @@ impl BosonHamiltonian {
     /// * `Self` - The new (empty) BosonHamiltonian.
     pub fn new() -> Self {
         BosonHamiltonian {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -277,7 +291,10 @@ impl BosonHamiltonian {
     /// * `Self` - The new (empty) BosonHamiltonian.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -518,7 +535,10 @@ impl ops::Mul<BosonHamiltonian> for BosonHamiltonian {
 ///
 impl IntoIterator for BosonHamiltonian {
     type Item = (HermitianBosonProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<HermitianBosonProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<HermitianBosonProduct, CalculatorComplex>;
     /// Returns the BosonHamiltonian in Iterator form.
     ///
     /// # Returns

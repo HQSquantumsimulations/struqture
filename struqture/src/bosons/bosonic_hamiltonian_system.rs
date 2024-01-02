@@ -428,7 +428,10 @@ impl ops::Mul<BosonHamiltonianSystem> for BosonHamiltonianSystem {
 ///
 impl IntoIterator for BosonHamiltonianSystem {
     type Item = (HermitianBosonProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<HermitianBosonProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<HermitianBosonProduct, CalculatorComplex>;
     /// Returns the BosonHamiltonianSystem in Iterator form.
     ///
     /// # Returns

@@ -19,11 +19,19 @@ use crate::{
 use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
+
 
 /// BosonOperators are combinations of BosonProducts with specific CalculatorComplex coefficients.
 ///
@@ -54,6 +62,9 @@ use std::ops;
 #[serde(into = "BosonOperatorSerialize")]
 pub struct BosonOperator {
     /// The internal HashMap of BosonProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<BosonProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<BosonProduct, CalculatorComplex>,
 }
 
@@ -223,7 +234,10 @@ impl BosonOperator {
     /// * `Self` - The new (empty) BosonOperator.
     pub fn new() -> Self {
         BosonOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -238,7 +252,10 @@ impl BosonOperator {
     /// * `Self` - The new (empty) BosonOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         BosonOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -438,7 +455,10 @@ impl ops::Mul<BosonOperator> for BosonOperator {
 ///
 impl IntoIterator for BosonOperator {
     type Item = (BosonProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<BosonProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<BosonProduct, CalculatorComplex>;
     /// Returns the BosonOperator in Iterator form.
     ///
     /// # Returns

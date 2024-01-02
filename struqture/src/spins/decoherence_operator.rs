@@ -444,7 +444,10 @@ impl ops::Mul<DecoherenceOperator> for DecoherenceOperator {
 ///
 impl IntoIterator for DecoherenceOperator {
     type Item = (DecoherenceProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<DecoherenceProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<DecoherenceProduct, CalculatorComplex>;
     /// Returns the DecoherenceOperator in Iterator form.
     ///
     /// # Returns
