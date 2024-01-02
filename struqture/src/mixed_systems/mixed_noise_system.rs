@@ -17,13 +17,17 @@ use crate::prelude::*;
 use crate::{OperateOnDensityMatrix, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::iter::{FromIterator, IntoIterator};
 use std::{
     fmt::{self, Write},
     ops,
 };
 use tinyvec::TinyVec;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 #[cfg(feature = "json_schema")]
 #[derive(schemars::JsonSchema)]
@@ -712,7 +716,13 @@ impl IntoIterator for MixedLindbladNoiseSystem {
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,
     );
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<
+        (MixedDecoherenceProduct, MixedDecoherenceProduct),
+        CalculatorComplex,
+    >;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,
     >;

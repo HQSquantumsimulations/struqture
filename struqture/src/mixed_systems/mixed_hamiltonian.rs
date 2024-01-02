@@ -17,11 +17,18 @@ use crate::{
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// MixedHamiltonians are combinations of HermitianMixedProducts with specific CalculatorComplex coefficients.
 ///
@@ -54,6 +61,9 @@ use std::ops;
 #[serde(into = "MixedHamiltonianSerialize")]
 pub struct MixedHamiltonian {
     /// The internal HashMap of HermitianMixedProducts and coefficients (CalculatorFloat)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<HermitianMixedProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<HermitianMixedProduct, CalculatorComplex>,
     /// Number of Spin subsystems
     n_spins: usize,
@@ -300,7 +310,10 @@ impl MixedHamiltonian {
     /// * `Self` - The new (empty) MixedHamiltonian.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
         MixedHamiltonian {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
             n_spins,
             n_bosons,
             n_fermions,
@@ -326,7 +339,10 @@ impl MixedHamiltonian {
         capacity: usize,
     ) -> Self {
         Self {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
             n_spins,
             n_bosons,
             n_fermions,
@@ -517,7 +533,10 @@ impl ops::Mul<MixedHamiltonian> for MixedHamiltonian {
 ///
 impl IntoIterator for MixedHamiltonian {
     type Item = (HermitianMixedProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<HermitianMixedProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<HermitianMixedProduct, CalculatorComplex>;
     /// Returns the MixedHamiltonian in Iterator form.
     ///
     /// # Returns

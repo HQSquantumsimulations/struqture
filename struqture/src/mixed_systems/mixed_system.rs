@@ -17,11 +17,15 @@ use crate::prelude::*;
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 use tinyvec::TinyVec;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// MixedSystems are representations of physical systems of spins, with a MixedOperator to represent the hermitian hamiltonian of the system, and an optional number of spins.
 /// MixedSystems are MixedOperators with a certain number of spins, a certain number of bosonic modes and a certain number of fermionic modes. When constructing it, the `new`
@@ -666,7 +670,10 @@ impl ops::Mul<MixedSystem> for MixedSystem {
 ///
 impl IntoIterator for MixedSystem {
     type Item = (MixedProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<MixedProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<MixedProduct, CalculatorComplex>;
     /// Returns the MixedSystem in Iterator form.
     ///
     /// # Returns

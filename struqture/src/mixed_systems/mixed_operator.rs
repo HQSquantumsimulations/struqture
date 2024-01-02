@@ -17,11 +17,18 @@ use crate::{
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// MixedOperators are combinations of MixedProducts with specific CalculatorComplex coefficients.
 ///
@@ -52,7 +59,10 @@ use std::ops;
 #[serde(into = "MixedOperatorSerialize")]
 pub struct MixedOperator {
     /// The internal HashMap of MixedProducts and coefficients (CalculatorComplex)
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<MixedProduct, CalculatorComplex>,
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<MixedProduct, CalculatorComplex>,
     /// Number of Spin subsystems
     n_spins: usize,
     /// Number of Boson subsystems
@@ -292,7 +302,10 @@ impl MixedOperator {
     /// * `Self` - The new (empty) MixedOperator.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
         MixedOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
             n_spins,
             n_bosons,
             n_fermions,
@@ -318,7 +331,10 @@ impl MixedOperator {
         capacity: usize,
     ) -> Self {
         Self {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
             n_spins,
             n_bosons,
             n_fermions,
@@ -506,7 +522,10 @@ impl ops::Mul<MixedOperator> for MixedOperator {
 ///
 impl IntoIterator for MixedOperator {
     type Item = (MixedProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<MixedProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<MixedProduct, CalculatorComplex>;
     /// Returns the MixedOperator in Iterator form.
     ///
     /// # Returns
