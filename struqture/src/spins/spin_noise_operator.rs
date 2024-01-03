@@ -32,7 +32,6 @@ use indexmap::map::{Entry, Iter, Keys, Values};
 use indexmap::IndexMap;
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 
 /// SpinLindbladNoiseOperators represent noise interactions in the Lindblad equation.

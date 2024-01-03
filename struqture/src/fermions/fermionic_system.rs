@@ -22,7 +22,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
 #[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
+use indexmap::map::{Iter, Keys, Values};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
 
