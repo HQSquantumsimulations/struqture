@@ -14,10 +14,14 @@ use super::{BosonHamiltonian, BosonSystem, HermitianBosonProduct, ModeIndex, Ope
 use crate::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// BosonHamiltonianSystems are BosonHamiltonians with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore
 /// when the user adds a set of HermitianBosonProducts with specific CalculatorComplex coefficients, their indices must not exceed the number of modes in the BosonHamiltonianSystem.
