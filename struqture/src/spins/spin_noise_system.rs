@@ -18,12 +18,16 @@ use crate::{CooSparseMatrix, OperateOnDensityMatrix, StruqtureError};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::iter::{FromIterator, IntoIterator};
 use std::{
     fmt::{self, Write},
     ops,
 };
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// SpinLindbladNoiseSystems are representations of systems of spins, with a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
@@ -422,10 +426,14 @@ where
 ///
 impl IntoIterator for SpinLindbladNoiseSystem {
     type Item = ((DecoherenceProduct, DecoherenceProduct), CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<
         (DecoherenceProduct, DecoherenceProduct),
         CalculatorComplex,
     >;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter =
+        indexmap::map::IntoIter<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
     /// Returns the SpinLindbladNoiseSystem in Iterator form.
     ///
     /// # Returns

@@ -20,11 +20,15 @@ use crate::prelude::*;
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 use tinyvec::TinyVec;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// MixedHamiltonianSystems are representations of physical systems of spins, with a MixedHamiltonian to represent the hermitian hamiltonian of the system, and an optional number of spins.
 ///
@@ -664,7 +668,10 @@ impl ops::Mul<MixedHamiltonianSystem> for MixedHamiltonianSystem {
 ///
 impl IntoIterator for MixedHamiltonianSystem {
     type Item = (HermitianMixedProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<HermitianMixedProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<HermitianMixedProduct, CalculatorComplex>;
     /// Returns the MixedHamiltonianSystem in Iterator form.
     ///
     /// # Returns

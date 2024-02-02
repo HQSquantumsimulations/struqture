@@ -18,10 +18,14 @@ use crate::spins::SpinHamiltonianSystem;
 use crate::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 /// FermionHamiltonianSystems are combinations of FermionProducts with specific CalculatorFloat coefficients.
 ///
@@ -429,8 +433,11 @@ impl ops::Mul<FermionHamiltonianSystem> for FermionHamiltonianSystem {
 ///
 impl IntoIterator for FermionHamiltonianSystem {
     type Item = (HermitianFermionProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter =
         std::collections::hash_map::IntoIter<HermitianFermionProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<HermitianFermionProduct, CalculatorComplex>;
     /// Returns the FermionHamiltonianSystem in Iterator form.
     ///
     /// # Returns
