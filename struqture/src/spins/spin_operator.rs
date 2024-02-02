@@ -152,6 +152,13 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinOperator {
         self.internal_map.values()
     }
 
+    #[cfg(feature = "indexed_map_iterators")]
+    // From trait
+    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
+        self.internal_map.shift_remove(key)
+    }
+
+    #[cfg(not(feature = "indexed_map_iterators"))]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.remove(key)
@@ -185,6 +192,9 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
+                #[cfg(feature = "indexed_map_iterators")]
+                Entry::Occupied(val) => Ok(Some(val.shift_remove())),
+                #[cfg(not(feature = "indexed_map_iterators"))]
                 Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
