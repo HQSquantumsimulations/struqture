@@ -767,10 +767,9 @@ fn test_from_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
         let pp = pp_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
             .unwrap();
@@ -815,10 +814,9 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
         let sys = pp_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
             .unwrap();
@@ -863,9 +861,7 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp
-            .call_method1("to_spin_noise_system", (number_spins,))
-            .unwrap();
+        let result = pmp.call_method0("to_spin_noise_system").unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
@@ -887,8 +883,7 @@ fn test_jordan_wigner() {
         let slno = pmno.call_method0("to_spin_noise_system").unwrap();
 
         let number_modes = usize::extract(flno.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract(slno.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_spins = usize::extract(slno.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
