@@ -83,13 +83,13 @@ pub fn productwrapper(
                 /// There is only a lower bound of the dimension or number of modes based on the
                 /// maximal mode the product of operators in the index acts on.
                 /// For example an index consisting of one creator acting on mode 0 would have
-                /// a current_number_modes of one. An index consisting of one annhihilator acting on 3
-                /// would have current_number_modes of four.
+                /// a number_modes of one. An index consisting of one annhihilator acting on 3
+                /// would have number_modes of four.
                 ///
                 /// Returns:
                 ///     int: The maximal number of modes self acts on.
-                pub fn current_number_modes(&self) -> usize {
-                    self.internal.current_number_modes()
+                pub fn number_modes(&self) -> usize {
+                    self.internal.number_modes()
                 }
 
                 /// Return list of creator indices.
@@ -180,8 +180,8 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     int: Maximum index.
-                pub fn current_number_spins(&self) -> usize {
-                    self.internal.current_number_spins()
+                pub fn number_spins(&self) -> usize {
+                    self.internal.number_spins()
                 }
 
                 /// Return number of entries in object.
@@ -302,24 +302,24 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     list[int]: Number of spins in each spin sub-system.
-                pub fn current_number_spins(&self) -> Vec<usize> {
-                    self.internal.current_number_spins()
+                pub fn number_spins(&self) -> Vec<usize> {
+                    self.internal.number_spins()
                 }
 
                 /// Return the current number of bosonic modes each subsystem acts upon.
                 ///
                 /// Returns:
                 ///     list[int]: Number of bosonic modes in each spin sub-system.
-                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.current_number_bosonic_modes()
+                pub fn number_bosonic_modes(&self) -> Vec<usize> {
+                    self.internal.number_bosonic_modes()
                 }
 
                 /// Return the current number of fermionic modes each subsystem acts upon.
                 ///
                 /// Returns:
                 ///     list[int]: Number of fermionic modes in each spin sub-system.
-                pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.current_number_fermionic_modes()
+                pub fn number_fermionic_modes(&self) -> Vec<usize> {
+                    self.internal.number_fermionic_modes()
                 }
         }
     } else {
