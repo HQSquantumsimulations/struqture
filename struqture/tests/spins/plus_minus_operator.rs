@@ -48,17 +48,17 @@ fn empty_clone_options() {
     );
 }
 
-// // Test the current_number_spins function of the PlusMinusOperator
+// // Test the number_spins function of the PlusMinusOperator
 // #[test]
-// fn internal_map_current_number_spins() {
+// fn internal_map_number_spins() {
 //     let pp_0: PlusMinusProduct = PlusMinusProduct::new().plus(0);
 //     let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
 //     let mut so = PlusMinusOperator::new();
-//     assert_eq!(so.current_number_spins(), 0_usize);
+//     assert_eq!(so.number_spins(), 0_usize);
 //     so.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
-//     assert_eq!(so.current_number_spins(), 1_usize);
+//     assert_eq!(so.number_spins(), 1_usize);
 //     so.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
-//     assert_eq!(so.current_number_spins(), 3_usize);
+//     assert_eq!(so.number_spins(), 3_usize);
 // }
 
 // Test the len function of the PlusMinusOperator

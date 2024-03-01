@@ -225,7 +225,7 @@ impl fmt::Display for BosonLindbladOpenSystem {
     ///
     /// * `std::fmt::Result` - The formatted BosonLindbladOpenSystem.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = "BosonLindbladOpenSystem{{\n".to_string();
+        let mut output = "BosonLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
             writeln!(output, "{}: {},", key, val)?;

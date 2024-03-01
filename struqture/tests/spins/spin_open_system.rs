@@ -22,7 +22,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SpinHamiltonianSystem, SpinLindbladNoiseSystem,
+    DecoherenceProduct, PauliProduct, SpinHamiltonian, SpinLindbladNoiseOperator,
     SpinLindbladOpenSystem,
 };
 use struqture::SpinIndex;
@@ -31,30 +31,28 @@ use test_case::test_case;
 // Test the new function of the SpinLindbladOpenSystem
 #[test]
 fn new_system() {
-    let system = SpinLindbladOpenSystem::new(Some(1));
-    assert_eq!(system.system(), &SpinHamiltonianSystem::new(Some(1)));
-    assert_eq!(system.noise(), &SpinLindbladNoiseSystem::new(Some(1)));
-    assert_eq!(system.number_spins(), 1_usize)
+    let system = SpinLindbladOpenSystem::new();
+    assert_eq!(system.system(), &SpinHamiltonian::new());
+    assert_eq!(system.noise(), &SpinLindbladNoiseOperator::new());
+    assert_eq!(system.number_spins(), 0_usize)
 }
 
 // Test the new function of the SpinLindbladOpenSystem with no spins specified
 #[test]
 fn new_system_none() {
-    let system = SpinLindbladOpenSystem::new(None);
+    let system = SpinLindbladOpenSystem::new();
     assert!(system.system().is_empty());
-    assert_eq!(system.system(), &SpinHamiltonianSystem::default());
+    assert_eq!(system.system(), &SpinHamiltonian::default());
     assert!(system.noise().is_empty());
-    assert_eq!(system.noise(), &SpinLindbladNoiseSystem::default());
+    assert_eq!(system.noise(), &SpinLindbladNoiseOperator::default());
     assert_eq!(system.number_spins(), 0_usize);
 }
 
 // Test the group function of the SpinLindbladOpenSystem
 #[test]
 fn group() {
-    let slos = SpinLindbladOpenSystem::group(
-        SpinHamiltonianSystem::new(None),
-        SpinLindbladNoiseSystem::new(None),
-    );
+    let slos =
+        SpinLindbladOpenSystem::group(SpinHamiltonian::new(), SpinLindbladNoiseOperator::new());
     assert!(slos.is_ok());
     let slos = slos.unwrap();
     assert!(slos.system().is_empty() && slos.noise().is_empty());
@@ -62,52 +60,12 @@ fn group() {
 }
 
 #[test]
-fn group_with_none() {
-    let slos = SpinLindbladOpenSystem::group(
-        SpinHamiltonianSystem::new(None),
-        SpinLindbladNoiseSystem::new(Some(2)),
-    );
-
-    assert!(slos.is_ok());
-    let os = slos.unwrap();
-    let (system, noise) = os.ungroup();
-
-    assert_eq!(noise.number_spins(), 2);
-    assert_eq!(system.number_spins(), 2);
-
-    let slos = SpinLindbladOpenSystem::group(
-        SpinHamiltonianSystem::new(Some(2)),
-        SpinLindbladNoiseSystem::new(None),
-    );
-
-    assert!(slos.is_ok());
-    let os = slos.unwrap();
-    let (system, noise) = os.ungroup();
-
-    assert_eq!(noise.number_spins(), 2);
-    assert_eq!(system.number_spins(), 2);
-}
-
-// Test the group function of the SpinLindbladOpenSystem
-#[test]
-fn group_failing() {
-    let slos = SpinLindbladOpenSystem::group(
-        SpinHamiltonianSystem::new(Some(3)),
-        SpinLindbladNoiseSystem::new(Some(2)),
-    );
-    assert!(slos.is_err());
-}
-
-#[test]
 fn empty_clone_options() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slos = SpinLindbladOpenSystem::new(Some(3));
+    let mut slos = SpinLindbladOpenSystem::new();
     slos.noise_mut()
         .set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
         .unwrap();
-
-    let full: Option<usize> = Some(3);
-    assert_eq!(slos.empty_clone(), SpinLindbladOpenSystem::new(full));
 }
 
 // Test the try_set_noise and get functions of the SpinLindbladOpenSystem
@@ -232,9 +190,9 @@ fn noise_system() {
         .set((dp_2.clone(), dp_2.clone()), CalculatorComplex::from(0.5))
         .unwrap();
 
-    let mut system = SpinHamiltonianSystem::new(None);
+    let mut system = SpinHamiltonian::new();
     system.set(pp_0, CalculatorFloat::from(0.4)).unwrap();
-    let mut noise = SpinLindbladNoiseSystem::new(None);
+    let mut noise = SpinLindbladNoiseOperator::new();
     noise
         .set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
         .unwrap();
@@ -248,7 +206,7 @@ fn noise_system() {
 fn negative_slos() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
     let pp_0: PauliProduct = PauliProduct::new().x(0);
-    let mut slos_0 = SpinLindbladOpenSystem::new(Some(1));
+    let mut slos_0 = SpinLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorFloat::from(0.4))
@@ -257,7 +215,7 @@ fn negative_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_minus = SpinLindbladOpenSystem::new(Some(1));
+    let mut slos_0_minus = SpinLindbladOpenSystem::new();
     slos_0_minus
         .system_mut()
         .set(pp_0, CalculatorFloat::from(-0.4))
@@ -277,7 +235,7 @@ fn add_slos_slos() {
     let pp_0: PauliProduct = PauliProduct::new().x(0);
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().x(1);
     let pp_1: PauliProduct = PauliProduct::new().z(1);
-    let mut slos_0 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = SpinLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorFloat::from(0.4))
@@ -286,7 +244,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_1 = SpinLindbladOpenSystem::new();
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorFloat::from(0.4))
@@ -295,7 +253,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = SpinLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorFloat::from(0.4))
@@ -323,7 +281,7 @@ fn sub_slos_slos() {
     let pp_0: PauliProduct = PauliProduct::new().x(0);
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().x(1);
     let pp_1: PauliProduct = PauliProduct::new().z(1);
-    let mut slos_0 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = SpinLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorFloat::from(0.4))
@@ -332,7 +290,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_1 = SpinLindbladOpenSystem::new();
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorFloat::from(0.4))
@@ -341,7 +299,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = SpinLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorFloat::from(0.4))
@@ -367,7 +325,7 @@ fn sub_slos_slos() {
 fn mul_so_cf() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
     let pp_0: PauliProduct = PauliProduct::new().x(0);
-    let mut slos_0 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = SpinLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorFloat::from(1.0))
@@ -376,7 +334,7 @@ fn mul_so_cf() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = SpinLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorFloat::from(3.0))
@@ -394,7 +352,7 @@ fn mul_so_cf() {
 fn debug() {
     let pp: PauliProduct = PauliProduct::new().x(1);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slos = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos = SpinLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorFloat::from(0.4))
         .unwrap();
@@ -403,7 +361,7 @@ fn debug() {
         .unwrap();
     assert_eq!(
         format!("{:?}", slos),
-        "SpinLindbladOpenSystem { system: SpinHamiltonianSystem { number_spins: Some(2), hamiltonian: SpinHamiltonian { internal_map: {PauliProduct { items: [(1, X)] }: Float(0.4)} } }, noise: SpinLindbladNoiseSystem { number_spins: Some(2), operator: SpinLindbladNoiseOperator { internal_map: {(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } } }"
+        "SpinLindbladOpenSystem { system: SpinHamiltonian { internal_map: {PauliProduct { items: [(1, X)] }: Float(0.4)} }, noise: SpinLindbladNoiseOperator { internal_map: {(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } }"
     );
 }
 
@@ -412,7 +370,7 @@ fn debug() {
 fn display() {
     let pp: PauliProduct = PauliProduct::new().x(1);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slos = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos = SpinLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorFloat::from(0.4))
         .unwrap();
@@ -422,7 +380,7 @@ fn display() {
 
     assert_eq!(
         format!("{}", slos),
-        "SpinLindbladOpenSystem(2){\nSystem: {\n1X: 4e-1,\n}\nNoise: {\n(0Z, 0Z): (5e-1 + i * 0e0),\n}\n}"
+        "SpinLindbladOpenSystem{\nSystem: {\n1X: 4e-1,\n}\nNoise: {\n(0Z, 0Z): (5e-1 + i * 0e0),\n}\n}"
     );
 }
 
@@ -501,7 +459,7 @@ fn serde_readable() {
 
     let pp = PauliProduct::new().x(0);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slos = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos = SpinLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorFloat::from(1.0))
         .unwrap();
@@ -517,14 +475,6 @@ fn serde_readable() {
                 len: 2,
             },
             Token::Str("system"),
-            Token::Struct {
-                name: "SpinHamiltonianSystem",
-                len: 2,
-            },
-            Token::Str("number_spins"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("hamiltonian"),
             Token::Struct {
                 name: "SpinHamiltonianSerialize",
                 len: 2,
@@ -547,16 +497,7 @@ fn serde_readable() {
             Token::U32(minor_version),
             Token::StructEnd,
             Token::StructEnd,
-            Token::StructEnd,
             Token::Str("noise"),
-            Token::Struct {
-                name: "SpinLindbladNoiseSystem",
-                len: 2,
-            },
-            Token::Str("number_spins"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("operator"),
             Token::Struct {
                 name: "SpinLindbladNoiseOperatorSerialize",
                 len: 2,
@@ -579,7 +520,6 @@ fn serde_readable() {
             Token::U32(major_version),
             Token::Str("minor_version"),
             Token::U32(minor_version),
-            Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -617,7 +557,7 @@ fn serde_compact() {
 
     let pp = PauliProduct::new().x(0);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slos = SpinLindbladOpenSystem::new(Some(2));
+    let mut slos = SpinLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorFloat::from(1.0))
         .unwrap();
@@ -633,14 +573,6 @@ fn serde_compact() {
                 len: 2,
             },
             Token::Str("system"),
-            Token::Struct {
-                name: "SpinHamiltonianSystem",
-                len: 2,
-            },
-            Token::Str("number_spins"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("hamiltonian"),
             Token::Struct {
                 name: "SpinHamiltonianSerialize",
                 len: 2,
@@ -675,16 +607,7 @@ fn serde_compact() {
             Token::U32(minor_version),
             Token::StructEnd,
             Token::StructEnd,
-            Token::StructEnd,
             Token::Str("noise"),
-            Token::Struct {
-                name: "SpinLindbladNoiseSystem",
-                len: 2,
-            },
-            Token::Str("number_spins"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("operator"),
             Token::Struct {
                 name: "SpinLindbladNoiseOperatorSerialize",
                 len: 2,
@@ -734,7 +657,6 @@ fn serde_compact() {
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
-            Token::StructEnd,
         ],
     );
 }
@@ -750,7 +672,7 @@ fn test_superoperator_noisy(
     left_operators: &[&str],
     right_operators: &[&str],
 ) {
-    let mut system = SpinLindbladOpenSystem::new(Some(left_operators.len()));
+    let mut system = SpinLindbladOpenSystem::new();
     let left: DecoherenceProduct = DecoherenceProduct::from_str(left_representation).unwrap();
     let right: DecoherenceProduct = DecoherenceProduct::from_str(right_representation).unwrap();
 
@@ -842,7 +764,7 @@ fn test_superoperator_noisy(
 #[test_case("0X1Y", &["Y", "X"]; "0X1Y")]
 #[test_case("0X2Y", &["Y", "I","X"]; "0X2Y")]
 fn test_superoperator_hamiltonian(pauli_representation: &str, pauli_operators: &[&str]) {
-    let mut system = SpinLindbladOpenSystem::new(None);
+    let mut system = SpinLindbladOpenSystem::new();
     let pp: PauliProduct = PauliProduct::from_str(pauli_representation).unwrap();
 
     system.system_mut().set(pp, 1.0.into()).unwrap();
@@ -888,7 +810,7 @@ fn test_superoperator_hamiltonian(pauli_representation: &str, pauli_operators: &
 
 #[test]
 fn test_superoperator_hamiltonian_and_noise() {
-    let mut system = SpinLindbladOpenSystem::new(None);
+    let mut system = SpinLindbladOpenSystem::new();
     let pp: PauliProduct = PauliProduct::from_str("0Z").unwrap();
 
     system.system_mut().set(pp, 1.0.into()).unwrap();
@@ -958,7 +880,7 @@ fn test_superoperator_hamiltonian_and_noise() {
 #[test_case("0X1Y", &["Y", "X"]; "0X1Y")]
 #[test_case("0X2Y", &["Y", "I","X"]; "0X2Y")]
 fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
-    let mut system = SpinLindbladOpenSystem::new(None);
+    let mut system = SpinLindbladOpenSystem::new();
     let pp: PauliProduct = PauliProduct::from_str(pauli_representation).unwrap();
 
     system.system_mut().set(pp, 1.0.into()).unwrap();
@@ -998,7 +920,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 
 #[test]
 fn test_truncate() {
-    let mut system = SpinLindbladOpenSystem::new(None);
+    let mut system = SpinLindbladOpenSystem::new();
     system
         .system_mut()
         .set(PauliProduct::from_str("0X").unwrap(), 1.0.into())
@@ -1045,7 +967,7 @@ fn test_truncate() {
         0.01.into(),
     );
 
-    let mut test_system1 = SpinLindbladOpenSystem::new(None);
+    let mut test_system1 = SpinLindbladOpenSystem::new();
     test_system1
         .system_mut()
         .set(PauliProduct::from_str("0X").unwrap(), 1.0.into())
@@ -1080,7 +1002,7 @@ fn test_truncate() {
         0.1.into(),
     );
 
-    let mut test_system2 = SpinLindbladOpenSystem::new(None);
+    let mut test_system2 = SpinLindbladOpenSystem::new();
     test_system2
         .system_mut()
         .set(PauliProduct::from_str("0X").unwrap(), 1.0.into())
@@ -1111,10 +1033,9 @@ fn test_truncate() {
 }
 
 #[cfg(feature = "json_schema")]
-#[test_case(None)]
-#[test_case(Some(3))]
-fn test_spin_noise_system_schema(number_spins: Option<usize>) {
-    let mut op = SpinLindbladOpenSystem::new(number_spins);
+#[test]
+fn test_spin_noise_system_schema() {
+    let mut op = SpinLindbladOpenSystem::new();
     let pp: PauliProduct = PauliProduct::new().x(1);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
     op.system_mut().set(pp, CalculatorFloat::from(0.4)).unwrap();

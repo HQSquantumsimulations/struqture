@@ -49,11 +49,8 @@ fn new(
     let mo = MixedPlusMinusOperator::new(n_pauli, n_bosons, n_fermions);
     assert!(mo.is_empty());
     assert_eq!(number_spins, mo.number_spins());
-    assert_eq!(number_spins, mo.current_number_spins());
     assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
-    assert_eq!(number_bosonic_modes, mo.current_number_bosonic_modes());
     assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
-    assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
 #[test]
@@ -73,34 +70,6 @@ fn empty_clone_options() {
         mo.empty_clone(full),
         MixedPlusMinusOperator::with_capacity(1, 1, 1, 2)
     );
-}
-// Test the current_number_spins function of the MixedPlusMinusOperator
-#[test]
-fn internal_map_current_number_spins_and_modes() {
-    let mp_0: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
-        [PlusMinusProduct::new().plus(0)],
-        [BosonProduct::new([0], [1]).unwrap()],
-        [FermionProduct::new([0], [2]).unwrap()],
-    );
-    let mp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
-        [PlusMinusProduct::new().z(2)],
-        [BosonProduct::new([0], [3]).unwrap()],
-        [FermionProduct::new([0], [3]).unwrap()],
-    );
-    let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
-    assert_eq!(mo.current_number_spins(), vec![0_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
-
-    mo.set(mp_0, CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(mo.current_number_spins(), vec![1_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![2_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![3_usize]);
-
-    mo.set(mp_2, CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(mo.current_number_spins(), vec![3_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![4_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![4_usize]);
 }
 
 // Test the len function of the SpinOperator
@@ -191,9 +160,9 @@ fn set_fail() {
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(0, 1, 1);
-    assert_eq!(mo.current_number_spins(), Vec::<usize>::new());
-    assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
+    assert_eq!(mo.number_spins(), Vec::<usize>::new());
+    assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
+    assert_eq!(mo.number_fermionic_modes(), vec![0_usize]);
 
     let err = mo.set(mp_0, CalculatorComplex::from(0.5));
     assert_eq!(
@@ -209,9 +178,9 @@ fn set_fail() {
     );
 
     let mut mo = MixedPlusMinusOperator::new(1, 0, 1);
-    assert_eq!(mo.current_number_spins(), vec![0_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), Vec::<usize>::new());
-    assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
+    assert_eq!(mo.number_spins(), vec![0_usize]);
+    assert_eq!(mo.number_bosonic_modes(), Vec::<usize>::new());
+    assert_eq!(mo.number_fermionic_modes(), vec![0_usize]);
 
     let err = mo.set(mp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
@@ -227,9 +196,9 @@ fn set_fail() {
     );
 
     let mut mo = MixedPlusMinusOperator::new(1, 1, 0);
-    assert_eq!(mo.current_number_spins(), vec![0_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), Vec::<usize>::new());
+    assert_eq!(mo.number_spins(), vec![0_usize]);
+    assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
+    assert_eq!(mo.number_fermionic_modes(), Vec::<usize>::new());
 
     let err = mo.set(mp_2, CalculatorComplex::from(0.5));
     assert_eq!(
