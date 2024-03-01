@@ -17,10 +17,14 @@ use crate::spins::{OperateOnSpins, PauliProduct, SpinIndex, SpinOperator};
 use crate::{
     CooSparseMatrix, OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex,
 };
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
+
 use std::iter::{FromIterator, IntoIterator};
 use std::{
     fmt::{self, Write},
@@ -452,7 +456,10 @@ impl ops::Mul<SpinSystem> for SpinSystem {
 ///
 impl IntoIterator for SpinSystem {
     type Item = (PauliProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<PauliProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<PauliProduct, CalculatorComplex>;
     /// Returns the SpinSystem in Iterator form.
     ///
     /// # Returns

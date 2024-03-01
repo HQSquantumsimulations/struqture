@@ -20,11 +20,18 @@ use crate::{
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// DecoherenceOperators are combinations of DecoherenceProducts with specific CalculatorComplex coefficients.
 ///
@@ -56,6 +63,9 @@ use std::ops;
 
 pub struct DecoherenceOperator {
     /// The internal HashMap of DecoherenceProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<DecoherenceProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<DecoherenceProduct, CalculatorComplex>,
 }
 
@@ -139,6 +149,13 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
         self.internal_map.values()
     }
 
+    #[cfg(feature = "indexed_map_iterators")]
+    // From trait
+    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
+        self.internal_map.shift_remove(key)
+    }
+
+    #[cfg(not(feature = "indexed_map_iterators"))]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.remove(key)
@@ -173,6 +190,9 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
+                #[cfg(feature = "indexed_map_iterators")]
+                Entry::Occupied(val) => Ok(Some(val.shift_remove())),
+                #[cfg(not(feature = "indexed_map_iterators"))]
                 Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
@@ -244,7 +264,10 @@ impl DecoherenceOperator {
     /// * `Self` - The new (empty) DecoherenceOperator.
     pub fn new() -> Self {
         DecoherenceOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -259,7 +282,10 @@ impl DecoherenceOperator {
     /// * `Self` - The new (empty) DecoherenceOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         DecoherenceOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -299,7 +325,10 @@ impl ops::Neg for DecoherenceOperator {
     ///
     /// * `Self` - The DecoherenceOperator * -1.
     fn neg(self) -> Self {
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
@@ -379,7 +408,10 @@ where
     /// * `Self` - The DecoherenceOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
+        #[cfg(not(feature = "indexed_map_iterators"))]
         let mut internal = HashMap::with_capacity(self.len());
+        #[cfg(feature = "indexed_map_iterators")]
+        let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
@@ -422,7 +454,10 @@ impl ops::Mul<DecoherenceOperator> for DecoherenceOperator {
 ///
 impl IntoIterator for DecoherenceOperator {
     type Item = (DecoherenceProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<DecoherenceProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<DecoherenceProduct, CalculatorComplex>;
     /// Returns the DecoherenceOperator in Iterator form.
     ///
     /// # Returns

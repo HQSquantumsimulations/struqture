@@ -2,6 +2,11 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.6.0
+
+* Add optional feature `indexed_map_iterators` switching internal HashMaps to `indexmap` implementation. Using this feature will change the type of iterators returned by `keys`, `values` and `iter` methods.
+* Switching Python interface to using `indexed_map_iterators` by default. This emulates the usual Python behavior of returning the elements of dictionary-like objects in the order of insertion.
+
 ## 1.5.2
 
 * Updated to pyo3 0.20
@@ -33,7 +38,6 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## 1.3.0
 
 * Added Jordan-Wigner transform to both struqture and struqture-py.
-
 
 ## 1.2.0
 

@@ -21,11 +21,18 @@ use crate::{
 // use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// FermionOperators are combinations of FermionProducts with specific CalculatorComplex coefficients.
 ///
@@ -56,6 +63,9 @@ use std::ops;
 #[serde(into = "FermionOperatorSerialize")]
 pub struct FermionOperator {
     /// The internal HashMap of FermionProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<FermionProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<FermionProduct, CalculatorComplex>,
 }
 impl crate::MinSupportedVersion for FermionOperator {}
@@ -137,6 +147,13 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionOperator {
         self.internal_map.values()
     }
 
+    #[cfg(feature = "indexed_map_iterators")]
+    // From trait
+    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
+        self.internal_map.shift_remove(key)
+    }
+
+    #[cfg(not(feature = "indexed_map_iterators"))]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.remove(key)
@@ -170,6 +187,9 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
+                #[cfg(feature = "indexed_map_iterators")]
+                Entry::Occupied(val) => Ok(Some(val.shift_remove())),
+                #[cfg(not(feature = "indexed_map_iterators"))]
                 Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
@@ -224,7 +244,10 @@ impl FermionOperator {
     /// * `Self` - The new (empty) FermionOperator.
     pub fn new() -> Self {
         FermionOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -239,7 +262,10 @@ impl FermionOperator {
     /// * `Self` - The new (empty) FermionOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         FermionOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -438,7 +464,10 @@ impl ops::Mul<FermionOperator> for FermionOperator {
 ///
 impl IntoIterator for FermionOperator {
     type Item = (FermionProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<FermionProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<FermionProduct, CalculatorComplex>;
     /// Returns the FermionOperator in Iterator form.
     ///
     /// # Returns

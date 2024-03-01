@@ -19,10 +19,16 @@ use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
     StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
 };
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
@@ -57,7 +63,10 @@ use std::ops;
 #[serde(from = "SpinHamiltonianSerialize")]
 #[serde(into = "SpinHamiltonianSerialize")]
 pub struct SpinHamiltonian {
-    /// The internal HashMap of PauliProducts and coefficients (CalculatorFloat)
+    // The internal HashMap of PauliProducts and coefficients (CalculatorFloat)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<PauliProduct, CalculatorFloat>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<PauliProduct, CalculatorFloat>,
 }
 
@@ -96,8 +105,7 @@ impl From<SpinHamiltonianSerialize> for SpinHamiltonian {
 
 impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
     fn from(value: SpinHamiltonian) -> Self {
-        let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> =
-            value.into_iter().map(|(key, val)| (key, val)).collect();
+        let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> = value.into_iter().collect();
         let current_version = StruqtureVersionSerializable {
             major_version: MINIMUM_STRUQTURE_VERSION.0,
             minor_version: MINIMUM_STRUQTURE_VERSION.1,
@@ -139,6 +147,13 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonian {
         self.internal_map.values()
     }
 
+    #[cfg(feature = "indexed_map_iterators")]
+    // From trait
+    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
+        self.internal_map.shift_remove(key)
+    }
+
+    #[cfg(not(feature = "indexed_map_iterators"))]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.remove(key)
@@ -172,6 +187,9 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonian {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
+                #[cfg(feature = "indexed_map_iterators")]
+                Entry::Occupied(val) => Ok(Some(val.shift_remove())),
+                #[cfg(not(feature = "indexed_map_iterators"))]
                 Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
@@ -261,7 +279,10 @@ impl SpinHamiltonian {
     /// * `Self` - The new (empty) SpinHamiltonian.
     pub fn new() -> Self {
         SpinHamiltonian {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
         }
     }
 
@@ -276,7 +297,10 @@ impl SpinHamiltonian {
     /// * `Self` - The new (empty) SpinHamiltonian.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
@@ -501,7 +525,11 @@ impl ops::Mul<SpinHamiltonian> for SpinHamiltonian {
 ///
 impl IntoIterator for SpinHamiltonian {
     type Item = (PauliProduct, CalculatorFloat);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<PauliProduct, CalculatorFloat>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<PauliProduct, CalculatorFloat>;
+
     /// Returns the SpinHamiltonian in Iterator form.
     ///
     /// # Returns

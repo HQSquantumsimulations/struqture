@@ -16,12 +16,16 @@ use crate::spins::SpinLindbladNoiseSystem;
 use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Iter, Keys, Values};
 use std::iter::{FromIterator, IntoIterator};
 use std::{
     fmt::{self, Write},
     ops,
 };
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 
 use super::FermionProduct;
 
@@ -393,8 +397,11 @@ where
 ///
 impl IntoIterator for FermionLindbladNoiseSystem {
     type Item = ((FermionProduct, FermionProduct), CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter =
         std::collections::hash_map::IntoIter<(FermionProduct, FermionProduct), CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<(FermionProduct, FermionProduct), CalculatorComplex>;
     /// Returns the FermionLindbladNoiseSystem in Iterator form.
     ///
     /// # Returns

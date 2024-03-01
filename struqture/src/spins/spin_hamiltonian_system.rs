@@ -17,10 +17,14 @@ use crate::spins::{
     PauliProduct, SpinHamiltonian, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use crate::{CooSparseMatrix, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
+#[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
+
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
@@ -469,7 +473,11 @@ impl ops::Mul<SpinHamiltonianSystem> for SpinHamiltonianSystem {
 ///
 impl IntoIterator for SpinHamiltonianSystem {
     type Item = (PauliProduct, CalculatorFloat);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<PauliProduct, CalculatorFloat>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<PauliProduct, CalculatorFloat>;
+
     /// Returns the SpinHamiltonianSystem in Iterator form.
     ///
     /// # Returns

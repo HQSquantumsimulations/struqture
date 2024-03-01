@@ -18,11 +18,18 @@ use crate::{
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
+
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter, Keys, Values};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::IndexMap;
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Entry, Iter, Keys, Values};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::HashMap;
 
 /// MixedOperators are combinations of MixedProducts with specific CalculatorComplex coefficients.
 ///
@@ -53,6 +60,9 @@ use std::ops;
 #[serde(into = "MixedPlusMinusOperatorSerialize")]
 pub struct MixedPlusMinusOperator {
     /// The internal HashMap of MixedProducts and coefficients (CalculatorComplex)
+    #[cfg(feature = "indexed_map_iterators")]
+    internal_map: IndexMap<MixedPlusMinusProduct, CalculatorComplex>,
+    #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<MixedPlusMinusProduct, CalculatorComplex>,
     /// Number of Spin subsystems
     n_spins: usize,
@@ -153,8 +163,15 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedPlusMinusOperator {
         self.internal_map.values()
     }
 
+    #[cfg(feature = "indexed_map_iterators")]
     // From trait
-    fn remove(&mut self, key: &MixedPlusMinusProduct) -> Option<CalculatorComplex> {
+    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
+        self.internal_map.shift_remove(key)
+    }
+
+    #[cfg(not(feature = "indexed_map_iterators"))]
+    // From trait
+    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.remove(key)
     }
 
@@ -201,6 +218,9 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedPlusMinusOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
+                #[cfg(feature = "indexed_map_iterators")]
+                Entry::Occupied(val) => Ok(Some(val.shift_remove())),
+                #[cfg(not(feature = "indexed_map_iterators"))]
                 Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
@@ -298,7 +318,10 @@ impl MixedPlusMinusOperator {
     /// * `Self` - The new (empty) MixedPlusMinusOperator.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
         MixedPlusMinusOperator {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::new(),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::new(),
             n_spins,
             n_bosons,
             n_fermions,
@@ -324,7 +347,10 @@ impl MixedPlusMinusOperator {
         capacity: usize,
     ) -> Self {
         Self {
+            #[cfg(not(feature = "indexed_map_iterators"))]
             internal_map: HashMap::with_capacity(capacity),
+            #[cfg(feature = "indexed_map_iterators")]
+            internal_map: IndexMap::with_capacity(capacity),
             n_spins,
             n_bosons,
             n_fermions,
@@ -537,7 +563,10 @@ where
 ///
 impl IntoIterator for MixedPlusMinusOperator {
     type Item = (MixedPlusMinusProduct, CalculatorComplex);
+    #[cfg(not(feature = "indexed_map_iterators"))]
     type IntoIter = std::collections::hash_map::IntoIter<MixedPlusMinusProduct, CalculatorComplex>;
+    #[cfg(feature = "indexed_map_iterators")]
+    type IntoIter = indexmap::map::IntoIter<MixedPlusMinusProduct, CalculatorComplex>;
     /// Returns the MixedPlusMinusOperator in Iterator form.
     ///
     /// # Returns
