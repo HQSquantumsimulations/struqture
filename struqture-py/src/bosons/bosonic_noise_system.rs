@@ -16,7 +16,7 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::bosons::BosonLindbladNoiseSystem;
+use struqture::bosons::BosonLindbladNoiseOperator;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnModes};
@@ -24,7 +24,7 @@ use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of bosons.
 ///
-/// In a BosonLindbladNoiseSystem is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.
+/// In a BosonLindbladNoiseOperator is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.
 ///
 /// Args:
 ///     number_bosons (Optional[int]): The number of bosons in the BosonLindbladNoiseSystem.
@@ -40,35 +40,31 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.bosons import BosonLindbladNoiseSystem, BosonProduct
+///     from struqture_py.bosons import BosonLindbladNoiseOperator, BosonProduct
 ///
-///     slns = BosonLindbladNoiseSystem()
+///     slns = BosonLindbladNoiseOperator()
 ///     dp = BosonProduct([0], [1])
 ///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///
-#[pyclass(name = "BosonLindbladNoiseSystem", module = "struqture_py.bosons")]
+#[pyclass(name = "BosonLindbladNoiseOperator", module = "struqture_py.bosons")]
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct BosonLindbladNoiseSystemWrapper {
-    /// Internal storage of [struqture::bosons::BosonLindbladNoiseSystem]
-    pub internal: BosonLindbladNoiseSystem,
+pub struct BosonLindbladNoiseOperatorWrapper {
+    /// Internal storage of [struqture::bosons::BosonLindbladNoiseOperator]
+    pub internal: BosonLindbladNoiseOperator,
 }
 
 #[noisy_system_wrapper(OperateOnModes, OperateOnBosons, OperateOnDensityMatrix, Calculus)]
-impl BosonLindbladNoiseSystemWrapper {
-    /// Create a new BosonLindbladNoiseSystem.
-    ///
-    /// Args:
-    ///     number_bosons (Optional[int]): The number of bosons in the BosonLindbladNoiseSystem.
+impl BosonLindbladNoiseOperatorWrapper {
+    /// Create a new BosonLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     self: The new BosonLindbladNoiseSystem with the input number of bosons.
+    ///     self: The new BosonLindbladNoiseOperator with the input number of bosons.
     #[new]
-    #[pyo3(signature = (number_bosons = None))]
-    pub fn new(number_bosons: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: BosonLindbladNoiseSystem::new(number_bosons),
+            internal: BosonLindbladNoiseOperator::new(),
         }
     }
 
@@ -79,7 +75,7 @@ impl BosonLindbladNoiseSystemWrapper {
     ///     number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
     ///
     /// Returns:
-    ///     Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     Tuple[BosonLindbladNoiseOperator, BosonLindbladNoiseOperator]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.

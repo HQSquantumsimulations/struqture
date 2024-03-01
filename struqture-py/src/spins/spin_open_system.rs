@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
-use super::{SpinHamiltonianSystemWrapper, SpinLindbladNoiseSystemWrapper};
+use super::{SpinHamiltonianWrapper, SpinLindbladNoiseOperatorWrapper};
 use crate::fermions::FermionLindbladOpenSystemWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -63,20 +63,21 @@ pub struct SpinLindbladOpenSystemWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[noisy_system_wrapper(OpenSystem, OperateOnSpins, ToSparseMatrixSuperOperator, Calculus)]
+#[noisy_system_wrapper(
+    OpenSystem,
+    OperateOnSpins,
+    ToSparseMatrixSuperOperator,
+    HermitianCalculus
+)]
 impl SpinLindbladOpenSystemWrapper {
     /// Create a new SpinLindbladOpenSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins in the SpinLindbladOpenSystem.
     ///
     /// Returns:
     ///     SpinLindbladOpenSystem: The new SpinLindbladOpenSystem with the input number of spins.
     #[new]
-    #[pyo3(signature = (number_spins = None))]
-    pub fn new(number_spins: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: SpinLindbladOpenSystem::new(number_spins),
+            internal: SpinLindbladOpenSystem::new(),
         }
     }
 }

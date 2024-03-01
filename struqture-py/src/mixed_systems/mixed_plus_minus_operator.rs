@@ -17,13 +17,11 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::mixed_systems::{
-    MixedOperator, MixedPlusMinusOperator, MixedSystem, OperateOnMixedSystems,
-};
+use struqture::mixed_systems::{MixedOperator, MixedPlusMinusOperator, OperateOnMixedSystems};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
 
-use super::MixedSystemWrapper;
+use super::MixedOperatorWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
@@ -70,7 +68,7 @@ pub struct MixedPlusMinusOperatorWrapper {
     OperateOnMixedSystems,
     OperateOnState,
     OperateOnDensityMatrix,
-    Calculus
+    HermitianCalculus
 )]
 impl MixedPlusMinusOperatorWrapper {
     /// Create an empty MixedPlusMinusOperator.
@@ -119,54 +117,41 @@ impl MixedPlusMinusOperatorWrapper {
         }
     }
 
-    /// Convert a MixedSystem into a MixedPlusMinusOperator.
+    /// Convert a MixedOperator into a MixedPlusMinusOperator.
     ///
     /// Args:
-    ///     value (MixedSystem): The MixedSystem to create the MixedPlusMinusOperator from.
+    ///     value (MixedOperator): The MixedOperator to create the MixedPlusMinusOperator from.
     ///
     /// Returns:
-    ///     MixedPlusMinusOperator: The operator created from the input MixedSystem.
+    ///     MixedPlusMinusOperator: The operator created from the input MixedOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create MixedSystem from input.
+    ///     ValueError: Could not create MixedOperator from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
-        let system = MixedSystemWrapper::from_pyany(value)
+    pub fn from_mixed_system(value: Py<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+        let system = MixedOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {
-            internal: MixedPlusMinusOperator::from(system.operator().clone()),
+            internal: MixedPlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a MixedPlusMinusOperator into a MixedSystem.
+    /// Convert a MixedPlusMinusOperator into a MixedOperator.
     ///
     /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spins to initialize the MixedSystem with.
-    ///     number_bosons (List[Optional[int]]): The number of bosons to initialize the MixedSystem with.
-    ///     number_fermions (List[Optional[int]]): The number of fermions to initialize the MixedSystem with.
+    ///     number_spins (list[Optional[int]]): The number of spins to initialize the MixedOperator with.
+    ///     number_bosons (list[Optional[int]]): The number of bosons to initialize the MixedOperator with.
+    ///     number_fermions (list[Optional[int]]): The number of fermions to initialize the MixedOperator with.
     ///
     /// Returns:
-    ///     MixedSystem: The operator created from the input MixedPlusMinusOperator and optional number of spins.
+    ///     MixedOperator: The operator created from the input MixedPlusMinusOperator and optional number of spins.
     ///
     /// Raises:
     ///     ValueError: Could not create MixedOperator from MixedPlusMinusOperator.
-    ///     ValueError: Could not create MixedSystem from MixedOperator.
-    pub fn to_mixed_system(
-        &self,
-        number_spins: Vec<Option<usize>>,
-        number_bosons: Vec<Option<usize>>,
-        number_fermions: Vec<Option<usize>>,
-    ) -> PyResult<MixedSystemWrapper> {
+    ///     ValueError: Could not create MixedOperator from MixedOperator.
+    pub fn to_mixed_system(&self) -> PyResult<MixedOperatorWrapper> {
         let result: MixedOperator = MixedOperator::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok(MixedSystemWrapper {
-            internal: MixedSystem::from_operator(
-                result,
-                number_spins,
-                number_bosons,
-                number_fermions,
-            )
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+        Ok(MixedOperatorWrapper { internal: result })
     }
 }

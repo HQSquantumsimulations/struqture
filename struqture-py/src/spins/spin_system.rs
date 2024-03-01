@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionSystemWrapper;
+use crate::fermions::FermionOperatorWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -26,7 +26,7 @@ use struqture::mappings::JordanWignerSpinToFermion;
 #[cfg(feature = "unstable_struqture_2_import")]
 use struqture::spins::PauliProduct;
 use struqture::spins::{
-    OperateOnSpins, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
+    OperateOnSpins, SpinOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
@@ -36,7 +36,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of spins.
 ///
-/// SpinSystems are characterized by a SpinOperator to represent the hamiltonian of the spin system
+/// SpinOperators are characterized by a SpinOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
 ///  Args:
@@ -53,9 +53,9 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import SpinSystem, PauliProduct
+///     from struqture_py.spins import SpinOperator, PauliProduct
 ///
-///     ssystem = SpinSystem(2)
+///     ssystem = SpinOperator(2)
 ///     pp = PauliProduct().z(0)
 ///     ssystem.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(ssystem.number_spins(), 2)
@@ -64,11 +64,11 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     dimension = 4**ssystem.number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinSystem", module = "struqture_py.spins")]
+#[pyclass(name = "SpinOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
-pub struct SpinSystemWrapper {
-    /// Internal storage of [struqture::spins::SpinSystem]
-    pub internal: SpinSystem,
+pub struct SpinOperatorWrapper {
+    /// Internal storage of [struqture::spins::SpinOperator]
+    pub internal: SpinOperator,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -80,33 +80,29 @@ pub struct SpinSystemWrapper {
     OperateOnDensityMatrix,
     Calculus
 )]
-impl SpinSystemWrapper {
-    /// Create an empty SpinSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins in the SpinSystem.
+impl SpinOperatorWrapper {
+    /// Create an empty SpinOperator.
     ///
     /// Returns:
-    ///     self: The new SpinSystem with the input number of spins.
+    ///     self: The new SpinOperator with the input number of spins.
     #[new]
-    #[pyo3(signature = (number_spins = None))]
-    pub fn new(number_spins: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: SpinSystem::new(number_spins),
+            internal: SpinOperator::new(),
         }
     }
 
-    /// Implement `*` for SpinSystem and SpinSystem/CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for SpinOperator and SpinOperator/CalculatorComplex/CalculatorFloat.
     ///
     /// Args:
-    ///     value (Union[SpinSystem, CalculatorComplex, CalculatorFloat]): value by which to multiply the self SpinSystem
+    ///     value (Union[SpinOperator, CalculatorComplex, CalculatorFloat]): value by which to multiply the self SpinOperator
     ///
     /// Returns:
-    ///     SpinSystem: The SpinSystem multiplied by the value.
+    ///     SpinOperator: The SpinOperator multiplied by the value.
     ///
     /// Raises:
-    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinSystem.
-    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
+    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinOperator.
+    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(Self {
@@ -126,7 +122,7 @@ impl SpinSystemWrapper {
                                 Ok(Self { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinSystem: {:?}",
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinOperator: {:?}",
                                 err)))
                         }
                     }
@@ -170,5 +166,11 @@ impl SpinSystemWrapper {
         Ok(SpinSystemWrapper {
             internal: new_operator,
         })
+    }
+}
+
+impl Default for SpinOperatorWrapper {
+    fn default() -> Self {
+        Self::new()
     }
 }

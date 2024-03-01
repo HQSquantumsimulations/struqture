@@ -54,9 +54,12 @@ fn jordan_wigner_spin_to_fermion_quote(
 ) -> TokenStream {
     if attribute_arguments.contains("JordanWignerSpinToFermion") {
         let output_wrapper_type;
-        let output_type;
 
-        if struct_name.contains("System") {
+        if struct_name == "SpinHamiltonian"
+            || struct_name == "SpinOperator"
+            || struct_name == "SpinLindbladNoiseOperator"
+            || struct_name == "SpinLindbladOpenSystem"
+        {
             let mut output_wrapper_name = format!("{}Wrapper", struct_name);
             output_wrapper_name = output_wrapper_name.replace("Spin", "Fermion");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
@@ -77,10 +80,8 @@ fn jordan_wigner_spin_to_fermion_quote(
                 || struct_name == "PlusMinusOperator"
             {
                 output_wrapper_type = quote::format_ident!("FermionOperatorWrapper");
-                output_type = quote::format_ident!("FermionOperator");
             } else if struct_name == "PlusMinusLindbladNoiseOperator" {
                 output_wrapper_type = quote::format_ident!("FermionLindbladNoiseOperatorWrapper");
-                output_type = quote::format_ident!("FermionLindbladNoiseOperator");
             } else {
                 panic!("JordanWignerSpinToFermion can only be implemented for spin types!")
             };
@@ -90,9 +91,7 @@ fn jordan_wigner_spin_to_fermion_quote(
                 /// the Jordan Wigner mapping.
                 pub fn jordan_wigner(&self) -> #output_wrapper_type {
                     #output_wrapper_type {
-                        internal: #output_type::from_operator(
-                            self.internal.jordan_wigner(), None)
-                            .expect("Internal bug when creating fermionic system object from fermionic operator object.")
+                        internal: self.internal.jordan_wigner()
                     }
                 }
             }
@@ -108,10 +107,11 @@ fn jordan_wigner_fermion_to_spin_quote(
 ) -> TokenStream {
     if attribute_arguments.contains("JordanWignerFermionToSpin") {
         let output_wrapper_type;
-        let output_type;
-        let from_method;
 
-        if struct_name.contains("System") {
+        if struct_name.contains("Operator")
+            || struct_name.contains("Hamiltonian")
+            || struct_name.contains("System")
+        {
             let mut output_wrapper_name = format!("{}Wrapper", struct_name);
             output_wrapper_name = output_wrapper_name.replace("Fermion", "Spin");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
@@ -128,12 +128,8 @@ fn jordan_wigner_fermion_to_spin_quote(
         } else {
             if struct_name == "FermionProduct" {
                 output_wrapper_type = quote::format_ident!("SpinOperatorWrapper");
-                output_type = quote::format_ident!("SpinOperator");
-                from_method = quote::format_ident!("from_operator");
             } else if struct_name == "HermitianFermionProduct" {
                 output_wrapper_type = quote::format_ident!("SpinHamiltonianWrapper");
-                output_type = quote::format_ident!("SpinHamiltonian");
-                from_method = quote::format_ident!("from_hamiltonian");
             } else {
                 panic!("JordanWignerFermionToSpin can only be implemented for fermionic types!")
             };
@@ -143,9 +139,7 @@ fn jordan_wigner_fermion_to_spin_quote(
                 /// the Jordan Wigner mapping.
                 pub fn jordan_wigner(&self) -> #output_wrapper_type {
                     #output_wrapper_type {
-                        internal: #output_type::#from_method(
-                            self.internal.jordan_wigner(), None)
-                            .expect("Internal bug when creating spin system object from spin operator object.")
+                        internal: self.internal.jordan_wigner()
                     }
                 }
             }
