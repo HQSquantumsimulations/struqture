@@ -76,11 +76,11 @@ fn jordan_wigner_spin_to_fermion_quote(
                 || struct_name == "PlusMinusProduct"
                 || struct_name == "PlusMinusOperator"
             {
-                output_wrapper_type = quote::format_ident!("FermionSystemWrapper");
-                output_type = quote::format_ident!("FermionSystem");
+                output_wrapper_type = quote::format_ident!("FermionOperatorWrapper");
+                output_type = quote::format_ident!("FermionOperator");
             } else if struct_name == "PlusMinusLindbladNoiseOperator" {
-                output_wrapper_type = quote::format_ident!("FermionLindbladNoiseSystemWrapper");
-                output_type = quote::format_ident!("FermionLindbladNoiseSystem");
+                output_wrapper_type = quote::format_ident!("FermionLindbladNoiseOperatorWrapper");
+                output_type = quote::format_ident!("FermionLindbladNoiseOperator");
             } else {
                 panic!("JordanWignerSpinToFermion can only be implemented for spin types!")
             };
@@ -127,12 +127,12 @@ fn jordan_wigner_fermion_to_spin_quote(
             }
         } else {
             if struct_name == "FermionProduct" {
-                output_wrapper_type = quote::format_ident!("SpinSystemWrapper");
-                output_type = quote::format_ident!("SpinSystem");
+                output_wrapper_type = quote::format_ident!("SpinOperatorWrapper");
+                output_type = quote::format_ident!("SpinOperator");
                 from_method = quote::format_ident!("from_operator");
             } else if struct_name == "HermitianFermionProduct" {
-                output_wrapper_type = quote::format_ident!("SpinHamiltonianSystemWrapper");
-                output_type = quote::format_ident!("SpinHamiltonianSystem");
+                output_wrapper_type = quote::format_ident!("SpinHamiltonianWrapper");
+                output_type = quote::format_ident!("SpinHamiltonian");
                 from_method = quote::format_ident!("from_hamiltonian");
             } else {
                 panic!("JordanWignerFermionToSpin can only be implemented for fermionic types!")

@@ -135,33 +135,31 @@ pub fn noisywrapper(
                     key: (Py<PyAny>, Py<PyAny>),
                     value: &Bound<PyAny>,
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
-                        let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
-                            .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
-                        let (converted_left, converted_right) = (
-                            #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
-                                PyValueError::new_err(format!(
-                                    "Product could not be constructed: {:?}",
-                                    err
-                                ))
-                            })?,
-                            #index_type::from_pyany(key.1.bind(py)).map_err(|err| {
-                                PyValueError::new_err(format!(
-                                    "Product could not be constructed: {:?}",
-                                    err
-                                ))
-                            })?,
-                        );
-                        match self
-                            .internal
-                            .set((converted_left, converted_right), value)
-                            .map_err(|err| {
-                                PyValueError::new_err(format!("Error in set function of FermionSystem: {:?}", err))
-                            })? {
-                            Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
-                            None => Ok(None),
-                        }
-                    })
+                    let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
+                        .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
+                    let (converted_left, converted_right) = (
+                        #index_type::from_pyany(key.0).map_err(|err| {
+                            PyValueError::new_err(format!(
+                                "Product could not be constructed: {:?}",
+                                err
+                            ))
+                        })?,
+                        #index_type::from_pyany(key.1).map_err(|err| {
+                            PyValueError::new_err(format!(
+                                "Product could not be constructed: {:?}",
+                                err
+                            ))
+                        })?,
+                    );
+                    match self
+                        .internal
+                        .set((converted_left, converted_right), value)
+                        .map_err(|err| {
+                            PyValueError::new_err(format!("Error in set function of FermionOperator: {:?}", err))
+                        })? {
+                        Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
+                        None => Ok(None),
+                    }
                 }
 
                 /// Adds a new (key object, CalculatorComplex) pair to existing entries.
@@ -182,31 +180,28 @@ pub fn noisywrapper(
                 ) -> PyResult<()> {
                     let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
-                    Python::with_gil(|py| -> PyResult<()> {
-                        let (converted_left, converted_right) = (
-                            #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
-                                PyValueError::new_err(format!(
-                                    "Product could not be constructed: {:?}",
-                                    err
-                                ))
-                            })?,
-                            #index_type::from_pyany(key.1.bind(py)).map_err(|err| {
-                                PyValueError::new_err(format!(
-                                    "Product could not be constructed: {:?}",
-                                    err
-                                ))
-                            })?,
-                        );
-                        self.internal
-                            .add_operator_product((converted_left, converted_right), value)
-                            .map_err(|err| {
-                                PyValueError::new_err(format!(
-                                    "Error in add_operator_product function of System: {:?}",
-                                    err
-                                ))
-                            })?;
-                        Ok(())
-                    })
+                    let (converted_left, converted_right) = (
+                        #index_type::from_pyany(key.0).map_err(|err| {
+                            PyValueError::new_err(format!(
+                                "Product could not be constructed: {:?}",
+                                err
+                            ))
+                        })?,
+                        #index_type::from_pyany(key.1).map_err(|err| {
+                            PyValueError::new_err(format!(
+                                "Product could not be constructed: {:?}",
+                                err
+                            ))
+                        })?,
+                    );
+                    self.internal
+                        .add_operator_product((converted_left, converted_right), value)
+                        .map_err(|err| {
+                            PyValueError::new_err(format!(
+                                "Error in add_operator_product function of Operator: {:?}",
+                                err
+                            ))
+                        })
                 }
 
                 /// Return unsorted keys in self.
@@ -311,14 +306,6 @@ pub fn noisywrapper(
     };
     let operate_on_modes_quote = if attribute_arguments.contains("OperateOnModes") {
         quote! {
-            /// Return maximum index in object.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_modes(&self) -> usize {
-                self.internal.current_number_modes()
-            }
-
             /// Return the number_modes input of self.
             ///
             /// Returns:
@@ -332,14 +319,6 @@ pub fn noisywrapper(
     };
     let operate_on_spins_quote = if attribute_arguments.contains("OperateOnSpins") {
         quote! {
-            /// Return maximum spin index in object.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_spins(&self) -> usize {
-                self.internal.current_number_spins()
-            }
-
             /// Return the number_spins input of self.
             ///
             /// Returns:
@@ -459,27 +438,12 @@ pub fn noisywrapper(
                     self.internal.number_spins()
                 }
 
-                /// Return maximum spin index in each spin subsystem of self.
-                ///
-                /// Returns:
-                ///     int: Maximum index in each spin subsystem of self.
-                pub fn current_number_spins(&self) -> Vec<usize> {
-                    self.internal.current_number_spins()
-                }
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
                 ///     List[int]: The number of bosonic modes in each bosonic subsystem of self.
                 pub fn number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.number_bosonic_modes()
-                }
-
-                /// Return the number of bosonic modes each bosonic subsystem of self acts on.
-                ///
-                /// Returns:
-                ///     List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.current_number_bosonic_modes()
                 }
 
                 /// Return the number of fermionic modes in each fermionic subsystem of self.
@@ -489,14 +453,6 @@ pub fn noisywrapper(
                 pub fn number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.number_fermionic_modes()
                 }
-
-                /// Return the number of fermionic modes each fermionic subsystem of self acts on.
-                ///
-                /// Returns:
-                ///     List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-                pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.current_number_fermionic_modes()
-                }
         }
     } else {
         TokenStream::new()
@@ -505,31 +461,31 @@ pub fn noisywrapper(
         let (system_type, system_index_type, value_type, noise_type) =
             if struct_name.contains("Spin") {
                 (
-                    quote::format_ident!("SpinHamiltonianSystemWrapper"),
+                    quote::format_ident!("SpinHamiltonianWrapper"),
                     quote::format_ident!("PauliProductWrapper"),
                     quote::format_ident!("CalculatorFloatWrapper"),
-                    quote::format_ident!("SpinLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("SpinLindbladNoiseOperatorWrapper"),
                 )
             } else if struct_name.contains("Boson") {
                 (
-                    quote::format_ident!("BosonHamiltonianSystemWrapper"),
+                    quote::format_ident!("BosonHamiltonianWrapper"),
                     quote::format_ident!("HermitianBosonProductWrapper"),
                     quote::format_ident!("CalculatorComplexWrapper"),
-                    quote::format_ident!("BosonLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("BosonLindbladNoiseOperatorWrapper"),
                 )
             } else if struct_name.contains("Fermion") {
                 (
-                    quote::format_ident!("FermionHamiltonianSystemWrapper"),
+                    quote::format_ident!("FermionHamiltonianWrapper"),
                     quote::format_ident!("HermitianFermionProductWrapper"),
                     quote::format_ident!("CalculatorComplexWrapper"),
-                    quote::format_ident!("FermionLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("FermionLindbladNoiseOperatorWrapper"),
                 )
             } else {
                 (
-                    quote::format_ident!("MixedHamiltonianSystemWrapper"),
+                    quote::format_ident!("MixedHamiltonianWrapper"),
                     quote::format_ident!("HermitianMixedProductWrapper"),
                     quote::format_ident!("CalculatorComplexWrapper"),
-                    quote::format_ident!("MixedLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("MixedLindbladNoiseOperatorWrapper"),
                 )
             };
         quote! {
@@ -901,7 +857,7 @@ pub fn noisywrapper(
             /// Return a copy (copy here produces a deepcopy).
             ///
             /// Returns:
-            ///     System: A deep copy of self.
+            ///     Operator: A deep copy of self.
             pub fn __copy__(&self) -> #ident {
                 self.clone()
             }
@@ -909,8 +865,13 @@ pub fn noisywrapper(
             /// Return a deep copy .
             ///
             /// Returns:
+<<<<<<< HEAD
             ///     System: A deep copy of self.
             pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
+=======
+            ///     Operator: A deep copy of self.
+            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+>>>>>>> c6c58f1 (Moved macros from system -> operator and removed current_... functions)
                 self.clone()
             }
 
