@@ -210,9 +210,9 @@ fn test_keys_len() {
     });
 }
 
-/// Test current_number_spins function of PlusMinusProduct
+/// Test number_spins function of PlusMinusProduct
 #[test]
-fn test_current_number_spins() {
+fn test_number_spins() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_pp_1 = new_pp(py);
@@ -221,10 +221,9 @@ fn test_current_number_spins() {
         pp = pp.call_method1("set_pauli", (2_u64, "Z")).unwrap();
         pp = pp.call_method1("set_pauli", (5_u64, "-")).unwrap();
 
-        let current_number_spins =
-            usize::extract_bound(&pp.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
 
-        assert_eq!(current_number_spins, 6);
+        assert_eq!(number_spins, 6);
     });
 }
 
@@ -581,7 +580,6 @@ fn test_to_pp() {
         let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "Y")).unwrap();
 
         let result = pmp.call_method0("to_pauli_product_list").unwrap();
-        let result_deprecated = pmp.call_method0("to_pauli_product").unwrap();
         let comp = vec![
             (
                 pp_1,
@@ -599,10 +597,6 @@ fn test_to_pp() {
         let equal =
             bool::extract_bound(&result.call_method1("__eq__", (comp.clone(),)).unwrap()).unwrap();
         assert!(equal);
-        let equal_deprecated =
-            bool::extract_bound(&result_deprecated.call_method1("__eq__", (comp,)).unwrap())
-                .unwrap();
-        assert!(equal_deprecated);
     })
 }
 
@@ -620,7 +614,6 @@ fn test_to_dp() {
         let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "iY")).unwrap();
 
         let result = pmp.call_method0("to_decoherence_product_list").unwrap();
-        let result_deprecated = pmp.call_method0("to_decoherence_product").unwrap();
         let comp = vec![
             (
                 pp_1,
@@ -638,10 +631,6 @@ fn test_to_dp() {
         let equal =
             bool::extract_bound(&result.call_method1("__eq__", (comp.clone(),)).unwrap()).unwrap();
         assert!(equal);
-        let equal_deprecated =
-            bool::extract_bound(&result_deprecated.call_method1("__eq__", (comp,)).unwrap())
-                .unwrap();
-        assert!(equal_deprecated);
     })
 }
 
@@ -680,9 +669,8 @@ fn test_jordan_wigner() {
             .get_item(0)
             .unwrap();
 
-        let number_modes = usize::extract_bound(&fo.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract_bound(&pp.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }

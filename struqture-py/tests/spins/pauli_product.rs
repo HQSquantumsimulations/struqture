@@ -92,9 +92,8 @@ fn test_from_string() {
             bool::extract_bound(&string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
-        let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", (4,)).unwrap()).unwrap();
+        let nbr_spins = string_pp.call_method0("number_spins").unwrap();
+        let comparison = bool::extract(nbr_spins.call_method1("__eq__", (4,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -515,9 +514,8 @@ fn test_jordan_wigner() {
         let empty = bool::extract_bound(&fo.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes = usize::extract_bound(&fo.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract_bound(&pp.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }

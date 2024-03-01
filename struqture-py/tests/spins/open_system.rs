@@ -55,7 +55,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
     }
 }
 
-/// Test number_spins and current_number_spins functions of SpinSystem
+/// Test number_spins function of SpinSystem
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -66,13 +66,9 @@ fn test_number_spins_current() {
             .unwrap();
 
         let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
 
         let comparison =
             bool::extract_bound(&number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
-        assert!(comparison);
-        let comparison =
-            bool::extract_bound(&current_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -102,9 +98,11 @@ fn spin_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let number_spins: Option<usize> = Some(4);
-        let binding = new_system.call1((number_spins,)).unwrap();
-        let system = binding.downcast::<SpinLindbladOpenSystemWrapper>().unwrap();
+        let system = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .unwrap();
         system
             .call_method1("system_add_operator_product", ("0X", 0.1))
             .unwrap();
@@ -149,11 +147,7 @@ fn spin_system_test_add_operator_product_remove_system() {
         let error = system.call_method1("system_add_operator_product", ("1Z", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of spins in entry exceeds number of spins in system.
-        let error = system.call_method1("system_add_operator_product", ("5Z", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("system_add_operator_product", ("1J", 0.5));
         assert!(error.is_err());
     });
@@ -165,9 +159,11 @@ fn spin_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let number_spins: Option<usize> = Some(4);
-        let binding = new_system.call1((number_spins,)).unwrap();
-        let system = binding.downcast::<SpinLindbladOpenSystemWrapper>().unwrap();
+        let system = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .unwrap();
         system
             .call_method1("noise_add_operator_product", (("0X", "0X"), 0.1))
             .unwrap();
@@ -212,11 +208,7 @@ fn spin_system_test_add_operator_product_remove_noise() {
         let error = system.call_method1("noise_add_operator_product", (("0X", "1Z"), vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of spins in entry exceeds number of spins in system.
-        let error = system.call_method1("noise_add_operator_product", (("0X", "5Z"), 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("noise_add_operator_product", (("0X", "1J"), 0.5));
         assert!(error.is_err());
     });
@@ -357,7 +349,7 @@ fn test_default_partialeq_debug_clone() {
         // Debug
         assert_eq!(
             format!("{:?}", SpinLindbladOpenSystemWrapper::new()),
-            "SpinLindbladOpenSystemWrapper { internal: SpinLindbladOpenSystem { system: SpinHamiltonian { number_spins: None, hamiltonian: SpinHamiltonian { internal_map: {} } }, noise: SpinLindbladNoiseOperator { number_spins: None, operator: SpinLindbladNoiseOperator { internal_map: {} } } } }"
+            "SpinLindbladOpenSystemWrapper { internal: SpinLindbladOpenSystem { system: SpinHamiltonian { internal_map: {} }, noise: SpinLindbladNoiseOperator { internal_map: {} } } }"
         );
 
         // Number of spins
@@ -366,18 +358,11 @@ fn test_default_partialeq_debug_clone() {
             bool::extract_bound(&comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 
-        // Current number of spins
-        let comp_op = new_sys.call_method0("current_number_spins").unwrap();
-        let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
-        assert!(comparison);
-
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
         let system_type = py.get_type::<SpinHamiltonianWrapper>();
-        let number_spins: Option<usize> = None;
         let spin_system = system_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
@@ -438,9 +423,8 @@ fn test_default_partialeq_debug_clone() {
             .unwrap();
 
         let system_type = py.get_type::<SpinHamiltonianWrapper>();
-        let number_spins: Option<usize> = None;
         let spin_system = system_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
@@ -1424,7 +1408,7 @@ fn test_format_repr() {
         );
 
         let test_string =
-        "SpinLindbladOpenSystem(2){\nSystem: {\n0X: 1e-1,\n}\nNoise: {\n(1X, 1iY): (1e-1 + i * 0e0),\n}\n}"
+        "SpinLindbladOpenSystem{\nSystem: {\n0X: 1e-1,\n}\nNoise: {\n(1X, 1iY): (1e-1 + i * 0e0),\n}\n}"
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
@@ -1512,10 +1496,8 @@ fn test_jordan_wigner() {
             .unwrap();
         let flos = slos.call_method0("jordan_wigner").unwrap();
 
-        let number_modes =
-            usize::extract_bound(&flos.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract_bound(&slos.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(flos.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(slos.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }

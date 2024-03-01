@@ -546,10 +546,9 @@ fn test_from_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinOperatorWrapper>();
         let pp = pp_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinOperatorWrapper>>()
             .unwrap();
@@ -584,10 +583,9 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinOperatorWrapper>();
         let sys = pp_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinOperatorWrapper>>()
             .unwrap();
@@ -604,8 +602,8 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp.call_method1("to_spin_system", (number_spins,)).unwrap();
-        let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
+        let result = pmp.call_method0("to_spin_system").unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
@@ -636,10 +634,9 @@ fn test_from_spin_ham_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
         let pp_type = py.get_type::<SpinHamiltonianWrapper>();
         let pp = pp_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
@@ -666,10 +663,9 @@ fn test_to_spin_ham_sys() {
         pmp.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
 
-        let number_spins: Option<usize> = None;
         let pp_type = py.get_type::<SpinHamiltonianWrapper>();
         let sys = pp_type
-            .call1((number_spins,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
@@ -914,9 +910,8 @@ fn test_jordan_wigner() {
 
         let ss = pmo.call_method0("to_spin_system").unwrap();
 
-        let number_modes = usize::extract_bound(&fo.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract_bound(&ss.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(ss.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
