@@ -48,17 +48,17 @@ fn empty_clone_options() {
     assert_eq!(system.empty_clone(full), SpinHamiltonian::with_capacity(1));
 }
 
-// Test the current_number_spins function of the SpinHamiltonian
+// Test the number_spins function of the SpinHamiltonian
 #[test]
-fn internal_map_current_number_spins() {
+fn internal_map_number_spins() {
     let pp_0: PauliProduct = PauliProduct::new().x(0);
     let pp_2: PauliProduct = PauliProduct::new().z(2);
     let mut so = SpinHamiltonian::new();
-    assert_eq!(so.current_number_spins(), 0_usize);
+    assert_eq!(so.number_spins(), 0_usize);
     so.set(pp_0, CalculatorFloat::from(0.5)).unwrap();
-    assert_eq!(so.current_number_spins(), 1_usize);
+    assert_eq!(so.number_spins(), 1_usize);
     so.set(pp_2, CalculatorFloat::from(0.5)).unwrap();
-    assert_eq!(so.current_number_spins(), 3_usize);
+    assert_eq!(so.number_spins(), 3_usize);
 }
 
 // Test the len function of the SpinHamiltonian

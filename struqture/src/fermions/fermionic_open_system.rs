@@ -227,7 +227,7 @@ impl fmt::Display for FermionLindbladOpenSystem {
     ///
     /// * `std::fmt::Result` - The formatted FermionLindbladOpenSystem.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = format!("FermionLindbladOpenSystem({}){{\n", self.number_modes());
+        let mut output = "FermionLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
             writeln!(output, "{}: {},", key, val)?;

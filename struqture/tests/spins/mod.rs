@@ -27,15 +27,9 @@ mod plus_minus_operator;
 
 mod spin_hamiltonian;
 
-mod spin_system;
-
-mod spin_hamiltonian_system;
-
 mod spin_noise_operator;
 
 mod plus_minus_noise_operator;
-
-mod spin_noise_system;
 
 mod spin_open_system;
 

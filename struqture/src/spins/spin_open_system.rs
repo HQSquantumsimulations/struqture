@@ -283,7 +283,7 @@ impl fmt::Display for SpinLindbladOpenSystem {
     ///
     /// * `std::fmt::Result` - The formatted SpinLindbladOpenSystem.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = format!("SpinLindbladOpenSystem({}){{\n", self.number_spins());
+        let mut output = "SpinLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
             writeln!(output, "{}: {},", key, val)?;

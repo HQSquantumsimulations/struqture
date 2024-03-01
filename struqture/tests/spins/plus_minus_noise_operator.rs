@@ -54,19 +54,19 @@ fn empty_clone_options() {
     );
 }
 
-// // Test the current_number_spins function of the PlusMinusLindbladNoiseOperator
+// // Test the number_spins function of the PlusMinusLindbladNoiseOperator
 // #[test]
-// fn internal_map_current_number_spins() {
+// fn internal_map_number_spins() {
 //     let dp_0: PlusMinusProduct = PlusMinusProduct::new().plus(0);
 //     let dp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
 //     let mut slno = PlusMinusLindbladNoiseOperator::new();
-//     assert_eq!(slno.current_number_spins(), 0_usize);
+//     assert_eq!(slno.number_spins(), 0_usize);
 //     slno.set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
 //         .unwrap();
-//     assert_eq!(slno.current_number_spins(), 1_usize);
+//     assert_eq!(slno.number_spins(), 1_usize);
 //     slno.set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
 //         .unwrap();
-//     assert_eq!(slno.current_number_spins(), 3_usize);
+//     assert_eq!(slno.number_spins(), 3_usize);
 // }
 
 // Test the len function of the PlusMinusLindbladNoiseOperator

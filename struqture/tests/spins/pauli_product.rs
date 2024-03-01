@@ -35,7 +35,7 @@ fn new() {
     let mut pp_compare = PauliProduct::new();
     assert!(pp_compare.is_empty());
     assert!(pp_compare.is_natural_hermitian());
-    assert_eq!(pp_compare.current_number_spins(), 0_usize);
+    assert_eq!(pp_compare.number_spins(), 0_usize);
     pp_compare = pp_compare.set_pauli(0, SingleSpinOperator::X);
 
     assert_eq!(pp, pp_compare);
@@ -64,7 +64,7 @@ fn internal_map_set_get() {
     assert_eq!(pp.get(&3), None);
     let pp = pp.set_pauli(3, SingleSpinOperator::X);
 
-    assert_eq!(pp.current_number_spins(), 4_usize);
+    assert_eq!(pp.number_spins(), 4_usize);
     assert_eq!(pp.len(), 3_usize);
 
     let mut internal: BTreeMap<usize, SingleSpinOperator> = BTreeMap::new();

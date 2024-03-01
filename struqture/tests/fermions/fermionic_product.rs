@@ -93,7 +93,7 @@ fn new_normal_ordered_passing(
     assert_eq!(res, res.corresponds_to());
     assert_eq!(res.number_creators(), n_creators);
     assert_eq!(res.number_annihilators(), n_annihilators);
-    assert_eq!(res.current_number_modes(), n_modes);
+    assert_eq!(res.number_modes(), n_modes);
     let cvec: Vec<usize> = res.creators().copied().collect();
     let avec: Vec<usize> = res.annihilators().copied().collect();
     assert_eq!(cvec, creators);
