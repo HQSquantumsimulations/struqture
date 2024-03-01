@@ -362,12 +362,7 @@ fn test_truncate(re: f64, im: f64) {
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
 
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
                 "add_operator_product",
@@ -413,12 +408,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let test_system1 = new_system(py, number_spins, number_bosons, number_fermions);
         test_system1
             .call_method1(
                 "add_operator_product",
@@ -505,12 +495,7 @@ fn test_neg() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -534,21 +519,11 @@ fn test_add() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1("add_operator_product", ("S0Z:Bc2c3a1:Fc0a0:", 0.2))
             .unwrap();
@@ -575,21 +550,11 @@ fn test_sub() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1("add_operator_product", ("S0Z:Bc2c3a1:Fc0a0:", 0.2))
             .unwrap();
@@ -616,12 +581,7 @@ fn test_mul_cf() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
@@ -646,12 +606,7 @@ fn test_mul_cc() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
@@ -686,21 +641,11 @@ fn test_mul_self() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S1X:Bc0c1:Fc2a2", 0.1))
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1("add_operator_product", ("S0Z:Bc2c3a1:Fc0a0:", 1.0))
             .unwrap();
@@ -771,12 +716,7 @@ fn test_to_from_bincode() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -826,12 +766,7 @@ fn test_to_from_json() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -916,12 +851,7 @@ fn test_richcmp() {
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
-        let system_one = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_one = new_system(py, number_spins, number_bosons, number_fermions);
         system_one
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
