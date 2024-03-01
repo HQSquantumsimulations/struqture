@@ -68,11 +68,11 @@ pub struct MixedLindbladNoiseOperator {
     #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<(MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>,
     /// Number of Spin subsystems
-    n_spins: usize,
+    pub(crate) n_spins: usize,
     /// Number of Boson subsystems
-    n_bosons: usize,
+    pub(crate) n_bosons: usize,
     /// Number of Fermion subsystems
-    n_fermions: usize,
+    pub(crate) n_fermions: usize,
 }
 
 impl crate::MinSupportedVersion for MixedLindbladNoiseOperator {}
