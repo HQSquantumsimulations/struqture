@@ -141,16 +141,6 @@ impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     }
 
     // From trait
-    fn current_number_spins(&self) -> Vec<usize> {
-        self.system
-            .current_number_spins()
-            .iter()
-            .zip(self.noise.current_number_spins().iter())
-            .map(|(s, n)| *(s.max(n)))
-            .collect()
-    }
-
-    // From trait
     fn number_bosonic_modes(&self) -> Vec<usize> {
         self.system
             .number_bosonic_modes()
@@ -161,31 +151,11 @@ impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     }
 
     // From trait
-    fn current_number_bosonic_modes(&self) -> Vec<usize> {
-        self.system
-            .current_number_bosonic_modes()
-            .iter()
-            .zip(self.noise.current_number_bosonic_modes().iter())
-            .map(|(s, n)| *(s.max(n)))
-            .collect()
-    }
-
-    // From trait
     fn number_fermionic_modes(&self) -> Vec<usize> {
         self.system
             .number_fermionic_modes()
             .iter()
             .zip(self.noise.number_fermionic_modes().iter())
-            .map(|(s, n)| *(s.max(n)))
-            .collect()
-    }
-
-    // From trait
-    fn current_number_fermionic_modes(&self) -> Vec<usize> {
-        self.system
-            .current_number_fermionic_modes()
-            .iter()
-            .zip(self.noise.current_number_fermionic_modes().iter())
             .map(|(s, n)| *(s.max(n)))
             .collect()
     }

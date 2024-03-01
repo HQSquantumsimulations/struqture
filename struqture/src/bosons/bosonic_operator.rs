@@ -199,27 +199,22 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonOperator {
 impl OperateOnState<'_> for BosonOperator {}
 
 impl<'a> OperateOnModes<'a> for BosonOperator {
-    // From trait
-    fn current_number_modes(&'a self) -> usize {
-        let mut max_mode: usize = 0;
-        if !self.is_empty() {
-            for key in self.keys() {
-                let maxk = key.current_number_modes();
-                if maxk > max_mode {
-                    max_mode = maxk;
-                }
-            }
-        }
-        max_mode
-    }
-
     /// Gets the maximum index of the BosonOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of bosons in the BosonOperator.
     fn number_modes(&'a self) -> usize {
-        self.current_number_modes()
+        let mut max_mode: usize = 0;
+        if !self.is_empty() {
+            for key in self.keys() {
+                let maxk = key.number_modes();
+                if maxk > max_mode {
+                    max_mode = maxk;
+                }
+            }
+        }
+        max_mode
     }
 }
 

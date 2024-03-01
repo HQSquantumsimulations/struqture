@@ -232,15 +232,10 @@ impl OperateOnState<'_> for MixedOperator {
 impl OperateOnMixedSystems<'_> for MixedOperator {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
-        self.current_number_spins()
-    }
-
-    // From trait
-    fn current_number_spins(&self) -> Vec<usize> {
         let mut number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.spins().enumerate() {
-                let maxk = s.current_number_spins();
+                let maxk = s.number_spins();
                 if maxk > number_spins[index] {
                     number_spins[index] = maxk
                 }
@@ -251,15 +246,10 @@ impl OperateOnMixedSystems<'_> for MixedOperator {
 
     // From trait
     fn number_bosonic_modes(&self) -> Vec<usize> {
-        self.current_number_bosonic_modes()
-    }
-
-    // From trait
-    fn current_number_bosonic_modes(&self) -> Vec<usize> {
         let mut number_bosons: Vec<usize> = (0..self.n_bosons).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.bosons().enumerate() {
-                let maxk = s.current_number_modes();
+                let maxk = s.number_modes();
                 if maxk > number_bosons[index] {
                     number_bosons[index] = maxk
                 }
@@ -270,15 +260,10 @@ impl OperateOnMixedSystems<'_> for MixedOperator {
 
     // From trait
     fn number_fermionic_modes(&self) -> Vec<usize> {
-        self.current_number_fermionic_modes()
-    }
-
-    // From trait
-    fn current_number_fermionic_modes(&self) -> Vec<usize> {
         let mut number_fermions: Vec<usize> = (0..self.n_fermions).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.fermions().enumerate() {
-                let maxk = s.current_number_modes();
+                let maxk = s.number_modes();
                 if maxk > number_fermions[index] {
                     number_fermions[index] = maxk
                 }

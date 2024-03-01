@@ -242,31 +242,22 @@ impl OperateOnState<'_> for FermionHamiltonian {
     }
 }
 
-impl OperateOnModes<'_> for FermionHamiltonian {
-    /// Return maximum index in FermionHamiltonian internal_map.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
-    fn current_number_modes(&self) -> usize {
-        let mut max_mode: usize = 0;
-        if !self.internal_map.is_empty() {
-            for key in self.internal_map.keys() {
-                if key.current_number_modes() > max_mode {
-                    max_mode = key.current_number_modes()
-                }
-            }
-        }
-        max_mode
-    }
-
+impl<'a> OperateOnModes<'a> for FermionHamiltonian {
     /// Gets the maximum index of the FermionHamiltonian.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of spins in the FermionHamiltonian.
     fn number_modes(&self) -> usize {
-        self.current_number_modes()
+        let mut max_mode: usize = 0;
+        if !self.internal_map.is_empty() {
+            for key in self.internal_map.keys() {
+                if key.number_modes() > max_mode {
+                    max_mode = key.number_modes()
+                }
+            }
+        }
+        max_mode
     }
 }
 

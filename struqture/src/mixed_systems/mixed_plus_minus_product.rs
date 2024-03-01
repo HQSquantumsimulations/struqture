@@ -258,8 +258,8 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of spins in each spin sub-system.
-    pub fn current_number_spins(&self) -> Vec<usize> {
-        self.spins().map(|s| s.current_number_spins()).collect()
+    pub fn number_spins(&self) -> Vec<usize> {
+        self.spins().map(|s| s.number_spins()).collect()
     }
 
     /// Returns the current number of bosonic modes each subsystem acts upon.
@@ -267,8 +267,8 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
-    pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
-        self.bosons().map(|b| b.current_number_modes()).collect()
+    pub fn number_bosonic_modes(&self) -> Vec<usize> {
+        self.bosons().map(|b| b.number_modes()).collect()
     }
 
     /// Returns the current number of fermionic modes each subsystem acts upon.
@@ -276,8 +276,8 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
-    pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
-        self.fermions().map(|f| f.current_number_modes()).collect()
+    pub fn number_fermionic_modes(&self) -> Vec<usize> {
+        self.fermions().map(|f| f.number_modes()).collect()
     }
 }
 

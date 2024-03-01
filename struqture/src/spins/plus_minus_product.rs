@@ -657,7 +657,7 @@ impl PlusMinusProduct {
     /// # Returns
     ///
     /// * `usize` - Maximum index.
-    pub fn current_number_spins(&self) -> usize {
+    pub fn number_spins(&self) -> usize {
         if let Some((max, _)) = self.iter().last() {
             *max + 1
         } else {
