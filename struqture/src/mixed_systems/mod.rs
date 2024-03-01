@@ -106,8 +106,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of spins in each spin sub-system.
-    fn current_number_spins(&self) -> Vec<usize> {
-        self.spins().map(|s| s.current_number_spins()).collect()
+    fn number_spins(&self) -> Vec<usize> {
+        self.spins().map(|s| s.number_spins()).collect()
     }
 
     /// Returns the current number of bosonic modes each subsystem acts upon.
@@ -115,8 +115,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
-    fn current_number_bosonic_modes(&self) -> Vec<usize> {
-        self.bosons().map(|b| b.current_number_modes()).collect()
+    fn number_bosonic_modes(&self) -> Vec<usize> {
+        self.bosons().map(|b| b.number_modes()).collect()
     }
 
     /// Returns the current number of fermionic modes each subsystem acts upon.
@@ -124,8 +124,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
-    fn current_number_fermionic_modes(&self) -> Vec<usize> {
-        self.fermions().map(|f| f.current_number_modes()).collect()
+    fn number_fermionic_modes(&self) -> Vec<usize> {
+        self.fermions().map(|f| f.number_modes()).collect()
     }
 
     // Document locally
@@ -172,11 +172,8 @@ where
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
 /// assert_eq!(sh.number_spins(), vec![1]);
-/// assert_eq!(sh.current_number_spins(), vec![1]);
 /// assert_eq!(sh.number_bosonic_modes(), vec![2]);
-/// assert_eq!(sh.current_number_bosonic_modes(), vec![2]);
 /// assert_eq!(sh.number_fermionic_modes(), vec![2]);
-/// assert_eq!(sh.current_number_fermionic_modes(), vec![2]);
 /// ```
 ///
 pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
@@ -187,15 +184,6 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// * `Vec<usize>` - The number of spins in each sub-system of Self.
     fn number_spins(&self) -> Vec<usize>;
 
-    /// Returns the number of spins a physical operator acts upon in each spin sub-system of Self.
-    ///
-    /// This corresponds to returning the maximum index the spin operator acts on in each sub-system.
-    ///
-    /// # Returns
-    ///
-    /// * `Vec<usize>` - Maximum spin index currently used in each sub-system of Self.
-    fn current_number_spins(&self) -> Vec<usize>;
-
     /// Returns the number of bosonic modes in each boson sub-system of Self.
     ///
     /// # Returns
@@ -203,30 +191,12 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// * `Vec<usize>` - The number of bosonic modes in each sub-system of Self.
     fn number_bosonic_modes(&self) -> Vec<usize>;
 
-    /// Returns the number of bosonic modes a physical operator acts upon in each boson sub-system of Self.
-    ///
-    /// This corresponds to returning the maximum index the boson operator acts on in each sub-system.
-    ///
-    /// # Returns
-    ///
-    /// * `Vec<usize>` - Maximum boson index currently used in each sub-system of Self.
-    fn current_number_bosonic_modes(&self) -> Vec<usize>;
-
     /// Returns the number of fermionic modes in each fermion sub-system of Self.
     ///
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of fermionic modes in each sub-system of Self.
     fn number_fermionic_modes(&self) -> Vec<usize>;
-
-    /// Returns the number of fermionic modes a physical operator acts upon in each fermion sub-system of Self.
-    ///
-    /// This corresponds to returning the maximum index the fermion operator acts on in each sub-system.
-    ///
-    /// # Returns
-    ///
-    /// * `Vec<usize>` - Maximum fermion index currently used in each sub-system of Self.
-    fn current_number_fermionic_modes(&self) -> Vec<usize>;
 }
 
 pub trait HermitianOperateOnMixedSystems<'a>:

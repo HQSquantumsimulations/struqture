@@ -111,17 +111,6 @@ impl<'a> OperateOnModes<'a> for BosonLindbladOpenSystem {
     fn number_modes(&self) -> usize {
         self.system.number_modes().max(self.noise.number_modes())
     }
-
-    /// Return maximum index in BosonLindbladOpenSystem.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
-    fn current_number_modes(&self) -> usize {
-        self.system
-            .current_number_modes()
-            .max(self.noise.current_number_modes())
-    }
 }
 
 /// Functions for the BosonLindbladOpenSystem

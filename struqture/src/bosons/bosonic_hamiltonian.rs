@@ -235,30 +235,21 @@ impl<'a> OperateOnState<'a> for BosonHamiltonian {
 }
 
 impl<'a> OperateOnModes<'a> for BosonHamiltonian {
-    /// Returns maximum index in BosonHamiltonian internal_map.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
-    fn current_number_modes(&self) -> usize {
-        let mut max_mode: usize = 0;
-        if !self.internal_map.is_empty() {
-            for key in self.internal_map.keys() {
-                if key.current_number_modes() > max_mode {
-                    max_mode = key.current_number_modes()
-                }
-            }
-        }
-        max_mode
-    }
-
     /// Gets the maximum index of the BosonHamiltonian.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of modes in the BosonHamiltonian.
     fn number_modes(&self) -> usize {
-        self.current_number_modes()
+        let mut max_mode: usize = 0;
+        if !self.internal_map.is_empty() {
+            for key in self.internal_map.keys() {
+                if key.number_modes() > max_mode {
+                    max_mode = key.number_modes()
+                }
+            }
+        }
+        max_mode
     }
 }
 

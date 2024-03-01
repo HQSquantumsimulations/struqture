@@ -260,22 +260,17 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
 impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseOperator {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
-        self.current_number_spins()
-    }
-
-    // From trait
-    fn current_number_spins(&self) -> Vec<usize> {
         let mut number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, s) in key_left.spins().enumerate() {
-                    let maxk = (s.current_number_spins()).max(s.current_number_spins());
+                    let maxk = (s.number_spins()).max(s.number_spins());
                     if maxk > number_spins[index] {
                         number_spins[index] = maxk
                     }
                 }
                 for (index, s) in key_right.spins().enumerate() {
-                    let maxk = (s.current_number_spins()).max(s.current_number_spins());
+                    let maxk = (s.number_spins()).max(s.number_spins());
                     if maxk > number_spins[index] {
                         number_spins[index] = maxk
                     }
@@ -287,22 +282,17 @@ impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseOperator {
 
     // From trait
     fn number_bosonic_modes(&self) -> Vec<usize> {
-        self.current_number_bosonic_modes()
-    }
-
-    // From trait
-    fn current_number_bosonic_modes(&self) -> Vec<usize> {
         let mut number_bosons: Vec<usize> = (0..self.n_bosons).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, b) in key_left.bosons().enumerate() {
-                    let maxk = (b.current_number_modes()).max(b.current_number_modes());
+                    let maxk = (b.number_modes()).max(b.number_modes());
                     if maxk > number_bosons[index] {
                         number_bosons[index] = maxk
                     }
                 }
                 for (index, b) in key_right.bosons().enumerate() {
-                    let maxk = (b.current_number_modes()).max(b.current_number_modes());
+                    let maxk = (b.number_modes()).max(b.number_modes());
                     if maxk > number_bosons[index] {
                         number_bosons[index] = maxk
                     }
@@ -314,22 +304,17 @@ impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseOperator {
 
     // From trait
     fn number_fermionic_modes(&self) -> Vec<usize> {
-        self.current_number_fermionic_modes()
-    }
-
-    // From trait
-    fn current_number_fermionic_modes(&self) -> Vec<usize> {
         let mut number_fermions: Vec<usize> = (0..self.n_fermions).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, f) in key_left.fermions().enumerate() {
-                    let maxk = (f.current_number_modes()).max(f.current_number_modes());
+                    let maxk = (f.number_modes()).max(f.number_modes());
                     if maxk > number_fermions[index] {
                         number_fermions[index] = maxk
                     }
                 }
                 for (index, f) in key_right.fermions().enumerate() {
-                    let maxk = (f.current_number_modes()).max(f.current_number_modes());
+                    let maxk = (f.number_modes()).max(f.number_modes());
                     if maxk > number_fermions[index] {
                         number_fermions[index] = maxk
                     }

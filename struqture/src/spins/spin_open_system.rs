@@ -117,13 +117,6 @@ impl<'a> OperateOnSpins<'a> for SpinLindbladOpenSystem {
     fn number_spins(&self) -> usize {
         self.system.number_spins().max(self.noise.number_spins())
     }
-
-    // From trait
-    fn current_number_spins(&self) -> usize {
-        self.system
-            .current_number_spins()
-            .max(self.noise.current_number_spins())
-    }
 }
 
 impl<'a> ToSparseMatrixSuperOperator<'a> for SpinLindbladOpenSystem {

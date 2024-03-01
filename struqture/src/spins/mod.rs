@@ -86,13 +86,6 @@ use crate::CooSparseMatrix;
 pub trait OperateOnSpins<'a>: PartialEq + Clone + Mul<CalculatorFloat> + Add + Sub {
     // Document locally
     fn number_spins(&self) -> usize;
-
-    /// Returns maximum index in Self.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
-    fn current_number_spins(&self) -> usize;
 }
 
 pub trait ToSparseMatrixOperator<'a>:
@@ -391,7 +384,7 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
         number_spins: Option<usize>,
     ) -> Result<CooSparseMatrix, StruqtureError> {
         let dimension = match number_spins {
-            None => 2usize.pow(self.current_number_spins() as u32),
+            None => 2usize.pow(self.number_spins() as u32),
             Some(num_spins) => 2usize.pow(num_spins as u32),
         };
         let number_spins = match number_spins {
