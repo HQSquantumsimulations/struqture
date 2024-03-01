@@ -18,9 +18,7 @@ use struqture::spins::{PlusMinusOperator, PlusMinusProduct};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
-use struqture_py::spins::{
-    PlusMinusOperatorWrapper, SpinHamiltonianSystemWrapper, SpinSystemWrapper,
-};
+use struqture_py::spins::{PlusMinusOperatorWrapper, SpinHamiltonianWrapper, SpinOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
@@ -543,11 +541,11 @@ fn test_from_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinSystemWrapper>();
+        let pp_type = py.get_type::<SpinOperatorWrapper>();
         let pp = pp_type
             .call1((number_spins,))
             .unwrap()
-            .downcast::<PyCell<SpinSystemWrapper>>()
+            .downcast::<PyCell<SpinOperatorWrapper>>()
             .unwrap();
         pp.call_method1(
             "add_operator_product",
@@ -591,11 +589,11 @@ fn test_to_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinSystemWrapper>();
+        let pp_type = py.get_type::<SpinOperatorWrapper>();
         let sys = pp_type
             .call1((number_spins,))
             .unwrap()
-            .downcast::<PyCell<SpinSystemWrapper>>()
+            .downcast::<PyCell<SpinOperatorWrapper>>()
             .unwrap();
         sys.call_method1("add_operator_product", ("0Y", -0.5))
             .unwrap();
@@ -643,11 +641,11 @@ fn test_from_spin_ham_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let pp_type = py.get_type::<SpinHamiltonianWrapper>();
         let pp = pp_type
             .call1((number_spins,))
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
         pp.call_method1(
             "add_operator_product",
@@ -683,11 +681,11 @@ fn test_to_spin_ham_sys() {
             .unwrap();
 
         let number_spins: Option<usize> = None;
-        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let pp_type = py.get_type::<SpinHamiltonianWrapper>();
         let sys = pp_type
             .call1((number_spins,))
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
         sys.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();

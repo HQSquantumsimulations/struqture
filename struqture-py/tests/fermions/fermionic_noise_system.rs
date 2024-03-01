@@ -15,18 +15,18 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 #[cfg(feature = "json_schema")]
-use struqture::{fermions::FermionLindbladNoiseSystem, STRUQTURE_VERSION};
-use struqture_py::fermions::{FermionLindbladNoiseSystemWrapper, FermionProductWrapper};
+use struqture::{fermions::FermionLindbladNoiseOperator, STRUQTURE_VERSION};
+use struqture_py::fermions::{FermionLindbladNoiseOperatorWrapper, FermionProductWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_noisesystem(py: Python) -> &PyCell<FermionLindbladNoiseSystemWrapper> {
-    let system_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
+fn new_noisesystem(py: Python) -> &PyCell<FermionLindbladNoiseOperatorWrapper> {
+    let system_type = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
     let number_modes: Option<usize> = None;
     system_type
         .call1((number_modes,))
         .unwrap()
-        .downcast::<PyCell<FermionLindbladNoiseSystemWrapper>>()
+        .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
         .unwrap()
 }
 
@@ -50,26 +50,26 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test default function of FermionLindbladNoiseSystemWrapper
+/// Test default function of FermionLindbladNoiseOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let system_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
+        let system_type = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
         let new_system = system_type
             .call1((4_usize,))
             .unwrap()
-            .downcast::<PyCell<FermionLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
             .unwrap();
         let system_wrapper = new_system
-            .extract::<FermionLindbladNoiseSystemWrapper>()
+            .extract::<FermionLindbladNoiseOperatorWrapper>()
             .unwrap();
 
         // PartialEq
-        let helper_ne: bool = FermionLindbladNoiseSystemWrapper::default() != system_wrapper;
+        let helper_ne: bool = FermionLindbladNoiseOperatorWrapper::default() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = FermionLindbladNoiseSystemWrapper::default()
-            == FermionLindbladNoiseSystemWrapper::new(None);
+        let helper_eq: bool = FermionLindbladNoiseOperatorWrapper::default()
+            == FermionLindbladNoiseOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -77,8 +77,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", FermionLindbladNoiseSystemWrapper::new(None)),
-            "FermionLindbladNoiseSystemWrapper { internal: FermionLindbladNoiseSystem { number_modes: None, operator: FermionLindbladNoiseOperator { internal_map: {} } } }"
+            format!("{:?}", FermionLindbladNoiseOperatorWrapper::new()),
+            "FermionLindbladNoiseOperatorWrapper { internal: FermionLindbladNoiseOperator { number_modes: None, operator: FermionLindbladNoiseOperator { internal_map: {} } } }"
         );
 
         // Number of fermions
@@ -92,7 +92,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_modes and current_number_modes functions of FermionSystem
+/// Test number_modes and current_number_modes functions of FermionOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -114,7 +114,7 @@ fn test_number_modes_current() {
     });
 }
 
-/// Test empty_clone function of FermionSystem
+/// Test empty_clone function of FermionOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -135,17 +135,17 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of FermionSystem
+/// Test add_operator_product and remove functions of FermionOperator
 #[test]
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionLindbladNoiseSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
         let number_modes: Option<usize> = Some(4);
         let system = new_system
             .call1((number_modes,))
             .unwrap()
-            .downcast::<PyCell<FermionLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -201,7 +201,7 @@ fn fermion_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of FermionSystem
+/// Test keys function of FermionOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -415,7 +415,7 @@ fn test_separate() {
     })
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -436,7 +436,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -464,7 +464,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -492,7 +492,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -514,7 +514,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -546,7 +546,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test copy and deepcopy functions of FermionLindbladNoiseSystem
+/// Test copy and deepcopy functions of FermionLindbladNoiseOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -574,7 +574,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of FermionLindbladNoiseSystem
+/// Test to_bincode and from_bincode functions of FermionLindbladNoiseOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -624,7 +624,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of FermionLindbladNoiseSystem
+/// Test to_ and from_json functions of FermionLindbladNoiseOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -679,7 +679,7 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system = FermionLindbladNoiseSystemWrapper::new(None);
+        let mut rust_system = FermionLindbladNoiseOperatorWrapper::new();
         let pp_type = py.get_type::<FermionProductWrapper>();
         let new_pp = pp_type
             .call1(([0], [0]))
@@ -705,20 +705,20 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "FermionLindbladNoiseSystem(1){\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
+            "FermionLindbladNoiseOperator(1){\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "FermionLindbladNoiseSystem(1){\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
+            "FermionLindbladNoiseOperator(1){\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "FermionLindbladNoiseSystem(1){\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
+            "FermionLindbladNoiseOperator(1){\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
 
-/// Test keys function of FermionLindbladNoiseSystem
+/// Test keys function of FermionLindbladNoiseOperator
 #[test]
 fn test_keys_noise() {
     pyo3::prepare_freethreaded_python();
@@ -790,7 +790,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of FermionLindbladNoiseSystem
+/// Test jordan_wigner() method of FermionLindbladNoiseOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -820,7 +820,7 @@ fn test_json_schema() {
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(FermionLindbladNoiseSystem))
+            serde_json::to_string_pretty(&schemars::schema_for!(FermionLindbladNoiseOperator))
                 .unwrap();
         assert_eq!(schema, rust_schema);
 

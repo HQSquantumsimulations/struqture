@@ -14,24 +14,24 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::bosons::{BosonProduct, BosonSystem};
+use struqture::bosons::{BosonOperator, BosonProduct};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix};
-use struqture_py::bosons::BosonSystemWrapper;
+use struqture_py::bosons::BosonOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python, number_bosons: Option<usize>) -> &PyCell<BosonSystemWrapper> {
-    let system_type = py.get_type::<BosonSystemWrapper>();
+fn new_system(py: Python, number_bosons: Option<usize>) -> &PyCell<BosonOperatorWrapper> {
+    let system_type = py.get_type::<BosonOperatorWrapper>();
     system_type
         .call1((number_bosons,))
         .unwrap()
-        .downcast::<PyCell<BosonSystemWrapper>>()
+        .downcast::<PyCell<BosonOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of BosonSystemWrapper
+/// Test default function of BosonOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -41,12 +41,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<BosonSystemWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<BosonOperatorWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = BosonSystemWrapper::new(None) != system_wrapper;
+        let helper_ne: bool = BosonOperatorWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = BosonSystemWrapper::new(None) == BosonSystemWrapper::new(None);
+        let helper_eq: bool = BosonOperatorWrapper::new() == BosonOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -54,8 +54,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", BosonSystemWrapper::new(None)),
-            "BosonSystemWrapper { internal: BosonSystem { number_modes: None, operator: BosonOperator { internal_map: {} } } }"
+            format!("{:?}", BosonOperatorWrapper::new()),
+            "BosonOperatorWrapper { internal: BosonOperator { number_modes: None, operator: BosonOperator { internal_map: {} } } }"
         );
 
         // Number of bosons
@@ -69,7 +69,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of BosonSystem
+/// Test number_bosons and current_number_bosons functions of BosonOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
@@ -92,7 +92,7 @@ fn test_number_bosons_current() {
     });
 }
 
-/// Test empty_clone function of BosonSystem
+/// Test empty_clone function of BosonOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -117,7 +117,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of BosonSystem
+/// Test hermitian_conjugate function of BosonOperator
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -135,17 +135,17 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of BosonSystem
+/// Test set and get functions of BosonOperator
 #[test]
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<BosonSystemWrapper>();
+        let new_system = py.get_type::<BosonOperatorWrapper>();
         let number_bosons: Option<usize> = Some(4);
         let system = new_system
             .call1((number_bosons,))
             .unwrap()
-            .downcast::<PyCell<BosonSystemWrapper>>()
+            .downcast::<PyCell<BosonOperatorWrapper>>()
             .unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c2c3a1", 0.2)).unwrap();
@@ -187,17 +187,17 @@ fn boson_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of BosonSystem
+/// Test add_operator_product and remove functions of BosonOperator
 #[test]
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<BosonSystemWrapper>();
+        let new_system = py.get_type::<BosonOperatorWrapper>();
         let number_bosons: Option<usize> = Some(4);
         let system = new_system
             .call1((number_bosons,))
             .unwrap()
-            .downcast::<PyCell<BosonSystemWrapper>>()
+            .downcast::<PyCell<BosonOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
@@ -253,7 +253,7 @@ fn boson_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of BosonSystem
+/// Test keys function of BosonOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -465,7 +465,7 @@ fn test_separate() {
     })
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -487,7 +487,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -516,7 +516,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -545,7 +545,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -568,7 +568,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -601,7 +601,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -627,7 +627,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -643,7 +643,7 @@ fn test_mul_error() {
     });
 }
 
-/// Test copy and deepcopy functions of BosonSystem
+/// Test copy and deepcopy functions of BosonOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -667,7 +667,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of BosonSystem
+/// Test to_bincode and from_bincode functions of BosonOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -713,7 +713,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of BosonSystem
+/// Test to_ and from_json functions of BosonOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -758,7 +758,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
-        let mut rust_system = BosonSystem::new(None);
+        let mut rust_system = BosonOperator::new();
         rust_system
             .add_operator_product(
                 BosonProduct::new(vec![0, 1], vec![0, 1]).unwrap(),
@@ -776,15 +776,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "BosonSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "BosonOperator(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "BosonSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "BosonOperator(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "BosonSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "BosonOperator(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -832,7 +832,7 @@ fn test_json_schema() {
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(BosonSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(BosonOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =

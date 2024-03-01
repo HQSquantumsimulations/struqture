@@ -21,7 +21,7 @@ use struqture::spins::PlusMinusProduct;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix};
-use struqture_py::mixed_systems::{MixedPlusMinusOperatorWrapper, MixedSystemWrapper};
+use struqture_py::mixed_systems::{MixedOperatorWrapper, MixedPlusMinusOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
@@ -679,11 +679,11 @@ fn test_from_mixed_sys() {
         let number_spins: Vec<Option<usize>> = vec![None];
         let number_bosons: Vec<Option<usize>> = vec![None];
         let number_fermions: Vec<Option<usize>> = vec![None];
-        let pp_type = py.get_type::<MixedSystemWrapper>();
+        let pp_type = py.get_type::<MixedOperatorWrapper>();
         let pp = pp_type
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         pp.call_method1(
             "add_operator_product",
@@ -729,7 +729,7 @@ fn test_to_mixed_sys() {
         let number_spins: Vec<Option<usize>> = vec![None];
         let number_bosons: Vec<Option<usize>> = vec![None];
         let number_fermions: Vec<Option<usize>> = vec![None];
-        let pp_type = py.get_type::<MixedSystemWrapper>();
+        let pp_type = py.get_type::<MixedOperatorWrapper>();
         let sys = pp_type
             .call1((
                 number_spins.clone(),
@@ -737,7 +737,7 @@ fn test_to_mixed_sys() {
                 number_fermions.clone(),
             ))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         sys.call_method1(
             "add_operator_product",

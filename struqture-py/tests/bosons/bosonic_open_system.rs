@@ -15,14 +15,14 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::bosons::{
-    BosonHamiltonianSystem, BosonLindbladNoiseSystem, BosonLindbladOpenSystem, BosonProduct,
+    BosonHamiltonian, BosonLindbladNoiseOperator, BosonLindbladOpenSystem, BosonProduct,
     HermitianBosonProduct,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OpenSystem, OperateOnDensityMatrix};
 use struqture_py::bosons::{
-    BosonHamiltonianSystemWrapper, BosonLindbladNoiseSystemWrapper, BosonLindbladOpenSystemWrapper,
+    BosonHamiltonianWrapper, BosonLindbladNoiseOperatorWrapper, BosonLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
 
@@ -56,7 +56,7 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test number_modes and current_number_modes functions of BosonSystem
+/// Test number_modes and current_number_modes functions of BosonOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -78,7 +78,7 @@ fn test_number_modes_current() {
     });
 }
 
-/// Test empty_clone function of BosonSystem
+/// Test empty_clone function of BosonOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -97,7 +97,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of BosonSystem
+/// Test add_operator_product and remove functions of BosonOperator
 #[test]
 fn boson_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
@@ -159,7 +159,7 @@ fn boson_system_test_add_operator_product_remove_system() {
     });
 }
 
-/// Test add_operator_product and remove functions of BosonSystem
+/// Test add_operator_product and remove functions of BosonOperator
 #[test]
 fn boson_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
@@ -226,7 +226,7 @@ fn boson_system_test_add_operator_product_remove_noise() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -247,7 +247,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -275,7 +275,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -303,7 +303,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of BosonSystem
+/// Test add magic method function of BosonOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -355,7 +355,7 @@ fn test_default_partialeq_debug_clone() {
         let helper_ne: bool = BosonLindbladOpenSystemWrapper::default() != system_wrapper;
         assert!(helper_ne);
         let helper_eq: bool =
-            BosonLindbladOpenSystemWrapper::default() == BosonLindbladOpenSystemWrapper::new(None);
+            BosonLindbladOpenSystemWrapper::default() == BosonLindbladOpenSystemWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -363,8 +363,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", BosonLindbladOpenSystemWrapper::new(None)),
-            "BosonLindbladOpenSystemWrapper { internal: BosonLindbladOpenSystem { system: BosonHamiltonianSystem { number_modes: None, hamiltonian: BosonHamiltonian { internal_map: {} } }, noise: BosonLindbladNoiseSystem { number_modes: None, operator: BosonLindbladNoiseOperator { internal_map: {} } } } }"
+            format!("{:?}", BosonLindbladOpenSystemWrapper::new()),
+            "BosonLindbladOpenSystemWrapper { internal: BosonLindbladOpenSystem { system: BosonHamiltonian { number_modes: None, hamiltonian: BosonHamiltonian { internal_map: {} } }, noise: BosonLindbladNoiseOperator { number_modes: None, operator: BosonLindbladNoiseOperator { internal_map: {} } } } }"
         );
 
         // Number of bosons
@@ -379,12 +379,12 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<BosonHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<BosonHamiltonianWrapper>();
         let number_modes: Option<usize> = None;
         let boson_system = system_type
             .call1((number_modes,))
             .unwrap()
-            .downcast::<PyCell<BosonHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<BosonHamiltonianWrapper>>()
             .unwrap();
         boson_system
             .call_method1(
@@ -401,11 +401,11 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<BosonLindbladNoiseSystemWrapper>();
+        let noise_type = py.get_type::<BosonLindbladNoiseOperatorWrapper>();
         let noise = noise_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<BosonLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<BosonLindbladNoiseOperatorWrapper>>()
             .unwrap();
         noise
             .call_method1(
@@ -422,11 +422,11 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<BosonLindbladNoiseSystemWrapper>();
+        let noise_type = py.get_type::<BosonLindbladNoiseOperatorWrapper>();
         let noise = noise_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<BosonLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<BosonLindbladNoiseOperatorWrapper>>()
             .unwrap();
         noise
             .call_method1(
@@ -438,12 +438,12 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<BosonHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<BosonHamiltonianWrapper>();
         let number_modes: Option<usize> = None;
         let boson_system = system_type
             .call1((number_modes,))
             .unwrap()
-            .downcast::<PyCell<BosonHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<BosonHamiltonianWrapper>>()
             .unwrap();
         boson_system
             .call_method1(
@@ -1470,8 +1470,8 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = BosonLindbladOpenSystem::group(
-            BosonHamiltonianSystem::new(None),
-            BosonLindbladNoiseSystem::new(None),
+            BosonHamiltonian::new(),
+            BosonLindbladNoiseOperator::new(),
         )
         .unwrap();
         rust_system

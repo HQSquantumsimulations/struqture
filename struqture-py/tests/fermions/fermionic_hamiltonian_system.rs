@@ -14,39 +14,36 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::fermions::{FermionHamiltonianSystem, HermitianFermionProduct};
+use struqture::fermions::{FermionHamiltonian, HermitianFermionProduct};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix};
-use struqture_py::fermions::{FermionHamiltonianSystemWrapper, FermionSystemWrapper};
+use struqture_py::fermions::{FermionHamiltonianWrapper, FermionOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_system(
-    py: Python,
-    number_fermions: Option<usize>,
-) -> &PyCell<FermionHamiltonianSystemWrapper> {
-    let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
+fn new_system(py: Python, number_fermions: Option<usize>) -> &PyCell<FermionHamiltonianWrapper> {
+    let system_type = py.get_type::<FermionHamiltonianWrapper>();
     system_type
         .call1((number_fermions,))
         .unwrap()
-        .downcast::<PyCell<FermionHamiltonianSystemWrapper>>()
+        .downcast::<PyCell<FermionHamiltonianWrapper>>()
         .unwrap()
 }
 // helper functions
 fn new_fermionic_system(
     py: Python,
     number_fermions: Option<usize>,
-) -> &PyCell<FermionSystemWrapper> {
-    let system_type = py.get_type::<FermionSystemWrapper>();
+) -> &PyCell<FermionOperatorWrapper> {
+    let system_type = py.get_type::<FermionOperatorWrapper>();
     system_type
         .call1((number_fermions,))
         .unwrap()
-        .downcast::<PyCell<FermionSystemWrapper>>()
+        .downcast::<PyCell<FermionOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of FermionHamiltonianSystemWrapper
+/// Test default function of FermionHamiltonianWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -56,15 +53,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_wrapper = new_system
-            .extract::<FermionHamiltonianSystemWrapper>()
-            .unwrap();
+        let system_wrapper = new_system.extract::<FermionHamiltonianWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = FermionHamiltonianSystemWrapper::new(None) != system_wrapper;
+        let helper_ne: bool = FermionHamiltonianWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = FermionHamiltonianSystemWrapper::new(None)
-            == FermionHamiltonianSystemWrapper::new(None);
+        let helper_eq: bool = FermionHamiltonianWrapper::new() == FermionHamiltonianWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -72,8 +66,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", FermionHamiltonianSystemWrapper::new(None)),
-            "FermionHamiltonianSystemWrapper { internal: FermionHamiltonianSystem { number_modes: None, hamiltonian: FermionHamiltonian { internal_map: {} } } }"
+            format!("{:?}", FermionHamiltonianWrapper::new()),
+            "FermionHamiltonianWrapper { internal: FermionHamiltonian { number_modes: None, hamiltonian: FermionHamiltonian { internal_map: {} } } }"
         );
 
         // Number of fermions
@@ -87,7 +81,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_fermions and current_number_fermions functions of FermionHamiltonianSystem
+/// Test number_fermions and current_number_fermions functions of FermionHamiltonian
 #[test]
 fn test_number_fermions_current() {
     pyo3::prepare_freethreaded_python();
@@ -110,7 +104,7 @@ fn test_number_fermions_current() {
     });
 }
 
-/// Test empty_clone function of FermionHamiltonianSystem
+/// Test empty_clone function of FermionHamiltonian
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -135,7 +129,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of FermionHamiltonianSystem
+/// Test hermitian_conjugate function of FermionHamiltonian
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -153,17 +147,17 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of FermionHamiltonianSystem
+/// Test set and get functions of FermionHamiltonian
 #[test]
 fn fermion_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<FermionHamiltonianWrapper>();
         let number_fermions: Option<usize> = Some(4);
         let system = new_system
             .call1((number_fermions,))
             .unwrap()
-            .downcast::<PyCell<FermionHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<FermionHamiltonianWrapper>>()
             .unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c1c2a3", 0.2)).unwrap();
@@ -205,17 +199,17 @@ fn fermion_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of FermionHamiltonianSystem
+/// Test add_operator_product and remove functions of FermionHamiltonian
 #[test]
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<FermionHamiltonianWrapper>();
         let number_fermions: Option<usize> = Some(4);
         let system = new_system
             .call1((number_fermions,))
             .unwrap()
-            .downcast::<PyCell<FermionHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<FermionHamiltonianWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
@@ -271,7 +265,7 @@ fn fermion_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of FermionHamiltonianSystem
+/// Test keys function of FermionHamiltonian
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -483,7 +477,7 @@ fn test_separate() {
     })
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -505,7 +499,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -534,7 +528,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -563,7 +557,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -586,7 +580,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -619,7 +613,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -654,7 +648,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of FermionHamiltonianSystem
+/// Test add magic method function of FermionHamiltonian
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -670,7 +664,7 @@ fn test_mul_error() {
     });
 }
 
-/// Test copy and deepcopy functions of FermionHamiltonianSystem
+/// Test copy and deepcopy functions of FermionHamiltonian
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -694,7 +688,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of FermionHamiltonianSystem
+/// Test to_bincode and from_bincode functions of FermionHamiltonian
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -740,7 +734,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of FermionHamiltonianSystem
+/// Test to_ and from_json functions of FermionHamiltonian
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -785,7 +779,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
-        let mut rust_system = FermionHamiltonianSystem::new(None);
+        let mut rust_system = FermionHamiltonian::new();
         rust_system
             .add_operator_product(
                 HermitianFermionProduct::new(vec![0, 1], vec![0, 1]).unwrap(),
@@ -803,15 +797,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "FermionHamiltonianSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "FermionHamiltonian(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "FermionHamiltonianSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "FermionHamiltonian(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "FermionHamiltonianSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "FermionHamiltonian(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -850,7 +844,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of FermionHamiltonianSystem
+/// Test jordan_wigner() method of FermionHamiltonian
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -881,7 +875,7 @@ fn test_json_schema() {
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(FermionHamiltonianSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(FermionHamiltonian)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =

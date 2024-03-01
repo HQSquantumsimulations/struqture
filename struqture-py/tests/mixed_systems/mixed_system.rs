@@ -16,13 +16,13 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{MixedProduct, MixedSystem};
+use struqture::mixed_systems::{MixedOperator, MixedProduct};
 use struqture::prelude::MixedIndex;
 use struqture::spins::PauliProduct;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix, SpinIndex};
-use struqture_py::mixed_systems::MixedSystemWrapper;
+use struqture_py::mixed_systems::MixedOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
@@ -31,16 +31,16 @@ fn new_system(
     number_spins: Vec<Option<usize>>,
     number_bosons: Vec<Option<usize>>,
     number_fermions: Vec<Option<usize>>,
-) -> &PyCell<MixedSystemWrapper> {
-    let system_type = py.get_type::<MixedSystemWrapper>();
+) -> &PyCell<MixedOperatorWrapper> {
+    let system_type = py.get_type::<MixedOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .downcast::<PyCell<MixedSystemWrapper>>()
+        .downcast::<PyCell<MixedOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of MixedSystemWrapper
+/// Test default function of MixedOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -52,14 +52,13 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<MixedSystemWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<MixedOperatorWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool =
-            MixedSystemWrapper::new(vec![None], vec![None], vec![None]) != system_wrapper;
+        let helper_ne: bool = MixedOperatorWrapper::new(1, 1, 1) != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = MixedSystemWrapper::new(vec![None], vec![None], vec![None])
-            == MixedSystemWrapper::new(vec![None], vec![None], vec![None]);
+        let helper_eq: bool =
+            MixedOperatorWrapper::new(1, 1, 1) == MixedOperatorWrapper::new(1, 1, 1);
         assert!(helper_eq);
 
         // Clone
@@ -67,13 +66,13 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", MixedSystemWrapper::new(vec![None], vec![None], vec![None])),
-            "MixedSystemWrapper { internal: MixedSystem { number_spins: [None], number_bosons: [None], number_fermions: [None], operator: MixedOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
+            format!("{:?}", MixedOperatorWrapper::new(1, 1, 1)),
+            "MixedOperatorWrapper { internal: MixedOperator { number_spins: [None], number_bosons: [None], number_fermions: [None], operator: MixedOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
         );
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of MixedSystem
+/// Test number_bosons and current_number_bosons functions of MixedOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
@@ -141,7 +140,7 @@ fn test_number_bosons_current() {
     });
 }
 
-/// Test empty_clone function of MixedSystem
+/// Test empty_clone function of MixedOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -166,7 +165,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of MixedSystem
+/// Test hermitian_conjugate function of MixedOperator
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -186,12 +185,12 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of MixedSystem
+/// Test set and get functions of MixedOperator
 #[test]
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedSystemWrapper>();
+        let new_system = py.get_type::<MixedOperatorWrapper>();
         let number_spins: Vec<Option<usize>> = vec![Some(4)];
         let number_bosons: Vec<Option<usize>> = vec![Some(4)];
         let number_fermions: Vec<Option<usize>> = vec![Some(4)];
@@ -199,7 +198,7 @@ fn boson_system_test_set_get() {
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("set", ("S0Z:Bc0a1:Fc0a0:", 0.1))
@@ -249,19 +248,19 @@ fn boson_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of MixedSystem
+/// Test add_operator_product and remove functions of MixedOperator
 #[test]
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedSystemWrapper>();
+        let new_system = py.get_type::<MixedOperatorWrapper>();
         let number_spins: Vec<Option<usize>> = vec![Some(4)];
         let number_bosons: Vec<Option<usize>> = vec![Some(4)];
         let number_fermions: Vec<Option<usize>> = vec![Some(4)];
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
@@ -323,7 +322,7 @@ fn boson_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of MixedSystem
+/// Test keys function of MixedOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -511,7 +510,7 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -540,7 +539,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -581,7 +580,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -622,7 +621,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -652,7 +651,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -692,7 +691,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -733,7 +732,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -751,7 +750,7 @@ fn test_mul_error() {
     });
 }
 
-/// Test copy and deepcopy functions of MixedSystem
+/// Test copy and deepcopy functions of MixedOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -776,7 +775,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of MixedSystem
+/// Test to_bincode and from_bincode functions of MixedOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -831,7 +830,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of MixedSystem
+/// Test to_ and from_json functions of MixedOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -885,7 +884,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
-        let mut rust_system = MixedSystem::new(vec![None], vec![None], vec![None]);
+        let mut rust_system = MixedOperator::new(1, 1, 1);
         rust_system
             .add_operator_product(
                 MixedProduct::new(
@@ -908,15 +907,15 @@ fn test_format_repr() {
 
         assert_eq!(
         format_op,
-        "MixedSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        "MixedOperator(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
     );
         assert_eq!(
         repr_op,
-        "MixedSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        "MixedOperator(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
     );
         assert_eq!(
         str_op,
-        "MixedSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        "MixedOperator(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
     );
     });
 }
@@ -979,7 +978,7 @@ fn test_json_schema() {
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(MixedSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(MixedOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
