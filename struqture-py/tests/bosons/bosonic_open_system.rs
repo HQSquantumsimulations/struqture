@@ -56,7 +56,7 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test number_modes and current_number_modes functions of BosonOperator
+/// Test number_modes function of BosonOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -67,13 +67,9 @@ fn test_number_modes_current() {
             .unwrap();
 
         let number_system = system.call_method0("number_modes").unwrap();
-        let current_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
-        assert!(comparison);
-        let comparison =
-            bool::extract(current_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -103,9 +99,8 @@ fn boson_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
-        let number_modes: Option<usize> = Some(4);
         let system = new_system
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<BosonLindbladOpenSystemWrapper>>()
             .unwrap();
@@ -149,11 +144,7 @@ fn boson_system_test_add_operator_product_remove_system() {
         let error = system.call_method1("system_add_operator_product", ("c1a2", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("system_add_operator_product", ("a5", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("system_add_operator_product", ("j1", 0.5));
         assert!(error.is_err());
     });
@@ -165,9 +156,8 @@ fn boson_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
-        let number_modes: Option<usize> = Some(4);
         let system = new_system
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<BosonLindbladOpenSystemWrapper>>()
             .unwrap();
@@ -216,11 +206,7 @@ fn boson_system_test_add_operator_product_remove_noise() {
             system.call_method1("noise_add_operator_product", (("c0a0", "c1a2"), vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("noise_add_operator_product", (("c0a0", "a5"), 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("noise_add_operator_product", (("c0a0", "j1"), 0.5));
         assert!(error.is_err());
     });
@@ -364,7 +350,7 @@ fn test_default_partialeq_debug_clone() {
         // Debug
         assert_eq!(
             format!("{:?}", BosonLindbladOpenSystemWrapper::new()),
-            "BosonLindbladOpenSystemWrapper { internal: BosonLindbladOpenSystem { system: BosonHamiltonian { number_modes: None, hamiltonian: BosonHamiltonian { internal_map: {} } }, noise: BosonLindbladNoiseOperator { number_modes: None, operator: BosonLindbladNoiseOperator { internal_map: {} } } } }"
+            "BosonLindbladOpenSystemWrapper { internal: BosonLindbladOpenSystem { system: BosonHamiltonian { internal_map: {} }, noise: BosonLindbladNoiseOperator { internal_map: {} } } }"
         );
 
         // Number of bosons
@@ -372,17 +358,11 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 
-        // Current number of bosons
-        let comp_op = new_sys.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
-        assert!(comparison);
-
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
         let system_type = py.get_type::<BosonHamiltonianWrapper>();
-        let number_modes: Option<usize> = None;
         let boson_system = system_type
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<BosonHamiltonianWrapper>>()
             .unwrap();
@@ -439,9 +419,8 @@ fn test_default_partialeq_debug_clone() {
             .unwrap();
 
         let system_type = py.get_type::<BosonHamiltonianWrapper>();
-        let number_modes: Option<usize> = None;
         let boson_system = system_type
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<BosonHamiltonianWrapper>>()
             .unwrap();
@@ -1490,7 +1469,7 @@ fn test_format_repr() {
         );
 
         let test_string =
-        "BosonLindbladOpenSystem(2){\nSystem: {\nc0a0: (1e-1 + i * 0e0),\n}\nNoise: {\n(c1a1, a1): (1e-1 + i * 0e0),\n}\n}"
+        "BosonLindbladOpenSystem{\nSystem: {\nc0a0: (1e-1 + i * 0e0),\n}\nNoise: {\n(c1a1, a1): (1e-1 + i * 0e0),\n}\n}"
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
