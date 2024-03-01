@@ -22,10 +22,10 @@ use struqture_py::bosons::BosonOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python, number_bosons: Option<usize>) -> &PyCell<BosonOperatorWrapper> {
+fn new_system(py: Python) -> &PyCell<BosonOperatorWrapper> {
     let system_type = py.get_type::<BosonOperatorWrapper>();
     system_type
-        .call1((number_bosons,))
+        .call0()
         .unwrap()
         .downcast::<PyCell<BosonOperatorWrapper>>()
         .unwrap()
@@ -37,8 +37,7 @@ fn new_system(py: Python, number_bosons: Option<usize>) -> &PyCell<BosonOperator
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let new_system = new_system(py, number_bosons);
+        let new_system = new_system(py);
         new_system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -56,7 +55,7 @@ fn test_default_partialeq_debug_clone() {
         // Debug
         assert_eq!(
             format!("{:?}", BosonOperatorWrapper::new()),
-            "BosonOperatorWrapper { internal: BosonOperator { number_modes: None, operator: BosonOperator { internal_map: {} } } }"
+            "BosonOperatorWrapper { internal: BosonOperator { internal_map: {} } }"
         );
 
         // Number of bosons
@@ -64,33 +63,23 @@ fn test_default_partialeq_debug_clone() {
         let comparison =
             bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
-
-        let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
-        assert!(comparison);
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of BosonOperator
+/// Test number_bosons function of BosonOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
         let number_system = system.call_method0("number_modes").unwrap();
-        let current_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
-        assert!(comparison);
-        let comparison =
-            bool::extract_bound(&current_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -100,20 +89,14 @@ fn test_number_bosons_current() {
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
-        let none_system = system
-            .call_method1("empty_clone", (number_bosons,))
-            .unwrap();
+        let system = new_system(py);
+        let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract_bound(&none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let number_bosons: Option<usize> = Some(3);
-        let system = new_system(py, number_bosons);
-        let some_system = system
-            .call_method1("empty_clone", (number_bosons,))
-            .unwrap();
+        let system = new_system(py);
+        let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract_bound(&some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
@@ -125,8 +108,7 @@ fn test_empty_clone() {
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -144,9 +126,8 @@ fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<BosonOperatorWrapper>();
-        let number_bosons: Option<usize> = Some(4);
         let system = new_system
-            .call1((number_bosons,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<BosonOperatorWrapper>>()
             .unwrap();
@@ -184,11 +165,7 @@ fn boson_system_test_set_get() {
         let error = system.call_method1("set", ("c2c3a1", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("set", ("c5", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("set", (vec![0.0], 0.5));
         assert!(error.is_err());
     });
@@ -200,9 +177,8 @@ fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<BosonOperatorWrapper>();
-        let number_bosons: Option<usize> = Some(4);
         let system = new_system
-            .call1((number_bosons,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<BosonOperatorWrapper>>()
             .unwrap();
@@ -255,11 +231,7 @@ fn boson_system_test_add_operator_product_remove() {
         let error = system.call_method1("add_operator_product", ("c2c3a1", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("add_operator_product", ("c5", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("add_operator_product", (vec![0.0], 0.5));
         assert!(error.is_err());
     });
@@ -270,8 +242,7 @@ fn boson_system_test_add_operator_product_remove() {
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
 
         let len_system = system.call_method0("__len__").unwrap();
         let comparison =
@@ -313,9 +284,7 @@ fn test_keys_values() {
 #[test_case(0.7,0.7;"mixed")]
 fn test_truncate(re: f64, im: f64) {
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1(
                 "add_operator_product",
@@ -361,7 +330,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system1 = new_system(py, number_bosons);
+        let test_system1 = new_system(py);
         test_system1
             .call_method1(
                 "add_operator_product",
@@ -396,7 +365,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system2 = new_system(py, number_bosons);
+        let test_system2 = new_system(py);
         test_system2
             .call_method1(
                 "add_operator_product",
@@ -444,7 +413,7 @@ fn test_truncate(re: f64, im: f64) {
 fn test_separate() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pmp = new_system(py, None);
+        let pmp = new_system(py);
         pmp.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         pmp.call_method1("add_operator_product", ("c0c1a0", 1.0))
@@ -452,12 +421,12 @@ fn test_separate() {
         pmp.call_method1("add_operator_product", ("c0c2a0", 1.0))
             .unwrap();
 
-        let pmp_rem = new_system(py, None);
+        let pmp_rem = new_system(py);
         pmp_rem
             .call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
 
-        let pmp_sys = new_system(py, None);
+        let pmp_sys = new_system(py);
         pmp_sys
             .call_method1("add_operator_product", ("c0c1a0", 1.0))
             .unwrap();
@@ -483,12 +452,11 @@ fn test_separate() {
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_bosons);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c0c1a0a1", -0.1))
             .unwrap();
@@ -505,16 +473,15 @@ fn test_neg() {
 fn test_add() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(4);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_bosons);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c2c3a1", 0.2))
             .unwrap();
-        let system_0_1 = new_system(py, number_bosons);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -534,16 +501,15 @@ fn test_add() {
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(4);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_bosons);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c2c3a1", 0.2))
             .unwrap();
-        let system_0_1 = new_system(py, number_bosons);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -563,13 +529,12 @@ fn test_sub() {
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_system(py, number_bosons);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1a0a1", 0.2))
             .unwrap();
@@ -586,13 +551,12 @@ fn test_mul_cf() {
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_system(py, number_bosons);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1(
                 "add_operator_product",
@@ -619,16 +583,15 @@ fn test_mul_cc() {
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(4);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_bosons);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c2c3a1", 1.0))
             .unwrap();
-        let system_0_1 = new_system(py, number_bosons);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1c2c3a0a1", 0.1))
             .unwrap();
@@ -645,8 +608,7 @@ fn test_mul_self() {
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_bosons);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
@@ -661,8 +623,7 @@ fn test_mul_error() {
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -686,15 +647,19 @@ fn test_copy_deepcopy() {
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
         let serialised = system.call_method0("to_bincode").unwrap();
+<<<<<<< HEAD
         let new = new_system(py, number_bosons);
         let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
+=======
+        let new = new_system(py);
+        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+>>>>>>> 63d1cba (Fixed boson tests)
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -720,8 +685,7 @@ fn test_to_from_bincode() {
 fn test_value_error_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let new = new_system(py, number_bosons);
+        let new = new_system(py);
         let deserialised_error = new.call_method1("from_bincode", ("J",));
         assert!(deserialised_error.is_err());
     });
@@ -732,15 +696,19 @@ fn test_value_error_bincode() {
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
         let serialised = system.call_method0("to_json").unwrap();
+<<<<<<< HEAD
         let new = new_system(py, number_bosons);
         let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
+=======
+        let new = new_system(py);
+        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+>>>>>>> 63d1cba (Fixed boson tests)
 
         let deserialised_error =
             new.call_method1("from_json", (serde_json::to_string("fails").unwrap(),));
@@ -767,8 +735,7 @@ fn test_to_from_json() {
 fn test_format_repr() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system = new_system(py, number_bosons);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
@@ -790,15 +757,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "BosonOperator(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "BosonOperator{\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "BosonOperator(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "BosonOperator{\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "BosonOperator(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "BosonOperator{\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -808,12 +775,11 @@ fn test_format_repr() {
 fn test_richcmp() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_bosons: Option<usize> = None;
-        let system_one = new_system(py, number_bosons);
+        let system_one = new_system(py);
         system_one
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_two = new_system(py, number_bosons);
+        let system_two = new_system(py);
         system_two
             .call_method1("add_operator_product", ("c0a2", 0.1))
             .unwrap();
@@ -846,7 +812,7 @@ fn test_richcmp() {
 fn test_json_schema() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new = new_system(py, None);
+        let new = new_system(py);
 
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
