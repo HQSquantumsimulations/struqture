@@ -74,7 +74,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of MixedPlusMinusOperator
+/// Test number_bosons function of MixedPlusMinusOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
@@ -88,52 +88,17 @@ fn test_number_bosons_current() {
             .unwrap();
 
         let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract_bound(
-            &number_system
+        let comparison = bool::extract(
+            number_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract_bound(
-            &current_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-
-        let number_system = system.call_method0("number_bosonic_modes").unwrap();
-        let current_system = system.call_method0("current_number_bosonic_modes").unwrap();
-        let comparison = bool::extract_bound(
-            &number_system
-                .call_method1("__eq__", (vec![2_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract_bound(
-            &current_system
-                .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
 
         let number_system = system.call_method0("number_fermionic_modes").unwrap();
-        let current_system = system
-            .call_method0("current_number_fermionic_modes")
-            .unwrap();
-        let comparison = bool::extract_bound(
-            &number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract_bound(
-            &current_system
+        let comparison = bool::extract(
+            number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -682,12 +647,9 @@ fn test_from_mixed_sys() {
         )
         .unwrap();
 
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
         let pp_type = py.get_type::<MixedOperatorWrapper>();
         let pp = pp_type
-            .call1((number_spins, number_bosons, number_fermions))
+            .call1((1, 1, 1))
             .unwrap()
             .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
@@ -734,16 +696,9 @@ fn test_to_mixed_sys() {
         )
         .unwrap();
 
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
         let pp_type = py.get_type::<MixedOperatorWrapper>();
         let sys = pp_type
-            .call1((
-                number_spins.clone(),
-                number_bosons.clone(),
-                number_fermions.clone(),
-            ))
+            .call1((1, 1, 1))
             .unwrap()
             .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
@@ -760,13 +715,8 @@ fn test_to_mixed_sys() {
             )
             .unwrap();
 
-        let result = pmp
-            .call_method1(
-                "to_mixed_system",
-                (number_spins, number_bosons, number_fermions),
-            )
-            .unwrap();
-        let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
+        let result = pmp.call_method0("to_mixed_system").unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
