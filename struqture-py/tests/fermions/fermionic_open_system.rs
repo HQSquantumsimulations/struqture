@@ -15,14 +15,14 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::fermions::{
-    FermionHamiltonianSystem, FermionLindbladNoiseSystem, FermionLindbladOpenSystem,
-    FermionProduct, HermitianFermionProduct,
+    FermionHamiltonian, FermionLindbladNoiseOperator, FermionLindbladOpenSystem, FermionProduct,
+    HermitianFermionProduct,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OpenSystem, OperateOnDensityMatrix};
 use struqture_py::fermions::{
-    FermionHamiltonianSystemWrapper, FermionLindbladNoiseSystemWrapper,
+    FermionHamiltonianWrapper, FermionLindbladNoiseOperatorWrapper,
     FermionLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
@@ -57,7 +57,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
     }
 }
 
-/// Test number_modes and current_number_modes functions of FermionSystem
+/// Test number_modes and current_number_modes functions of FermionOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -79,7 +79,7 @@ fn test_number_modes_current() {
     });
 }
 
-/// Test empty_clone function of FermionSystem
+/// Test empty_clone function of FermionOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -98,7 +98,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of FermionSystem
+/// Test add_operator_product and remove functions of FermionOperator
 #[test]
 fn fermion_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
@@ -163,7 +163,7 @@ fn fermion_system_test_add_operator_product_remove_system() {
     });
 }
 
-/// Test add_operator_product and remove functions of FermionSystem
+/// Test add_operator_product and remove functions of FermionOperator
 #[test]
 fn fermion_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
@@ -233,7 +233,7 @@ fn fermion_system_test_add_operator_product_remove_noise() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -254,7 +254,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -282,7 +282,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -310,7 +310,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -363,8 +363,8 @@ fn test_default_partialeq_debug_clone() {
         // PartialEq
         let helper_ne: bool = FermionLindbladOpenSystemWrapper::default() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = FermionLindbladOpenSystemWrapper::default()
-            == FermionLindbladOpenSystemWrapper::new(None);
+        let helper_eq: bool =
+            FermionLindbladOpenSystemWrapper::default() == FermionLindbladOpenSystemWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -372,8 +372,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", FermionLindbladOpenSystemWrapper::new(None)),
-            "FermionLindbladOpenSystemWrapper { internal: FermionLindbladOpenSystem { system: FermionHamiltonianSystem { number_modes: None, hamiltonian: FermionHamiltonian { internal_map: {} } }, noise: FermionLindbladNoiseSystem { number_modes: None, operator: FermionLindbladNoiseOperator { internal_map: {} } } } }"
+            format!("{:?}", FermionLindbladOpenSystemWrapper::new()),
+            "FermionLindbladOpenSystemWrapper { internal: FermionLindbladOpenSystem { system: FermionHamiltonian { number_modes: None, hamiltonian: FermionHamiltonian { internal_map: {} } }, noise: FermionLindbladNoiseOperator { number_modes: None, operator: FermionLindbladNoiseOperator { internal_map: {} } } } }"
         );
 
         // Number of fermions
@@ -390,9 +390,13 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<FermionHamiltonianWrapper>();
         let number_modes: Option<usize> = None;
-        let fermion_system = system_type.call1((number_modes,)).unwrap();
+        let fermion_system = system_type
+            .call1((number_modes,))
+            .unwrap()
+            .downcast::<PyCell<FermionHamiltonianWrapper>>()
+            .unwrap();
         fermion_system
             .downcast::<FermionHamiltonianSystemWrapper>()
             .unwrap()
@@ -411,8 +415,12 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
-        let noise = noise_type.call0().unwrap();
+        let noise_type = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
+        let noise = noise_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
+            .unwrap();
         noise
             .downcast::<FermionLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -431,8 +439,12 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
-        let noise = noise_type.call0().unwrap();
+        let noise_type = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
+        let noise = noise_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
+            .unwrap();
         noise
             .downcast::<FermionLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -445,9 +457,13 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<FermionHamiltonianWrapper>();
         let number_modes: Option<usize> = None;
-        let fermion_system = system_type.call1((number_modes,)).unwrap();
+        let fermion_system = system_type
+            .call1((number_modes,))
+            .unwrap()
+            .downcast::<PyCell<FermionHamiltonianWrapper>>()
+            .unwrap();
         fermion_system
             .downcast::<FermionHamiltonianSystemWrapper>()
             .unwrap()
@@ -1465,8 +1481,8 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = FermionLindbladOpenSystem::group(
-            FermionHamiltonianSystem::new(None),
-            FermionLindbladNoiseSystem::new(None),
+            FermionHamiltonian::new(),
+            FermionLindbladNoiseOperator::new(),
         )
         .unwrap();
         rust_system

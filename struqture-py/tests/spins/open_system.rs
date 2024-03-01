@@ -14,14 +14,14 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SpinHamiltonianSystem, SpinLindbladNoiseSystem,
+    DecoherenceProduct, PauliProduct, SpinHamiltonian, SpinLindbladNoiseOperator,
     SpinLindbladOpenSystem,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, SpinIndex};
 use struqture_py::spins::{
-    SpinHamiltonianSystemWrapper, SpinLindbladNoiseSystemWrapper, SpinLindbladOpenSystemWrapper,
+    SpinHamiltonianWrapper, SpinLindbladNoiseOperatorWrapper, SpinLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
 
@@ -348,7 +348,7 @@ fn test_default_partialeq_debug_clone() {
         let helper_ne: bool = SpinLindbladOpenSystemWrapper::default() != system_wrapper;
         assert!(helper_ne);
         let helper_eq: bool =
-            SpinLindbladOpenSystemWrapper::default() == SpinLindbladOpenSystemWrapper::new(None);
+            SpinLindbladOpenSystemWrapper::default() == SpinLindbladOpenSystemWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -356,8 +356,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", SpinLindbladOpenSystemWrapper::new(None)),
-            "SpinLindbladOpenSystemWrapper { internal: SpinLindbladOpenSystem { system: SpinHamiltonianSystem { number_spins: None, hamiltonian: SpinHamiltonian { internal_map: {} } }, noise: SpinLindbladNoiseSystem { number_spins: None, operator: SpinLindbladNoiseOperator { internal_map: {} } } } }"
+            format!("{:?}", SpinLindbladOpenSystemWrapper::new()),
+            "SpinLindbladOpenSystemWrapper { internal: SpinLindbladOpenSystem { system: SpinHamiltonian { number_spins: None, hamiltonian: SpinHamiltonian { internal_map: {} } }, noise: SpinLindbladNoiseOperator { number_spins: None, operator: SpinLindbladNoiseOperator { internal_map: {} } } } }"
         );
 
         // Number of spins
@@ -374,9 +374,13 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<SpinHamiltonianWrapper>();
         let number_spins: Option<usize> = None;
-        let spin_system = system_type.call1((number_spins,)).unwrap();
+        let spin_system = system_type
+            .call1((number_spins,))
+            .unwrap()
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .unwrap();
         spin_system
             .downcast::<SpinHamiltonianSystemWrapper>()
             .unwrap()
@@ -391,8 +395,12 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let noise = noise_type.call0().unwrap();
+        let noise_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
+        let noise = noise_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
+            .unwrap();
         noise
             .downcast::<SpinLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -411,8 +419,12 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let noise = noise_type.call0().unwrap();
+        let noise_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
+        let noise = noise_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
+            .unwrap();
         noise
             .downcast::<SpinLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -425,9 +437,13 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<SpinHamiltonianWrapper>();
         let number_spins: Option<usize> = None;
-        let spin_system = system_type.call1((number_spins,)).unwrap();
+        let spin_system = system_type
+            .call1((number_spins,))
+            .unwrap()
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .unwrap();
         spin_system
             .downcast::<SpinHamiltonianSystemWrapper>()
             .unwrap()
@@ -1392,11 +1408,9 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system = SpinLindbladOpenSystem::group(
-            SpinHamiltonianSystem::new(None),
-            SpinLindbladNoiseSystem::new(None),
-        )
-        .unwrap();
+        let mut rust_system =
+            SpinLindbladOpenSystem::group(SpinHamiltonian::new(), SpinLindbladNoiseOperator::new())
+                .unwrap();
         rust_system
             .system_mut()
             .add_operator_product(PauliProduct::new().x(0), CalculatorFloat::from(0.1))

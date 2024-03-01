@@ -17,7 +17,8 @@ use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 #[cfg(feature = "json_schema")]
 use struqture::{spins::PlusMinusLindbladNoiseOperator, STRUQTURE_VERSION};
 use struqture_py::spins::{
-    PlusMinusLindbladNoiseOperatorWrapper, PlusMinusProductWrapper, SpinLindbladNoiseSystemWrapper,
+    PlusMinusLindbladNoiseOperatorWrapper, PlusMinusProductWrapper,
+    SpinLindbladNoiseOperatorWrapper,
 };
 use test_case::test_case;
 
@@ -776,19 +777,11 @@ fn test_from_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let pp = pp_type.call1((number_spins,)).unwrap();
-        pp.downcast::<SpinLindbladNoiseSystemWrapper>()
+        let pp_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
+        let pp = pp_type
+            .call1((number_spins,))
             .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    ("0iY", "0iY"),
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(1.0, 0.0),
-                    },
-                ),
-            )
+            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
             .unwrap();
 
         let result = py
@@ -822,19 +815,11 @@ fn test_to_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let sys = pp_type.call1((number_spins,)).unwrap();
-        sys.downcast::<SpinLindbladNoiseSystemWrapper>()
+        let pp_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
+        let sys = pp_type
+            .call1((number_spins,))
             .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    ("0X", "0X"),
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(0.25, 0.0),
-                    },
-                ),
-            )
+            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
             .unwrap();
         sys.call_method1(
             "add_operator_product",

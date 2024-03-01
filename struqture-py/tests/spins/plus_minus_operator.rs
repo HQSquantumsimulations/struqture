@@ -18,9 +18,7 @@ use struqture::spins::{PlusMinusOperator, PlusMinusProduct};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
-use struqture_py::spins::{
-    PlusMinusOperatorWrapper, SpinHamiltonianSystemWrapper, SpinSystemWrapper,
-};
+use struqture_py::spins::{PlusMinusOperatorWrapper, SpinHamiltonianWrapper, SpinOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
@@ -549,19 +547,11 @@ fn test_from_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinSystemWrapper>();
-        let pp = pp_type.call1((number_spins,)).unwrap();
-        pp.downcast::<SpinSystemWrapper>()
+        let pp_type = py.get_type::<SpinOperatorWrapper>();
+        let pp = pp_type
+            .call1((number_spins,))
             .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    "0Y",
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(1.0, 0.0),
-                    },
-                ),
-            )
+            .downcast::<PyCell<SpinOperatorWrapper>>()
             .unwrap();
 
         let result = py
@@ -595,11 +585,13 @@ fn test_to_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinSystemWrapper>();
-        let sys = pp_type.call1((number_spins,)).unwrap();
-        sys.downcast::<SpinSystemWrapper>()
+        let pp_type = py.get_type::<SpinOperatorWrapper>();
+        let sys = pp_type
+            .call1((number_spins,))
             .unwrap()
-            .call_method1("add_operator_product", ("0Y", -0.5))
+            .downcast::<PyCell<SpinOperatorWrapper>>()
+            .unwrap();
+        sys.call_method1("add_operator_product", ("0Y", -0.5))
             .unwrap();
         sys.call_method1(
             "add_operator_product",
@@ -645,19 +637,11 @@ fn test_from_spin_ham_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
-        let pp = pp_type.call1((number_spins,)).unwrap();
-        pp.downcast::<SpinHamiltonianSystemWrapper>()
+        let pp_type = py.get_type::<SpinHamiltonianWrapper>();
+        let pp = pp_type
+            .call1((number_spins,))
             .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    "0Y",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(1.0),
-                    },
-                ),
-            )
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
             .unwrap();
 
         let result = py
@@ -683,11 +667,13 @@ fn test_to_spin_ham_sys() {
             .unwrap();
 
         let number_spins: Option<usize> = None;
-        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
-        let sys = pp_type.call1((number_spins,)).unwrap();
-        sys.downcast::<SpinHamiltonianSystemWrapper>()
+        let pp_type = py.get_type::<SpinHamiltonianWrapper>();
+        let sys = pp_type
+            .call1((number_spins,))
             .unwrap()
-            .call_method1("add_operator_product", ("0Z", 1.0))
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .unwrap();
+        sys.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
         let result = pmp.call_method0("to_spin_hamiltonian_system").unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();

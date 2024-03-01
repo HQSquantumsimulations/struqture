@@ -17,8 +17,8 @@ use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedDecoherenceProduct, MixedHamiltonianSystem,
-    MixedLindbladNoiseSystem, MixedLindbladOpenSystem,
+    HermitianMixedProduct, MixedDecoherenceProduct, MixedHamiltonian, MixedLindbladNoiseOperator,
+    MixedLindbladOpenSystem,
 };
 use struqture::prelude::MixedIndex;
 use struqture::spins::{DecoherenceProduct, PauliProduct};
@@ -26,7 +26,7 @@ use struqture::spins::{DecoherenceProduct, PauliProduct};
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OpenSystem, OperateOnDensityMatrix, SpinIndex};
 use struqture_py::mixed_systems::{
-    MixedHamiltonianSystemWrapper, MixedLindbladNoiseSystemWrapper, MixedLindbladOpenSystemWrapper,
+    MixedHamiltonianWrapper, MixedLindbladNoiseOperatorWrapper, MixedLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
 
@@ -65,7 +65,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
     }
 }
 
-/// Test number_modes and current_number_modes functions of MixedSystem
+/// Test number_modes and current_number_modes functions of MixedOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -136,7 +136,7 @@ fn test_number_modes_current() {
     });
 }
 
-/// Test empty_clone function of MixedSystem
+/// Test empty_clone function of MixedOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -161,7 +161,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of MixedSystem
+/// Test add_operator_product and remove functions of MixedOperator
 #[test]
 fn mixed_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
@@ -240,7 +240,7 @@ fn mixed_system_test_add_operator_product_remove_system() {
     });
 }
 
-/// Test add_operator_product and remove functions of MixedSystem
+/// Test add_operator_product and remove functions of MixedOperator
 #[test]
 fn mixed_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
@@ -336,7 +336,7 @@ fn mixed_system_test_add_operator_product_remove_noise() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -369,7 +369,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -418,7 +418,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -467,7 +467,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of MixedSystem
+/// Test add magic method function of MixedOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -535,8 +535,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", MixedLindbladOpenSystemWrapper::new(vec![None], vec![None], vec![None])),
-            "MixedLindbladOpenSystemWrapper { internal: MixedLindbladOpenSystem { system: MixedHamiltonianSystem { number_spins: [None], number_bosons: [None], number_fermions: [None], hamiltonian: MixedHamiltonian { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }, noise: MixedLindbladNoiseSystem { number_spins: [None], number_bosons: [None], number_fermions: [None], operator: MixedLindbladNoiseOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } } }"
+            format!("{:?}", MixedLindbladOpenSystemWrapper::new(1, 1, 1)),
+            "MixedLindbladOpenSystemWrapper { internal: MixedLindbladOpenSystem { system: MixedHamiltonian { number_spins: [None], number_bosons: [None], number_fermions: [None], hamiltonian: MixedHamiltonian { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }, noise: MixedLindbladNoiseOperator { number_spins: [None], number_bosons: [None], number_fermions: [None], operator: MixedLindbladNoiseOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } } }"
         );
 
         // Number of modes
@@ -596,10 +596,12 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<MixedHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<MixedHamiltonianWrapper>();
         let number_modes: Option<usize> = None;
         let mixed_system = system_type
             .call1((vec![number_modes], vec![number_modes], vec![number_modes]))
+            .unwrap()
+            .downcast::<PyCell<MixedHamiltonianWrapper>>()
             .unwrap();
         mixed_system
             .downcast::<MixedHamiltonianSystemWrapper>()
@@ -618,8 +620,12 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<MixedLindbladNoiseSystemWrapper>();
-        let noise = noise_type.call0().unwrap();
+        let noise_type = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+        let noise = noise_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+            .unwrap();
         noise
             .downcast::<MixedLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -638,8 +644,12 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<MixedLindbladNoiseSystemWrapper>();
-        let noise = noise_type.call0().unwrap();
+        let noise_type = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+        let noise = noise_type
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+            .unwrap();
         noise
             .downcast::<MixedLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -652,10 +662,12 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<MixedHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<MixedHamiltonianWrapper>();
         let number_modes: Option<usize> = None;
         let mixed_system = system_type
             .call1((vec![number_modes], vec![number_modes], vec![number_modes]))
+            .unwrap()
+            .downcast::<PyCell<MixedHamiltonianWrapper>>()
             .unwrap();
         mixed_system
             .downcast::<MixedHamiltonianSystemWrapper>()
@@ -1746,8 +1758,8 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = MixedLindbladOpenSystem::group(
-            MixedHamiltonianSystem::new(vec![None], vec![None], vec![None]),
-            MixedLindbladNoiseSystem::new(vec![None], vec![None], vec![None]),
+            MixedHamiltonian::new(1, 1, 1),
+            MixedLindbladNoiseOperator::new(1, 1, 1),
         )
         .unwrap();
         rust_system
@@ -1781,7 +1793,7 @@ fn test_format_repr() {
         );
 
         let test_string =
-        "MixedLindbladOpenSystem{\nSystem: {\nMixedHamiltonianSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}}\nNoise: {\nMixedLindbladNoiseSystem(\nnumber_spins: 1, \nnumber_bosons: 1, \nnumber_fermions: 2, )\n{(S0X:Bc0a0:Fc0a1:, S0X:Bc0a0:Fc0a1:): (1e-1 + i * 0e0),\n}}\n}"
+        "MixedLindbladOpenSystem{\nSystem: {\nMixedHamiltonian(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}}\nNoise: {\nMixedLindbladNoiseOperator(\nnumber_spins: 1, \nnumber_bosons: 1, \nnumber_fermions: 2, )\n{(S0X:Bc0a0:Fc0a1:, S0X:Bc0a0:Fc0a1:): (1e-1 + i * 0e0),\n}}\n}"
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();

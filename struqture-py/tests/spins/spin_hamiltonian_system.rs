@@ -14,34 +14,34 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
-use struqture::spins::{PauliProduct, SpinHamiltonianSystem};
+use struqture::spins::{PauliProduct, SpinHamiltonian};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};
-use struqture_py::spins::{SpinHamiltonianSystemWrapper, SpinSystemWrapper};
+use struqture_py::spins::{SpinHamiltonianWrapper, SpinOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python, number_spins: Option<usize>) -> Bound<SpinHamiltonianSystemWrapper> {
-    let system_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+fn new_system(py: Python, number_spins: Option<usize>) -> &PyCell<SpinHamiltonianWrapper> {
+    let system_type = py.get_type::<SpinHamiltonianWrapper>();
     system_type
         .call1((number_spins,))
         .unwrap()
-        .downcast::<SpinHamiltonianSystemWrapper>()
+        .downcast::<PyCell<SpinHamiltonianWrapper>>()
         .unwrap()
         .to_owned()
 }
-fn new_spin_system(py: Python, number_spins: Option<usize>) -> Bound<SpinSystemWrapper> {
-    let system_type = py.get_type::<SpinSystemWrapper>();
+fn new_spin_system(py: Python, number_spins: Option<usize>) -> &PyCell<SpinOperatorWrapper> {
+    let system_type = py.get_type::<SpinOperatorWrapper>();
     system_type
         .call1((number_spins,))
         .unwrap()
-        .downcast::<SpinSystemWrapper>()
+        .downcast::<PyCell<SpinOperatorWrapper>>()
         .unwrap()
         .to_owned()
 }
 
-/// Test default function of SpinHamiltonianSystemWrapper
+/// Test default function of SpinHamiltonianWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -51,15 +51,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let system_wrapper = new_system
-            .extract::<SpinHamiltonianSystemWrapper>()
-            .unwrap();
+        let system_wrapper = new_system.extract::<SpinHamiltonianWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = SpinHamiltonianSystemWrapper::new(None) != system_wrapper;
+        let helper_ne: bool = SpinHamiltonianWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool =
-            SpinHamiltonianSystemWrapper::new(None) == SpinHamiltonianSystemWrapper::new(None);
+        let helper_eq: bool = SpinHamiltonianWrapper::new() == SpinHamiltonianWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -67,8 +64,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", SpinHamiltonianSystemWrapper::new(None)),
-            "SpinHamiltonianSystemWrapper { internal: SpinHamiltonianSystem { number_spins: None, hamiltonian: SpinHamiltonian { internal_map: {} } } }"
+            format!("{:?}", SpinHamiltonianWrapper::new()),
+            "SpinHamiltonianWrapper { internal: SpinHamiltonian { number_spins: None, hamiltonian: SpinHamiltonian { internal_map: {} } } }"
         );
 
         // Number of spins
@@ -79,7 +76,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_spins and current_number_spins functions of SpinHamiltonianSystem
+/// Test number_spins and current_number_spins functions of SpinHamiltonian
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -102,7 +99,7 @@ fn test_number_spins_current() {
     });
 }
 
-/// Test empty_clone function of SpinHamiltonianSystem
+/// Test empty_clone function of SpinHamiltonian
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -123,7 +120,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of SpinHamiltonianSystem
+/// Test hermitian_conjugate function of SpinHamiltonian
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -141,15 +138,18 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of SpinHamiltonianSystem
+/// Test set and get functions of SpinHamiltonian
 #[test]
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<SpinHamiltonianWrapper>();
         let number_spins: Option<usize> = Some(4);
-        let binding = new_system.call1((number_spins,)).unwrap();
-        let system = binding.downcast::<SpinHamiltonianSystemWrapper>().unwrap();
+        let system = new_system
+            .call1((number_spins,))
+            .unwrap()
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
         system.call_method1("set", ("3Y", 0.05)).unwrap();
@@ -194,15 +194,18 @@ fn spin_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of SpinHamiltonianSystem
+/// Test add_operator_product and remove functions of SpinHamiltonian
 #[test]
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<SpinHamiltonianWrapper>();
         let number_spins: Option<usize> = Some(4);
-        let binding = new_system.call1((number_spins,)).unwrap();
-        let system = binding.downcast::<SpinHamiltonianSystemWrapper>().unwrap();
+        let system = new_system
+            .call1((number_spins,))
+            .unwrap()
+            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
@@ -262,7 +265,7 @@ fn spin_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of SpinHamiltonianSystem
+/// Test keys function of SpinHamiltonian
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -468,7 +471,7 @@ fn test_separate() {
     })
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -490,7 +493,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -519,7 +522,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -548,7 +551,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -571,7 +574,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -601,7 +604,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -627,7 +630,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonianSystem
+/// Test add magic method function of SpinHamiltonian
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -643,7 +646,7 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of SpinHamiltonianSystem
+// /// Test test_sparse_lindblad_entries function of SpinHamiltonian
 // #[test]
 // fn test_sparse_lindblad_entries() {
 //     pyo3::prepare_freethreaded_python();
@@ -666,7 +669,7 @@ fn test_mul_error() {
 //     assert!(comparison);
 // }
 
-// /// Test add magic method function of SpinHamiltonianSystem
+// /// Test add magic method function of SpinHamiltonian
 // #[test]
 // fn test_unitary_sparse_matrix_coo() {
 //     pyo3::prepare_freethreaded_python();
@@ -690,7 +693,7 @@ fn test_mul_error() {
 //     // assert_eq!(result_matrix, test_matrix);
 // }
 
-/// Test copy and deepcopy functions of SpinHamiltonianSystem
+/// Test copy and deepcopy functions of SpinHamiltonian
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -715,7 +718,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of SpinHamiltonianSystem
+/// Test to_bincode and from_bincode functions of SpinHamiltonian
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -761,7 +764,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of SpinHamiltonianSystem
+/// Test to_ and from_json functions of SpinHamiltonian
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -806,7 +809,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("0X", 0.1_f64))
             .unwrap();
-        let mut rust_system = SpinHamiltonianSystem::new(None);
+        let mut rust_system = SpinHamiltonian::new();
         rust_system
             .add_operator_product(PauliProduct::new().x(0), CalculatorFloat::from(0.1))
             .unwrap();
@@ -819,18 +822,9 @@ fn test_format_repr() {
         let to_str = system.call_method0("__str__").unwrap();
         let str_op: String = String::extract_bound(&to_str).unwrap();
 
-        assert_eq!(
-            format_op,
-            "SpinHamiltonianSystem(1){\n0X: 1e-1,\n}".to_string()
-        );
-        assert_eq!(
-            repr_op,
-            "SpinHamiltonianSystem(1){\n0X: 1e-1,\n}".to_string()
-        );
-        assert_eq!(
-            str_op,
-            "SpinHamiltonianSystem(1){\n0X: 1e-1,\n}".to_string()
-        );
+        assert_eq!(format_op, "SpinHamiltonian(1){\n0X: 1e-1,\n}".to_string());
+        assert_eq!(repr_op, "SpinHamiltonian(1){\n0X: 1e-1,\n}".to_string());
+        assert_eq!(str_op, "SpinHamiltonian(1){\n0X: 1e-1,\n}".to_string());
     });
 }
 
@@ -870,7 +864,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of SpinHamiltonianSystem
+/// Test jordan_wigner() method of SpinHamiltonian
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -901,7 +895,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(SpinHamiltonianSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(SpinHamiltonian)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
