@@ -35,17 +35,8 @@ pub use spin_operator::*;
 mod spin_hamiltonian;
 pub use spin_hamiltonian::*;
 
-mod spin_system;
-pub use spin_system::*;
-
-mod spin_hamiltonian_system;
-pub use spin_hamiltonian_system::*;
-
 mod spin_noise_operator;
 pub use spin_noise_operator::*;
-
-mod spin_noise_system;
-pub use spin_noise_system::*;
 
 mod spin_open_system;
 pub use spin_open_system::*;

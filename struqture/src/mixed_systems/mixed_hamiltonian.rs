@@ -66,11 +66,11 @@ pub struct MixedHamiltonian {
     #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<HermitianMixedProduct, CalculatorComplex>,
     /// Number of Spin subsystems
-    n_spins: usize,
+    pub(crate) n_spins: usize,
     /// Number of Boson subsystems
-    n_bosons: usize,
+    pub(crate) n_bosons: usize,
     /// Number of Fermion subsystems
-    n_fermions: usize,
+    pub(crate) n_fermions: usize,
 }
 
 impl crate::MinSupportedVersion for MixedHamiltonian {}

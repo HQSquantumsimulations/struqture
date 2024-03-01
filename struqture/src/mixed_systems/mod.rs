@@ -26,38 +26,32 @@
 
 mod mixed_decoherence_product;
 mod mixed_hamiltonian;
-mod mixed_hamiltonian_system;
 mod mixed_hermitian_product;
 mod mixed_noise_operator;
-mod mixed_noise_system;
 mod mixed_open_system;
 mod mixed_operator;
 mod mixed_plus_minus_operator;
 mod mixed_plus_minus_product;
 mod mixed_product;
-mod mixed_system;
 
 use crate::{
     bosons::BosonIndex, fermions::FermionIndex, ModeIndex, OperateOnDensityMatrix, SpinIndex,
     StruqtureError,
 };
-#[cfg(feature = "json_schema")]
-use mixed_noise_system::TinyVecDef;
+// #[cfg(feature = "json_schema")]
+// use mixed_noise_system::TinyVecDef;
 use qoqo_calculator::CalculatorComplex;
 use std::str::FromStr;
 
 pub use mixed_decoherence_product::MixedDecoherenceProduct;
 pub use mixed_hamiltonian::MixedHamiltonian;
-pub use mixed_hamiltonian_system::MixedHamiltonianSystem;
 pub use mixed_hermitian_product::HermitianMixedProduct;
 pub use mixed_noise_operator::MixedLindbladNoiseOperator;
-pub use mixed_noise_system::MixedLindbladNoiseSystem;
 pub use mixed_open_system::MixedLindbladOpenSystem;
 pub use mixed_operator::MixedOperator;
 pub use mixed_plus_minus_operator::MixedPlusMinusOperator;
 pub use mixed_plus_minus_product::MixedPlusMinusProduct;
 pub use mixed_product::MixedProduct;
-pub use mixed_system::MixedSystem;
 
 /// Trait for all index types requires converting between index types
 pub trait MixedIndex:
