@@ -57,7 +57,7 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test number_modes and current_number_modes functions of FermionOperator
+/// Test number_modes function of FermionOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -68,13 +68,9 @@ fn test_number_modes_current() {
             .unwrap();
 
         let number_system = system.call_method0("number_modes").unwrap();
-        let current_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
-        assert!(comparison);
-        let comparison =
-            bool::extract(current_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -104,9 +100,8 @@ fn fermion_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
-        let number_modes: Option<usize> = Some(4);
         let system = new_system
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<FermionLindbladOpenSystemWrapper>>()
             .unwrap();
@@ -150,11 +145,7 @@ fn fermion_system_test_add_operator_product_remove_system() {
         let error = system.call_method1("system_add_operator_product", ("c1a2", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of fermions in entry exceeds number of fermions in system.
-        let error = system.call_method1("system_add_operator_product", ("a5", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("system_add_operator_product", ("j1", 0.5));
         assert!(error.is_err());
     });
@@ -166,9 +157,8 @@ fn fermion_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
-        let number_modes: Option<usize> = Some(4);
         let system = new_system
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<FermionLindbladOpenSystemWrapper>>()
             .unwrap();
@@ -217,11 +207,7 @@ fn fermion_system_test_add_operator_product_remove_noise() {
             system.call_method1("noise_add_operator_product", (("c0a0", "c1a2"), vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of fermions in entry exceeds number of fermions in system.
-        let error = system.call_method1("noise_add_operator_product", (("c0a0", "a5"), 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("noise_add_operator_product", (("c0a0", "j1"), 0.5));
         assert!(error.is_err());
     });
@@ -367,7 +353,7 @@ fn test_default_partialeq_debug_clone() {
         // Debug
         assert_eq!(
             format!("{:?}", FermionLindbladOpenSystemWrapper::new()),
-            "FermionLindbladOpenSystemWrapper { internal: FermionLindbladOpenSystem { system: FermionHamiltonian { number_modes: None, hamiltonian: FermionHamiltonian { internal_map: {} } }, noise: FermionLindbladNoiseOperator { number_modes: None, operator: FermionLindbladNoiseOperator { internal_map: {} } } } }"
+            "FermionLindbladOpenSystemWrapper { internal: FermionLindbladOpenSystem { system: FermionHamiltonian { internal_map: {} }, noise: FermionLindbladNoiseOperator { internal_map: {} } } }"
         );
 
         // Number of fermions
@@ -375,17 +361,11 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 
-        // Current number of fermions
-        let comp_op = new_sys.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
-        assert!(comparison);
-
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
         let system_type = py.get_type::<FermionHamiltonianWrapper>();
-        let number_modes: Option<usize> = None;
         let fermion_system = system_type
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<FermionHamiltonianWrapper>>()
             .unwrap();
@@ -442,9 +422,8 @@ fn test_default_partialeq_debug_clone() {
             .unwrap();
 
         let system_type = py.get_type::<FermionHamiltonianWrapper>();
-        let number_modes: Option<usize> = None;
         let fermion_system = system_type
-            .call1((number_modes,))
+            .call0()
             .unwrap()
             .downcast::<PyCell<FermionHamiltonianWrapper>>()
             .unwrap();
@@ -1493,7 +1472,7 @@ fn test_format_repr() {
         );
 
         let test_string =
-        "FermionLindbladOpenSystem(2){\nSystem: {\nc0a0: (1e-1 + i * 0e0),\n}\nNoise: {\n(c1a1, a1): (1e-1 + i * 0e0),\n}\n}"
+        "FermionLindbladOpenSystem{\nSystem: {\nc0a0: (1e-1 + i * 0e0),\n}\nNoise: {\n(c1a1, a1): (1e-1 + i * 0e0),\n}\n}"
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
@@ -1587,10 +1566,8 @@ fn test_jordan_wigner() {
             .unwrap();
         let slos = flos.call_method0("jordan_wigner").unwrap();
 
-        let number_modes =
-            usize::extract(flos.call_method0("current_number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract(slos.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(flos.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(slos.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }

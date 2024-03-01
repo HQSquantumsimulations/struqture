@@ -101,7 +101,7 @@ fn test_from_string() {
         let comparison = bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let nbr_spins = string_pp.call_method0("current_number_modes").unwrap();
+        let nbr_spins = string_pp.call_method0("number_modes").unwrap();
         let comparison =
             bool::extract(nbr_spins.call_method1("__eq__", (3_u64,)).unwrap()).unwrap();
         assert!(comparison);
@@ -154,7 +154,7 @@ fn test_creators_annihilators_create_valid_pair() {
         .unwrap();
         assert!(comparison);
 
-        let nbr_spins = pp.call_method0("current_number_modes").unwrap();
+        let nbr_spins = pp.call_method0("number_modes").unwrap();
         let comparison =
             bool::extract(nbr_spins.call_method1("__eq__", (3_u64,)).unwrap()).unwrap();
         assert!(comparison);
@@ -415,10 +415,8 @@ fn test_jordan_wigner() {
         let empty = bool::extract(so.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes =
-            usize::extract(fp.call_method0("current_number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract(so.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(fp.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(so.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
