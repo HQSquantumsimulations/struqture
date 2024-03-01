@@ -28,9 +28,9 @@ use test_case::test_case;
 // helper functions
 fn new_system(
     py: Python,
-    number_spins: Vec<Option<usize>>,
-    number_bosons: Vec<Option<usize>>,
-    number_fermions: Vec<Option<usize>>,
+    number_spins: usize,
+    number_bosons: usize,
+    number_fermions: usize,
 ) -> &PyCell<MixedOperatorWrapper> {
     let system_type = py.get_type::<MixedOperatorWrapper>();
     system_type
@@ -45,9 +45,9 @@ fn new_system(
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let new_system = new_system(py, number_spins, number_bosons, number_fermions);
         new_system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
@@ -67,35 +67,27 @@ fn test_default_partialeq_debug_clone() {
         // Debug
         assert_eq!(
             format!("{:?}", MixedOperatorWrapper::new(1, 1, 1)),
-            "MixedOperatorWrapper { internal: MixedOperator { number_spins: [None], number_bosons: [None], number_fermions: [None], operator: MixedOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
+            "MixedOperatorWrapper { internal: MixedOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
         );
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of MixedOperator
+/// Test number_bosons function of MixedOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
 
         let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -103,16 +95,8 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("number_bosonic_modes").unwrap();
-        let current_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![2_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
@@ -120,18 +104,8 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("number_fermionic_modes").unwrap();
-        let current_system = system
-            .call_method0("current_number_fermionic_modes")
-            .unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -145,18 +119,18 @@ fn test_number_bosons_current() {
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         let none_system = system.call_method1("empty_clone", (4,)).unwrap();
         let comparison =
             bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let number_spins: Vec<Option<usize>> = vec![Some(3)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(3)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(3)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         let some_system = system.call_method1("empty_clone", (2,)).unwrap();
         let comparison =
@@ -170,9 +144,9 @@ fn test_empty_clone() {
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
@@ -191,9 +165,9 @@ fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<MixedOperatorWrapper>();
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
 
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
@@ -254,9 +228,9 @@ fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let new_system = py.get_type::<MixedOperatorWrapper>();
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
@@ -327,9 +301,9 @@ fn boson_system_test_add_operator_product_remove() {
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
 
         let len_system = system.call_method0("__len__").unwrap();
@@ -371,9 +345,9 @@ fn test_keys_values() {
 #[test_case(0.7,0.7;"mixed")]
 fn test_truncate(re: f64, im: f64) {
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
 
         let system = new_system(
             py,
@@ -515,9 +489,9 @@ fn test_truncate(re: f64, im: f64) {
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(
             py,
             number_spins.clone(),
@@ -544,9 +518,9 @@ fn test_neg() {
 fn test_add() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(
             py,
             number_spins.clone(),
@@ -585,9 +559,9 @@ fn test_add() {
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(
             py,
             number_spins.clone(),
@@ -626,9 +600,9 @@ fn test_sub() {
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(
             py,
             number_spins.clone(),
@@ -656,9 +630,9 @@ fn test_mul_cf() {
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(
             py,
             number_spins.clone(),
@@ -696,9 +670,9 @@ fn test_mul_cc() {
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(
             py,
             number_spins.clone(),
@@ -737,9 +711,9 @@ fn test_mul_self() {
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
@@ -755,9 +729,9 @@ fn test_mul_error() {
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
@@ -780,9 +754,9 @@ fn test_copy_deepcopy() {
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(
             py,
             number_spins.clone(),
@@ -821,9 +795,9 @@ fn test_to_from_bincode() {
 fn test_value_error_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let new = new_system(py, number_spins, number_bosons, number_fermions);
         let deserialised_error = new.call_method1("from_bincode", ("J",));
         assert!(deserialised_error.is_err());
@@ -835,9 +809,9 @@ fn test_value_error_bincode() {
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(
             py,
             number_spins.clone(),
@@ -877,9 +851,9 @@ fn test_to_from_json() {
 fn test_format_repr() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
@@ -906,17 +880,17 @@ fn test_format_repr() {
         let str_op: &str = <&str>::extract(to_str).unwrap();
 
         assert_eq!(
-        format_op,
-        "MixedOperator(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
-    );
+            format_op,
+            "MixedOperator{\nS0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        );
         assert_eq!(
-        repr_op,
-        "MixedOperator(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
-    );
+            repr_op,
+            "MixedOperator{\nS0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        );
         assert_eq!(
-        str_op,
-        "MixedOperator(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
-    );
+            str_op,
+            "MixedOperator{\nS0Z:Bc0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        );
     });
 }
 
@@ -925,9 +899,9 @@ fn test_format_repr() {
 fn test_richcmp() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_one = new_system(
             py,
             number_spins.clone(),
@@ -974,7 +948,7 @@ fn test_richcmp() {
 fn test_json_schema() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new = new_system(py, vec![None], vec![None], vec![None]);
+        let new = new_system(py, 1, 1, 1);
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
