@@ -16,7 +16,7 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::mixed_systems::{MixedLindbladNoiseSystem, OperateOnMixedSystems};
+use struqture::mixed_systems::{MixedLindbladNoiseOperator, OperateOnMixedSystems};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
@@ -24,7 +24,7 @@ use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of mixed_systems.
 ///
-/// In a MixedLindbladNoiseSystem is characterized by a MixedLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of mixed_systems.
+/// In a MixedLindbladNoiseOperator is characterized by a MixedLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of mixed_systems.
 ///
 /// Examples
 /// --------
@@ -34,51 +34,47 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
-///     from struqture_py.mixed_systems import MixedLindbladNoiseSystem, MixedDecoherenceProduct
+///     from struqture_py.mixed_systems import MixedLindbladNoiseOperator, MixedDecoherenceProduct
 ///     from struqture_py.spins import DecoherenceProduct
 ///     from struqture_py.bosons import BosonProduct
 ///     from struqture_py.fermions import FermionProduct
 ///
-///     slns = MixedLindbladNoiseSystem()
+///     slns = MixedLindbladNoiseOperator(1, 1, 1)
 ///     dp = MixedDecoherenceProduct([DecoherenceProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
 ///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), [1])
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorFloat(2))
 ///
 #[pyclass(
-    name = "MixedLindbladNoiseSystem",
+    name = "MixedLindbladNoiseOperator",
     module = "struqture_py.mixed_systems"
 )]
 #[derive(Clone, Debug, PartialEq)]
-pub struct MixedLindbladNoiseSystemWrapper {
-    /// Internal storage of [struqture::mixed_systems::MixedLindbladNoiseSystem]
-    pub internal: MixedLindbladNoiseSystem,
+pub struct MixedLindbladNoiseOperatorWrapper {
+    /// Internal storage of [struqture::mixed_systems::MixedLindbladNoiseOperator]
+    pub internal: MixedLindbladNoiseOperator,
 }
 
 #[noisy_system_wrapper(OperateOnMixedSystems, OperateOnDensityMatrix, Calculus)]
-impl MixedLindbladNoiseSystemWrapper {
-    /// Create a new MixedLindbladNoiseSystem.
+impl MixedLindbladNoiseOperatorWrapper {
+    /// Create a new MixedLindbladNoiseOperator.
     ///
     /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedSystem.
-    ///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedSystem.
-    ///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedSystem.
+    ///     number_spins (int): The number of spin subsystems in the MixedSystem.
+    ///     number_bosons (int): The number of boson subsystems in the MixedSystem.
+    ///     number_fermions (int): The number of fermion subsystems in the MixedSystem.
     ///
     /// Returns:
-    ///     self: The new MixedLindbladNoiseSystem.
+    ///     self: The new MixedLindbladNoiseOperator.
     #[new]
     #[pyo3(signature = (
-        number_spins = vec![None],
-        number_bosons = vec![None],
-        number_fermions = vec![None],
+        number_spins,
+        number_bosons,
+        number_fermions,
     ))]
-    pub fn new(
-        number_spins: Vec<Option<usize>>,
-        number_bosons: Vec<Option<usize>>,
-        number_fermions: Vec<Option<usize>>,
-    ) -> Self {
+    pub fn new(number_spins: usize, number_bosons: usize, number_fermions: usize) -> Self {
         Self {
-            internal: MixedLindbladNoiseSystem::new(number_spins, number_bosons, number_fermions),
+            internal: MixedLindbladNoiseOperator::new(number_spins, number_bosons, number_fermions),
         }
     }
 

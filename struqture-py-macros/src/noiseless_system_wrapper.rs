@@ -504,6 +504,55 @@ pub fn noiselesswrapper(
             /// Raises:
             ///     ValueError: Objects could not be added.
             pub fn __add__(&self, other: #ident) -> PyResult<#ident> {
+                let new_self = (self.clone().internal + other.internal);
+                Ok(#ident {
+                    internal: new_self
+                })
+            }
+
+            /// Implement `-` for self with self-type.
+            ///
+            /// Args:
+            ///     other (self): value by which to subtract from self.
+            ///
+            /// Returns:
+            ///     self: The two objects subtracted.
+            ///
+            /// Raises:
+            ///     ValueError: Objects could not be subtracted.
+            pub fn __sub__(&self, other: #ident) -> PyResult<#ident> {
+                let new_self = (self.clone().internal - other.internal);
+                Ok(#ident {
+                    internal: new_self
+                })
+            }
+        }
+    } else {
+        TokenStream::new()
+    };
+    let hermitian_calculus_quote = if attribute_arguments.contains("HermitianCalculus") {
+        quote! {
+            /// Implement `-1` for self.
+            ///
+            /// Returns:
+            ///     self: The object * -1.
+            pub fn __neg__(&self) -> #ident {
+                #ident {
+                    internal: -self.clone().internal
+                }
+            }
+
+            /// Implement `+` for self with self-type.
+            ///
+            /// Args:
+            ///     other (self): value by which to add to self.
+            ///
+            /// Returns:
+            ///     self: The two objects added.
+            ///
+            /// Raises:
+            ///     ValueError: Objects could not be added.
+            pub fn __add__(&self, other: #ident) -> PyResult<#ident> {
                 let new_self = (self.clone().internal + other.internal).map_err(|err| PyValueError::new_err(format!("Objects could not be added: {:?}", err)))?;
                 Ok(#ident {
                     internal: new_self
@@ -573,6 +622,7 @@ pub fn noiselesswrapper(
             #to_sparse_matrix_superoperator_quote
             #operate_on_mixedsystems_quote
             #calculus_quote
+            #hermitian_calculus_quote
 
             // ----------------------------------
             // Default pyo3 implementations

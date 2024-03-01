@@ -768,7 +768,7 @@ pub fn noisywrapper(
             /// Raises:
             ///     ValueError: Objects could not be added.
             pub fn __add__(&self, other: #ident) -> PyResult<#ident> {
-                let new_self = (self.clone().internal + other.internal).map_err(|err| PyValueError::new_err(format!("Objects could not be added: {:?}", err)))?;
+                let new_self = (self.clone().internal + other.internal);
                 Ok(#ident {
                     internal: new_self
                 })
@@ -785,7 +785,7 @@ pub fn noisywrapper(
             /// Raises:
             ///     ValueError: Objects could not be subtracted.
             pub fn __sub__(&self, other: #ident) -> PyResult<#ident> {
-                let new_self = (self.clone().internal - other.internal).map_err(|err| PyValueError::new_err(format!("Objects could not be subtracted: {:?}", err)))?;
+                let new_self = (self.clone().internal - other.internal);
                 Ok(#ident {
                     internal: new_self
                 })
