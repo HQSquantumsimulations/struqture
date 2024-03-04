@@ -22,15 +22,15 @@ def test_jordan_wigner_spin_to_fermion():
     pmns.add_operator_product((pmp, pmp), 2.0)
     assert type(pmns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    ss = SpinOperator(4)
+    ss = SpinOperator()
     ss.add_operator_product(pp, 5.0)
     assert type(ss.jordan_wigner()) == FermionOperator
 
-    shs = SpinHamiltonian(5)
+    shs = SpinHamiltonian()
     shs.add_operator_product(pp, 5.0)
     assert type(shs.jordan_wigner()) == FermionHamiltonian
 
-    slns = SpinLindbladNoiseOperator(4)
+    slns = SpinLindbladNoiseOperator()
     slns.add_operator_product((dp, dp), 2.0)
     assert type(slns.jordan_wigner()) == FermionLindbladNoiseOperator
 
@@ -47,11 +47,11 @@ def test_jordan_wigner_fermion_to_spin():
     hfp = HermitianFermionProduct([0], [2, 3])
     assert type(hfp.jordan_wigner()) == SpinHamiltonian
 
-    fs = FermionOperator(4)
+    fs = FermionOperator()
     fs.add_operator_product(fp, 1.0)
     assert type(fs.jordan_wigner()) == SpinOperator
 
-    fh = FermionHamiltonian(5)
+    fh = FermionHamiltonian()
     fh.add_operator_product(hfp, 1.0)
     assert type(fh.jordan_wigner()) == SpinHamiltonian
 
