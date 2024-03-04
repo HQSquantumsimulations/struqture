@@ -26,7 +26,7 @@ use std::ops;
 /// use qoqo_calculator::CalculatorComplex;
 /// use struqture::bosons::{BosonProduct, HermitianBosonProduct, BosonLindbladOpenSystem};
 ///
-/// let mut system = BosonLindbladOpenSystem::new(None);
+/// let mut system = BosonLindbladOpenSystem::new();
 ///
 /// let bp_0_1 = BosonProduct::new([0], [1]).unwrap();
 /// let bp_0 = HermitianBosonProduct::new([], [0]).unwrap();
