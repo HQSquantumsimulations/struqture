@@ -28,7 +28,7 @@ use std::ops;
 /// use qoqo_calculator::CalculatorComplex;
 /// use struqture::fermions::{FermionProduct, HermitianFermionProduct, FermionLindbladOpenSystem, FermionHamiltonian};
 ///
-/// let mut system = FermionLindbladOpenSystem::new(None);
+/// let mut system = FermionLindbladOpenSystem::new();
 ///
 /// let bp_0_1 = FermionProduct::new([0], [1]).unwrap();
 /// let bp_0 = HermitianFermionProduct::new([], [0]).unwrap();

@@ -31,7 +31,7 @@ use std::ops;
 /// use qoqo_calculator::CalculatorComplex;
 /// use struqture::spins::{DecoherenceProduct, SpinLindbladOpenSystem, SpinLindbladNoiseOperator, SpinHamiltonian};
 ///
-/// let mut system = SpinLindbladOpenSystem::new(None);
+/// let mut system = SpinLindbladOpenSystem::new();
 ///
 /// // Representing the hamiltonian $ 1/2 \sigma_0^{X} \sigma_1^{X} + 1/5 \sigma_0^{z} $
 /// let pp_01 = DecoherenceProduct::new().x(0).x(1);
