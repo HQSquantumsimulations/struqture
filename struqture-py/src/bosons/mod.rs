@@ -32,14 +32,14 @@ pub use boson_product::BosonProductWrapper;
 mod hermitian_boson_product;
 pub use hermitian_boson_product::HermitianBosonProductWrapper;
 
-mod bosonic_system;
-pub use bosonic_system::BosonOperatorWrapper;
+mod bosonic_operator;
+pub use bosonic_operator::BosonOperatorWrapper;
 
-mod bosonic_hamiltonian_system;
-pub use bosonic_hamiltonian_system::BosonHamiltonianWrapper;
+mod bosonic_hamiltonian;
+pub use bosonic_hamiltonian::BosonHamiltonianWrapper;
 
-mod bosonic_noise_system;
-pub use bosonic_noise_system::BosonLindbladNoiseOperatorWrapper;
+mod bosonic_noise_operator;
+pub use bosonic_noise_operator::BosonLindbladNoiseOperatorWrapper;
 
 mod bosonic_open_system;
 pub use bosonic_open_system::BosonLindbladOpenSystemWrapper;

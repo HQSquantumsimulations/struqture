@@ -24,17 +24,17 @@ pub use mixed_hermitian_product::HermitianMixedProductWrapper;
 mod mixed_decoherence_product;
 pub use mixed_decoherence_product::MixedDecoherenceProductWrapper;
 
-mod mixed_system;
-pub use mixed_system::MixedOperatorWrapper;
+mod mixed_operator;
+pub use mixed_operator::MixedOperatorWrapper;
 
 mod mixed_plus_minus_operator;
 pub use mixed_plus_minus_operator::MixedPlusMinusOperatorWrapper;
 
-mod mixed_hamiltonian_system;
-pub use mixed_hamiltonian_system::MixedHamiltonianWrapper;
+mod mixed_hamiltonian;
+pub use mixed_hamiltonian::MixedHamiltonianWrapper;
 
-mod mixed_noise_system;
-pub use mixed_noise_system::MixedLindbladNoiseOperatorWrapper;
+mod mixed_noise_operator;
+pub use mixed_noise_operator::MixedLindbladNoiseOperatorWrapper;
 
 mod mixed_open_system;
 pub use mixed_open_system::MixedLindbladOpenSystemWrapper;
