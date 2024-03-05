@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.6.2
+
+* Updated VersionMissmatch error message
+
 ## 1.6.1
 
 * Updated Cargo.lock (particularly mio 0.8.10->0.8.11)
