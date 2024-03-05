@@ -32,14 +32,14 @@ pub use fermion_product::FermionProductWrapper;
 mod hermitian_fermion_product;
 pub use hermitian_fermion_product::HermitianFermionProductWrapper;
 
-mod fermionic_system;
-pub use fermionic_system::FermionOperatorWrapper;
+mod fermionic_operator;
+pub use fermionic_operator::FermionOperatorWrapper;
 
-mod fermionic_hamiltonian_system;
-pub use fermionic_hamiltonian_system::FermionHamiltonianWrapper;
+mod fermionic_hamiltonian;
+pub use fermionic_hamiltonian::FermionHamiltonianWrapper;
 
-mod fermionic_noise_system;
-pub use fermionic_noise_system::FermionLindbladNoiseOperatorWrapper;
+mod fermionic_noise_operator;
+pub use fermionic_noise_operator::FermionLindbladNoiseOperatorWrapper;
 
 mod fermionic_open_system;
 pub use fermionic_open_system::FermionLindbladOpenSystemWrapper;
