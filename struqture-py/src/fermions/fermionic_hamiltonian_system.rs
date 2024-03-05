@@ -171,3 +171,9 @@ impl Default for FermionHamiltonianWrapper {
         Self::new()
     }
 }
+
+impl Default for FermionHamiltonianWrapper {
+    fn default() -> Self {
+        Self::new()
+    }
+}

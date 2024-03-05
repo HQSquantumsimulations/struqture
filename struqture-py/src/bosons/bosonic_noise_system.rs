@@ -26,12 +26,6 @@ use struqture_py_macros::noisy_system_wrapper;
 ///
 /// In a BosonLindbladNoiseOperator is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.
 ///
-/// Args:
-///     number_bosons (Optional[int]): The number of bosons in the BosonLindbladNoiseSystem.
-///
-/// Returns:
-///     self: The new BosonLindbladNoiseSystem with the input number of bosons.
-///
 /// Examples
 /// --------
 ///

@@ -162,3 +162,9 @@ impl Default for FermionOperatorWrapper {
         Self::new()
     }
 }
+
+impl Default for FermionOperatorWrapper {
+    fn default() -> Self {
+        Self::new()
+    }
+}

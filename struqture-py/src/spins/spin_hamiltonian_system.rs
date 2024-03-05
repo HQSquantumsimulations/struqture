@@ -175,3 +175,9 @@ impl Default for SpinHamiltonianWrapper {
         Self::new()
     }
 }
+
+impl Default for SpinHamiltonianWrapper {
+    fn default() -> Self {
+        Self::new()
+    }
+}

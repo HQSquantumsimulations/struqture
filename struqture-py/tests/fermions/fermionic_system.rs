@@ -63,14 +63,6 @@ fn test_default_partialeq_debug_clone() {
         let comparison =
             bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
-<<<<<<< HEAD
-
-        let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
-        assert!(comparison);
-=======
->>>>>>> 93fb6b2 (Fixed fermion tests)
     })
 }
 
@@ -89,12 +81,6 @@ fn test_number_fermions_current() {
         let comparison =
             bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
-<<<<<<< HEAD
-        let comparison =
-            bool::extract_bound(&current_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
-        assert!(comparison);
-=======
->>>>>>> 93fb6b2 (Fixed fermion tests)
     });
 }
 

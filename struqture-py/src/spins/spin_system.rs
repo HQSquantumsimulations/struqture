@@ -174,3 +174,9 @@ impl Default for SpinOperatorWrapper {
         Self::new()
     }
 }
+
+impl Default for SpinOperatorWrapper {
+    fn default() -> Self {
+        Self::new()
+    }
+}

@@ -60,8 +60,7 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of bosons
         let comp_op = new_system.call_method0("number_modes").unwrap();
-        let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
+        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
@@ -79,7 +78,7 @@ fn test_number_bosons_current() {
         let number_system = system.call_method0("number_modes").unwrap();
 
         let comparison =
-            bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+            bool::extract(number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -654,9 +653,12 @@ fn test_to_from_bincode() {
 
         let serialised = system.call_method0("to_bincode").unwrap();
 <<<<<<< HEAD
+<<<<<<< HEAD
         let new = new_system(py, number_bosons);
         let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
 =======
+=======
+>>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
         let new = new_system(py);
         let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
 >>>>>>> 63d1cba (Fixed boson tests)
@@ -703,9 +705,12 @@ fn test_to_from_json() {
 
         let serialised = system.call_method0("to_json").unwrap();
 <<<<<<< HEAD
+<<<<<<< HEAD
         let new = new_system(py, number_bosons);
         let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
 =======
+=======
+>>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
         let new = new_system(py);
         let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
 >>>>>>> 63d1cba (Fixed boson tests)

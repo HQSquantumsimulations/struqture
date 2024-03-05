@@ -915,13 +915,8 @@ pub fn noisywrapper(
             /// Return a deep copy .
             ///
             /// Returns:
-<<<<<<< HEAD
             ///     System: A deep copy of self.
             pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
-=======
-            ///     Operator: A deep copy of self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
->>>>>>> c6c58f1 (Moved macros from system -> operator and removed current_... functions)
                 self.clone()
             }
 

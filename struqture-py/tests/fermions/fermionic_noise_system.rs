@@ -98,7 +98,7 @@ fn test_number_modes_current() {
         let number_system = system.call_method0("number_modes").unwrap();
 
         let comparison =
-            bool::extract_bound(&number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
+            bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }

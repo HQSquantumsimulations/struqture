@@ -95,6 +95,18 @@ fn test_number_bosons_current() {
         )
         .unwrap();
         assert!(comparison);
+<<<<<<< HEAD
+=======
+
+        let number_system = system.call_method0("number_bosonic_modes").unwrap();
+        let comparison = bool::extract(
+            number_system
+                .call_method1("__eq__", (vec![2_u64],))
+                .unwrap(),
+        )
+        .unwrap();
+        assert!(comparison);
+>>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
 
         let number_system = system.call_method0("number_fermionic_modes").unwrap();
         let comparison = bool::extract(
@@ -652,6 +664,7 @@ fn test_from_mixed_sys() {
             .call1((1, 1, 1))
             .unwrap()
             .downcast::<PyCell<MixedOperatorWrapper>>()
+<<<<<<< HEAD
             .unwrap();
         pp.downcast::<MixedSystemWrapper>()
             .unwrap()
@@ -664,6 +677,8 @@ fn test_from_mixed_sys() {
                     },
                 ),
             )
+=======
+>>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
             .unwrap();
 
         let result = py
@@ -702,18 +717,16 @@ fn test_to_mixed_sys() {
             .unwrap()
             .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
-        sys.downcast::<MixedSystemWrapper>()
-            .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    "S0Z:Bc0a1:Fc0a0:",
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(0.0, 1.0),
-                    },
-                ),
-            )
-            .unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (
+                "S0Z:Bc0a1:Fc0a0:",
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.0, 1.0),
+                },
+            ),
+        )
+        .unwrap();
 
         let result = pmp.call_method0("to_mixed_system").unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
