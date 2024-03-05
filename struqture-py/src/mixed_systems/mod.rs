@@ -25,16 +25,16 @@ mod mixed_decoherence_product;
 pub use mixed_decoherence_product::MixedDecoherenceProductWrapper;
 
 mod mixed_system;
-pub use mixed_system::MixedSystemWrapper;
+pub use mixed_system::MixedOperatorWrapper;
 
 mod mixed_plus_minus_operator;
 pub use mixed_plus_minus_operator::MixedPlusMinusOperatorWrapper;
 
 mod mixed_hamiltonian_system;
-pub use mixed_hamiltonian_system::MixedHamiltonianSystemWrapper;
+pub use mixed_hamiltonian_system::MixedHamiltonianWrapper;
 
 mod mixed_noise_system;
-pub use mixed_noise_system::MixedLindbladNoiseSystemWrapper;
+pub use mixed_noise_system::MixedLindbladNoiseOperatorWrapper;
 
 mod mixed_open_system;
 pub use mixed_open_system::MixedLindbladOpenSystemWrapper;
@@ -47,8 +47,8 @@ pub use mixed_open_system::MixedLindbladOpenSystemWrapper;
 ///
 /// This module, here the python inferface for struqture, can be used to represent
 /// mixed quantum indices (MixedProduct, HermitianMixedProduct and MixedDecoherenceProduct),
-/// mixed systems (MixedSystem and MixedHamiltonianSystem) and Lindblad type mixed open systems
-/// (MixedLindbladNoiseSystem and MixedLindbladOpenSystem).
+/// mixed systems (MixedOperator and MixedHamiltonian) and Lindblad type mixed open systems
+/// (MixedLindbladNoiseOperator and MixedLindbladOpenSystem).
 ///
 /// .. autosummary::
 ///     :toctree: generated/
@@ -56,9 +56,9 @@ pub use mixed_open_system::MixedLindbladOpenSystemWrapper;
 ///     MixedProduct
 ///     HermitianMixedProduct
 ///     MixedDecoherenceProduct
-///     MixedSystem
-///     MixedHamiltonianSystem
-///     MixedLindbladNoiseSystem
+///     MixedOperator
+///     MixedHamiltonian
+///     MixedLindbladNoiseOperator
 ///     MixedLindbladOpenSystem
 ///     MixedPlusMinusProduct
 ///     MixedPlusMinusOperator
@@ -69,9 +69,9 @@ pub fn mixed_systems(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<MixedProductWrapper>()?;
     m.add_class::<HermitianMixedProductWrapper>()?;
     m.add_class::<MixedDecoherenceProductWrapper>()?;
-    m.add_class::<MixedSystemWrapper>()?;
-    m.add_class::<MixedHamiltonianSystemWrapper>()?;
-    m.add_class::<MixedLindbladNoiseSystemWrapper>()?;
+    m.add_class::<MixedOperatorWrapper>()?;
+    m.add_class::<MixedHamiltonianWrapper>()?;
+    m.add_class::<MixedLindbladNoiseOperatorWrapper>()?;
     m.add_class::<MixedLindbladOpenSystemWrapper>()?;
     m.add_class::<MixedPlusMinusProductWrapper>()?;
     m.add_class::<MixedPlusMinusOperatorWrapper>()?;

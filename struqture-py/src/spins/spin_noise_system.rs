@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionLindbladNoiseSystemWrapper;
+use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::DecoherenceProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -20,14 +20,14 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{OperateOnSpins, SpinLindbladNoiseSystem, ToSparseMatrixSuperOperator};
+use struqture::spins::{OperateOnSpins, SpinLindbladNoiseOperator, ToSparseMatrixSuperOperator};
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, StruqtureError};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 /// These are representations of noisy systems of spins.
 ///
-/// In a SpinLindbladNoiseSystem is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+/// In a SpinLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
 /// Examples
 /// --------
@@ -37,9 +37,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import SpinLindbladNoiseSystem, DecoherenceProduct
+///     from struqture_py.spins import SpinLindbladNoiseOperator, DecoherenceProduct
 ///
-///     slns = SpinLindbladNoiseSystem()
+///     slns = SpinLindbladNoiseOperator()
 ///     dp = DecoherenceProduct().z(0).x(1)
 ///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
@@ -48,11 +48,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     dimension = 4**slns.number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinLindbladNoiseSystem", module = "struqture_py.spins")]
+#[pyclass(name = "SpinLindbladNoiseOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct SpinLindbladNoiseSystemWrapper {
-    /// Internal storage of [struqture::spins::SpinLindbladNoiseSystem]
-    pub internal: SpinLindbladNoiseSystem,
+pub struct SpinLindbladNoiseOperatorWrapper {
+    /// Internal storage of [struqture::spins::SpinLindbladNoiseOperator]
+    pub internal: SpinLindbladNoiseOperator,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -62,19 +62,15 @@ pub struct SpinLindbladNoiseSystemWrapper {
     ToSparseMatrixSuperOperator,
     Calculus
 )]
-impl SpinLindbladNoiseSystemWrapper {
-    /// Create a new SpinLindbladNoiseSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins in the SpinLindbladNoiseSystem.
+impl SpinLindbladNoiseOperatorWrapper {
+    /// Create a new SpinLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     self: The new SpinLindbladNoiseSystem with the input number of spins.
+    ///     self: The new SpinLindbladNoiseOperator with the input number of spins.
     #[new]
-    #[pyo3(signature = (number_spins = None))]
-    pub fn new(number_spins: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: SpinLindbladNoiseSystem::new(number_spins),
+            internal: SpinLindbladNoiseOperator::new(),
         }
     }
 
@@ -85,7 +81,7 @@ impl SpinLindbladNoiseSystemWrapper {
     ///     number_spins_right (int): Number of spins to filter for in the right term of the keys.
     ///
     /// Returns:
-    ///     Tuple[SpinLindbladNoiseSystem, SpinLindbladNoiseSystem]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     Tuple[SpinLindbladNoiseOperator, SpinLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.

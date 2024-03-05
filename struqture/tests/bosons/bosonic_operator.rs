@@ -42,19 +42,6 @@ fn empty_clone_options() {
     assert_eq!(system.empty_clone(full), BosonOperator::with_capacity(1));
 }
 
-// Test the current_number_modes function of the BosonOperator
-#[test]
-fn internal_map_current_number_modes() {
-    let pp_0: BosonProduct = BosonProduct::new([0], [1]).unwrap();
-    let pp_2: BosonProduct = BosonProduct::new([2], [3]).unwrap();
-    let mut so = BosonOperator::new();
-    assert_eq!(so.current_number_modes(), 0_usize);
-    so.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(so.current_number_modes(), 2_usize);
-    so.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(so.current_number_modes(), 4_usize);
-}
-
 // Test the len function of the BosonOperator
 #[test]
 fn internal_map_len() {
@@ -67,7 +54,6 @@ fn internal_map_len() {
 #[test]
 fn internal_map_set_get_dict() {
     let mut system = BosonOperator::new();
-    assert_eq!(system.current_number_modes(), 0_usize);
     assert_eq!(system.number_modes(), 0_usize);
     let pp_0: BosonProduct = BosonProduct::new([0], [0]).unwrap();
 
@@ -79,7 +65,6 @@ fn internal_map_set_get_dict() {
     system
         .set(pp_0.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    assert_eq!(system.current_number_modes(), 1_usize);
     assert_eq!(system.number_modes(), 1_usize);
     assert_eq!(system.get(&pp_0), &CalculatorComplex::from(0.5));
 

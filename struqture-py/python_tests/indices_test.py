@@ -25,7 +25,7 @@ def test_simple():
     print(a.__repr__())
     b = mixed_systems.HermitianMixedProduct.from_string(a.__repr__())
     print(b.__repr__())
-    s = mixed_systems.MixedHamiltonianSystem([None, None], [None, None], [None])
+    s = mixed_systems.MixedHamiltonian(2, 2, 1)
     print(s.__repr__())
     # This should not fail
     s.set(a, 2 + 2j)
@@ -58,7 +58,7 @@ def test_simple():
         [bosons.BosonProduct([0], [0]), "a1"],
         [fermions.FermionProduct([0],[0])])
 
-    s = mixed_systems.MixedLindbladNoiseSystem([None, None], [None, None], [None])
+    s = mixed_systems.MixedLindbladNoiseOperator(2, 2, 1)
     print(s.__repr__())
     s.set((a, a.__repr__()), 2+2j)
     print(s.__repr__())

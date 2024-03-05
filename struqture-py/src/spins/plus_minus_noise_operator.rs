@@ -10,22 +10,19 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionLindbladNoiseSystemWrapper;
+use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::PlusMinusProductWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::fermions::FermionLindbladNoiseSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{
-    PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
-};
+use struqture::spins::{PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator};
 use struqture::OperateOnDensityMatrix;
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 
-use super::SpinLindbladNoiseSystemWrapper;
+use super::SpinLindbladNoiseOperatorWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
@@ -143,46 +140,37 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         ))
     }
 
-    /// Convert a SpinLindbladNoiseSystem into a PlusMinusLindbladNoiseOperator.
+    /// Convert a SpinLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
     ///
     /// Args:
-    ///     value (SpinLindbladNoiseSystem): The SpinLindbladNoiseSystem to create the PlusMinusLindbladNoiseOperator from.
+    ///     value (SpinLindbladNoiseOperator): The SpinLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
     ///
     /// Returns:
-    ///     PlusMinusLindbladNoiseOperator: The operator created from the input SpinLindbladNoiseSystem.
+    ///     PlusMinusLindbladNoiseOperator: The operator created from the input SpinLindbladNoiseOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinLindbladNoiseSystem from input.
+    ///     ValueError: Could not create SpinLindbladNoiseOperator from input.
     #[staticmethod]
     pub fn from_spin_noise_system(
         value: Py<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
-        let system = SpinLindbladNoiseSystemWrapper::from_pyany(value)
+        let system = SpinLindbladNoiseOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusLindbladNoiseOperatorWrapper {
-            internal: PlusMinusLindbladNoiseOperator::from(system.operator().clone()),
+            internal: PlusMinusLindbladNoiseOperator::from(system.clone()),
         })
     }
 
-    /// Convert a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseSystem.
-    ///
-    /// Args:
-    ///     number_spinss (Optional[int]): The number of spins to initialize the SpinLindbladNoiseSystem with.
+    /// Convert a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     SpinLindbladNoiseSystem: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
+    ///     SpinLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinLindbladNoiseSystem from PlusMinusLindbladNoiseOperator.
-    pub fn to_spin_noise_system(
-        &self,
-        number_spinss: Option<usize>,
-    ) -> PyResult<SpinLindbladNoiseSystemWrapper> {
+    ///     ValueError: Could not create SpinLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
+    pub fn to_spin_noise_system(&self) -> PyResult<SpinLindbladNoiseOperatorWrapper> {
         let result: SpinLindbladNoiseOperator =
             SpinLindbladNoiseOperator::from(self.internal.clone());
-        Ok(SpinLindbladNoiseSystemWrapper {
-            internal: SpinLindbladNoiseSystem::from_operator(result, number_spinss)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+        Ok(SpinLindbladNoiseOperatorWrapper { internal: result })
     }
 }

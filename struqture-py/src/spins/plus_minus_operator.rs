@@ -10,25 +10,24 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionSystemWrapper;
-use crate::spins::{PlusMinusProductWrapper, SpinSystemWrapper};
+use crate::{
+    fermions::FermionOperatorWrapper,
+    spins::{PlusMinusProductWrapper, SpinOperatorWrapper},
+};
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{
-    PlusMinusOperator, SpinHamiltonian, SpinHamiltonianSystem, SpinOperator, SpinSystem,
-};
+use struqture::spins::{PlusMinusOperator, SpinHamiltonian, SpinOperator};
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
-use super::SpinHamiltonianSystemWrapper;
+use super::SpinHamiltonianWrapper;
 
 /// These are representations of systems of spins.
 ///
@@ -165,82 +164,67 @@ impl PlusMinusOperatorWrapper {
         ))
     }
 
-    /// Convert a SpinSystem into a PlusMinusOperator.
+    /// Convert a SpinOperator into a PlusMinusOperator.
     ///
     /// Args:
-    ///     value (SpinSystem): The SpinSystem to create the PlusMinusOperator from.
+    ///     value (SpinOperator): The SpinOperator to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     PlusMinusOperator: The operator created from the input SpinSystem.
+    ///     PlusMinusOperator: The operator created from the input SpinOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinSystem from input.
+    ///     ValueError: Could not create SpinOperator from input.
     #[staticmethod]
     pub fn from_spin_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
-        let system = SpinSystemWrapper::from_pyany(value)
+        let system = SpinOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
-            internal: PlusMinusOperator::from(system.operator().clone()),
+            internal: PlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a SpinHamiltonianSystem into a PlusMinusOperator.
+    /// Convert a SpinHamiltonian into a PlusMinusOperator.
     ///
     /// Args:
-    ///     value (SpinHamiltonianSystem): The SpinHamiltonianSystem to create the PlusMinusOperator from.
+    ///     value (SpinHamiltonian): The SpinHamiltonian to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     PlusMinusOperator: The operator created from the input SpinSystem.
+    ///     PlusMinusOperator: The operator created from the input SpinOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinHamiltonianSystem from input.
+    ///     ValueError: Could not create SpinHamiltonian from input.
     #[staticmethod]
     pub fn from_spin_hamiltonian_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
-        let system = SpinHamiltonianSystemWrapper::from_pyany(value)
+        let system = SpinHamiltonianWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
-            internal: PlusMinusOperator::from(system.hamiltonian().clone()),
+            internal: PlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a PlusMinusOperator into a SpinSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins to initialize the SpinSystem with.
+    /// Convert a PlusMinusOperator into a SpinOperator.
     ///
     /// Returns:
-    ///     SpinSystem: The operator created from the input PlusMinusOperator and optional number of spins.
+    ///     SpinOperator: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinSystem from PlusMinusOperator.
-    pub fn to_spin_system(&self, number_spins: Option<usize>) -> PyResult<SpinSystemWrapper> {
+    ///     ValueError: Could not create SpinOperator from PlusMinusOperator.
+    pub fn to_spin_system(&self) -> PyResult<SpinOperatorWrapper> {
         let result: SpinOperator = SpinOperator::from(self.internal.clone());
-        Ok(SpinSystemWrapper {
-            internal: SpinSystem::from_operator(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+        Ok(SpinOperatorWrapper { internal: result })
     }
 
-    /// Convert a PlusMinusOperator into a SpinHamiltonianSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins to initialize the SpinHamiltonianSystem with.
+    /// Convert a PlusMinusOperator into a SpinHamiltonian.
     ///
     /// Returns:
-    ///     SpinHamiltonianSystem: The operator created from the input PlusMinusOperator and optional number of spins.
+    ///     SpinHamiltonian: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinHamiltonianSystem from PlusMinusOperator.
-    pub fn to_spin_hamiltonian_system(
-        &self,
-        number_spins: Option<usize>,
-    ) -> PyResult<SpinHamiltonianSystemWrapper> {
+    ///     ValueError: Could not create SpinHamiltonian from PlusMinusOperator.
+    pub fn to_spin_hamiltonian_system(&self) -> PyResult<SpinHamiltonianWrapper> {
         let result: SpinHamiltonian = SpinHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok(SpinHamiltonianSystemWrapper {
-            internal: SpinHamiltonianSystem::from_hamiltonian(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+        Ok(SpinHamiltonianWrapper { internal: result })
     }
 }
 

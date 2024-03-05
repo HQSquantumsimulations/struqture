@@ -11,8 +11,8 @@
 // limitations under the License.
 
 use super::{
-    HermitianMixedProductWrapper, MixedDecoherenceProductWrapper, MixedHamiltonianSystemWrapper,
-    MixedLindbladNoiseSystemWrapper,
+    HermitianMixedProductWrapper, MixedDecoherenceProductWrapper, MixedHamiltonianWrapper,
+    MixedLindbladNoiseOperatorWrapper,
 };
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -57,28 +57,24 @@ pub struct MixedLindbladOpenSystemWrapper {
     pub internal: MixedLindbladOpenSystem,
 }
 
-#[noisy_system_wrapper(OpenSystem, OperateOnMixedSystems, Calculus)]
+#[noisy_system_wrapper(OpenSystem, OperateOnMixedSystems, HermitianCalculus)]
 impl MixedLindbladOpenSystemWrapper {
     /// Create a new MixedLindbladOpenSystem.
     ///
     /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedLindbladOpenSystem.
-    ///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedLindbladOpenSystem.
-    ///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedLindbladOpenSystem.
+    ///     number_spins (int): The number of spin subsystems in the MixedLindbladOpenSystem.
+    ///     number_bosons (int): The number of boson subsystems in the MixedLindbladOpenSystem.
+    ///     number_fermions (int): The number of fermion subsystems in the MixedLindbladOpenSystem.
     ///
     /// Returns:
     ///     self: The new MixedLindbladOpenSystem.
     #[new]
     #[pyo3(signature = (
-        number_spins = vec![None],
-        number_bosons = vec![None],
-        number_fermions = vec![None],
+        number_spins,
+        number_bosons,
+        number_fermions,
     ))]
-    pub fn new(
-        number_spins: Vec<Option<usize>>,
-        number_bosons: Vec<Option<usize>>,
-        number_fermions: Vec<Option<usize>>,
-    ) -> Self {
+    pub fn new(number_spins: usize, number_bosons: usize, number_fermions: usize) -> Self {
         Self {
             internal: MixedLindbladOpenSystem::new(number_spins, number_bosons, number_fermions),
         }

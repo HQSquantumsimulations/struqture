@@ -15,18 +15,17 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 #[cfg(feature = "json_schema")]
-use struqture::{spins::SpinLindbladNoiseSystem, STRUQTURE_VERSION};
-use struqture_py::spins::{DecoherenceProductWrapper, SpinLindbladNoiseSystemWrapper};
+use struqture::{spins::SpinLindbladNoiseOperator, STRUQTURE_VERSION};
+use struqture_py::spins::{DecoherenceProductWrapper, SpinLindbladNoiseOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_noisesystem(py: Python) -> &PyCell<SpinLindbladNoiseSystemWrapper> {
-    let system_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-    let number_spins: Option<usize> = None;
+fn new_noisesystem(py: Python) -> &PyCell<SpinLindbladNoiseOperatorWrapper> {
+    let system_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
     system_type
-        .call1((number_spins,))
+        .call0()
         .unwrap()
-        .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+        .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
         .unwrap()
 }
 
@@ -50,26 +49,24 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test default function of SpinLindbladNoiseSystemWrapper
+/// Test default function of SpinLindbladNoiseOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let system_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let new_system = system_type
-            .call1((4_usize,))
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+        let system = new_noisesystem(py);
+        system
+            .call_method1("add_operator_product", (("0X", "0X"), 0.1))
             .unwrap();
-        let system_wrapper = new_system
-            .extract::<SpinLindbladNoiseSystemWrapper>()
+        let system_wrapper = system
+            .extract::<SpinLindbladNoiseOperatorWrapper>()
             .unwrap();
 
         // PartialEq
-        let helper_ne: bool = SpinLindbladNoiseSystemWrapper::default() != system_wrapper;
+        let helper_ne: bool = SpinLindbladNoiseOperatorWrapper::default() != system_wrapper;
         assert!(helper_ne);
         let helper_eq: bool =
-            SpinLindbladNoiseSystemWrapper::default() == SpinLindbladNoiseSystemWrapper::new(None);
+            SpinLindbladNoiseOperatorWrapper::default() == SpinLindbladNoiseOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -77,22 +74,18 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", SpinLindbladNoiseSystemWrapper::new(None)),
-            "SpinLindbladNoiseSystemWrapper { internal: SpinLindbladNoiseSystem { number_spins: None, operator: SpinLindbladNoiseOperator { internal_map: {} } } }"
+            format!("{:?}", SpinLindbladNoiseOperatorWrapper::new()),
+            "SpinLindbladNoiseOperatorWrapper { internal: SpinLindbladNoiseOperator { internal_map: {} } }"
         );
 
         // Number of spins
-        let comp_op = new_system.call_method0("number_spins").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (4,)).unwrap()).unwrap();
-        assert!(comparison);
-
-        let comp_op = new_system.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0,)).unwrap()).unwrap();
+        let comp_op = system.call_method0("number_spins").unwrap();
+        let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
 
-/// Test number_spins and current_number_spins functions of SpinSystem
+/// Test number_spins function of SpinSystem
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -103,13 +96,9 @@ fn test_number_spins_current() {
             .unwrap();
 
         let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
-        assert!(comparison);
-        let comparison =
-            bool::extract(current_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -119,16 +108,14 @@ fn test_number_spins_current() {
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Option<usize> = None;
         let system = new_noisesystem(py);
-        let none_system = system.call_method1("empty_clone", (number_spins,)).unwrap();
+        let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let number_spins: Option<usize> = Some(3);
         let system = new_noisesystem(py);
-        let some_system = system.call_method1("empty_clone", (number_spins,)).unwrap();
+        let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract(some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
@@ -140,12 +127,11 @@ fn test_empty_clone() {
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let number_spins: Option<usize> = Some(4);
+        let new_system = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
         let system = new_system
-            .call1((number_spins,))
+            .call0()
             .unwrap()
-            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", (("0X", "0X"), 0.1))
@@ -191,11 +177,7 @@ fn spin_system_test_add_operator_product_remove() {
         let error = system.call_method1("add_operator_product", (("0X", "1Z"), vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of spins in entry exceeds number of spins in system.
-        let error = system.call_method1("add_operator_product", (("0X", "5Z"), 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("add_operator_product", (("0X", "1J"), 0.5));
         assert!(error.is_err());
     });
@@ -544,7 +526,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test copy and deepcopy functions of SpinLindbladNoiseSystem
+/// Test copy and deepcopy functions of SpinLindbladNoiseOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -572,7 +554,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of SpinLindbladNoiseSystem
+/// Test to_bincode and from_bincode functions of SpinLindbladNoiseOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -622,7 +604,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of SpinLindbladNoiseSystem
+/// Test to_ and from_json functions of SpinLindbladNoiseOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -677,7 +659,7 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system = SpinLindbladNoiseSystemWrapper::new(None);
+        let mut rust_system = SpinLindbladNoiseOperatorWrapper::new();
         let pp_type = py.get_type::<DecoherenceProductWrapper>();
         let new_pp = pp_type
             .call0()
@@ -704,15 +686,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "SpinLindbladNoiseSystem(1){\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
+            "SpinLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "SpinLindbladNoiseSystem(1){\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
+            "SpinLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "SpinLindbladNoiseSystem(1){\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
+            "SpinLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -762,7 +744,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of SpinLindbladNoiseSystem
+/// Test jordan_wigner() method of SpinLindbladNoiseOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -776,8 +758,7 @@ fn test_jordan_wigner() {
         assert!(!empty);
 
         let number_modes = usize::extract(flns.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract(slns.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_spins = usize::extract(slns.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
@@ -791,7 +772,8 @@ fn test_json_schema() {
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(SpinLindbladNoiseSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(SpinLindbladNoiseOperator))
+                .unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =

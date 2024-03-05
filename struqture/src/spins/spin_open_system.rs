@@ -10,10 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::SpinLindbladNoiseSystem;
+use super::SpinLindbladNoiseOperator;
 use crate::fermions::FermionLindbladOpenSystem;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::{OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixSuperOperator};
+use crate::spins::{OperateOnSpins, SpinHamiltonian, ToSparseMatrixSuperOperator};
 use crate::{CooSparseMatrix, OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorFloat;
@@ -22,16 +22,16 @@ use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::ops;
 
-/// SpinLindbladOpenSystems are representations of open systems of spins, where a system (SpinHamiltonianSystem) interacts with the environment via noise (SpinLindbladNoiseSystem).
+/// SpinLindbladOpenSystems are representations of open systems of spins, where a system (SpinHamiltonian) interacts with the environment via noise (SpinLindbladNoiseOperator).
 ///
 /// # Example
 ///
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
-/// use struqture::spins::{DecoherenceProduct, SpinLindbladOpenSystem, SpinLindbladNoiseSystem, SpinHamiltonianSystem};
+/// use struqture::spins::{DecoherenceProduct, SpinLindbladOpenSystem, SpinLindbladNoiseOperator, SpinHamiltonian};
 ///
-/// let mut system = SpinLindbladOpenSystem::new(None);
+/// let mut system = SpinLindbladOpenSystem::new();
 ///
 /// // Representing the hamiltonian $ 1/2 \sigma_0^{X} \sigma_1^{X} + 1/5 \sigma_0^{z} $
 /// let pp_01 = DecoherenceProduct::new().x(0).x(1);
@@ -48,17 +48,17 @@ use std::ops;
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct SpinLindbladOpenSystem {
-    /// The SpinHamiltonianSystem representing the system terms of the open system
-    system: SpinHamiltonianSystem,
-    /// The SpinLindbladNoiseSystem representing the noise terms of the open system
-    noise: SpinLindbladNoiseSystem,
+    /// The SpinHamiltonian representing the system terms of the open system
+    system: SpinHamiltonian,
+    /// The SpinLindbladNoiseOperator representing the noise terms of the open system
+    noise: SpinLindbladNoiseOperator,
 }
 
 impl crate::MinSupportedVersion for SpinLindbladOpenSystem {}
 
 impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
-    type System = SpinHamiltonianSystem;
-    type Noise = SpinLindbladNoiseSystem;
+    type System = SpinHamiltonian;
+    type Noise = SpinLindbladNoiseOperator;
 
     // From trait
     fn noise(&self) -> &Self::Noise {
@@ -85,46 +85,18 @@ impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
         (self.system, self.noise)
     }
 
-    /// Takes a tuple of a system (SpinHamiltonianSystem) and a noise term (SpinLindbladNoiseSystem) and combines them to be a SpinLindbladOpenSystem.
+    /// Takes a tuple of a system (SpinHamiltonian) and a noise term (SpinLindbladNoiseOperator) and combines them to be a SpinLindbladOpenSystem.
     ///
     /// # Arguments
     ///
-    /// * `system` - The SpinHamiltonianSystem to have in the SpinLindbladOpenSystem.
-    /// * `noise` - The SpinLindbladNoiseSystem to have in the SpinLindbladOpenSystem.
+    /// * `system` - The SpinHamiltonian to have in the SpinLindbladOpenSystem.
+    /// * `noise` - The SpinLindbladNoiseOperator to have in the SpinLindbladOpenSystem.
     ///
     /// # Returns
     ///
     /// * `Ok(Self)` - The SpinLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberSpins)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        let (system, noise) = if system.number_spins != noise.number_spins {
-            match (system.number_spins, noise.number_spins) {
-                (Some(n), None) => {
-                    if n >= noise.number_spins() {
-                        let mut noise = noise;
-                        noise.number_spins = Some(n);
-                        (system, noise)
-                    } else {
-                        return Err(StruqtureError::MissmatchedNumberSpins);
-                    }
-                }
-                (None, Some(n)) => {
-                    if n >= system.number_spins() {
-                        let mut system = system;
-                        system.number_spins = Some(n);
-                        (system, noise)
-                    } else {
-                        return Err(StruqtureError::MissmatchedNumberSpins);
-                    }
-                }
-                (Some(_), Some(_)) => {
-                    return Err(StruqtureError::MissmatchedNumberSpins);
-                }
-                _ => panic!("Unexpected missmatch of number spins"),
-            }
-        } else {
-            (system, noise)
-        };
         Ok(Self { system, noise })
     }
 
@@ -137,20 +109,13 @@ impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
 }
 
 impl<'a> OperateOnSpins<'a> for SpinLindbladOpenSystem {
-    /// Gets the maximum number_spins of the SpinHamiltonianSystem/SpinLindbladNoiseSystem.
+    /// Gets the maximum number_spins of the SpinHamiltonian/SpinLindbladNoiseOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of spins in the SpinLindbladOpenSystem.
     fn number_spins(&self) -> usize {
         self.system.number_spins().max(self.noise.number_spins())
-    }
-
-    // From trait
-    fn current_number_spins(&self) -> usize {
-        self.system
-            .current_number_spins()
-            .max(self.noise.current_number_spins())
     }
 }
 
@@ -210,17 +175,13 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for SpinLindbladOpenSystem {
 impl SpinLindbladOpenSystem {
     /// Creates a new SpinLindbladOpenSystem.
     ///
-    /// # Arguments
-    ///
-    /// * `number_spins` - The number of spins in the system.
-    ///
     /// # Returns
     ///
     /// * `Self` - The new (empty) SpinLindbladOpenSystem.
-    pub fn new(number_spins: Option<usize>) -> Self {
+    pub fn new() -> Self {
         SpinLindbladOpenSystem {
-            system: SpinHamiltonianSystem::new(number_spins),
-            noise: SpinLindbladNoiseSystem::new(number_spins),
+            system: SpinHamiltonian::new(),
+            noise: SpinLindbladNoiseOperator::new(),
         }
     }
 }
@@ -256,12 +217,12 @@ impl ops::Add<SpinLindbladOpenSystem> for SpinLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two SpinLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of PauliProduct exceeds that of the SpinHamiltonianSystem.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of (DecoherenceProduct, DecoherenceProduct) exceeds that of the SpinLindbladNoiseSystem.
+    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of PauliProduct exceeds that of the SpinHamiltonian.
+    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of (DecoherenceProduct, DecoherenceProduct) exceeds that of the SpinLindbladNoiseOperator.
     fn add(self, other: SpinLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys + other_sys)?, (self_noise + other_noise)?)
+        Self::group(self_sys + other_sys, self_noise + other_noise)
     }
 }
 
@@ -278,12 +239,12 @@ impl ops::Sub<SpinLindbladOpenSystem> for SpinLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two SpinLindbladOpenSystems subtracted.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of PauliProduct exceeds that of the SpinHamiltonianSystem.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of (DecoherenceProduct, DecoherenceProduct) exceeds that of the SpinLindbladNoiseSystem.
+    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of PauliProduct exceeds that of the SpinHamiltonian.
+    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of (DecoherenceProduct, DecoherenceProduct) exceeds that of the SpinLindbladNoiseOperator.
     fn sub(self, other: SpinLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys - other_sys)?, (self_noise - other_noise)?)
+        Self::group(self_sys - other_sys, self_noise - other_noise)
     }
 }
 
@@ -322,7 +283,7 @@ impl fmt::Display for SpinLindbladOpenSystem {
     ///
     /// * `std::fmt::Result` - The formatted SpinLindbladOpenSystem.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = format!("SpinLindbladOpenSystem({}){{\n", self.number_spins());
+        let mut output = "SpinLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
             writeln!(output, "{}: {},", key, val)?;
@@ -353,11 +314,11 @@ impl JordanWignerSpinToFermion for SpinLindbladOpenSystem {
     ///
     /// # Panics
     ///
-    /// * Internal error in jordan_wigner() for SpinHamiltonianSystem or SpinLindbladNoiseSystem.
+    /// * Internal error in jordan_wigner() for SpinHamiltonian or SpinLindbladNoiseOperator.
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
         FermionLindbladOpenSystem::group(jw_system, jw_noise)
-            .expect("Internal bug in jordan_wigner() for SpinHamiltonianSystem or SpinLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of spins in the spin system.")
+            .expect("Internal bug in jordan_wigner() for SpinHamiltonian or SpinLindbladNoiseOperator. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

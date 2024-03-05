@@ -10,8 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::SpinSystemWrapper;
-use crate::fermions::FermionHamiltonianSystemWrapper;
+use super::SpinOperatorWrapper;
+use crate::fermions::FermionHamiltonianWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -23,7 +23,7 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorFloatWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
-    OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
+    OperateOnSpins, SpinHamiltonian, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
@@ -32,7 +32,7 @@ use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// These are representations of systems of spins.
 ///
-/// SpinHamiltonianSystems are characterized by a SpinOperator to represent the hamiltonian of the spin system
+/// SpinHamiltonians are characterized by a SpinOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
 /// Examples
@@ -43,9 +43,9 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import SpinHamiltonianSystem, PauliProduct
+///     from struqture_py.spins import SpinHamiltonian, PauliProduct
 ///
-///     ssystem = SpinHamiltonianSystem(2)
+///     ssystem = SpinHamiltonian(2)
 ///     pp = PauliProduct().z(0)
 ///     ssystem.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(ssystem.number_spins(), 2)
@@ -54,11 +54,11 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     dimension = 4**ssystem.number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinHamiltonianSystem", module = "struqture_py.spins")]
+#[pyclass(name = "SpinHamiltonian", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
-pub struct SpinHamiltonianSystemWrapper {
-    /// Internal storage of [struqture::spins::SpinHamiltonianSystem]
-    pub internal: SpinHamiltonianSystem,
+pub struct SpinHamiltonianWrapper {
+    /// Internal storage of [struqture::spins::SpinHamiltonian]
+    pub internal: SpinHamiltonian,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -70,63 +70,60 @@ pub struct SpinHamiltonianSystemWrapper {
     OperateOnDensityMatrix,
     Calculus
 )]
-impl SpinHamiltonianSystemWrapper {
-    /// Create an empty SpinHamiltonianSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins in the SpinHamiltonianSystem.
+impl SpinHamiltonianWrapper {
+    /// Create an empty SpinHamiltonian.
     ///
     /// Returns:
-    ///     self: The new SpinHamiltonianSystem with the input number of spins.
+    ///     self: The new SpinHamiltonian with the input number of spins.
     #[new]
-    #[pyo3(signature = (number_spins = None))]
-    pub fn new(number_spins: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: SpinHamiltonianSystem::new(number_spins),
+            internal: SpinHamiltonian::new(),
         }
     }
 
-    /// Implement `*` for SpinHamiltonianSystem and SpinHamiltonianSystem/CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for SpinHamiltonian and SpinHamiltonian/CalculatorComplex/CalculatorFloat.
     ///
     /// Args:
-    ///     value (Union[SpinHamiltonianSystem, CalculatorComplex, CalculatorFloat]): value by which to multiply the self SpinHamiltonianSystem
+    ///     value (Union[SpinHamiltonian, CalculatorComplex, CalculatorFloat]): value by which to multiply the self SpinHamiltonian
     ///
     /// Returns:
-    ///     SpinSystem: The SpinHamiltonianSystem multiplied by the value.
+    ///     SpinOperator: The SpinHamiltonian multiplied by the value.
     ///
     /// Raises:
-    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<SpinSystemWrapper> {
+    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonian.
+    pub fn __mul__(&self, value: &PyAny) -> PyResult<SpinOperatorWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
-            Ok(x) => Ok(SpinSystemWrapper {
+            Ok(x) => Ok(SpinOperatorWrapper {
                 internal: self.clone().internal * CalculatorComplex::from(x),
             }),
             Err(_) => {
                 let cc_value = qoqo_calculator_pyo3::convert_into_calculator_complex(value);
                 match cc_value {
-                    Ok(x) => Ok(SpinSystemWrapper {
+                    Ok(x) => Ok(SpinOperatorWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
                         let bhs_value = Self::from_pyany(value.into());
                         match bhs_value {
                             Ok(x) => {
-                                let new_self = (self.clone().internal * x).map_err(|err| {
-                                    PyValueError::new_err(format!(
-                                        "SpinHamiltonianSystems could not be multiplied: {:?}",
-                                        err
-                                    ))
-                                })?;
-                                Ok(SpinSystemWrapper { internal: new_self })
+                                let new_self = self.clone().internal * x;
+                                Ok(SpinOperatorWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonianSystem: {:?}",
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonian: {:?}",
                                 err)))
                         }
                     }
                 }
             }
         }
+    }
+}
+
+impl Default for SpinHamiltonianWrapper {
+    fn default() -> Self {
+        Self::new()
     }
 }

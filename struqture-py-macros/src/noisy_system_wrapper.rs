@@ -144,7 +144,7 @@ pub fn noisywrapper(
                         .internal
                         .set((converted_left, converted_right), value)
                         .map_err(|err| {
-                            PyValueError::new_err(format!("Error in set function of FermionSystem: {:?}", err))
+                            PyValueError::new_err(format!("Error in set function of FermionOperator: {:?}", err))
                         })? {
                         Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
                         None => Ok(None),
@@ -183,7 +183,7 @@ pub fn noisywrapper(
                         .add_operator_product((converted_left, converted_right), value)
                         .map_err(|err| {
                             PyValueError::new_err(format!(
-                                "Error in add_operator_product function of System: {:?}",
+                                "Error in add_operator_product function of Operator: {:?}",
                                 err
                             ))
                         })
@@ -291,14 +291,6 @@ pub fn noisywrapper(
     };
     let operate_on_modes_quote = if attribute_arguments.contains("OperateOnModes") {
         quote! {
-            /// Return maximum index in object.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_modes(&self) -> usize {
-                self.internal.current_number_modes()
-            }
-
             /// Return the number_modes input of self.
             ///
             /// Returns:
@@ -312,14 +304,6 @@ pub fn noisywrapper(
     };
     let operate_on_spins_quote = if attribute_arguments.contains("OperateOnSpins") {
         quote! {
-            /// Return maximum spin index in object.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_spins(&self) -> usize {
-                self.internal.current_number_spins()
-            }
-
             /// Return the number_spins input of self.
             ///
             /// Returns:
@@ -439,27 +423,12 @@ pub fn noisywrapper(
                     self.internal.number_spins()
                 }
 
-                /// Return maximum spin index in each spin subsystem of self.
-                ///
-                /// Returns:
-                ///     int: Maximum index in each spin subsystem of self.
-                pub fn current_number_spins(&self) -> Vec<usize> {
-                    self.internal.current_number_spins()
-                }
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
                 ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
                 pub fn number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.number_bosonic_modes()
-                }
-
-                /// Return the number of bosonic modes each bosonic subsystem of self acts on.
-                ///
-                /// Returns:
-                ///     list[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.current_number_bosonic_modes()
                 }
 
                 /// Return the number of fermionic modes in each fermionic subsystem of self.
@@ -469,14 +438,6 @@ pub fn noisywrapper(
                 pub fn number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.number_fermionic_modes()
                 }
-
-                /// Return the number of fermionic modes each fermionic subsystem of self acts on.
-                ///
-                /// Returns:
-                ///     list[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-                pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.current_number_fermionic_modes()
-                }
         }
     } else {
         TokenStream::new()
@@ -485,31 +446,31 @@ pub fn noisywrapper(
         let (system_type, system_index_type, value_type, noise_type) =
             if struct_name.contains("Spin") {
                 (
-                    quote::format_ident!("SpinHamiltonianSystemWrapper"),
+                    quote::format_ident!("SpinHamiltonianWrapper"),
                     quote::format_ident!("PauliProductWrapper"),
                     quote::format_ident!("CalculatorFloatWrapper"),
-                    quote::format_ident!("SpinLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("SpinLindbladNoiseOperatorWrapper"),
                 )
             } else if struct_name.contains("Boson") {
                 (
-                    quote::format_ident!("BosonHamiltonianSystemWrapper"),
+                    quote::format_ident!("BosonHamiltonianWrapper"),
                     quote::format_ident!("HermitianBosonProductWrapper"),
                     quote::format_ident!("CalculatorComplexWrapper"),
-                    quote::format_ident!("BosonLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("BosonLindbladNoiseOperatorWrapper"),
                 )
             } else if struct_name.contains("Fermion") {
                 (
-                    quote::format_ident!("FermionHamiltonianSystemWrapper"),
+                    quote::format_ident!("FermionHamiltonianWrapper"),
                     quote::format_ident!("HermitianFermionProductWrapper"),
                     quote::format_ident!("CalculatorComplexWrapper"),
-                    quote::format_ident!("FermionLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("FermionLindbladNoiseOperatorWrapper"),
                 )
             } else {
                 (
-                    quote::format_ident!("MixedHamiltonianSystemWrapper"),
+                    quote::format_ident!("MixedHamiltonianWrapper"),
                     quote::format_ident!("HermitianMixedProductWrapper"),
                     quote::format_ident!("CalculatorComplexWrapper"),
-                    quote::format_ident!("MixedLindbladNoiseSystemWrapper"),
+                    quote::format_ident!("MixedLindbladNoiseOperatorWrapper"),
                 )
             };
         quote! {
@@ -807,6 +768,55 @@ pub fn noisywrapper(
             /// Raises:
             ///     ValueError: Objects could not be added.
             pub fn __add__(&self, other: #ident) -> PyResult<#ident> {
+                let new_self = (self.clone().internal + other.internal);
+                Ok(#ident {
+                    internal: new_self
+                })
+            }
+
+            /// Implement `-` for self with self-type.
+            ///
+            /// Args:
+            ///     other (self): value by which to subtract from self.
+            ///
+            /// Returns:
+            ///     self: The two objects subtracted.
+            ///
+            /// Raises:
+            ///     ValueError: Objects could not be subtracted.
+            pub fn __sub__(&self, other: #ident) -> PyResult<#ident> {
+                let new_self = (self.clone().internal - other.internal);
+                Ok(#ident {
+                    internal: new_self
+                })
+            }
+        }
+    } else {
+        TokenStream::new()
+    };
+    let hermitian_calculus_quote = if attribute_arguments.contains("HermitianCalculus") {
+        quote! {
+            /// Implement `-1` for self.
+            ///
+            /// Returns:
+            ///     self: The object * -1.
+            pub fn __neg__(&self) -> #ident {
+                #ident {
+                    internal: -self.clone().internal
+                }
+            }
+
+            /// Implement `+` for self with self-type.
+            ///
+            /// Args:
+            ///     other (self): value by which to add to self.
+            ///
+            /// Returns:
+            ///     self: The two objects added.
+            ///
+            /// Raises:
+            ///     ValueError: Objects could not be added.
+            pub fn __add__(&self, other: #ident) -> PyResult<#ident> {
                 let new_self = (self.clone().internal + other.internal).map_err(|err| PyValueError::new_err(format!("Objects could not be added: {:?}", err)))?;
                 Ok(#ident {
                     internal: new_self
@@ -875,13 +885,14 @@ pub fn noisywrapper(
             #to_sparse_matrix_superoperator_quote
             #operate_on_mixedsystems_quote
             #calculus_quote
+            #hermitian_calculus_quote
 
             // ----------------------------------
             // Default pyo3 implementations
             /// Return a copy (copy here produces a deepcopy).
             ///
             /// Returns:
-            ///     System: A deep copy of self.
+            ///     Operator: A deep copy of self.
             pub fn __copy__(&self) -> #ident {
                 self.clone()
             }
@@ -889,7 +900,7 @@ pub fn noisywrapper(
             /// Return a deep copy .
             ///
             /// Returns:
-            ///     System: A deep copy of self.
+            ///     Operator: A deep copy of self.
             pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
                 self.clone()
             }

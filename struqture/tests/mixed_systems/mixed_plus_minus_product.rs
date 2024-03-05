@@ -571,7 +571,7 @@ fn from_mixed_product_longer() {
 
 // Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
 #[test]
-fn current_number_particles() {
+fn number_particles() {
     let spins = PlusMinusProduct::from_str("0+").unwrap();
     let creators = &[0];
     let annihilators = &[3];
@@ -583,9 +583,9 @@ fn current_number_particles() {
         [fermions],
     );
 
-    assert_eq!(test_new.current_number_spins(), vec![1, 0]);
-    assert_eq!(test_new.current_number_bosonic_modes(), vec![0, 4]);
-    assert_eq!(test_new.current_number_fermionic_modes(), vec![4]);
+    assert_eq!(test_new.number_spins(), vec![1, 0]);
+    assert_eq!(test_new.number_bosonic_modes(), vec![0, 4]);
+    assert_eq!(test_new.number_fermionic_modes(), vec![4]);
 }
 
 // Test the Hash, Debug and Display traits of PlusMinusProduct

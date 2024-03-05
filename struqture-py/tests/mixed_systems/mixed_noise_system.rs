@@ -16,38 +16,38 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{MixedDecoherenceProduct, MixedLindbladNoiseSystem};
+use struqture::mixed_systems::{MixedDecoherenceProduct, MixedLindbladNoiseOperator};
 use struqture::prelude::MixedIndex;
 use struqture::spins::DecoherenceProduct;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix, SpinIndex};
-use struqture_py::mixed_systems::MixedLindbladNoiseSystemWrapper;
+use struqture_py::mixed_systems::MixedLindbladNoiseOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
 fn new_system(
     py: Python,
-    number_spins: Vec<Option<usize>>,
-    number_bosons: Vec<Option<usize>>,
-    number_fermions: Vec<Option<usize>>,
-) -> &PyCell<MixedLindbladNoiseSystemWrapper> {
-    let system_type = py.get_type::<MixedLindbladNoiseSystemWrapper>();
+    number_spins: usize,
+    number_bosons: usize,
+    number_fermions: usize,
+) -> &PyCell<MixedLindbladNoiseOperatorWrapper> {
+    let system_type = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .downcast::<PyCell<MixedLindbladNoiseSystemWrapper>>()
+        .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of MixedLindbladNoiseSystemWrapper
+/// Test default function of MixedLindbladNoiseOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let new_system = new_system(py, number_spins, number_bosons, number_fermions);
         new_system
             .call_method1(
@@ -56,17 +56,14 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
         let system_wrapper = new_system
-            .extract::<MixedLindbladNoiseSystemWrapper>()
+            .extract::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
 
         // PartialEq
-        let helper_ne: bool =
-            MixedLindbladNoiseSystemWrapper::new(vec![None], vec![None], vec![None])
-                != system_wrapper;
+        let helper_ne: bool = MixedLindbladNoiseOperatorWrapper::new(1, 1, 1) != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool =
-            MixedLindbladNoiseSystemWrapper::new(vec![None], vec![None], vec![None])
-                == MixedLindbladNoiseSystemWrapper::new(vec![None], vec![None], vec![None]);
+        let helper_eq: bool = MixedLindbladNoiseOperatorWrapper::new(1, 1, 1)
+            == MixedLindbladNoiseOperatorWrapper::new(1, 1, 1);
         assert!(helper_eq);
 
         // Clone
@@ -74,20 +71,20 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", MixedLindbladNoiseSystemWrapper::new(vec![None], vec![None], vec![None])),
-            "MixedLindbladNoiseSystemWrapper { internal: MixedLindbladNoiseSystem { number_spins: [None], number_bosons: [None], number_fermions: [None], operator: MixedLindbladNoiseOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
+            format!("{:?}", MixedLindbladNoiseOperatorWrapper::new(1, 1, 1)),
+            "MixedLindbladNoiseOperatorWrapper { internal: MixedLindbladNoiseOperator { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
         );
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of MixedLindbladNoiseSystem
+/// Test number_bosons and current_number_bosons functions of MixedLindbladNoiseOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
@@ -97,16 +94,8 @@ fn test_number_bosons_current() {
             .unwrap();
 
         let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -114,16 +103,8 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("number_bosonic_modes").unwrap();
-        let current_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![2_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
@@ -131,9 +112,6 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("number_fermionic_modes").unwrap();
-        let current_system = system
-            .call_method0("current_number_fermionic_modes")
-            .unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
@@ -141,55 +119,48 @@ fn test_number_bosons_current() {
         )
         .unwrap();
         assert!(comparison);
-        let comparison = bool::extract(
-            current_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
     });
 }
 
-/// Test empty_clone function of MixedLindbladNoiseSystem
+/// Test empty_clone function of MixedLindbladNoiseOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
-        let none_system = system.call_method1("empty_clone", (4,)).unwrap();
+        let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let number_spins: Vec<Option<usize>> = vec![Some(3)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(3)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(3)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
-        let some_system = system.call_method1("empty_clone", (2,)).unwrap();
+        let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract(some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
 
-/// Test set and get functions of MixedLindbladNoiseSystem
+/// Test set and get functions of MixedLindbladNoiseOperator
 #[test]
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladNoiseSystemWrapper>();
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let new_system = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
 
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("set", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 0.1))
@@ -255,19 +226,19 @@ fn boson_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of MixedLindbladNoiseSystem
+/// Test add_operator_product and remove functions of MixedLindbladNoiseOperator
 #[test]
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladNoiseSystemWrapper>();
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let new_system = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedLindbladNoiseSystemWrapper>>()
+            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
             .unwrap();
         system
             .call_method1(
@@ -356,14 +327,14 @@ fn boson_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of MixedLindbladNoiseSystem
+/// Test keys function of MixedLindbladNoiseOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
 
         let len_system = system.call_method0("__len__").unwrap();
@@ -408,16 +379,11 @@ fn test_keys_values() {
 #[test_case(0.7,0.7;"mixed")]
 fn test_truncate(re: f64, im: f64) {
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
 
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
                 "add_operator_product",
@@ -463,12 +429,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let test_system1 = new_system(py, number_spins, number_bosons, number_fermions);
         test_system1
             .call_method1(
                 "add_operator_product",
@@ -547,20 +508,15 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test add magic method function of MixedLindbladNoiseSystem
+/// Test add magic method function of MixedLindbladNoiseOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1(
                 "add_operator_product",
@@ -582,32 +538,22 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of MixedLindbladNoiseSystem
+/// Test add magic method function of MixedLindbladNoiseOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1(
                 "add_operator_product",
                 (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 0.1),
             )
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1(
                 "add_operator_product",
@@ -635,32 +581,22 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of MixedLindbladNoiseSystem
+/// Test add magic method function of MixedLindbladNoiseOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1(
                 "add_operator_product",
                 (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 0.1),
             )
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1(
                 "add_operator_product",
@@ -688,20 +624,15 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of MixedLindbladNoiseSystem
+/// Test add magic method function of MixedLindbladNoiseOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1(
                 "add_operator_product",
@@ -724,20 +655,15 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of MixedLindbladNoiseSystem
+/// Test add magic method function of MixedLindbladNoiseOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1(
                 "add_operator_product",
@@ -770,14 +696,14 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of MixedLindbladNoiseSystem
+/// Test add magic method function of MixedLindbladNoiseOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1(
@@ -791,14 +717,14 @@ fn test_mul_error() {
     });
 }
 
-/// Test copy and deepcopy functions of MixedLindbladNoiseSystem
+/// Test copy and deepcopy functions of MixedLindbladNoiseOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
@@ -819,20 +745,15 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of MixedLindbladNoiseSystem
+/// Test to_bincode and from_bincode functions of MixedLindbladNoiseOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
                 "add_operator_product",
@@ -868,29 +789,24 @@ fn test_to_from_bincode() {
 fn test_value_error_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let new = new_system(py, number_spins, number_bosons, number_fermions);
         let deserialised_error = new.call_method1("from_bincode", ("J",));
         assert!(deserialised_error.is_err());
     });
 }
 
-/// Test to_ and from_json functions of MixedLindbladNoiseSystem
+/// Test to_ and from_json functions of MixedLindbladNoiseOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
                 "add_operator_product",
@@ -927,9 +843,9 @@ fn test_to_from_json() {
 fn test_format_repr() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
@@ -937,7 +853,7 @@ fn test_format_repr() {
                 (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 0.1_f64),
             )
             .unwrap();
-        let mut rust_system = MixedLindbladNoiseSystem::new(vec![None], vec![None], vec![None]);
+        let mut rust_system = MixedLindbladNoiseOperator::new(1, 1, 1);
         rust_system
             .add_operator_product(
                 (
@@ -968,15 +884,15 @@ fn test_format_repr() {
 
         assert_eq!(
         format_op,
-        "MixedLindbladNoiseSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{(S0Z:Bc0a1:Fc0a0:, S0Z:Bc0a1:Fc0a0:): (1e-1 + i * 0e0),\n}".to_string()
+        "MixedLindbladNoiseOperator{\n(S0Z:Bc0a1:Fc0a0:, S0Z:Bc0a1:Fc0a0:): (1e-1 + i * 0e0),\n}".to_string()
     );
         assert_eq!(
         repr_op,
-        "MixedLindbladNoiseSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{(S0Z:Bc0a1:Fc0a0:, S0Z:Bc0a1:Fc0a0:): (1e-1 + i * 0e0),\n}".to_string()
+        "MixedLindbladNoiseOperator{\n(S0Z:Bc0a1:Fc0a0:, S0Z:Bc0a1:Fc0a0:): (1e-1 + i * 0e0),\n}".to_string()
     );
         assert_eq!(
         str_op,
-        "MixedLindbladNoiseSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{(S0Z:Bc0a1:Fc0a0:, S0Z:Bc0a1:Fc0a0:): (1e-1 + i * 0e0),\n}".to_string()
+        "MixedLindbladNoiseOperator{\n(S0Z:Bc0a1:Fc0a0:, S0Z:Bc0a1:Fc0a0:): (1e-1 + i * 0e0),\n}".to_string()
     );
     });
 }
@@ -986,15 +902,10 @@ fn test_format_repr() {
 fn test_richcmp() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let system_one = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_one = new_system(py, number_spins, number_bosons, number_fermions);
         system_one
             .call_method1(
                 "add_operator_product",
@@ -1042,11 +953,12 @@ fn test_richcmp() {
 fn test_json_schema() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new = new_system(py, vec![None], vec![None], vec![None]);
+        let new = new_system(py, 1, 1, 1);
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(MixedLindbladNoiseSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(MixedLindbladNoiseOperator))
+                .unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =

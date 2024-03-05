@@ -16,69 +16,64 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{HermitianMixedProduct, MixedHamiltonianSystem};
+use struqture::mixed_systems::{HermitianMixedProduct, MixedHamiltonian};
 use struqture::prelude::MixedIndex;
 use struqture::spins::PauliProduct;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix, SpinIndex};
-use struqture_py::mixed_systems::{MixedHamiltonianSystemWrapper, MixedSystemWrapper};
+use struqture_py::mixed_systems::{MixedHamiltonianWrapper, MixedOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
 fn new_system(
     py: Python,
-    number_spins: Vec<Option<usize>>,
-    number_bosons: Vec<Option<usize>>,
-    number_fermions: Vec<Option<usize>>,
-) -> &PyCell<MixedHamiltonianSystemWrapper> {
-    let system_type = py.get_type::<MixedHamiltonianSystemWrapper>();
+    number_spins: usize,
+    number_bosons: usize,
+    number_fermions: usize,
+) -> &PyCell<MixedHamiltonianWrapper> {
+    let system_type = py.get_type::<MixedHamiltonianWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .downcast::<PyCell<MixedHamiltonianSystemWrapper>>()
+        .downcast::<PyCell<MixedHamiltonianWrapper>>()
         .unwrap()
 }
 
 // helper functions
 fn new_operator(
     py: Python,
-    number_spins: Vec<Option<usize>>,
-    number_bosons: Vec<Option<usize>>,
-    number_fermions: Vec<Option<usize>>,
-) -> &PyCell<MixedSystemWrapper> {
-    let system_type = py.get_type::<MixedSystemWrapper>();
+    number_spins: usize,
+    number_bosons: usize,
+    number_fermions: usize,
+) -> &PyCell<MixedOperatorWrapper> {
+    let system_type = py.get_type::<MixedOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .downcast::<PyCell<MixedSystemWrapper>>()
+        .downcast::<PyCell<MixedOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of MixedHamiltonianSystemWrapper
+/// Test default function of MixedHamiltonianWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let new_system = new_system(py, number_spins, number_bosons, number_fermions);
         new_system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
-        let system_wrapper = new_system
-            .extract::<MixedHamiltonianSystemWrapper>()
-            .unwrap();
+        let system_wrapper = new_system.extract::<MixedHamiltonianWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool =
-            MixedHamiltonianSystemWrapper::new(vec![None], vec![None], vec![None])
-                != system_wrapper;
+        let helper_ne: bool = MixedHamiltonianWrapper::new(1, 1, 1) != system_wrapper;
         assert!(helper_ne);
         let helper_eq: bool =
-            MixedHamiltonianSystemWrapper::new(vec![None], vec![None], vec![None])
-                == MixedHamiltonianSystemWrapper::new(vec![None], vec![None], vec![None]);
+            MixedHamiltonianWrapper::new(1, 1, 1) == MixedHamiltonianWrapper::new(1, 1, 1);
         assert!(helper_eq);
 
         // Clone
@@ -86,36 +81,28 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", MixedHamiltonianSystemWrapper::new(vec![None], vec![None], vec![None])),
-            "MixedHamiltonianSystemWrapper { internal: MixedHamiltonianSystem { number_spins: [None], number_bosons: [None], number_fermions: [None], hamiltonian: MixedHamiltonian { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } } }"
+            format!("{:?}", MixedHamiltonianWrapper::new(1, 1, 1)),
+            "MixedHamiltonianWrapper { internal: MixedHamiltonian { internal_map: {}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
         );
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of MixedHamiltonianSystem
+/// Test number_bosons and number_bosons functions of MixedHamiltonian
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
 
         let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -123,16 +110,8 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("number_bosonic_modes").unwrap();
-        let current_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![2_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
@@ -140,18 +119,8 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("number_fermionic_modes").unwrap();
-        let current_system = system
-            .call_method0("current_number_fermionic_modes")
-            .unwrap();
         let comparison = bool::extract(
             number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract(
-            current_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -160,23 +129,23 @@ fn test_number_bosons_current() {
     });
 }
 
-/// Test empty_clone function of MixedHamiltonianSystem
+/// Test empty_clone function of MixedHamiltonian
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         let none_system = system.call_method1("empty_clone", (4,)).unwrap();
         let comparison =
             bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let number_spins: Vec<Option<usize>> = vec![Some(3)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(3)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(3)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         let some_system = system.call_method1("empty_clone", (2,)).unwrap();
         let comparison =
@@ -185,14 +154,14 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of MixedHamiltonianSystem
+/// Test hermitian_conjugate function of MixedHamiltonian
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
@@ -205,20 +174,20 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of MixedHamiltonianSystem
+/// Test set and get functions of MixedHamiltonian
 #[test]
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedHamiltonianSystemWrapper>();
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let new_system = py.get_type::<MixedHamiltonianWrapper>();
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
 
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<MixedHamiltonianWrapper>>()
             .unwrap();
         system
             .call_method1("set", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
@@ -262,29 +231,25 @@ fn boson_system_test_set_get() {
         let error = system.call_method1("set", ("S0Z:Bc2a2a3:Fc0a0:", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("set", ("S5X:S7Y:Bc2a2a3:Fc0a2a3:", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("set", (vec![0.0], 0.5));
         assert!(error.is_err());
     });
 }
 
-/// Test add_operator_product and remove functions of MixedHamiltonianSystem
+/// Test add_operator_product and remove functions of MixedHamiltonian
 #[test]
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedHamiltonianSystemWrapper>();
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
+        let new_system = py.get_type::<MixedHamiltonianWrapper>();
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedHamiltonianSystemWrapper>>()
+            .downcast::<PyCell<MixedHamiltonianWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
@@ -340,24 +305,20 @@ fn boson_system_test_add_operator_product_remove() {
         let error = system.call_method1("add_operator_product", ("S0Z:Bc2c3a2:Fc0a0:", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of bosons in entry exceeds number of bosons in system.
-        let error = system.call_method1("add_operator_product", ("S5X:S7Y:Bc2c3a2:Fc0a2a3:", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("add_operator_product", (vec![0.0], 0.5));
         assert!(error.is_err());
     });
 }
 
-/// Test keys function of MixedHamiltonianSystem
+/// Test keys function of MixedHamiltonian
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
 
         let len_system = system.call_method0("__len__").unwrap();
@@ -397,16 +358,11 @@ fn test_keys_values() {
 #[test_case(1.0,0.0;"real")]
 fn test_truncate(re: f64, im: f64) {
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
 
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1(
                 "add_operator_product",
@@ -452,12 +408,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let test_system1 = new_system(py, number_spins, number_bosons, number_fermions);
         test_system1
             .call_method1(
                 "add_operator_product",
@@ -536,20 +487,15 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -565,29 +511,19 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
@@ -606,29 +542,19 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1("add_operator_product", ("S0Z:Bc2a2a3:Fc0a0:", 0.2))
             .unwrap();
@@ -647,29 +573,24 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedOperatorWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         system_0_1
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.2))
@@ -682,29 +603,24 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_mul_cf_with_conj() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedOperatorWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         system_0_1
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.2))
@@ -720,29 +636,24 @@ fn test_mul_cf_with_conj() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem CHECK + X
+/// Test add magic method function of MixedHamiltonian CHECK + X
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedOperatorWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         system_0_1
             .call_method1(
@@ -765,29 +676,24 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem CHECK + X
+/// Test add magic method function of MixedHamiltonian CHECK + X
 #[test]
 fn test_mul_cc_with_conj() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedOperatorWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap()
-            .downcast::<PyCell<MixedSystemWrapper>>()
+            .downcast::<PyCell<MixedOperatorWrapper>>()
             .unwrap();
         system_0_1
             .call_method1(
@@ -816,29 +722,19 @@ fn test_mul_cc_with_conj() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(4)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(4)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(4)];
-        let system_0 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S1X:Ba0:Fa2", 0.1))
             .unwrap();
-        let system_1 = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let system_1 = new_system(py, number_spins, number_bosons, number_fermions);
         system_1
             .call_method1("add_operator_product", ("S0Z:Ba1:Fa3:", 1.0))
             .unwrap();
@@ -863,14 +759,14 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of MixedHamiltonianSystem
+/// Test add magic method function of MixedHamiltonian
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![Some(2)];
-        let number_bosons: Vec<Option<usize>> = vec![Some(2)];
-        let number_fermions: Vec<Option<usize>> = vec![Some(2)];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system_0 = new_system(py, number_spins, number_bosons, number_fermions);
         system_0
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1_f64))
@@ -878,25 +774,17 @@ fn test_mul_error() {
 
         let added = system_0.call_method1("__mul__", (vec![0.0],));
         assert!(added.is_err());
-
-        let added = system_0.call_method1(
-            "__mul__",
-            (MixedHamiltonianSystemWrapper {
-                internal: MixedHamiltonianSystem::default(),
-            },),
-        );
-        assert!(added.is_err());
     });
 }
 
-/// Test copy and deepcopy functions of MixedHamiltonianSystem
+/// Test copy and deepcopy functions of MixedHamiltonian
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
@@ -914,20 +802,15 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of MixedHamiltonianSystem
+/// Test to_bincode and from_bincode functions of MixedHamiltonian
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -960,29 +843,24 @@ fn test_to_from_bincode() {
 fn test_value_error_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let new = new_system(py, number_spins, number_bosons, number_fermions);
         let deserialised_error = new.call_method1("from_bincode", ("J",));
         assert!(deserialised_error.is_err());
     });
 }
 
-/// Test to_ and from_json functions of MixedHamiltonianSystem
+/// Test to_ and from_json functions of MixedHamiltonian
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let system = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -1016,14 +894,14 @@ fn test_to_from_json() {
 fn test_format_repr() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         system
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1_f64))
             .unwrap();
-        let mut rust_system = MixedHamiltonianSystem::new(vec![None], vec![None], vec![None]);
+        let mut rust_system = MixedHamiltonian::new(1, 1, 1);
         rust_system
             .add_operator_product(
                 HermitianMixedProduct::new(
@@ -1045,17 +923,17 @@ fn test_format_repr() {
         let str_op: &str = <&str>::extract(to_str).unwrap();
 
         assert_eq!(
-        format_op,
-        "MixedHamiltonianSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0c1a0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
-    );
+            format_op,
+            "MixedHamiltonian{\nS0Z:Bc0c1a0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        );
         assert_eq!(
-        repr_op,
-        "MixedHamiltonianSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0c1a0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
-    );
+            repr_op,
+            "MixedHamiltonian{\nS0Z:Bc0c1a0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        );
         assert_eq!(
-        str_op,
-        "MixedHamiltonianSystem(\nnumber_spins: 1, \nnumber_bosons: 2, \nnumber_fermions: 1, )\n{S0Z:Bc0c1a0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
-    );
+            str_op,
+            "MixedHamiltonian{\nS0Z:Bc0c1a0a1:Fc0a0:: (1e-1 + i * 0e0),\n}".to_string()
+        );
     });
 }
 
@@ -1064,15 +942,10 @@ fn test_format_repr() {
 fn test_richcmp() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let system_one = new_system(
-            py,
-            number_spins.clone(),
-            number_bosons.clone(),
-            number_fermions.clone(),
-        );
+        let number_spins: usize = 1;
+        let number_bosons: usize = 1;
+        let number_fermions: usize = 1;
+        let system_one = new_system(py, number_spins, number_bosons, number_fermions);
         system_one
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -1113,11 +986,11 @@ fn test_richcmp() {
 fn test_json_schema() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new = new_system(py, vec![None], vec![None], vec![None]);
+        let new = new_system(py, 1, 1, 1);
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(MixedHamiltonianSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(MixedHamiltonian)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =

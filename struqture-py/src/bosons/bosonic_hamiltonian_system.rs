@@ -10,14 +10,14 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::bosons::{BosonSystemWrapper, HermitianBosonProductWrapper};
+use crate::bosons::{BosonOperatorWrapper, HermitianBosonProductWrapper};
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::bosons::BosonHamiltonianSystem;
+use struqture::bosons::BosonHamiltonian;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
@@ -25,7 +25,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 
 /// These are representations of systems of bosons.
 ///
-/// BosonHamiltonianSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
+/// BosonHamiltonians are characterized by a BosonOperator to represent the hamiltonian of the spin system
 /// and an optional number of bosons.
 ///
 /// Examples
@@ -36,20 +36,20 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.bosons import BosonHamiltonianSystem, HermitianBosonProduct
+///     from struqture_py.bosons import BosonHamiltonian, HermitianBosonProduct
 ///     
-///     ssystem = BosonHamiltonianSystem(2)
+///     ssystem = BosonHamiltonian(2)
 ///     pp = HermitianBosonProduct([0], [0])
 ///     ssystem.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(ssystem.number_modes(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///
-#[pyclass(name = "BosonHamiltonianSystem", module = "struqture_py.bosons")]
+#[pyclass(name = "BosonHamiltonian", module = "struqture_py.bosons")]
 #[derive(Clone, Debug, PartialEq)]
-pub struct BosonHamiltonianSystemWrapper {
-    /// Internal storage of [struqture::bosons::BosonHamiltonianSystem]
-    pub internal: BosonHamiltonianSystem,
+pub struct BosonHamiltonianWrapper {
+    /// Internal storage of [struqture::bosons::BosonHamiltonian]
+    pub internal: BosonHamiltonian,
 }
 
 #[noiseless_system_wrapper(
@@ -57,65 +57,62 @@ pub struct BosonHamiltonianSystemWrapper {
     OperateOnState,
     OperateOnModes,
     OperateOnDensityMatrix,
-    Calculus
+    HermitianCalculus
 )]
-impl BosonHamiltonianSystemWrapper {
-    /// Create an empty BosonHamiltonianSystem.
-    ///
-    /// Args:
-    ///     number_bosons (Optional[int]): The number of bosons in the BosonHamiltonianSystem.
+impl BosonHamiltonianWrapper {
+    /// Create an empty BosonHamiltonian.
     ///
     /// Returns:
-    ///     self: The new BosonHamiltonianSystem with the input number of bosons.
+    ///     self: The new BosonHamiltonian with the input number of bosons.
     #[new]
-    #[pyo3(signature = (number_bosons = None))]
-    pub fn new(number_bosons: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: BosonHamiltonianSystem::new(number_bosons),
+            internal: BosonHamiltonian::new(),
         }
     }
 
-    /// Implement `*` for BosonHamiltonianSystem and BosonHamiltonianSystem/CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for BosonHamiltonian and BosonHamiltonian/CalculatorComplex/CalculatorFloat.
     ///
     /// Args:
-    ///     value (Union[BosonHamiltonianSystem, CalculatorComplex, CalculatorFloat]): value by which to multiply the self BosonHamiltonianSystem
+    ///     value (Union[BosonHamiltonian, CalculatorComplex, CalculatorFloat]): value by which to multiply the self BosonHamiltonian
     ///
     /// Returns:
-    ///     BosonSystem: The BosonHamiltonianSystem multiplied by the value.
+    ///     BosonOperator: The BosonHamiltonian multiplied by the value.
     ///
     /// Raises:
-    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<BosonSystemWrapper> {
+    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonian.
+    pub fn __mul__(&self, value: &PyAny) -> PyResult<BosonOperatorWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
-            Ok(x) => Ok(BosonSystemWrapper {
+            Ok(x) => Ok(BosonOperatorWrapper {
                 internal: (self.clone().internal * CalculatorComplex::from(x)),
             }),
             Err(_) => {
                 let cc_value = qoqo_calculator_pyo3::convert_into_calculator_complex(value);
                 match cc_value {
-                    Ok(x) => Ok(BosonSystemWrapper {
+                    Ok(x) => Ok(BosonOperatorWrapper {
                         internal: (self.clone().internal * x),
                     }),
                     Err(_) => {
                         let bhs_value = Self::from_pyany(value.into());
                         match bhs_value {
                             Ok(x) => {
-                                let new_self = (self.clone().internal * x).map_err(|err| {
-                                    PyValueError::new_err(format!(
-                                        "BosonHamiltonianSystems could not be multiplied: {:?}",
-                                        err
-                                    ))
-                                })?;
-                                Ok(BosonSystemWrapper { internal: new_self })
+                                let new_self = self.clone().internal * x;
+                                Ok(BosonOperatorWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonianSystem: {:?}",
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonian: {:?}",
                                 err))),
                         }
                     }
                 }
             }
         }
+    }
+}
+
+impl Default for BosonHamiltonianWrapper {
+    fn default() -> Self {
+        Self::new()
     }
 }

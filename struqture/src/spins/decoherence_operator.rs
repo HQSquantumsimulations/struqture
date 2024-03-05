@@ -215,30 +215,21 @@ impl<'a> OperateOnState<'a> for DecoherenceOperator {
 }
 
 impl<'a> OperateOnSpins<'a> for DecoherenceOperator {
-    /// Returns maximum index in DecoherenceOperator internal_map.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
-    fn current_number_spins(&self) -> usize {
-        let mut max_mode: usize = 0;
-        if !self.internal_map.is_empty() {
-            for key in self.internal_map.keys() {
-                if key.current_number_spins() > max_mode {
-                    max_mode = key.current_number_spins()
-                }
-            }
-        }
-        max_mode
-    }
-
     /// Gets the maximum index of the DecoherenceOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of spins in the DecoherenceOperator.
     fn number_spins(&self) -> usize {
-        self.current_number_spins()
+        let mut max_mode: usize = 0;
+        if !self.internal_map.is_empty() {
+            for key in self.internal_map.keys() {
+                if key.number_spins() > max_mode {
+                    max_mode = key.number_spins()
+                }
+            }
+        }
+        max_mode
     }
 }
 

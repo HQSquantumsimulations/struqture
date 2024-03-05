@@ -14,39 +14,38 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::fermions::{FermionProduct, FermionSystem};
+use struqture::fermions::{FermionOperator, FermionProduct};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix};
-use struqture_py::fermions::FermionSystemWrapper;
+use struqture_py::fermions::FermionOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python, number_fermions: Option<usize>) -> &PyCell<FermionSystemWrapper> {
-    let system_type = py.get_type::<FermionSystemWrapper>();
+fn new_system(py: Python) -> &PyCell<FermionOperatorWrapper> {
+    let system_type = py.get_type::<FermionOperatorWrapper>();
     system_type
-        .call1((number_fermions,))
+        .call0()
         .unwrap()
-        .downcast::<PyCell<FermionSystemWrapper>>()
+        .downcast::<PyCell<FermionOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of FermionSystemWrapper
+/// Test default function of FermionOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let new_system = new_system(py, number_fermions);
+        let new_system = new_system(py);
         new_system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<FermionSystemWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<FermionOperatorWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = FermionSystemWrapper::new(None) != system_wrapper;
+        let helper_ne: bool = FermionOperatorWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = FermionSystemWrapper::new(None) == FermionSystemWrapper::new(None);
+        let helper_eq: bool = FermionOperatorWrapper::new() == FermionOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -54,76 +53,60 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", FermionSystemWrapper::new(None)),
-            "FermionSystemWrapper { internal: FermionSystem { number_modes: None, operator: FermionOperator { internal_map: {} } } }"
+            format!("{:?}", FermionOperatorWrapper::new()),
+            "FermionOperatorWrapper { internal: FermionOperator { internal_map: {} } }"
         );
 
         // Number of fermions
         let comp_op = new_system.call_method0("number_modes").unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
-
-        let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
-        assert!(comparison);
     })
 }
 
-/// Test number_fermions and current_number_fermions functions of FermionSystem
+/// Test number_fermions function of FermionOperator
 #[test]
 fn test_number_fermions_current() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
         let number_system = system.call_method0("number_modes").unwrap();
-        let current_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
-        let comparison =
-            bool::extract(current_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
-        assert!(comparison);
     });
 }
 
-/// Test empty_clone function of FermionSystem
+/// Test empty_clone function of FermionOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
-        let none_system = system
-            .call_method1("empty_clone", (number_fermions,))
-            .unwrap();
+        let system = new_system(py);
+        let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let number_fermions: Option<usize> = Some(3);
-        let system = new_system(py, number_fermions);
-        let some_system = system
-            .call_method1("empty_clone", (number_fermions,))
-            .unwrap();
+        let system = new_system(py);
+        let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
             bool::extract(some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
 
-/// Test hermitian_conjugate function of FermionSystem
+/// Test hermitian_conjugate function of FermionOperator
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -135,17 +118,16 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of FermionSystem
+/// Test set and get functions of FermionOperator
 #[test]
 fn fermion_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionSystemWrapper>();
-        let number_fermions: Option<usize> = Some(4);
+        let new_system = py.get_type::<FermionOperatorWrapper>();
         let system = new_system
-            .call1((number_fermions,))
+            .call0()
             .unwrap()
-            .downcast::<PyCell<FermionSystemWrapper>>()
+            .downcast::<PyCell<FermionOperatorWrapper>>()
             .unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c2c3a1", 0.2)).unwrap();
@@ -177,27 +159,22 @@ fn fermion_system_test_set_get() {
         let error = system.call_method1("set", ("c2c3a1", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of fermions in entry exceeds number of fermions in system.
-        let error = system.call_method1("set", ("c5", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("set", (vec![0.0], 0.5));
         assert!(error.is_err());
     });
 }
 
-/// Test add_operator_product and remove functions of FermionSystem
+/// Test add_operator_product and remove functions of FermionOperator
 #[test]
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionSystemWrapper>();
-        let number_fermions: Option<usize> = Some(4);
+        let new_system = py.get_type::<FermionOperatorWrapper>();
         let system = new_system
-            .call1((number_fermions,))
+            .call0()
             .unwrap()
-            .downcast::<PyCell<FermionSystemWrapper>>()
+            .downcast::<PyCell<FermionOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
@@ -243,23 +220,18 @@ fn fermion_system_test_add_operator_product_remove() {
         let error = system.call_method1("add_operator_product", ("c2c3a1", vec![0.0]));
         assert!(error.is_err());
 
-        // Try_set error 3: Number of fermions in entry exceeds number of fermions in system.
-        let error = system.call_method1("add_operator_product", ("c5", 0.1));
-        assert!(error.is_err());
-
-        // Try_set error 4: Generic error
+        // Try_set error 3: Generic error
         let error = system.call_method1("add_operator_product", (vec![0.0], 0.5));
         assert!(error.is_err());
     });
 }
 
-/// Test keys function of FermionSystem
+/// Test keys function of FermionOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
 
         let len_system = system.call_method0("__len__").unwrap();
         let comparison =
@@ -300,9 +272,7 @@ fn test_keys_values() {
 #[test_case(0.7,0.7;"mixed")]
 fn test_truncate(re: f64, im: f64) {
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1(
                 "add_operator_product",
@@ -348,7 +318,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system1 = new_system(py, number_fermions);
+        let test_system1 = new_system(py);
         test_system1
             .call_method1(
                 "add_operator_product",
@@ -383,7 +353,7 @@ fn test_truncate(re: f64, im: f64) {
             )
             .unwrap();
 
-        let test_system2 = new_system(py, number_fermions);
+        let test_system2 = new_system(py);
         test_system2
             .call_method1(
                 "add_operator_product",
@@ -431,7 +401,7 @@ fn test_truncate(re: f64, im: f64) {
 fn test_separate() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pmp = new_system(py, None);
+        let pmp = new_system(py);
         pmp.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         pmp.call_method1("add_operator_product", ("c0c1a0", 1.0))
@@ -439,12 +409,12 @@ fn test_separate() {
         pmp.call_method1("add_operator_product", ("c0c2a0", 1.0))
             .unwrap();
 
-        let pmp_rem = new_system(py, None);
+        let pmp_rem = new_system(py);
         pmp_rem
             .call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
 
-        let pmp_sys = new_system(py, None);
+        let pmp_sys = new_system(py);
         pmp_sys
             .call_method1("add_operator_product", ("c0c1a0", 1.0))
             .unwrap();
@@ -465,17 +435,16 @@ fn test_separate() {
     })
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_fermions);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c0c1a0a1", -0.1))
             .unwrap();
@@ -487,21 +456,20 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(4);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_fermions);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c2c3a1", 0.2))
             .unwrap();
-        let system_0_1 = new_system(py, number_fermions);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -516,21 +484,20 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(4);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_fermions);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c2c3a1", 0.2))
             .unwrap();
-        let system_0_1 = new_system(py, number_fermions);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -545,18 +512,17 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_system(py, number_fermions);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1a0a1", 0.2))
             .unwrap();
@@ -568,18 +534,17 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_system(py, number_fermions);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1(
                 "add_operator_product",
@@ -601,21 +566,20 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(4);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0", 0.1))
             .unwrap();
-        let system_1 = new_system(py, number_fermions);
+        let system_1 = new_system(py);
         system_1
             .call_method1("add_operator_product", ("c2c3a1", 1.0))
             .unwrap();
-        let system_0_1 = new_system(py, number_fermions);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("c0c1c2c3a0a1", 0.1))
             .unwrap();
@@ -627,13 +591,12 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of FermionSystem
+/// Test add magic method function of FermionOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = Some(2);
-        let system_0 = new_system(py, number_fermions);
+        let system_0 = new_system(py);
         system_0
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
@@ -643,13 +606,12 @@ fn test_mul_error() {
     });
 }
 
-/// Test copy and deepcopy functions of FermionSystem
+/// Test copy and deepcopy functions of FermionOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -667,19 +629,18 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of FermionSystem
+/// Test to_bincode and from_bincode functions of FermionOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
         let serialised = system.call_method0("to_bincode").unwrap();
-        let new = new_system(py, number_fermions);
+        let new = new_system(py);
         let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
 
         let deserialised_error =
@@ -706,26 +667,24 @@ fn test_to_from_bincode() {
 fn test_value_error_bincode() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let new = new_system(py, number_fermions);
+        let new = new_system(py);
         let deserialised_error = new.call_method1("from_bincode", ("J",));
         assert!(deserialised_error.is_err());
     });
 }
 
-/// Test to_ and from_json functions of FermionSystem
+/// Test to_ and from_json functions of FermionOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
         let serialised = system.call_method0("to_json").unwrap();
-        let new = new_system(py, number_fermions);
+        let new = new_system(py);
         let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
 
         let deserialised_error =
@@ -753,12 +712,11 @@ fn test_to_from_json() {
 fn test_format_repr() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system = new_system(py, number_fermions);
+        let system = new_system(py);
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1_f64))
             .unwrap();
-        let mut rust_system = FermionSystem::new(None);
+        let mut rust_system = FermionOperator::new();
         rust_system
             .add_operator_product(
                 FermionProduct::new(vec![0, 1], vec![0, 1]).unwrap(),
@@ -776,15 +734,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "FermionSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "FermionOperator{\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "FermionSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "FermionOperator{\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "FermionSystem(2){\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
+            "FermionOperator{\nc0c1a0a1: (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -794,12 +752,11 @@ fn test_format_repr() {
 fn test_richcmp() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let system_one = new_system(py, number_fermions);
+        let system_one = new_system(py);
         system_one
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
-        let system_two = new_system(py, number_fermions);
+        let system_two = new_system(py);
         system_two
             .call_method1("add_operator_product", ("c0a2", 0.1))
             .unwrap();
@@ -823,13 +780,12 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of FermionSystem
+/// Test jordan_wigner() method of FermionOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let number_fermions: Option<usize> = None;
-        let fs = new_system(py, number_fermions);
+        let fs = new_system(py);
         fs.call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
         let ss = fs.call_method0("jordan_wigner").unwrap();
@@ -837,10 +793,8 @@ fn test_jordan_wigner() {
         let empty = bool::extract(ss.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes =
-            usize::extract(fs.call_method0("current_number_modes").unwrap()).unwrap();
-        let number_spins =
-            usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
+        let number_modes = usize::extract(fs.call_method0("number_modes").unwrap()).unwrap();
+        let number_spins = usize::extract(ss.call_method0("number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
@@ -850,11 +804,11 @@ fn test_jordan_wigner() {
 fn test_json_schema() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new = new_system(py, None);
+        let new = new_system(py);
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(FermionSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(FermionOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =

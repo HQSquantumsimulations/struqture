@@ -200,27 +200,22 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionOperator {
 impl<'a> OperateOnState<'a> for FermionOperator {}
 
 impl<'a> OperateOnModes<'a> for FermionOperator {
-    // From trait
-    fn current_number_modes(&'a self) -> usize {
-        let mut max_mode: usize = 0;
-        if !self.is_empty() {
-            for key in self.keys() {
-                let maxk = key.current_number_modes();
-                if maxk > max_mode {
-                    max_mode = maxk;
-                }
-            }
-        }
-        max_mode
-    }
-
     /// Gets the maximum index of the FermionOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of fermions in the FermionOperator.
     fn number_modes(&'a self) -> usize {
-        self.current_number_modes()
+        let mut max_mode: usize = 0;
+        if !self.is_empty() {
+            for key in self.keys() {
+                let maxk = key.number_modes();
+                if maxk > max_mode {
+                    max_mode = maxk;
+                }
+            }
+        }
+        max_mode
     }
 }
 

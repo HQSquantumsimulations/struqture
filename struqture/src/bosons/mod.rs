@@ -20,22 +20,16 @@
 //! Open Quantum Systems should be represented using [crate::bosons::BosonLindbladOpenSystem].
 
 mod bosonic_hamiltonian;
-mod bosonic_hamiltonian_system;
 mod bosonic_indices;
 mod bosonic_noise_operator;
-mod bosonic_noise_system;
 mod bosonic_open_system;
 mod bosonic_operator;
-mod bosonic_system;
 use std::str::FromStr;
 
 pub use bosonic_hamiltonian::BosonHamiltonian;
-pub use bosonic_hamiltonian_system::BosonHamiltonianSystem;
 pub use bosonic_noise_operator::BosonLindbladNoiseOperator;
-pub use bosonic_noise_system::BosonLindbladNoiseSystem;
 pub use bosonic_open_system::BosonLindbladOpenSystem;
 pub use bosonic_operator::BosonOperator;
-pub use bosonic_system::BosonSystem;
 
 use crate::{ModeIndex, OperateOnDensityMatrix, SymmetricIndex};
 pub use bosonic_indices::{BosonProduct, HermitianBosonProduct};
