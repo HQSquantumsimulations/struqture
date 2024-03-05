@@ -14,10 +14,10 @@ mod bosonic_product;
 
 mod hermitian_bosonic_product;
 
-mod bosonic_system;
+mod bosonic_operator;
 
-mod bosonic_hamiltonian_system;
+mod bosonic_hamiltonian;
 
-mod bosonic_noise_system;
+mod bosonic_noise_operator;
 
 mod bosonic_open_system;

@@ -20,10 +20,10 @@ mod plus_minus_operator;
 
 mod plus_minus_noise_operator;
 
-mod spin_system;
+mod spin_operator;
 
-mod spin_hamiltonian_system;
+mod spin_hamiltonian;
 
-mod noise_system;
+mod spin_noise_operator;
 
-mod open_system;
+mod spin_open_system;

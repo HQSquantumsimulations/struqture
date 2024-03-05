@@ -26,14 +26,14 @@ pub use plus_minus_operator::PlusMinusOperatorWrapper;
 mod plus_minus_noise_operator;
 pub use plus_minus_noise_operator::PlusMinusLindbladNoiseOperatorWrapper;
 
-mod spin_system;
-pub use spin_system::SpinOperatorWrapper;
+mod spin_operator;
+pub use spin_operator::SpinOperatorWrapper;
 
-mod spin_hamiltonian_system;
-pub use spin_hamiltonian_system::SpinHamiltonianWrapper;
+mod spin_hamiltonian;
+pub use spin_hamiltonian::SpinHamiltonianWrapper;
 
-mod spin_noise_system;
-pub use spin_noise_system::SpinLindbladNoiseOperatorWrapper;
+mod spin_noise_operator;
+pub use spin_noise_operator::SpinLindbladNoiseOperatorWrapper;
 
 mod spin_open_system;
 pub use spin_open_system::SpinLindbladOpenSystemWrapper;
