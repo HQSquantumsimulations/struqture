@@ -192,7 +192,7 @@ Similarly the support of symbolic expression leads to a trade-off in speed compa
 The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported from <a href="https://github.com/HQSquantumsimulations/qoqo_calculator">qoqo_calculator</a>.
 Struqture is designed to also support the construction and (de)serialisation of large systems but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.</p>
 <p>This documentation is split into two parts. The <a href="physical_types/intro.html">first part</a> covers the basic usage for spins, bosons, fermions and mixed systems. The <a href="container_types/intro.html">second part</a> covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world <a href="example.html">example</a> is also included in.</p>
-<p>Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls. </p>
+<p>Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls.</p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <h3 id="python"><a class="header" href="#python">Python</a></h3>
 <p>You can install <code>struqture_py</code> from PyPi. For x86 Linux, Windows and macOS systems pre-built wheels are available.
@@ -200,8 +200,8 @@ On other platforms a local Rust toolchain is required to compile the Python sour
 <pre><code class="language-bash">pip install struqture-py
 </code></pre>
 <h3 id="rust"><a class="header" href="#rust">Rust</a></h3>
-<p>You can use struqture in your Rust project by adding </p>
-<pre><code class="language-TOML">struqture = { version = &quot;1.0.1&quot; }
+<p>You can use struqture in your Rust project by adding</p>
+<pre><code class="language-TOML">struqture = { version = "1.0.1" }
 </code></pre>
 <p>to your Cargo.toml file.</p>
 <h2 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h2>
@@ -353,12 +353,12 @@ let pp = PauliProduct::new().x(0).z(2);
 let mut operator = SpinOperator::new();
 operator.add_operator_product(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
 assert_eq!(operator.get(&amp;pp), &amp;CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = SpinOperator::new();
 operator.set(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // A complex entry is not valid for a SpinHamiltonian
 let mut hamiltonian = SpinHamiltonian::new();
@@ -366,7 +366,7 @@ let mut hamiltonian = SpinHamiltonian::new();
 hamiltonian.add_operator_product(pp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 // This is possible
 hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
-println!(&quot;{}&quot;, hamiltonian);</code></pre>
+println!("{}", hamiltonian);</code></pre>
 <p>In python, we need to use a <code>SpinSystem</code> and <code>SpinHamiltonianSystem</code> instead of an<code>SpinOperator</code> and <code>SpinHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems"><a class="header" href="#systems-and-hamiltoniansystems">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, SpinSystems and SpinHamiltonianSystems are wrappers around SpinOperators and SpinHamiltonians that allow to explicitly set the number of spins of the systems.
@@ -384,13 +384,13 @@ let pp = PauliProduct::new().x(0).z(2);
 system
     .add_operator_product(pp, CalculatorComplex::new(1.0, 1.5))
     .unwrap();
-println!(&quot;{}&quot;, system);
+println!("{}", system);
 
 // This will not work, as the spin index of the PauliProduct is larger than
 // the number of the spins in the system (the spin with the smallest index is 0).
 let pp_error = PauliProduct::new().z(3);
 let error = system.add_operator_product(pp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let mut system = SpinSystem::new(None);
@@ -433,7 +433,7 @@ We use <code>DecoherenceProducts</code> as the operator basis.</p>
 In programming terms the object <code>SpinLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>DecoherenceProduct</code>, <code>DecoherenceProduct</code>) as keys and the entries in the rate matrix as values.</p>
 <p>Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent: <code>SpinLindbladNoiseSystem</code>, with a number of involved spins defined by the user. For more information on these, see the <a href="physical_types/../container_types/noise_operators_and_systems">noise container</a> chapter.</p>
 <h3 id="examples-3"><a class="header" href="#examples-3">Examples</a></h3>
-<p>Here, we add the terms \( L_0 = \sigma_0^{x} \sigma_2^{z} \) and \( L_1 = \sigma_0^{x} \sigma_2^{z} \) with coefficient 1.0: 
+<p>Here, we add the terms \( L_0 = \sigma_0^{x} \sigma_2^{z} \) and \( L_1 = \sigma_0^{x} \sigma_2^{z} \) with coefficient 1.0:
 \( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
 <pre><code class="language-rust">use struqture::prelude::*;
 use struqture::spins::{DecoherenceProduct, SpinLindbladNoiseSystem};
@@ -447,7 +447,7 @@ system.add_operator_product((dp.clone(), dp.clone()), 1.0.into()).unwrap();
 
 // Checking our system
 assert_eq!(system.get(&amp;(dp.clone(), dp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from struqture_py import spins
 
@@ -461,7 +461,7 @@ print(system)
 
 # In python we can also use the string representation
 system = spins.SpinLindbladNoiseSystem(3)
-system.add_operator_product((&quot;0X2Z&quot;, &quot;0X2Z&quot;), 1.0+1.5*1j)
+system.add_operator_product(("0X2Z", "0X2Z"), 1.0+1.5*1j)
 print(system)
 </code></pre>
 <h2 id="open-systems"><a class="header" href="#open-systems">Open systems</a></h2>
@@ -491,7 +491,7 @@ noise
     .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
-println!(&quot;{}&quot;, open_system);</code></pre>
+println!("{}", open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
 from struqture_py import spins
@@ -537,7 +537,7 @@ system
 
 // Here we have a noise system, so we can only construct a superoperator
 let matrix = system.sparse_matrix_superoperator(Some(3)).unwrap();
-println!(&quot;{:?}&quot;, matrix);</code></pre>
+println!("{:?}", matrix);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import spins
@@ -611,15 +611,15 @@ let (fp_1, coeff) = HermitianFermionProduct::create_valid_pair(
 with
 \[ f(j, k) = \begin{cases} c_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
 \[ g(j, l) = \begin{cases} c_l \\ \mathbb{1} \end{cases} , \]
-and 
+and
 \(c^{\dagger}\) the fermionionic creation operator, \(c\) the fermionionic annihilation operator
 \[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\
 \lbrace c_k, c_j \rbrace = 0, \\
 \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \]</p>
 <p>For instance, \(c^{\dagger}_0 c^{\dagger}_1 c_1\) is a term with a \(c^{\dagger}\) term acting on 0, and both a \(c^{\dagger}\) term and a \(c\) term acting on 1.</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>FermionProducts</code> or <code>HermitianFermionProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
+<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>FermionProducts</code> or <code>HermitianFermionProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values.</p>
 <p>In struqture we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors.
 In the <code>HermitianFermionProducts</code>, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.</p>
 <h3 id="examples-6"><a class="header" href="#examples-6">Examples</a></h3>
 <p>Here is an example of how to build a product and using it to build an operator, in Rust:</p>
@@ -635,12 +635,12 @@ let fp = FermionProduct::new([1, 2], [0, 1]).unwrap();
 // O = (1 + 1.5 * i) * c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
 let mut operator = FermionOperator::new();
 operator.add_operator_product(fp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = FermionOperator::new();
 operator.set(fp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // A FermionProduct entry is not valid for a FermionHamiltonian
 let mut hamiltonian = FermionHamiltonian::new();
@@ -649,7 +649,7 @@ hamiltonian.add_operator_product(fp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 // This is possible
 let hfp = HermitianFermionProduct::new([0, 2], [0, 1]).unwrap();
 hamiltonian.add_operator_product(hfp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!(&quot;{}&quot;, hamiltonian);</code></pre>
+println!("{}", hamiltonian);</code></pre>
 <p>In python, we need to use a <code>FermionSystem</code> and <code>FermionHamiltonianSystem</code> instead of a <code>FermionOperator</code> and <code>FermionHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems-1"><a class="header" href="#systems-and-hamiltoniansystems-1">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, FermionSystems and FermionHamiltonianSystems are wrappers around FermionOperators and FermionHamiltonians that allow to explicitly set the number of spins of the systems.
@@ -665,14 +665,14 @@ let mut system = FermionHamiltonianSystem::new(Some(3));
 // This will work
 let hfp = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
 system.add_operator_product(hfp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, system);
+println!("{}", system);
 
 // This will not work, as the fermionic index of the HermitianFermionProduct is larger
 // than the number of the fermionic modes in the system (the fermionic mode with the
 // smallest index is 0).
 let hfp_error = HermitianFermionProduct::new([3], [3]).unwrap();
 let error = system.add_operator_product(hfp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hbf = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
@@ -733,7 +733,7 @@ system
         CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
 assert_eq!(system.get(&amp;(fp.clone(), fp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
@@ -781,7 +781,7 @@ noise
         (fp.clone(), fp), CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
 
-println!(&quot;{}&quot;, open_system);</code></pre>
+println!("{}", open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
@@ -859,14 +859,14 @@ let (bp_1, coeff) = HermitianBosonProduct::create_valid_pair(
 with
 \[ f(j, k) = \begin{cases} c_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
 \[ g(j, l) = \begin{cases} c_l \\ \mathbb{1} \end{cases} , \]
-and 
-\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator 
+and
+\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator
 \[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
 \lbrack c_k, c_j \rbrack = 0, \\
 \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>BosonProducts</code> or <code>HermitianBosonProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
+<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>BosonProducts</code> or <code>HermitianBosonProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values.</p>
 <p>In struqture we distinguish between bosonic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors.
 In the <code>HermitianBosonProducts</code>, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.</p>
 <h3 id="examples-11"><a class="header" href="#examples-11">Examples</a></h3>
 <p>Here is an example of how to build a <code>BosonOperator</code> and a <code>BosonHamiltonian</code>, in Rust:</p>
@@ -882,12 +882,12 @@ let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
 // O = (1 + 1.5 * i) * c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
 let mut operator = BosonOperator::new();
 operator.add_operator_product(bp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = BosonOperator::new();
 operator.set(bp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // A BosonProduct entry is not valid for a BosonHamiltonian
 let mut hamiltonian = BosonHamiltonian::new();
@@ -896,7 +896,7 @@ hamiltonian.add_operator_product(bp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 // This is possible
 let hbp = HermitianBosonProduct::new([0, 2], [0, 1]).unwrap();
 hamiltonian.add_operator_product(hbp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!(&quot;{}&quot;, hamiltonian);</code></pre>
+println!("{}", hamiltonian);</code></pre>
 <p>In python, we need to use a <code>BosonSystem</code> and <code>BosonHamiltonianSystem</code> instead of a <code>BosonOperator</code> and <code>BosonHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems-2"><a class="header" href="#systems-and-hamiltoniansystems-2">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, BosonSystems and BosonHamiltonianSystems are wrappers around BosonOperators and BosonHamiltonians that allow to explicitly set the number of spins of the systems.
@@ -912,14 +912,14 @@ let mut system = BosonHamiltonianSystem::new(Some(3));
 // This will work
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
 system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, system);
+println!("{}", system);
 
 // This will not work, as the bosonic index of the HermitianBosonProduct is larger than
 // the number of the bosonic modes in the system (the bosonic mode with the
 // smallest index is 0).
 let hbp_error = HermitianBosonProduct::new([3], [3]).unwrap();
 let error = system.add_operator_product(hbp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
@@ -979,7 +979,7 @@ system
         (bp.clone(), bp.clone()), CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
 assert_eq!(system.get(&amp;(bp.clone(), bp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
@@ -1024,7 +1024,7 @@ noise
     .add_operator_product((bp.clone(), bp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
-println!(&quot;{}&quot;, open_system);</code></pre>
+println!("{}", open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
@@ -1055,12 +1055,12 @@ print(open_system)
 \[ \lbrace c_{f, k}^{\dagger}, c_{f, j}^{\dagger} \rbrace = 0, \\
 \lbrace c_{f, k}, c_{f, j} \rbrace = 0, \\
 \lbrace c_{f, k}, c_{f, j}^{\dagger} \rbrace = \delta_{k, j}. \]</p>
-<p>with 
+<p>with
 \(c_b^{\dagger}\) the bosonic creation operator, \(c_b\) the bosonic annihilation operator, \(\lbrack ., . \rbrack\) the bosonic commutation relations, \(c_f^{\dagger}\) the fermionic creation operator, \(c_f\) the fermionic annihilation operator, and \(\lbrace ., . \rbrace\) the fermionic anti-commutation relations.</p>
 <h3 id="mixedproducts"><a class="header" href="#mixedproducts">MixedProducts</a></h3>
 <p>MixedProducts are combinations of <code>PauliProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
 <h3 id="hermitianmixedproducts"><a class="header" href="#hermitianmixedproducts">HermitianMixedProducts</a></h3>
-<p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate. </p>
+<p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate.</p>
 <h3 id="mixeddecoherenceproducts"><a class="header" href="#mixeddecoherenceproducts">MixedDecoherenceProducts</a></h3>
 <p>MixedDecoherenceProducts are combinations of <code>DecoherenceProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
 <h3 id="examples-15"><a class="header" href="#examples-15">Examples</a></h3>
@@ -1135,7 +1135,7 @@ let mdp = MixedDecoherenceProduct::new([dp], [bp], [fp]).unwrap();
 <p>These <code>MixedOperators</code> and <code>MixedHamiltonians</code> represent operators or Hamiltonians such as:
 \[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \]
 with commutation relations and cyclicity respected.</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>MixedProducts</code> or <code>HermitianMixedProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
+<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>MixedProducts</code> or <code>HermitianMixedProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values.</p>
 <p>In struqture we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed Hamiltonian , this means that the sums of products are sums of hermitian mixed products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.</p>
 <p>For <code>MixedOperators</code> and <code>MixedHamiltonians</code>, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.</p>
@@ -1173,13 +1173,13 @@ let mp_1 = MixedProduct::new(
 let mut operator = MixedOperator::new(1, 1, 1);
 operator.add_operator_product(mp_0.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
 operator.add_operator_product(mp_1.clone(), CalculatorComplex::from(2.0)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = MixedOperator::new(1, 1, 1);
 operator.set(mp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
 operator.set(mp_1, CalculatorComplex::from(2.0)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 
 // Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
@@ -1196,11 +1196,11 @@ let hmp_1 = HermitianMixedProduct::new(
 let mut hamiltonian = MixedHamiltonian::new(1, 1, 1);
 hamiltonian.add_operator_product(hmp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
 hamiltonian.add_operator_product(hmp_1, CalculatorComplex::from(2.0)).unwrap();
-println!(&quot;{}&quot;, hamiltonian);</code></pre>
+println!("{}", hamiltonian);</code></pre>
 <p>In python, we need to use a <code>MixedSystem</code> and <code>MixedHamiltonianSystem</code> instead of a <code>MixedOperator</code> and <code>MixedHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems-3"><a class="header" href="#systems-and-hamiltoniansystems-3">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, MixedSystems and MixedHamiltonianSystems are wrappers around MixedOperators and MixedHamiltonians that allow to explicitly set the number of spins, the number of bosonic modes and the number of fermionic modes in each subsystem of the systems.
-When setting or adding a MixedProduct/HermitianMixedProduct to the systems, it is guaranteed that the mixed indices involved cannot exceed the number of spins, bosonic modes, and fermionic modes (for each subsystem) in the system. 
+When setting or adding a MixedProduct/HermitianMixedProduct to the systems, it is guaranteed that the mixed indices involved cannot exceed the number of spins, bosonic modes, and fermionic modes (for each subsystem) in the system.
 Additionally, the correct number of subsystems needs to have been specified for each type.
 Note that the user can decide to explicitly set the number of of each particle type to be variable.</p>
 <h3 id="examples-17"><a class="header" href="#examples-17">Examples</a></h3>
@@ -1231,7 +1231,7 @@ let hmp = HermitianMixedProduct::new(
 system
     .add_operator_product(hmp, CalculatorComplex::new(1.0, 1.5))
     .unwrap();
-println!(&quot;{}&quot;, system);
+println!("{}", system);
 
 // This will not work, as the number of subsystems of the system and
 // product do not match.
@@ -1241,7 +1241,7 @@ let hmp_error = HermitianMixedProduct::new(
     [fp.clone()]
 ).unwrap();
 let error = system.add_operator_product(hmp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will not work, as the number of spins in the first
 // subsystem of the system and product do not match.
@@ -1253,7 +1253,7 @@ let hmp_error = HermitianMixedProduct::new(
 )
 .unwrap();
 let error = system.add_operator_product(hmp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hmp = HermitianMixedProduct::new(
@@ -1357,7 +1357,7 @@ assert_eq!(
     system.get(&amp;(mdp.clone(), mdp)),
     &amp;CalculatorComplex::new(1.0, 1.5)
 );
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
@@ -1439,7 +1439,7 @@ noise
     .add_operator_product((mdp.clone(), mdp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
-println!(&quot;{}&quot;, open_system);</code></pre>
+println!("{}", open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
@@ -1513,21 +1513,21 @@ It can be used to uniquely represent the coefficient in sum objects that are the
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operators-and-systems"><a class="header" href="#operators-and-systems">Operators and Systems</a></h1>
 <p>Operators and systems act on a state space using HashMaps (Dictionaries) of operator products and values. The distinction between operators and systems is that systems are given a fixed system size by the user when creating the object.</p>
 <p>For spins, the operators and systems represent
-\[ 
+\[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
 \sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \}
 \]
 where the \(\sigma_{j, k}\) are <code>SinglePauliOperators</code>.</p>
 <p>For bosons, the operators and systems represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l, j} \]
-with 
-\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator 
+with
+\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator
 \[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
 \lbrack c_k, c_j \rbrack = 0, \\
 \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
 <p>For fermions, the operators and systems represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l,j}  \]
-with 
+with
 \(c^{\dagger}\) the fermionionic creation operator, \(c\) the fermionionic annihilation operator
 \[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\
 \lbrace c_k, c_j \rbrace = 0, \\
@@ -1560,21 +1560,21 @@ with
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operators-and-systems-1"><a class="header" href="#operators-and-systems-1">Operators and Systems</a></h1>
 <p>Operators and systems act on a state space using HashMaps (Dictionaries) of operator products and values. The distinction between operators and systems is that systems are given a fixed system size by the user when creating the object.</p>
 <p>For spins, the operators and systems represent
-\[ 
+\[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
 \sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \}
 \]
 where the \(\sigma_{j, k}\) are <code>SinglePauliOperators</code>.</p>
 <p>For bosons, the operators and systems represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l, j} \]
-with 
-\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator 
+with
+\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator
 \[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
 \lbrack c_k, c_j \rbrack = 0, \\
 \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
 <p>For fermions, the operators and systems represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l,j}  \]
-with 
+with
 \(c^{\dagger}\) the fermionionic creation operator, \(c\) the fermionionic annihilation operator
 \[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\
 \lbrace c_k, c_j \rbrace = 0, \\
@@ -1664,11 +1664,11 @@ with the Hamiltonian of the system \(\hat{H}\), the rate matrix \(\Gamma_{j,k}\)
 \hat{H} = \frac {\hbar \Delta} {2} \sigma^z_0,
 \]</p>
 <p>the bosonic bath Hamiltonian \(\hat{H}_B\) :</p>
-<p>\[ 
+<p>\[
 \hat{H} = \sum_{k=0}^2 \hbar \omega_k c_k^{\dagger} c_k,
 \]</p>
 <p>and the coupling between system and bath \(\hat{H}_C\) :</p>
-<p>\[ 
+<p>\[
 \hat{H} = \sigma_0^x \sum_{k=0}^2 \frac {v_k} {2} \left( c_k + c_k^{\dagger} \right)
 \]</p>
 <p>For simplicity, we will set \(\hbar\) to 1.0 for this example.</p>
@@ -1722,7 +1722,7 @@ for k in 0..3 {
 }
 
 // Our resulting H:
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>Python implementation:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py.bosons import BosonProduct

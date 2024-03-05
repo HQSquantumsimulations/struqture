@@ -188,12 +188,12 @@
 \[ \lbrace c_{f, k}^{\dagger}, c_{f, j}^{\dagger} \rbrace = 0, \\
 \lbrace c_{f, k}, c_{f, j} \rbrace = 0, \\
 \lbrace c_{f, k}, c_{f, j}^{\dagger} \rbrace = \delta_{k, j}. \]</p>
-<p>with 
+<p>with
 \(c_b^{\dagger}\) the bosonic creation operator, \(c_b\) the bosonic annihilation operator, \(\lbrack ., . \rbrack\) the bosonic commutation relations, \(c_f^{\dagger}\) the fermionic creation operator, \(c_f\) the fermionic annihilation operator, and \(\lbrace ., . \rbrace\) the fermionic anti-commutation relations.</p>
 <h3 id="mixedproducts"><a class="header" href="#mixedproducts">MixedProducts</a></h3>
 <p>MixedProducts are combinations of <code>PauliProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
 <h3 id="hermitianmixedproducts"><a class="header" href="#hermitianmixedproducts">HermitianMixedProducts</a></h3>
-<p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate. </p>
+<p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate.</p>
 <h3 id="mixeddecoherenceproducts"><a class="header" href="#mixeddecoherenceproducts">MixedDecoherenceProducts</a></h3>
 <p>MixedDecoherenceProducts are combinations of <code>DecoherenceProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
 <h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
@@ -268,7 +268,7 @@ let mdp = MixedDecoherenceProduct::new([dp], [bp], [fp]).unwrap();
 <p>These <code>MixedOperators</code> and <code>MixedHamiltonians</code> represent operators or Hamiltonians such as:
 \[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} c_{b, l, j}^{\dagger} c_{b, m, j} \prod_{r, s} c_{f, r, j}^{\dagger} c_{f, s, j} \]
 with commutation relations and cyclicity respected.</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>MixedProducts</code> or <code>HermitianMixedProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
+<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>MixedProducts</code> or <code>HermitianMixedProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values.</p>
 <p>In struqture we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed Hamiltonian , this means that the sums of products are sums of hermitian mixed products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.</p>
 <p>For <code>MixedOperators</code> and <code>MixedHamiltonians</code>, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.</p>
@@ -306,13 +306,13 @@ let mp_1 = MixedProduct::new(
 let mut operator = MixedOperator::new(1, 1, 1);
 operator.add_operator_product(mp_0.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
 operator.add_operator_product(mp_1.clone(), CalculatorComplex::from(2.0)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = MixedOperator::new(1, 1, 1);
 operator.set(mp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
 operator.set(mp_1, CalculatorComplex::from(2.0)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 
 // Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
@@ -329,11 +329,11 @@ let hmp_1 = HermitianMixedProduct::new(
 let mut hamiltonian = MixedHamiltonian::new(1, 1, 1);
 hamiltonian.add_operator_product(hmp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
 hamiltonian.add_operator_product(hmp_1, CalculatorComplex::from(2.0)).unwrap();
-println!(&quot;{}&quot;, hamiltonian);</code></pre>
+println!("{}", hamiltonian);</code></pre>
 <p>In python, we need to use a <code>MixedSystem</code> and <code>MixedHamiltonianSystem</code> instead of a <code>MixedOperator</code> and <code>MixedHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems"><a class="header" href="#systems-and-hamiltoniansystems">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, MixedSystems and MixedHamiltonianSystems are wrappers around MixedOperators and MixedHamiltonians that allow to explicitly set the number of spins, the number of bosonic modes and the number of fermionic modes in each subsystem of the systems.
-When setting or adding a MixedProduct/HermitianMixedProduct to the systems, it is guaranteed that the mixed indices involved cannot exceed the number of spins, bosonic modes, and fermionic modes (for each subsystem) in the system. 
+When setting or adding a MixedProduct/HermitianMixedProduct to the systems, it is guaranteed that the mixed indices involved cannot exceed the number of spins, bosonic modes, and fermionic modes (for each subsystem) in the system.
 Additionally, the correct number of subsystems needs to have been specified for each type.
 Note that the user can decide to explicitly set the number of of each particle type to be variable.</p>
 <h3 id="examples-2"><a class="header" href="#examples-2">Examples</a></h3>
@@ -364,7 +364,7 @@ let hmp = HermitianMixedProduct::new(
 system
     .add_operator_product(hmp, CalculatorComplex::new(1.0, 1.5))
     .unwrap();
-println!(&quot;{}&quot;, system);
+println!("{}", system);
 
 // This will not work, as the number of subsystems of the system and
 // product do not match.
@@ -374,7 +374,7 @@ let hmp_error = HermitianMixedProduct::new(
     [fp.clone()]
 ).unwrap();
 let error = system.add_operator_product(hmp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will not work, as the number of spins in the first
 // subsystem of the system and product do not match.
@@ -386,7 +386,7 @@ let hmp_error = HermitianMixedProduct::new(
 )
 .unwrap();
 let error = system.add_operator_product(hmp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hmp = HermitianMixedProduct::new(
@@ -490,7 +490,7 @@ assert_eq!(
     system.get(&amp;(mdp.clone(), mdp)),
     &amp;CalculatorComplex::new(1.0, 1.5)
 );
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
@@ -572,7 +572,7 @@ noise
     .add_operator_product((mdp.clone(), mdp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
-println!(&quot;{}&quot;, open_system);</code></pre>
+println!("{}", open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems

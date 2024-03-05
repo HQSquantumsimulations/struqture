@@ -235,14 +235,14 @@ let (bp_1, coeff) = HermitianBosonProduct::create_valid_pair(
 with
 \[ f(j, k) = \begin{cases} c_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
 \[ g(j, l) = \begin{cases} c_l \\ \mathbb{1} \end{cases} , \]
-and 
-\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator 
+and
+\(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator
 \[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
 \lbrack c_k, c_j \rbrack = 0, \\
 \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>BosonProducts</code> or <code>HermitianBosonProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values. </p>
+<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with <code>BosonProducts</code> or <code>HermitianBosonProducts</code> (respectively) as keys and the coefficients \(\alpha_j\) as values.</p>
 <p>In struqture we distinguish between bosonic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors.
 In the <code>HermitianBosonProducts</code>, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.</p>
 <h3 id="examples-1"><a class="header" href="#examples-1">Examples</a></h3>
 <p>Here is an example of how to build a <code>BosonOperator</code> and a <code>BosonHamiltonian</code>, in Rust:</p>
@@ -258,12 +258,12 @@ let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
 // O = (1 + 1.5 * i) * c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
 let mut operator = BosonOperator::new();
 operator.add_operator_product(bp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = BosonOperator::new();
 operator.set(bp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, operator);
+println!("{}", operator);
 
 // A BosonProduct entry is not valid for a BosonHamiltonian
 let mut hamiltonian = BosonHamiltonian::new();
@@ -272,7 +272,7 @@ hamiltonian.add_operator_product(bp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 // This is possible
 let hbp = HermitianBosonProduct::new([0, 2], [0, 1]).unwrap();
 hamiltonian.add_operator_product(hbp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!(&quot;{}&quot;, hamiltonian);</code></pre>
+println!("{}", hamiltonian);</code></pre>
 <p>In python, we need to use a <code>BosonSystem</code> and <code>BosonHamiltonianSystem</code> instead of a <code>BosonOperator</code> and <code>BosonHamiltonian</code>. See next section for more details.</p>
 <h2 id="systems-and-hamiltoniansystems"><a class="header" href="#systems-and-hamiltoniansystems">Systems and HamiltonianSystems</a></h2>
 <p>Following the intention to avoid unphysical behaviour, BosonSystems and BosonHamiltonianSystems are wrappers around BosonOperators and BosonHamiltonians that allow to explicitly set the number of spins of the systems.
@@ -288,14 +288,14 @@ let mut system = BosonHamiltonianSystem::new(Some(3));
 // This will work
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
 system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!(&quot;{}&quot;, system);
+println!("{}", system);
 
 // This will not work, as the bosonic index of the HermitianBosonProduct is larger than
 // the number of the bosonic modes in the system (the bosonic mode with the
 // smallest index is 0).
 let hbp_error = HermitianBosonProduct::new([3], [3]).unwrap();
 let error = system.add_operator_product(hbp_error, CalculatorComplex::new(1.0, 1.5));
-println!(&quot;{:?}&quot;, error);
+println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
@@ -355,7 +355,7 @@ system
         (bp.clone(), bp.clone()), CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
 assert_eq!(system.get(&amp;(bp.clone(), bp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!(&quot;{}&quot;, system);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
@@ -400,7 +400,7 @@ noise
     .add_operator_product((bp.clone(), bp), CalculatorComplex::new(1.0, 0.0))
     .unwrap();
 
-println!(&quot;{}&quot;, open_system);</code></pre>
+println!("{}", open_system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
