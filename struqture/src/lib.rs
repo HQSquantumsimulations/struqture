@@ -712,7 +712,7 @@ where
 {
     type Index;
     type Value;
-    type IteratorType; // can be removed (and two below) + in where clause
+    type IteratorType;
     type KeyIteratorType;
     type ValueIteratorType;
 
@@ -739,7 +739,7 @@ where
     /// # Returns
     ///
     /// * `Keys<'_, Self::Index, Self::Value>` - The sequence of keys of Self.
-    fn keys(&'a self) -> Self::KeyIteratorType;  // use this here instead impl ExactSizeIterator + Iterator<Item = &'a <Self as OperateOnDensityMatrix<'a>>::Index>
+    fn keys(&'a self) -> Self::KeyIteratorType;
 
     /// Returns the unsorted values in Self.
     ///

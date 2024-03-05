@@ -18,12 +18,12 @@ mod mixed_hermitian_product;
 
 mod mixed_decoherence_product;
 
-mod mixed_system;
+mod mixed_operator;
 
 mod mixed_plus_minus_operator;
 
-mod mixed_hamiltonian_system;
+mod mixed_hamiltonian;
 
-mod mixed_noise_system;
+mod mixed_noise_operator;
 
 mod mixed_open_system;
