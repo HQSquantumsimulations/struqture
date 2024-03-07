@@ -21,14 +21,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter};
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// MixedLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -63,10 +57,7 @@ use std::collections::HashMap;
 #[serde(into = "MixedLindbladNoiseOperatorSerialize")]
 pub struct MixedLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>,
     /// Number of Spin subsystems
     pub(crate) n_spins: usize,
     /// Number of Boson subsystems
@@ -175,16 +166,9 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -242,10 +226,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -343,9 +324,6 @@ impl MixedLindbladNoiseOperator {
     /// * `Self` - The new (empty) MixedLindbladNoiseOperator.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
         MixedLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
             n_spins,
             n_bosons,
@@ -372,9 +350,6 @@ impl MixedLindbladNoiseOperator {
         capacity: usize,
     ) -> Self {
         MixedLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
             n_spins,
             n_bosons,
@@ -430,9 +405,6 @@ impl ops::Neg for MixedLindbladNoiseOperator {
     ///
     /// * `Self` - The MixedLindbladNoiseOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         let n_spins = self.n_spins;
         let n_bosons = self.n_bosons;
@@ -527,9 +499,6 @@ where
     /// * `Self` - The MixedLindbladNoiseOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         let n_spins = self.n_spins;
         let n_bosons = self.n_bosons;
@@ -553,12 +522,6 @@ impl IntoIterator for MixedLindbladNoiseOperator {
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,
     );
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<
-        (MixedDecoherenceProduct, MixedDecoherenceProduct),
-        CalculatorComplex,
-    >;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,

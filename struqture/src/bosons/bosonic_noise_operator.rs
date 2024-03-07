@@ -21,14 +21,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter};
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// BosonLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -61,10 +55,7 @@ use std::collections::HashMap;
 #[serde(into = "BosonLindbladNoiseOperatorSerialize")]
 pub struct BosonLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(BosonProduct, BosonProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(BosonProduct, BosonProduct), CalculatorComplex>,
 }
 
 impl crate::MinSupportedVersion for BosonLindbladNoiseOperator {}
@@ -148,16 +139,9 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -197,10 +181,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -247,9 +228,6 @@ impl BosonLindbladNoiseOperator {
     /// * `Self` - The new (empty) BosonLindbladNoiseOperator.
     pub fn new() -> Self {
         BosonLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -265,9 +243,6 @@ impl BosonLindbladNoiseOperator {
     /// * `Self` - The new (empty) BosonLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         BosonLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
@@ -314,9 +289,6 @@ impl ops::Neg for BosonLindbladNoiseOperator {
     ///
     /// * `Self` - The BosonLindbladNoiseOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
@@ -405,9 +377,6 @@ where
     /// * `Self` - The BosonLindbladNoiseOperator multiplied by the CalculatorComplex.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
@@ -422,10 +391,6 @@ where
 ///
 impl IntoIterator for BosonLindbladNoiseOperator {
     type Item = ((BosonProduct, BosonProduct), CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter =
-        std::collections::hash_map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
     /// Returns the BosonLindbladNoiseOperator in Iterator form.
     ///

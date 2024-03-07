@@ -15,16 +15,16 @@ use crate::fermions::FermionLindbladNoiseOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
 use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter};
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::IndexMap;
 use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter};
+use std::fmt::{self, Write};
+use std::iter::{FromIterator, IntoIterator};
+use std::ops;
+
+use indexmap::map::{Entry, Iter};
+use indexmap::IndexMap;
 use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
@@ -60,10 +60,7 @@ use std::ops;
 #[serde(into = "PlusMinusLindbladNoiseOperatorSerialize")]
 pub struct PlusMinusLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>,
 }
 
 impl crate::MinSupportedVersion for PlusMinusLindbladNoiseOperator {
@@ -160,16 +157,9 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -200,10 +190,7 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -228,9 +215,6 @@ impl PlusMinusLindbladNoiseOperator {
     /// * `Self` - The new (empty) PlusMinusLindbladNoiseOperator.
     pub fn new() -> Self {
         PlusMinusLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -246,9 +230,6 @@ impl PlusMinusLindbladNoiseOperator {
     /// * `Self` - The new (empty) PlusMinusLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         PlusMinusLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
@@ -526,12 +507,6 @@ where
 ///
 impl IntoIterator for PlusMinusLindbladNoiseOperator {
     type Item = ((PlusMinusProduct, PlusMinusProduct), CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<
-        (PlusMinusProduct, PlusMinusProduct),
-        CalculatorComplex,
-    >;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter =
         indexmap::map::IntoIter<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
     /// Returns the PlusMinusLindbladNoiseOperator in Iterator form.

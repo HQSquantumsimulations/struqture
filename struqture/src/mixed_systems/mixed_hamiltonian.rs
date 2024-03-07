@@ -21,14 +21,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter};
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// MixedHamiltonians are combinations of HermitianMixedProducts with specific CalculatorComplex coefficients.
 ///
@@ -61,10 +55,7 @@ use std::collections::HashMap;
 #[serde(into = "MixedHamiltonianSerialize")]
 pub struct MixedHamiltonian {
     /// The internal HashMap of HermitianMixedProducts and coefficients (CalculatorFloat)
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<HermitianMixedProduct, CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<HermitianMixedProduct, CalculatorComplex>,
     /// Number of Spin subsystems
     pub(crate) n_spins: usize,
     /// Number of Boson subsystems
@@ -157,16 +148,9 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonian {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -217,10 +201,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonian {
             }
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -302,9 +283,6 @@ impl MixedHamiltonian {
     /// * `Self` - The new (empty) MixedHamiltonian.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
         MixedHamiltonian {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
             n_spins,
             n_bosons,
@@ -331,9 +309,6 @@ impl MixedHamiltonian {
         capacity: usize,
     ) -> Self {
         Self {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
             n_spins,
             n_bosons,
@@ -525,9 +500,6 @@ impl ops::Mul<MixedHamiltonian> for MixedHamiltonian {
 ///
 impl IntoIterator for MixedHamiltonian {
     type Item = (HermitianMixedProduct, CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<HermitianMixedProduct, CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<HermitianMixedProduct, CalculatorComplex>;
     /// Returns the MixedHamiltonian in Iterator form.
     ///
