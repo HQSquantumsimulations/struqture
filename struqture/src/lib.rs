@@ -706,15 +706,12 @@ where
     Self::Value: Add<Self::Value, Output = Self::Value>,
     Self::Value: Clone,
     Self::Value: TruncateTrait,
-    Self::IteratorType: ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)>,
-    Self::KeyIteratorType: ExactSizeIterator<Item = &'a Self::Index>,
-    Self::ValueIteratorType: ExactSizeIterator<Item = &'a Self::Value>,
 {
     type Index;
     type Value;
-    type IteratorType;
-    type KeyIteratorType;
-    type ValueIteratorType;
+    // type IteratorType; // can be removed (and two below) + in where clause
+    // type KeyIteratorType;
+    // type ValueIteratorType;
 
     /// Gets the Self::Value typed coefficient corresponding to the key.
     ///
@@ -732,21 +729,21 @@ where
     /// # Returns
     ///
     /// * `Iter<'_, Self::Index, Self::Value>` - Self in iterator form.
-    fn iter(&'a self) -> Self::IteratorType;
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)>;
 
     /// Returns the unsorted keys in Self.
     ///
     /// # Returns
     ///
     /// * `Keys<'_, Self::Index, Self::Value>` - The sequence of keys of Self.
-    fn keys(&'a self) -> Self::KeyIteratorType;
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index>; // use this here instead impl ExactSizeIterator + Iterator<Item = &'a <Self as OperateOnDensityMatrix<'a>>::Index>
 
     /// Returns the unsorted values in Self.
     ///
     /// # Returns
     ///
     /// * `Values<'_, Self::Index, Self::Value>` - The sequence of values of Self.
-    fn values(&'a self) -> Self::ValueIteratorType;
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value>;
 
     /// Returns number of entries in object.
     ///
@@ -848,21 +845,21 @@ where
     <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value: Clone,
     <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value: TruncateTrait,
     <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value: ConjugationTrait,
-    <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::IteratorType:
-        ExactSizeIterator<
-            Item = (
-                &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
-                &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
-            ),
-        >,
-    <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::KeyIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
-        >,
-    <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::ValueIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
-        >,
+    // <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::IteratorType:
+    //     ExactSizeIterator<
+    //         Item = (
+    //             &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
+    //             &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
+    //         ),
+    //     >,
+    // <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::KeyIteratorType:
+    //     ExactSizeIterator<
+    //         Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
+    //     >,
+    // <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::ValueIteratorType:
+    //     ExactSizeIterator<
+    //         Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
+    //     >,
     Self::Noise: OperateOnDensityMatrix<'a>,
     Self::Noise: 'a,
     &'a Self::Noise: IntoIterator,
@@ -876,21 +873,6 @@ where
     <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value: Clone,
     <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value: TruncateTrait,
     <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value: ConjugationTrait,
-    <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::IteratorType:
-        ExactSizeIterator<
-            Item = (
-                &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Index,
-                &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value,
-            ),
-        >,
-    <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::KeyIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Index,
-        >,
-    <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::ValueIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value,
-        >,
 {
     type System;
     type Noise;
@@ -1003,9 +985,6 @@ where
     Self::Value: Clone,
     Self::Value: TruncateTrait,
     Self::Value: ConjugationTrait,
-    Self::IteratorType: ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)>,
-    Self::KeyIteratorType: ExactSizeIterator<Item = &'a Self::Index>,
-    Self::ValueIteratorType: ExactSizeIterator<Item = &'a Self::Value>,
 {
     /// Returns the hermitian conjugate of Self.
     ///

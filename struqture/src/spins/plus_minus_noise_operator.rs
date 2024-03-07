@@ -16,7 +16,7 @@ use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
 use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
 #[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
+use indexmap::map::{Entry, Iter};
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
 use itertools::Itertools;
@@ -24,7 +24,7 @@ use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 #[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
+use std::collections::hash_map::{Entry, Iter};
 use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
@@ -136,9 +136,6 @@ impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSeri
 impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
     type Index = (PlusMinusProduct, PlusMinusProduct);
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, (PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
-    type KeyIteratorType = Keys<'a, (PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
-    type ValueIteratorType = Values<'a, (PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -149,17 +146,17 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
@@ -278,7 +275,7 @@ impl PlusMinusLindbladNoiseOperator {
         value: CalculatorComplex,
     ) -> Result<(), StruqtureError> {
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
-            left.iter().cartesian_product(right.iter())
+            left.iter().cartesian_product(right.into_iter())
         {
             let value_complex = value_right.conj() * value_left;
             self.add_operator_product(

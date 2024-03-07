@@ -22,11 +22,11 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
 #[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
+use indexmap::map::{Entry, Iter};
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
 #[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
+use std::collections::hash_map::{Entry, Iter};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 
@@ -118,9 +118,6 @@ impl From<BosonHamiltonian> for BosonHamiltonianSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonian {
     type Index = HermitianBosonProduct;
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, Self::Index, Self::Value>;
-    type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
-    type ValueIteratorType = Values<'a, Self::Index, Self::Value>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -131,17 +128,17 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonian {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
