@@ -64,7 +64,7 @@ pub struct PauliProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[product_wrapper(SpinIndex, SymmetricIndex, Calculus)]
 impl PauliProductWrapper {
     /// Create an empty PauliProduct.
     ///

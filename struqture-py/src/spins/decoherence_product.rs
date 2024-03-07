@@ -61,7 +61,7 @@ pub struct DecoherenceProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[product_wrapper(SpinIndex, SymmetricIndex, Calculus)]
 impl DecoherenceProductWrapper {
     /// Create an empty DecoherenceProduct.
     ///

@@ -229,7 +229,12 @@ pub fn productwrapper(
                         internal: concatenated
                     })
                 }
-
+        }
+    } else {
+        TokenStream::new()
+    };
+    let calculus_quote = if attribute_arguments.contains("Calculus") {
+        quote! {
                 /// Multiplication function for a self-typed object by a self-typed object.
                 ///
                 /// Args:
@@ -364,6 +369,7 @@ pub fn productwrapper(
             #mode_index_quote
             #spin_index_quote
             #mixed_index_quote
+            #calculus_quote
 
             // ----------------------------------
             // Default pyo3 implementations

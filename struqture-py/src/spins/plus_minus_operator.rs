@@ -60,7 +60,7 @@ pub struct PlusMinusOperatorWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix)]
+#[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix, OperateOnSpins, Calculus)]
 impl PlusMinusOperatorWrapper {
     /// Create an empty PlusMinusOperator.
     ///
@@ -99,72 +99,6 @@ impl PlusMinusOperatorWrapper {
                 }
             }
         }
-    }
-
-    /// Implement `-1` for self.
-    ///
-    /// Returns:
-    ///     self: The object * -1.
-    pub fn __neg__(&self) -> PlusMinusOperatorWrapper {
-        PlusMinusOperatorWrapper {
-            internal: -self.clone().internal,
-        }
-    }
-
-    /// Implement `+` for self with self-type.
-    ///
-    /// Args:
-    ///     other (self): value by which to add to self.
-    ///
-    /// Returns:
-    ///     self: The two objects added.
-    ///
-    /// Raises:
-    ///     ValueError: Objects could not be added.
-    pub fn __add__(&self, other: PlusMinusOperatorWrapper) -> PlusMinusOperatorWrapper {
-        PlusMinusOperatorWrapper {
-            internal: self.clone().internal + other.internal,
-        }
-    }
-
-    /// Implement `-` for self with self-type.
-    ///
-    /// Args:
-    ///     other (self): value by which to subtract from self.
-    ///
-    /// Returns:
-    ///     self: The two objects subtracted.
-    ///
-    /// Raises:
-    ///     ValueError: Objects could not be subtracted.
-    pub fn __sub__(&self, other: PlusMinusOperatorWrapper) -> PlusMinusOperatorWrapper {
-        PlusMinusOperatorWrapper {
-            internal: self.clone().internal - other.internal,
-        }
-    }
-
-    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
-    ///
-    /// Args
-    ///     number_spins (int): Number of spins to filter for in the keys.
-    ///
-    /// Returns
-    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
-    ///
-    /// Raises:
-    ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_terms(
-        &self,
-        number_spins: usize,
-    ) -> PyResult<(PlusMinusOperatorWrapper, PlusMinusOperatorWrapper)> {
-        let result = self
-            .internal
-            .separate_into_n_terms(number_spins)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok((
-            PlusMinusOperatorWrapper { internal: result.0 },
-            PlusMinusOperatorWrapper { internal: result.1 },
-        ))
     }
 
     /// Convert a SpinOperator into a PlusMinusOperator.
