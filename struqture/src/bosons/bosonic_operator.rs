@@ -16,7 +16,6 @@ use crate::{
     GetValue, ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
     StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
 };
-use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
@@ -24,11 +23,11 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
 #[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
+use indexmap::map::{Entry, Iter};
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
 #[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
+use std::collections::hash_map::{Entry, Iter};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::HashMap;
 
@@ -119,9 +118,6 @@ impl From<BosonOperator> for BosonOperatorSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for BosonOperator {
     type Index = BosonProduct;
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, Self::Index, Self::Value>;
-    type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
-    type ValueIteratorType = Values<'a, Self::Index, Self::Value>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -132,17 +128,17 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
@@ -439,19 +435,18 @@ impl ops::Mul<BosonOperator> for BosonOperator {
     ///
     /// * Internal error in add_operator_product.
     fn mul(self, other: BosonOperator) -> Self {
-        let mut boson_op = BosonOperator::new();
-        for ((left_key, left_val), (right_key, right_val)) in
-            self.into_iter().cartesian_product(other.iter())
-        {
-            let list_of_products = left_key * right_key.clone();
-            let product = left_val.clone() * right_val;
-            for product_key in list_of_products {
-                boson_op
-                    .add_operator_product(product_key, product.clone())
-                    .expect("Internal error in add_operator_product");
+        let mut op = BosonOperator::with_capacity(self.len() * other.len());
+        for (bps, vals) in self {
+            for (bpo, valo) in other.iter() {
+                let boson_products = bps.clone() * bpo.clone();
+                let coefficient = Into::<CalculatorComplex>::into(valo) * vals.clone();
+                for prod in boson_products {
+                    op.add_operator_product(prod, coefficient.clone())
+                        .expect("Internal bug in add_operator_product");
+                }
             }
         }
-        boson_op
+        op
     }
 }
 

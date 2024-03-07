@@ -27,11 +27,11 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
 #[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
+use indexmap::map::{Entry, Iter};
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
 #[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
+use std::collections::hash_map::{Entry, Iter};
 use std::collections::HashMap;
 
 /// SpinLindbladNoiseOperators represent noise interactions in the Lindblad equation.
@@ -136,10 +136,6 @@ impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     type Index = (DecoherenceProduct, DecoherenceProduct);
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, (DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
-    type KeyIteratorType = Keys<'a, (DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
-    type ValueIteratorType =
-        Values<'a, (DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -150,17 +146,17 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
@@ -368,7 +364,7 @@ impl SpinLindbladNoiseOperator {
         }
 
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
-            left.iter().cartesian_product(right.iter())
+            left.iter().cartesian_product(right.into_iter())
         {
             if !decoherence_product_left.is_empty() && !decoherence_product_right.is_empty() {
                 let value_complex = value_right.conj() * value_left;
