@@ -49,7 +49,6 @@ pyo3-build-config="0.20"
 no-default-features = true
 
 [features]
-extension-module = ["pyo3/extension-module"]#, "qoqo_calculator_pyo3/extension-module"]
-default = ["extension-module", "json_schema", "indexed_map_iterators"]
+extension-module = ["pyo3/extension-module"]
+default = ["extension-module", "json_schema"]
 json_schema = ["struqture/json_schema"]
-indexed_map_iterators = ["struqture/indexed_map_iterators"]

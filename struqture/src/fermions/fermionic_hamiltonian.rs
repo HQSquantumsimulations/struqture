@@ -25,14 +25,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter};
-#[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// FermionHamiltonians are combinations of FermionProducts with specific CalculatorComplex coefficients.
 ///
@@ -64,10 +58,7 @@ use std::collections::HashMap;
 #[serde(into = "FermionHamiltonianSerialize")]
 pub struct FermionHamiltonian {
     /// The internal HashMap of FermionProducts and coefficients (CalculatorComplex)
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<HermitianFermionProduct, CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<HermitianFermionProduct, CalculatorComplex>,
 }
 
 impl crate::MinSupportedVersion for FermionHamiltonian {}
@@ -146,16 +137,9 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonian {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -192,10 +176,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonian {
             }
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -278,9 +259,6 @@ impl FermionHamiltonian {
     /// * `Self` - The new (empty) FermionHamiltonian.
     pub fn new() -> Self {
         FermionHamiltonian {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -296,9 +274,6 @@ impl FermionHamiltonian {
     /// * `Self` - The new (empty) FermionHamiltonian.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
@@ -523,10 +498,6 @@ impl ops::Mul<FermionHamiltonian> for FermionHamiltonian {
 ///
 impl IntoIterator for FermionHamiltonian {
     type Item = (HermitianFermionProduct, CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter =
-        std::collections::hash_map::IntoIter<HermitianFermionProduct, CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<HermitianFermionProduct, CalculatorComplex>;
     /// Returns the FermionHamiltonian in Iterator form.
     ///
