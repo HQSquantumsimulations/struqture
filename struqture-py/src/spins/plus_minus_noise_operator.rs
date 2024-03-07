@@ -53,7 +53,7 @@ pub struct PlusMinusLindbladNoiseOperatorWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[noisy_system_wrapper(OperateOnDensityMatrix)]
+#[noisy_system_wrapper(OperateOnDensityMatrix, Calculus)]
 impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Create a new PlusMinusLindbladNoiseOperator.
     ///
@@ -64,51 +64,6 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         Self {
             internal: PlusMinusLindbladNoiseOperator::new(),
         }
-    }
-    /// Implement `-1` for self.
-    ///
-    /// Returns:
-    ///     self: The object * -1.
-    pub fn __neg__(&self) -> PlusMinusLindbladNoiseOperatorWrapper {
-        PlusMinusLindbladNoiseOperatorWrapper {
-            internal: -self.clone().internal,
-        }
-    }
-
-    /// Implement `+` for self with self-type.
-    ///
-    /// Args:
-    ///     other (self): value by which to add to self.
-    ///
-    /// Returns:
-    ///     self: The two objects added.
-    ///
-    /// Raises:
-    ///     ValueError: Objects could not be added.
-    pub fn __add__(
-        &self,
-        other: PlusMinusLindbladNoiseOperatorWrapper,
-    ) -> PlusMinusLindbladNoiseOperatorWrapper {
-        let new_self = self.clone().internal + other.internal;
-        PlusMinusLindbladNoiseOperatorWrapper { internal: new_self }
-    }
-
-    /// Implement `-` for self with self-type.
-    ///
-    /// Args:
-    ///     other (self): value by which to subtract from self.
-    ///
-    /// Returns:
-    ///     self: The two objects subtracted.
-    ///
-    /// Raises:
-    ///     ValueError: Objects could not be subtracted.
-    pub fn __sub__(
-        &self,
-        other: PlusMinusLindbladNoiseOperatorWrapper,
-    ) -> PlusMinusLindbladNoiseOperatorWrapper {
-        let new_self = self.clone().internal - other.internal;
-        PlusMinusLindbladNoiseOperatorWrapper { internal: new_self }
     }
 
     /// Separate self into an operator with the terms of given number of spins (left and right) and an operator with the remaining operations.
