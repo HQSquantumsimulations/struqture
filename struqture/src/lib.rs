@@ -226,7 +226,7 @@ pub enum StruqtureError {
     #[error("Error parsing str into {target_type}: {msg}")]
     ParsingError { target_type: String, msg: String },
     /// Error when trying to deserialize struqture data created with an incompatible version of struqture
-    #[error("Trying to deserialize data created with incompatible version of struqture Library version: {library_major_version}.{library_minor_version} Data version: {data_major_version}.{data_minor_version}. Try to convert data with struqture data conversion tool.")]
+    #[error("Version conflict. Data created with struqture version: {data_major_version}.{data_minor_version} could not be deserialized to Library version: {library_major_version}.{library_minor_version}. Please update your libraries to compatible versions or use the data conversion tool.")]
     VersionMissmatch {
         /// Major version of the library
         library_major_version: u32,
