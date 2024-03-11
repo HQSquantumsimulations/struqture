@@ -63,9 +63,9 @@ pub struct PlusMinusLindbladNoiseOperator {
     internal_map: IndexMap<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for PlusMinusLindbladNoiseOperator {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 1, 0)
+impl crate::SerializationSupport for PlusMinusLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::PlusMinusLindbladNoiseOperator
     }
 }
 

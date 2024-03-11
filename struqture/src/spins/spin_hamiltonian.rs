@@ -61,8 +61,11 @@ pub struct SpinHamiltonian {
     internal_map: IndexMap<PauliProduct, CalculatorFloat>,
 }
 
-impl crate::MinSupportedVersion for SpinHamiltonian {}
-
+impl crate::SerializationSupport for SpinHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::SpinHamiltonian
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinHamiltonian {
     fn schema_name() -> String {

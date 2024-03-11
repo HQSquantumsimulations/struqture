@@ -57,7 +57,11 @@ pub struct BosonHamiltonian {
     internal_map: IndexMap<HermitianBosonProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for BosonHamiltonian {}
+impl crate::SerializationSupport for BosonHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonHamiltonian
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonHamiltonian {

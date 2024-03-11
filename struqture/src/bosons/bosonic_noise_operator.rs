@@ -58,7 +58,11 @@ pub struct BosonLindbladNoiseOperator {
     internal_map: IndexMap<(BosonProduct, BosonProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for BosonLindbladNoiseOperator {}
+impl crate::SerializationSupport for BosonLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonLindbladNoiseOperator
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonLindbladNoiseOperator {

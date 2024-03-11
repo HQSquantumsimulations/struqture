@@ -61,9 +61,9 @@ pub struct PlusMinusOperator {
     internal_map: IndexMap<PlusMinusProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for PlusMinusOperator {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 1, 0)
+impl crate::SerializationSupport for PlusMinusOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::PlusMinusOperator
     }
 }
 

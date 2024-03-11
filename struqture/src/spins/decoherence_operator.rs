@@ -59,8 +59,11 @@ pub struct DecoherenceOperator {
     internal_map: IndexMap<DecoherenceProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for DecoherenceOperator {}
-
+impl crate::SerializationSupport for DecoherenceOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::DecoherenceOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceOperator {
     fn schema_name() -> String {

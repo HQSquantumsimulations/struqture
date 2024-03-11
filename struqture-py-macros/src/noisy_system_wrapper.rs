@@ -1061,8 +1061,16 @@ pub fn noisywrapper(
             /// Returns:
             ///     str: The minimum version of the struqture library to deserialize this object.
             pub fn min_supported_version(&self) -> String {
-                let min_version: (usize, usize, usize) = #struct_ident::min_supported_version();
+                let min_version: (usize, usize, usize) = struqture::SerializationSupport::min_supported_version(&self.internal);
                 return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
+            }
+
+            /// Returns the StruqtureSerialisationMeta of the object.
+            // Could also be implemented without returning result if
+            fn struqture_serialisation_meta(&self) -> PyResult<String>{
+                let meta = struqture::SerializationSupport::struqture_serialisation_meta(&self.internal);
+                let string = serde_json::to_string(&meta).map_err(|err| PyValueError::new_err(err.to_string()))?;
+                Ok(string)
             }
 
             #[cfg(feature = "json_schema")]
