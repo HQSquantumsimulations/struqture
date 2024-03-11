@@ -58,7 +58,7 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "SpinOperatorSerialize")]
+#[serde(try_from = "SpinOperatorSerialize")]
 #[serde(into = "SpinOperatorSerialize")]
 pub struct SpinOperator {
     // The internal HashMap of PauliProducts and coefficients (CalculatorComplex)
@@ -68,8 +68,11 @@ pub struct SpinOperator {
     internal_map: HashMap<PauliProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for SpinOperator {}
-
+impl crate::SerializationSupport for SpinOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::SpinOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinOperator {
     fn schema_name() -> String {
@@ -91,33 +94,34 @@ struct SpinOperatorSerialize {
     /// List of all non-zero entries in the SpinOperator in the form (PauliProduct, real part of weight, imaginary part of weight).
     items: Vec<(PauliProduct, CalculatorFloat, CalculatorFloat)>,
     /// Minimum struqture version required to de-serialize object
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<SpinOperatorSerialize> for SpinOperator {
-    fn from(value: SpinOperatorSerialize) -> Self {
+impl TryFrom<SpinOperatorSerialize> for SpinOperator {
+    type Error = StruqtureError;
+    fn try_from(value: SpinOperatorSerialize) -> Result<Self, Self::Error> {
         let new_noise_op: SpinOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+        Ok(new_noise_op)
     }
 }
 
 impl From<SpinOperator> for SpinOperatorSerialize {
     fn from(value: SpinOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta: serialisation_meta,
         }
     }
 }
@@ -289,6 +293,28 @@ impl SpinOperator {
             #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(struqture_1_export)]
+    pub fn to_struqture_1(&self) -> Result<struqture_one::SpinSystem, StruqtureError> {
+        let mut new_spin_system = struqture_one::SpinSystem::new(None);
+        for (key, val) in self.iter() {
+            let one_key = key.to_struqture_1()?;
+            let _ = new_spin_system.set(one_key, val.clone());
+        }
+        Ok(new_spin_system)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(struqture_1_import)]
+    pub fn from_struqture_1(value: &struqture_one::SpinSystem) -> Result<Self, StruqtureError> {
+        let mut new_spin_operator = Self::new();
+        for (key, val) in value.iter() {
+            let self_key = PauliProduct.from_struqture_1(key)?;
+            let _ = new_spin_operator.set(self_key, val.clone());
+        }
+        Ok(new_spin_operator)
     }
 
     /// Creates a new SpinOperator with pre-allocated capacity.
@@ -691,6 +717,7 @@ impl JordanWignerSpinToFermion for SpinOperator {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::StruqtureSerialisationMeta;
     use serde_test::{assert_tokens, Configure, Token};
 
     // Test the Clone and PartialEq traits of SpinOperator
@@ -699,15 +726,16 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = SpinOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(SpinOperator::from(sos.clone()), so);
+        assert_eq!(SpinOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(SpinOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of SpinOperator
@@ -716,9 +744,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -729,17 +758,19 @@ mod test {
         let pp_1: PauliProduct = PauliProduct::new().z(0);
         let sos_1 = SpinOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: PauliProduct = PauliProduct::new().z(2);
         let sos_2 = SpinOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -754,9 +785,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -772,9 +804,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -814,9 +847,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let sos = SpinOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: StruqtureSerialisationMeta {
+                type_name: "SpinOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 

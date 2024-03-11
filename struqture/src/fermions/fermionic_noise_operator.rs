@@ -70,7 +70,11 @@ pub struct FermionLindbladNoiseOperator {
     internal_map: HashMap<(FermionProduct, FermionProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for FermionLindbladNoiseOperator {}
+impl crate::SerializationSupport for FermionLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionLindbladNoiseOperator
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionLindbladNoiseOperator {

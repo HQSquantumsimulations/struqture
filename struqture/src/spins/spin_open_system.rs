@@ -54,8 +54,11 @@ pub struct SpinLindbladOpenSystem {
     noise: SpinLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for SpinLindbladOpenSystem {}
-
+impl crate::SerializationSupport for SpinLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::SpinLindbladOpenSystem
+    }
+}
 impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
     type System = SpinHamiltonian;
     type Noise = SpinLindbladNoiseOperator;

@@ -67,8 +67,11 @@ pub struct BosonOperator {
     internal_map: HashMap<BosonProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for BosonOperator {}
-
+impl crate::SerializationSupport for BosonOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonOperator {
     fn schema_name() -> String {

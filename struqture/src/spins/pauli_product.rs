@@ -565,6 +565,26 @@ impl GetValue<PauliProduct> for PauliProduct {
 /// Functions for the PauliProduct
 ///
 impl PauliProduct {
+    /// Export to struqture_1 format.
+    #[cfg(struqture_1_export)]
+    fn to_struqture_1(&self) -> Result<struqture_one::PauliProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product =
+            struqture_one::PauliProduct::from_str(&self_string).map_err(|err| {
+                StruqtureError::GenericError {
+                    msg: format!("{}", err),
+                }
+            })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(struqture_1_import)]
+    fn from_struqture_1(value: &struqture_one::PauliProduct) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
     /// Sets a new entry for SingleSpinOperator X in the internal dictionary. This function consumes Self.
     ///
     /// # Arguments

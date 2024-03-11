@@ -68,7 +68,12 @@ pub struct FermionOperator {
     #[cfg(not(feature = "indexed_map_iterators"))]
     internal_map: HashMap<FermionProduct, CalculatorComplex>,
 }
-impl crate::MinSupportedVersion for FermionOperator {}
+
+impl crate::SerializationSupport for FermionOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionOperator
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionOperator {
