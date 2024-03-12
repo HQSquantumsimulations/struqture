@@ -92,17 +92,29 @@ impl SpinOperatorWrapper {
         }
     }
 
-    // /// Fallible conversion of generic python object that is implemented in struqture 1.x.
-    // #[cfg(feature = "struqture_1_import")]
-    // pub fn from_pyany_struquture_one(input: Py<PyAny>) -> PyResult<SpinOperator> {
-    //     Python::with_gil(|py| -> PyResult<SpinOperator> {
-    //         let one_import = struqture_one_py::spins::SpinSystemWrapper::from_pyany(input)?;
-    //         let spin_operator: SpinOperator = struqture::spins::SpinOperator::from_struqture_1(&one_import).map_err(
-    //             |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x SpinOperator from struqture 1.x SpinSystem. Conversion failed. Was the right type passed to all functions?")
-    //         ))?;
-    //         Ok(spin_operator)
-    //     })
-    // }
+    /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_pyany_struquture_one(input: Py<PyAny>) -> PyResult<SpinOperator> {
+        Python::with_gil(|py| -> PyResult<SpinOperator> {
+            let one_import = struqture_one_py::spins::SpinSystemWrapper::from_pyany(input)?;
+            let spin_operator: SpinOperator = struqture::spins::SpinOperator::from_struqture_1(&one_import).map_err(
+                |err: StruqtureError| PyValueError::new_err(format!("Trying to obtain struqture 2.x SpinOperator from struqture 1.x SpinSystem. Conversion failed. Was the right type passed to all functions?")
+            ))?;
+            Ok(spin_operator)
+        })
+    }
+
+    /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn from_pyany_to_struquture_one(input: Py<PyAny>) -> PyResult<struqture_one::spins::SpinSystem> {
+        Python::with_gil(|py| -> PyResult<struqture_one::spins::SpinSystem> {
+            let res = Self::from_pyany(input)?;
+            let one_export = struqture::spins::SpinOperator::to_struqture_1(&res).map_err(
+                |err: StruqtureError| PyValueError::new_err(format!("Trying to obtain struqture 2.x SpinOperator from struqture 1.x SpinSystem. Conversion failed. Was the right type passed to all functions?")
+            ))?;
+            Ok(one_export)
+        })
+    }
 
     /// Implement `*` for SpinOperator and SpinOperator/CalculatorComplex/CalculatorFloat.
     ///
