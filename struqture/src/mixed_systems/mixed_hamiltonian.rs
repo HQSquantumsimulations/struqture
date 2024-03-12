@@ -64,7 +64,11 @@ pub struct MixedHamiltonian {
     pub(crate) n_fermions: usize,
 }
 
-impl crate::MinSupportedVersion for MixedHamiltonian {}
+impl crate::SerializationSupport for MixedHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedHamiltonian
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedHamiltonian {

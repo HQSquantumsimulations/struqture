@@ -54,15 +54,18 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "SpinHamiltonianSerialize")]
+#[serde(try_from = "SpinHamiltonianSerialize")]
 #[serde(into = "SpinHamiltonianSerialize")]
 pub struct SpinHamiltonian {
     // The internal HashMap of PauliProducts and coefficients (CalculatorFloat)
     internal_map: IndexMap<PauliProduct, CalculatorFloat>,
 }
 
-impl crate::MinSupportedVersion for SpinHamiltonian {}
-
+impl crate::SerializationSupport for SpinHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::SpinHamiltonian
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinHamiltonian {
     fn schema_name() -> String {
@@ -84,26 +87,28 @@ impl schemars::JsonSchema for SpinHamiltonian {
 struct SpinHamiltonianSerialize {
     /// List of all non-zero entries in the SpinHamiltonian in the form (PauliProduct, real weight).
     items: Vec<(PauliProduct, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<SpinHamiltonianSerialize> for SpinHamiltonian {
-    fn from(value: SpinHamiltonianSerialize) -> Self {
+impl TryFrom<SpinHamiltonianSerialize> for SpinHamiltonian {
+    type Error = StruqtureError;
+    fn try_from(value: SpinHamiltonianSerialize) -> Result<Self, Self::Error> {
         let new_noise_op: SpinHamiltonian = value.items.into_iter().collect();
-        new_noise_op
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+        Ok(new_noise_op)
     }
 }
 
 impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
     fn from(value: SpinHamiltonian) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> = value.into_iter().collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta: serialisation_meta,
         }
     }
 }
@@ -630,15 +635,15 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp.clone(), 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut sh = SpinHamiltonian::new();
         sh.set(pp, CalculatorFloat::from(0.5)).unwrap();
 
-        assert_eq!(SpinHamiltonian::from(shs.clone()), sh);
         assert_eq!(SpinHamiltonianSerialize::from(sh), shs);
     }
     // Test the Clone and PartialEq traits of SpinHamiltonian
@@ -647,9 +652,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -660,17 +666,19 @@ mod test {
         let pp_1: PauliProduct = PauliProduct::new().z(0);
         let shs_1 = SpinHamiltonianSerialize {
             items: vec![(pp_1, 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: PauliProduct = PauliProduct::new().z(2);
         let shs_2 = SpinHamiltonianSerialize {
             items: vec![(pp_2, 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(shs_1 == shs);
@@ -685,9 +693,10 @@ mod test {
         let pp: PauliProduct = PauliProduct::new().z(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -703,9 +712,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -744,9 +754,10 @@ mod test {
         let pp = PauliProduct::new().x(0);
         let shs = SpinHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "SpinHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 

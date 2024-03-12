@@ -1,6 +1,6 @@
 [package]
 name = "struqture"
-version = "1.6.0"
+version = "2.0.0"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.57"
@@ -25,8 +25,8 @@ itertools = "0.12"
 ndarray = {version="0.15"}
 tinyvec = {version="1.6", features=["alloc", "serde"]}
 schemars ={version="0.8.12", optional=true}
-indexmap = {version="2"}
-
+indexmap = {version="2", optional=true}
+struqture_one = {package = "struqture", version="=1", optional=true}
 [dev-dependencies]
 nalgebra = "0.32"
 serde_test = {version="1.0"}
@@ -39,3 +39,5 @@ criterion = {version = "0.5"}
 [features]
 default = ["json_schema"]
 json_schema = ["schemars", "qoqo_calculator/json_schema"]
+struqture_1_export = ["struqture_one"]
+struqture_1_import = ["struqture_one"]

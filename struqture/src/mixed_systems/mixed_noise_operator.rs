@@ -66,8 +66,11 @@ pub struct MixedLindbladNoiseOperator {
     pub(crate) n_fermions: usize,
 }
 
-impl crate::MinSupportedVersion for MixedLindbladNoiseOperator {}
-
+impl crate::SerializationSupport for MixedLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedLindbladNoiseOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedLindbladNoiseOperator {
     fn schema_name() -> String {

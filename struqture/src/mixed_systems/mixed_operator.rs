@@ -62,8 +62,11 @@ pub struct MixedOperator {
     n_fermions: usize,
 }
 
-impl crate::MinSupportedVersion for MixedOperator {}
-
+impl crate::SerializationSupport for MixedOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedOperator {
     fn schema_name() -> String {
