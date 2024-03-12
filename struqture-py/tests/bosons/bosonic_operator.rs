@@ -833,8 +833,8 @@ fn test_json_schema() {
         new.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         let min_version: String =
-            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
 }
