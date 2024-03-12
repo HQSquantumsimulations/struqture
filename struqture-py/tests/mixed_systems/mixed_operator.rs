@@ -894,7 +894,7 @@ fn test_json_schema() {
             .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
 }

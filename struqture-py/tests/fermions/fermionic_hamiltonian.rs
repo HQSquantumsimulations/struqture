@@ -15,8 +15,6 @@ use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::{FermionHamiltonian, HermitianFermionProduct};
-#[cfg(feature = "json_schema")]
-use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix};
 use struqture_py::fermions::{FermionHamiltonianWrapper, FermionOperatorWrapper};
 use test_case::test_case;
@@ -833,15 +831,11 @@ fn test_json_schema() {
             serde_json::to_string_pretty(&schemars::schema_for!(FermionHamiltonian)).unwrap();
         assert_eq!(schema, rust_schema);
 
-        let version: String = String::extract(new.call_method0("version").unwrap()).unwrap();
-        let rust_version = STRUQTURE_VERSION.to_string();
-        assert_eq!(version, rust_version);
-
         new.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
 }
