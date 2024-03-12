@@ -337,24 +337,32 @@ pub fn productwrapper(
             pub fn from_pyany( input: Py<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                let input = input.as_ref(py);
-                if let Ok(try_downcast) = input.extract::<#ident>() {
-                    Ok(try_downcast.internal)
-                }
-                else {
-                let get_str = input.call_method0("__str__").map_err(|_| {
-                    PyTypeError::new_err("Type conversion failed".to_string())
-                })?;
-                let string = get_str.extract::<String>().map_err(|_| {
-                    PyTypeError::new_err("Type conversion failed".to_string())
-                })?;
-                #struct_ident::from_str(string.as_str()).map_err(|err|
-                    PyTypeError::new_err(format!(
-                        "Type conversion failed: {}",
-                        err
-                    )))
+                    let input = input.as_ref(py);
+                    if let Ok(try_downcast) = input.extract::<#ident>() {
+                        return Ok(try_downcast.internal);
+                    } else {
+                        let get_str = input.call_method0("__str__").map_err(|_| {
+                            PyTypeError::new_err("Type conversion failed".to_string())
+                        })?;
+                        let string = get_str.extract::<String>().map_err(|_| {
+                            PyTypeError::new_err("Type conversion failed".to_string())
+                        })?;
+                        let res = #struct_ident::from_str(string.as_str()).map_err(|err|
+                            PyTypeError::new_err(format!(
+                                "Type conversion failed: {}",
+                                err
+                            )))?;
+                        let source_serialisation_meta = res.struqture_serialisation_meta();
 
-            }
+                        let target_serialisation_meta = <#struct_ident as struqture::SerializationSupport>::target_serialisation_meta();
+
+                        struqture::check_can_be_deserialised(&target_serialisation_meta, &source_serialisation_meta).map_err(|err| {
+                            PyTypeError::new_err(err.to_string())
+                        })?;
+
+                        Ok(res)
+
+                    }
                 }
 
             )
@@ -565,8 +573,15 @@ pub fn productwrapper(
             /// Returns:
             ///     str: The minimum version of the struqture library to deserialize this object.
             pub fn min_supported_version(&self) -> String {
-                let min_version: (usize, usize, usize) = #struct_ident::min_supported_version();
+                let min_version: (usize, usize, usize) = struqture::SerializationSupport::min_supported_version(&self.internal);
                 return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
+            }
+
+            /// Returns the StruqtureSerialisationMeta of the object.
+            fn _get_serialisation_meta(&self) -> PyResult<String>{
+                let meta = struqture::SerializationSupport::struqture_serialisation_meta(&self.internal);
+                let string = serde_json::to_string(&meta).map_err(|err| PyValueError::new_err(err.to_string()))?;
+                Ok(string)
             }
 
             #[cfg(feature = "json_schema")]

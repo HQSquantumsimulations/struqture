@@ -22,7 +22,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{OperateOnSpins, SpinLindbladNoiseOperator, ToSparseMatrixSuperOperator};
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, StruqtureError};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 /// These are representations of noisy systems of spins.

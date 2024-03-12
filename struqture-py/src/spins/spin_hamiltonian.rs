@@ -27,7 +27,7 @@ use struqture::spins::{
 };
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// These are representations of systems of spins.

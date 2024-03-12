@@ -23,7 +23,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 
 use super::MixedOperatorWrapper;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 
 /// These are representations of systems of mixed_systems.
 ///

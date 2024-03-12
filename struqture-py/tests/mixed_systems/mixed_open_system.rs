@@ -596,7 +596,7 @@ fn test_default_partialeq_debug_clone() {
 
         let comparison = bool::extract(
             comp_op_ungroup
-                .call_method1("__eq__", ((system, noise),))
+                .call_method1("__eq__", ((mixed_system, noise),))
                 .unwrap(),
         )
         .unwrap();
@@ -605,7 +605,7 @@ fn test_default_partialeq_debug_clone() {
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
         let comp_op_group = new_system(py, number_spins, number_bosons, number_fermions)
-            .call_method1("group", (system, noise))
+            .call_method1("group", (mixed_system, noise))
             .unwrap();
         let comparison =
             bool::extract(comp_op_group.call_method1("__eq__", (new_sys,)).unwrap()).unwrap();

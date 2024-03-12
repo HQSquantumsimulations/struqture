@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::{DecoherenceProductWrapper, PauliProductWrapper};
 use crate::fermions::FermionOperatorWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -25,12 +26,11 @@ use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
+use struqture::SerializationSupport;
 use struqture::SymmetricIndex;
-use struqture_py_macros::{mappings, product_wrapper};
-
-use super::{DecoherenceProductWrapper, PauliProductWrapper};
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
+use struqture_py_macros::{mappings, product_wrapper};
 
 /// PlusMinusProducts are combinations of SinglePlusMinusOperators on specific qubits.
 ///
