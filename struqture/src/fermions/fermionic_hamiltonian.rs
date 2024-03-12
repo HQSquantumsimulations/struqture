@@ -70,7 +70,11 @@ pub struct FermionHamiltonian {
     internal_map: HashMap<HermitianFermionProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for FermionHamiltonian {}
+impl crate::SerializationSupport for FermionHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionHamiltonian
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionHamiltonian {

@@ -61,8 +61,11 @@ pub struct MixedLindbladOpenSystem {
     noise: MixedLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for MixedLindbladOpenSystem {}
-
+impl crate::SerializationSupport for MixedLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedLindbladOpenSystem
+    }
+}
 impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
     type System = MixedHamiltonian;
     type Noise = MixedLindbladNoiseOperator;

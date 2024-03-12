@@ -28,7 +28,15 @@ use std::ops::Mul;
 use std::ops::Sub;
 use std::str::FromStr;
 use thiserror::Error;
+
+mod serialisation_meta_information;
+pub use serialisation_meta_information::{
+    check_can_be_deserialised, SerializationSupport, StruqtureSerialisationMeta, StruqtureType,
+};
+
 pub const STRUQTURE_VERSION: &str = env!("CARGO_PKG_VERSION");
+// if it should be up
+pub const CURRENT_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
 pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (1, 0, 0);
 use tinyvec::TinyVec;
 #[derive(
@@ -236,6 +244,26 @@ pub enum StruqtureError {
         data_major_version: u32,
         /// Minor version of the data
         data_minor_version: u32,
+    },
+    #[error("Trying to deserialize a {name_type} with incompatible version of struqture. Library version: {library_major_version}.{library_minor_version} Data version: {data_major_version}.{data_minor_version}.")]
+    NewVersionMissmatch {
+        /// Major version of the library
+        library_major_version: u32,
+        /// Minor version of the library
+        library_minor_version: u32,
+        /// Major version of the data
+        data_major_version: u32,
+        /// Minor version of the data
+        data_minor_version: u32,
+        /// Type of object trying to be deserialized.
+        name_type: String,
+    },
+    #[error("Trying to use a struqture {source_type} object as a struqture {target_type} object. Did you maybe pass the wrong object into a function?")]
+    TypeMissmatch {
+        /// The type of the data that is deserialized.
+        source_type: String,
+        /// The type of the target that the data is supposed to be deserialized to.
+        target_type: String,
     },
     /// Transparent propagation of CalculatorError.
     #[error(transparent)]

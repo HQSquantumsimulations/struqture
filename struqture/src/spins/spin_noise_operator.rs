@@ -71,8 +71,11 @@ pub struct SpinLindbladNoiseOperator {
     internal_map: HashMap<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for SpinLindbladNoiseOperator {}
-
+impl crate::SerializationSupport for SpinLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::SpinLindbladNoiseOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinLindbladNoiseOperator {
     fn schema_name() -> String {

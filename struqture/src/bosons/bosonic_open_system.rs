@@ -48,7 +48,11 @@ pub struct BosonLindbladOpenSystem {
     noise: BosonLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for BosonLindbladOpenSystem {}
+impl crate::SerializationSupport for BosonLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonLindbladOpenSystem
+    }
+}
 
 impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
     type System = BosonHamiltonian;

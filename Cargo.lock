@@ -1504,7 +1504,24 @@ checksum = "5ee073c9e4cd00e28217186dbe12796d692868f432bf2e97ee73bed0c56dfa01"
 
 [[package]]
 name = "struqture"
-version = "1.6.0"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b5e6a6fae203fb8098042ab51364cf5ff79020312e68b63038371d627029ab08"
+dependencies = [
+ "itertools 0.12.1",
+ "ndarray",
+ "num-complex",
+ "qoqo_calculator",
+ "schemars",
+ "serde",
+ "test-case",
+ "thiserror",
+ "tinyvec",
+]
+
+[[package]]
+name = "struqture"
+version = "2.0.0"
 dependencies = [
  "bincode",
  "criterion",
@@ -1520,6 +1537,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
+ "struqture 1.6.1",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1527,7 +1545,31 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.6.0"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd549b80a7e8a929b9125c37c8ec8f74916df3ed2fbc427462ee93812c1f450e"
+dependencies = [
+ "bincode",
+ "num-complex",
+ "numpy",
+ "proc-macro2",
+ "pyo3",
+ "pyo3-build-config",
+ "qoqo_calculator",
+ "qoqo_calculator_pyo3",
+ "quote",
+ "schemars",
+ "serde",
+ "serde_json",
+ "struqture 1.6.1",
+ "struqture-py-macros 1.6.1",
+ "syn 2.0.52",
+ "thiserror",
+]
+
+[[package]]
+name = "struqture-py"
+version = "2.0.0"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1543,8 +1585,10 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture",
- "struqture-py-macros",
+ "struqture 1.6.1",
+ "struqture 2.0.0",
+ "struqture-py 1.6.1",
+ "struqture-py-macros 2.0.0",
  "syn 2.0.52",
  "test-case",
  "thiserror",
@@ -1552,7 +1596,19 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.6.0"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3215f75379ad75b4847b3166e5fd39de65ae2723a9cdd382ad92966925a8f48e"
+dependencies = [
+ "num-complex",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.52",
+]
+
+[[package]]
+name = "struqture-py-macros"
+version = "2.0.0"
 dependencies = [
  "num-complex",
  "proc-macro2",

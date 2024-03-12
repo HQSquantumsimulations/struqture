@@ -72,9 +72,9 @@ pub struct MixedPlusMinusOperator {
     n_fermions: usize,
 }
 
-impl crate::MinSupportedVersion for MixedPlusMinusOperator {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 2, 0)
+impl crate::SerializationSupport for MixedPlusMinusOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedPlusMinusOperator
     }
 }
 

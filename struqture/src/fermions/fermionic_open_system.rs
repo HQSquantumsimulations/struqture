@@ -50,8 +50,11 @@ pub struct FermionLindbladOpenSystem {
     noise: FermionLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for FermionLindbladOpenSystem {}
-
+impl crate::SerializationSupport for FermionLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionLindbladOpenSystem
+    }
+}
 impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     type System = FermionHamiltonian;
     type Noise = FermionLindbladNoiseOperator;
