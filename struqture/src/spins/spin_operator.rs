@@ -296,22 +296,28 @@ impl SpinOperator {
     }
 
     /// Export to struqture_1 format.
-    #[cfg(struqture_1_export)]
-    pub fn to_struqture_1(&self) -> Result<struqture_one::SpinSystem, StruqtureError> {
-        let mut new_spin_system = struqture_one::SpinSystem::new(None);
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(&self) -> Result<struqture_one::spins::SpinSystem, StruqtureError> {
+        let mut new_spin_system = struqture_one::spins::SpinSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
-            let _ = new_spin_system.set(one_key, val.clone());
+            let _ = struqture_one::OperateOnDensityMatrix::set(
+                &mut new_spin_system,
+                one_key,
+                val.clone(),
+            );
         }
         Ok(new_spin_system)
     }
 
     /// Export to struqture_1 format.
-    #[cfg(struqture_1_import)]
-    pub fn from_struqture_1(value: &struqture_one::SpinSystem) -> Result<Self, StruqtureError> {
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::spins::SpinSystem,
+    ) -> Result<Self, StruqtureError> {
         let mut new_spin_operator = Self::new();
-        for (key, val) in value.iter() {
-            let self_key = PauliProduct.from_struqture_1(key)?;
+        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+            let self_key = PauliProduct::from_struqture_1(key)?;
             let _ = new_spin_operator.set(self_key, val.clone());
         }
         Ok(new_spin_operator)

@@ -1508,7 +1508,6 @@ version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b5e6a6fae203fb8098042ab51364cf5ff79020312e68b63038371d627029ab08"
 dependencies = [
- "indexmap",
  "itertools 0.12.1",
  "ndarray",
  "num-complex",
