@@ -14,10 +14,7 @@ use super::{OperateOnSpins, SpinOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::DecoherenceProduct;
-use crate::{
-    OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError, SymmetricIndex};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
@@ -52,7 +49,7 @@ use indexmap::IndexMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "DecoherenceOperatorSerialize")]
+#[serde(try_from = "DecoherenceOperatorSerialize")]
 #[serde(into = "DecoherenceOperatorSerialize")]
 pub struct DecoherenceOperator {
     /// The internal HashMap of DecoherenceProducts and coefficients (CalculatorComplex)
@@ -81,33 +78,36 @@ impl schemars::JsonSchema for DecoherenceOperator {
 struct DecoherenceOperatorSerialize {
     /// The internal map representing the noise terms
     items: Vec<(DecoherenceProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<DecoherenceOperatorSerialize> for DecoherenceOperator {
-    fn from(value: DecoherenceOperatorSerialize) -> Self {
+impl TryFrom<DecoherenceOperatorSerialize> for DecoherenceOperator {
+    type Error = StruqtureError;
+    fn try_from(value: DecoherenceOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+
         let new_noise_op: DecoherenceOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<DecoherenceOperator> for DecoherenceOperatorSerialize {
     fn from(value: DecoherenceOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(DecoherenceProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -557,15 +557,16 @@ mod test {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = DecoherenceOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(DecoherenceOperator::from(sos.clone()), so);
+        assert_eq!(DecoherenceOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(DecoherenceOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of SpinOperator
@@ -574,9 +575,10 @@ mod test {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -587,17 +589,19 @@ mod test {
         let pp_1: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos_1 = DecoherenceOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
         let sos_2 = DecoherenceOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -612,15 +616,16 @@ mod test {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "DecoherenceOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "DecoherenceOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"DecoherenceOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -630,9 +635,10 @@ mod test {
         let pp = DecoherenceProduct::new().x(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -651,15 +657,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("DecoherenceOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -672,9 +684,10 @@ mod test {
         let pp = DecoherenceProduct::new().x(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -709,15 +722,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("DecoherenceOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

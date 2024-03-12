@@ -267,7 +267,11 @@ impl schemars::JsonSchema for DecoherenceProduct {
     }
 }
 
-impl crate::MinSupportedVersion for DecoherenceProduct {}
+impl crate::SerializationSupport for DecoherenceProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::DecoherenceProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///

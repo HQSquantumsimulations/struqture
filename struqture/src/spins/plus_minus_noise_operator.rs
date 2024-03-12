@@ -14,7 +14,7 @@ use super::{DecoherenceProduct, SpinLindbladNoiseOperator};
 use crate::fermions::FermionLindbladNoiseOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
-use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
+use crate::{OperateOnDensityMatrix, StruqtureError};
 use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -56,7 +56,7 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "PlusMinusLindbladNoiseOperatorSerialize")]
+#[serde(try_from = "PlusMinusLindbladNoiseOperatorSerialize")]
 #[serde(into = "PlusMinusLindbladNoiseOperatorSerialize")]
 pub struct PlusMinusLindbladNoiseOperator {
     /// The internal map representing the noise terms
@@ -91,12 +91,16 @@ struct PlusMinusLindbladNoiseOperatorSerialize {
         CalculatorFloat,
         CalculatorFloat,
     )>,
-    /// The struqture version
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<PlusMinusLindbladNoiseOperatorSerialize> for PlusMinusLindbladNoiseOperator {
-    fn from(value: PlusMinusLindbladNoiseOperatorSerialize) -> Self {
+impl TryFrom<PlusMinusLindbladNoiseOperatorSerialize> for PlusMinusLindbladNoiseOperator {
+    type Error = StruqtureError;
+    fn try_from(value: PlusMinusLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+
         let new_noise_op: PlusMinusLindbladNoiseOperator = value
             .items
             .into_iter()
@@ -104,12 +108,14 @@ impl From<PlusMinusLindbladNoiseOperatorSerialize> for PlusMinusLindbladNoiseOpe
                 ((left, right), CalculatorComplex { re: real, im: imag })
             })
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSerialize {
     fn from(value: PlusMinusLindbladNoiseOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(
             PlusMinusProduct,
             PlusMinusProduct,
@@ -119,13 +125,9 @@ impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSeri
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: 1,
-            minor_version: 1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -658,16 +660,20 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = PlusMinusLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
-        assert_eq!(PlusMinusLindbladNoiseOperator::from(sos.clone()), so);
+        assert_eq!(
+            PlusMinusLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            so
+        );
         assert_eq!(PlusMinusLindbladNoiseOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of SpinOperator
@@ -676,9 +682,10 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -689,17 +696,19 @@ mod test {
         let pp_1: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos_1 = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
         let sos_2 = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -714,15 +723,16 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
+            "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"PlusMinusLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -732,9 +742,10 @@ mod test {
         let pp = PlusMinusProduct::new().minus(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -754,15 +765,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -775,9 +792,10 @@ mod test {
         let pp = PlusMinusProduct::new().plus(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -821,15 +839,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

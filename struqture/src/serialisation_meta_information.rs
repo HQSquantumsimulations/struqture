@@ -19,7 +19,7 @@ use crate::STRUQTURE_VERSION;
 /// Struct encoding serialisation meta information for struqture objects.
 ///
 /// This struct is meant to be used when checking if a struqture object
-/// can be searialised or deserialised into the correct struqture type.
+/// can be serialised or deserialised into the correct struqture type.
 ///
 /// For this purpose the struct contains
 ///
@@ -45,7 +45,7 @@ pub struct StruqtureSerialisationMeta {
 /// Struct encoding serialisation meta information for targets for deserialisation.
 ///
 /// This struct is meant to be used when checking if a struqture object
-/// can be searialised or deserialised into the correct struqture type.
+/// can be serialised or deserialised into the correct struqture type.
 ///
 /// For this purpose the struct contains
 ///
@@ -69,7 +69,7 @@ pub fn check_can_be_deserialised(
     target: &TargetSerialisationMeta,
     source: &StruqtureSerialisationMeta,
 ) -> Result<(), StruqtureError> {
-    if !(target.type_name == source.type_name) {
+    if target.type_name != source.type_name {
         return Err(StruqtureError::TypeMissmatch {
             source_type: source.type_name.clone(),
             target_type: target.type_name.clone(),
@@ -115,7 +115,6 @@ pub trait SerializationSupport {
     fn struqture_type() -> StruqtureType;
 
     /// Returns the StruqtureSerialisationMeta of the object.
-    // Could also be implemented without returning result if
     fn struqture_serialisation_meta(&self) -> StruqtureSerialisationMeta {
         StruqtureSerialisationMeta {
             type_name: Self::struqture_type().to_string(),
@@ -125,7 +124,6 @@ pub trait SerializationSupport {
     }
 
     /// Returns the StruqtureSerialisationMeta of the object.
-    // Could also be implemented without returning result if
     fn target_serialisation_meta() -> TargetSerialisationMeta {
         TargetSerialisationMeta {
             type_name: Self::struqture_type().to_string(),
@@ -160,57 +158,77 @@ fn semver_to_tuple(version: &str) -> Result<(u32, u32, u32), StruqtureError> {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 #[non_exhaustive]
 pub enum StruqtureType {
+    PauliProduct,
     SpinOperator,
     SpinHamiltonian,
     SpinLindbladNoiseOperator,
     SpinLindbladOpenSystem,
     PlusMinusOperator,
-    PlusMinusNoiseOperator,
     PlusMinusLindbladNoiseOperator,
+    PlusMinusProduct,
     DecoherenceOperator,
+    DecoherenceProduct,
     FermionOperator,
     FermionHamiltonian,
     FermionLindbladNoiseOperator,
     FermionLindbladOpenSystem,
+    FermionProduct,
+    HermitianFermionProduct,
     BosonHamiltonian,
     BosonOperator,
     BosonLindbladNoiseOperator,
     BosonLindbladOpenSystem,
+    HermitianBosonProduct,
+    BosonProduct,
     MixedOperator,
     MixedHamiltonian,
     MixedLindbladNoiseOperator,
     MixedLindbladOpenSystem,
     MixedPlusMinusOperator,
     MixedDecoherenceProduct,
+    MixedProduct,
+    HermitianMixedProduct,
+    MixedPlusMinusProduct,
 }
 
 impl Display for StruqtureType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            StruqtureType::PauliProduct => write!(f, "PauliProduct"),
             StruqtureType::SpinOperator => write!(f, "SpinOperator"),
             StruqtureType::SpinHamiltonian => write!(f, "SpinHamiltonian"),
             StruqtureType::SpinLindbladNoiseOperator => write!(f, "SpinLindbladNoiseOperator"),
             StruqtureType::SpinLindbladOpenSystem => write!(f, "SpinLindbladOpenSystem"),
             StruqtureType::PlusMinusOperator => write!(f, "PlusMinusOperator"),
-            StruqtureType::PlusMinusNoiseOperator => write!(f, "PlusMinusNoiseOperator"),
-            StruqtureType::PlusMinusLindbladNoiseOperator => write!(f, "PlusMinusNoiseOperator"),
+            StruqtureType::PlusMinusLindbladNoiseOperator => {
+                write!(f, "PlusMinusLindbladNoiseOperator")
+            }
+            StruqtureType::PlusMinusProduct => write!(f, "PlusMinusProduct"),
             StruqtureType::DecoherenceOperator => write!(f, "DecoherenceOperator"),
+            StruqtureType::DecoherenceProduct => write!(f, "DecoherenceProduct"),
             StruqtureType::FermionOperator => write!(f, "FermionOperator"),
             StruqtureType::FermionHamiltonian => write!(f, "FermionHamiltonian"),
             StruqtureType::FermionLindbladNoiseOperator => {
                 write!(f, "FermionLindbladNoiseOperator")
             }
             StruqtureType::FermionLindbladOpenSystem => write!(f, "FermionLindbladOpenSystem"),
+            StruqtureType::FermionProduct => write!(f, "FermionProduct"),
+            StruqtureType::HermitianFermionProduct => write!(f, "HermitianFermionProduct"),
             StruqtureType::BosonHamiltonian => write!(f, "BosonHamiltonian"),
             StruqtureType::BosonOperator => write!(f, "BosonOperator"),
             StruqtureType::BosonLindbladNoiseOperator => write!(f, "BosonLindbladNoiseOperator"),
             StruqtureType::BosonLindbladOpenSystem => write!(f, "BosonLindbladOpenSystem"),
+            StruqtureType::HermitianBosonProduct => write!(f, "HermitianBosonProduct"),
+            StruqtureType::BosonProduct => write!(f, "BosonProduct"),
             StruqtureType::MixedOperator => write!(f, "MixedOperator"),
             StruqtureType::MixedHamiltonian => write!(f, "MixedHamiltonian"),
             StruqtureType::MixedLindbladNoiseOperator => write!(f, "MixedLindbladNoiseOperator"),
             StruqtureType::MixedLindbladOpenSystem => write!(f, "MixedLindbladOpenSystem"),
             StruqtureType::MixedPlusMinusOperator => write!(f, "MixedPlusMinusOperator"),
             StruqtureType::MixedDecoherenceProduct => write!(f, "MixedDecoherenceProduct"),
+            StruqtureType::MixedProduct => write!(f, "MixedProduct"),
+            StruqtureType::HermitianMixedProduct => write!(f, "HermitianMixedProduct"),
+            StruqtureType::MixedPlusMinusProduct => write!(f, "MixedPlusMinusProduct"),
         }
     }
 }

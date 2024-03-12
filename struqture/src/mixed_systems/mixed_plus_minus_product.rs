@@ -73,8 +73,12 @@ impl schemars::JsonSchema for MixedPlusMinusProduct {
     }
 }
 
-impl crate::MinSupportedVersion for MixedPlusMinusProduct {
-    fn min_supported_version() -> (usize, usize, usize) {
+impl crate::SerializationSupport for MixedPlusMinusProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedPlusMinusProduct
+    }
+
+    fn min_supported_version(&self) -> (usize, usize, usize) {
         (1, 2, 0)
     }
 }

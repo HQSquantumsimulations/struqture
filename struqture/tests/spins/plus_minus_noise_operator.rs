@@ -562,9 +562,6 @@ fn serde_json() {
 /// Test PlusMinusLindbladNoiseOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    let major_version = 1;
-    let minor_version = 1;
-
     let dp = PlusMinusProduct::new().plus(0);
     let mut slno = PlusMinusLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
@@ -586,15 +583,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("PlusMinusLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -620,9 +623,6 @@ fn bincode() {
 /// Test PlusMinusLindbladNoiseOperator Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    let major_version = 1;
-    let minor_version = 1;
-
     let dp = PlusMinusProduct::new().plus(0);
     let mut slno = PlusMinusLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
@@ -668,15 +668,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("PlusMinusLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
         ],

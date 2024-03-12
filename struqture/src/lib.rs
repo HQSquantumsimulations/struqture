@@ -37,7 +37,7 @@ pub use serialisation_meta_information::{
 pub const STRUQTURE_VERSION: &str = env!("CARGO_PKG_VERSION");
 // if it should be up
 pub const CURRENT_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
-pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (1, 0, 0);
+pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
 use tinyvec::TinyVec;
 #[derive(
     Clone,
@@ -1067,14 +1067,3 @@ pub mod spins;
 /// Shorhand type for TinyVec representation of creators or annihilators
 #[cfg(test)]
 type ModeTinyVec = TinyVec<[usize; 2]>;
-
-/// Trait for implementing a function to determine the minimum supported version of struqture required.
-pub trait MinSupportedVersion {
-    /// Returns the minimum version of struqture required to deserialize this object.
-    ///
-    /// # Returns
-    /// (majon_verision, minor_version, patch_version)
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 0, 0)
-    }
-}

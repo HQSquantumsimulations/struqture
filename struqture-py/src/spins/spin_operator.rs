@@ -29,8 +29,6 @@ use struqture::spins::{
     OperateOnSpins, SpinOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use struqture::StruqtureError;
-#[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
@@ -106,7 +104,9 @@ impl SpinOperatorWrapper {
 
     /// Fallible conversion of generic python object that is implemented in struqture 1.x.
     #[cfg(feature = "struqture_1_export")]
-    pub fn from_pyany_to_struquture_one(input: Py<PyAny>) -> PyResult<struqture_one::spins::SpinSystem> {
+    pub fn from_pyany_to_struquture_one(
+        input: Py<PyAny>,
+    ) -> PyResult<struqture_one::spins::SpinSystem> {
         Python::with_gil(|py| -> PyResult<struqture_one::spins::SpinSystem> {
             let res = Self::from_pyany(input)?;
             let one_export = struqture::spins::SpinOperator::to_struqture_1(&res).map_err(

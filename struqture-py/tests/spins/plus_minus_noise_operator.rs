@@ -856,7 +856,7 @@ fn test_to_spin_sys() {
     })
 }
 
-/// Test jordan_wigner() method of PlusMinusNoiseOperator
+/// Test jordan_wigner() method of PlusMinusLindbladNoiseOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();

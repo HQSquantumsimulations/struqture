@@ -15,10 +15,7 @@ use crate::fermions::{FermionHamiltonian, FermionOperator};
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::prelude::*;
 use crate::spins::{HermitianOperateOnSpins, PauliProduct, SpinIndex};
-use crate::{
-    CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError};
 use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
 use num_complex::Complex64;
@@ -79,6 +76,7 @@ impl schemars::JsonSchema for SpinHamiltonian {
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 /// # SpinHamiltonian
 /// SpinHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
 ///
@@ -93,10 +91,10 @@ struct SpinHamiltonianSerialize {
 impl TryFrom<SpinHamiltonianSerialize> for SpinHamiltonian {
     type Error = StruqtureError;
     fn try_from(value: SpinHamiltonianSerialize) -> Result<Self, Self::Error> {
-        let new_noise_op: SpinHamiltonian = value.items.into_iter().collect();
         let target_serialisation_meta =
             <Self as crate::SerializationSupport>::target_serialisation_meta();
         crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+        let new_noise_op: SpinHamiltonian = value.items.into_iter().collect();
         Ok(new_noise_op)
     }
 }
@@ -108,7 +106,7 @@ impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> = value.into_iter().collect();
         Self {
             items: new_noise_op,
-            serialisation_meta: serialisation_meta,
+            serialisation_meta,
         }
     }
 }
@@ -702,7 +700,7 @@ mod test {
 
         assert_eq!(
             format!("{:?}", shs),
-            "SpinHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "SpinHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"SpinHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -733,15 +731,21 @@ mod test {
                 Token::F64(0.5),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("SpinHamiltonian"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -787,15 +791,21 @@ mod test {
                 Token::F64(0.5),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("SpinHamiltonian"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

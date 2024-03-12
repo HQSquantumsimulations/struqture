@@ -12,9 +12,7 @@
 
 use super::{MixedDecoherenceProduct, MixedIndex, OperateOnMixedSystems};
 use crate::prelude::*;
-use crate::{
-    OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{OperateOnDensityMatrix, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
@@ -53,7 +51,7 @@ use indexmap::IndexMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "MixedLindbladNoiseOperatorSerialize")]
+#[serde(try_from = "MixedLindbladNoiseOperatorSerialize")]
 #[serde(into = "MixedLindbladNoiseOperatorSerialize")]
 pub struct MixedLindbladNoiseOperator {
     /// The internal map representing the noise terms
@@ -96,12 +94,15 @@ struct MixedLindbladNoiseOperatorSerialize {
     n_spins: usize,
     n_bosons: usize,
     n_fermions: usize,
-    /// The struqture version
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
-    fn from(value: MixedLindbladNoiseOperatorSerialize) -> Self {
+impl TryFrom<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
+    type Error = StruqtureError;
+    fn try_from(value: MixedLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let mut new_noise_op =
             MixedLindbladNoiseOperator::new(value.n_spins, value.n_bosons, value.n_fermions);
         for (key_l, key_r, real, imag) in value.items.iter() {
@@ -112,12 +113,13 @@ impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
                 )
                 .expect("Internal bug in add_operator_product");
         }
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
     fn from(value: MixedLindbladNoiseOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(
             MixedDecoherenceProduct,
             MixedDecoherenceProduct,
@@ -128,16 +130,12 @@ impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
             n_spins: value.n_spins,
             n_bosons: value.n_bosons,
             n_fermions: value.n_fermions,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -692,16 +690,20 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = MixedLindbladNoiseOperator::new(1, 1, 1);
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
-        assert_eq!(MixedLindbladNoiseOperator::from(sos.clone()), so);
+        assert_eq!(
+            MixedLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            so
+        );
         assert_eq!(MixedLindbladNoiseOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of SpinOperator
@@ -718,9 +720,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -739,9 +742,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -755,9 +759,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -780,15 +785,16 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, serialisation_meta: StruqtureSerialisationMeta { type_name: \"MixedLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -806,9 +812,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -834,15 +841,21 @@ mod test {
                 Token::U64(1),
                 Token::Str("n_fermions"),
                 Token::U64(1),
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("MixedLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -863,9 +876,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -963,15 +977,21 @@ mod test {
                 Token::U64(1),
                 Token::Str("n_fermions"),
                 Token::U64(1),
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("MixedLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

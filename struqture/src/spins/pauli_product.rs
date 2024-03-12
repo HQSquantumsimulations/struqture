@@ -238,7 +238,12 @@ impl schemars::JsonSchema for PauliProduct {
         schemars::schema::Schema::Object(obj)
     }
 }
-impl crate::MinSupportedVersion for PauliProduct {}
+
+impl crate::SerializationSupport for PauliProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::PauliProduct
+    }
+}
 
 /// Deserializing directly from string.
 ///

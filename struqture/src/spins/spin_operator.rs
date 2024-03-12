@@ -16,7 +16,7 @@ use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, PauliProduct, SpinHamiltonian, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
+    SymmetricIndex,
 };
 use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
@@ -91,14 +91,14 @@ struct SpinOperatorSerialize {
 impl TryFrom<SpinOperatorSerialize> for SpinOperator {
     type Error = StruqtureError;
     fn try_from(value: SpinOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: SpinOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        let target_serialisation_meta =
-            <Self as crate::SerializationSupport>::target_serialisation_meta();
-        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         Ok(new_noise_op)
     }
 }
@@ -112,7 +112,7 @@ impl From<SpinOperator> for SpinOperatorSerialize {
             .collect();
         Self {
             items: new_noise_op,
-            serialisation_meta: serialisation_meta,
+            serialisation_meta,
         }
     }
 }
@@ -766,7 +766,7 @@ mod test {
 
         assert_eq!(
             format!("{:?}", sos),
-            "SpinOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "SpinOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"SpinOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -798,15 +798,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("SpinOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -857,15 +863,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("SpinOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
