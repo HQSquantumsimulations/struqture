@@ -25,7 +25,7 @@ use std::str::FromStr;
 use struqture::mixed_systems::{HermitianMixedProduct, MixedDecoherenceProduct};
 use struqture::mixed_systems::{MixedLindbladOpenSystem, OperateOnMixedSystems};
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix};
 use struqture_py_macros::noisy_system_wrapper;
 

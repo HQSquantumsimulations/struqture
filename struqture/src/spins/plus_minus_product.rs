@@ -455,9 +455,6 @@ impl crate::SerializationSupport for PlusMinusProduct {
     fn struqture_type() -> crate::StruqtureType {
         crate::StruqtureType::PlusMinusProduct
     }
-    fn min_supported_version(&self) -> (usize, usize, usize) {
-        (1, 1, 0)
-    }
 }
 
 /// Implementing serde serialization writing directly to string.

@@ -455,15 +455,15 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let comparison = bool::extract_bound(
-            &comp_op_ungroup
-                .call_method1("__eq__", ((&system, &noise),))
+        let comparison = bool::extract(
+            comp_op_ungroup
+                .call_method1("__eq__", ((fermion_system, noise),))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
         let comp_op_group = new_system(py)
-            .call_method1("group", (system, noise))
+            .call_method1("group", (fermion_system, noise))
             .unwrap();
         let comparison =
             bool::extract_bound(&comp_op_group.call_method1("__eq__", (new_sys,)).unwrap())

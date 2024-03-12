@@ -870,6 +870,25 @@ pub fn noisywrapper(
             /// Fallible conversion of generic python object..
             pub fn from_pyany( input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
+                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                        PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+                    })?;
+                    let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                        PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+                    })?;
+
+                    let source_serialisation_meta: struqture::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+                        PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+                    })?;
+
+                    let target_serialisation_meta = <#struct_ident as struqture::SerializationSupport>::target_serialisation_meta();
+
+                    struqture::check_can_be_deserialised(&target_serialisation_meta, &source_serialisation_meta).map_err(|err| {
+                        PyTypeError::new_err(err.to_string())
+                    })?;
+
+                    let input = input.as_ref(py);
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -1066,8 +1085,7 @@ pub fn noisywrapper(
             }
 
             /// Returns the StruqtureSerialisationMeta of the object.
-            // Could also be implemented without returning result if
-            fn struqture_serialisation_meta(&self) -> PyResult<String>{
+            fn _get_serialisation_meta(&self) -> PyResult<String>{
                 let meta = struqture::SerializationSupport::struqture_serialisation_meta(&self.internal);
                 let string = serde_json::to_string(&meta).map_err(|err| PyValueError::new_err(err.to_string()))?;
                 Ok(string)

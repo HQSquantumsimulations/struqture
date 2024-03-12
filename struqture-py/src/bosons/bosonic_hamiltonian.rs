@@ -19,7 +19,7 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonHamiltonian;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
 

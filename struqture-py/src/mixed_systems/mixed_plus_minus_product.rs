@@ -30,8 +30,9 @@ use struqture::SymmetricIndex;
 use struqture_py_macros::product_wrapper;
 
 use super::MixedProductWrapper;
+use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 
 /// A mixed product of pauli products and boson products.
 ///

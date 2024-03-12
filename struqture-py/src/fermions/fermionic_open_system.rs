@@ -23,7 +23,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionLindbladOpenSystem;
 use struqture::mappings::JordanWignerFermionToSpin;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 

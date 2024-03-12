@@ -22,8 +22,9 @@ use std::str::FromStr;
 use struqture::fermions::*;
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
+use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture_py_macros::{mappings, product_wrapper};
 
 /// A product of fermionic creation and annihilation operators.
