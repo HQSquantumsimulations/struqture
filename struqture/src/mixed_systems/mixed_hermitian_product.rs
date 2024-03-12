@@ -73,7 +73,11 @@ impl schemars::JsonSchema for HermitianMixedProduct {
     }
 }
 
-impl crate::MinSupportedVersion for HermitianMixedProduct {}
+impl crate::SerializationSupport for HermitianMixedProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::HermitianMixedProduct
+    }
+}
 
 impl Serialize for HermitianMixedProduct {
     /// Serialization function for HermitianMixedProduct according to string type.

@@ -68,7 +68,11 @@ impl schemars::JsonSchema for FermionProduct {
     }
 }
 
-impl crate::MinSupportedVersion for FermionProduct {}
+impl crate::SerializationSupport for FermionProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///
@@ -614,7 +618,11 @@ impl schemars::JsonSchema for HermitianFermionProduct {
     }
 }
 
-impl crate::MinSupportedVersion for HermitianFermionProduct {}
+impl crate::SerializationSupport for HermitianFermionProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::HermitianFermionProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///

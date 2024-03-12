@@ -11,10 +11,7 @@
 // limitations under the License.
 
 use super::{MixedOperator, MixedPlusMinusProduct, MixedProduct, OperateOnMixedSystems};
-use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnState, StruqtureError};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -50,7 +47,7 @@ use indexmap::IndexMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "MixedPlusMinusOperatorSerialize")]
+#[serde(try_from = "MixedPlusMinusOperatorSerialize")]
 #[serde(into = "MixedPlusMinusOperatorSerialize")]
 pub struct MixedPlusMinusOperator {
     /// The internal HashMap of MixedProducts and coefficients (CalculatorComplex)
@@ -88,38 +85,39 @@ struct MixedPlusMinusOperatorSerialize {
     n_spins: usize,
     n_bosons: usize,
     n_fermions: usize,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<MixedPlusMinusOperatorSerialize> for MixedPlusMinusOperator {
-    fn from(value: MixedPlusMinusOperatorSerialize) -> Self {
+impl TryFrom<MixedPlusMinusOperatorSerialize> for MixedPlusMinusOperator {
+    type Error = StruqtureError;
+    fn try_from(value: MixedPlusMinusOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let mut new_noise_op =
             MixedPlusMinusOperator::new(value.n_spins, value.n_bosons, value.n_fermions);
         for (key, real, imag) in value.items.iter() {
             let _ =
                 new_noise_op.add_operator_product(key.clone(), CalculatorComplex::new(real, imag));
         }
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<MixedPlusMinusOperator> for MixedPlusMinusOperatorSerialize {
     fn from(value: MixedPlusMinusOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(MixedPlusMinusProduct, CalculatorFloat, CalculatorFloat)> = value
             .clone()
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
             n_spins: value.n_spins,
             n_bosons: value.n_bosons,
             n_fermions: value.n_fermions,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -654,15 +652,19 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut mpmo = MixedPlusMinusOperator::new(1, 1, 1);
         mpmo.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(MixedPlusMinusOperator::from(mpmos.clone()), mpmo);
+        assert_eq!(
+            MixedPlusMinusOperator::try_from(mpmos.clone()).unwrap(),
+            mpmo
+        );
         assert_eq!(MixedPlusMinusOperatorSerialize::from(mpmo), mpmos);
     }
     // Test the Clone and PartialEq traits of MixedOperator
@@ -678,9 +680,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -698,9 +701,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: MixedPlusMinusProduct = MixedPlusMinusProduct::new(
@@ -713,9 +717,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(mpmos_1 == mpmos);
@@ -737,15 +742,16 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", mpmos),
-            "MixedPlusMinusOperatorSerialize { items: [(MixedPlusMinusProduct { spins: [PlusMinusProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "MixedPlusMinusOperatorSerialize { items: [(MixedPlusMinusProduct { spins: [PlusMinusProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, serialisation_meta: StruqtureSerialisationMeta { type_name: \"MixedPlusMinusOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -762,9 +768,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -789,15 +796,21 @@ mod test {
                 Token::U64(1),
                 Token::Str("n_fermions"),
                 Token::U64(1),
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("MixedPlusMinusOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -817,9 +830,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedPlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -884,15 +898,21 @@ mod test {
                 Token::U64(1),
                 Token::Str("n_fermions"),
                 Token::U64(1),
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("MixedPlusMinusOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

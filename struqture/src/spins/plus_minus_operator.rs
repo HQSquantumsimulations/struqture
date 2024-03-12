@@ -14,10 +14,7 @@ use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator}
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusProduct, SpinHamiltonian};
-use crate::{
-    OperateOnDensityMatrix, OperateOnState, StruqtureError, StruqtureVersionSerializable,
-    SymmetricIndex,
-};
+use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -54,7 +51,7 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "PlusMinusOperatorSerialize")]
+#[serde(try_from = "PlusMinusOperatorSerialize")]
 #[serde(into = "PlusMinusOperatorSerialize")]
 pub struct PlusMinusOperator {
     // The internal HashMap of PlusMinusProducts and coefficients (CalculatorComplex)
@@ -83,33 +80,35 @@ impl schemars::JsonSchema for PlusMinusOperator {
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct PlusMinusOperatorSerialize {
     items: Vec<(PlusMinusProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<PlusMinusOperatorSerialize> for PlusMinusOperator {
-    fn from(value: PlusMinusOperatorSerialize) -> Self {
+impl TryFrom<PlusMinusOperatorSerialize> for PlusMinusOperator {
+    type Error = StruqtureError;
+    fn try_from(value: PlusMinusOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: PlusMinusOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<PlusMinusOperator> for PlusMinusOperatorSerialize {
     fn from(value: PlusMinusOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(PlusMinusProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: 1,
-            minor_version: 1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -657,15 +656,16 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = PlusMinusOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(PlusMinusOperator::from(sos.clone()), so);
+        assert_eq!(PlusMinusOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(PlusMinusOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of PlusMinusOperator
@@ -674,9 +674,10 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -687,17 +688,19 @@ mod test {
         let pp_1: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos_1 = PlusMinusOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
         let sos_2 = PlusMinusOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -712,15 +715,16 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
+            "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"PlusMinusOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -730,9 +734,10 @@ mod test {
         let pp = PlusMinusProduct::new().plus(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -751,15 +756,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -772,9 +783,10 @@ mod test {
         let pp = PlusMinusProduct::new().plus(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -809,15 +821,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
