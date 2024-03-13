@@ -12,14 +12,14 @@
 
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::fermions::{
-    FermionHamiltonian, FermionHamiltonianSystem, FermionLindbladNoiseOperator,
+    FermionHamiltonian, FermionHamiltonian, FermionLindbladNoiseOperator,
     FermionLindbladNoiseSystem, FermionLindbladOpenSystem, FermionOperator, FermionProduct,
     FermionSystem, HermitianFermionProduct,
 };
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinHamiltonianSystem,
+    DecoherenceProduct, PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinHamiltonian,
     SpinLindbladNoiseOperator, SpinLindbladNoiseSystem, SpinLindbladOpenSystem, SpinOperator,
     SpinSystem,
 };
@@ -145,16 +145,16 @@ fn test_jw_fermion_systems_to_spin() {
 
     assert_eq!(fs.jordan_wigner(), ss);
 
-    // Test FermionHamiltonianSystem
+    // Test FermionHamiltonian
     let mut fh = FermionHamiltonian::new();
     fh.add_operator_product(
         HermitianFermionProduct::new([1], [2]).unwrap(),
         CalculatorComplex::new(1.0, 2.0),
     )
     .unwrap();
-    let fhs = FermionHamiltonianSystem::from_hamiltonian(fh.clone(), Some(5)).unwrap();
+    let fhs = FermionHamiltonian::from_hamiltonian(fh.clone(), Some(5)).unwrap();
     let sh = fh.jordan_wigner();
-    let shs = SpinHamiltonianSystem::from_hamiltonian(sh, Some(5)).unwrap();
+    let shs = SpinHamiltonian::from_hamiltonian(sh, Some(5)).unwrap();
 
     assert_eq!(fhs.jordan_wigner(), shs);
 

@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{HermitianMixedProduct, MixedIndex, MixedOperator, OperateOnMixedSystems};
+use super::{HermitianMixedProduct, HermitianOperateOnMixedSystems, MixedIndex, MixedOperator, OperateOnMixedSystems};
 use crate::{
     ModeIndex, OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError, SymmetricIndex,
 };
@@ -219,7 +219,9 @@ impl OperateOnState<'_> for MixedHamiltonian {
     }
 }
 
-impl OperateOnMixedSystems<'_> for MixedHamiltonian {
+impl<'a> HermitianOperateOnMixedSystems<'a> for MixedHamiltonian {}
+
+impl<'a> OperateOnMixedSystems<'a> for MixedHamiltonian {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
         let mut number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();

@@ -32,12 +32,12 @@ Rust implementation:
 use qoqo_calculator::CalculatorComplex;
 use struqture::bosons::BosonProduct;
 use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedHamiltonianSystem,
+    HermitianMixedProduct, MixedHamiltonian,
 };
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 
-let mut system = MixedHamiltonianSystem::new([Some(1)], [Some(3)], []);
+let mut system = MixedHamiltonian::new([Some(1)], [Some(3)], []);
 
 // Setting up constants:
 let delta = 1.0;
@@ -86,12 +86,12 @@ Python implementation:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py.bosons import BosonProduct
 from struqture_py.mixed_systems import (
-    HermitianMixedProduct, HermitianMixedProduct, MixedHamiltonianSystem,
+    HermitianMixedProduct, HermitianMixedProduct, MixedHamiltonian,
 )
 from struqture_py.spins import (PauliProduct, PauliProduct)
 
 
-system = MixedHamiltonianSystem([1], [3], [])
+system = MixedHamiltonian([1], [3], [])
 
 # Setting up constants:
 delta = 1.0

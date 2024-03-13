@@ -122,11 +122,11 @@ hamiltonian.add_operator_product(hbp, CalculatorComplex::new(1.5, 0.0)).unwrap()
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `BosonSystem` and `BosonHamiltonianSystem` instead of a `BosonOperator` and `BosonHamiltonian`. See next section for more details.
+In python, we need to use a `BosonSystem` and `BosonHamiltonian` instead of a `BosonOperator` and `BosonHamiltonian`. See next section for more details.
 
 ## Systems and HamiltonianSystems
 
-Following the intention to avoid unphysical behaviour, BosonSystems and BosonHamiltonianSystems are wrappers around BosonOperators and BosonHamiltonians that allow to explicitly set the number of spins of the systems.
+Following the intention to avoid unphysical behaviour, BosonSystems and BosonHamiltonians are wrappers around BosonOperators and BosonHamiltonians that allow to explicitly set the number of spins of the systems.
 When setting or adding a BosonProduct/HermitianBosonProduct to the systems, it is guaranteed that the bosonic indices involved cannot exceed the number of bosonic modes in the system.
 Note that the user can decide to explicitly set the number of bosonic modes to be variable.
 
@@ -135,9 +135,9 @@ Note that the user can decide to explicitly set the number of bosonic modes to b
 ```rust
 use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
-use struqture::bosons::{HermitianBosonProduct, BosonHamiltonianSystem};
+use struqture::bosons::{HermitianBosonProduct, BosonHamiltonian};
 
-let mut system = BosonHamiltonianSystem::new(Some(3));
+let mut system = BosonHamiltonian::new(Some(3));
 
 // This will work
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
@@ -153,7 +153,7 @@ println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
-let mut system = BosonHamiltonianSystem::new(None);
+let mut system = BosonHamiltonian::new(None);
 system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 ```
 
@@ -162,7 +162,7 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
-system = bosons.BosonHamiltonianSystem(3)
+system = bosons.BosonHamiltonian(3)
 
 # This will work
 hbp = bosons.HermitianBosonProduct([0, 1], [0, 2])
@@ -177,7 +177,7 @@ value = CalculatorComplex.from_pair(1.0, 1.5)
 # system.add_operator_product(hbp_error, value)  # Uncomment me!
 
 # This will work because we leave the number of spins dynamic
-system = bosons.BosonHamiltonianSystem()
+system = bosons.BosonHamiltonian()
 hbp = bosons.HermitianBosonProduct([3], [3])
 system.add_operator_product(hbp, CalculatorComplex.from_pair(1.0, 0.0))
 ```
@@ -250,7 +250,7 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a Hamiltonian (`BosonHamiltonianSystem`) and noise (`BosonLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (`BosonHamiltonian`) and noise (`BosonLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
 
 ### Examples
 

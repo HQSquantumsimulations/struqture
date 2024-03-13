@@ -17,7 +17,7 @@
 //!
 //! This module can be used to represent mixed quantum operators, mixed quantum Hamiltonians and mixed open quantum systems.
 //!
-//! In general the enduser should use the high-level [crate::mixed_systems::MixedSystem] and [crate::mixed_systems::MixedHamiltonianSystem] structs
+//! In general the enduser should use the high-level [crate::mixed_systems::MixedSystem] and [crate::mixed_systems::MixedHamiltonian] structs
 //! to represent mixed quantum Operators and mixed Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [crate::mixed_systems::MixedLindbladOpenSystem].

@@ -182,11 +182,11 @@ hamiltonian.add_operator_product(hmp_1, CalculatorComplex::from(2.0)).unwrap();
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `MixedSystem` and `MixedHamiltonianSystem` instead of a `MixedOperator` and `MixedHamiltonian`. See next section for more details.
+In python, we need to use a `MixedSystem` and `MixedHamiltonian` instead of a `MixedOperator` and `MixedHamiltonian`. See next section for more details.
 
 ## Systems and HamiltonianSystems
 
-Following the intention to avoid unphysical behaviour, MixedSystems and MixedHamiltonianSystems are wrappers around MixedOperators and MixedHamiltonians that allow to explicitly set the number of spins, the number of bosonic modes and the number of fermionic modes in each subsystem of the systems.
+Following the intention to avoid unphysical behaviour, MixedSystems and MixedHamiltonians are wrappers around MixedOperators and MixedHamiltonians that allow to explicitly set the number of spins, the number of bosonic modes and the number of fermionic modes in each subsystem of the systems.
 When setting or adding a MixedProduct/HermitianMixedProduct to the systems, it is guaranteed that the mixed indices involved cannot exceed the number of spins, bosonic modes, and fermionic modes (for each subsystem) in the system. 
 Additionally, the correct number of subsystems needs to have been specified for each type.
 Note that the user can decide to explicitly set the number of of each particle type to be variable.
@@ -197,11 +197,11 @@ Note that the user can decide to explicitly set the number of of each particle t
 use qoqo_calculator::CalculatorComplex;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{HermitianMixedProduct, MixedHamiltonianSystem};
+use struqture::mixed_systems::{HermitianMixedProduct, MixedHamiltonian};
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 
-let mut system = MixedHamiltonianSystem::new([Some(2), Some(1)], [Some(3)], [Some(3)]);
+let mut system = MixedHamiltonian::new([Some(2), Some(1)], [Some(3)], [Some(3)]);
 
 // Building the spin term sigma^x_0 sigma^z_1
 let pp_0 = PauliProduct::new().x(0).z(1);
@@ -251,7 +251,7 @@ let hmp = HermitianMixedProduct::new(
     [BosonProduct::new([], []).unwrap()],
     [fp]
 ).unwrap();
-let mut system = MixedHamiltonianSystem::new([None, None], [None], [None]);
+let mut system = MixedHamiltonian::new([None, None], [None], [None]);
 system
     .add_operator_product(hmp, CalculatorComplex::new(1.0, 0.0))
     .unwrap();
@@ -262,7 +262,7 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
-system = mixed_systems.MixedHamiltonianSystem([2, 1], [3], [3])
+system = mixed_systems.MixedHamiltonian([2, 1], [3], [3])
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp_0 = spins.PauliProduct().x(0).z(1)
@@ -294,7 +294,7 @@ hmp_error = mixed_systems.HermitianMixedProduct(
 # This will work because we leave the number of spins dynamic.
 hmp = mixed_systems.HermitianMixedProduct(
     [pp_error, pp_1], [bosons.BosonProduct([], [])], [fp])
-system = mixed_systems.MixedHamiltonianSystem([None, None], [None], [None])
+system = mixed_systems.MixedHamiltonian([None, None], [None], [None])
 system.add_operator_product(hmp_error, CalculatorComplex.from_pair(1.0, 0.0))
 ```
 
@@ -397,7 +397,7 @@ The Lindblad master equation is given by
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 
-In struqture they are composed of a Hamiltonian (MixedHamiltonianSystem) and noise (MixedLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseSystem). They have different ways to set terms in Rust and Python:
 
 ### Examples
 

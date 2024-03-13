@@ -47,10 +47,10 @@ Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are 
 The Hamiltonians and Hamiltonian systems in struqture are
 
 * `SpinHamiltonian`
-* `SpinHamiltonianSystem`
+* `SpinHamiltonian`
 * `FermionHamiltonian`
-* `FermionHamiltonianSystem`
+* `FermionHamiltonian`
 * `BosonHamiltonian`
-* `BosonHamiltonianSystem`
+* `BosonHamiltonian`
 * `MixedHamiltonian`
-* `MixedHamiltonianSystem`
+* `MixedHamiltonian`

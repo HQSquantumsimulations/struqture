@@ -168,11 +168,11 @@ hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `SpinSystem` and `SpinHamiltonianSystem` instead of an`SpinOperator` and `SpinHamiltonian`. See next section for more details.
+In python, we need to use a `SpinSystem` and `SpinHamiltonian` instead of an`SpinOperator` and `SpinHamiltonian`. See next section for more details.
 
 ## Systems and HamiltonianSystems
 
-Following the intention to avoid unphysical behaviour, SpinSystems and SpinHamiltonianSystems are wrappers around SpinOperators and SpinHamiltonians that allow to explicitly set the number of spins of the systems.
+Following the intention to avoid unphysical behaviour, SpinSystems and SpinHamiltonians are wrappers around SpinOperators and SpinHamiltonians that allow to explicitly set the number of spins of the systems.
 When setting or adding a PauliProduct to the systems, it is guaranteed that the spin indices involved cannot exceed the number of spins in the system.
 Note that the user can decide to explicitly set the number of spins to be variable.
 
@@ -296,7 +296,7 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a hamiltonian (`SpinHamiltonianSystem`) and noise (`SpinLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a hamiltonian (`SpinHamiltonian`) and noise (`SpinLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
 
 ### Examples
 
@@ -356,7 +356,7 @@ struqture uses the convention that density matrices are flattened in row-major o
 \\[
     \rho = \begin{pmatrix} a & b \\\\ c & d \end{pmatrix} => \vec{\rho} = \begin{pmatrix} a \\\\ b \\\\ c \\\\ d \end{pmatrix}
 \\]
-For noiseless objects (`SpinSystem`, `SpinHamiltonianSystem`), sparse operators and sparse superoperators can be constructed, as we can represent the system as a wavefunction. For systems with noise (`SpinLindbladNoiseSystem`, `SpinLindbladOpenSystem`), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.
+For noiseless objects (`SpinSystem`, `SpinHamiltonian`), sparse operators and sparse superoperators can be constructed, as we can represent the system as a wavefunction. For systems with noise (`SpinLindbladNoiseSystem`, `SpinLindbladOpenSystem`), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.
 
 Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.
 

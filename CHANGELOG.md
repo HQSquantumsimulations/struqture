@@ -87,7 +87,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.4.0
 
-* Fixed bug in Jordan-Wigner transformation for FermionHamiltonian and FermionHamiltonianSystem.
+* Fixed bug in Jordan-Wigner transformation for FermionHamiltonian and FermionHamiltonian.
 * Added MixedPlusMinusProduct, MixedPlusMinusOperator to mod.rs in struqture-py/src/mixed_systems (fixed import error).
 * Added conversion from SpinHamiltonian(System) to PlusMinusOperator.
 * Added support for jsonschema in struqture and struqture-py.
@@ -120,4 +120,4 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## 1.0.0
 
 * Added `noise_get` and `system_get` getters for all OpenSystems in python interface
-* Added a number of particles check to MixedHamiltonianSystem, MixedSystem and MixedLindbladNoiseSystem
+* Added a number of particles check to MixedHamiltonian, MixedSystem and MixedLindbladNoiseSystem
