@@ -37,7 +37,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// `PauliProduct().x(0).x(2)`.
 ///
 /// PauliProduct is  supposed to be used as input for the function `set_pauli_product`,
-/// for instance in the spin system classes SpinLindbladOpenSystem, SpinHamiltonianSystem or SpinSystem,
+/// for instance in the spin system classes SpinLindbladOpenSystem, SpinHamiltonian or SpinSystem,
 /// or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
 /// or as part of `HermitianMixedProduct <mixed_systems.HermitianMixedProduct>`.
 ///

@@ -122,11 +122,11 @@ hamiltonian.add_operator_product(hfp, CalculatorComplex::new(1.5, 0.0)).unwrap()
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `FermionSystem` and `FermionHamiltonianSystem` instead of a `FermionOperator` and `FermionHamiltonian`. See next section for more details.
+In python, we need to use a `FermionSystem` and `FermionHamiltonian` instead of a `FermionOperator` and `FermionHamiltonian`. See next section for more details.
 
 ## Systems and HamiltonianSystems
 
-Following the intention to avoid unphysical behaviour, FermionSystems and FermionHamiltonianSystems are wrappers around FermionOperators and FermionHamiltonians that allow to explicitly set the number of spins of the systems.
+Following the intention to avoid unphysical behaviour, FermionSystems and FermionHamiltonians are wrappers around FermionOperators and FermionHamiltonians that allow to explicitly set the number of spins of the systems.
 When setting or adding a FermionProduct/HermitianFermionProduct to the systems, it is guaranteed that the fermionic indices involved cannot exceed the number of fermionic modes in the system.
 Note that the user can decide to explicitly set the number of fermionic modes to be variable.
 
@@ -135,9 +135,9 @@ Note that the user can decide to explicitly set the number of fermionic modes to
 ```rust
 use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
-use struqture::fermions::{HermitianFermionProduct, FermionHamiltonianSystem};
+use struqture::fermions::{HermitianFermionProduct, FermionHamiltonian};
 
-let mut system = FermionHamiltonianSystem::new(Some(3));
+let mut system = FermionHamiltonian::new(Some(3));
 
 // This will work
 let hfp = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
@@ -153,7 +153,7 @@ println!("{:?}", error);
 
 // This will work because we leave the number of spins dynamic
 let hbf = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
-let mut system = FermionHamiltonianSystem::new(None);
+let mut system = FermionHamiltonian::new(None);
 system.add_operator_product(hbf, CalculatorComplex::new(1.0, 1.5)).unwrap();
 ```
 
@@ -162,7 +162,7 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
-system = fermions.FermionHamiltonianSystem(3)
+system = fermions.FermionHamiltonian(3)
 
 # This will work
 hfp = fermions.HermitianFermionProduct([0, 1], [0, 2])
@@ -177,7 +177,7 @@ value = CalculatorComplex.from_pair(1.0, 1.5)
 # system.add_operator_product(hfp_error, value)  # Uncomment me!
 
 # This will work because we leave the number of spins dynamic
-system = fermions.FermionHamiltonianSystem()
+system = fermions.FermionHamiltonian()
 hfp = fermions.HermitianFermionProduct([3], [3])
 system.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 0.0))
 ```
@@ -250,7 +250,7 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a Hamiltonian (`FermionHamiltonianSystem`) and noise (`FermionLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
 
 ### Examples
 
