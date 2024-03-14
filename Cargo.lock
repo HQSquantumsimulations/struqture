@@ -1545,30 +1545,6 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd549b80a7e8a929b9125c37c8ec8f74916df3ed2fbc427462ee93812c1f450e"
-dependencies = [
- "bincode",
- "num-complex",
- "numpy",
- "proc-macro2",
- "pyo3",
- "pyo3-build-config",
- "qoqo_calculator",
- "qoqo_calculator_pyo3",
- "quote",
- "schemars",
- "serde",
- "serde_json",
- "struqture 1.6.1",
- "struqture-py-macros 1.6.1",
- "syn 2.0.52",
- "thiserror",
-]
-
-[[package]]
-name = "struqture-py"
 version = "2.0.0"
 dependencies = [
  "bincode",
@@ -1587,23 +1563,10 @@ dependencies = [
  "serde_json",
  "struqture 1.6.1",
  "struqture 2.0.0",
- "struqture-py 1.6.1",
- "struqture-py-macros 2.0.0",
+ "struqture-py-macros",
  "syn 2.0.52",
  "test-case",
  "thiserror",
-]
-
-[[package]]
-name = "struqture-py-macros"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3215f75379ad75b4847b3166e5fd39de65ae2723a9cdd382ad92966925a8f48e"
-dependencies = [
- "num-complex",
- "proc-macro2",
- "quote",
- "syn 2.0.52",
 ]
 
 [[package]]
