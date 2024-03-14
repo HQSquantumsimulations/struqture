@@ -37,7 +37,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// `PauliProduct().x(0).x(2)`.
 ///
 /// PauliProduct is  supposed to be used as input for the function `set_pauli_product`,
-/// for instance in the spin system classes SpinLindbladOpenSystem, SpinHamiltonian or SpinSystem,
+/// for instance in the spin system classes SpinLindbladOpenSystem, SpinHamiltonian or SpinOperator,
 /// or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
 /// or as part of `HermitianMixedProduct <mixed_systems.HermitianMixedProduct>`.
 ///
@@ -58,6 +58,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///     npt.assert_equal(pp.keys(), [0, 1, 2, 3])
 ///
 #[pyclass(name = "PauliProduct", module = "struqture_py.spins")]
+// #[pyo3(crate = "pyo3")]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct PauliProductWrapper {
     /// Internal storage of [struqture::spins::PauliProduct]
@@ -136,4 +137,33 @@ impl PauliProductWrapper {
             internal: self.internal.clone().set_pauli(index, converted_pauli),
         })
     }
+
+    // /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+    // #[cfg(feature = "struqture_1_import")]
+    // pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<PauliProductWrapper> {
+    //     Python::with_gil(|_py| -> PyResult<PauliProductWrapper> {
+    //         let one_import = struqture_one_py::spins::PauliProductWrapper::from_pyany(input)?;
+    //         let spin_operator: PauliProduct = struqture::spins::PauliProduct::from_struqture_1(&one_import).map_err(
+    //             |_err| PyValueError::new_err(format!("Trying to obtain struqture 2.x PauliProduct from struqture 1.x PauliProduct. Conversion failed. Was the right type passed to all functions?")
+    //         ))?;
+    //         Ok(PauliProductWrapper { internal: spin_operator })
+    //         // Err(PyValueError::new_err("args"))
+    //     })
+    // }
+
+    // /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+    // #[cfg(feature = "struqture_1_export")]
+    // // #[pyo3(crate = "struqture_one_py::pyo3")]
+    // pub fn from_pyany_to_struqture_one(
+    //     input: Py<PyAny>,
+    // ) -> Result<struqture_one_py::spins::PauliProductWrapper, PyErr> {
+    //     Python::with_gil(|_py| -> PyResult<struqture_one_py::spins::PauliProductWrapper> {
+    //         let res = Self::from_pyany(input)?;
+    //         let one_export = struqture::spins::PauliProduct::to_struqture_1(&res).map_err(
+    //             |_err| PyValueError::new_err(format!("Trying to obtain struqture 2.x PauliProduct from struqture 1.x PauliProduct. Conversion failed. Was the right type passed to all functions?")
+    //         ))?;
+    //         Ok(struqture_one_py::spins::PauliProductWrapper { internal: one_export })
+    //         // Err(PyValueError::new_err("args"))
+    //     })
+    // }
 }

@@ -22,8 +22,7 @@ features = ["num-complex", "multiple-pymethods"]
 
 [dependencies]
 struqture = {version="2.0", path="../struqture", default-features=false}
-struqture_one_py = {package = "struqture-py", version="=1", optional=true, default-features=false}
-struqture_one = {package = "struqture", version="=1", optional=true, default-features=false}
+struqture_one = {package = "struqture", version="=1.6", optional=true, default-features=false}
 
 serde = { version = "1.0", features = ["derive"] }
 numpy = "0.20"
@@ -56,5 +55,5 @@ no-default-features = true
 extension-module = ["pyo3/extension-module"]
 default = ["extension-module", "json_schema"]
 json_schema = ["struqture/json_schema"]
-struqture_1_export = ["struqture_one", "struqture_one_py", "struqture/struqture_1_export", "struqture/struqture_1_import"]
-struqture_1_import = ["struqture_one", "struqture_one_py", "struqture/struqture_1_import", "struqture/struqture_1_export"]
+struqture_1_export = ["struqture_one", "struqture/struqture_1_export", "struqture/struqture_1_import"]
+struqture_1_import = ["struqture_one", "struqture/struqture_1_import", "struqture/struqture_1_export"]
