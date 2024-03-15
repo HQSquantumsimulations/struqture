@@ -590,6 +590,7 @@ impl PauliProduct {
         let pauli_product = Self::from_str(&value_string)?;
         Ok(pauli_product)
     }
+
     /// Sets a new entry for SingleSpinOperator X in the internal dictionary. This function consumes Self.
     ///
     /// # Arguments
