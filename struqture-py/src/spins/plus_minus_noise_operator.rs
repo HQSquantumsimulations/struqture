@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::SpinLindbladNoiseOperatorWrapper;
 use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::PlusMinusProductWrapper;
 use bincode::deserialize;
@@ -20,11 +21,9 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator};
 use struqture::OperateOnDensityMatrix;
-use struqture_py_macros::{mappings, noisy_system_wrapper};
-
-use super::SpinLindbladNoiseOperatorWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///

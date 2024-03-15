@@ -28,6 +28,62 @@ pub fn productwrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
+    let (struqture_one_module, struqture_one_ident) = if struct_name.contains("PauliProduct") {
+        (
+            quote::format_ident!("spins"),
+            quote::format_ident!("PauliProduct"),
+        )
+    } else if struct_name.contains("MixedDecoherenceProduct") {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("MixedDecoherenceProduct"),
+        )
+    } else if struct_name.contains("HermitianMixedProduct") {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("HermitianMixedProduct"),
+        )
+    } else if struct_name.contains("MixedPlusMinusProduct") {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("MixedPlusMinusProduct"),
+        )
+    } else if struct_name.contains("DecoherenceProduct") {
+        (
+            quote::format_ident!("spins"),
+            quote::format_ident!("DecoherenceProduct"),
+        )
+    } else if struct_name.contains("HermitianBosonProduct") {
+        (
+            quote::format_ident!("bosons"),
+            quote::format_ident!("HermitianBosonProduct"),
+        )
+    } else if struct_name.contains("BosonProduct") {
+        (
+            quote::format_ident!("bosons"),
+            quote::format_ident!("BosonProduct"),
+        )
+    } else if struct_name.contains("HermitianFermionProduct") {
+        (
+            quote::format_ident!("fermions"),
+            quote::format_ident!("HermitianFermionProduct"),
+        )
+    } else if struct_name.contains("FermionProduct") {
+        (
+            quote::format_ident!("fermions"),
+            quote::format_ident!("FermionProduct"),
+        )
+    } else if struct_name.contains("PlusMinusProduct") {
+        (
+            quote::format_ident!("spins"),
+            quote::format_ident!("PlusMinusProduct"),
+        )
+    } else {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("MixedProduct"),
+        )
+    };
     // ------------
     // Start the generating part of the macro
     let symmetric_index_quote = if attribute_arguments.contains("SymmetricIndex") {
@@ -334,8 +390,7 @@ pub fn productwrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: Py<PyAny>
-            ) -> PyResult<#struct_ident> {
+            pub fn from_pyany( input: Py<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
                     let input = input.as_ref(py);
                     if let Ok(try_downcast) = input.extract::<#ident>() {
@@ -363,11 +418,41 @@ pub fn productwrapper(
                         Ok(res)
 
                     }
-                }
+                })
+            }
 
-            )
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_import")]
+            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let get_str = input.call_method0(py, "__str__").map_err(|_| {
+                        PyTypeError::new_err("Type conversion failed".to_string())
+                    })?;
+                    let string = get_str.extract::<String>(py).map_err(|_| {
+                        PyTypeError::new_err("Type conversion failed".to_string())
+                    })?;
+                    let one_import = struqture_one::#struqture_one_module::#struqture_one_ident::from_str(string.as_str()).map_err(|err|
+                        PyTypeError::new_err(format!(
+                            "Type conversion failed: {}",
+                            err
+                        )))?;
+
+                    let spin_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
+                        |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
+                    ))?;
+                    Ok(spin_operator)
+                })
+            }
+
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_export")]
+            pub fn from_pyany_to_struqture_one(input: Py<PyAny>) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+                let res = <#ident>::from_pyany(input)?;
+                <#struct_ident>::to_struqture_1(&res).map_err(
+                    |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? Error message: {:?}", err)
+                ))
+            }
         }
-    }
 
         #[pymethods]
         impl #ident {
@@ -382,6 +467,16 @@ pub fn productwrapper(
 
             // ----------------------------------
             // Default pyo3 implementations
+
+            // add in a function converting struqture_one (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            #[cfg(feature = "struqture_1_import")]
+            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
+                let spin_operator: #struct_ident = #ident::from_pyany_struqture_one(input)?;
+                Ok(#ident {
+                    internal: spin_operator,
+                })
+            }
 
             /// Return a copy of self (copy here produces a deepcopy).
             ///

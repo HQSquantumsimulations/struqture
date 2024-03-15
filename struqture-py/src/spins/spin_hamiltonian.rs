@@ -30,6 +30,7 @@ use struqture::StruqtureError;
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
+
 /// These are representations of systems of spins.
 ///
 /// SpinHamiltonians are characterized by a SpinOperator to represent the hamiltonian of the spin system

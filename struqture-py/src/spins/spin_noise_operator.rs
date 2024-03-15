@@ -25,6 +25,7 @@ use struqture::spins::{OperateOnSpins, SpinLindbladNoiseOperator, ToSparseMatrix
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, StruqtureError};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
+
 /// These are representations of noisy systems of spins.
 ///
 /// In a SpinLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
