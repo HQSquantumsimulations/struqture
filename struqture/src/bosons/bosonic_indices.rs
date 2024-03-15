@@ -253,17 +253,6 @@ impl ModeIndex for BosonProduct {
 
 impl BosonIndex for BosonProduct {}
 
-impl CorrespondsTo<BosonProduct> for BosonProduct {
-    /// Gets the BosonProduct corresponding to self (here, itself).
-    ///
-    /// # Returns
-    ///
-    /// * `BosonProduct` - The BosonProduct corresponding to Self.
-    fn corresponds_to(&self) -> BosonProduct {
-        self.clone()
-    }
-}
-
 impl BosonProduct {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
@@ -284,6 +273,17 @@ impl BosonProduct {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;
         Ok(pauli_product)
+    }
+}
+
+impl CorrespondsTo<BosonProduct> for BosonProduct {
+    /// Gets the BosonProduct corresponding to self (here, itself).
+    ///
+    /// # Returns
+    ///
+    /// * `BosonProduct` - The BosonProduct corresponding to Self.
+    fn corresponds_to(&self) -> BosonProduct {
+        self.clone()
     }
 }
 

@@ -281,6 +281,31 @@ impl ModeIndex for FermionProduct {
 
 impl FermionIndex for FermionProduct {}
 
+impl FermionProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::fermions::FermionProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::fermions::FermionProduct::from_str(&self_string)
+            .map_err(|err| StruqtureError::GenericError {
+                msg: format!("{}", err),
+            })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::fermions::FermionProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
+
 impl CorrespondsTo<FermionProduct> for FermionProduct {
     /// Gets the FermionProduct corresponding to self (here, itself).
     ///
@@ -893,6 +918,33 @@ impl ModeIndex for HermitianFermionProduct {
 }
 
 impl FermionIndex for HermitianFermionProduct {}
+
+impl HermitianFermionProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::fermions::HermitianFermionProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::fermions::HermitianFermionProduct::from_str(
+            &self_string,
+        )
+        .map_err(|err| StruqtureError::GenericError {
+            msg: format!("{}", err),
+        })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::fermions::HermitianFermionProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
 
 impl CorrespondsTo<HermitianFermionProduct> for HermitianFermionProduct {
     /// Gets the HermitianFermionProduct corresponding to self (here, itself).

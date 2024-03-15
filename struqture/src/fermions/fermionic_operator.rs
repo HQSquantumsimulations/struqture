@@ -266,6 +266,34 @@ impl FermionOperator {
         }
         Ok((separated, remainder))
     }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(&self) -> Result<struqture_one::fermions::FermionSystem, StruqtureError> {
+        let mut new_spin_system = struqture_one::fermions::FermionSystem::new(None);
+        for (key, val) in self.iter() {
+            let one_key = key.to_struqture_1()?;
+            let _ = struqture_one::OperateOnDensityMatrix::set(
+                &mut new_spin_system,
+                one_key,
+                val.clone(),
+            );
+        }
+        Ok(new_spin_system)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::fermions::FermionSystem,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_spin_operator = Self::new();
+        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+            let self_key = FermionProduct::from_struqture_1(key)?;
+            let _ = new_spin_operator.set(self_key, val.clone());
+        }
+        Ok(new_spin_operator)
+    }
 }
 
 impl From<FermionHamiltonian> for FermionOperator {
