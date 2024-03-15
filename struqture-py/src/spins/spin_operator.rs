@@ -130,51 +130,6 @@ impl SpinOperatorWrapper {
             }
         }
     }
-
-    // add in a function converting struqture_one (not py) to struqture 2
-    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
-    #[cfg(feature = "struqture_1_import")]
-    pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<SpinOperatorWrapper> {
-        Ok(SpinOperatorWrapper {
-            internal: spin_operator,
-        })
-    }
-
-    // also add a function in 1.7 which takes struqture 2 and gives struqture 1 (if everything else works)
-}
-
-impl SpinOperatorWrapper {
-    /// Fallible conversion of generic python object that is implemented in struqture 1.x.
-    #[cfg(feature = "struqture_1_import")]
-    pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<SpinOperator> {
-        Python::with_gil(|py| -> PyResult<SpinOperator> {
-            let input = input.as_ref(py);
-            let get_bytes = input
-                .call_method0("to_bincode")
-                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
-            let bytes = get_bytes
-                .extract::<Vec<u8>>()
-                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let one_import = deserialize(&bytes[..])
-                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
-            let spin_operator: SpinOperator = struqture::spins::SpinOperator::from_struqture_1(&one_import).map_err(
-                |_err: StruqtureError| PyValueError::new_err(format!("Trying to obtain struqture 2.x SpinOperator from struqture 1.x SpinSystem. Conversion failed. Was the right type passed to all functions?")
-            ))?;
-            Ok(spin_operator)
-        })
-    }
-
-    /// Fallible conversion of generic python object that is implemented in struqture 1.x.
-    #[cfg(feature = "struqture_1_export")]
-    pub fn from_pyany_to_struqture_one(
-        input: Py<PyAny>,
-    ) -> PyResult<struqture_one::spins::SpinSystem> {
-        let res = Self::from_pyany(input)?;
-        let one_export = struqture::spins::SpinOperator::to_struqture_1(&res).map_err(
-            |_err: StruqtureError| PyValueError::new_err(format!("Trying to obtain struqture 2.x SpinOperator from struqture 1.x SpinSystem. Conversion failed. Was the right type passed to all functions?")
-        ))?;
-        Ok(one_export)
-    }
 }
 
 impl Default for SpinOperatorWrapper {

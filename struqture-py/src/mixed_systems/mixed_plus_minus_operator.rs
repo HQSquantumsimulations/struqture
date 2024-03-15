@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::MixedOperatorWrapper;
 use crate::mixed_systems::MixedPlusMinusProductWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -18,12 +19,10 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mixed_systems::{MixedOperator, MixedPlusMinusOperator, OperateOnMixedSystems};
-use struqture::{OperateOnDensityMatrix, OperateOnState};
-use struqture_py_macros::noiseless_system_wrapper;
-
-use super::MixedOperatorWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
+use struqture::{OperateOnDensityMatrix, OperateOnState};
+use struqture_py_macros::noiseless_system_wrapper;
 
 /// These are representations of systems of mixed_systems.
 ///

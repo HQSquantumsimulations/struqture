@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::SpinHamiltonianWrapper;
 use crate::{
     fermions::FermionOperatorWrapper,
     spins::{PlusMinusProductWrapper, SpinOperatorWrapper},
@@ -26,8 +27,6 @@ use struqture::spins::{PlusMinusOperator, SpinHamiltonian, SpinOperator};
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
-
-use super::SpinHamiltonianWrapper;
 
 /// These are representations of systems of spins.
 ///

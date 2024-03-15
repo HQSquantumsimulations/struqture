@@ -28,17 +28,62 @@ pub fn noisywrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
-    let index_type = if struct_name.contains("Spin") {
-        quote::format_ident!("DecoherenceProductWrapper")
-    } else if struct_name.contains("PlusMinus") {
-        quote::format_ident!("PlusMinusProductWrapper")
-    } else if struct_name.contains("Boson") {
-        quote::format_ident!("BosonProductWrapper")
-    } else if struct_name.contains("Fermion") {
-        quote::format_ident!("FermionProductWrapper")
-    } else {
-        quote::format_ident!("MixedDecoherenceProductWrapper")
-    };
+    let (index_type, struqture_one_module, struqture_one_ident) =
+        if struct_name.contains("SpinLindbladNoiseOperator") {
+            (
+                quote::format_ident!("DecoherenceProductWrapper"),
+                quote::format_ident!("spins"),
+                quote::format_ident!("SpinLindbladNoiseSystem"),
+            )
+        } else if struct_name.contains("SpinLindbladOpenSystem") {
+            (
+                quote::format_ident!("DecoherenceProductWrapper"),
+                quote::format_ident!("spins"),
+                quote::format_ident!("SpinLindbladOpenSystem"),
+            )
+        } else if struct_name.contains("PlusMinusLindbladNoiseOperator") {
+            (
+                quote::format_ident!("PlusMinusProductWrapper"),
+                quote::format_ident!("spins"),
+                quote::format_ident!("PlusMinusLindbladNoiseOperator"),
+            )
+        } else if struct_name.contains("MixedLindbladNoiseOperator") {
+            (
+                quote::format_ident!("MixedDecoherenceProductWrapper"),
+                quote::format_ident!("mixed_systems"),
+                quote::format_ident!("MixedLindbladNoiseSystem"),
+            )
+        } else if struct_name.contains("MixedLindbladOpenSystem") {
+            (
+                quote::format_ident!("MixedDecoherenceProductWrapper"),
+                quote::format_ident!("mixed_systems"),
+                quote::format_ident!("MixedLindbladOpenSystem"),
+            )
+        } else if struct_name.contains("BosonLindbladNoiseOperator") {
+            (
+                quote::format_ident!("BosonProductWrapper"),
+                quote::format_ident!("bosons"),
+                quote::format_ident!("BosonLindbladNoiseSystem"),
+            )
+        } else if struct_name.contains("BosonLindbladOpenSystem") {
+            (
+                quote::format_ident!("BosonProductWrapper"),
+                quote::format_ident!("bosons"),
+                quote::format_ident!("BosonLindbladOpenSystem"),
+            )
+        } else if struct_name.contains("FermionLindbladNoiseOperator") {
+            (
+                quote::format_ident!("FermionProductWrapper"),
+                quote::format_ident!("fermions"),
+                quote::format_ident!("FermionLindbladNoiseSystem"),
+            )
+        } else {
+            (
+                quote::format_ident!("FermionProductWrapper"),
+                quote::format_ident!("fermions"),
+                quote::format_ident!("FermionLindbladOpenSystem"),
+            )
+        };
     // ------------
     // Start the generating part of the macro
     let operate_on_density_matrix_quote = if attribute_arguments.contains("OperateOnDensityMatrix")
@@ -868,8 +913,7 @@ pub fn noisywrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: &Bound<PyAny>
-            ) -> PyResult<#struct_ident> {
+            pub fn from_pyany(input: Py<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
                     let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
@@ -892,21 +936,54 @@ pub fn noisywrapper(
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
-                    let get_bytes = input.call_method0("to_bincode").map_err(|_| {
-                        PyTypeError::new_err("Serialisation failed".to_string())
-                    })?;
-                    let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
-                        PyTypeError::new_err("Deserialisation failed".to_string())
-                    })?;
-                    deserialize(&bytes[..]).map_err(|err| {
-                        PyTypeError::new_err(format!(
-                            "Type conversion failed: {}",
-                            err
-                        ))}
-                    )
+                        let get_bytes = input.call_method0("to_bincode").map_err(|_| {
+                            PyTypeError::new_err("Serialisation failed".to_string())
+                        })?;
+                        let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
+                            PyTypeError::new_err("Deserialisation failed".to_string())
+                        })?;
+                        deserialize(&bytes[..]).map_err(|err| {
+                            PyTypeError::new_err(format!(
+                                "Type conversion failed: {}",
+                                err
+                            ))}
+                        )
                     }
-                }
-    }
+                })
+            }
+
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_import")]
+            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let input = input.as_ref(py);
+                    let get_bytes = input
+                        .call_method0("to_bincode")
+                        .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+                    let bytes = get_bytes
+                        .extract::<Vec<u8>>()
+                        .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+                    let one_import = deserialize(&bytes[..])
+                        .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+                    let spin_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
+                        |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
+                    ))?;
+                    Ok(spin_operator)
+                })
+            }
+
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_export")]
+            pub fn from_pyany_to_struqture_one(
+                input: Py<PyAny>,
+            ) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+                let res = #ident::from_pyany(input)?;
+                let one_export = #struct_ident::to_struqture_1(&res).map_err(
+                    |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
+                ))?;
+                Ok(one_export)
+            }
+        }
         #[pymethods]
         impl #ident {
 
@@ -923,6 +1000,18 @@ pub fn noisywrapper(
 
             // ----------------------------------
             // Default pyo3 implementations
+
+            // add in a function converting struqture_one (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            #[cfg(feature = "struqture_1_import")]
+            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
+                let spin_operator: #struct_ident =
+                    #ident::from_pyany_struqture_one(input)?;
+                Ok(#ident {
+                    internal: spin_operator,
+                })
+            }
+
             /// Return a copy (copy here produces a deepcopy).
             ///
             /// Returns:
