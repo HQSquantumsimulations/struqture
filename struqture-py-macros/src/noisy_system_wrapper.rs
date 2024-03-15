@@ -983,11 +983,33 @@ pub fn noisywrapper(
             // add in a function converting struqture_one (not py) to struqture 2
             // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
+            #[staticmethod]
             pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
                 let spin_operator: #struct_ident =
                     #ident::from_pyany_struqture_one(input)?;
                 Ok(#ident {
                     internal: spin_operator,
+                })
+            }
+
+            // add in a function converting struqture_one (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            #[cfg(feature = "struqture_1_import")]
+            #[staticmethod]
+            pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
+                let spin_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+                    serde_json::from_str(&input).map_err(|err| {
+                        PyValueError::new_err(format!(
+                            "Input cannot be deserialized from json to struqture 1.x: {}",
+                            err
+                        ))
+                    })?;
+                Ok(#ident {
+                    internal: #struct_ident::from_struqture_1(&spin_operator).map_err(|err| {
+                        PyValueError::new_err(format!(
+                            "Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err
+                        ))
+                    })?,
                 })
             }
 
