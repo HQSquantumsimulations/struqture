@@ -199,6 +199,33 @@ impl<'de> Deserialize<'de> for MixedProduct {
     }
 }
 
+impl MixedProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::mixed_systems::MixedProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product =
+            struqture_one::mixed_systems::MixedProduct::from_str(&self_string).map_err(|err| {
+                StruqtureError::GenericError {
+                    msg: format!("{}", err),
+                }
+            })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::mixed_systems::MixedProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
+
 impl MixedIndex for MixedProduct {
     type SpinIndexType = PauliProduct;
     type BosonicIndexType = BosonProduct;
