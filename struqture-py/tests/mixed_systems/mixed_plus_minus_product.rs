@@ -601,3 +601,29 @@ fn test_from_pyany_to_struqture_one() {
         assert_eq!(result, pp_1);
     });
 }
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"").into();
+        let pp_2 = new_pp(
+            py,
+            vec!["0Z".to_string()],
+            vec!["c1a1".to_string()],
+            vec!["c0a0".to_string()],
+        );
+
+        let pp_from_1 = pp_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny =
+            pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0b0\"").into();
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(pp_from_1.is_err());
+    });
+}

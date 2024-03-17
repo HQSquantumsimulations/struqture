@@ -482,6 +482,7 @@ pub fn productwrapper(
             // add in a function converting struqture_one (not py) to struqture 2
             // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
+            #[pyo3(text_signature = "(input)")]
             #[staticmethod]
             pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
                 let spin_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
