@@ -955,3 +955,20 @@ fn test_spin_noise_operator_schema() {
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
 }
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_one::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
+    let mut ss_1 = struqture_one::spins::SpinLindbladNoiseSystem::new(None);
+    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
+        .unwrap();
+
+    let pp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);
+    let mut ss_2 = SpinLindbladNoiseOperator::new();
+    ss_2.set((pp_2.clone(), pp_2.clone()), 1.0.into()).unwrap();
+
+    assert!(SpinLindbladNoiseOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
+}

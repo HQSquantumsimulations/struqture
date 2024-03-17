@@ -17,6 +17,9 @@ use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
     DecoherenceOperator, DecoherenceProduct, PauliProduct, PlusMinusOperator, PlusMinusProduct,
@@ -928,4 +931,20 @@ fn test_plus_minus_operator_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_one::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
+    let mut ss_1 = struqture_one::spins::PlusMinusOperator::new();
+    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = PlusMinusProduct::new().plus(0).minus(1).z(25);
+    let mut ss_2 = PlusMinusOperator::new();
+    ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(PlusMinusOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

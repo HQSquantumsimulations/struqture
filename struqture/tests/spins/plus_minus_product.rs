@@ -968,3 +968,13 @@ fn test_plus_minus_product_schema() {
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
 }
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp = struqture_one::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
+    let pp_2 = PlusMinusProduct::new().plus(0).minus(1).z(25);
+    assert!(PlusMinusProduct::from_struqture_1(&pp).unwrap() == pp_2);
+    assert!(pp == pp_2.to_struqture_1().unwrap());
+}
