@@ -24,13 +24,12 @@ use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::MixedOperator;
 use struqture::mixed_systems::MixedProduct;
+use struqture::mixed_systems::{MixedPlusMinusOperator, MixedPlusMinusProduct};
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 use struqture::spins::PlusMinusProduct;
-use struqture::StruqtureError;
-
-use struqture::mixed_systems::{MixedPlusMinusOperator, MixedPlusMinusProduct};
 use struqture::OperateOnDensityMatrix;
+use struqture::StruqtureError;
 use test_case::test_case;
 
 // Test the new function of the MixedPlusMinusOperator
@@ -996,4 +995,35 @@ fn test_mixed_plus_minus_operator_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1: struqture_one::mixed_systems::MixedPlusMinusProduct =
+        struqture_one::mixed_systems::MixedPlusMinusProduct::new(
+            [struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap()],
+            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+            [
+                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+            ],
+        );
+    let mut ss_1 = struqture_one::mixed_systems::MixedPlusMinusOperator::new(1, 1, 2);
+    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = MixedPlusMinusProduct::new(
+        [PlusMinusProduct::new().plus(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [
+            FermionProduct::new([0], [0]).unwrap(),
+            FermionProduct::new([0], [1]).unwrap(),
+        ],
+    );
+    let mut ss_2 = MixedPlusMinusOperator::new(1, 1, 2);
+    ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(MixedPlusMinusOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

@@ -763,3 +763,21 @@ fn test_mixed_plus_minus_product_schema() {
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
 }
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_one::mixed_systems::MixedPlusMinusProduct::new(
+        [struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap()],
+        [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+        [struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap()],
+    );
+    let pp_2 = MixedPlusMinusProduct::new(
+        [PlusMinusProduct::new().plus(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [FermionProduct::new([0], [0]).unwrap()],
+    );
+    assert!(MixedPlusMinusProduct::from_struqture_1(&pp_1).unwrap() == pp_2);
+    assert!(pp_1 == pp_2.to_struqture_1().unwrap());
+}
