@@ -1905,3 +1905,32 @@ fn test_from_pyany_to_struqture_one() {
         assert_eq!(result, sys_1);
     });
 }
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}").into();
+        let sys_2 = new_system(py, 1, 1, 1);
+        sys_2
+            .call_method1("system_add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
+            .unwrap();
+        sys_2
+            .call_method1(
+                "noise_add_operator_product",
+                (("S0Z:Bc0a0:Fc1a1", "S0Z:Bc0a0:Fc1a1"), 1.0),
+            )
+            .unwrap();
+
+        let sys_from_1 = sys_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}").into();
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(sys_from_1.is_err());
+    });
+}
