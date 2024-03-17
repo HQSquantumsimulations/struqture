@@ -563,3 +563,28 @@ fn test_json_schema() {
         assert_eq!(min_version, rust_min_version);
     });
 }
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let pp_2 = new_pp(
+            py,
+            vec!["0+".to_string()],
+            vec!["c0a0".to_string()],
+            vec!["c1a1".to_string()],
+        );
+        let pp_1 = struqture_one::mixed_systems::MixedPlusMinusProduct::new(
+            [struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap()],
+            [struqture_one::bosons::BosonProduct::from_str("c0a0").unwrap()],
+            [struqture_one::fermions::FermionProduct::from_str("c1a1").unwrap()],
+        );
+
+        let result =
+            MixedPlusMinusProductWrapper::from_pyany_to_struqture_one(pp_2.as_ref().into())
+                .unwrap();
+        assert_eq!(result, pp_1);
+    });
+}

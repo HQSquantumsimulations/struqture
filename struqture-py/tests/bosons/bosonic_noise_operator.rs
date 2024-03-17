@@ -797,3 +797,31 @@ fn test_json_schema() {
         assert_eq!(min_version, rust_min_version);
     });
 }
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let sys_2 = new_noisesystem(py);
+        sys_2
+            .call_method1("add_operator_product", (("c0c1a0a1", "c0c1a0a1"), 0.1))
+            .unwrap();
+        let mut sys_1 = struqture_one::bosons::BosonLindbladNoiseSystem::new(None);
+        struqture_one::OperateOnDensityMatrix::set(
+            &mut sys_1,
+            (
+                struqture_one::bosons::BosonProduct::from_str("c0c1a0a1").unwrap(),
+                struqture_one::bosons::BosonProduct::from_str("c0c1a0a1").unwrap(),
+            ),
+            0.1.into(),
+        )
+        .unwrap();
+
+        let result =
+            BosonLindbladNoiseOperatorWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into())
+                .unwrap();
+        assert_eq!(result, sys_1);
+    });
+}
