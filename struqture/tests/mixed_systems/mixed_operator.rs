@@ -24,6 +24,9 @@ use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 use struqture::StruqtureError;
 
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::mixed_systems::{MixedOperator, MixedProduct};
 use struqture::OperateOnDensityMatrix;
 use struqture::SpinIndex;
@@ -833,4 +836,37 @@ fn test_mixed_operator_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1: struqture_one::mixed_systems::MixedProduct =
+        struqture_one::mixed_systems::MixedIndex::new(
+            [struqture_one::spins::PauliProduct::from_str("0X").unwrap()],
+            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+            [
+                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+            ],
+        )
+        .unwrap();
+    let mut ss_1 = struqture_one::mixed_systems::MixedSystem::new([None], [None], [None, None]);
+    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = MixedProduct::new(
+        [PauliProduct::new().x(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [
+            FermionProduct::new([0], [0]).unwrap(),
+            FermionProduct::new([0], [1]).unwrap(),
+        ],
+    )
+    .unwrap();
+    let mut ss_2 = MixedOperator::new(1, 1, 2);
+    ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(MixedOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }
