@@ -905,26 +905,31 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "unstable_struqture_2_import")]
+#[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_json_struqture_1() {
+fn test_from_pyany_to_struqture_one() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        use std::str::FromStr;
         let sys_2 = new_noisesystem(py);
         sys_2
-            .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
+            .call_method1("add_operator_product", (("0+", "0+"), 0.1))
             .unwrap();
+        let mut sys_1 = struqture_one::spins::PlusMinusLindbladNoiseOperator::new();
+        struqture_one::OperateOnDensityMatrix::set(
+            &mut sys_1,
+            (
+                struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap(),
+                struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap(),
+            ),
+            0.1.into(),
+        )
+        .unwrap();
 
-        let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_2", (json_string,))
-            .unwrap();
-        let equal =
-            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
-        assert!(equal);
-
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
-        assert!(sys_from_1.is_err());
+        let result = PlusMinusLindbladNoiseOperatorWrapper::from_pyany_to_struqture_one(
+            sys_2.as_ref().into(),
+        )
+        .unwrap();
+        assert_eq!(result, sys_1);
     });
 }

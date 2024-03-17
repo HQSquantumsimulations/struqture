@@ -859,26 +859,26 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "unstable_struqture_2_import")]
+#[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_json_struqture_1() {
+fn test_from_pyany_to_struqture_one() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"c0a0\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"FermionHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
-        let sys_2 = new_system(py, None);
+        use std::str::FromStr;
+        let sys_2 = new_system(py);
         sys_2
-            .call_method1("add_operator_product", ("c0a0", 1.0))
+            .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
+        let mut sys_1 = struqture_one::fermions::FermionHamiltonianSystem::new(None);
+        struqture_one::OperateOnDensityMatrix::set(
+            &mut sys_1,
+            struqture_one::fermions::HermitianFermionProduct::from_str("c0c1a0a1").unwrap(),
+            0.1.into(),
+        )
+        .unwrap();
 
-        let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_2", (json_string,))
-            .unwrap();
-        let equal =
-            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
-        assert!(equal);
-
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"c0a0\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"FermionHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
-        assert!(sys_from_1.is_err());
+        let result =
+            FermionHamiltonianWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
+        assert_eq!(result, sys_1);
     });
 }
