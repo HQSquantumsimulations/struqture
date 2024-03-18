@@ -312,36 +312,6 @@ impl MixedPlusMinusOperator {
         }
     }
 
-    // /// Separate self into an operator with the terms of given number of spins, bosons and fermions and an operator with the remaining operations
-    // ///
-    // /// # Arguments
-    // ///
-    // /// * `number_particles` - Number of spins, bosons and fermions to filter for in the keys.
-    // ///
-    // /// # Returns
-    // ///
-    // /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-    // pub fn separate_into_n_terms(
-    //     &self,
-    //     number_particles: (usize, usize, usize),
-    // ) -> Result<(Self, Self), StruqtureError> {
-    //     let mut separated = Self::default();
-    //     let mut remainder = Self::default();
-    //     for (prod, val) in self.iter() {
-    //         if (
-    //             prod.spins().len(),
-    //             prod.bosons().len(),
-    //             prod.fermions().len(),
-    //         ) == number_particles
-    //         {
-    //             separated.add_operator_product(prod.clone(), val.clone())?;
-    //         } else {
-    //             remainder.add_operator_product(prod.clone(), val.clone())?;
-    //         }
-    //     }
-    //     Ok((separated, remainder))
-    // }
-
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(

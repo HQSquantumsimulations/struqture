@@ -68,35 +68,6 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of spins (left and right) and an operator with the remaining operations.
-    ///
-    /// Args
-    ///     number_spins_left (int): Number of spin to filter for in the left key.
-    ///     number_spins_right (int): Number of spin to filter for in the right key.
-    ///
-    /// Returns
-    ///     Tuple[PlusMinusLindbladNoiseOperator, PlusMinusLindbladNoiseOperator]: Operator with the noise terms where number_spins (left and right) matches the number of spins the operator product acts on and Operator with all other contributions.
-    ///
-    /// Raises:
-    ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_terms(
-        &self,
-        number_spins_left: usize,
-        number_spins_right: usize,
-    ) -> PyResult<(
-        PlusMinusLindbladNoiseOperatorWrapper,
-        PlusMinusLindbladNoiseOperatorWrapper,
-    )> {
-        let result = self
-            .internal
-            .separate_into_n_terms(number_spins_left, number_spins_right)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok((
-            PlusMinusLindbladNoiseOperatorWrapper { internal: result.0 },
-            PlusMinusLindbladNoiseOperatorWrapper { internal: result.1 },
-        ))
-    }
-
     /// Convert a SpinLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
     ///
     /// Args:

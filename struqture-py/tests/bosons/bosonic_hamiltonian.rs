@@ -418,44 +418,6 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-#[test]
-fn test_separate() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let pmp = new_system(py);
-        pmp.call_method1("add_operator_product", ("c0a0", 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", ("c0a0a1", 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", ("c0a0a2", 1.0))
-            .unwrap();
-
-        let pmp_rem = new_system(py);
-        pmp_rem
-            .call_method1("add_operator_product", ("c0a0", 1.0))
-            .unwrap();
-
-        let pmp_sys = new_system(py);
-        pmp_sys
-            .call_method1("add_operator_product", ("c0a0a1", 1.0))
-            .unwrap();
-        pmp_sys
-            .call_method1("add_operator_product", ("c0a0a2", 1.0))
-            .unwrap();
-
-        let result = pmp
-            .call_method1("separate_into_n_terms", ((1, 2),))
-            .unwrap();
-        let equal = bool::extract_bound(
-            &result
-                .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(equal);
-    })
-}
-
 /// Test add magic method function of BosonHamiltonian
 #[test]
 fn test_neg() {

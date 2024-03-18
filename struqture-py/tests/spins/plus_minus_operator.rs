@@ -682,42 +682,6 @@ fn test_to_spin_ham_sys() {
     })
 }
 
-#[test]
-fn test_separate() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let pmp = new_system(py);
-        pmp.call_method1("add_operator_product", ("0Z", 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", ("0Z1Z", 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", ("0Z1+", 1.0))
-            .unwrap();
-
-        let pmp_rem = new_system(py);
-        pmp_rem
-            .call_method1("add_operator_product", ("0Z", 1.0))
-            .unwrap();
-
-        let pmp_sys = new_system(py);
-        pmp_sys
-            .call_method1("add_operator_product", ("0Z1Z", 1.0))
-            .unwrap();
-        pmp_sys
-            .call_method1("add_operator_product", ("0Z1+", 1.0))
-            .unwrap();
-
-        let result = pmp.call_method1("separate_into_n_terms", (2,)).unwrap();
-        let equal = bool::extract_bound(
-            &result
-                .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(equal);
-    })
-}
-
 /// Test copy and deepcopy functions of PlusMinusOperator
 #[test]
 fn test_copy_deepcopy() {
