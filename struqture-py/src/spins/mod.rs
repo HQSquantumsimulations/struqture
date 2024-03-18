@@ -26,17 +26,17 @@ pub use plus_minus_operator::PlusMinusOperatorWrapper;
 mod plus_minus_noise_operator;
 pub use plus_minus_noise_operator::PlusMinusLindbladNoiseOperatorWrapper;
 
-mod spin_operator;
-pub use spin_operator::QubitOperatorWrapper;
+mod qubit_operator;
+pub use qubit_operator::QubitOperatorWrapper;
 
-mod spin_hamiltonian;
-pub use spin_hamiltonian::QubitHamiltonianWrapper;
+mod qubit_hamiltonian;
+pub use qubit_hamiltonian::QubitHamiltonianWrapper;
 
-mod spin_noise_operator;
-pub use spin_noise_operator::QubitLindbladNoiseOperatorWrapper;
+mod qubit_noise_operator;
+pub use qubit_noise_operator::QubitLindbladNoiseOperatorWrapper;
 
-mod spin_open_system;
-pub use spin_open_system::QubitLindbladOpenSystemWrapper;
+mod qubit_open_system;
+pub use qubit_open_system::QubitLindbladOpenSystemWrapper;
 
 /// Spin module of struqture Python interface
 ///

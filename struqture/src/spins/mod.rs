@@ -29,17 +29,17 @@ pub use pauli_product::*;
 mod decoherence_operator;
 pub use decoherence_operator::*;
 
-mod spin_operator;
-pub use spin_operator::*;
+mod qubit_operator;
+pub use qubit_operator::*;
 
-mod spin_hamiltonian;
-pub use spin_hamiltonian::*;
+mod qubit_hamiltonian;
+pub use qubit_hamiltonian::*;
 
-mod spin_noise_operator;
-pub use spin_noise_operator::*;
+mod qubit_noise_operator;
+pub use qubit_noise_operator::*;
 
-mod spin_open_system;
-pub use spin_open_system::*;
+mod qubit_open_system;
+pub use qubit_open_system::*;
 
 mod plus_minus_product;
 pub use plus_minus_product::*;

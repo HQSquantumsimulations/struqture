@@ -20,10 +20,10 @@ mod plus_minus_operator;
 
 mod plus_minus_noise_operator;
 
-mod spin_operator;
+mod qubit_operator;
 
-mod spin_hamiltonian;
+mod qubit_hamiltonian;
 
-mod spin_noise_operator;
+mod qubit_noise_operator;
 
-mod spin_open_system;
+mod qubit_open_system;
