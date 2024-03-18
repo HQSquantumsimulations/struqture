@@ -681,47 +681,6 @@ fn test_richcmp() {
 }
 
 #[test]
-fn test_separate() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let pmp = new_noisesystem(py);
-        pmp.call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("0Z1Z", "0Z"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("0Z1Z", "0Z1Z"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("0Z1+", "0Z1Z"), 1.0))
-            .unwrap();
-
-        let pmp_rem = new_noisesystem(py);
-        pmp_rem
-            .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
-            .unwrap();
-        pmp_rem
-            .call_method1("add_operator_product", (("0Z1Z", "0Z"), 1.0))
-            .unwrap();
-
-        let pmp_sys = new_noisesystem(py);
-        pmp_sys
-            .call_method1("add_operator_product", (("0Z1Z", "0Z1Z"), 1.0))
-            .unwrap();
-        pmp_sys
-            .call_method1("add_operator_product", (("0Z1+", "0Z1Z"), 1.0))
-            .unwrap();
-
-        let result = pmp.call_method1("separate_into_n_terms", (2, 2)).unwrap();
-        let equal = bool::extract(
-            result
-                .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(equal);
-    })
-}
-
-#[test]
 fn test_from_spin_sys() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {

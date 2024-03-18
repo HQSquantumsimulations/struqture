@@ -293,24 +293,6 @@ pub fn noiselesswrapper(
             pub fn number_modes(&self) -> usize {
                 self.internal.number_modes()
             }
-
-            /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
-            ///
-            /// Args:
-            ///     number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
-            ///
-            /// Returns:
-            ///     Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-            ///
-            /// Raises:
-            ///     ValueError: Error in adding terms to return values.
-            pub fn separate_into_n_terms(&self, number_creators_annihilators: (usize, usize)) -> PyResult<(#ident, #ident)> {
-                let (separated, remainder) = self.internal.separate_into_n_terms(number_creators_annihilators).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                Ok((
-                    #ident { internal: separated },
-                    #ident { internal: remainder }
-                ))
-            }
         }
     } else {
         TokenStream::new()
@@ -323,24 +305,6 @@ pub fn noiselesswrapper(
             ///     int: The number of spins in self.
             pub fn number_spins(&self) -> usize {
                 self.internal.number_spins()
-            }
-
-            /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
-            ///
-            /// Args:
-            ///     number_spins (int): Number of spins to filter for in the keys.
-            ///
-            /// Returns:
-            ///     Tuple[Self, Self]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
-            ///
-            /// Raises:
-            ///     ValueError: Error in adding terms to return values.
-            pub fn separate_into_n_terms(&self, number_spins: usize) -> PyResult<(#ident, #ident)> {
-                let (separated, remainder) = self.internal.separate_into_n_terms(number_spins).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                Ok((
-                    #ident { internal: separated },
-                    #ident { internal: remainder }
-                ))
             }
         }
     } else {
@@ -502,24 +466,6 @@ pub fn noiselesswrapper(
                 pub fn number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.number_fermionic_modes()
                 }
-
-                // /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
-                // ///
-                // /// Args:
-                // ///     number_particles (Tuple[int, int, int]): Number of particles to filter for in the keys.
-                // ///
-                // /// Returns:
-                // ///     int: The number of modes in self.
-                // ///
-                // /// Raises:
-                // ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-                // pub fn separate_into_n_terms(&self, number_particles: (usize, usize, usize)) -> PyResult<(#ident, #ident)> {
-                //     let (separated, remainder) = self.internal.separate_into_n_terms(number_particles).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                //     Ok((
-                //         #ident { internal: separated },
-                //         #ident { internal: remainder }
-                //     ))
-                // }
         }
     } else {
         TokenStream::new()

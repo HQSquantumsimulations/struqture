@@ -248,37 +248,6 @@ impl BosonLindbladNoiseOperator {
         }
     }
 
-    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_creators_annihilators_left` - Number of creators and number of annihilators to filter for in the left term of the keys.
-    /// * `number_creators_annihilators_right` - Number of creators and number of annihilators to filter for in the right term of the keys.
-    ///
-    /// # Returns
-    ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
-        &self,
-        number_creators_annihilators_left: (usize, usize),
-        number_creators_annihilators_right: (usize, usize),
-    ) -> Result<(Self, Self), StruqtureError> {
-        let mut separated = Self::default();
-        let mut remainder = Self::default();
-        for ((prod_l, prod_r), val) in self.iter() {
-            if (prod_l.creators().len(), prod_l.annihilators().len())
-                == number_creators_annihilators_left
-                && (prod_r.creators().len(), prod_r.annihilators().len())
-                    == number_creators_annihilators_right
-            {
-                separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            } else {
-                remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            }
-        }
-        Ok((separated, remainder))
-    }
-
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(

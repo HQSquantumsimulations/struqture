@@ -26,7 +26,6 @@ use struqture::spins::{
     SpinHamiltonian, SpinOperator,
 };
 use struqture::OperateOnDensityMatrix;
-use test_case::test_case;
 
 // Test the new function of the PlusMinusOperator
 #[test]
@@ -345,82 +344,6 @@ fn clone_partial_eq() {
     assert!(so == so_1);
     assert!(so_2 != so);
     assert!(so != so_2);
-}
-
-// Test the separation of terms
-#[test_case(1)]
-#[test_case(2)]
-#[test_case(3)]
-fn separate_out_terms(number_spins: usize) {
-    let pp_1_a: PlusMinusProduct = PlusMinusProduct::new().z(0);
-    let pp_1_b: PlusMinusProduct = PlusMinusProduct::new().plus(1);
-    let pp_2_a: PlusMinusProduct = PlusMinusProduct::new().z(0).plus(2);
-    let pp_2_b: PlusMinusProduct = PlusMinusProduct::new().plus(1).minus(2);
-    let pp_3_a: PlusMinusProduct = PlusMinusProduct::new().z(0).z(1).z(2);
-    let pp_3_b: PlusMinusProduct = PlusMinusProduct::new().plus(1).plus(2).z(0);
-
-    let mut allowed: Vec<(PlusMinusProduct, f64)> = Vec::new();
-    let mut not_allowed: Vec<(PlusMinusProduct, f64)> = vec![
-        (pp_1_a.clone(), 1.0),
-        (pp_1_b.clone(), 1.1),
-        (pp_2_a.clone(), 1.2),
-        (pp_2_b.clone(), 1.3),
-        (pp_3_a.clone(), 1.4),
-        (pp_3_b.clone(), 1.5),
-    ];
-
-    match number_spins {
-        1 => {
-            allowed.push((pp_1_a.clone(), 1.0));
-            allowed.push((pp_1_b.clone(), 1.1));
-            not_allowed.remove(0);
-            not_allowed.remove(0);
-        }
-        2 => {
-            allowed.push((pp_2_a.clone(), 1.2));
-            allowed.push((pp_2_b.clone(), 1.3));
-            not_allowed.remove(2);
-            not_allowed.remove(2);
-        }
-        3 => {
-            allowed.push((pp_3_a.clone(), 1.4));
-            allowed.push((pp_3_b.clone(), 1.5));
-            not_allowed.remove(4);
-            not_allowed.remove(4);
-        }
-        _ => panic!(),
-    }
-
-    let mut separated = PlusMinusOperator::new();
-    for (key, value) in allowed.iter() {
-        separated
-            .add_operator_product(key.clone(), value.into())
-            .unwrap();
-    }
-    let mut remainder = PlusMinusOperator::new();
-    for (key, value) in not_allowed.iter() {
-        remainder
-            .add_operator_product(key.clone(), value.into())
-            .unwrap();
-    }
-
-    let mut so = PlusMinusOperator::new();
-    so.add_operator_product(pp_1_a, CalculatorComplex::from(1.0))
-        .unwrap();
-    so.add_operator_product(pp_1_b, CalculatorComplex::from(1.1))
-        .unwrap();
-    so.add_operator_product(pp_2_a, CalculatorComplex::from(1.2))
-        .unwrap();
-    so.add_operator_product(pp_2_b, CalculatorComplex::from(1.3))
-        .unwrap();
-    so.add_operator_product(pp_3_a, CalculatorComplex::from(1.4))
-        .unwrap();
-    so.add_operator_product(pp_3_b, CalculatorComplex::from(1.5))
-        .unwrap();
-
-    let result = so.separate_into_n_terms(number_spins).unwrap();
-    assert_eq!(result.0, separated);
-    assert_eq!(result.1, remainder);
 }
 
 /// Test PlusMinusOperator Serialization and Deserialization traits (readable)
