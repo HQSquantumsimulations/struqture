@@ -29,7 +29,7 @@ with
 
 The operators and systems in struqture are
 
-* `SpinOperator`
+* `QubitOperator`
 * `SpinSystem`
 * `DecoherenceOperator`
 * `FermionOperator`
@@ -46,8 +46,8 @@ Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are 
 
 The Hamiltonians and Hamiltonian systems in struqture are
 
-* `SpinHamiltonian`
-* `SpinHamiltonian`
+* `QubitHamiltonian`
+* `QubitHamiltonian`
 * `FermionHamiltonian`
 * `FermionHamiltonian`
 * `BosonHamiltonian`

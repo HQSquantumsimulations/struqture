@@ -20,7 +20,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::prelude::*;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, QubitOperator};
 use struqture::SpinIndex;
 use test_case::test_case;
 
@@ -401,10 +401,10 @@ fn mul_so_cf() {
     assert_eq!(so_0 * CalculatorFloat::from(3.0), so_0_1);
 }
 
-// Test the From<SpinOperator> trait
+// Test the From<QubitOperator> trait
 #[test]
 fn test_from_spin_operator() {
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     let pp_0 = PauliProduct::new().x(0).y(1).z(2);
     let c0 = CalculatorComplex::new(1.0, 2.0);
     let pp_1 = PauliProduct::new().x(0).y(1).y(2);

@@ -27,7 +27,7 @@ use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
 use std::collections::HashMap;
 
-/// SpinLindbladNoiseOperators represent noise interactions in the Lindblad equation.
+/// QubitLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
 /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::spins::DecoherenceProduct] style operators.
 /// We use ([crate::spins::DecoherenceProduct], [crate::spins::DecoherenceProduct]) as a unique basis.
@@ -37,9 +37,9 @@ use std::collections::HashMap;
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
-/// use struqture::spins::{DecoherenceProduct, SpinLindbladNoiseOperator};
+/// use struqture::spins::{DecoherenceProduct, QubitLindbladNoiseOperator};
 ///
-/// let mut system = SpinLindbladNoiseOperator::new();
+/// let mut system = QubitLindbladNoiseOperator::new();
 ///
 /// // Set noise terms:
 /// let pp_01 = DecoherenceProduct::new().x(0).x(1);
@@ -54,33 +54,33 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(try_from = "SpinLindbladNoiseOperatorSerialize")]
-#[serde(into = "SpinLindbladNoiseOperatorSerialize")]
-pub struct SpinLindbladNoiseOperator {
+#[serde(try_from = "QubitLindbladNoiseOperatorSerialize")]
+#[serde(into = "QubitLindbladNoiseOperatorSerialize")]
+pub struct QubitLindbladNoiseOperator {
     // The internal map representing the noise terms
     internal_map: IndexMap<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>,
 }
 
-impl crate::SerializationSupport for SpinLindbladNoiseOperator {
+impl crate::SerializationSupport for QubitLindbladNoiseOperator {
     fn struqture_type() -> crate::StruqtureType {
-        crate::StruqtureType::SpinLindbladNoiseOperator
+        crate::StruqtureType::QubitLindbladNoiseOperator
     }
 }
 #[cfg(feature = "json_schema")]
-impl schemars::JsonSchema for SpinLindbladNoiseOperator {
+impl schemars::JsonSchema for QubitLindbladNoiseOperator {
     fn schema_name() -> String {
         "PlusMinusOperator".to_string()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SpinLindbladNoiseOperatorSerialize>::json_schema(gen)
+        <QubitLindbladNoiseOperatorSerialize>::json_schema(gen)
     }
 }
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
-struct SpinLindbladNoiseOperatorSerialize {
-    /// The vector representing the internal map of the SpinLindbladNoiseOperator
+struct QubitLindbladNoiseOperatorSerialize {
+    /// The vector representing the internal map of the QubitLindbladNoiseOperator
     items: Vec<(
         DecoherenceProduct,
         DecoherenceProduct,
@@ -90,13 +90,13 @@ struct SpinLindbladNoiseOperatorSerialize {
     serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl TryFrom<SpinLindbladNoiseOperatorSerialize> for SpinLindbladNoiseOperator {
+impl TryFrom<QubitLindbladNoiseOperatorSerialize> for QubitLindbladNoiseOperator {
     type Error = StruqtureError;
-    fn try_from(value: SpinLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+    fn try_from(value: QubitLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
         let target_serialisation_meta =
             <Self as crate::SerializationSupport>::target_serialisation_meta();
         crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
-        let new_noise_op: SpinLindbladNoiseOperator = value
+        let new_noise_op: QubitLindbladNoiseOperator = value
             .items
             .into_iter()
             .map(|(left, right, real, imag)| {
@@ -107,8 +107,8 @@ impl TryFrom<SpinLindbladNoiseOperatorSerialize> for SpinLindbladNoiseOperator {
     }
 }
 
-impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
-    fn from(value: SpinLindbladNoiseOperator) -> Self {
+impl From<QubitLindbladNoiseOperator> for QubitLindbladNoiseOperatorSerialize {
+    fn from(value: QubitLindbladNoiseOperator) -> Self {
         let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
 
         let new_noise_op: Vec<(
@@ -127,7 +127,7 @@ impl From<SpinLindbladNoiseOperator> for SpinLindbladNoiseOperatorSerialize {
     }
 }
 
-impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
+impl<'a> OperateOnDensityMatrix<'a> for QubitLindbladNoiseOperator {
     type Index = (DecoherenceProduct, DecoherenceProduct);
     type Value = CalculatorComplex;
 
@@ -167,12 +167,12 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
         }
     }
 
-    /// Overwrites an existing entry or sets a new entry in the SpinLindbladNoiseOperator with the given ((DecoherenceProduct, DecoherenceProduct) key, CalculatorComplex value) pair.
+    /// Overwrites an existing entry or sets a new entry in the QubitLindbladNoiseOperator with the given ((DecoherenceProduct, DecoherenceProduct) key, CalculatorComplex value) pair.
     ///
     /// # Arguments
     ///
-    /// * `key` - The (DecoherenceProduct, DecoherenceProduct) key to set in the SpinLindbladNoiseOperator.
-    /// * `value` - The corresponding CalculatorComplex value to set for the key in the SpinLindbladNoiseOperator.
+    /// * `key` - The (DecoherenceProduct, DecoherenceProduct) key to set in the QubitLindbladNoiseOperator.
+    /// * `value` - The corresponding CalculatorComplex value to set for the key in the QubitLindbladNoiseOperator.
     ///
     /// # Returns
     ///
@@ -199,12 +199,12 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinLindbladNoiseOperator {
-    /// Gets the maximum index of the SpinLindbladNoiseOperator.
+impl<'a> OperateOnSpins<'a> for QubitLindbladNoiseOperator {
+    /// Gets the maximum index of the QubitLindbladNoiseOperator.
     ///
     /// # Returns
     ///
-    /// * `usize` - The number of spins in the SpinLindbladNoiseOperator.
+    /// * `usize` - The number of spins in the QubitLindbladNoiseOperator.
     fn number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -219,7 +219,7 @@ impl<'a> OperateOnSpins<'a> for SpinLindbladNoiseOperator {
     }
 }
 
-impl<'a> ToSparseMatrixSuperOperator<'a> for SpinLindbladNoiseOperator {
+impl<'a> ToSparseMatrixSuperOperator<'a> for QubitLindbladNoiseOperator {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(
         &self,
@@ -278,29 +278,29 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for SpinLindbladNoiseOperator {
     }
 }
 
-/// Implements the default function (Default trait) of SpinLindbladNoiseOperator (an empty SpinLindbladNoiseOperator).
+/// Implements the default function (Default trait) of QubitLindbladNoiseOperator (an empty QubitLindbladNoiseOperator).
 ///
-impl Default for SpinLindbladNoiseOperator {
+impl Default for QubitLindbladNoiseOperator {
     fn default() -> Self {
         Self::new()
     }
 }
 
-/// Functions for the SpinLindbladNoiseOperator
+/// Functions for the QubitLindbladNoiseOperator
 ///
-impl SpinLindbladNoiseOperator {
-    /// Creates a new SpinLindbladNoiseOperator.
+impl QubitLindbladNoiseOperator {
+    /// Creates a new QubitLindbladNoiseOperator.
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) SpinLindbladNoiseOperator.
+    /// * `Self` - The new (empty) QubitLindbladNoiseOperator.
     pub fn new() -> Self {
-        SpinLindbladNoiseOperator {
+        QubitLindbladNoiseOperator {
             internal_map: IndexMap::new(),
         }
     }
 
-    /// Creates a new SpinLindbladNoiseOperator with pre-allocated capacity.
+    /// Creates a new QubitLindbladNoiseOperator with pre-allocated capacity.
     ///
     /// # Arguments
     ///
@@ -308,9 +308,9 @@ impl SpinLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) SpinLindbladNoiseOperator.
+    /// * `Self` - The new (empty) QubitLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
-        SpinLindbladNoiseOperator {
+        QubitLindbladNoiseOperator {
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
@@ -358,7 +358,7 @@ impl SpinLindbladNoiseOperator {
         Ok(())
     }
 
-    /// Remaps the qubits in the SpinLindbladNoiseOperator.
+    /// Remaps the qubits in the QubitLindbladNoiseOperator.
     ///
     /// # Arguments
     ///
@@ -366,9 +366,9 @@ impl SpinLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The remapped SpinLindbladNoiseOperator.
+    /// * `Self` - The remapped QubitLindbladNoiseOperator.
     pub fn remap_qubits(&self, mapping: &HashMap<usize, usize>) -> Self {
-        let mut new_noise = SpinLindbladNoiseOperator::new();
+        let mut new_noise = QubitLindbladNoiseOperator::new();
         for ((left, right), rate) in self.iter() {
             let new_left = left.remap_qubits(mapping);
             let new_right = right.remap_qubits(mapping);
@@ -440,43 +440,43 @@ impl SpinLindbladNoiseOperator {
     }
 }
 
-/// Implements the negative sign function of SpinLindbladNoiseOperator.
+/// Implements the negative sign function of QubitLindbladNoiseOperator.
 ///
-impl ops::Neg for SpinLindbladNoiseOperator {
-    type Output = SpinLindbladNoiseOperator;
-    /// Implement minus sign for SpinLindbladNoiseOperator.
+impl ops::Neg for QubitLindbladNoiseOperator {
+    type Output = QubitLindbladNoiseOperator;
+    /// Implement minus sign for QubitLindbladNoiseOperator.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinLindbladNoiseOperator * -1.
+    /// * `Self` - The QubitLindbladNoiseOperator * -1.
     fn neg(self) -> Self {
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
-        SpinLindbladNoiseOperator {
+        QubitLindbladNoiseOperator {
             internal_map: internal,
         }
     }
 }
 
-/// Implements the plus function of SpinLindbladNoiseOperator by SpinLindbladNoiseOperator.
+/// Implements the plus function of QubitLindbladNoiseOperator by QubitLindbladNoiseOperator.
 ///
-impl<T, V> ops::Add<T> for SpinLindbladNoiseOperator
+impl<T, V> ops::Add<T> for QubitLindbladNoiseOperator
 where
     T: IntoIterator<Item = ((DecoherenceProduct, DecoherenceProduct), V)>,
     V: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implements `+` (add) for two SpinLindbladNoiseOperators.
+    /// Implements `+` (add) for two QubitLindbladNoiseOperators.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinLindbladNoiseOperator to be added.
+    /// * `other` - The QubitLindbladNoiseOperator to be added.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinLindbladNoiseOperators added together.
+    /// * `Self` - The two QubitLindbladNoiseOperators added together.
     ///
     /// # Panics
     ///
@@ -490,23 +490,23 @@ where
     }
 }
 
-/// Implements the minus function of SpinLindbladNoiseOperator by SpinLindbladNoiseOperator.
+/// Implements the minus function of QubitLindbladNoiseOperator by QubitLindbladNoiseOperator.
 ///
-impl<T, V> ops::Sub<T> for SpinLindbladNoiseOperator
+impl<T, V> ops::Sub<T> for QubitLindbladNoiseOperator
 where
     T: IntoIterator<Item = ((DecoherenceProduct, DecoherenceProduct), V)>,
     V: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implements `-` (subtract) for two SpinLindbladNoiseOperators.
+    /// Implements `-` (subtract) for two QubitLindbladNoiseOperators.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinLindbladNoiseOperator to be subtracted.
+    /// * `other` - The QubitLindbladNoiseOperator to be subtracted.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinLindbladNoiseOperators subtracted.
+    /// * `Self` - The two QubitLindbladNoiseOperators subtracted.
     ///
     /// # Panics
     ///
@@ -520,14 +520,14 @@ where
     }
 }
 
-/// Implements the multiplication function of SpinLindbladNoiseOperator by CalculatorComplex/CalculatorFloat.
+/// Implements the multiplication function of QubitLindbladNoiseOperator by CalculatorComplex/CalculatorFloat.
 ///
-impl<T> ops::Mul<T> for SpinLindbladNoiseOperator
+impl<T> ops::Mul<T> for QubitLindbladNoiseOperator
 where
     T: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implement `*` for SpinLindbladNoiseOperator and CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for QubitLindbladNoiseOperator and CalculatorComplex/CalculatorFloat.
     ///
     /// # Arguments
     ///
@@ -535,69 +535,69 @@ where
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinLindbladNoiseOperator multiplied by the CalculatorComplex/CalculatorFloat.
+    /// * `Self` - The QubitLindbladNoiseOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
-        SpinLindbladNoiseOperator {
+        QubitLindbladNoiseOperator {
             internal_map: internal,
         }
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of SpinLindbladNoiseOperator.
+/// Implements the into_iter function (IntoIterator trait) of QubitLindbladNoiseOperator.
 ///
-impl IntoIterator for SpinLindbladNoiseOperator {
+impl IntoIterator for QubitLindbladNoiseOperator {
     type Item = ((DecoherenceProduct, DecoherenceProduct), CalculatorComplex);
     type IntoIter =
         indexmap::map::IntoIter<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
 
-    /// Returns the SpinLindbladNoiseOperator in Iterator form.
+    /// Returns the QubitLindbladNoiseOperator in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The SpinLindbladNoiseOperator in Iterator form.
+    /// * `Self::IntoIter` - The QubitLindbladNoiseOperator in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.into_iter()
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of reference SpinLindbladNoiseOperator.
+/// Implements the into_iter function (IntoIterator trait) of reference QubitLindbladNoiseOperator.
 ///
-impl<'a> IntoIterator for &'a SpinLindbladNoiseOperator {
+impl<'a> IntoIterator for &'a QubitLindbladNoiseOperator {
     type Item = (
         &'a (DecoherenceProduct, DecoherenceProduct),
         &'a CalculatorComplex,
     );
     type IntoIter = Iter<'a, (DecoherenceProduct, DecoherenceProduct), CalculatorComplex>;
 
-    /// Returns the reference SpinLindbladNoiseOperator in Iterator form.
+    /// Returns the reference QubitLindbladNoiseOperator in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The reference SpinLindbladNoiseOperator in Iterator form.
+    /// * `Self::IntoIter` - The reference QubitLindbladNoiseOperator in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.iter()
     }
 }
 
-/// Implements the from_iter function (FromIterator trait) of SpinLindbladNoiseOperator.
+/// Implements the from_iter function (FromIterator trait) of QubitLindbladNoiseOperator.
 ///
 impl FromIterator<((DecoherenceProduct, DecoherenceProduct), CalculatorComplex)>
-    for SpinLindbladNoiseOperator
+    for QubitLindbladNoiseOperator
 {
-    /// Returns the object in SpinLindbladNoiseOperator form, from an Iterator form of the object.
+    /// Returns the object in QubitLindbladNoiseOperator form, from an Iterator form of the object.
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the information from which to create the SpinLindbladNoiseOperator.
+    /// * `iter` - The iterator containing the information from which to create the QubitLindbladNoiseOperator.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The iterator in SpinLindbladNoiseOperator form.
+    /// * `Self::IntoIter` - The iterator in QubitLindbladNoiseOperator form.
     ///
     /// # Panics
     ///
@@ -607,7 +607,7 @@ impl FromIterator<((DecoherenceProduct, DecoherenceProduct), CalculatorComplex)>
     >(
         iter: I,
     ) -> Self {
-        let mut slno = SpinLindbladNoiseOperator::new();
+        let mut slno = QubitLindbladNoiseOperator::new();
         for (pair, cc) in iter {
             slno.add_operator_product(pair, cc)
                 .expect("Internal bug in add_operator_product");
@@ -616,16 +616,16 @@ impl FromIterator<((DecoherenceProduct, DecoherenceProduct), CalculatorComplex)>
     }
 }
 
-/// Implements the extend function (Extend trait) of SpinLindbladNoiseOperator.
+/// Implements the extend function (Extend trait) of QubitLindbladNoiseOperator.
 ///
 impl Extend<((DecoherenceProduct, DecoherenceProduct), CalculatorComplex)>
-    for SpinLindbladNoiseOperator
+    for QubitLindbladNoiseOperator
 {
-    /// Extends the SpinLindbladNoiseOperator by the specified operations (in Iterator form).
+    /// Extends the QubitLindbladNoiseOperator by the specified operations (in Iterator form).
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the operations by which to extend the SpinLindbladNoiseOperator.
+    /// * `iter` - The iterator containing the operations by which to extend the QubitLindbladNoiseOperator.
     ///
     /// # Panics
     ///
@@ -643,10 +643,10 @@ impl Extend<((DecoherenceProduct, DecoherenceProduct), CalculatorComplex)>
     }
 }
 
-/// Implements the format function (Display trait) of SpinLindbladNoiseOperator.
+/// Implements the format function (Display trait) of QubitLindbladNoiseOperator.
 ///
-impl fmt::Display for SpinLindbladNoiseOperator {
-    /// Formats the SpinLindbladNoiseOperator using the given formatter.
+impl fmt::Display for QubitLindbladNoiseOperator {
+    /// Formats the QubitLindbladNoiseOperator using the given formatter.
     ///
     /// # Arguments
     ///
@@ -654,9 +654,9 @@ impl fmt::Display for SpinLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `std::fmt::Result` - The formatted SpinLindbladNoiseOperator.
+    /// * `std::fmt::Result` - The formatted QubitLindbladNoiseOperator.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = "SpinLindbladNoiseOperator{\n".to_string();
+        let mut output = "QubitLindbladNoiseOperator{\n".to_string();
         for (key, val) in self.iter() {
             writeln!(output, "({}, {}): {},", key.0, key.1, val)?;
         }
@@ -820,10 +820,10 @@ fn add_lindblad_terms(
     Ok(())
 }
 
-impl JordanWignerSpinToFermion for SpinLindbladNoiseOperator {
+impl JordanWignerSpinToFermion for QubitLindbladNoiseOperator {
     type Output = FermionLindbladNoiseOperator;
 
-    /// Implements JordanWignerSpinToFermion for a SpinLindbladNoiseOperator.
+    /// Implements JordanWignerSpinToFermion for a QubitLindbladNoiseOperator.
     ///
     /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
     /// and |1> represents an occupied fermionic state.
@@ -854,36 +854,36 @@ mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-        let sos = SpinLindbladNoiseOperatorSerialize {
+        let sos = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
         };
-        let mut so = SpinLindbladNoiseOperator::new();
+        let mut so = QubitLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
         assert_eq!(
-            SpinLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            QubitLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
             so
         );
-        assert_eq!(SpinLindbladNoiseOperatorSerialize::from(so), sos);
+        assert_eq!(QubitLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-        let sos = SpinLindbladNoiseOperatorSerialize {
+        let sos = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -894,19 +894,19 @@ mod test {
 
         // Test PartialEq trait
         let pp_1: DecoherenceProduct = DecoherenceProduct::new().z(0);
-        let sos_1 = SpinLindbladNoiseOperatorSerialize {
+        let sos_1 = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
         };
         let pp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
-        let sos_2 = SpinLindbladNoiseOperatorSerialize {
+        let sos_2 = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -917,14 +917,14 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-        let sos = SpinLindbladNoiseOperatorSerialize {
+        let sos = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -932,18 +932,18 @@ mod test {
 
         assert_eq!(
             format!("{:?}", sos),
-            "SpinLindbladNoiseOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"SpinLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
+            "QubitLindbladNoiseOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"QubitLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = DecoherenceProduct::new().x(0);
-        let sos = SpinLindbladNoiseOperatorSerialize {
+        let sos = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -953,7 +953,7 @@ mod test {
             &sos.readable(),
             &[
                 Token::Struct {
-                    name: "SpinLindbladNoiseOperatorSerialize",
+                    name: "QubitLindbladNoiseOperatorSerialize",
                     len: 2,
                 },
                 Token::Str("items"),
@@ -971,7 +971,7 @@ mod test {
                     len: 3,
                 },
                 Token::Str("type_name"),
-                Token::Str("SpinLindbladNoiseOperator"),
+                Token::Str("QubitLindbladNoiseOperator"),
                 Token::Str("min_version"),
                 Token::Tuple { len: 3 },
                 Token::U64(2),
@@ -986,14 +986,14 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = DecoherenceProduct::new().x(0);
-        let sos = SpinLindbladNoiseOperatorSerialize {
+        let sos = QubitLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinLindbladNoiseOperator".to_string(),
+                type_name: "QubitLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -1003,7 +1003,7 @@ mod test {
             &sos.compact(),
             &[
                 Token::Struct {
-                    name: "SpinLindbladNoiseOperatorSerialize",
+                    name: "QubitLindbladNoiseOperatorSerialize",
                     len: 2,
                 },
                 Token::Str("items"),
@@ -1045,7 +1045,7 @@ mod test {
                     len: 3,
                 },
                 Token::Str("type_name"),
-                Token::Str("SpinLindbladNoiseOperator"),
+                Token::Str("QubitLindbladNoiseOperator"),
                 Token::Str("min_version"),
                 Token::Tuple { len: 3 },
                 Token::U64(2),

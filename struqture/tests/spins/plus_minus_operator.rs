@@ -23,7 +23,7 @@ use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
     DecoherenceOperator, DecoherenceProduct, PauliProduct, PlusMinusOperator, PlusMinusProduct,
-    SpinHamiltonian, SpinOperator,
+    QubitHamiltonian, QubitOperator,
 };
 use struqture::OperateOnDensityMatrix;
 
@@ -630,7 +630,7 @@ fn sh_from_pmo() {
         (PauliProduct::new().z(0).z(1).z(2), 1.5.into()),
     ];
 
-    let mut spin_ham = SpinHamiltonian::new();
+    let mut spin_ham = QubitHamiltonian::new();
     for (key, val) in pp_vec.iter() {
         spin_ham
             .add_operator_product(key.clone(), val.clone())
@@ -644,7 +644,7 @@ fn sh_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(SpinHamiltonian::try_from(pm_op).unwrap(), spin_ham);
+    assert_eq!(QubitHamiltonian::try_from(pm_op).unwrap(), spin_ham);
 }
 
 #[test]
@@ -687,7 +687,7 @@ fn so_from_pmo() {
         ),
     ];
 
-    let mut spin_op = SpinOperator::new();
+    let mut spin_op = QubitOperator::new();
     for (key, val) in pp_vec.iter() {
         spin_op
             .add_operator_product(key.clone(), val.clone())
@@ -701,8 +701,8 @@ fn so_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(SpinOperator::from(pm_op.clone()), spin_op);
-    assert!(SpinHamiltonian::try_from(pm_op).is_err());
+    assert_eq!(QubitOperator::from(pm_op.clone()), spin_op);
+    assert!(QubitHamiltonian::try_from(pm_op).is_err());
 }
 
 #[test]
@@ -754,7 +754,7 @@ fn pmo_from_sh() {
         ),
     ];
 
-    let mut spin_op = SpinHamiltonian::new();
+    let mut spin_op = QubitHamiltonian::new();
     for (key, val) in pp_vec.iter() {
         spin_op
             .add_operator_product(key.clone(), val.clone())
@@ -823,7 +823,7 @@ fn pmo_from_so() {
         ),
     ];
 
-    let mut spin_op = SpinOperator::new();
+    let mut spin_op = QubitOperator::new();
     for (key, val) in pp_vec.iter() {
         spin_op
             .add_operator_product(key.clone(), val.clone())

@@ -14,7 +14,7 @@ use super::{
     FermionHamiltonianWrapper, FermionLindbladNoiseOperatorWrapper, FermionProductWrapper,
     HermitianFermionProductWrapper,
 };
-use crate::spins::SpinLindbladOpenSystemWrapper;
+use crate::spins::QubitLindbladOpenSystemWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;

@@ -6,7 +6,7 @@ All spin objects in struqture are expressed based on products of either Pauli op
 
 ### PauliProducts
 
-PauliProducts are combinations of SingleSpinOperators on specific qubits. These are the `SingleSpinOperators`, or Pauli matrices, that are available for PauliProducts:
+PauliProducts are combinations of SingleQubitOperators on specific qubits. These are the `SingleQubitOperators`, or Pauli matrices, that are available for PauliProducts:
 
 * I: identity matrix
 \\[
@@ -98,20 +98,20 @@ In Rust the user can also import enums for the operators acting on single spins.
 ```rust
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator,
+    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleQubitOperator,
 };
 
 // A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
 let pp = PauliProduct::new().x(0).y(3).z(20);
-// Constructing with SingleSpinOperator
+// Constructing with SingleQubitOperator
 let pp_equivalent = PauliProduct::new()
-    .set_pauli(0, SingleSpinOperator::X)
-    .set_pauli(3, SingleSpinOperator::Y)
-    .set_pauli(20, SingleSpinOperator::Z);
+    .set_pauli(0, SingleQubitOperator::X)
+    .set_pauli(3, SingleQubitOperator::Y)
+    .set_pauli(20, SingleQubitOperator::Z);
 
 // A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
 let dp = DecoherenceProduct::new().x(0).iy(3).z(20);
-// Constructing with SingleSpinOperator
+// Constructing with SingleQubitOperator
 let dp_equivalent = DecoherenceProduct::new()
     .set_pauli(0, SingleDecoherenceOperator::X)
     .set_pauli(3, SingleDecoherenceOperator::IY)
@@ -120,10 +120,10 @@ let dp_equivalent = DecoherenceProduct::new()
 
 ## Operators and Hamiltonians
 
-A good example how complex objects are constructed from operator products are `SpinOperators` and `SpinHamiltonians`
+A good example how complex objects are constructed from operator products are `QubitOperators` and `QubitHamiltonians`
 (for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
 
-These `SpinOperators` and `SpinHamiltonians` represent operators or Hamiltonians such as:
+These `QubitOperators` and `QubitHamiltonians` represent operators or Hamiltonians such as:
 \\[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\\\
     \sigma_{j, k} \in \\{ X_k, Y_k, Z_k, I_k \\}
@@ -137,30 +137,30 @@ While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermit
 
 ### Examples
 
-Here is an example of how to build a `SpinOperator` and a `SpinHamiltonian`, in Rust:
+Here is an example of how to build a `QubitOperator` and a `QubitHamiltonian`, in Rust:
 
 ```rust
 use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
-use struqture::spins::{PauliProduct, SpinOperator, SpinHamiltonian};
+use struqture::spins::{PauliProduct, QubitOperator, QubitHamiltonian};
 
 // Building the term sigma^x_0 * sigma^z_2: sigma_x acting on qubit 0
 // and sigma_z acting on qubit 2
 let pp = PauliProduct::new().x(0).z(2);
 
 // O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
-let mut operator = SpinOperator::new();
+let mut operator = QubitOperator::new();
 operator.add_operator_product(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
 assert_eq!(operator.get(&pp), &CalculatorComplex::new(1.0, 1.5));
 println!("{}", operator);
 
 // Or when overwriting the previous value
-let mut operator = SpinOperator::new();
+let mut operator = QubitOperator::new();
 operator.set(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
 println!("{}", operator);
 
-// A complex entry is not valid for a SpinHamiltonian
-let mut hamiltonian = SpinHamiltonian::new();
+// A complex entry is not valid for a QubitHamiltonian
+let mut hamiltonian = QubitHamiltonian::new();
 // This would fail
 hamiltonian.add_operator_product(pp, CalculatorComplex::new(1.0, 1.5)).unwrap();
 // This is possible
@@ -168,11 +168,11 @@ hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `SpinSystem` and `SpinHamiltonian` instead of an`SpinOperator` and `SpinHamiltonian`. See next section for more details.
+In python, we need to use a `SpinSystem` and `QubitHamiltonian` instead of an`QubitOperator` and `QubitHamiltonian`. See next section for more details.
 
 ## Systems and HamiltonianSystems
 
-Following the intention to avoid unphysical behaviour, SpinSystems and SpinHamiltonians are wrappers around SpinOperators and SpinHamiltonians that allow to explicitly set the number of spins of the systems.
+Following the intention to avoid unphysical behaviour, SpinSystems and QubitHamiltonians are wrappers around QubitOperators and QubitHamiltonians that allow to explicitly set the number of spins of the systems.
 When setting or adding a PauliProduct to the systems, it is guaranteed that the spin indices involved cannot exceed the number of spins in the system.
 Note that the user can decide to explicitly set the number of spins to be variable.
 
@@ -245,9 +245,9 @@ Therefore, to describe the pure noise part of the Lindblad equation one needs th
 We use `DecoherenceProducts` as the operator basis.
 
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `DecoherenceProducts`, giving the operators acting from the left and right on the density matrix.
-In programming terms the object `SpinLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`DecoherenceProduct`, `DecoherenceProduct`) as keys and the entries in the rate matrix as values.
+In programming terms the object `QubitLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`DecoherenceProduct`, `DecoherenceProduct`) as keys and the entries in the rate matrix as values.
 
-Similarly to SpinOperators, SpinLindbladNoiseOperators have a system equivalent: `SpinLindbladNoiseSystem`, with a number of involved spins defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
+Similarly to QubitOperators, QubitLindbladNoiseOperators have a system equivalent: `SpinLindbladNoiseSystem`, with a number of involved spins defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
 
 ### Examples
 
@@ -296,16 +296,16 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a hamiltonian (`SpinHamiltonian`) and noise (`SpinLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a hamiltonian (`QubitHamiltonian`) and noise (`SpinLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
 
 ### Examples
 
 ```rust
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct, SpinLindbladOpenSystem};
+use struqture::spins::{DecoherenceProduct, PauliProduct, QubitLindbladOpenSystem};
 
-let mut open_system = SpinLindbladOpenSystem::new(Some(3));
+let mut open_system = QubitLindbladOpenSystem::new(Some(3));
 
 let pp = PauliProduct::new().z(1);
 let dp = DecoherenceProduct::new().x(0).z(2);
@@ -329,7 +329,7 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
 from struqture_py import spins
 
-open_system = spins.SpinLindbladOpenSystem(3)
+open_system = spins.QubitLindbladOpenSystem(3)
 
 pp = spins.PauliProduct().z(1)
 dp = spins.DecoherenceProduct().x(0).z(2)
@@ -356,7 +356,7 @@ struqture uses the convention that density matrices are flattened in row-major o
 \\[
     \rho = \begin{pmatrix} a & b \\\\ c & d \end{pmatrix} => \vec{\rho} = \begin{pmatrix} a \\\\ b \\\\ c \\\\ d \end{pmatrix}
 \\]
-For noiseless objects (`SpinSystem`, `SpinHamiltonian`), sparse operators and sparse superoperators can be constructed, as we can represent the system as a wavefunction. For systems with noise (`SpinLindbladNoiseSystem`, `SpinLindbladOpenSystem`), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.
+For noiseless objects (`SpinSystem`, `QubitHamiltonian`), sparse operators and sparse superoperators can be constructed, as we can represent the system as a wavefunction. For systems with noise (`SpinLindbladNoiseSystem`, `QubitLindbladOpenSystem`), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.
 
 Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.
 

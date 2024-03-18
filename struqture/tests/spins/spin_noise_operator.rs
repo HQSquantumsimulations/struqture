@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! Integration test for public API of SpinLindbladNoiseOperator
+//! Integration test for public API of QubitLindbladNoiseOperator
 
 use super::create_na_matrix_from_decoherence_list;
 use na::DMatrix;
@@ -23,43 +23,43 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::prelude::*;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct, SpinLindbladNoiseOperator};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct, QubitLindbladNoiseOperator};
 use struqture::{CooSparseMatrix, OperateOnDensityMatrix, SpinIndex};
 use test_case::test_case;
 
-// Test the new function of the SpinLindbladNoiseOperator
+// Test the new function of the QubitLindbladNoiseOperator
 #[test]
 fn new() {
-    let slno = SpinLindbladNoiseOperator::new();
+    let slno = QubitLindbladNoiseOperator::new();
     assert!(slno.is_empty());
     assert_eq!(
-        SpinLindbladNoiseOperator::new(),
-        SpinLindbladNoiseOperator::default()
+        QubitLindbladNoiseOperator::new(),
+        QubitLindbladNoiseOperator::default()
     );
 }
 
 #[test]
 fn empty_clone_options() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
         .unwrap();
 
     let empty: Option<usize> = None;
     let full: Option<usize> = Some(3);
-    assert_eq!(slno.empty_clone(empty), SpinLindbladNoiseOperator::new());
+    assert_eq!(slno.empty_clone(empty), QubitLindbladNoiseOperator::new());
     assert_eq!(
         slno.empty_clone(full),
-        SpinLindbladNoiseOperator::with_capacity(1)
+        QubitLindbladNoiseOperator::with_capacity(1)
     );
 }
 
-// Test the number_spins function of the SpinLindbladNoiseOperator
+// Test the number_spins function of the QubitLindbladNoiseOperator
 #[test]
 fn internal_map_number_spins() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().x(0);
     let dp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     assert_eq!(slno.number_spins(), 0_usize);
     slno.set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
         .unwrap();
@@ -69,21 +69,21 @@ fn internal_map_number_spins() {
     assert_eq!(slno.number_spins(), 3_usize);
 }
 
-// Test the len function of the SpinLindbladNoiseOperator
+// Test the len function of the QubitLindbladNoiseOperator
 #[test]
 fn internal_map_len() {
     let dp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(slno.len(), 1_usize);
 }
 
-// Test the try_set_noise and get functions of the SpinLindbladNoiseOperator
+// Test the try_set_noise and get functions of the QubitLindbladNoiseOperator
 #[test]
 fn internal_map_set_get() {
     let dp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     assert_eq!(slno.number_spins(), 0_usize);
 
     // Vacant
@@ -119,14 +119,14 @@ fn internal_map_set_get() {
 
     // 3) Test remove function
     slno.remove(&(dp_2.clone(), dp_2));
-    assert_eq!(slno, SpinLindbladNoiseOperator::new());
+    assert_eq!(slno, QubitLindbladNoiseOperator::new());
 }
 
-// Test the add_noise function of the SpinLindbladNoiseOperator
+// Test the add_noise function of the QubitLindbladNoiseOperator
 #[test]
 fn internal_map_add_noise() {
     let dp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
 
     let _ = slno.add_operator_product((dp_2.clone(), dp_2.clone()), CalculatorComplex::from(0.5));
     assert_eq!(
@@ -140,7 +140,7 @@ fn internal_map_add_noise() {
     );
 }
 
-// Test the add_noise_from_full_operators function of the SpinLindbladNoiseOperator
+// Test the add_noise_from_full_operators function of the QubitLindbladNoiseOperator
 #[test]
 fn internal_map_add_noise_from_full_operators() {
     let mut left: DecoherenceOperator = DecoherenceOperator::new();
@@ -157,7 +157,7 @@ fn internal_map_add_noise_from_full_operators() {
         .add_operator_product(DecoherenceProduct::new().iy(0), (-0.5).into())
         .unwrap();
 
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
 
     let _ = slno.add_noise_from_full_operators(&left, &right, CalculatorComplex::from(10.0));
 
@@ -205,7 +205,7 @@ fn internal_map_add_noise_from_full_operators() {
     );
 }
 
-// Test the add_noise_from_full_operators function of the SpinLindbladNoiseOperator
+// Test the add_noise_from_full_operators function of the QubitLindbladNoiseOperator
 #[test]
 fn internal_map_add_noise_from_full_operators_complex() {
     let mut left: DecoherenceOperator = DecoherenceOperator::new();
@@ -223,7 +223,7 @@ fn internal_map_add_noise_from_full_operators_complex() {
         )
         .unwrap();
 
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
 
     let _ = slno.add_noise_from_full_operators(&left, &right, 10.into());
 
@@ -236,20 +236,20 @@ fn internal_map_add_noise_from_full_operators_complex() {
     );
 }
 
-// Test the Iter traits of SpinLindbladNoiseOperator: into_iter, from_iter and extend
+// Test the Iter traits of QubitLindbladNoiseOperator: into_iter, from_iter and extend
 #[test]
 fn into_iter_from_iter_extend() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().x(1);
-    let mut slno_0 = SpinLindbladNoiseOperator::new();
+    let mut slno_0 = QubitLindbladNoiseOperator::new();
     let _ = slno_0.add_operator_product((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(1.0));
 
     let slno_iter = slno_0.clone().into_iter();
-    assert_eq!(SpinLindbladNoiseOperator::from_iter(slno_iter), slno_0);
+    assert_eq!(QubitLindbladNoiseOperator::from_iter(slno_iter), slno_0);
     let slno_iter = (&slno_0)
         .into_iter()
         .map(|(key, value)| (key.clone(), value.clone()));
-    assert_eq!(SpinLindbladNoiseOperator::from_iter(slno_iter), slno_0);
+    assert_eq!(QubitLindbladNoiseOperator::from_iter(slno_iter), slno_0);
 
     let mut mapping: BTreeMap<(DecoherenceProduct, DecoherenceProduct), CalculatorComplex> =
         BTreeMap::new();
@@ -257,7 +257,7 @@ fn into_iter_from_iter_extend() {
     let mapping_iter = mapping.into_iter();
     slno_0.extend(mapping_iter);
 
-    let mut slno_0_1 = SpinLindbladNoiseOperator::new();
+    let mut slno_0_1 = QubitLindbladNoiseOperator::new();
     let _ = slno_0_1.add_operator_product((dp_0.clone(), dp_0), CalculatorComplex::from(1.0));
     let _ = slno_0_1.add_operator_product((dp_1.clone(), dp_1), CalculatorComplex::from(0.5));
 
@@ -269,7 +269,7 @@ fn into_iter_from_iter_extend() {
 fn remap_qubits() {
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().z(2).x(0).z(1);
     let dp_2: DecoherenceProduct = DecoherenceProduct::new().iy(2).iy(1).iy(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp_1.clone(), dp_1), CalculatorComplex::from(0.3))
         .unwrap();
     slno.set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
@@ -277,7 +277,7 @@ fn remap_qubits() {
 
     let dp_1_remapped: DecoherenceProduct = DecoherenceProduct::new().z(0).x(1).z(2);
     let dp_2_remapped: DecoherenceProduct = DecoherenceProduct::new().iy(2).iy(1).iy(0);
-    let mut slno_remapped = SpinLindbladNoiseOperator::new();
+    let mut slno_remapped = QubitLindbladNoiseOperator::new();
     slno_remapped
         .set(
             (dp_1_remapped.clone(), dp_1_remapped),
@@ -299,28 +299,28 @@ fn remap_qubits() {
     assert_eq!(slno.remap_qubits(&mapping), slno_remapped);
 }
 
-// Test the negative operation: -SpinLindbladNoiseOperator
+// Test the negative operation: -QubitLindbladNoiseOperator
 #[test]
 fn negative_slno() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slno_0 = SpinLindbladNoiseOperator::new();
+    let mut slno_0 = QubitLindbladNoiseOperator::new();
     let _ = slno_0.add_operator_product((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(1.0));
-    let mut slno_0_minus = SpinLindbladNoiseOperator::new();
+    let mut slno_0_minus = QubitLindbladNoiseOperator::new();
     let _ = slno_0_minus.add_operator_product((dp_0.clone(), dp_0), CalculatorComplex::from(-1.0));
 
     assert_eq!(-slno_0, slno_0_minus);
 }
 
-// Test the addition: SpinLindbladNoiseOperator + SpinLindbladNoiseOperator
+// Test the addition: QubitLindbladNoiseOperator + QubitLindbladNoiseOperator
 #[test]
 fn add_slno_slno() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().x(1);
-    let mut slno_0 = SpinLindbladNoiseOperator::new();
+    let mut slno_0 = QubitLindbladNoiseOperator::new();
     let _ = slno_0.add_operator_product((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(1.0));
-    let mut slno_1 = SpinLindbladNoiseOperator::new();
+    let mut slno_1 = QubitLindbladNoiseOperator::new();
     let _ = slno_1.add_operator_product((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5));
-    let mut slno_0_1 = SpinLindbladNoiseOperator::new();
+    let mut slno_0_1 = QubitLindbladNoiseOperator::new();
     let _ = slno_0_1.add_operator_product((dp_0.clone(), dp_0), CalculatorComplex::from(1.0));
     let _ = slno_0_1.add_operator_product((dp_1.clone(), dp_1), CalculatorComplex::from(0.5));
 
@@ -328,16 +328,16 @@ fn add_slno_slno() {
     assert_eq!(slno_0.add(slno_1), slno_0_1);
 }
 
-// Test the subtraction: SpinLindbladNoiseOperator - SpinLindbladNoiseOperator
+// Test the subtraction: QubitLindbladNoiseOperator - QubitLindbladNoiseOperator
 #[test]
 fn sub_slno_slno() {
     let dp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().x(1);
-    let mut slno_0 = SpinLindbladNoiseOperator::new();
+    let mut slno_0 = QubitLindbladNoiseOperator::new();
     let _ = slno_0.add_operator_product((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(1.0));
-    let mut slno_1 = SpinLindbladNoiseOperator::new();
+    let mut slno_1 = QubitLindbladNoiseOperator::new();
     let _ = slno_1.add_operator_product((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5));
-    let mut slno_0_1 = SpinLindbladNoiseOperator::new();
+    let mut slno_0_1 = QubitLindbladNoiseOperator::new();
     let _ = slno_0_1.add_operator_product((dp_0.clone(), dp_0), CalculatorComplex::from(1.0));
     let _ = slno_0_1.add_operator_product((dp_1.clone(), dp_1), CalculatorComplex::from(-0.5));
 
@@ -345,61 +345,61 @@ fn sub_slno_slno() {
     assert_eq!(slno_0.sub(slno_1), slno_0_1);
 }
 
-// Test the multiplication: SpinLindbladNoiseOperator * Calculatorcomplex
+// Test the multiplication: QubitLindbladNoiseOperator * Calculatorcomplex
 #[test]
 fn mul_so_cc() {
     let pp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut so_0 = SpinLindbladNoiseOperator::new();
+    let mut so_0 = QubitLindbladNoiseOperator::new();
     let _ = so_0.set((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(2.0));
-    let mut so_0_1 = SpinLindbladNoiseOperator::new();
+    let mut so_0_1 = QubitLindbladNoiseOperator::new();
     let _ = so_0_1.set((pp_0.clone(), pp_0), CalculatorComplex::from(6.0));
 
     assert_eq!(so_0 * CalculatorComplex::from(3.0), so_0_1);
 }
 
-// Test the multiplication: SpinLindbladNoiseOperator * Calculatorcomplex
+// Test the multiplication: QubitLindbladNoiseOperator * Calculatorcomplex
 #[test]
 fn mul_so_cf() {
     let pp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut so_0 = SpinLindbladNoiseOperator::new();
+    let mut so_0 = QubitLindbladNoiseOperator::new();
     let _ = so_0.add_operator_product((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(2.0));
-    let mut so_0_1 = SpinLindbladNoiseOperator::new();
+    let mut so_0_1 = QubitLindbladNoiseOperator::new();
     let _ = so_0_1.add_operator_product((pp_0.clone(), pp_0), CalculatorComplex::from(6.0));
 
     assert_eq!(so_0 * CalculatorFloat::from(3.0), so_0_1);
 }
 
-// Test the Debug trait of SpinLindbladNoiseOperator
+// Test the Debug trait of QubitLindbladNoiseOperator
 #[test]
 fn debug() {
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     let _ = slno.set((dp.clone(), dp), CalculatorComplex::from(0.5));
 
     assert_eq!(
         format!("{:?}", slno),
-        "SpinLindbladNoiseOperator { internal_map: {(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} }"
+        "QubitLindbladNoiseOperator { internal_map: {(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} }"
     );
 }
 
 // Test the Display trait of DecoherenceOperator
 #[test]
 fn display() {
-    let mut so = SpinLindbladNoiseOperator::new();
+    let mut so = QubitLindbladNoiseOperator::new();
     let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
     let _ = so.set((pp.clone(), pp), CalculatorComplex::from(0.5));
 
     assert_eq!(
         format!("{}", so),
-        "SpinLindbladNoiseOperator{\n(0Z, 0Z): (5e-1 + i * 0e0),\n}"
+        "QubitLindbladNoiseOperator{\n(0Z, 0Z): (5e-1 + i * 0e0),\n}"
     );
 }
 
-// Test the Clone and PartialEq traits of SpinLindbladNoiseOperator
+// Test the Clone and PartialEq traits of QubitLindbladNoiseOperator
 #[test]
 fn clone_partial_eq() {
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
 
@@ -408,12 +408,12 @@ fn clone_partial_eq() {
 
     // Test PartialEq trait
     let dp_1: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let mut slno_1 = SpinLindbladNoiseOperator::new();
+    let mut slno_1 = QubitLindbladNoiseOperator::new();
     slno_1
         .set((dp_1.clone(), dp_1), CalculatorComplex::from(0.5))
         .unwrap();
     let dp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
-    let mut slno_2 = SpinLindbladNoiseOperator::new();
+    let mut slno_2 = QubitLindbladNoiseOperator::new();
     slno_2
         .set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
         .unwrap();
@@ -491,20 +491,20 @@ fn separate_out_terms(number_spins_left: usize, number_spins_right: usize) {
         _ => panic!(),
     }
 
-    let mut separated = SpinLindbladNoiseOperator::new();
+    let mut separated = QubitLindbladNoiseOperator::new();
     for (key_l, key_r, value) in allowed.iter() {
         separated
             .add_operator_product((key_l.clone(), key_r.clone()), value.into())
             .unwrap();
     }
-    let mut remainder = SpinLindbladNoiseOperator::new();
+    let mut remainder = QubitLindbladNoiseOperator::new();
     for (key_l, key_r, value) in not_allowed.iter() {
         remainder
             .add_operator_product((key_l.clone(), key_r.clone()), value.into())
             .unwrap();
     }
 
-    let mut so = SpinLindbladNoiseOperator::new();
+    let mut so = QubitLindbladNoiseOperator::new();
     so.add_operator_product(
         (pp_1_a.clone(), pp_1_a.clone()),
         CalculatorComplex::from(1.0),
@@ -549,24 +549,24 @@ fn separate_out_terms(number_spins_left: usize, number_spins_right: usize) {
     assert_eq!(result.1, remainder);
 }
 
-/// Test SpinLindbladNoiseOperator Serialization and Deserialization traits (readable)
+/// Test QubitLindbladNoiseOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_json() {
     let dp = DecoherenceProduct::new().x(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
         .unwrap();
 
     let serialized = serde_json::to_string(&slno).unwrap();
-    let deserialized: SpinLindbladNoiseOperator = serde_json::from_str(&serialized).unwrap();
+    let deserialized: QubitLindbladNoiseOperator = serde_json::from_str(&serialized).unwrap();
     assert_eq!(slno, deserialized);
 }
 
-/// Test SpinLindbladNoiseOperator Serialization and Deserialization traits (readable)
+/// Test QubitLindbladNoiseOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let dp = DecoherenceProduct::new().x(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
         .unwrap();
 
@@ -574,7 +574,7 @@ fn serde_readable() {
         &slno.readable(),
         &[
             Token::Struct {
-                name: "SpinLindbladNoiseOperatorSerialize",
+                name: "QubitLindbladNoiseOperatorSerialize",
                 len: 2,
             },
             Token::Str("items"),
@@ -592,7 +592,7 @@ fn serde_readable() {
                 len: 3,
             },
             Token::Str("type_name"),
-            Token::Str("SpinLindbladNoiseOperator"),
+            Token::Str("QubitLindbladNoiseOperator"),
             Token::Str("min_version"),
             Token::Tuple { len: 3 },
             Token::U64(2),
@@ -610,24 +610,24 @@ fn serde_readable() {
 #[test]
 fn bincode() {
     let dp = DecoherenceProduct::new().x(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
         .unwrap();
 
     let encoded: Vec<u8> = bincode::serialize(&slno).unwrap();
-    let decoded: SpinLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: QubitLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(slno, decoded);
 
     let encoded: Vec<u8> = bincode::serialize(&slno.clone().compact()).unwrap();
-    let decoded: SpinLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: QubitLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(slno, decoded);
 }
 
-/// Test SpinLindbladNoiseOperator Serialization and Deserialization traits (compact)
+/// Test QubitLindbladNoiseOperator Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
     let dp = DecoherenceProduct::new().x(0);
-    let mut slno = SpinLindbladNoiseOperator::new();
+    let mut slno = QubitLindbladNoiseOperator::new();
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
         .unwrap();
 
@@ -635,7 +635,7 @@ fn serde_compact() {
         &slno.compact(),
         &[
             Token::Struct {
-                name: "SpinLindbladNoiseOperatorSerialize",
+                name: "QubitLindbladNoiseOperatorSerialize",
                 len: 2,
             },
             Token::Str("items"),
@@ -677,7 +677,7 @@ fn serde_compact() {
                 len: 3,
             },
             Token::Str("type_name"),
-            Token::Str("SpinLindbladNoiseOperator"),
+            Token::Str("QubitLindbladNoiseOperator"),
             Token::Str("min_version"),
             Token::Tuple { len: 3 },
             Token::U64(2),
@@ -705,7 +705,7 @@ fn test_superoperator(
     left_operators: &[&str],
     right_operators: &[&str],
 ) {
-    let mut system = SpinLindbladNoiseOperator::new();
+    let mut system = QubitLindbladNoiseOperator::new();
     let left: DecoherenceProduct = DecoherenceProduct::from_str(left_representation).unwrap();
     let right: DecoherenceProduct = DecoherenceProduct::from_str(right_representation).unwrap();
 
@@ -791,7 +791,7 @@ fn test_superoperator(
 
 #[test]
 fn unitary_matrix() {
-    let mut system = SpinLindbladNoiseOperator::new();
+    let mut system = QubitLindbladNoiseOperator::new();
     let pp0: DecoherenceProduct = DecoherenceProduct::new().z(0).x(1);
     let pp1: DecoherenceProduct = DecoherenceProduct::new().x(0);
     let _ = system.set((pp0, pp1), CalculatorComplex::from(1.0));
@@ -802,7 +802,7 @@ fn unitary_matrix() {
 
 #[test]
 fn test_superoperator_multiple_entries() {
-    let mut system = SpinLindbladNoiseOperator::new();
+    let mut system = QubitLindbladNoiseOperator::new();
 
     let _ = system.set(
         (
@@ -900,23 +900,23 @@ fn test_superoperator_multiple_entries() {
     }
 }
 
-// Test the failure of creating the SpinLindbladNoiseOperator with identity terms
+// Test the failure of creating the QubitLindbladNoiseOperator with identity terms
 #[test]
 fn illegal_identity_operators() {
     let empty_fp = DecoherenceProduct::new();
     let fp = DecoherenceProduct::new().x(0);
-    let mut fno_left_identity = SpinLindbladNoiseOperator::new();
+    let mut fno_left_identity = QubitLindbladNoiseOperator::new();
     let cc = CalculatorComplex::new(1.0, 1.0);
     let ok = fno_left_identity
         .add_operator_product((empty_fp.clone(), fp.clone()), cc.clone())
         .is_err();
     assert!(ok);
-    let mut fno_right_identity = SpinLindbladNoiseOperator::new();
+    let mut fno_right_identity = QubitLindbladNoiseOperator::new();
     let ok = fno_right_identity
         .add_operator_product((fp, empty_fp.clone()), cc.clone())
         .is_err();
     assert!(ok);
-    let mut fno_both_identity = SpinLindbladNoiseOperator::new();
+    let mut fno_both_identity = QubitLindbladNoiseOperator::new();
     let ok = fno_both_identity
         .add_operator_product((empty_fp.clone(), empty_fp), cc)
         .is_err();
@@ -926,7 +926,7 @@ fn illegal_identity_operators() {
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_spin_noise_operator_schema() {
-    let mut op = SpinLindbladNoiseOperator::new();
+    let mut op = QubitLindbladNoiseOperator::new();
     op.set(
         (
             DecoherenceProduct::new().x(0),
@@ -943,7 +943,7 @@ fn test_spin_noise_operator_schema() {
         "val".into(),
     )
     .unwrap();
-    let schema = schemars::schema_for!(SpinLindbladNoiseOperator);
+    let schema = schemars::schema_for!(QubitLindbladNoiseOperator);
     let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
@@ -966,9 +966,9 @@ fn test_from_to_struqture_1() {
         .unwrap();
 
     let pp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);
-    let mut ss_2 = SpinLindbladNoiseOperator::new();
+    let mut ss_2 = QubitLindbladNoiseOperator::new();
     ss_2.set((pp_2.clone(), pp_2.clone()), 1.0.into()).unwrap();
 
-    assert!(SpinLindbladNoiseOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(QubitLindbladNoiseOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
     assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

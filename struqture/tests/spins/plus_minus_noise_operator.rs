@@ -22,7 +22,7 @@ use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::spins::{
     DecoherenceProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct,
-    SpinLindbladNoiseOperator,
+    QubitLindbladNoiseOperator,
 };
 use struqture::{OperateOnDensityMatrix, SpinIndex};
 
@@ -615,7 +615,7 @@ fn so_from_pmo() {
         ),
     ];
 
-    let mut spin_op = SpinLindbladNoiseOperator::new();
+    let mut spin_op = QubitLindbladNoiseOperator::new();
     for (key_l, val_l) in dp_vec.iter() {
         for (key_r, val_r) in dp_vec.iter() {
             spin_op
@@ -633,7 +633,7 @@ fn so_from_pmo() {
         }
     }
 
-    assert_eq!(SpinLindbladNoiseOperator::from(pm_op.clone()), spin_op);
+    assert_eq!(QubitLindbladNoiseOperator::from(pm_op.clone()), spin_op);
 }
 
 #[test]
@@ -689,7 +689,7 @@ fn pmo_from_so() {
         ),
     ];
 
-    let mut spin_op = SpinLindbladNoiseOperator::new();
+    let mut spin_op = QubitLindbladNoiseOperator::new();
     for (key_l, val_l) in dp_vec.iter() {
         for (key_r, val_r) in dp_vec.iter() {
             spin_op

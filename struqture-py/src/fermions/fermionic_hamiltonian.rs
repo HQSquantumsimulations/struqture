@@ -12,7 +12,7 @@
 
 use super::FermionOperatorWrapper;
 use crate::fermions::HermitianFermionProductWrapper;
-use crate::spins::SpinHamiltonianWrapper;
+use crate::spins::QubitHamiltonianWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;

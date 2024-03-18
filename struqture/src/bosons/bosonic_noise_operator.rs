@@ -493,7 +493,7 @@ mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
@@ -515,7 +515,7 @@ mod test {
         );
         assert_eq!(BosonLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
@@ -556,7 +556,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
@@ -575,7 +575,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
@@ -625,7 +625,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();

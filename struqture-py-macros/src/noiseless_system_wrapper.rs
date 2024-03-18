@@ -28,13 +28,13 @@ pub fn noiselesswrapper(
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
     let (index_type, struqture_one_module, struqture_one_ident) =
-        if struct_name.contains("SpinOperator") {
+        if struct_name.contains("QubitOperator") {
             (
                 quote::format_ident!("PauliProductWrapper"),
                 quote::format_ident!("spins"),
                 quote::format_ident!("SpinSystem"),
             )
-        } else if struct_name.contains("SpinHamiltonian") {
+        } else if struct_name.contains("QubitHamiltonian") {
             (
                 quote::format_ident!("PauliProductWrapper"),
                 quote::format_ident!("spins"),
@@ -89,7 +89,7 @@ pub fn noiselesswrapper(
                 quote::format_ident!("MixedSystem"),
             )
         };
-    let value_type = if struct_name.contains("SpinHamiltonian") {
+    let value_type = if struct_name.contains("QubitHamiltonian") {
         quote::format_ident!("CalculatorFloatWrapper")
     } else {
         quote::format_ident!("CalculatorComplexWrapper")

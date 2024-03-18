@@ -177,8 +177,8 @@ pub enum StruqtureError {
         /// Index that is occupied.
         index: String,
     },
-    /// Error when index of SpinIndex object exceeds that of the Spin(Hamiltonian)System.
-    #[error("Index of SpinIndex object exceeds that of the Spin(Hamiltonian)System")]
+    /// Error when index of SpinIndex object exceeds that of the QubitHamiltonian/QubitOperator.
+    #[error("Index of SpinIndex object exceeds that of the QubitHamiltonian/QubitOperator")]
     NumberSpinsExceeded,
     /// Error when number of spins between system and noise missmatched.
     #[error("Number of spins between system and noise missmatched")]
@@ -329,7 +329,7 @@ where
 {
     /// Type of operators on single spin in a SpinIndex.
     ///
-    /// This can either be a [crate::spins::SingleSpinOperator] (`I`, `X`, `Y` or `Z`)
+    /// This can either be a [crate::spins::SingleQubitOperator] (`I`, `X`, `Y` or `Z`)
     /// or a [crate::spins::SingleOperator/Hamiltonian] (`I`, `X`, `iY` or `Z`)
     type SingleSpinType;
 
@@ -690,9 +690,9 @@ impl ConjugationTrait for CalculatorFloat {
 /// use qoqo_calculator::CalculatorComplex;
 /// use std::collections::HashMap;
 /// use struqture::prelude::*;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, QubitOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = QubitOperator::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// so.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 /// let mut mapping: HashMap<PauliProduct, CalculatorComplex> = HashMap::new();
@@ -982,9 +982,9 @@ where
 /// use qoqo_calculator::CalculatorComplex;
 /// use std::collections::HashMap;
 /// use struqture::prelude::*;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, QubitOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = QubitOperator::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// so.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///

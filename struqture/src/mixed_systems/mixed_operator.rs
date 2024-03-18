@@ -833,7 +833,7 @@ mod test {
                 Token::Tuple { len: 2 },
                 Token::U64(2),
                 Token::UnitVariant {
-                    name: "SingleSpinOperator",
+                    name: "SingleQubitOperator",
                     variant: "Z",
                 },
                 Token::TupleEnd,

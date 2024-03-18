@@ -59,9 +59,9 @@ use crate::CooSparseMatrix;
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
 /// use std::collections::HashMap;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, QubitOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = QubitOperator::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// so.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 /// let mut mapping: HashMap<PauliProduct, CalculatorComplex> = HashMap::new();
@@ -96,7 +96,7 @@ pub trait ToSparseMatrixOperator<'a>:
     + PartialEq
     + Clone
 where
-    SingleSpinOperator:
+    SingleQubitOperator:
         From<<<Self as OperateOnDensityMatrix<'a>>::Index as SpinIndex>::SingleSpinType>,
     CalculatorComplex: From<<Self as OperateOnDensityMatrix<'a>>::Value>,
     &'a Self: IntoIterator<Item = (&'a Self::Index, &'a Self::Value)>,
@@ -184,15 +184,15 @@ where
             let mut column = row;
             let mut prefac: Complex<f64> = 1.0.into();
             for (spin_op_index, pauliop) in index.iter() {
-                match SingleSpinOperator::from(*pauliop) {
-                    SingleSpinOperator::X => {
+                match SingleQubitOperator::from(*pauliop) {
+                    SingleQubitOperator::X => {
                         match row.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                             0 => column += 2usize.pow(*spin_op_index as u32),
                             1 => column -= 2usize.pow(*spin_op_index as u32),
                             _ => panic!("Internal error in constructing matrix"),
                         }
                     }
-                    SingleSpinOperator::Y => {
+                    SingleQubitOperator::Y => {
                         match row.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                             0 => {
                                 column += 2usize.pow(*spin_op_index as u32);
@@ -205,7 +205,7 @@ where
                             _ => panic!("Internal error in constructing matrix"),
                         };
                     }
-                    SingleSpinOperator::Z => {
+                    SingleQubitOperator::Z => {
                         match row.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                             0 => {
                                 prefac *= Complex::<f64>::new(1.0, 0.0);
@@ -216,7 +216,7 @@ where
                             _ => panic!("Internal error in constructing matrix"),
                         };
                     }
-                    SingleSpinOperator::Identity => (),
+                    SingleQubitOperator::Identity => (),
                 }
             }
             let mut_value = entries.get_mut(&column);
@@ -263,15 +263,15 @@ where
                 let mut prefac: Complex<f64> = 1.0.into();
                 // first the terms corresponding to -i H p => -i H.kron(I) flatten(p)
                 for (spin_op_index, pauliop) in index.iter() {
-                    match SingleSpinOperator::from(*pauliop) {
-                        SingleSpinOperator::X => {
+                    match SingleQubitOperator::from(*pauliop) {
+                        SingleQubitOperator::X => {
                             match row_adjusted.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                                 0 => column += 2usize.pow((*spin_op_index + shift) as u32),
                                 1 => column -= 2usize.pow((*spin_op_index + shift) as u32),
                                 _ => panic!("Internal error in constructing matrix"),
                             }
                         }
-                        SingleSpinOperator::Y => {
+                        SingleQubitOperator::Y => {
                             match row_adjusted.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                                 0 => {
                                     column += 2usize.pow((*spin_op_index + shift) as u32);
@@ -286,7 +286,7 @@ where
                                 _ => panic!("Internal error in constructing matrix"),
                             };
                         }
-                        SingleSpinOperator::Z => {
+                        SingleQubitOperator::Z => {
                             match row_adjusted.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                                 0 => {
                                     prefac *= Complex::<f64>::new(1.0, 0.0);
@@ -297,7 +297,7 @@ where
                                 _ => panic!("Internal error in constructing matrix"),
                             };
                         }
-                        SingleSpinOperator::Identity => (),
+                        SingleQubitOperator::Identity => (),
                     }
                 }
                 prefac *= commutator_prefactor * constant_prefactor;
@@ -452,9 +452,9 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorFloat;
 /// use std::collections::HashMap;
-/// use struqture::spins::{HermitianOperateOnSpins, PauliProduct, SpinHamiltonian};
+/// use struqture::spins::{HermitianOperateOnSpins, PauliProduct, QubitHamiltonian};
 ///
-/// let mut sh = SpinHamiltonian::new();
+/// let mut sh = QubitHamiltonian::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// sh.add_operator_product(pp_0z.clone(), CalculatorFloat::from(0.2)).unwrap();
 /// let mut mapping: HashMap<PauliProduct, CalculatorFloat> = HashMap::new();
@@ -484,7 +484,7 @@ pub trait HermitianOperateOnSpins<'a>:
 where
     &'a Self: IntoIterator<Item = (&'a Self::Index, &'a Self::Value)>,
 
-    SingleSpinOperator:
+    SingleQubitOperator:
         From<<<Self as OperateOnDensityMatrix<'a>>::Index as SpinIndex>::SingleSpinType>,
     <Self as OperateOnDensityMatrix<'a>>::Value: Into<CalculatorFloat>,
 

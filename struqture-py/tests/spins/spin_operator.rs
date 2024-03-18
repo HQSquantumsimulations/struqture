@@ -14,24 +14,24 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::spins::{PauliProduct, SpinOperator};
+use struqture::spins::{PauliProduct, QubitOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};
-use struqture_py::spins::SpinOperatorWrapper;
+use struqture_py::spins::QubitOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> &PyCell<SpinOperatorWrapper> {
-    let system_type = py.get_type::<SpinOperatorWrapper>();
+fn new_system(py: Python) -> &PyCell<QubitOperatorWrapper> {
+    let system_type = py.get_type::<QubitOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<SpinOperatorWrapper>>()
+        .downcast::<PyCell<QubitOperatorWrapper>>()
         .unwrap()
 }
 
-/// Test default function of SpinOperatorWrapper
+/// Test default function of QubitOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -40,12 +40,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<SpinOperatorWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<QubitOperatorWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = SpinOperatorWrapper::new() != system_wrapper;
+        let helper_ne: bool = QubitOperatorWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = SpinOperatorWrapper::new() == SpinOperatorWrapper::new();
+        let helper_eq: bool = QubitOperatorWrapper::new() == QubitOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -53,8 +53,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", SpinOperatorWrapper::new()),
-            "SpinOperatorWrapper { internal: SpinOperator { internal_map: {} } }"
+            format!("{:?}", QubitOperatorWrapper::new()),
+            "QubitOperatorWrapper { internal: QubitOperator { internal_map: {} } }"
         );
 
         // Number of spins
@@ -64,7 +64,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_spins function of SpinOperator
+/// Test number_spins function of QubitOperator
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -82,7 +82,7 @@ fn test_number_spins_current() {
     });
 }
 
-/// Test empty_clone function of SpinOperator
+/// Test empty_clone function of QubitOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -101,7 +101,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of SpinOperator
+/// Test hermitian_conjugate function of QubitOperator
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -118,16 +118,16 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of SpinOperator
+/// Test set and get functions of QubitOperator
 #[test]
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinOperatorWrapper>();
+        let new_system = py.get_type::<QubitOperatorWrapper>();
         let system = new_system
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinOperatorWrapper>>()
+            .downcast::<PyCell<QubitOperatorWrapper>>()
             .unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
@@ -165,16 +165,16 @@ fn spin_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of SpinOperator
+/// Test add_operator_product and remove functions of QubitOperator
 #[test]
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinOperatorWrapper>();
+        let new_system = py.get_type::<QubitOperatorWrapper>();
         let system = new_system
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinOperatorWrapper>>()
+            .downcast::<PyCell<QubitOperatorWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
@@ -226,7 +226,7 @@ fn spin_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of SpinOperator
+/// Test keys function of QubitOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -393,7 +393,7 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -414,7 +414,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -442,7 +442,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -470,7 +470,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -492,7 +492,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -521,7 +521,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -546,7 +546,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of SpinOperator
+/// Test add magic method function of QubitOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -561,7 +561,7 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of SpinOperator
+// /// Test test_sparse_lindblad_entries function of QubitOperator
 // #[test]
 // fn test_sparse_lindblad_entries() {
 //     pyo3::prepare_freethreaded_python();
@@ -607,7 +607,7 @@ fn test_mul_error() {
 //     // assert_eq!(result_matrix, test_matrix);
 // }
 
-/// Test copy and deepcopy functions of SpinOperator
+/// Test copy and deepcopy functions of QubitOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -630,7 +630,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of SpinOperator
+/// Test to_bincode and from_bincode functions of QubitOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -674,7 +674,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of SpinOperator
+/// Test to_ and from_json functions of QubitOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -717,7 +717,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let mut rust_system = SpinOperator::new();
+        let mut rust_system = QubitOperator::new();
         rust_system
             .add_operator_product(PauliProduct::new().x(0), CalculatorComplex::new(0.1, 0.0))
             .unwrap();
@@ -732,15 +732,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "SpinOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+            "QubitOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "SpinOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+            "QubitOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "SpinOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+            "QubitOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -778,7 +778,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of SpinOperator
+/// Test jordan_wigner() method of QubitOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -806,7 +806,7 @@ fn test_json_schema() {
 
         let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(SpinOperator)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(QubitOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
@@ -842,7 +842,7 @@ fn test_from_pyany_to_struqture_one() {
         .unwrap();
 
         let result =
-            SpinOperatorWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
+            QubitOperatorWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
         assert_eq!(result, sys_1);
     });
 }

@@ -23,7 +23,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SingleDecoherenceOperator,
-    SinglePlusMinusOperator, SingleSpinOperator,
+    SinglePlusMinusOperator, SingleQubitOperator,
 };
 use struqture::{SpinIndex, StruqtureError, SymmetricIndex};
 
@@ -554,37 +554,37 @@ fn test_single_plus_minus_operator_product() {
 
 #[test]
 fn single_so_from_single_pm() {
-    let result: Vec<(SingleSpinOperator, Complex64)> =
-        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Z);
+    let result: Vec<(SingleQubitOperator, Complex64)> =
+        Vec::<(SingleQubitOperator, Complex64)>::from(SinglePlusMinusOperator::Z);
     assert_eq!(
         result,
-        vec![(SingleSpinOperator::Z, Complex64::new(1.0, 0.0))]
+        vec![(SingleQubitOperator::Z, Complex64::new(1.0, 0.0))]
     );
 
-    let result: Vec<(SingleSpinOperator, Complex64)> =
-        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Identity);
+    let result: Vec<(SingleQubitOperator, Complex64)> =
+        Vec::<(SingleQubitOperator, Complex64)>::from(SinglePlusMinusOperator::Identity);
     assert_eq!(
         result,
-        vec![(SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))]
+        vec![(SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))]
     );
 
-    let result: Vec<(SingleSpinOperator, Complex64)> =
-        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Plus);
+    let result: Vec<(SingleQubitOperator, Complex64)> =
+        Vec::<(SingleQubitOperator, Complex64)>::from(SinglePlusMinusOperator::Plus);
     assert_eq!(
         result,
         vec![
-            (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
-            (SingleSpinOperator::Y, Complex64::new(0.0, 0.5))
+            (SingleQubitOperator::X, Complex64::new(0.5, 0.0)),
+            (SingleQubitOperator::Y, Complex64::new(0.0, 0.5))
         ]
     );
 
-    let result: Vec<(SingleSpinOperator, Complex64)> =
-        Vec::<(SingleSpinOperator, Complex64)>::from(SinglePlusMinusOperator::Minus);
+    let result: Vec<(SingleQubitOperator, Complex64)> =
+        Vec::<(SingleQubitOperator, Complex64)>::from(SinglePlusMinusOperator::Minus);
     assert_eq!(
         result,
         vec![
-            (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
-            (SingleSpinOperator::Y, Complex64::new(0.0, -0.5))
+            (SingleQubitOperator::X, Complex64::new(0.5, 0.0)),
+            (SingleQubitOperator::Y, Complex64::new(0.0, -0.5))
         ]
     );
 }
@@ -632,21 +632,21 @@ fn single_do_from_single_pm() {
 #[test]
 fn single_pm_from_single_so() {
     let result: Vec<(SinglePlusMinusOperator, Complex64)> =
-        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::Z);
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleQubitOperator::Z);
     assert_eq!(
         result,
         vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))]
     );
 
     let result: Vec<(SinglePlusMinusOperator, Complex64)> =
-        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::Identity);
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleQubitOperator::Identity);
     assert_eq!(
         result,
         vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
     );
 
     let result: Vec<(SinglePlusMinusOperator, Complex64)> =
-        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::X);
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleQubitOperator::X);
     assert_eq!(
         result,
         vec![
@@ -656,7 +656,7 @@ fn single_pm_from_single_so() {
     );
 
     let result: Vec<(SinglePlusMinusOperator, Complex64)> =
-        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleSpinOperator::Y);
+        Vec::<(SinglePlusMinusOperator, Complex64)>::from(SingleQubitOperator::Y);
     assert_eq!(
         result,
         vec![

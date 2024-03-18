@@ -89,7 +89,7 @@ fn empty_clone_options() {
     );
 }
 
-// Test the len function of the SpinOperator
+// Test the len function of the QubitOperator
 #[test]
 fn internal_map_len() {
     let pp_2: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -142,7 +142,7 @@ fn internal_map_keys() {
     }
 }
 
-// Test the set, get and remove functions of the SpinOperator
+// Test the set, get and remove functions of the QubitOperator
 #[test]
 fn internal_map_set_get_remove() {
     let pp_2: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -342,7 +342,7 @@ fn negative_mo() {
     assert_eq!(-mo_0, mo_0_minus);
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the addition: QubitOperator + QubitOperator
 #[test]
 fn add_so_so() {
     let pp_0: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -374,7 +374,7 @@ fn add_so_so() {
     assert_eq!(mo_0 + mo_1, Ok(mo_0_1));
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the addition: QubitOperator + QubitOperator
 #[test]
 fn sub_so_so() {
     let pp_0: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -438,7 +438,7 @@ fn mul_so_so() {
     assert_eq!(mo_0 * mo_1, Ok(mo_0_1));
 }
 
-// Test the multiplication: SpinOperator * Calculatorcomplex
+// Test the multiplication: QubitOperator * Calculatorcomplex
 #[test]
 fn mul_so_cf() {
     let pp_0: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -458,7 +458,7 @@ fn mul_so_cf() {
     assert_eq!(mo_0 * CalculatorFloat::from(3.0), mo_0_1);
 }
 
-// Test the multiplication: SpinOperator * Calculatorcomplex
+// Test the multiplication: QubitOperator * Calculatorcomplex
 #[test]
 fn mul_so_cc() {
     let pp_0: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -624,7 +624,7 @@ fn serde_json() {
     assert_eq!(mo, deserialized);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test QubitOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let pp: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -723,7 +723,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(2),
             Token::UnitVariant {
-                name: "SingleSpinOperator",
+                name: "SingleQubitOperator",
                 variant: "Z",
             },
             Token::TupleEnd,
