@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{OperateOnSpins, SpinOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
+use super::{OperateOnSpins, QubitOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
 use crate::fermions::{FermionHamiltonian, FermionOperator};
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::prelude::*;
@@ -25,19 +25,19 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-/// SpinHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
+/// QubitHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
 ///
 /// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
-/// SpinHamiltonian is the hermitian equivalent of SpinOperator.
+/// QubitHamiltonian is the hermitian equivalent of QubitOperator.
 ///
 /// # Example
 ///
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorFloat;
-/// use struqture::spins::{HermitianOperateOnSpins, PauliProduct, SpinHamiltonian};
+/// use struqture::spins::{HermitianOperateOnSpins, PauliProduct, QubitHamiltonian};
 ///
-/// let mut sh = SpinHamiltonian::new();
+/// let mut sh = QubitHamiltonian::new();
 ///
 /// // Representing the hamiltonian $ 1/2 \sigma_0^{x} \sigma_1^{x} + 1/5 \sigma_0^{z} $
 /// let pp_0x1x = PauliProduct::new().x(0).x(1);
@@ -51,56 +51,56 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(try_from = "SpinHamiltonianSerialize")]
-#[serde(into = "SpinHamiltonianSerialize")]
-pub struct SpinHamiltonian {
+#[serde(try_from = "QubitHamiltonianSerialize")]
+#[serde(into = "QubitHamiltonianSerialize")]
+pub struct QubitHamiltonian {
     // The internal HashMap of PauliProducts and coefficients (CalculatorFloat)
     internal_map: IndexMap<PauliProduct, CalculatorFloat>,
 }
 
-impl crate::SerializationSupport for SpinHamiltonian {
+impl crate::SerializationSupport for QubitHamiltonian {
     fn struqture_type() -> crate::StruqtureType {
-        crate::StruqtureType::SpinHamiltonian
+        crate::StruqtureType::QubitHamiltonian
     }
 }
 #[cfg(feature = "json_schema")]
-impl schemars::JsonSchema for SpinHamiltonian {
+impl schemars::JsonSchema for QubitHamiltonian {
     fn schema_name() -> String {
-        "struqture::spins::SpinHamiltonian".to_string()
+        "struqture::spins::QubitHamiltonian".to_string()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SpinHamiltonianSerialize>::json_schema(gen)
+        <QubitHamiltonianSerialize>::json_schema(gen)
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
-/// # SpinHamiltonian
-/// SpinHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
+/// # QubitHamiltonian
+/// QubitHamiltonians are combinations of PauliProducts with specific CalculatorFloat coefficients.
 ///
 /// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
-/// SpinHamiltonian is the hermitian equivalent of SpinOperator.
-struct SpinHamiltonianSerialize {
-    /// List of all non-zero entries in the SpinHamiltonian in the form (PauliProduct, real weight).
+/// QubitHamiltonian is the hermitian equivalent of QubitOperator.
+struct QubitHamiltonianSerialize {
+    /// List of all non-zero entries in the QubitHamiltonian in the form (PauliProduct, real weight).
     items: Vec<(PauliProduct, CalculatorFloat)>,
     serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl TryFrom<SpinHamiltonianSerialize> for SpinHamiltonian {
+impl TryFrom<QubitHamiltonianSerialize> for QubitHamiltonian {
     type Error = StruqtureError;
-    fn try_from(value: SpinHamiltonianSerialize) -> Result<Self, Self::Error> {
+    fn try_from(value: QubitHamiltonianSerialize) -> Result<Self, Self::Error> {
         let target_serialisation_meta =
             <Self as crate::SerializationSupport>::target_serialisation_meta();
         crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
-        let new_noise_op: SpinHamiltonian = value.items.into_iter().collect();
+        let new_noise_op: QubitHamiltonian = value.items.into_iter().collect();
         Ok(new_noise_op)
     }
 }
 
-impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
-    fn from(value: SpinHamiltonian) -> Self {
+impl From<QubitHamiltonian> for QubitHamiltonianSerialize {
+    fn from(value: QubitHamiltonian) -> Self {
         let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
 
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> = value.into_iter().collect();
@@ -111,7 +111,7 @@ impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
     }
 }
 
-impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonian {
+impl<'a> OperateOnDensityMatrix<'a> for QubitHamiltonian {
     type Index = PauliProduct;
     type Value = CalculatorFloat;
 
@@ -151,12 +151,12 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonian {
         }
     }
 
-    /// Overwrites an existing entry or sets a new entry in the SpinHamiltonian with the given (PauliProduct key, CalculatorFloat value) pair.
+    /// Overwrites an existing entry or sets a new entry in the QubitHamiltonian with the given (PauliProduct key, CalculatorFloat value) pair.
     ///
     /// # Arguments
     ///
-    /// * `key` - The PauliProduct key to set in the SpinHamiltonian.
-    /// * `value` - The corresponding CalculatorFloat value to set for the key in the SpinHamiltonian.
+    /// * `key` - The PauliProduct key to set in the QubitHamiltonian.
+    /// * `value` - The corresponding CalculatorFloat value to set for the key in the QubitHamiltonian.
     ///
     /// # Returns
     ///
@@ -178,19 +178,19 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonian {
     }
 }
 
-impl OperateOnState<'_> for SpinHamiltonian {
+impl<'a> OperateOnState<'a> for QubitHamiltonian {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl OperateOnSpins<'_> for SpinHamiltonian {
-    /// Gets the maximum index of the SpinHamiltonian.
+impl<'a> OperateOnSpins<'a> for QubitHamiltonian {
+    /// Gets the maximum index of the QubitHamiltonian.
     ///
     /// # Returns
     ///
-    /// * `usize` - The number of spins in the SpinHamiltonian.
+    /// * `usize` - The number of spins in the QubitHamiltonian.
     fn number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -204,10 +204,17 @@ impl OperateOnSpins<'_> for SpinHamiltonian {
     }
 }
 
+<<<<<<< HEAD
 impl HermitianOperateOnSpins<'_> for SpinHamiltonian {}
 
 impl ToSparseMatrixOperator<'_> for SpinHamiltonian {}
 impl<'a> ToSparseMatrixSuperOperator<'a> for SpinHamiltonian {
+=======
+impl<'a> HermitianOperateOnSpins<'a> for QubitHamiltonian {}
+
+impl<'a> ToSparseMatrixOperator<'a> for QubitHamiltonian {}
+impl<'a> ToSparseMatrixSuperOperator<'a> for QubitHamiltonian {
+>>>>>>> c2f6461 (Renamed Spin objects to Qubit objects)
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,
@@ -237,29 +244,29 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for SpinHamiltonian {
     }
 }
 
-/// Implements the default function (Default trait) of SpinHamiltonian (an empty SpinHamiltonian).
+/// Implements the default function (Default trait) of QubitHamiltonian (an empty QubitHamiltonian).
 ///
-impl Default for SpinHamiltonian {
+impl Default for QubitHamiltonian {
     fn default() -> Self {
         Self::new()
     }
 }
 
-/// Functions for the SpinHamiltonian
+/// Functions for the QubitHamiltonian
 ///
-impl SpinHamiltonian {
-    /// Creates a new SpinHamiltonian.
+impl QubitHamiltonian {
+    /// Creates a new QubitHamiltonian.
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) SpinHamiltonian.
+    /// * `Self` - The new (empty) QubitHamiltonian.
     pub fn new() -> Self {
-        SpinHamiltonian {
+        QubitHamiltonian {
             internal_map: IndexMap::new(),
         }
     }
 
-    /// Creates a new SpinHamiltonian with pre-allocated capacity.
+    /// Creates a new QubitHamiltonian with pre-allocated capacity.
     ///
     /// # Arguments
     ///
@@ -267,7 +274,7 @@ impl SpinHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) SpinHamiltonian.
+    /// * `Self` - The new (empty) QubitHamiltonian.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             internal_map: IndexMap::with_capacity(capacity),
@@ -305,20 +312,20 @@ impl SpinHamiltonian {
     }
 }
 
-impl TryFrom<SpinOperator> for SpinHamiltonian {
+impl TryFrom<QubitOperator> for QubitHamiltonian {
     type Error = StruqtureError;
-    /// Tries to convert a SpinOperator into a SpinHamiltonian.
+    /// Tries to convert a QubitOperator into a QubitHamiltonian.
     ///
     /// # Arguments
     ///
-    /// * `hamiltonian` - The SpinOperator to try to convert.
+    /// * `hamiltonian` - The QubitOperator to try to convert.
     ///
     /// # Returns
     ///
-    /// * `Ok(Self)` - The SpinOperator converted into a SpinHamiltonian.
+    /// * `Ok(Self)` - The QubitOperator converted into a QubitHamiltonian.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
-    fn try_from(hamiltonian: SpinOperator) -> Result<Self, StruqtureError> {
-        let mut internal = SpinHamiltonian::new();
+    fn try_from(hamiltonian: QubitOperator) -> Result<Self, StruqtureError> {
+        let mut internal = QubitHamiltonian::new();
         for (key, value) in hamiltonian.into_iter() {
             if value.im != CalculatorFloat::ZERO {
                 return Err(StruqtureError::NonHermitianOperator {});
@@ -331,43 +338,43 @@ impl TryFrom<SpinOperator> for SpinHamiltonian {
     }
 }
 
-/// Implements the negative sign function of SpinOperator.
+/// Implements the negative sign function of QubitOperator.
 ///
-impl ops::Neg for SpinHamiltonian {
-    type Output = SpinHamiltonian;
-    /// Implement minus sign for SpinHamiltonian.
+impl ops::Neg for QubitHamiltonian {
+    type Output = QubitHamiltonian;
+    /// Implement minus sign for QubitHamiltonian.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinHamiltonian * -1.
+    /// * `Self` - The QubitHamiltonian * -1.
     fn neg(self) -> Self {
         let mut internal = self.internal_map.clone();
         for key in self.keys() {
             internal.insert(key.clone(), internal[key].clone() * -1.0);
         }
-        SpinHamiltonian {
+        QubitHamiltonian {
             internal_map: internal,
         }
     }
 }
 
-/// Implements the plus function of SpinHamiltonian by SpinHamiltonian.
+/// Implements the plus function of QubitHamiltonian by QubitHamiltonian.
 ///
-impl<T, V> ops::Add<T> for SpinHamiltonian
+impl<T, V> ops::Add<T> for QubitHamiltonian
 where
     T: IntoIterator<Item = (PauliProduct, V)>,
     V: Into<CalculatorFloat>,
 {
     type Output = Self;
-    /// Implements `+` (add) for two SpinHamiltonians.
+    /// Implements `+` (add) for two QubitHamiltonians.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinHamiltonian to be added.
+    /// * `other` - The QubitHamiltonian to be added.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinHamiltonians added together.
+    /// * `Self` - The two QubitHamiltonians added together.
     ///
     /// # Panics
     ///
@@ -381,23 +388,23 @@ where
     }
 }
 
-/// Implements the minus function of SpinHamiltonian by SpinHamiltonian.
+/// Implements the minus function of QubitHamiltonian by QubitHamiltonian.
 ///
-impl<T, V> ops::Sub<T> for SpinHamiltonian
+impl<T, V> ops::Sub<T> for QubitHamiltonian
 where
     T: IntoIterator<Item = (PauliProduct, V)>,
     V: Into<CalculatorFloat>,
 {
     type Output = Self;
-    /// Implements `-` (subtract) for two SpinHamiltonians.
+    /// Implements `-` (subtract) for two QubitHamiltonians.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinHamiltonian to be subtracted.
+    /// * `other` - The QubitHamiltonian to be subtracted.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinHamiltonians subtracted.
+    /// * `Self` - The two QubitHamiltonians subtracted.
     ///
     /// # Panics
     ///
@@ -411,11 +418,11 @@ where
     }
 }
 
-/// Implements the multiplication function of SpinHamiltonian by CalculatorFloat.
+/// Implements the multiplication function of QubitHamiltonian by CalculatorFloat.
 ///
-impl ops::Mul<CalculatorFloat> for SpinHamiltonian {
+impl ops::Mul<CalculatorFloat> for QubitHamiltonian {
     type Output = Self;
-    /// Implement `*` for SpinHamiltonian and CalculatorFloat.
+    /// Implement `*` for QubitHamiltonian and CalculatorFloat.
     ///
     /// # Arguments
     ///
@@ -423,23 +430,23 @@ impl ops::Mul<CalculatorFloat> for SpinHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinHamiltonian multiplied by the CalculatorFloat.
+    /// * `Self` - The QubitHamiltonian multiplied by the CalculatorFloat.
     fn mul(self, other: CalculatorFloat) -> Self {
         let mut internal = self.internal_map.clone();
         for key in self.keys() {
             internal.insert(key.clone(), internal[key].clone() * other.clone());
         }
-        SpinHamiltonian {
+        QubitHamiltonian {
             internal_map: internal,
         }
     }
 }
 
-/// Implements the multiplication function of SpinHamiltonian by CalculatorComplex.
+/// Implements the multiplication function of QubitHamiltonian by CalculatorComplex.
 ///
-impl ops::Mul<CalculatorComplex> for SpinHamiltonian {
-    type Output = SpinOperator;
-    /// Implement `*` for SpinHamiltonian and CalculatorComplex.
+impl ops::Mul<CalculatorComplex> for QubitHamiltonian {
+    type Output = QubitOperator;
+    /// Implement `*` for QubitHamiltonian and CalculatorComplex.
     ///
     /// # Arguments
     ///
@@ -447,13 +454,13 @@ impl ops::Mul<CalculatorComplex> for SpinHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `SpinOperator` - The SpinHamiltonian multiplied by the CalculatorFloat.
+    /// * `QubitOperator` - The QubitHamiltonian multiplied by the CalculatorFloat.
     ///
     /// # Panics
     ///
     /// * Internal bug in set.
     fn mul(self, other: CalculatorComplex) -> Self::Output {
-        let mut new_out = SpinOperator::with_capacity(self.len());
+        let mut new_out = QubitOperator::with_capacity(self.len());
         for (key, val) in self {
             new_out
                 .set(key, other.clone() * val)
@@ -463,25 +470,25 @@ impl ops::Mul<CalculatorComplex> for SpinHamiltonian {
     }
 }
 
-/// Implement `*` for SpinHamiltonian and SpinHamiltonian.
+/// Implement `*` for QubitHamiltonian and QubitHamiltonian.
 ///
-impl ops::Mul<SpinHamiltonian> for SpinHamiltonian {
-    type Output = SpinOperator;
-    /// Implement `*` for SpinHamiltonian and SpinHamiltonian.
+impl ops::Mul<QubitHamiltonian> for QubitHamiltonian {
+    type Output = QubitOperator;
+    /// Implement `*` for QubitHamiltonian and QubitHamiltonian.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinHamiltonian to multiply by.
+    /// * `other` - The QubitHamiltonian to multiply by.
     ///
     /// # Returns
     ///
-    /// * `SpinOperator` - The two SpinHamiltonians multiplied.
+    /// * `QubitOperator` - The two QubitHamiltonians multiplied.
     ///
     /// # Panics
     ///
     /// * Internal bug in add_operator_product.
-    fn mul(self, other: SpinHamiltonian) -> Self::Output {
-        let mut spin_op = SpinOperator::with_capacity(self.len() * other.len());
+    fn mul(self, other: QubitHamiltonian) -> Self::Output {
+        let mut spin_op = QubitOperator::with_capacity(self.len() * other.len());
         for (pps, vals) in self {
             for (ppo, valo) in other.iter() {
                 let (ppp, coefficient) = pps.clone() * ppo.clone();
@@ -496,56 +503,56 @@ impl ops::Mul<SpinHamiltonian> for SpinHamiltonian {
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of SpinHamiltonian.
+/// Implements the into_iter function (IntoIterator trait) of QubitHamiltonian.
 ///
-impl IntoIterator for SpinHamiltonian {
+impl IntoIterator for QubitHamiltonian {
     type Item = (PauliProduct, CalculatorFloat);
     type IntoIter = indexmap::map::IntoIter<PauliProduct, CalculatorFloat>;
 
-    /// Returns the SpinHamiltonian in Iterator form.
+    /// Returns the QubitHamiltonian in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The SpinHamiltonian in Iterator form.
+    /// * `Self::IntoIter` - The QubitHamiltonian in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.into_iter()
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of reference SpinHamiltonian.
+/// Implements the into_iter function (IntoIterator trait) of reference QubitHamiltonian.
 ///
-impl<'a> IntoIterator for &'a SpinHamiltonian {
+impl<'a> IntoIterator for &'a QubitHamiltonian {
     type Item = (&'a PauliProduct, &'a CalculatorFloat);
     type IntoIter = Iter<'a, PauliProduct, CalculatorFloat>;
 
-    /// Returns the reference SpinHamiltonian in Iterator form.
+    /// Returns the reference QubitHamiltonian in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The reference SpinHamiltonian in Iterator form.
+    /// * `Self::IntoIter` - The reference QubitHamiltonian in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.iter()
     }
 }
 
-/// Implements the from_iter function (FromIterator trait) of SpinHamiltonian.
+/// Implements the from_iter function (FromIterator trait) of QubitHamiltonian.
 ///
-impl FromIterator<(PauliProduct, CalculatorFloat)> for SpinHamiltonian {
-    /// Returns the object in SpinHamiltonian form, from an Iterator form of the object.
+impl FromIterator<(PauliProduct, CalculatorFloat)> for QubitHamiltonian {
+    /// Returns the object in QubitHamiltonian form, from an Iterator form of the object.
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the information from which to create the SpinHamiltonian.
+    /// * `iter` - The iterator containing the information from which to create the QubitHamiltonian.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The iterator in SpinHamiltonian form.
+    /// * `Self::IntoIter` - The iterator in QubitHamiltonian form.
     ///
     /// # Panics
     ///
     /// * Internal bug in add_operator_product.
     fn from_iter<I: IntoIterator<Item = (PauliProduct, CalculatorFloat)>>(iter: I) -> Self {
-        let mut so = SpinHamiltonian::new();
+        let mut so = QubitHamiltonian::new();
         for (pp, cc) in iter {
             so.add_operator_product(pp, cc)
                 .expect("Internal bug in add_operator_product");
@@ -554,14 +561,14 @@ impl FromIterator<(PauliProduct, CalculatorFloat)> for SpinHamiltonian {
     }
 }
 
-/// Implements the extend function (Extend trait) of SpinHamiltonian.
+/// Implements the extend function (Extend trait) of QubitHamiltonian.
 ///
-impl Extend<(PauliProduct, CalculatorFloat)> for SpinHamiltonian {
-    /// Extends the SpinHamiltonian by the specified operations (in Iterator form).
+impl Extend<(PauliProduct, CalculatorFloat)> for QubitHamiltonian {
+    /// Extends the QubitHamiltonian by the specified operations (in Iterator form).
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the operations by which to extend the SpinHamiltonian.
+    /// * `iter` - The iterator containing the operations by which to extend the QubitHamiltonian.
     ///
     /// # Panics
     ///
@@ -574,10 +581,10 @@ impl Extend<(PauliProduct, CalculatorFloat)> for SpinHamiltonian {
     }
 }
 
-/// Implements the format function (Display trait) of SpinHamiltonian.
+/// Implements the format function (Display trait) of QubitHamiltonian.
 ///
-impl fmt::Display for SpinHamiltonian {
-    /// Formats the SpinHamiltonian using the given formatter.
+impl fmt::Display for QubitHamiltonian {
+    /// Formats the QubitHamiltonian using the given formatter.
     ///
     /// # Arguments
     ///
@@ -585,9 +592,9 @@ impl fmt::Display for SpinHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `std::fmt::Result` - The formatted SpinHamiltonian.
+    /// * `std::fmt::Result` - The formatted QubitHamiltonian.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = "SpinHamiltonian{\n".to_string();
+        let mut output = "QubitHamiltonian{\n".to_string();
         for (key, val) in self.iter() {
             writeln!(output, "{}: {},", key, val)?;
         }
@@ -597,10 +604,10 @@ impl fmt::Display for SpinHamiltonian {
     }
 }
 
-impl JordanWignerSpinToFermion for SpinHamiltonian {
+impl JordanWignerSpinToFermion for QubitHamiltonian {
     type Output = FermionHamiltonian;
 
-    /// Implements JordanWignerSpinToFermion for a SpinHamiltonian.
+    /// Implements JordanWignerSpinToFermion for a QubitHamiltonian.
     ///
     /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
     /// and |1> represents an occupied fermionic state.
@@ -632,31 +639,31 @@ mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinHamiltonian
+    // Test the Clone and PartialEq traits of QubitHamiltonian
     #[test]
     fn sh_from_shs() {
         let pp: PauliProduct = PauliProduct::new().z(0);
-        let shs = SpinHamiltonianSerialize {
+        let shs = QubitHamiltonianSerialize {
             items: vec![(pp.clone(), 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
         };
-        let mut sh = SpinHamiltonian::new();
+        let mut sh = QubitHamiltonian::new();
         sh.set(pp, CalculatorFloat::from(0.5)).unwrap();
 
-        assert_eq!(SpinHamiltonianSerialize::from(sh), shs);
+        assert_eq!(QubitHamiltonianSerialize::from(sh), shs);
     }
-    // Test the Clone and PartialEq traits of SpinHamiltonian
+    // Test the Clone and PartialEq traits of QubitHamiltonian
     #[test]
     fn clone_partial_eq() {
         let pp: PauliProduct = PauliProduct::new().z(0);
-        let shs = SpinHamiltonianSerialize {
+        let shs = QubitHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -667,19 +674,19 @@ mod test {
 
         // Test PartialEq trait
         let pp_1: PauliProduct = PauliProduct::new().z(0);
-        let shs_1 = SpinHamiltonianSerialize {
+        let shs_1 = QubitHamiltonianSerialize {
             items: vec![(pp_1, 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
         };
         let pp_2: PauliProduct = PauliProduct::new().z(2);
-        let shs_2 = SpinHamiltonianSerialize {
+        let shs_2 = QubitHamiltonianSerialize {
             items: vec![(pp_2, 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -690,14 +697,14 @@ mod test {
         assert!(shs != shs_2);
     }
 
-    // Test the Debug trait of SpinHamiltonian
+    // Test the Debug trait of QubitHamiltonian
     #[test]
     fn debug() {
         let pp: PauliProduct = PauliProduct::new().z(0);
-        let shs = SpinHamiltonianSerialize {
+        let shs = QubitHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -705,18 +712,18 @@ mod test {
 
         assert_eq!(
             format!("{:?}", shs),
-            "SpinHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"SpinHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
+            "QubitHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"QubitHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinHamiltonian Serialization and Deserialization traits (readable)
+    /// Test QubitHamiltonian Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = PauliProduct::new().x(0);
-        let shs = SpinHamiltonianSerialize {
+        let shs = QubitHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -726,7 +733,7 @@ mod test {
             &shs.readable(),
             &[
                 Token::Struct {
-                    name: "SpinHamiltonianSerialize",
+                    name: "QubitHamiltonianSerialize",
                     len: 2,
                 },
                 Token::Str("items"),
@@ -742,7 +749,7 @@ mod test {
                     len: 3,
                 },
                 Token::Str("type_name"),
-                Token::Str("SpinHamiltonian"),
+                Token::Str("QubitHamiltonian"),
                 Token::Str("min_version"),
                 Token::Tuple { len: 3 },
                 Token::U64(2),
@@ -757,14 +764,14 @@ mod test {
         );
     }
 
-    /// Test SpinHamiltonian Serialization and Deserialization traits (compact)
+    /// Test QubitHamiltonian Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = PauliProduct::new().x(0);
-        let shs = SpinHamiltonianSerialize {
+        let shs = QubitHamiltonianSerialize {
             items: vec![(pp, 0.5.into())],
             serialisation_meta: crate::StruqtureSerialisationMeta {
-                type_name: "SpinHamiltonian".to_string(),
+                type_name: "QubitHamiltonian".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -774,7 +781,7 @@ mod test {
             &shs.compact(),
             &[
                 Token::Struct {
-                    name: "SpinHamiltonianSerialize",
+                    name: "QubitHamiltonianSerialize",
                     len: 2,
                 },
                 Token::Str("items"),
@@ -784,7 +791,7 @@ mod test {
                 Token::Tuple { len: 2 },
                 Token::U64(0),
                 Token::UnitVariant {
-                    name: "SingleSpinOperator",
+                    name: "SingleQubitOperator",
                     variant: "X",
                 },
                 Token::TupleEnd,
@@ -802,7 +809,7 @@ mod test {
                     len: 3,
                 },
                 Token::Str("type_name"),
-                Token::Str("SpinHamiltonian"),
+                Token::Str("QubitHamiltonian"),
                 Token::Str("min_version"),
                 Token::Tuple { len: 3 },
                 Token::U64(2),

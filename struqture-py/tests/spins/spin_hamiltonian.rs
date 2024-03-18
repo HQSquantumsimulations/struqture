@@ -14,34 +14,34 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
-use struqture::spins::{PauliProduct, SpinHamiltonian};
+use struqture::spins::{PauliProduct, QubitHamiltonian};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};
-use struqture_py::spins::{SpinHamiltonianWrapper, SpinOperatorWrapper};
+use struqture_py::spins::{QubitHamiltonianWrapper, QubitOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> &PyCell<SpinHamiltonianWrapper> {
-    let system_type = py.get_type::<SpinHamiltonianWrapper>();
+fn new_system(py: Python) -> &PyCell<QubitHamiltonianWrapper> {
+    let system_type = py.get_type::<QubitHamiltonianWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<SpinHamiltonianWrapper>>()
+        .downcast::<PyCell<QubitHamiltonianWrapper>>()
         .unwrap()
         .to_owned()
 }
-fn new_spin_system(py: Python) -> &PyCell<SpinOperatorWrapper> {
-    let system_type = py.get_type::<SpinOperatorWrapper>();
+fn new_spin_system(py: Python) -> &PyCell<QubitOperatorWrapper> {
+    let system_type = py.get_type::<QubitOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<SpinOperatorWrapper>>()
+        .downcast::<PyCell<QubitOperatorWrapper>>()
         .unwrap()
         .to_owned()
 }
 
-/// Test default function of SpinHamiltonianWrapper
+/// Test default function of QubitHamiltonianWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -50,12 +50,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<SpinHamiltonianWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<QubitHamiltonianWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = SpinHamiltonianWrapper::new() != system_wrapper;
+        let helper_ne: bool = QubitHamiltonianWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = SpinHamiltonianWrapper::new() == SpinHamiltonianWrapper::new();
+        let helper_eq: bool = QubitHamiltonianWrapper::new() == QubitHamiltonianWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -63,8 +63,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", SpinHamiltonianWrapper::new()),
-            "SpinHamiltonianWrapper { internal: SpinHamiltonian { internal_map: {} } }"
+            format!("{:?}", QubitHamiltonianWrapper::new()),
+            "QubitHamiltonianWrapper { internal: QubitHamiltonian { internal_map: {} } }"
         );
 
         // Number of spins
@@ -75,7 +75,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_spins function of SpinHamiltonian
+/// Test number_spins function of QubitHamiltonian
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -93,7 +93,7 @@ fn test_number_spins_current() {
     });
 }
 
-/// Test empty_clone function of SpinHamiltonian
+/// Test empty_clone function of QubitHamiltonian
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -112,7 +112,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of SpinHamiltonian
+/// Test hermitian_conjugate function of QubitHamiltonian
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -129,16 +129,16 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of SpinHamiltonian
+/// Test set and get functions of QubitHamiltonian
 #[test]
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinHamiltonianWrapper>();
+        let new_system = py.get_type::<QubitHamiltonianWrapper>();
         let system = new_system
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .downcast::<PyCell<QubitHamiltonianWrapper>>()
             .unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
@@ -180,16 +180,16 @@ fn spin_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of SpinHamiltonian
+/// Test add_operator_product and remove functions of QubitHamiltonian
 #[test]
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinHamiltonianWrapper>();
+        let new_system = py.get_type::<QubitHamiltonianWrapper>();
         let system = new_system
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .downcast::<PyCell<QubitHamiltonianWrapper>>()
             .unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
@@ -246,7 +246,7 @@ fn spin_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of SpinHamiltonian
+/// Test keys function of QubitHamiltonian
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -413,7 +413,7 @@ fn test_truncate(re: f64) {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -434,7 +434,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -462,7 +462,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -490,7 +490,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -512,7 +512,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -541,7 +541,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -566,7 +566,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of SpinHamiltonian
+/// Test add magic method function of QubitHamiltonian
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -581,7 +581,7 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of SpinHamiltonian
+// /// Test test_sparse_lindblad_entries function of QubitHamiltonian
 // #[test]
 // fn test_sparse_lindblad_entries() {
 //     pyo3::prepare_freethreaded_python();
@@ -603,7 +603,7 @@ fn test_mul_error() {
 //     assert!(comparison);
 // }
 
-// /// Test add magic method function of SpinHamiltonian
+// /// Test add magic method function of QubitHamiltonian
 // #[test]
 // fn test_unitary_sparse_matrix_coo() {
 //     pyo3::prepare_freethreaded_python();
@@ -626,7 +626,7 @@ fn test_mul_error() {
 //     // assert_eq!(result_matrix, test_matrix);
 // }
 
-/// Test copy and deepcopy functions of SpinHamiltonian
+/// Test copy and deepcopy functions of QubitHamiltonian
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -650,7 +650,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of SpinHamiltonian
+/// Test to_bincode and from_bincode functions of QubitHamiltonian
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -694,7 +694,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of SpinHamiltonian
+/// Test to_ and from_json functions of QubitHamiltonian
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -737,7 +737,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("0X", 0.1_f64))
             .unwrap();
-        let mut rust_system = SpinHamiltonian::new();
+        let mut rust_system = QubitHamiltonian::new();
         rust_system
             .add_operator_product(PauliProduct::new().x(0), CalculatorFloat::from(0.1))
             .unwrap();
@@ -750,9 +750,9 @@ fn test_format_repr() {
         let to_str = system.call_method0("__str__").unwrap();
         let str_op: String = String::extract_bound(&to_str).unwrap();
 
-        assert_eq!(format_op, "SpinHamiltonian{\n0X: 1e-1,\n}".to_string());
-        assert_eq!(repr_op, "SpinHamiltonian{\n0X: 1e-1,\n}".to_string());
-        assert_eq!(str_op, "SpinHamiltonian{\n0X: 1e-1,\n}".to_string());
+        assert_eq!(format_op, "QubitHamiltonian{\n0X: 1e-1,\n}".to_string());
+        assert_eq!(repr_op, "QubitHamiltonian{\n0X: 1e-1,\n}".to_string());
+        assert_eq!(str_op, "QubitHamiltonian{\n0X: 1e-1,\n}".to_string());
     });
 }
 
@@ -791,7 +791,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of SpinHamiltonian
+/// Test jordan_wigner() method of QubitHamiltonian
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -820,7 +820,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(SpinHamiltonian)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(QubitHamiltonian)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
@@ -856,7 +856,7 @@ fn test_from_pyany_to_struqture_one() {
         .unwrap();
 
         let result =
-            SpinHamiltonianWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
+            QubitHamiltonianWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
         assert_eq!(result, sys_1);
     });
 }

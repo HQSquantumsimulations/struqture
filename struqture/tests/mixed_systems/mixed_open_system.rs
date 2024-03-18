@@ -810,7 +810,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(0),
             Token::UnitVariant {
-                name: "SingleSpinOperator",
+                name: "SingleQubitOperator",
                 variant: "X",
             },
             Token::TupleEnd,

@@ -27,7 +27,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
 use tinyvec::{TinyVec, TinyVecIterator};
 
-use super::{DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator};
+use super::{DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleQubitOperator};
 
 const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str =
     "Internal bug in add_operator_product for FermionOperator.";
@@ -175,8 +175,8 @@ impl SinglePlusMinusOperator {
     }
 }
 
-impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
-    /// Converts a SinglePlusMinusOperator into a vector of tuples of (SingleSpinOperator, Complex64).
+impl From<SinglePlusMinusOperator> for Vec<(SingleQubitOperator, Complex64)> {
+    /// Converts a SinglePlusMinusOperator into a vector of tuples of (SingleQubitOperator, Complex64).
     ///
     /// # Arguments
     ///
@@ -184,49 +184,49 @@ impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
     ///
     /// # Returns
     ///
-    /// * `Self` - The SinglePlusMinusOperator converted into a vector of tuples of (SingleSpinOperator, Complex64).
+    /// * `Self` - The SinglePlusMinusOperator converted into a vector of tuples of (SingleQubitOperator, Complex64).
     fn from(val: SinglePlusMinusOperator) -> Self {
         match val {
             SinglePlusMinusOperator::Identity => {
-                vec![(SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))]
+                vec![(SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))]
             }
             SinglePlusMinusOperator::Plus => vec![
-                (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
-                (SingleSpinOperator::Y, Complex64::new(0.0, 0.5)),
+                (SingleQubitOperator::X, Complex64::new(0.5, 0.0)),
+                (SingleQubitOperator::Y, Complex64::new(0.0, 0.5)),
             ],
             SinglePlusMinusOperator::Minus => vec![
-                (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
-                (SingleSpinOperator::Y, Complex64::new(0.0, -0.5)),
+                (SingleQubitOperator::X, Complex64::new(0.5, 0.0)),
+                (SingleQubitOperator::Y, Complex64::new(0.0, -0.5)),
             ],
-            SinglePlusMinusOperator::Z => vec![(SingleSpinOperator::Z, Complex64::new(1.0, 0.0))],
+            SinglePlusMinusOperator::Z => vec![(SingleQubitOperator::Z, Complex64::new(1.0, 0.0))],
         }
     }
 }
 
-impl From<SingleSpinOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
-    /// Converts a SingleSpinOperator into a vector of tuples of (SinglePlusMinusOperator, Complex64).
+impl From<SingleQubitOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
+    /// Converts a SingleQubitOperator into a vector of tuples of (SinglePlusMinusOperator, Complex64).
     ///
     /// # Arguments
     ///
-    /// * `val` - The SingleSpinOperator to convert.
+    /// * `val` - The SingleQubitOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SingleSpinOperator converted into a vector of tuples of (SinglePlusMinusOperator, Complex64).
-    fn from(val: SingleSpinOperator) -> Self {
+    /// * `Self` - The SingleQubitOperator converted into a vector of tuples of (SinglePlusMinusOperator, Complex64).
+    fn from(val: SingleQubitOperator) -> Self {
         match val {
-            SingleSpinOperator::Identity => {
+            SingleQubitOperator::Identity => {
                 vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
             }
-            SingleSpinOperator::X => vec![
+            SingleQubitOperator::X => vec![
                 (SinglePlusMinusOperator::Plus, Complex64::new(1.0, 0.0)),
                 (SinglePlusMinusOperator::Minus, Complex64::new(1.0, 0.0)),
             ],
-            SingleSpinOperator::Y => vec![
+            SingleQubitOperator::Y => vec![
                 (SinglePlusMinusOperator::Plus, Complex64::new(0.0, -1.0)),
                 (SinglePlusMinusOperator::Minus, Complex64::new(0.0, 1.0)),
             ],
-            SingleSpinOperator::Z => vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))],
+            SingleQubitOperator::Z => vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))],
         }
     }
 }
@@ -362,7 +362,7 @@ impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
         let mut new_vec: Vec<(PauliProduct, Complex64)> =
             vec![(PauliProduct::new(), Complex64::new(1.0, 0.0))];
         for (index, single) in value.iter() {
-            let temp_vec: Vec<(SingleSpinOperator, Complex64)> = (*single).into();
+            let temp_vec: Vec<(SingleQubitOperator, Complex64)> = (*single).into();
             let mut temp_new_vec: Vec<(PauliProduct, Complex64)> = Vec::new();
             for (new_op, new_prefactor) in temp_vec {
                 for (product, prefactor) in new_vec.iter() {

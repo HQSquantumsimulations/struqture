@@ -13,7 +13,7 @@
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::prelude::*;
-use crate::spins::{PlusMinusOperator, SpinOperator};
+use crate::spins::{PlusMinusOperator, QubitOperator};
 use crate::{CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
@@ -68,33 +68,32 @@ const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_pr
     Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default,
 )]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
-pub enum SingleSpinOperator {
-    #[default]
+pub enum SingleQubitOperator {
     Identity,
     X,
     Y,
     Z,
 }
 
-/// Creates a SingleSpinOperator from an &str representation.
+/// Creates a SingleQubitOperator from an &str representation.
 ///
 /// # Arguments
 ///
-/// * `s` - The string (&str) to be converted to a SingleSpinOperator.
+/// * `s` - The string (&str) to be converted to a SingleQubitOperator.
 ///
 /// # Returns
 ///
-/// * `Ok(Self)` - The SingleSpinOperator of the input string.
+/// * `Ok(Self)` - The SingleQubitOperator of the input string.
 /// * `Err(StruqtureError::IncorrectPauliEntry)` - The pauli matrix being set is not in [\"I\", \"X\", \"Y\", \"Z\"].
 ///
-impl FromStr for SingleSpinOperator {
+impl FromStr for SingleQubitOperator {
     type Err = StruqtureError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "I" => Ok(SingleSpinOperator::Identity),
-            "X" => Ok(SingleSpinOperator::X),
-            "Y" => Ok(SingleSpinOperator::Y),
-            "Z" => Ok(SingleSpinOperator::Z),
+            "I" => Ok(SingleQubitOperator::Identity),
+            "X" => Ok(SingleQubitOperator::X),
+            "Y" => Ok(SingleQubitOperator::Y),
+            "Z" => Ok(SingleQubitOperator::Z),
             _ => Err(StruqtureError::IncorrectPauliEntry {
                 pauli: s.to_string(),
             }),
@@ -102,65 +101,71 @@ impl FromStr for SingleSpinOperator {
     }
 }
 
-/// Implements the fmt function (Display trait) of SingleSpinOperator.
+impl Default for SingleQubitOperator {
+    fn default() -> Self {
+        SingleQubitOperator::Identity
+    }
+}
+
+/// Implements the fmt function (Display trait) of SingleQubitOperator.
 ///
-impl fmt::Display for SingleSpinOperator {
+impl fmt::Display for SingleQubitOperator {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            SingleSpinOperator::Identity => write!(f, "I"),
-            SingleSpinOperator::X => write!(f, "X"),
-            SingleSpinOperator::Y => write!(f, "Y"),
-            SingleSpinOperator::Z => write!(f, "Z"),
+            SingleQubitOperator::Identity => write!(f, "I"),
+            SingleQubitOperator::X => write!(f, "X"),
+            SingleQubitOperator::Y => write!(f, "Y"),
+            SingleQubitOperator::Z => write!(f, "Z"),
         }
     }
 }
 
-/// Functions for the SingleSpinOperator
+/// Functions for the SingleQubitOperator
 ///
-impl SingleSpinOperator {
-    /// Implements multiplication function for a SingleSpinOperator by a SingleSpinOperator.
+impl SingleQubitOperator {
+    /// Implements multiplication function for a SingleQubitOperator by a SingleQubitOperator.
     ///
     /// # Arguments
     ///
-    /// * `left` - left-hand SingleSpinOperator to be multiplied.
-    /// * `right` - right-hand SingleSpinOperator to be multiplied.
-    pub fn multiply(left: SingleSpinOperator, right: SingleSpinOperator) -> (Self, Complex64) {
-        let (result, coeff): (SingleSpinOperator, Complex64) = match (left, right) {
-            (SingleSpinOperator::Identity, x) => (x, Complex64::new(1.0, 0.0)),
-            (x, SingleSpinOperator::Identity) => (x, Complex64::new(1.0, 0.0)),
-            (SingleSpinOperator::X, SingleSpinOperator::X) => {
-                (SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))
+    /// * `left` - left-hand SingleQubitOperator to be multiplied.
+    /// * `right` - right-hand SingleQubitOperator to be multiplied.
+    pub fn multiply(left: SingleQubitOperator, right: SingleQubitOperator) -> (Self, Complex64) {
+        let (result, coeff): (SingleQubitOperator, Complex64) = match (left, right) {
+            (SingleQubitOperator::Identity, x) => (x, Complex64::new(1.0, 0.0)),
+            (x, SingleQubitOperator::Identity) => (x, Complex64::new(1.0, 0.0)),
+            (SingleQubitOperator::X, SingleQubitOperator::X) => {
+                (SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))
             }
-            (SingleSpinOperator::X, SingleSpinOperator::Y) => {
-                (SingleSpinOperator::Z, Complex64::new(0.0, 1.0))
+            (SingleQubitOperator::X, SingleQubitOperator::Y) => {
+                (SingleQubitOperator::Z, Complex64::new(0.0, 1.0))
             }
-            (SingleSpinOperator::X, SingleSpinOperator::Z) => {
-                (SingleSpinOperator::Y, Complex64::new(0.0, -1.0))
+            (SingleQubitOperator::X, SingleQubitOperator::Z) => {
+                (SingleQubitOperator::Y, Complex64::new(0.0, -1.0))
             }
-            (SingleSpinOperator::Y, SingleSpinOperator::X) => {
-                (SingleSpinOperator::Z, Complex64::new(0.0, -1.0))
+            (SingleQubitOperator::Y, SingleQubitOperator::X) => {
+                (SingleQubitOperator::Z, Complex64::new(0.0, -1.0))
             }
-            (SingleSpinOperator::Y, SingleSpinOperator::Y) => {
-                (SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))
+            (SingleQubitOperator::Y, SingleQubitOperator::Y) => {
+                (SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))
             }
-            (SingleSpinOperator::Y, SingleSpinOperator::Z) => {
-                (SingleSpinOperator::X, Complex64::new(0.0, 1.0))
+            (SingleQubitOperator::Y, SingleQubitOperator::Z) => {
+                (SingleQubitOperator::X, Complex64::new(0.0, 1.0))
             }
-            (SingleSpinOperator::Z, SingleSpinOperator::X) => {
-                (SingleSpinOperator::Y, Complex64::new(0.0, 1.0))
+            (SingleQubitOperator::Z, SingleQubitOperator::X) => {
+                (SingleQubitOperator::Y, Complex64::new(0.0, 1.0))
             }
-            (SingleSpinOperator::Z, SingleSpinOperator::Y) => {
-                (SingleSpinOperator::X, Complex64::new(0.0, -1.0))
+            (SingleQubitOperator::Z, SingleQubitOperator::Y) => {
+                (SingleQubitOperator::X, Complex64::new(0.0, -1.0))
             }
-            (SingleSpinOperator::Z, SingleSpinOperator::Z) => {
-                (SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))
+            (SingleQubitOperator::Z, SingleQubitOperator::Z) => {
+                (SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))
             }
         };
         (result, coeff)
     }
 }
 
-/// PauliProducts are combinations of SingleSpinOperators on specific qubits.
+/// PauliProducts are combinations of SingleQubitOperators on specific qubits.
 ///
 /// This is a representation of products of pauli matrices acting on qubits, in order to build the terms of a hamiltonian.
 /// For instance, to represent the term $ \sigma_0^{x} \sigma_2^{x} $ :
@@ -170,25 +175,25 @@ impl SingleSpinOperator {
 ///
 /// ```
 /// use struqture::prelude::*;
-/// use struqture::spins::{PauliProduct, SingleSpinOperator};
+/// use struqture::spins::{PauliProduct, SingleQubitOperator};
 ///
 /// let mut pp = PauliProduct::new();
 ///
 /// // Method 1 to add to PauliProduct:
-/// pp = pp.set_pauli(0, SingleSpinOperator::X);
+/// pp = pp.set_pauli(0, SingleQubitOperator::X);
 /// // Method 2 to add to PauliProduct:
 /// pp = pp.z(1);
 /// // These methods are equal:
-/// assert_eq!(pp.clone().x(2), pp.clone().set_pauli(2, SingleSpinOperator::X));
+/// assert_eq!(pp.clone().x(2), pp.clone().set_pauli(2, SingleQubitOperator::X));
 ///
 /// // Access what you set:
-/// assert_eq!(pp.get(&0).unwrap(), &SingleSpinOperator::X);
+/// assert_eq!(pp.get(&0).unwrap(), &SingleQubitOperator::X);
 /// ```
 ///
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct PauliProduct {
     /// The internal dictionary of pauli matrices (I, X, Y, Z) and qubits
-    items: TinyVec<[(usize, SingleSpinOperator); 5]>,
+    items: TinyVec<[(usize, SingleQubitOperator); 5]>,
 }
 /// Implementing serde serialization writing directly to string.
 ///
@@ -311,7 +316,7 @@ impl<'de> Deserialize<'de> for PauliProduct {
             }
             #[derive(Deserialize)]
             #[serde(transparent)]
-            struct Entry((usize, SingleSpinOperator));
+            struct Entry((usize, SingleQubitOperator));
             let pp_visitor = PauliProductVisitor;
 
             deserializer.deserialize_seq(pp_visitor)
@@ -320,17 +325,17 @@ impl<'de> Deserialize<'de> for PauliProduct {
 }
 
 impl SpinIndex for PauliProduct {
-    type SingleSpinType = SingleSpinOperator;
+    type SingleSpinType = SingleQubitOperator;
 
     // From trait
     fn new() -> Self {
         PauliProduct {
-            items: TinyVec::<[(usize, SingleSpinOperator); 5]>::with_capacity(5),
+            items: TinyVec::<[(usize, SingleQubitOperator); 5]>::with_capacity(5),
         }
     }
 
     // From trait
-    fn set_pauli(self, index: usize, pauli: SingleSpinOperator) -> Self {
+    fn set_pauli(self, index: usize, pauli: SingleQubitOperator) -> Self {
         let mut pp = self;
         if let Some((vecindex, insertindex, index_in_use)) =
             pp.items
@@ -346,14 +351,14 @@ impl SpinIndex for PauliProduct {
         {
             if index_in_use {
                 match pauli {
-                    SingleSpinOperator::Identity => {
+                    SingleQubitOperator::Identity => {
                         let _x = pp.items.remove(vecindex);
                     }
                     _ => pp.items[vecindex] = (insertindex, pauli),
                 }
             } else {
                 match pauli {
-                    SingleSpinOperator::Identity => (),
+                    SingleQubitOperator::Identity => (),
                     _ => {
                         pp.items.insert(vecindex, (index, pauli));
                     }
@@ -361,7 +366,7 @@ impl SpinIndex for PauliProduct {
             }
         } else {
             match pauli {
-                SingleSpinOperator::Identity => (),
+                SingleQubitOperator::Identity => (),
                 _ => {
                     pp.items.push((index, pauli));
                 }
@@ -371,15 +376,15 @@ impl SpinIndex for PauliProduct {
     }
 
     // From trait
-    fn get(&self, index: &usize) -> Option<&SingleSpinOperator> {
+    fn get(&self, index: &usize) -> Option<&SingleQubitOperator> {
         self.items
             .iter()
             .find_map(|(key, value)| if key == index { Some(value) } else { None })
     }
 
     // From trait
-    fn iter(&self) -> std::slice::Iter<(usize, SingleSpinOperator)> {
-        match &self.items {
+    fn iter(&self) -> std::slice::Iter<(usize, SingleQubitOperator)> {
+        return match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
         }
@@ -387,8 +392,8 @@ impl SpinIndex for PauliProduct {
 
     // From trait
     fn remap_qubits(&self, mapping: &HashMap<usize, usize>) -> PauliProduct {
-        let mut mutable_internal: TinyVec<[(usize, SingleSpinOperator); 5]> =
-            TinyVec::<[(usize, SingleSpinOperator); 5]>::with_capacity(10);
+        let mut mutable_internal: TinyVec<[(usize, SingleQubitOperator); 5]> =
+            TinyVec::<[(usize, SingleQubitOperator); 5]>::with_capacity(10);
 
         for (key, val) in self.iter() {
             mutable_internal.push(match mapping.get(key) {
@@ -447,8 +452,8 @@ impl SpinIndex for PauliProduct {
 /// `Ordering` - The ordering result
 impl Ord for PauliProduct {
     fn cmp(&self, other: &Self) -> Ordering {
-        let me: &TinyVec<[(usize, SingleSpinOperator); 5]> = &(self.items);
-        let them: &TinyVec<[(usize, SingleSpinOperator); 5]> = &(other.items);
+        let me: &TinyVec<[(usize, SingleQubitOperator); 5]> = &(self.items);
+        let them: &TinyVec<[(usize, SingleQubitOperator); 5]> = &(other.items);
 
         match me.len().cmp(&them.len()) {
             Ordering::Less => Ordering::Less,
@@ -512,7 +517,7 @@ impl Mul<PauliProduct> for PauliProduct {
             match rhs.get(key) {
                 Some(right_operator) => {
                     let (tmp_product, tmp_factor) =
-                        SingleSpinOperator::multiply(*left_operator, *right_operator);
+                        SingleQubitOperator::multiply(*left_operator, *right_operator);
                     factor *= tmp_factor;
                     return_product = return_product.set_pauli(*key, tmp_product);
                 }
@@ -588,7 +593,7 @@ impl PauliProduct {
         Ok(pauli_product)
     }
 
-    /// Sets a new entry for SingleSpinOperator X in the internal dictionary. This function consumes Self.
+    /// Sets a new entry for SingleQubitOperator X in the internal dictionary. This function consumes Self.
     ///
     /// # Arguments
     ///
@@ -598,10 +603,10 @@ impl PauliProduct {
     ///
     /// * `Self` - The entry was correctly set and the PauliProduct is returned.
     pub fn x(self, index: usize) -> Self {
-        self.set_pauli(index, SingleSpinOperator::X)
+        self.set_pauli(index, SingleQubitOperator::X)
     }
 
-    /// Sets a new entry for SingleSpinOperator Y in the internal dictionary. This function consumes Self.
+    /// Sets a new entry for SingleQubitOperator Y in the internal dictionary. This function consumes Self.
     ///
     /// # Arguments
     ///
@@ -611,10 +616,10 @@ impl PauliProduct {
     ///
     /// * `Self` - The entry was correctly set and the PauliProduct is returned.
     pub fn y(self, index: usize) -> Self {
-        self.set_pauli(index, SingleSpinOperator::Y)
+        self.set_pauli(index, SingleQubitOperator::Y)
     }
 
-    /// Sets a new entry for SingleSpinOperator Z in the internal dictionary. This function consumes Self.
+    /// Sets a new entry for SingleQubitOperator Z in the internal dictionary. This function consumes Self.
     ///
     /// # Arguments
     ///
@@ -624,7 +629,7 @@ impl PauliProduct {
     ///
     /// * `Self` - The entry was correctly set and the PauliProduct is returned.
     pub fn z(self, index: usize) -> Self {
-        self.set_pauli(index, SingleSpinOperator::Z)
+        self.set_pauli(index, SingleQubitOperator::Z)
     }
 
     /// Creates a new PauliProduct with pre-allocated capacity.
@@ -638,7 +643,7 @@ impl PauliProduct {
     /// * `Self` - The new (empty) PauliProduct.
     pub fn with_capacity(cap: usize) -> Self {
         PauliProduct {
-            items: TinyVec::<[(usize, SingleSpinOperator); 5]>::with_capacity(cap),
+            items: TinyVec::<[(usize, SingleQubitOperator); 5]>::with_capacity(cap),
         }
     }
 }
@@ -673,13 +678,8 @@ impl FromStr for PauliProduct {
         if s == "I" || s.is_empty() {
             Ok(Self::new()) // If the string is identity then it's an empty PauliProduct
         } else {
-            if !s.starts_with(char::is_numeric) {
-                return Err(StruqtureError::FromStringFailed {
-                    msg: format!("Missing spin index in the following PauliProduct: {}", s),
-                });
-            }
-            let mut internal: TinyVec<[(usize, SingleSpinOperator); 5]> =
-                TinyVec::<[(usize, SingleSpinOperator); 5]>::with_capacity(10);
+            let mut internal: TinyVec<[(usize, SingleQubitOperator); 5]> =
+                TinyVec::<[(usize, SingleQubitOperator); 5]>::with_capacity(10);
 
             let value = s.to_string();
             let vec_paulis = value.split(char::is_numeric).filter(|s| !s.is_empty());
@@ -688,9 +688,9 @@ impl FromStr for PauliProduct {
             for (index, pauli) in vec_indices.zip(vec_paulis) {
                 match index.parse() {
                     Ok(num) => {
-                        let spin: SingleSpinOperator = SingleSpinOperator::from_str(pauli)?;
+                        let spin: SingleQubitOperator = SingleQubitOperator::from_str(pauli)?;
                         match spin {
-                            SingleSpinOperator::Identity => (),
+                            SingleQubitOperator::Identity => (),
                             _ => {
                                 internal.push((num, spin));
                             }
@@ -756,9 +756,9 @@ impl fmt::Display for PauliProduct {
 /// Implements the into_iter function (IntoIterator trait) of PauliProduct.
 ///
 impl IntoIterator for PauliProduct {
-    type Item = (usize, SingleSpinOperator);
+    type Item = (usize, SingleQubitOperator);
 
-    type IntoIter = TinyVecIterator<[(usize, SingleSpinOperator); 5]>;
+    type IntoIter = TinyVecIterator<[(usize, SingleQubitOperator); 5]>;
     /// Returns the PauliProduct in Iterator form.
     ///
     /// # Returns
@@ -771,7 +771,7 @@ impl IntoIterator for PauliProduct {
 
 /// Implements the from_iter function (FromIterator trait) of PauliProduct.
 ///
-impl FromIterator<(usize, SingleSpinOperator)> for PauliProduct {
+impl FromIterator<(usize, SingleQubitOperator)> for PauliProduct {
     /// Returns the object in PauliProduct form, from an Iterator form of the object.
     ///
     /// # Arguments
@@ -781,7 +781,7 @@ impl FromIterator<(usize, SingleSpinOperator)> for PauliProduct {
     /// # Returns
     ///
     /// * `Self::IntoIter` - The iterator in PauliProduct form.
-    fn from_iter<I: IntoIterator<Item = (usize, SingleSpinOperator)>>(iter: I) -> Self {
+    fn from_iter<I: IntoIterator<Item = (usize, SingleQubitOperator)>>(iter: I) -> Self {
         let mut pp = PauliProduct::new();
         for (index, pauli) in iter {
             pp = pp.set_pauli(index, pauli);
@@ -792,13 +792,13 @@ impl FromIterator<(usize, SingleSpinOperator)> for PauliProduct {
 
 /// Implements the extend function (Extend trait) of PauliProduct.
 ///
-impl Extend<(usize, SingleSpinOperator)> for PauliProduct {
+impl Extend<(usize, SingleQubitOperator)> for PauliProduct {
     /// Extends the PauliProduct by the specified operations (in Iterator form).
     ///
     /// # Arguments
     ///
     /// * `iter` - The iterator containing the operations by which to extend the PauliProduct.
-    fn extend<I: IntoIterator<Item = (usize, SingleSpinOperator)>>(&mut self, iter: I) {
+    fn extend<I: IntoIterator<Item = (usize, SingleQubitOperator)>>(&mut self, iter: I) {
         let mut pp = self.clone();
         for (index, pauli) in iter {
             pp = pp.set_pauli(index, pauli);
@@ -823,7 +823,7 @@ impl JordanWignerSpinToFermion for PauliProduct {
     ///
     /// * Internal bug in `add_operator_product`
     fn jordan_wigner(&self) -> Self::Output {
-        let mut spin_operator = SpinOperator::new();
+        let mut spin_operator = QubitOperator::new();
         spin_operator
             .add_operator_product(self.clone(), 1.0.into())
             .expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT);

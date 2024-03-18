@@ -14,24 +14,33 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SpinHamiltonian, SpinLindbladNoiseOperator,
-    SpinLindbladOpenSystem,
+    DecoherenceProduct, PauliProduct, QubitHamiltonian, QubitLindbladNoiseOperator,
+    QubitLindbladOpenSystem,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, SpinIndex};
 use struqture_py::spins::{
-    SpinHamiltonianWrapper, SpinLindbladNoiseOperatorWrapper, SpinLindbladOpenSystemWrapper,
+    QubitHamiltonianWrapper, QubitLindbladNoiseOperatorWrapper, QubitLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
 
 // helper functions
+<<<<<<< HEAD
 fn new_system(py: Python) -> Bound<SpinLindbladOpenSystemWrapper> {
     let system_type = py.get_type::<SpinLindbladOpenSystemWrapper>();
     system_type
         .call0()
         .unwrap()
         .downcast::<SpinLindbladOpenSystemWrapper>()
+=======
+fn new_system(py: Python) -> &PyCell<QubitLindbladOpenSystemWrapper> {
+    let system_type = py.get_type::<QubitLindbladOpenSystemWrapper>();
+    system_type
+        .call0()
+        .unwrap()
+        .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+>>>>>>> c2f6461 (Renamed Spin objects to Qubit objects)
         .unwrap()
         .to_owned()
 }
@@ -97,11 +106,11 @@ fn test_empty_clone() {
 fn spin_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
         let system = new_system
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
             .unwrap();
         system
             .call_method1("system_add_operator_product", ("0X", 0.1))
@@ -158,11 +167,11 @@ fn spin_system_test_add_operator_product_remove_system() {
 fn spin_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
         let system = new_system
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
             .unwrap();
         system
             .call_method1("noise_add_operator_product", (("0X", "0X"), 0.1))
@@ -313,7 +322,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test default function of SpinLindbladOpenSystemWrapper
+/// Test default function of QubitLindbladOpenSystemWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -334,13 +343,13 @@ fn test_default_partialeq_debug_clone() {
                 ),
             )
             .unwrap();
-        let system_wrapper = new_sys.extract::<SpinLindbladOpenSystemWrapper>().unwrap();
+        let system_wrapper = new_sys.extract::<QubitLindbladOpenSystemWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = SpinLindbladOpenSystemWrapper::default() != system_wrapper;
+        let helper_ne: bool = QubitLindbladOpenSystemWrapper::default() != system_wrapper;
         assert!(helper_ne);
         let helper_eq: bool =
-            SpinLindbladOpenSystemWrapper::default() == SpinLindbladOpenSystemWrapper::new();
+            QubitLindbladOpenSystemWrapper::default() == QubitLindbladOpenSystemWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -348,8 +357,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", SpinLindbladOpenSystemWrapper::new()),
-            "SpinLindbladOpenSystemWrapper { internal: SpinLindbladOpenSystem { system: SpinHamiltonian { internal_map: {} }, noise: SpinLindbladNoiseOperator { internal_map: {} } } }"
+            format!("{:?}", QubitLindbladOpenSystemWrapper::new()),
+            "QubitLindbladOpenSystemWrapper { internal: QubitLindbladOpenSystem { system: QubitHamiltonian { internal_map: {} }, noise: QubitLindbladNoiseOperator { internal_map: {} } } }"
         );
 
         // Number of spins
@@ -359,11 +368,11 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<SpinHamiltonianWrapper>();
+        let system_type = py.get_type::<QubitHamiltonianWrapper>();
         let spin_system = system_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .downcast::<PyCell<QubitHamiltonianWrapper>>()
             .unwrap();
         spin_system
             .downcast::<SpinHamiltonianSystemWrapper>()
@@ -379,11 +388,11 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
+        let noise_type = py.get_type::<QubitLindbladNoiseOperatorWrapper>();
         let noise = noise_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
+            .downcast::<PyCell<QubitLindbladNoiseOperatorWrapper>>()
             .unwrap();
         noise
             .downcast::<SpinLindbladNoiseSystemWrapper>()
@@ -403,11 +412,11 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<SpinLindbladNoiseOperatorWrapper>();
+        let noise_type = py.get_type::<QubitLindbladNoiseOperatorWrapper>();
         let noise = noise_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinLindbladNoiseOperatorWrapper>>()
+            .downcast::<PyCell<QubitLindbladNoiseOperatorWrapper>>()
             .unwrap();
         noise
             .downcast::<SpinLindbladNoiseSystemWrapper>()
@@ -421,11 +430,11 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<SpinHamiltonianWrapper>();
+        let system_type = py.get_type::<QubitHamiltonianWrapper>();
         let spin_system = system_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .downcast::<PyCell<QubitHamiltonianWrapper>>()
             .unwrap();
         spin_system
             .downcast::<SpinHamiltonianSystemWrapper>()
@@ -453,13 +462,17 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test set_pauli_product and get_pauli_product functions of SpinLindbladOpenSystem
+/// Test set_pauli_product and get_pauli_product functions of QubitLindbladOpenSystem
 #[test]
 fn test_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system.call0().unwrap();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+            .unwrap();
         let mut system = new_system_1
             .downcast::<SpinLindbladOpenSystemWrapper>()
             .unwrap()
@@ -551,13 +564,17 @@ fn test_set_pauli_get_pauli() {
     });
 }
 
-/// Test set_noise and get_noise functions of SpinLindbladOpenSystem
+/// Test set_noise and get_noise functions of QubitLindbladOpenSystem
 #[test]
 fn test_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let system = new_system.call0().unwrap();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
+        let system = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+            .unwrap();
         system
             .downcast::<SpinLindbladOpenSystemWrapper>()
             .unwrap()
@@ -676,13 +693,17 @@ fn test_set_noise_get_noise() {
     });
 }
 
-/// Test try_set_pauli_product and get_pauli_product functions of SpinLindbladOpenSystem
+/// Test try_set_pauli_product and get_pauli_product functions of QubitLindbladOpenSystem
 #[test]
 fn test_try_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system.call0().unwrap();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+            .unwrap();
         let mut system = new_system_1
             .downcast::<SpinLindbladOpenSystemWrapper>()
             .unwrap()
@@ -770,13 +791,17 @@ fn test_try_set_pauli_get_pauli() {
     });
 }
 
-/// Test try_set_noise and get_noise functions of SpinLindbladOpenSystem
+/// Test try_set_noise and get_noise functions of QubitLindbladOpenSystem
 #[test]
 fn test_try_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system.call0().unwrap();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+            .unwrap();
         let mut system = new_system_1
             .downcast::<SpinLindbladOpenSystemWrapper>()
             .unwrap()
@@ -883,13 +908,17 @@ fn test_try_set_noise_get_noise() {
     });
 }
 
-/// Test add_pauli_product and get_pauli_product functions of SpinLindbladOpenSystem
+/// Test add_pauli_product and get_pauli_product functions of QubitLindbladOpenSystem
 #[test]
 fn test_add_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system.call0().unwrap();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+            .unwrap();
         let mut system = new_system_1
             .downcast::<SpinLindbladOpenSystemWrapper>()
             .unwrap()
@@ -985,13 +1014,17 @@ fn test_add_pauli_get_pauli() {
     });
 }
 
-/// Test add_noise and get_noise functions of SpinLindbladOpenSystem
+/// Test add_noise and get_noise functions of QubitLindbladOpenSystem
 #[test]
 fn test_add_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system.call0().unwrap();
+        let new_system = py.get_type::<QubitLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system
+            .call0()
+            .unwrap()
+            .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
+            .unwrap();
         let mut system = new_system_1
             .downcast::<SpinLindbladOpenSystemWrapper>()
             .unwrap()
@@ -1232,7 +1265,7 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test copy and deepcopy functions of SpinLindbladOpenSystem
+/// Test copy and deepcopy functions of QubitLindbladOpenSystem
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -1268,7 +1301,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of SpinLindbladOpenSystem
+/// Test to_bincode and from_bincode functions of QubitLindbladOpenSystem
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -1324,7 +1357,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of SpinLindbladOpenSystem
+/// Test to_ and from_json functions of QubitLindbladOpenSystem
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -1391,9 +1424,11 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system =
-            SpinLindbladOpenSystem::group(SpinHamiltonian::new(), SpinLindbladNoiseOperator::new())
-                .unwrap();
+        let mut rust_system = QubitLindbladOpenSystem::group(
+            QubitHamiltonian::new(),
+            QubitLindbladNoiseOperator::new(),
+        )
+        .unwrap();
         rust_system
             .system_mut()
             .add_operator_product(PauliProduct::new().x(0), CalculatorFloat::from(0.1))
@@ -1407,7 +1442,7 @@ fn test_format_repr() {
         );
 
         let test_string =
-        "SpinLindbladOpenSystem{\nSystem: {\n0X: 1e-1,\n}\nNoise: {\n(1X, 1iY): (1e-1 + i * 0e0),\n}\n}"
+        "QubitLindbladOpenSystem{\nSystem: {\n0X: 1e-1,\n}\nNoise: {\n(1X, 1iY): (1e-1 + i * 0e0),\n}\n}"
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
@@ -1483,7 +1518,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of SpinLindbladOpenSystem
+/// Test jordan_wigner() method of QubitLindbladOpenSystem
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -1511,7 +1546,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(SpinLindbladOpenSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(QubitLindbladOpenSystem)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
@@ -1565,7 +1600,7 @@ fn test_from_pyany_to_struqture_one() {
         .unwrap();
 
         let result =
-            SpinLindbladOpenSystemWrapper::from_pyany_to_struqture_one(sys_2.into()).unwrap();
+            QubitLindbladOpenSystemWrapper::from_pyany_to_struqture_one(sys_2.into()).unwrap();
         assert_eq!(result, sys_1);
     });
 }

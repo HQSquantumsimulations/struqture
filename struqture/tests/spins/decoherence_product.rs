@@ -24,7 +24,7 @@ use std::hash::{Hash, Hasher};
 use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator,
+    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleQubitOperator,
 };
 use struqture::{CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use test_case::test_case;
@@ -251,7 +251,7 @@ fn into_iter_from_iter_extend() {
     assert_eq!(dp_0, dp_01);
 }
 
-// Test the multiplication: SingleSpinOperator * SingleSpinOperator with all possible pauli matrices
+// Test the multiplication: SingleQubitOperator * SingleQubitOperator with all possible pauli matrices
 #[test_case("", "0X", ("0X", Complex64::new(1.0, 0.0)); "i_x")]
 #[test_case("0X", "", ("0X", Complex64::new(1.0, 0.0)); "x_i")]
 #[test_case("0X", "0X", ("", Complex64::new(1.0, 0.0)); "x_x")]
@@ -491,7 +491,7 @@ fn serde_compact() {
     );
 }
 
-// Test the conversion from SingleDecoherenceOperator to SingleSpinOperator
+// Test the conversion from SingleDecoherenceOperator to SingleQubitOperator
 #[test_case("I", ("I", Complex64::new(1.0, 0.0)); "identity")]
 #[test_case("X", ("X", Complex64::new(1.0, 0.0)); "x")]
 #[test_case("iY", ("Y", Complex64::new(0.0, 1.0)); "iy")]
@@ -500,17 +500,17 @@ fn decoh_to_spin(dp_str: &str, result: (&str, Complex64)) {
     let dp: SingleDecoherenceOperator = SingleDecoherenceOperator::from_str(dp_str).unwrap();
 
     let conv_res = SingleDecoherenceOperator::decoherence_to_spin(dp);
-    assert_eq!(conv_res.0, SingleSpinOperator::from_str(result.0).unwrap());
+    assert_eq!(conv_res.0, SingleQubitOperator::from_str(result.0).unwrap());
     assert_eq!(conv_res.1, result.1);
 }
 
-// Test the conversion from SingleSpinOperator to SingleDecoherenceOperator
+// Test the conversion from SingleQubitOperator to SingleDecoherenceOperator
 #[test_case("I", ("I", Complex64::new(1.0, 0.0)); "identity")]
 #[test_case("X", ("X", Complex64::new(1.0, 0.0)); "x")]
 #[test_case("Y", ("iY", Complex64::new(0.0, -1.0)); "y")]
 #[test_case("Z", ("Z", Complex64::new(1.0, 0.0)); "z")]
 fn spin_to_decoh(pp_str: &str, result: (&str, Complex64)) {
-    let pp: SingleSpinOperator = SingleSpinOperator::from_str(pp_str).unwrap();
+    let pp: SingleQubitOperator = SingleQubitOperator::from_str(pp_str).unwrap();
 
     let conv_res = SingleDecoherenceOperator::spin_to_decoherence(pp);
     assert_eq!(

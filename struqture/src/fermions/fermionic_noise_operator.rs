@@ -12,7 +12,7 @@
 
 use super::{FermionOperator, FermionProduct, OperateOnFermions};
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::{DecoherenceOperator, SpinLindbladNoiseOperator};
+use crate::spins::{DecoherenceOperator, QubitLindbladNoiseOperator};
 use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -262,9 +262,9 @@ impl FermionLindbladNoiseOperator {
 
     /// Adds all noise entries corresponding to a ((FermionOperator, FermionOperator), CalculatorFloat).
     ///
-    /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::spins::FermionProduct] style operators.
+    /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::fermions::FermionProduct] style operators.
     /// We use ([crate::spins::FermionProduct], [crate::spins::FermionProduct]) as a unique basis.
-    /// This function adds a Linblad-Term defined by a combination of Lindblad operators given as general [crate::spins::FermionOperator]
+    /// This function adds a Linblad-Term defined by a combination of Lindblad operators given as general [crate::fermions::FermionOperator]
     ///
     /// # Arguments
     ///
@@ -553,7 +553,7 @@ impl fmt::Display for FermionLindbladNoiseOperator {
 }
 
 impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
-    type Output = SpinLindbladNoiseOperator;
+    type Output = QubitLindbladNoiseOperator;
 
     /// Implements JordanWignerFermionToSpin for a FermionLindbladNoiseOperator.
     ///
@@ -562,13 +562,13 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    /// * `QubitLindbladNoiseOperator` - The spin noise operator that results from the transformation.
     ///
     /// # Panics
     ///
     /// * Internal bug in add_noise_from_full_operators.
     fn jordan_wigner(&self) -> Self::Output {
-        let mut out = SpinLindbladNoiseOperator::new();
+        let mut out = QubitLindbladNoiseOperator::new();
 
         for key in self.keys() {
             let decoherence_operator_left = DecoherenceOperator::from(key.0.jordan_wigner());
@@ -590,7 +590,7 @@ mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -612,7 +612,7 @@ mod test {
         );
         assert_eq!(FermionLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -653,7 +653,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -672,7 +672,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -722,7 +722,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();

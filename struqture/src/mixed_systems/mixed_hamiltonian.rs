@@ -639,7 +639,7 @@ mod test {
     use crate::spins::PauliProduct;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let pp: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -665,7 +665,7 @@ mod test {
         assert_eq!(MixedHamiltonian::try_from(sos.clone()).unwrap(), so);
         assert_eq!(MixedHamiltonianSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let pp: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -730,7 +730,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let pp: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -757,7 +757,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -820,7 +820,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: HermitianMixedProduct = HermitianMixedProduct::new(
@@ -857,7 +857,7 @@ mod test {
                 Token::Tuple { len: 2 },
                 Token::U64(2),
                 Token::UnitVariant {
-                    name: "SingleSpinOperator",
+                    name: "SingleQubitOperator",
                     variant: "Z",
                 },
                 Token::TupleEnd,

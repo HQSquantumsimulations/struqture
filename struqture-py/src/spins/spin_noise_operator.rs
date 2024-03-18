@@ -22,7 +22,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 #[cfg(feature = "unstable_struqture_2_import")]
 use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{OperateOnSpins, SpinLindbladNoiseOperator, ToSparseMatrixSuperOperator};
+use struqture::spins::{OperateOnSpins, QubitLindbladNoiseOperator, ToSparseMatrixSuperOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, StruqtureError};
@@ -30,7 +30,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
-/// In a SpinLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+/// In a QubitLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
 /// Examples
 /// --------
@@ -40,9 +40,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import SpinLindbladNoiseOperator, DecoherenceProduct
+///     from struqture_py.spins import QubitLindbladNoiseOperator, DecoherenceProduct
 ///
-///     slns = SpinLindbladNoiseOperator()
+///     slns = QubitLindbladNoiseOperator()
 ///     dp = DecoherenceProduct().z(0).x(1)
 ///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
@@ -51,11 +51,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     dimension = 4**slns.number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinLindbladNoiseOperator", module = "struqture_py.spins")]
+#[pyclass(name = "QubitLindbladNoiseOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct SpinLindbladNoiseOperatorWrapper {
-    /// Internal storage of [struqture::spins::SpinLindbladNoiseOperator]
-    pub internal: SpinLindbladNoiseOperator,
+pub struct QubitLindbladNoiseOperatorWrapper {
+    /// Internal storage of [struqture::spins::QubitLindbladNoiseOperator]
+    pub internal: QubitLindbladNoiseOperator,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -65,15 +65,15 @@ pub struct SpinLindbladNoiseOperatorWrapper {
     ToSparseMatrixSuperOperator,
     Calculus
 )]
-impl SpinLindbladNoiseOperatorWrapper {
-    /// Create a new SpinLindbladNoiseOperator.
+impl QubitLindbladNoiseOperatorWrapper {
+    /// Create a new QubitLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     self: The new SpinLindbladNoiseOperator with the input number of spins.
+    ///     self: The new QubitLindbladNoiseOperator with the input number of spins.
     #[new]
     pub fn new() -> Self {
         Self {
-            internal: SpinLindbladNoiseOperator::new(),
+            internal: QubitLindbladNoiseOperator::new(),
         }
     }
 
@@ -84,7 +84,7 @@ impl SpinLindbladNoiseOperatorWrapper {
     ///     number_spins_right (int): Number of spins to filter for in the right term of the keys.
     ///
     /// Returns:
-    ///     Tuple[SpinLindbladNoiseOperator, SpinLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     Tuple[QubitLindbladNoiseOperator, QubitLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.

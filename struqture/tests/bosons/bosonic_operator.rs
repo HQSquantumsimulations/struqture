@@ -355,7 +355,7 @@ fn clone_partial_eq() {
     assert!(so != so_2);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test QubitOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_json() {
     let pp = BosonProduct::new([0], [2]).unwrap();
@@ -368,7 +368,7 @@ fn serde_json() {
     assert_eq!(so, deserialized);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test QubitOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let pp = BosonProduct::new([0], [0]).unwrap();

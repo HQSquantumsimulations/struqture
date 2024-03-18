@@ -13,7 +13,7 @@
 use super::{ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::{OperateOnSpins, PauliProduct, SpinHamiltonian, SpinIndex};
+use crate::spins::{OperateOnSpins, PauliProduct, QubitHamiltonian, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
     SymmetricIndex,
@@ -27,7 +27,7 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-/// SpinOperators are combinations of PauliProducts with specific CalculatorComplex coefficients.
+/// QubitOperators are combinations of PauliProducts with specific CalculatorComplex coefficients.
 ///
 /// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
 ///
@@ -36,9 +36,9 @@ use std::ops;
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, QubitOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = QubitOperator::new();
 ///
 /// // Representing the hamiltonian $ 1/2 \sigma_0^{x} \sigma_1^{x} + 1/5 \sigma_0^{z} $
 /// let pp_0x1x = PauliProduct::new().x(0).x(1);
@@ -52,49 +52,49 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(try_from = "SpinOperatorSerialize")]
-#[serde(into = "SpinOperatorSerialize")]
-pub struct SpinOperator {
+#[serde(try_from = "QubitOperatorSerialize")]
+#[serde(into = "QubitOperatorSerialize")]
+pub struct QubitOperator {
     // The internal HashMap of PauliProducts and coefficients (CalculatorComplex)
     internal_map: IndexMap<PauliProduct, CalculatorComplex>,
 }
 
-impl crate::SerializationSupport for SpinOperator {
+impl crate::SerializationSupport for QubitOperator {
     fn struqture_type() -> crate::StruqtureType {
-        crate::StruqtureType::SpinOperator
+        crate::StruqtureType::QubitOperator
     }
 }
 #[cfg(feature = "json_schema")]
-impl schemars::JsonSchema for SpinOperator {
+impl schemars::JsonSchema for QubitOperator {
     fn schema_name() -> String {
-        "SpinOperator".to_string()
+        "QubitOperator".to_string()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SpinOperatorSerialize>::json_schema(gen)
+        <QubitOperatorSerialize>::json_schema(gen)
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
-///# SpinOperator
+///# QubitOperator
 ///
 /// This is a representation of sums of pauli products with weightings, in order to build a full hamiltonian.
-struct SpinOperatorSerialize {
-    /// List of all non-zero entries in the SpinOperator in the form (PauliProduct, real part of weight, imaginary part of weight).
+struct QubitOperatorSerialize {
+    /// List of all non-zero entries in the QubitOperator in the form (PauliProduct, real part of weight, imaginary part of weight).
     items: Vec<(PauliProduct, CalculatorFloat, CalculatorFloat)>,
     /// Minimum struqture version required to de-serialize object
     serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl TryFrom<SpinOperatorSerialize> for SpinOperator {
+impl TryFrom<QubitOperatorSerialize> for QubitOperator {
     type Error = StruqtureError;
-    fn try_from(value: SpinOperatorSerialize) -> Result<Self, Self::Error> {
+    fn try_from(value: QubitOperatorSerialize) -> Result<Self, Self::Error> {
         let target_serialisation_meta =
             <Self as crate::SerializationSupport>::target_serialisation_meta();
         crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
-        let new_noise_op: SpinOperator = value
+        let new_noise_op: QubitOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
@@ -103,8 +103,8 @@ impl TryFrom<SpinOperatorSerialize> for SpinOperator {
     }
 }
 
-impl From<SpinOperator> for SpinOperatorSerialize {
-    fn from(value: SpinOperator) -> Self {
+impl From<QubitOperator> for QubitOperatorSerialize {
+    fn from(value: QubitOperator) -> Self {
         let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
@@ -117,7 +117,7 @@ impl From<SpinOperator> for SpinOperatorSerialize {
     }
 }
 
-impl<'a> OperateOnDensityMatrix<'a> for SpinOperator {
+impl<'a> OperateOnDensityMatrix<'a> for QubitOperator {
     type Value = CalculatorComplex;
     type Index = PauliProduct;
 
@@ -157,12 +157,12 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinOperator {
         }
     }
 
-    /// Overwrites an existing entry or sets a new entry in the SpinOperator with the given (PauliProduct key, CalculatorComplex value) pair.
+    /// Overwrites an existing entry or sets a new entry in the QubitOperator with the given (PauliProduct key, CalculatorComplex value) pair.
     ///
     /// # Arguments
     ///
-    /// * `key` - The PauliProduct key to set in the SpinOperator.
-    /// * `value` - The corresponding CalculatorComplex value to set for the key in the SpinOperator.
+    /// * `key` - The PauliProduct key to set in the QubitOperator.
+    /// * `value` - The corresponding CalculatorComplex value to set for the key in the QubitOperator.
     ///
     /// # Returns
     ///
@@ -184,7 +184,7 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinOperator {
     }
 }
 
-impl OperateOnState<'_> for SpinOperator {
+impl<'a> OperateOnState<'a> for QubitOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.len());
@@ -198,12 +198,12 @@ impl OperateOnState<'_> for SpinOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinOperator {
-    /// Gets the maximum index of the SpinOperator.
+impl<'a> OperateOnSpins<'a> for QubitOperator {
+    /// Gets the maximum index of the QubitOperator.
     ///
     /// # Returns
     ///
-    /// * `usize` - The number of spins in the SpinOperator.
+    /// * `usize` - The number of spins in the QubitOperator.
     fn number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -217,8 +217,8 @@ impl<'a> OperateOnSpins<'a> for SpinOperator {
     }
 }
 
-impl ToSparseMatrixOperator<'_> for SpinOperator {}
-impl<'a> ToSparseMatrixSuperOperator<'a> for SpinOperator {
+impl<'a> ToSparseMatrixOperator<'a> for QubitOperator {}
+impl<'a> ToSparseMatrixSuperOperator<'a> for QubitOperator {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,
@@ -248,24 +248,24 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for SpinOperator {
     }
 }
 
-/// Implements the default function (Default trait) of SpinOperator (an empty SpinOperator).
+/// Implements the default function (Default trait) of QubitOperator (an empty QubitOperator).
 ///
-impl Default for SpinOperator {
+impl Default for QubitOperator {
     fn default() -> Self {
         Self::new()
     }
 }
 
-/// Functions for the SpinOperator
+/// Functions for the QubitOperator
 ///
-impl SpinOperator {
-    /// Creates a new SpinOperator.
+impl QubitOperator {
+    /// Creates a new QubitOperator.
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) SpinOperator.
+    /// * `Self` - The new (empty) QubitOperator.
     pub fn new() -> Self {
-        SpinOperator {
+        QubitOperator {
             internal_map: IndexMap::new(),
         }
     }
@@ -298,7 +298,7 @@ impl SpinOperator {
         Ok(new_spin_operator)
     }
 
-    /// Creates a new SpinOperator with pre-allocated capacity.
+    /// Creates a new QubitOperator with pre-allocated capacity.
     ///
     /// # Arguments
     ///
@@ -306,30 +306,30 @@ impl SpinOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The new (empty) SpinOperator.
+    /// * `Self` - The new (empty) QubitOperator.
     pub fn with_capacity(capacity: usize) -> Self {
-        SpinOperator {
+        QubitOperator {
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
 }
 
-impl From<SpinHamiltonian> for SpinOperator {
-    /// Converts a SpinHamiltonian into a SpinOperator.
+impl From<QubitHamiltonian> for QubitOperator {
+    /// Converts a QubitHamiltonian into a QubitOperator.
     ///
     /// # Arguments
     ///
-    /// * `hamiltonian` - The SpinHamiltonian to convert.
+    /// * `hamiltonian` - The QubitHamiltonian to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinHamiltonian converted into a SpinOperator.
+    /// * `Self` - The QubitHamiltonian converted into a QubitOperator.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
-    fn from(hamiltonian: SpinHamiltonian) -> Self {
-        let mut internal = SpinOperator::new();
+    fn from(hamiltonian: QubitHamiltonian) -> Self {
+        let mut internal = QubitOperator::new();
         for (key, value) in hamiltonian.into_iter() {
             let bp = PauliProduct::get_key(&key);
             internal
@@ -340,43 +340,43 @@ impl From<SpinHamiltonian> for SpinOperator {
     }
 }
 
-/// Implements the negative sign function of SpinOperator.
+/// Implements the negative sign function of QubitOperator.
 ///
-impl ops::Neg for SpinOperator {
-    type Output = SpinOperator;
-    /// Implement minus sign for SpinOperator.
+impl ops::Neg for QubitOperator {
+    type Output = QubitOperator;
+    /// Implement minus sign for QubitOperator.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinOperator * -1.
+    /// * `Self` - The QubitOperator * -1.
     fn neg(self) -> Self {
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
         }
-        SpinOperator {
+        QubitOperator {
             internal_map: internal,
         }
     }
 }
 
-/// Implements the plus function of SpinOperator by SpinOperator.
+/// Implements the plus function of QubitOperator by QubitOperator.
 ///
-impl<T, V> ops::Add<T> for SpinOperator
+impl<T, V> ops::Add<T> for QubitOperator
 where
     T: IntoIterator<Item = (PauliProduct, V)>,
     V: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implements `+` (add) for two SpinOperators.
+    /// Implements `+` (add) for two QubitOperators.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinOperator to be added.
+    /// * `other` - The QubitOperator to be added.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinOperators added together.
+    /// * `Self` - The two QubitOperators added together.
     ///
     /// # Panics
     ///
@@ -390,23 +390,23 @@ where
     }
 }
 
-/// Implements the minus function of SpinOperator by SpinOperator.
+/// Implements the minus function of QubitOperator by QubitOperator.
 ///
-impl<T, V> ops::Sub<T> for SpinOperator
+impl<T, V> ops::Sub<T> for QubitOperator
 where
     T: IntoIterator<Item = (PauliProduct, V)>,
     V: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implements `-` (subtract) for two SpinOperators.
+    /// Implements `-` (subtract) for two QubitOperators.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinOperator to be subtracted.
+    /// * `other` - The QubitOperator to be subtracted.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinOperators subtracted.
+    /// * `Self` - The two QubitOperators subtracted.
     ///
     /// # Panics
     ///
@@ -420,14 +420,14 @@ where
     }
 }
 
-/// Implements the multiplication function of SpinOperator by CalculatorComplex/CalculatorFloat.
+/// Implements the multiplication function of QubitOperator by CalculatorComplex/CalculatorFloat.
 ///
-impl<T> ops::Mul<T> for SpinOperator
+impl<T> ops::Mul<T> for QubitOperator
 where
     T: Into<CalculatorComplex>,
 {
     type Output = Self;
-    /// Implement `*` for SpinOperator and CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for QubitOperator and CalculatorComplex/CalculatorFloat.
     ///
     /// # Arguments
     ///
@@ -435,38 +435,38 @@ where
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinOperator multiplied by the CalculatorComplex/CalculatorFloat.
+    /// * `Self` - The QubitOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
         let mut internal = self.internal_map.clone();
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
         }
-        SpinOperator {
+        QubitOperator {
             internal_map: internal,
         }
     }
 }
 
-/// Implements the multiplication function of SpinOperator by SpinOperator.
+/// Implements the multiplication function of QubitOperator by QubitOperator.
 ///
-impl ops::Mul<SpinOperator> for SpinOperator {
+impl ops::Mul<QubitOperator> for QubitOperator {
     type Output = Self;
-    /// Implement `*` for SpinOperator and SpinOperator.
+    /// Implement `*` for QubitOperator and QubitOperator.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinOperator to multiply by.
+    /// * `other` - The QubitOperator to multiply by.
     ///
     /// # Returns
     ///
-    /// * `Self` - The two SpinOperators multiplied.
+    /// * `Self` - The two QubitOperators multiplied.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
-    fn mul(self, other: SpinOperator) -> Self {
-        let mut spin_op = SpinOperator::with_capacity(self.len() * other.len());
+    fn mul(self, other: QubitOperator) -> Self {
+        let mut spin_op = QubitOperator::with_capacity(self.len() * other.len());
         for (pps, vals) in self {
             for (ppo, valo) in other.iter() {
                 let (ppp, coefficient) = pps.clone() * ppo.clone();
@@ -481,11 +481,11 @@ impl ops::Mul<SpinOperator> for SpinOperator {
     }
 }
 
-/// Implements the multiplication function of SpinOperator by PauliProduct.
+/// Implements the multiplication function of QubitOperator by PauliProduct.
 ///
-impl ops::Mul<PauliProduct> for SpinOperator {
+impl ops::Mul<PauliProduct> for QubitOperator {
     type Output = Self;
-    /// Implement `*` for SpinOperator and PauliProduct.
+    /// Implement `*` for QubitOperator and PauliProduct.
     ///
     /// # Arguments
     ///
@@ -493,13 +493,13 @@ impl ops::Mul<PauliProduct> for SpinOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinOperator multiplied by the PauliProduct.
+    /// * `Self` - The QubitOperator multiplied by the PauliProduct.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
     fn mul(self, ppo: PauliProduct) -> Self {
-        let mut spin_op = SpinOperator::with_capacity(self.len());
+        let mut spin_op = QubitOperator::with_capacity(self.len());
         for (pps, vals) in self {
             let (ppp, coefficient) = pps.clone() * ppo.clone();
             let coefficient = CalculatorComplex::from(coefficient) * vals.clone();
@@ -511,25 +511,25 @@ impl ops::Mul<PauliProduct> for SpinOperator {
     }
 }
 
-/// Implements the multiplication function of PauliProduct by SpinOperator.
+/// Implements the multiplication function of PauliProduct by QubitOperator.
 ///
-impl ops::Mul<SpinOperator> for PauliProduct {
-    type Output = SpinOperator;
-    /// Implement `*` for PauliProduct and SpinOperator.
+impl ops::Mul<QubitOperator> for PauliProduct {
+    type Output = QubitOperator;
+    /// Implement `*` for PauliProduct and QubitOperator.
     ///
     /// # Arguments
     ///
-    /// * `other` - The SpinOperator to multiply by.
+    /// * `other` - The QubitOperator to multiply by.
     ///
     /// # Returns
     ///
-    /// * `Self` - A SpinOperator derived from the PauliProduct, SpinOperator multiplication.
+    /// * `Self` - A QubitOperator derived from the PauliProduct, QubitOperator multiplication.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
-    fn mul(self, other: SpinOperator) -> SpinOperator {
-        let mut spin_op = SpinOperator::with_capacity(other.len());
+    fn mul(self, other: QubitOperator) -> QubitOperator {
+        let mut spin_op = QubitOperator::with_capacity(other.len());
         for (ppo, valo) in other.iter() {
             let (ppp, coefficient) = self.clone() * ppo.clone();
             let coefficient = valo.clone() * CalculatorComplex::from(coefficient);
@@ -541,55 +541,55 @@ impl ops::Mul<SpinOperator> for PauliProduct {
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of SpinOperator.
+/// Implements the into_iter function (IntoIterator trait) of QubitOperator.
 ///
-impl IntoIterator for SpinOperator {
+impl IntoIterator for QubitOperator {
     type Item = (PauliProduct, CalculatorComplex);
     type IntoIter = indexmap::map::IntoIter<PauliProduct, CalculatorComplex>;
-    /// Returns the SpinOperator in Iterator form.
+    /// Returns the QubitOperator in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The SpinOperator in Iterator form.
+    /// * `Self::IntoIter` - The QubitOperator in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.into_iter()
     }
 }
 
-/// Implements the into_iter function (IntoIterator trait) of reference SpinOperator.
+/// Implements the into_iter function (IntoIterator trait) of reference QubitOperator.
 ///
-impl<'a> IntoIterator for &'a SpinOperator {
+impl<'a> IntoIterator for &'a QubitOperator {
     type Item = (&'a PauliProduct, &'a CalculatorComplex);
     type IntoIter = Iter<'a, PauliProduct, CalculatorComplex>;
 
-    /// Returns the reference SpinOperator in Iterator form.
+    /// Returns the reference QubitOperator in Iterator form.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The reference SpinOperator in Iterator form.
+    /// * `Self::IntoIter` - The reference QubitOperator in Iterator form.
     fn into_iter(self) -> Self::IntoIter {
         self.internal_map.iter()
     }
 }
 
-/// Implements the from_iter function (FromIterator trait) of SpinOperator.
+/// Implements the from_iter function (FromIterator trait) of QubitOperator.
 ///
-impl FromIterator<(PauliProduct, CalculatorComplex)> for SpinOperator {
-    /// Returns the object in SpinOperator form, from an Iterator form of the object.
+impl FromIterator<(PauliProduct, CalculatorComplex)> for QubitOperator {
+    /// Returns the object in QubitOperator form, from an Iterator form of the object.
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the information from which to create the SpinOperator.
+    /// * `iter` - The iterator containing the information from which to create the QubitOperator.
     ///
     /// # Returns
     ///
-    /// * `Self::IntoIter` - The iterator in SpinOperator form.
+    /// * `Self::IntoIter` - The iterator in QubitOperator form.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
     fn from_iter<I: IntoIterator<Item = (PauliProduct, CalculatorComplex)>>(iter: I) -> Self {
-        let mut so = SpinOperator::new();
+        let mut so = QubitOperator::new();
         for (pp, cc) in iter {
             so.add_operator_product(pp, cc)
                 .expect("Internal bug in add_operator_product");
@@ -598,14 +598,14 @@ impl FromIterator<(PauliProduct, CalculatorComplex)> for SpinOperator {
     }
 }
 
-/// Implements the extend function (Extend trait) of SpinOperator.
+/// Implements the extend function (Extend trait) of QubitOperator.
 ///
-impl Extend<(PauliProduct, CalculatorComplex)> for SpinOperator {
-    /// Extends the SpinOperator by the specified operations (in Iterator form).
+impl Extend<(PauliProduct, CalculatorComplex)> for QubitOperator {
+    /// Extends the QubitOperator by the specified operations (in Iterator form).
     ///
     /// # Arguments
     ///
-    /// * `iter` - The iterator containing the operations by which to extend the SpinOperator.
+    /// * `iter` - The iterator containing the operations by which to extend the QubitOperator.
     ///
     /// # Panics
     ///
@@ -618,10 +618,10 @@ impl Extend<(PauliProduct, CalculatorComplex)> for SpinOperator {
     }
 }
 
-/// Implements the format function (Display trait) of SpinOperator.
+/// Implements the format function (Display trait) of QubitOperator.
 ///
-impl fmt::Display for SpinOperator {
-    /// Formats the SpinOperator using the given formatter.
+impl fmt::Display for QubitOperator {
+    /// Formats the QubitOperator using the given formatter.
     ///
     /// # Arguments
     ///
@@ -629,9 +629,9 @@ impl fmt::Display for SpinOperator {
     ///
     /// # Returns
     ///
-    /// * `std::fmt::Result` - The formatted SpinOperator.
+    /// * `std::fmt::Result` - The formatted QubitOperator.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = "SpinOperator{\n".to_string();
+        let mut output = "QubitOperator{\n".to_string();
         for (key, val) in self.iter() {
             writeln!(output, "{}: {},", key, val)?;
         }
@@ -641,10 +641,10 @@ impl fmt::Display for SpinOperator {
     }
 }
 
-impl JordanWignerSpinToFermion for SpinOperator {
+impl JordanWignerSpinToFermion for QubitOperator {
     type Output = FermionOperator;
 
-    /// Implements JordanWignerSpinToFermion for a SpinOperator.
+    /// Implements JordanWignerSpinToFermion for a QubitOperator.
     ///
     /// The convention used is that |0> represents an empty fermionic state (spin-orbital),
     /// and |1> represents an occupied fermionic state.
@@ -667,32 +667,32 @@ mod test {
     use crate::StruqtureSerialisationMeta;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let pp: PauliProduct = PauliProduct::new().z(0);
-        let sos = SpinOperatorSerialize {
+        let sos = QubitOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
         };
-        let mut so = SpinOperator::new();
+        let mut so = QubitOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(SpinOperator::try_from(sos.clone()).unwrap(), so);
-        assert_eq!(SpinOperatorSerialize::from(so), sos);
+        assert_eq!(QubitOperator::try_from(sos.clone()).unwrap(), so);
+        assert_eq!(QubitOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let pp: PauliProduct = PauliProduct::new().z(0);
-        let sos = SpinOperatorSerialize {
+        let sos = QubitOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -703,19 +703,19 @@ mod test {
 
         // Test PartialEq trait
         let pp_1: PauliProduct = PauliProduct::new().z(0);
-        let sos_1 = SpinOperatorSerialize {
+        let sos_1 = QubitOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
         };
         let pp_2: PauliProduct = PauliProduct::new().z(2);
-        let sos_2 = SpinOperatorSerialize {
+        let sos_2 = QubitOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -726,14 +726,14 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let pp: PauliProduct = PauliProduct::new().z(0);
-        let sos = SpinOperatorSerialize {
+        let sos = QubitOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -741,18 +741,18 @@ mod test {
 
         assert_eq!(
             format!("{:?}", sos),
-            "SpinOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"SpinOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
+            "QubitOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"QubitOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = PauliProduct::new().x(0);
-        let sos = SpinOperatorSerialize {
+        let sos = QubitOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -762,7 +762,7 @@ mod test {
             &sos.readable(),
             &[
                 Token::Struct {
-                    name: "SpinOperatorSerialize",
+                    name: "QubitOperatorSerialize",
                     len: 2,
                 },
                 Token::Str("items"),
@@ -779,7 +779,7 @@ mod test {
                     len: 3,
                 },
                 Token::Str("type_name"),
-                Token::Str("SpinOperator"),
+                Token::Str("QubitOperator"),
                 Token::Str("min_version"),
                 Token::Tuple { len: 3 },
                 Token::U64(2),
@@ -794,14 +794,14 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = PauliProduct::new().x(0);
-        let sos = SpinOperatorSerialize {
+        let sos = QubitOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
             serialisation_meta: StruqtureSerialisationMeta {
-                type_name: "SpinOperator".to_string(),
+                type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
                 version: "2.0.0".to_string(),
             },
@@ -811,7 +811,7 @@ mod test {
             &sos.compact(),
             &[
                 Token::Struct {
-                    name: "SpinOperatorSerialize",
+                    name: "QubitOperatorSerialize",
                     len: 2,
                 },
                 Token::Str("items"),
@@ -821,7 +821,7 @@ mod test {
                 Token::Tuple { len: 2 },
                 Token::U64(0),
                 Token::UnitVariant {
-                    name: "SingleSpinOperator",
+                    name: "SingleQubitOperator",
                     variant: "X",
                 },
                 Token::TupleEnd,
@@ -844,7 +844,7 @@ mod test {
                     len: 3,
                 },
                 Token::Str("type_name"),
-                Token::Str("SpinOperator"),
+                Token::Str("QubitOperator"),
                 Token::Str("min_version"),
                 Token::Tuple { len: 3 },
                 Token::U64(2),

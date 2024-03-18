@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
-use super::{SpinHamiltonianWrapper, SpinLindbladNoiseOperatorWrapper};
+use super::{QubitHamiltonianWrapper, QubitLindbladNoiseOperatorWrapper};
 use crate::fermions::FermionLindbladOpenSystemWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
@@ -21,7 +21,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{OperateOnSpins, SpinLindbladOpenSystem, ToSparseMatrixSuperOperator};
+use struqture::spins::{OperateOnSpins, QubitLindbladOpenSystem, ToSparseMatrixSuperOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
@@ -29,7 +29,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
-/// In a SpinLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.
+/// In a QubitLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.
 ///
 /// Args:
 ///     number_spins (Optional[int]): The number of spins in the SpinLindbladOpenSystem.
@@ -45,9 +45,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
-///     from struqture_py.spins import SpinLindbladOpenSystem, DecoherenceProduct
+///     from struqture_py.spins import QubitLindbladOpenSystem, DecoherenceProduct
 ///
-///     slns = SpinLindbladOpenSystem()
+///     slns = QubitLindbladOpenSystem()
 ///     dp = DecoherenceProduct().z(0).x(1)
 ///     slns.system_add_operator_product(dp, 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
@@ -55,11 +55,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     dimension = 4**slns.number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinLindbladOpenSystem", module = "struqture_py.spins")]
+#[pyclass(name = "QubitLindbladOpenSystem", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct SpinLindbladOpenSystemWrapper {
-    /// Internal storage of [struqture::spins::SpinLindbladOpenSystem]
-    pub internal: SpinLindbladOpenSystem,
+pub struct QubitLindbladOpenSystemWrapper {
+    /// Internal storage of [struqture::spins::QubitLindbladOpenSystem]
+    pub internal: QubitLindbladOpenSystem,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -69,15 +69,15 @@ pub struct SpinLindbladOpenSystemWrapper {
     ToSparseMatrixSuperOperator,
     HermitianCalculus
 )]
-impl SpinLindbladOpenSystemWrapper {
-    /// Create a new SpinLindbladOpenSystem.
+impl QubitLindbladOpenSystemWrapper {
+    /// Create a new QubitLindbladOpenSystem.
     ///
     /// Returns:
-    ///     SpinLindbladOpenSystem: The new SpinLindbladOpenSystem with the input number of spins.
+    ///     QubitLindbladOpenSystem: The new QubitLindbladOpenSystem with the input number of spins.
     #[new]
     pub fn new() -> Self {
         Self {
-            internal: SpinLindbladOpenSystem::new(),
+            internal: QubitLindbladOpenSystem::new(),
         }
     }
 }

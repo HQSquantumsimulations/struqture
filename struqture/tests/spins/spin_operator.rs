@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! Integration test for public API of SpinOperator
+//! Integration test for public API of QubitOperator
 
 use super::create_na_matrix_from_operator_list;
 use nalgebra as na;
@@ -24,37 +24,37 @@ use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
-    OperateOnSpins, PauliProduct, SpinHamiltonian, SpinOperator, ToSparseMatrixOperator,
+    OperateOnSpins, PauliProduct, QubitHamiltonian, QubitOperator, ToSparseMatrixOperator,
 };
 use struqture::{CooSparseMatrix, OperateOnDensityMatrix, SpinIndex};
 use test_case::test_case;
 
-// Test the new function of the SpinOperator
+// Test the new function of the QubitOperator
 #[test]
 fn new() {
-    let so = SpinOperator::new();
+    let so = QubitOperator::new();
     assert!(so.is_empty());
-    assert_eq!(SpinOperator::new(), SpinOperator::default())
+    assert_eq!(QubitOperator::new(), QubitOperator::default())
 }
 
 #[test]
 fn empty_clone_options() {
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
 
     let empty: Option<usize> = None;
     let full: Option<usize> = Some(3);
-    assert_eq!(system.empty_clone(empty), SpinOperator::new());
-    assert_eq!(system.empty_clone(full), SpinOperator::with_capacity(1));
+    assert_eq!(system.empty_clone(empty), QubitOperator::new());
+    assert_eq!(system.empty_clone(full), QubitOperator::with_capacity(1));
 }
 
-// Test the number_spins function of the SpinOperator
+// Test the number_spins function of the QubitOperator
 #[test]
 fn internal_map_number_spins() {
     let pp_0: PauliProduct = PauliProduct::new().x(0);
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     assert_eq!(so.number_spins(), 0_usize);
     so.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
     assert_eq!(so.number_spins(), 1_usize);
@@ -62,11 +62,11 @@ fn internal_map_number_spins() {
     assert_eq!(so.number_spins(), 3_usize);
 }
 
-// Test the len function of the SpinOperator
+// Test the len function of the QubitOperator
 #[test]
 fn internal_map_len() {
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     so.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
     assert_eq!(so.len(), 1_usize);
 }
@@ -74,7 +74,7 @@ fn internal_map_len() {
 // Test the set, set_pauli_product, get functions of the SpinSystem
 #[test]
 fn internal_map_set_get_dict() {
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     assert_eq!(system.number_spins(), 0_usize);
     let pp_0: PauliProduct = PauliProduct::new().z(0);
 
@@ -109,11 +109,11 @@ fn internal_map_set_get_dict() {
     }
 }
 
-// Test the set, get and remove functions of the SpinOperator
+// Test the set, get and remove functions of the QubitOperator
 #[test]
 fn internal_map_set_get_remove() {
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
 
     // 1) Test try_set_pauli_product and get functions
     // Vacant
@@ -122,14 +122,14 @@ fn internal_map_set_get_remove() {
 
     // 2) Test remove function
     so.remove(&pp_2);
-    assert_eq!(so, SpinOperator::new());
+    assert_eq!(so, QubitOperator::new());
 }
 
-// Test the add_operator_product function of the SpinOperator
+// Test the add_operator_product function of the QubitOperator
 #[test]
 fn internal_map_add_operator_product() {
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
 
     so.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5))
         .unwrap();
@@ -139,11 +139,11 @@ fn internal_map_add_operator_product() {
     assert_eq!(so.get(&pp_2), &CalculatorComplex::from(0.0));
 }
 
-// Test the iter, keys and values functions of the SpinOperator
+// Test the iter, keys and values functions of the QubitOperator
 #[test]
 fn internal_map_keys() {
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     so.set(pp_2.clone(), CalculatorComplex::from(0.5)).unwrap();
 
     let mut map: BTreeMap<PauliProduct, CalculatorComplex> = BTreeMap::new();
@@ -166,23 +166,23 @@ fn internal_map_keys() {
     }
 }
 
-// Test the Iter traits of SpinOperator: into_iter, from_iter and extend
+// Test the Iter traits of QubitOperator: into_iter, from_iter and extend
 #[test]
 fn into_iter_from_iter_extend() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
     let pp_1: PauliProduct = PauliProduct::new().x(1);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system
         .add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
 
     let system_iter = system.clone().into_iter();
-    assert_eq!(SpinOperator::from_iter(system_iter), system);
+    assert_eq!(QubitOperator::from_iter(system_iter), system);
     let system_iter = (&system)
         .into_iter()
         .map(|(key, value)| (key.clone(), value.clone()));
-    assert_eq!(SpinOperator::from_iter(system_iter), system);
-    let mut hamiltonian = SpinOperator::new();
+    assert_eq!(QubitOperator::from_iter(system_iter), system);
+    let mut hamiltonian = QubitOperator::new();
     hamiltonian
         .add_operator_product(pp_0.clone(), 1.0.into())
         .unwrap();
@@ -191,7 +191,7 @@ fn into_iter_from_iter_extend() {
         assert_eq!(first.1, *second.1);
     }
 
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system
         .add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
@@ -200,7 +200,7 @@ fn into_iter_from_iter_extend() {
     let mapping_iter = mapping.into_iter();
     system.extend(mapping_iter);
 
-    let mut system_1 = SpinOperator::new();
+    let mut system_1 = QubitOperator::new();
     system_1
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -214,22 +214,22 @@ fn into_iter_from_iter_extend() {
 #[test]
 fn from_operator_pass() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let mut so_0 = SpinHamiltonian::new();
+    let mut so_0 = QubitHamiltonian::new();
     let _ = so_0.add_operator_product(pp_0.clone(), CalculatorFloat::from(1.0));
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     let _ = so_0_1.add_operator_product(pp_0, CalculatorComplex::from(1.0));
 
-    assert_eq!(SpinOperator::from(so_0), so_0_1);
+    assert_eq!(QubitOperator::from(so_0), so_0_1);
 }
 
-// Test the negative operation: -SpinOperator
+// Test the negative operation: -QubitOperator
 #[test]
 fn negative_so() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     so_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut so_0_minus = SpinOperator::new();
+    let mut so_0_minus = QubitOperator::new();
     so_0_minus
         .add_operator_product(pp_0, CalculatorComplex::from(-1.0))
         .unwrap();
@@ -237,18 +237,18 @@ fn negative_so() {
     assert_eq!(-so_0, so_0_minus);
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the addition: QubitOperator + QubitOperator
 #[test]
 fn add_so_so() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
     let pp_1: PauliProduct = PauliProduct::new().x(1);
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     so_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut so_1 = SpinOperator::new();
+    let mut so_1 = QubitOperator::new();
     so_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     so_0_1
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -260,18 +260,18 @@ fn add_so_so() {
     assert_eq!(so_0.add(so_1), so_0_1);
 }
 
-// Test the subtraction: SpinOperator - SpinOperator
+// Test the subtraction: QubitOperator - QubitOperator
 #[test]
 fn sub_so_so() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
     let pp_1: PauliProduct = PauliProduct::new().x(1);
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     so_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(1.0))
         .unwrap();
-    let mut so_1 = SpinOperator::new();
+    let mut so_1 = QubitOperator::new();
     so_1.add_operator_product(pp_1.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     so_0_1
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -283,7 +283,7 @@ fn sub_so_so() {
     assert_eq!(so_0.sub(so_1), so_0_1);
 }
 
-// Test the multiplication: SpinOperator * SpinOperator with all possible pauli matrices
+// Test the multiplication: QubitOperator * QubitOperator with all possible pauli matrices
 #[test_case("0X", "0X", "0I", CalculatorComplex::from(1.0); "x_x_identity")]
 #[test_case("0X1X", "0X", "0I1X", CalculatorComplex::new(1.0, 0.0); "x_x")]
 #[test_case("0X1X", "0Y", "0Z1X", CalculatorComplex::new(0.0, 1.0); "x_y")]
@@ -296,33 +296,33 @@ fn sub_so_so() {
 #[test_case("0Z1X", "0Z", "0I1X", CalculatorComplex::new(1.0, 0.0); "z_z")]
 fn mul_so_so_all_paulis(pp0: &str, pp1: &str, pp01: &str, coeff: CalculatorComplex) {
     let pp_0: PauliProduct = PauliProduct::from_str(pp0).unwrap();
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     so_0.add_operator_product(pp_0, CalculatorComplex::from(2.0))
         .unwrap();
     let pp_1: PauliProduct = PauliProduct::from_str(pp1).unwrap();
-    let mut so_1 = SpinOperator::new();
+    let mut so_1 = QubitOperator::new();
     so_1.add_operator_product(pp_1, CalculatorComplex::from(0.5))
         .unwrap();
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     let pp_0_1: PauliProduct = PauliProduct::from_str(pp01).unwrap();
     so_0_1.add_operator_product(pp_0_1, coeff).unwrap();
 
     assert_eq!(so_0 * so_1, so_0_1);
 }
 
-// Test the multiplication: SpinOperator * SpinOperator
+// Test the multiplication: QubitOperator * QubitOperator
 #[test]
 fn mul_so_so() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
     let pp_1: PauliProduct = PauliProduct::new().x(1);
     let pp_0_1: PauliProduct = PauliProduct::new().z(0).x(1);
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     so_0.add_operator_product(pp_0, CalculatorComplex::from(2.0))
         .unwrap();
-    let mut so_1 = SpinOperator::new();
+    let mut so_1 = QubitOperator::new();
     so_1.add_operator_product(pp_1, CalculatorComplex::from(0.5))
         .unwrap();
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     so_0_1
         .add_operator_product(pp_0_1, CalculatorComplex::from(1.0))
         .unwrap();
@@ -330,19 +330,19 @@ fn mul_so_so() {
     assert_eq!(so_0 * so_1, so_0_1);
 }
 
-// Test the multiplication: SpinOperator * SpinOperator where they have a PauliProduct with the same index
+// Test the multiplication: QubitOperator * QubitOperator where they have a PauliProduct with the same index
 #[test]
 fn mul_so_so_same_index() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
     let pp_1: PauliProduct = PauliProduct::new().x(0);
     let pp_0_1: PauliProduct = PauliProduct::new().y(0);
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     so_0.add_operator_product(pp_0, CalculatorComplex::from(2.0))
         .unwrap();
-    let mut so_1 = SpinOperator::new();
+    let mut so_1 = QubitOperator::new();
     so_1.add_operator_product(pp_1, CalculatorComplex::from(0.5))
         .unwrap();
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     so_0_1
         .add_operator_product(pp_0_1, CalculatorComplex::new(0.0, 1.0))
         .unwrap();
@@ -350,46 +350,49 @@ fn mul_so_so_same_index() {
     assert_eq!(so_0 * so_1, so_0_1);
 }
 
-// Test the multiplication: SpinOperator * Calculatorcomplex
+// Test the multiplication: QubitOperator * Calculatorcomplex
 #[test]
 fn mul_so_cc() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let mut so_0 = SpinOperator::new();
+    let mut so_0 = QubitOperator::new();
     let _ = so_0.add_operator_product(pp_0.clone(), CalculatorComplex::from(2.0));
-    let mut so_0_1 = SpinOperator::new();
+    let mut so_0_1 = QubitOperator::new();
     let _ = so_0_1.add_operator_product(pp_0, CalculatorComplex::from(6.0));
 
     assert_eq!(so_0 * CalculatorComplex::from(3.0), so_0_1);
 }
 
-// Test the Debug trait of SpinOperator
+// Test the Debug trait of QubitOperator
 #[test]
 fn debug() {
     let pp: PauliProduct = PauliProduct::new().z(0);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     let _ = so.set(pp, CalculatorComplex::from(0.5));
 
     assert_eq!(
         format!("{:?}", so),
-        "SpinOperator { internal_map: {PauliProduct { items: [(0, Z)] }: CalculatorComplex { re: Float(0.5), im: Float(0.0) }} }"
+        "QubitOperator { internal_map: {PauliProduct { items: [(0, Z)] }: CalculatorComplex { re: Float(0.5), im: Float(0.0) }} }"
     );
 }
 
-// Test the Display trait of SpinOperator
+// Test the Display trait of QubitOperator
 #[test]
 fn display() {
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     let pp: PauliProduct = PauliProduct::new().z(0);
     let _ = so.set(pp, CalculatorComplex::from(0.5));
 
-    assert_eq!(format!("{}", so), "SpinOperator{\n0Z: (5e-1 + i * 0e0),\n}");
+    assert_eq!(
+        format!("{}", so),
+        "QubitOperator{\n0Z: (5e-1 + i * 0e0),\n}"
+    );
 }
 
 // Test the hermitian_conjugate and is_natural_hermitian functions of the HermitianMixedProduct
 #[test]
 fn hermitian_test() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -400,7 +403,7 @@ fn hermitian_test() {
 #[test]
 fn matrices() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -437,11 +440,11 @@ fn matrices() {
     superoperator_matrix.insert(3, row_3);
 }
 
-// Test the Clone and PartialEq traits of SpinOperator
+// Test the Clone and PartialEq traits of QubitOperator
 #[test]
 fn clone_partial_eq() {
     let pp: PauliProduct = PauliProduct::new().z(0);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
     // Test Clone trait
@@ -449,10 +452,10 @@ fn clone_partial_eq() {
 
     // Test PartialEq trait
     let pp_1: PauliProduct = PauliProduct::new().z(0);
-    let mut so_1 = SpinOperator::new();
+    let mut so_1 = QubitOperator::new();
     so_1.set(pp_1, CalculatorComplex::from(0.5)).unwrap();
     let pp_2: PauliProduct = PauliProduct::new().z(2);
-    let mut so_2 = SpinOperator::new();
+    let mut so_2 = QubitOperator::new();
     so_2.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
     assert!(so_1 == so);
     assert!(so == so_1);
@@ -460,29 +463,29 @@ fn clone_partial_eq() {
     assert!(so != so_2);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test QubitOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_json() {
     let pp = PauliProduct::new().x(0);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
     let serialized = serde_json::to_string(&so).unwrap();
-    let deserialized: SpinOperator = serde_json::from_str(&serialized).unwrap();
+    let deserialized: QubitOperator = serde_json::from_str(&serialized).unwrap();
     assert_eq!(so, deserialized);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test QubitOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let pp = PauliProduct::new().x(0);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system.set(pp, 0.5.into()).unwrap();
     assert_tokens(
         &system.readable(),
         &[
             Token::Struct {
-                name: "SpinOperatorSerialize",
+                name: "QubitOperatorSerialize",
                 len: 2,
             },
             Token::Str("items"),
@@ -499,7 +502,7 @@ fn serde_readable() {
                 len: 3,
             },
             Token::Str("type_name"),
-            Token::Str("SpinOperator"),
+            Token::Str("QubitOperator"),
             Token::Str("min_version"),
             Token::Tuple { len: 3 },
             Token::U64(2),
@@ -517,29 +520,29 @@ fn serde_readable() {
 #[test]
 fn bincode() {
     let pp = PauliProduct::new().x(0);
-    let mut so = SpinOperator::new();
+    let mut so = QubitOperator::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
     let encoded: Vec<u8> = bincode::serialize(&so).unwrap();
-    let decoded: SpinOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: QubitOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(so, decoded);
 
     let encoded: Vec<u8> = bincode::serialize(&so.clone().compact()).unwrap();
-    let decoded: SpinOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: QubitOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(so, decoded);
 }
 
 #[test]
 fn serde_compact() {
     let pp = PauliProduct::new().x(0);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system.set(pp, 0.5.into()).unwrap();
 
     assert_tokens(
         &system.compact(),
         &[
             Token::Struct {
-                name: "SpinOperatorSerialize",
+                name: "QubitOperatorSerialize",
                 len: 2,
             },
             Token::Str("items"),
@@ -549,7 +552,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(0),
             Token::UnitVariant {
-                name: "SingleSpinOperator",
+                name: "SingleQubitOperator",
                 variant: "X",
             },
             Token::TupleEnd,
@@ -572,7 +575,7 @@ fn serde_compact() {
                 len: 3,
             },
             Token::Str("type_name"),
-            Token::Str("SpinOperator"),
+            Token::Str("QubitOperator"),
             Token::Str("min_version"),
             Token::Tuple { len: 3 },
             Token::U64(2),
@@ -595,7 +598,7 @@ fn serde_compact() {
 #[test_case("0X1Y", &["Y", "X"]; "0X1Y")]
 #[test_case("0X2Y", &["Y", "I","X"]; "0X2Y")]
 fn test_superoperator(pauli_representation: &str, pauli_operators: &[&str]) {
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     let pp: PauliProduct = PauliProduct::from_str(pauli_representation).unwrap();
 
     system.set(pp, CalculatorComplex::from(1.0)).unwrap();
@@ -648,7 +651,7 @@ fn test_superoperator(pauli_representation: &str, pauli_operators: &[&str]) {
 #[test_case("0X1Y", &["Y", "X"]; "0X1Y")]
 #[test_case("0X2Y", &["Y", "I","X"]; "0X2Y")]
 fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     let pp: PauliProduct = PauliProduct::from_str(pauli_representation).unwrap();
 
     system.set(pp, CalculatorComplex::from(1.0)).unwrap();
@@ -718,7 +721,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 fn sparse_lindblad_entries() {
     let pp_0: PauliProduct = PauliProduct::new().z(0);
     let pp_1: PauliProduct = PauliProduct::new().x(1);
-    let mut system = SpinOperator::new();
+    let mut system = QubitOperator::new();
     system
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
@@ -745,19 +748,19 @@ fn test_spin_operator_pauli_multiplication() {
     // We use this a bunch
     let one = CalculatorComplex::from(1.0);
     // This is to test the algebra of
-    // SpinOperator * PauliProduct and
-    // PauliProduct * SpinOperator
+    // QubitOperator * PauliProduct and
+    // PauliProduct * QubitOperator
     let pauli_1 = PauliProduct::from_str("0X").unwrap();
     let pauli_2 = PauliProduct::from_str("0Y").unwrap();
     let pauli_3 = PauliProduct::from_str("0Z").unwrap();
     let pauli_4 = PauliProduct::from_str("2Y").unwrap();
     let pauli_5 = PauliProduct::from_str("0X2Y").unwrap();
 
-    let mut spin_op_1 = SpinOperator::new();
-    let mut spin_op_2 = SpinOperator::new();
-    let mut spin_op_3 = SpinOperator::new();
-    let mut spin_op_4 = SpinOperator::new();
-    let mut spin_op_5 = SpinOperator::new();
+    let mut spin_op_1 = QubitOperator::new();
+    let mut spin_op_2 = QubitOperator::new();
+    let mut spin_op_3 = QubitOperator::new();
+    let mut spin_op_4 = QubitOperator::new();
+    let mut spin_op_5 = QubitOperator::new();
 
     spin_op_1.set(pauli_1.clone(), one.clone()).unwrap();
     spin_op_2.set(pauli_2.clone(), one.clone()).unwrap();
@@ -792,11 +795,11 @@ fn test_spin_operator_pauli_multiplication() {
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_spin_operator_schema() {
-    let mut op = SpinOperator::new();
+    let mut op = QubitOperator::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
-    let schema = schemars::schema_for!(SpinOperator);
-    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
+    let schema = schemars::schema_for!(QubitOperator);
+    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let val = match value {
@@ -817,9 +820,9 @@ fn test_from_to_struqture_1() {
     struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = PauliProduct::new().x(0).y(1).z(25);
-    let mut ss_2 = SpinOperator::new();
+    let mut ss_2 = QubitOperator::new();
     ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
 
-    assert!(SpinOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(QubitOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
     assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

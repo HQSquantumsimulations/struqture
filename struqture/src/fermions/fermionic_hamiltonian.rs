@@ -14,7 +14,7 @@ use super::{
     FermionOperator, FermionProduct, HermitianFermionProduct, ModeIndex, OperateOnFermions,
 };
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::SpinHamiltonian;
+use crate::spins::QubitHamiltonian;
 use crate::{
     GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
     SymmetricIndex,
@@ -230,7 +230,7 @@ impl<'a> OperateOnModes<'a> for FermionHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `usize` - The number of spins in the FermionHamiltonian.
+    /// * `usize` - The number of modes in the FermionHamiltonian.
     fn number_modes(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -610,7 +610,7 @@ impl fmt::Display for FermionHamiltonian {
 }
 
 impl JordanWignerFermionToSpin for FermionHamiltonian {
-    type Output = SpinHamiltonian;
+    type Output = QubitHamiltonian;
 
     /// Implements JordanWignerFermionToSpin for a FermionHamiltonian.
     ///
@@ -619,9 +619,9 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
     ///
     /// # Returns
     ///
-    /// `SpinHamiltonian` - The spin Hamiltonian that results from the transformation.
+    /// `QubitHamiltonian` - The spin Hamiltonian that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
-        let mut out = SpinHamiltonian::new();
+        let mut out = QubitHamiltonian::new();
 
         for hfp in self.keys() {
             let coeff = self.get(hfp);
@@ -637,8 +637,8 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
 
                 let spin_op = fp.jordan_wigner() * coeff.clone()
                     + fp_conj.jordan_wigner() * conjugate_sign * coeff.conj();
-                let spin_hamiltonian = SpinHamiltonian::try_from(spin_op).expect(
-                    "Something went wrong when attempting to cast SpinOperator into SpinHamiltonian.",
+                let spin_hamiltonian = QubitHamiltonian::try_from(spin_op).expect(
+                    "Something went wrong when attempting to cast QubitOperator into QubitHamiltonian.",
                 );
                 out = out + spin_hamiltonian;
             }
@@ -652,7 +652,7 @@ mod test {
     use super::*;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -670,7 +670,7 @@ mod test {
         assert_eq!(FermionHamiltonian::try_from(sos.clone()).unwrap(), so);
         assert_eq!(FermionHamiltonianSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -711,7 +711,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -730,7 +730,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -779,7 +779,7 @@ mod test {
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();

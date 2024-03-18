@@ -16,7 +16,7 @@ Each Lindblad operator is an operator product (in the spins case, a decoherence 
 
 The noise operators in struqture are
 
-* `SpinLindbladNoiseOperator`
+* `QubitLindbladNoiseOperator`
 * `BosonLindbladNoiseOperator`
 * `FermionLindbladNoiseOperator`
 * `MixedLindbladNoiseOperator`
