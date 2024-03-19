@@ -150,7 +150,7 @@ fn test_jw_pauli_decoherence_product() {
 }
 
 #[test]
-fn test_jw_spin_operator() {
+fn test_jw_qubit_operator() {
     let mut so = QubitOperator::new();
     let pp1 = PauliProduct::new().z(0).y(1).x(2);
     let pp2 = PauliProduct::new().y(1).x(2).z(3);
@@ -165,7 +165,7 @@ fn test_jw_spin_operator() {
 }
 
 #[test]
-fn test_jw_spin_hamiltonian() {
+fn test_jw_qubit_hamiltonian() {
     let mut sh = QubitHamiltonian::new();
 
     let pp1 = PauliProduct::new().z(0).y(1).x(2);

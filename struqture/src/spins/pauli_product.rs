@@ -821,12 +821,12 @@ impl JordanWignerSpinToFermion for PauliProduct {
     ///
     /// * Internal bug in `add_operator_product`
     fn jordan_wigner(&self) -> Self::Output {
-        let mut spin_operator = QubitOperator::new();
-        spin_operator
+        let mut qubit_operator = QubitOperator::new();
+        qubit_operator
             .add_operator_product(self.clone(), 1.0.into())
             .expect(INTERNAL_BUG_ADD_OPERATOR_PRODUCT);
 
-        let plus_minus_operator = PlusMinusOperator::from(spin_operator);
+        let plus_minus_operator = PlusMinusOperator::from(qubit_operator);
         plus_minus_operator.jordan_wigner()
     }
 }

@@ -330,7 +330,7 @@ impl MixedHamiltonian {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_one::mixed_systems::MixedHamiltonianSystem, StruqtureError> {
-        let mut new_spin_system = struqture_one::mixed_systems::MixedHamiltonianSystem::new(
+        let mut new_mixed_system = struqture_one::mixed_systems::MixedHamiltonianSystem::new(
             vec![None; self.n_spins],
             vec![None; self.n_bosons],
             vec![None; self.n_fermions],
@@ -338,12 +338,12 @@ impl MixedHamiltonian {
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_spin_system,
+                &mut new_mixed_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_spin_system)
+        Ok(new_mixed_system)
     }
 
     /// Export to struqture_1 format.
@@ -351,7 +351,7 @@ impl MixedHamiltonian {
     pub fn from_struqture_1(
         value: &struqture_one::mixed_systems::MixedHamiltonianSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_spin_operator = Self::new(
+        let mut new_qubit_operator = Self::new(
             struqture_one::mixed_systems::OperateOnMixedSystems::number_spins(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_bosonic_modes(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_fermionic_modes(value)
@@ -359,9 +359,9 @@ impl MixedHamiltonian {
         );
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key = HermitianMixedProduct::from_struqture_1(key)?;
-            let _ = new_spin_operator.set(self_key, val.clone());
+            let _ = new_qubit_operator.set(self_key, val.clone());
         }
-        Ok(new_spin_operator)
+        Ok(new_qubit_operator)
     }
 }
 

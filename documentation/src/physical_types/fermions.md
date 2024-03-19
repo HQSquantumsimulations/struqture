@@ -122,67 +122,22 @@ hamiltonian.add_operator_product(hfp, CalculatorComplex::new(1.5, 0.0)).unwrap()
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `FermionSystem` and `FermionHamiltonian` instead of a `FermionOperator` and `FermionHamiltonian`. See next section for more details.
-
-## Systems and HamiltonianSystems
-
-Following the intention to avoid unphysical behaviour, FermionSystems and FermionHamiltonians are wrappers around FermionOperators and FermionHamiltonians that allow to explicitly set the number of spins of the systems.
-When setting or adding a FermionProduct/HermitianFermionProduct to the systems, it is guaranteed that the fermionic indices involved cannot exceed the number of fermionic modes in the system.
-Note that the user can decide to explicitly set the number of fermionic modes to be variable.
-
-### Examples
-
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{HermitianFermionProduct, FermionHamiltonian};
-
-let mut system = FermionHamiltonian::new(Some(3));
-
-// This will work
-let hfp = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
-system.add_operator_product(hfp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", system);
-
-// This will not work, as the fermionic index of the HermitianFermionProduct is larger
-// than the number of the fermionic modes in the system (the fermionic mode with the
-// smallest index is 0).
-let hfp_error = HermitianFermionProduct::new([3], [3]).unwrap();
-let error = system.add_operator_product(hfp_error, CalculatorComplex::new(1.0, 1.5));
-println!("{:?}", error);
-
-// This will work because we leave the number of spins dynamic
-let hbf = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
-let mut system = FermionHamiltonian::new(None);
-system.add_operator_product(hbf, CalculatorComplex::new(1.0, 1.5)).unwrap();
-```
-
 The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
-system = fermions.FermionHamiltonian(3)
+operator = fermions.FermionHamiltonian()
 
 # This will work
 hfp = fermions.HermitianFermionProduct([0, 1], [0, 2])
-system.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 1.5))
-print(system)
-
-# This will not work, as the fermioncic index of the HermitianFermionProduct is larger
-# than the number of the fermionic modes in the system (the fermionic mode with the
-# smallest index is 0).
-hfp_error = fermions.HermitianFermionProduct([3], [3])
-value = CalculatorComplex.from_pair(1.0, 1.5)
-# system.add_operator_product(hfp_error, value)  # Uncomment me!
-
-# This will work because we leave the number of spins dynamic
-system = fermions.FermionHamiltonian()
+operator.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 1.5))
 hfp = fermions.HermitianFermionProduct([3], [3])
-system.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 0.0))
+operator.add_operator_product(hfp, CalculatorComplex.from_pair(1.0, 0.0))
+print(operator)
 ```
 
-## Noise operators and systems
+## Noise operators
 
 We describe decoherence by representing it with the Lindblad equation.
 The Lindblad equation is a master equation determining the time evolution of the density matrix.
@@ -199,8 +154,6 @@ We use `FermionProducts` as the operator basis.
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `FermionProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `FermionLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`FermionProduct`, `FermionProduct`) as keys and the entries in the rate matrix as values.
 
-Similarly to FermionOperators, FermionLindbladNoiseOperators have a system equivalent: `FermionLindbladNoiseSystem`, with a number of involved fermionic modes defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
-
 ### Examples
 Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
@@ -208,20 +161,20 @@ Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 
 ```rust
 use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
-use struqture::fermions::{FermionProduct, FermionLindbladNoiseSystem};
+use struqture::fermions::{FermionProduct, FermionLindbladNoiseOperator};
 
-// Setting up the system and the product we want to add to it
-let mut system = FermionLindbladNoiseSystem::new(Some(3));
+// Setting up the operator and the product we want to add to it
+let mut operator = FermionLindbladNoiseOperator::new();
 let fp = FermionProduct::new([0], [0]).unwrap();
 
-// Adding the product to the system
-system
+// Adding the product to the operator
+operator
     .add_operator_product(
         (fp.clone(), fp.clone()),
         CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
-assert_eq!(system.get(&(fp.clone(), fp)), &CalculatorComplex::new(1.0, 0.0));
-println!("{}", system);
+assert_eq!(operator.get(&(fp.clone(), fp)), &CalculatorComplex::new(1.0, 0.0));
+println!("{}", operator);
 ```
 
 The equivalent code in python:
@@ -229,18 +182,18 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
-# Setting up the system and the product we want to add to it
-system = fermions.FermionLindbladNoiseSystem(3)
+# Setting up the operator and the product we want to add to it
+operator = fermions.FermionLindbladNoiseOperator()
 fp = fermions.FermionProduct([0], [0])
 
-# Adding the product to the system
-system.add_operator_product((fp, fp), CalculatorComplex.from_pair(1.0, 1.5))
-print(system)
+# Adding the product to the operator
+operator.add_operator_product((fp, fp), CalculatorComplex.from_pair(1.0, 1.5))
+print(operator)
 
 # In python we can also use the string representation
-system = fermions.FermionLindbladNoiseSystem(3)
-system.add_operator_product((str(fp), str(fp)), 1.0+1.5*1j)
-print(system)
+operator = fermions.FermionLindbladNoiseSystem()
+operator.add_operator_product((str(fp), str(fp)), 1.0+1.5*1j)
+print(operator)
 ```
 
 ## Open systems
@@ -250,7 +203,7 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseOperator`). They have different ways to set terms in Rust and Python:
 
 ### Examples
 
@@ -261,14 +214,14 @@ use struqture::fermions::{
     FermionProduct, HermitianFermionProduct, FermionLindbladOpenSystem
 };
 
-let mut open_system = FermionLindbladOpenSystem::new(Some(3));
+let mut open_system = FermionLindbladOpenSystem::new();
 
 let hfp = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
 let fp = FermionProduct::new([0], [0]).unwrap();
 
 // Adding the c^{\dagger}_0 c^{\dagger}_1 c_0 c_2 term to the system part of the open system
-let system = open_system.system_mut();
-system.add_operator_product(hfp, CalculatorComplex::new(2.0, 0.0)).unwrap();
+let operator = open_system.system_mut();
+operator.add_operator_product(hfp, CalculatorComplex::new(2.0, 0.0)).unwrap();
 
 // Adding the c^{\dagger}_0 c_0 part to the noise part of the open system
 let noise = open_system.noise_mut();
@@ -285,7 +238,7 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
-open_system = fermions.FermionLindbladOpenSystem(3)
+open_system = fermions.FermionLindbladOpenSystem()
 
 hfp = fermions.HermitianFermionProduct([0, 1], [0, 2])
 fp = fermions.FermionProduct([0], [0])

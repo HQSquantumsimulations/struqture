@@ -76,7 +76,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create QubitLindbladNoiseOperator from input.
     #[staticmethod]
-    pub fn from_spin_noise_system(
+    pub fn from_qubit_noise_operator(
         value: Py<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         let system = QubitLindbladNoiseOperatorWrapper::from_pyany(value)
@@ -93,7 +93,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create QubitLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
-    pub fn to_spin_noise_system(&self) -> PyResult<QubitLindbladNoiseOperatorWrapper> {
+    pub fn to_qubit_noise_operator(&self) -> PyResult<QubitLindbladNoiseOperatorWrapper> {
         let result: QubitLindbladNoiseOperator =
             QubitLindbladNoiseOperator::from(self.internal.clone());
         Ok(QubitLindbladNoiseOperatorWrapper { internal: result })

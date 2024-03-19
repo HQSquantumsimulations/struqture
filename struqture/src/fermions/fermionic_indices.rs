@@ -1376,11 +1376,11 @@ impl JordanWignerFermionToSpin for FermionProduct {
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
-        let mut spin_operator = QubitOperator::new();
+        let mut qubit_operator = QubitOperator::new();
 
         let mut id = PauliProduct::new();
         id = id.set_pauli(0, SingleQubitOperator::Identity);
-        spin_operator
+        qubit_operator
             .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
             .expect("Internal bug in add_operator_product.");
 
@@ -1391,10 +1391,10 @@ impl JordanWignerFermionToSpin for FermionProduct {
         for (index, site) in self.creators().enumerate() {
             if index % 2 != number_creators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _lowering_operator(site);
+            qubit_operator = qubit_operator * _lowering_operator(site);
             previous = *site;
         }
 
@@ -1402,13 +1402,13 @@ impl JordanWignerFermionToSpin for FermionProduct {
         for (index, site) in self.annihilators().enumerate() {
             if index % 2 != number_annihilators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _raising_operator(site);
+            qubit_operator = qubit_operator * _raising_operator(site);
             previous = *site;
         }
-        spin_operator
+        qubit_operator
     }
 }
 
@@ -1430,11 +1430,11 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
-        let mut spin_operator = QubitOperator::new();
+        let mut qubit_operator = QubitOperator::new();
 
         let mut id = PauliProduct::new();
         id = id.set_pauli(0, SingleQubitOperator::Identity);
-        spin_operator
+        qubit_operator
             .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
             .expect("Internal bug in add_operator_product.");
 
@@ -1445,10 +1445,10 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         for (index, site) in self.creators().enumerate() {
             if index % 2 != number_creators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _lowering_operator(site);
+            qubit_operator = qubit_operator * _lowering_operator(site);
             previous = *site;
         }
 
@@ -1456,10 +1456,10 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         for (index, site) in self.annihilators().enumerate() {
             if index % 2 != number_annihilators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _raising_operator(site);
+            qubit_operator = qubit_operator * _raising_operator(site);
             previous = *site;
         }
 
@@ -1467,7 +1467,7 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         // real coefficients are doubled.
         if !self.is_natural_hermitian() {
             let mut out = QubitHamiltonian::new();
-            for (product, coeff) in spin_operator.iter() {
+            for (product, coeff) in qubit_operator.iter() {
                 if coeff.im == 0.0.into() {
                     out.add_operator_product(product.clone(), coeff.re.clone() * 2)
                         .expect("Internal bug in add_operator_product.");
@@ -1475,7 +1475,7 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             }
             return out;
         }
-        QubitHamiltonian::try_from(spin_operator).expect(
+        QubitHamiltonian::try_from(qubit_operator).expect(
             "Error in conversion from QubitOperator to
 QubitHamiltonian, despite the internal check that the HermitianFermionProduct in the jordan-wigner
 transform is hermitian.",

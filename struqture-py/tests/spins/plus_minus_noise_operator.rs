@@ -104,9 +104,9 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of SpinSystem
+/// Test add_operator_product and remove functions of PMLNO
 #[test]
-fn spin_system_test_add_operator_product_remove() {
+fn _system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let system = new_noisesystem(py);
@@ -681,7 +681,7 @@ fn test_richcmp() {
 }
 
 #[test]
-fn test_from_spin_sys() {
+fn test_from_qubit_op() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_noisesystem(py);
@@ -745,20 +745,20 @@ fn test_from_spin_sys() {
 
         let result = py
             .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
-            .call_method1("from_spin_noise_system", (pp,))
+            .call_method1("from_qubit_noise_operator", (pp,))
             .unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
-            .call_method1("from_spin_noise_system", ("No",));
+            .call_method1("from_qubit_noise_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_spin_sys() {
+fn test_to_qubit_noise_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_noisesystem(py);
@@ -820,7 +820,7 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp.call_method0("to_spin_noise_system").unwrap();
+        let result = pmp.call_method0("to_qubit_noise_operator").unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
@@ -839,7 +839,7 @@ fn test_jordan_wigner() {
         let empty = bool::extract(flno.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let slno = pmno.call_method0("to_spin_noise_system").unwrap();
+        let slno = pmno.call_method0("to_qubit_noise_operator").unwrap();
 
         let number_modes = usize::extract(flno.call_method0("number_modes").unwrap()).unwrap();
         let number_spins = usize::extract(slno.call_method0("number_spins").unwrap()).unwrap();

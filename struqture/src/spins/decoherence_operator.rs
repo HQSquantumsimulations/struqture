@@ -260,16 +260,16 @@ impl DecoherenceOperator {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_one::spins::DecoherenceOperator, StruqtureError> {
-        let mut new_spin_system = struqture_one::spins::DecoherenceOperator::new();
+        let mut new_qubit_system = struqture_one::spins::DecoherenceOperator::new();
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_spin_system,
+                &mut new_qubit_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_spin_system)
+        Ok(new_qubit_system)
     }
 
     /// Export to struqture_1 format.
@@ -277,12 +277,12 @@ impl DecoherenceOperator {
     pub fn from_struqture_1(
         value: &struqture_one::spins::DecoherenceOperator,
     ) -> Result<Self, StruqtureError> {
-        let mut new_spin_operator = Self::new();
+        let mut new_qubit_operator = Self::new();
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key = DecoherenceProduct::from_struqture_1(key)?;
-            let _ = new_spin_operator.set(self_key, val.clone());
+            let _ = new_qubit_operator.set(self_key, val.clone());
         }
-        Ok(new_spin_operator)
+        Ok(new_qubit_operator)
     }
 }
 
@@ -400,18 +400,18 @@ impl ops::Mul<DecoherenceOperator> for DecoherenceOperator {
     ///
     /// * `Self` - The two DecoherenceOperators multiplied.
     fn mul(self, other: DecoherenceOperator) -> Self {
-        let mut spin_op = DecoherenceOperator::with_capacity(self.len() * other.len());
+        let mut qubit_op = DecoherenceOperator::with_capacity(self.len() * other.len());
         for (pps, vals) in self {
             for (ppo, valo) in other.iter() {
                 let (ppp, coefficient) = pps.clone() * ppo.clone();
                 let coefficient =
                     Into::<CalculatorComplex>::into(valo) * coefficient * vals.clone();
-                spin_op
+                qubit_op
                     .add_operator_product(ppp, coefficient)
                     .expect("Internal bug in add_operator_product");
             }
         }
-        spin_op
+        qubit_op
     }
 }
 

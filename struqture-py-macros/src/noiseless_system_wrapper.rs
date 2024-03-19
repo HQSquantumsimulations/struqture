@@ -624,10 +624,10 @@ pub fn noiselesswrapper(
                         .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
                     let one_import = deserialize(&bytes[..])
                         .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
-                    let spin_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
+                    let qubit_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
                         |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
                     ))?;
-                    Ok(spin_operator)
+                    Ok(qubit_operator)
                 })
             }
 
@@ -666,10 +666,10 @@ pub fn noiselesswrapper(
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
             pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
-                let spin_operator: #struct_ident =
+                let qubit_operator: #struct_ident =
                     #ident::from_pyany_struqture_one(input)?;
                 Ok(#ident {
-                    internal: spin_operator,
+                    internal: qubit_operator,
                 })
             }
 
@@ -678,7 +678,7 @@ pub fn noiselesswrapper(
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
             pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
-                let spin_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+                let qubit_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
                     serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from json to struqture 1.x: {}",
@@ -686,7 +686,7 @@ pub fn noiselesswrapper(
                         ))
                     })?;
                 Ok(#ident {
-                    internal: #struct_ident::from_struqture_1(&spin_operator).map_err(|err| {
+                    internal: #struct_ident::from_struqture_1(&qubit_operator).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err
                         ))

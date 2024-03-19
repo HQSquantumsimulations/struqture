@@ -279,16 +279,16 @@ impl QubitHamiltonian {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_one::spins::SpinHamiltonianSystem, StruqtureError> {
-        let mut new_spin_system = struqture_one::spins::SpinHamiltonianSystem::new(None);
+        let mut new_qubit_system = struqture_one::spins::SpinHamiltonianSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_spin_system,
+                &mut new_qubit_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_spin_system)
+        Ok(new_qubit_system)
     }
 
     /// Export to struqture_1 format.
@@ -296,12 +296,12 @@ impl QubitHamiltonian {
     pub fn from_struqture_1(
         value: &struqture_one::spins::SpinHamiltonianSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_spin_operator = Self::new();
+        let mut new_qubit_operator = Self::new();
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key = PauliProduct::from_struqture_1(key)?;
-            let _ = new_spin_operator.set(self_key, val.clone());
+            let _ = new_qubit_operator.set(self_key, val.clone());
         }
-        Ok(new_spin_operator)
+        Ok(new_qubit_operator)
     }
 }
 
@@ -481,18 +481,18 @@ impl ops::Mul<QubitHamiltonian> for QubitHamiltonian {
     ///
     /// * Internal bug in add_operator_product.
     fn mul(self, other: QubitHamiltonian) -> Self::Output {
-        let mut spin_op = QubitOperator::with_capacity(self.len() * other.len());
+        let mut qubit_op = QubitOperator::with_capacity(self.len() * other.len());
         for (pps, vals) in self {
             for (ppo, valo) in other.iter() {
                 let (ppp, coefficient) = pps.clone() * ppo.clone();
                 let coefficient =
                     Into::<CalculatorComplex>::into(valo) * vals.clone() * coefficient;
-                spin_op
+                qubit_op
                     .add_operator_product(ppp, coefficient)
                     .expect("Internal bug in add_operator_product");
             }
         }
-        spin_op
+        qubit_op
     }
 }
 

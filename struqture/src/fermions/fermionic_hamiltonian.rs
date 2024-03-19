@@ -288,16 +288,16 @@ impl FermionHamiltonian {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_one::fermions::FermionHamiltonianSystem, StruqtureError> {
-        let mut new_spin_system = struqture_one::fermions::FermionHamiltonianSystem::new(None);
+        let mut new_fermion_system = struqture_one::fermions::FermionHamiltonianSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_spin_system,
+                &mut new_fermion_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_spin_system)
+        Ok(new_fermion_system)
     }
 
     /// Export to struqture_1 format.
@@ -305,12 +305,12 @@ impl FermionHamiltonian {
     pub fn from_struqture_1(
         value: &struqture_one::fermions::FermionHamiltonianSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_spin_operator = Self::new();
+        let mut new_qubit_operator = Self::new();
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key = HermitianFermionProduct::from_struqture_1(key)?;
-            let _ = new_spin_operator.set(self_key, val.clone());
+            let _ = new_qubit_operator.set(self_key, val.clone());
         }
-        Ok(new_spin_operator)
+        Ok(new_qubit_operator)
     }
 }
 
@@ -635,12 +635,12 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
             } else {
                 let (fp_conj, conjugate_sign) = fp.hermitian_conjugate();
 
-                let spin_op = fp.jordan_wigner() * coeff.clone()
+                let qubit_op = fp.jordan_wigner() * coeff.clone()
                     + fp_conj.jordan_wigner() * conjugate_sign * coeff.conj();
-                let spin_hamiltonian = QubitHamiltonian::try_from(spin_op).expect(
+                let qubit_hamiltonian = QubitHamiltonian::try_from(qubit_op).expect(
                     "Something went wrong when attempting to cast QubitOperator into QubitHamiltonian.",
                 );
-                out = out + spin_hamiltonian;
+                out = out + qubit_hamiltonian;
             }
         }
         out
