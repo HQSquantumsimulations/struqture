@@ -154,11 +154,11 @@ impl<'a> OperateOnMixedSystems<'a> for MixedLindbladOpenSystem {
     }
 
     // From trait
-    fn number_fermionic_modes(&self) -> Vec<usize> {
+    fn current_number_fermionic_modes(&self) -> Vec<usize> {
         self.system
-            .number_fermionic_modes()
+            .current_number_fermionic_modes()
             .iter()
-            .zip(self.noise.number_fermionic_modes().iter())
+            .zip(self.noise.current_number_fermionic_modes().iter())
             .map(|(s, n)| *(s.max(n)))
             .collect()
     }

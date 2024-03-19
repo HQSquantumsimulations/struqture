@@ -379,8 +379,8 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     list[int]: Number of fermionic modes in each spin sub-system.
-                pub fn number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.number_fermionic_modes()
+                pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_fermionic_modes()
                 }
         }
     } else {

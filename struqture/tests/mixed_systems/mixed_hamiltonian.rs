@@ -46,7 +46,7 @@ fn new(
     assert!(mo.is_empty());
     assert_eq!(current_number_spins, mo.current_number_spins());
     assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
-    assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
+    assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
 // Test the new function of the MixedHamiltonian
@@ -66,7 +66,7 @@ fn new_with_capacity(
     assert!(mo.is_empty());
     assert_eq!(current_number_spins, mo.current_number_spins());
     assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
-    assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
+    assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
 #[test]
@@ -184,7 +184,7 @@ fn set_fail() {
     let mut mo = MixedHamiltonian::new(0, 1, 1);
     assert_eq!(mo.current_number_spins(), Vec::<usize>::new());
     assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
-    assert_eq!(mo.number_fermionic_modes(), vec![0_usize]);
+    assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
     let err = mo.set(pp_0, CalculatorComplex::from(0.5));
     assert_eq!(
@@ -202,7 +202,7 @@ fn set_fail() {
     let mut mo = MixedHamiltonian::new(1, 0, 1);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.number_bosonic_modes(), Vec::<usize>::new());
-    assert_eq!(mo.number_fermionic_modes(), vec![0_usize]);
+    assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
     let err = mo.set(pp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
@@ -220,7 +220,7 @@ fn set_fail() {
     let mut mo = MixedHamiltonian::new(1, 1, 0);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
-    assert_eq!(mo.number_fermionic_modes(), Vec::<usize>::new());
+    assert_eq!(mo.current_number_fermionic_modes(), Vec::<usize>::new());
 
     let err = mo.set(pp_2, CalculatorComplex::from(0.5));
     assert_eq!(

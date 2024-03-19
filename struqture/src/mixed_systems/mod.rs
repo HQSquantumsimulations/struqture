@@ -124,7 +124,7 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
-    fn number_fermionic_modes(&self) -> Vec<usize> {
+    fn current_number_fermionic_modes(&self) -> Vec<usize> {
         self.fermions().map(|f| f.current_number_modes()).collect()
     }
 
@@ -173,7 +173,7 @@ where
 ///
 /// assert_eq!(sh.current_number_spins(), vec![1]);
 /// assert_eq!(sh.number_bosonic_modes(), vec![2]);
-/// assert_eq!(sh.number_fermionic_modes(), vec![2]);
+/// assert_eq!(sh.current_number_fermionic_modes(), vec![2]);
 /// ```
 ///
 pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
@@ -196,7 +196,7 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of fermionic modes in each sub-system of Self.
-    fn number_fermionic_modes(&self) -> Vec<usize>;
+    fn current_number_fermionic_modes(&self) -> Vec<usize>;
 }
 
 pub trait HermitianOperateOnMixedSystems<'a>:

@@ -585,7 +585,7 @@ fn number_particles() {
 
     assert_eq!(test_new.current_number_spins(), vec![1, 0]);
     assert_eq!(test_new.number_bosonic_modes(), vec![0, 4]);
-    assert_eq!(test_new.number_fermionic_modes(), vec![4]);
+    assert_eq!(test_new.current_number_fermionic_modes(), vec![4]);
 }
 
 // Test the Hash, Debug and Display traits of PlusMinusProduct

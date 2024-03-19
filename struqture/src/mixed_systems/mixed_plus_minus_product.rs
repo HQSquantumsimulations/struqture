@@ -276,7 +276,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
-    pub fn number_fermionic_modes(&self) -> Vec<usize> {
+    pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
         self.fermions().map(|f| f.current_number_modes()).collect()
     }
 

@@ -463,8 +463,8 @@ pub fn noiselesswrapper(
                 ///
                 /// Returns:
                 ///     list[int]: The number of fermionic modes in each fermionic subsystem of self.
-                pub fn number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.number_fermionic_modes()
+                pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_fermionic_modes()
                 }
         }
     } else {
