@@ -10,26 +10,17 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
+use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, QubitOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::{PlusMinusProduct, SpinHamiltonian};
-use crate::{
-    OperateOnDensityMatrix, OperateOnState, StruqtureError, StruqtureVersionSerializable,
-    SymmetricIndex,
-};
+use crate::spins::{PlusMinusProduct, QubitHamiltonian};
+use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
@@ -60,19 +51,16 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "PlusMinusOperatorSerialize")]
+#[serde(try_from = "PlusMinusOperatorSerialize")]
 #[serde(into = "PlusMinusOperatorSerialize")]
 pub struct PlusMinusOperator {
     // The internal HashMap of PlusMinusProducts and coefficients (CalculatorComplex)
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<PlusMinusProduct, CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<PlusMinusProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for PlusMinusOperator {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 1, 0)
+impl crate::SerializationSupport for PlusMinusOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::PlusMinusOperator
     }
 }
 
@@ -92,41 +80,40 @@ impl schemars::JsonSchema for PlusMinusOperator {
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct PlusMinusOperatorSerialize {
     items: Vec<(PlusMinusProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<PlusMinusOperatorSerialize> for PlusMinusOperator {
-    fn from(value: PlusMinusOperatorSerialize) -> Self {
+impl TryFrom<PlusMinusOperatorSerialize> for PlusMinusOperator {
+    type Error = StruqtureError;
+    fn try_from(value: PlusMinusOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: PlusMinusOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<PlusMinusOperator> for PlusMinusOperatorSerialize {
     fn from(value: PlusMinusOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(PlusMinusProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: 1,
-            minor_version: 1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
 
 impl<'a> OperateOnDensityMatrix<'a> for PlusMinusOperator {
-    type IteratorType = Iter<'a, Self::Index, Self::Value>;
-    type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
-    type ValueIteratorType = Values<'a, Self::Index, Self::Value>;
     type Value = CalculatorComplex;
     type Index = PlusMinusProduct;
 
@@ -139,30 +126,23 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -193,10 +173,7 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -235,9 +212,6 @@ impl PlusMinusOperator {
     /// * `Self` - The new (empty) PlusMinusOperator.
     pub fn new() -> Self {
         PlusMinusOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -253,41 +227,60 @@ impl PlusMinusOperator {
     /// * `Self` - The new (empty) PlusMinusOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         PlusMinusOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
-    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_spins` - Number of spins to filter for in the keys.
+    /// Gets the maximum index of the PlusMinusOperator.
     ///
     /// # Returns
     ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
-        &self,
-        number_spins: usize,
-    ) -> Result<(PlusMinusOperator, PlusMinusOperator), StruqtureError> {
-        let mut separated = PlusMinusOperator::new();
-        let mut remainder = PlusMinusOperator::new();
-        for (prod, val) in self.iter() {
-            if prod.iter().len() == number_spins {
-                separated.add_operator_product(prod.clone(), val.clone())?;
-            } else {
-                remainder.add_operator_product(prod.clone(), val.clone())?;
+    /// * `usize` - The number of spins in the PlusMinusOperator.
+    pub fn current_number_spins(&self) -> usize {
+        let mut max_mode: usize = 0;
+        if !self.internal_map.is_empty() {
+            for key in self.internal_map.keys() {
+                if key.current_number_spins() > max_mode {
+                    max_mode = key.current_number_spins()
+                }
             }
         }
-        Ok((separated, remainder))
+        max_mode
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::spins::PlusMinusOperator, StruqtureError> {
+        let mut new_pm_system = struqture_one::spins::PlusMinusOperator::new();
+        for (key, val) in self.iter() {
+            let one_key = key.to_struqture_1()?;
+            let _ = struqture_one::OperateOnDensityMatrix::set(
+                &mut new_pm_system,
+                one_key,
+                val.clone(),
+            );
+        }
+        Ok(new_pm_system)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::spins::PlusMinusOperator,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_qubit_operator = Self::new();
+        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+            let self_key = PlusMinusProduct::from_struqture_1(key)?;
+            let _ = new_qubit_operator.set(self_key, val.clone());
+        }
+        Ok(new_qubit_operator)
     }
 }
 
-impl From<PlusMinusOperator> for SpinOperator {
-    /// Converts a PlusMinusOperator into a SpinOperator.
+impl From<PlusMinusOperator> for QubitOperator {
+    /// Converts a PlusMinusOperator into a QubitOperator.
     ///
     /// # Arguments
     ///
@@ -295,9 +288,9 @@ impl From<PlusMinusOperator> for SpinOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The PlusMinusOperator converted into a SpinOperator.
+    /// * `Self` - The PlusMinusOperator converted into a QubitOperator.
     fn from(value: PlusMinusOperator) -> Self {
-        let mut new_operator = SpinOperator::with_capacity(2 * value.len());
+        let mut new_operator = QubitOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
             let transscribed_vector: Vec<(PauliProduct, Complex64)> = product.into();
             for (transscribed_product, prefactor) in transscribed_vector {
@@ -310,17 +303,17 @@ impl From<PlusMinusOperator> for SpinOperator {
     }
 }
 
-impl From<SpinOperator> for PlusMinusOperator {
-    /// Converts a SpinOperator into a PlusMinusOperator.
+impl From<QubitOperator> for PlusMinusOperator {
+    /// Converts a QubitOperator into a PlusMinusOperator.
     ///
     /// # Arguments
     ///
-    /// * `value` - The SpinOperator to convert.
+    /// * `value` - The QubitOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinOperator converted into a PlusMinusOperator.
-    fn from(value: SpinOperator) -> Self {
+    /// * `Self` - The QubitOperator converted into a PlusMinusOperator.
+    fn from(value: QubitOperator) -> Self {
         let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
             let transscribed_vector: Vec<(PlusMinusProduct, Complex64)> = product.into();
@@ -382,10 +375,10 @@ impl From<DecoherenceOperator> for PlusMinusOperator {
     }
 }
 
-impl TryFrom<PlusMinusOperator> for SpinHamiltonian {
+impl TryFrom<PlusMinusOperator> for QubitHamiltonian {
     type Error = StruqtureError;
 
-    /// Tries to converts a PlusMinusOperator into a SpinHamiltonian.
+    /// Tries to converts a PlusMinusOperator into a QubitHamiltonian.
     ///
     /// # Arguments
     ///
@@ -393,25 +386,25 @@ impl TryFrom<PlusMinusOperator> for SpinHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `Ok(Self)` - The PlusMinusOperator converted into a SpinHamiltonian.
+    /// * `Ok(Self)` - The PlusMinusOperator converted into a QubitHamiltonian.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn try_from(value: PlusMinusOperator) -> Result<Self, Self::Error> {
-        let tmp_operator = SpinOperator::from(value).truncate(1e-16);
-        SpinHamiltonian::try_from(tmp_operator)
+        let tmp_operator = QubitOperator::from(value).truncate(1e-16);
+        QubitHamiltonian::try_from(tmp_operator)
     }
 }
 
-impl From<SpinHamiltonian> for PlusMinusOperator {
-    /// Converts a SpinHamiltonian into a PlusMinusOperator.
+impl From<QubitHamiltonian> for PlusMinusOperator {
+    /// Converts a QubitHamiltonian into a PlusMinusOperator.
     ///
     /// # Arguments
     ///
-    /// * `value` - The SpinHamiltonian to convert.
+    /// * `value` - The QubitHamiltonian to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinHamiltonian converted into a PlusMinusOperator.
-    fn from(value: SpinHamiltonian) -> Self {
+    /// * `Self` - The QubitHamiltonian converted into a PlusMinusOperator.
+    fn from(value: QubitHamiltonian) -> Self {
         let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
             let transscribed_vector: Vec<(PlusMinusProduct, Complex64)> = product.into();
@@ -438,9 +431,6 @@ impl ops::Neg for PlusMinusOperator {
     ///
     /// * `Self` - The PlusMinusOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
@@ -529,9 +519,6 @@ where
     /// * `Self` - The PlusMinusOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
@@ -546,9 +533,6 @@ where
 ///
 impl IntoIterator for PlusMinusOperator {
     type Item = (PlusMinusProduct, CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<PlusMinusProduct, CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<PlusMinusProduct, CalculatorComplex>;
 
     /// Returns the PlusMinusOperator in Iterator form.
@@ -677,15 +661,16 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = PlusMinusOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(PlusMinusOperator::from(sos.clone()), so);
+        assert_eq!(PlusMinusOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(PlusMinusOperatorSerialize::from(so), sos);
     }
     // Test the Clone and PartialEq traits of PlusMinusOperator
@@ -694,9 +679,10 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -707,17 +693,19 @@ mod test {
         let pp_1: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos_1 = PlusMinusOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
         let sos_2 = PlusMinusOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -732,15 +720,16 @@ mod test {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
+            "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"PlusMinusOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
@@ -750,9 +739,10 @@ mod test {
         let pp = PlusMinusProduct::new().plus(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -771,15 +761,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
@@ -792,9 +788,10 @@ mod test {
         let pp = PlusMinusProduct::new().plus(0);
         let sos = PlusMinusOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -829,15 +826,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

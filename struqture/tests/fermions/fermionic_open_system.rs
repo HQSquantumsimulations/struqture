@@ -15,12 +15,16 @@
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::fermions::{
     FermionHamiltonian, FermionLindbladNoiseOperator, FermionLindbladOpenSystem, FermionProduct,
     HermitianFermionProduct,
 };
 use struqture::prelude::*;
 use struqture::ModeIndex;
+
 #[cfg(feature = "json_schema")]
 // Test the new function of the FermionLindbladOpenSystem
 #[test]
@@ -28,7 +32,7 @@ fn new_system() {
     let system = FermionLindbladOpenSystem::new();
     assert_eq!(system.system(), &FermionHamiltonian::new());
     assert_eq!(system.noise(), &FermionLindbladNoiseOperator::new());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 
     assert_eq!(
         FermionLindbladOpenSystem::new(),
@@ -44,7 +48,7 @@ fn new_system_none() {
     assert_eq!(system.system(), &FermionHamiltonian::default());
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &FermionLindbladNoiseOperator::default());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the group function of the FermionLindbladOpenSystem
@@ -454,10 +458,6 @@ fn serde_json() {
 
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
     let mut slos = FermionLindbladOpenSystem::new();
@@ -488,15 +488,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("FermionHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -513,15 +519,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("FermionLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -553,10 +565,6 @@ fn bincode() {
 /// Test FermionLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
     let mut slos = FermionLindbladOpenSystem::new();
@@ -602,15 +610,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("FermionHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -649,15 +663,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("FermionLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -811,4 +831,33 @@ fn test_fermion_noise_system_schema() {
     let value: serde_json::Value = serde_json::to_value(val).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_one::fermions::HermitianFermionProduct::from_str("c0a1").unwrap();
+    let dp_1 = struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap();
+    let mut ss_1 = struqture_one::fermions::FermionLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
+    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
+    struqture_one::OperateOnDensityMatrix::set(
+        noise_mut_1,
+        (dp_1.clone(), dp_1.clone()),
+        1.0.into(),
+    )
+    .unwrap();
+
+    let pp_2 = HermitianFermionProduct::new([0], [1]).unwrap();
+    let dp_2 = FermionProduct::new([0], [0]).unwrap();
+    let mut ss_2 = FermionLindbladOpenSystem::new();
+    ss_2.system_mut().set(pp_2.clone(), 2.0.into()).unwrap();
+    ss_2.noise_mut()
+        .set((dp_2.clone(), dp_2.clone()), 1.0.into())
+        .unwrap();
+
+    assert!(FermionLindbladOpenSystem::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

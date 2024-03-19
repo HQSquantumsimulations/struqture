@@ -63,7 +63,11 @@ impl schemars::JsonSchema for BosonProduct {
     }
 }
 
-impl crate::MinSupportedVersion for BosonProduct {}
+impl crate::SerializationSupport for BosonProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///
@@ -248,6 +252,29 @@ impl ModeIndex for BosonProduct {
 }
 
 impl BosonIndex for BosonProduct {}
+
+impl BosonProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(&self) -> Result<struqture_one::bosons::BosonProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::bosons::BosonProduct::from_str(&self_string)
+            .map_err(|err| StruqtureError::GenericError {
+                msg: format!("{}", err),
+            })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::bosons::BosonProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
 
 impl CorrespondsTo<BosonProduct> for BosonProduct {
     /// Gets the BosonProduct corresponding to self (here, itself).
@@ -568,7 +595,11 @@ impl schemars::JsonSchema for HermitianBosonProduct {
     }
 }
 
-impl crate::MinSupportedVersion for HermitianBosonProduct {}
+impl crate::SerializationSupport for HermitianBosonProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::HermitianBosonProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///
@@ -814,6 +845,33 @@ impl ModeIndex for HermitianBosonProduct {
 }
 
 impl BosonIndex for HermitianBosonProduct {}
+
+impl HermitianBosonProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::bosons::HermitianBosonProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::bosons::HermitianBosonProduct::from_str(
+            &self_string,
+        )
+        .map_err(|err| StruqtureError::GenericError {
+            msg: format!("{}", err),
+        })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::bosons::HermitianBosonProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
 
 impl CorrespondsTo<HermitianBosonProduct> for HermitianBosonProduct {
     /// Gets the HermitianBosonProduct corresponding to self (here, itself).

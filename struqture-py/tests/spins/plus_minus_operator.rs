@@ -18,7 +18,9 @@ use struqture::spins::{PlusMinusOperator, PlusMinusProduct};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
-use struqture_py::spins::{PlusMinusOperatorWrapper, SpinHamiltonianWrapper, SpinOperatorWrapper};
+use struqture_py::spins::{
+    PlusMinusOperatorWrapper, QubitHamiltonianWrapper, QubitOperatorWrapper,
+};
 use test_case::test_case;
 
 // helper functions
@@ -515,7 +517,7 @@ fn test_mul_error() {
 }
 
 #[test]
-fn test_from_spin_sys() {
+fn test_from_qubit_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -540,11 +542,11 @@ fn test_from_spin_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<SpinOperatorWrapper>();
+        let pp_type = py.get_type::<QubitOperatorWrapper>();
         let pp = pp_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinOperatorWrapper>>()
+            .downcast::<PyCell<QubitOperatorWrapper>>()
             .unwrap();
         pp.call_method1(
             "add_operator_product",
@@ -559,20 +561,20 @@ fn test_from_spin_sys() {
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_system", (pp,))
+            .call_method1("from_qubit_operator", (pp,))
             .unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_system", ("No",));
+            .call_method1("from_qubit_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_spin_sys() {
+fn test_to_qubit_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -587,11 +589,11 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<SpinOperatorWrapper>();
+        let pp_type = py.get_type::<QubitOperatorWrapper>();
         let sys = pp_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinOperatorWrapper>>()
+            .downcast::<PyCell<QubitOperatorWrapper>>()
             .unwrap();
         sys.call_method1("add_operator_product", ("0Y", -0.5))
             .unwrap();
@@ -606,14 +608,14 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp.call_method0("to_spin_system").unwrap();
+        let result = pmp.call_method0("to_qubit_operator").unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
 
 #[test]
-fn test_from_spin_ham_sys() {
+fn test_from_qubit_ham() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -638,11 +640,11 @@ fn test_from_spin_ham_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<SpinHamiltonianWrapper>();
+        let pp_type = py.get_type::<QubitHamiltonianWrapper>();
         let pp = pp_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .downcast::<PyCell<QubitHamiltonianWrapper>>()
             .unwrap();
         pp.call_method1(
             "add_operator_product",
@@ -657,78 +659,42 @@ fn test_from_spin_ham_sys() {
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_hamiltonian_system", (pp,))
+            .call_method1("from_qubit_hamiltonian", (pp,))
             .unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_system", ("No",));
+            .call_method1("from_qubit_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_spin_ham_sys() {
+fn test_to_qubit_ham() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
         pmp.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
 
-        let pp_type = py.get_type::<SpinHamiltonianWrapper>();
+        let pp_type = py.get_type::<QubitHamiltonianWrapper>();
         let sys = pp_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<SpinHamiltonianWrapper>>()
+            .downcast::<PyCell<QubitHamiltonianWrapper>>()
             .unwrap();
         sys.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
-        let result = pmp.call_method0("to_spin_hamiltonian_system").unwrap();
+        let result = pmp.call_method0("to_qubit_hamiltonian").unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
 
         pmp.call_method1("add_operator_product", ("0+", 1.0))
             .unwrap();
-        let result = pmp.call_method0("to_spin_hamiltonian_system");
+        let result = pmp.call_method0("to_qubit_hamiltonian");
         assert!(result.is_err())
-    })
-}
-
-#[test]
-fn test_separate() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let pmp = new_system(py);
-        pmp.call_method1("add_operator_product", ("0Z", 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", ("0Z1Z", 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", ("0Z1+", 1.0))
-            .unwrap();
-
-        let pmp_rem = new_system(py);
-        pmp_rem
-            .call_method1("add_operator_product", ("0Z", 1.0))
-            .unwrap();
-
-        let pmp_sys = new_system(py);
-        pmp_sys
-            .call_method1("add_operator_product", ("0Z1Z", 1.0))
-            .unwrap();
-        pmp_sys
-            .call_method1("add_operator_product", ("0Z1+", 1.0))
-            .unwrap();
-
-        let result = pmp.call_method1("separate_into_n_terms", (2,)).unwrap();
-        let equal = bool::extract(
-            result
-                .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(equal);
     })
 }
 
@@ -919,11 +885,13 @@ fn test_jordan_wigner() {
         let empty = bool::extract(fo.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let ss = pmo.call_method0("to_spin_system").unwrap();
+        let ss = pmo.call_method0("to_qubit_operator").unwrap();
 
-        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins = usize::extract(ss.call_method0("number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, number_spins)
+        let current_number_modes =
+            usize::extract(fo.call_method0("current_number_modes").unwrap()).unwrap();
+        let current_number_spins =
+            usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 
@@ -948,7 +916,54 @@ fn test_json_schema() {
             .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.1.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let sys_2 = new_system(py);
+        sys_2
+            .call_method1("add_operator_product", ("0Z", 0.1))
+            .unwrap();
+        let mut sys_1 = struqture_one::spins::PlusMinusOperator::new();
+        struqture_one::OperateOnDensityMatrix::set(
+            &mut sys_1,
+            struqture_one::spins::PlusMinusProduct::from_str("0Z").unwrap(),
+            0.1.into(),
+        )
+        .unwrap();
+
+        let result =
+            PlusMinusOperatorWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
+        assert_eq!(result, sys_1);
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}").into();
+        let sys_2 = new_system(py);
+        sys_2
+            .call_method1("add_operator_product", ("0Z", 1.0))
+            .unwrap();
+
+        let sys_from_1 = sys_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",1.0,0.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}").into();
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(sys_from_1.is_err());
     });
 }

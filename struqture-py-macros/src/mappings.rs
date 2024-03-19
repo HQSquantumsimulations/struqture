@@ -55,13 +55,13 @@ fn jordan_wigner_spin_to_fermion_quote(
     if attribute_arguments.contains("JordanWignerSpinToFermion") {
         let output_wrapper_type;
 
-        if struct_name == "SpinHamiltonian"
-            || struct_name == "SpinOperator"
-            || struct_name == "SpinLindbladNoiseOperator"
-            || struct_name == "SpinLindbladOpenSystem"
+        if struct_name == "QubitHamiltonian"
+            || struct_name == "QubitOperator"
+            || struct_name == "QubitLindbladNoiseOperator"
+            || struct_name == "QubitLindbladOpenSystem"
         {
             let mut output_wrapper_name = format!("{}Wrapper", struct_name);
-            output_wrapper_name = output_wrapper_name.replace("Spin", "Fermion");
+            output_wrapper_name = output_wrapper_name.replace("Qubit", "Fermion");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
 
             quote! {
@@ -113,7 +113,7 @@ fn jordan_wigner_fermion_to_spin_quote(
             || struct_name.contains("System")
         {
             let mut output_wrapper_name = format!("{}Wrapper", struct_name);
-            output_wrapper_name = output_wrapper_name.replace("Fermion", "Spin");
+            output_wrapper_name = output_wrapper_name.replace("Fermion", "Qubit");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
 
             quote! {
@@ -127,9 +127,9 @@ fn jordan_wigner_fermion_to_spin_quote(
             }
         } else {
             if struct_name == "FermionProduct" {
-                output_wrapper_type = quote::format_ident!("SpinOperatorWrapper");
+                output_wrapper_type = quote::format_ident!("QubitOperatorWrapper");
             } else if struct_name == "HermitianFermionProduct" {
-                output_wrapper_type = quote::format_ident!("SpinHamiltonianWrapper");
+                output_wrapper_type = quote::format_ident!("QubitHamiltonianWrapper");
             } else {
                 panic!("JordanWignerFermionToSpin can only be implemented for fermionic types!")
             };

@@ -73,9 +73,9 @@ impl schemars::JsonSchema for MixedPlusMinusProduct {
     }
 }
 
-impl crate::MinSupportedVersion for MixedPlusMinusProduct {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 2, 0)
+impl crate::SerializationSupport for MixedPlusMinusProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedPlusMinusProduct
     }
 }
 
@@ -258,8 +258,8 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of spins in each spin sub-system.
-    pub fn number_spins(&self) -> Vec<usize> {
-        self.spins().map(|s| s.number_spins()).collect()
+    pub fn current_number_spins(&self) -> Vec<usize> {
+        self.spins().map(|s| s.current_number_spins()).collect()
     }
 
     /// Returns the current number of bosonic modes each subsystem acts upon.
@@ -267,8 +267,8 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
-    pub fn number_bosonic_modes(&self) -> Vec<usize> {
-        self.bosons().map(|b| b.number_modes()).collect()
+    pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
+        self.bosons().map(|b| b.current_number_modes()).collect()
     }
 
     /// Returns the current number of fermionic modes each subsystem acts upon.
@@ -276,8 +276,33 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
-    pub fn number_fermionic_modes(&self) -> Vec<usize> {
-        self.fermions().map(|f| f.number_modes()).collect()
+    pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
+        self.fermions().map(|f| f.current_number_modes()).collect()
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::mixed_systems::MixedPlusMinusProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::mixed_systems::MixedPlusMinusProduct::from_str(
+            &self_string,
+        )
+        .map_err(|err| StruqtureError::GenericError {
+            msg: format!("{}", err),
+        })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::mixed_systems::MixedPlusMinusProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
     }
 }
 

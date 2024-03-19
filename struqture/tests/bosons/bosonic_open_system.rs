@@ -15,12 +15,16 @@
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::bosons::{
     BosonHamiltonian, BosonLindbladNoiseOperator, BosonLindbladOpenSystem, BosonProduct,
     HermitianBosonProduct,
 };
 use struqture::prelude::*;
 use struqture::ModeIndex;
+
 #[cfg(feature = "json_schema")]
 // Test the new function of the BosonLindbladOpenSystem
 #[test]
@@ -28,7 +32,7 @@ fn new_system() {
     let system = BosonLindbladOpenSystem::new();
     assert_eq!(system.system(), &BosonHamiltonian::new());
     assert_eq!(system.noise(), &BosonLindbladNoiseOperator::new());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the new function of the BosonLindbladOpenSystem with no modes specified
@@ -39,7 +43,7 @@ fn new_system_none() {
     assert_eq!(system.system(), &BosonHamiltonian::default());
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &BosonLindbladNoiseOperator::default());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the group function of the BosonLindbladOpenSystem
@@ -446,10 +450,6 @@ fn serde_json() {
 
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
     let mut slos = BosonLindbladOpenSystem::new();
@@ -480,15 +480,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("BosonHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -505,15 +511,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("BosonLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -545,10 +557,6 @@ fn bincode() {
 /// Test BosonLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
     let mut slos = BosonLindbladOpenSystem::new();
@@ -594,15 +602,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("BosonHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -641,15 +655,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("BosonLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -798,4 +818,33 @@ fn test_boson_open_system_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_one::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
+    let dp_1 = struqture_one::bosons::BosonProduct::from_str("c0a0").unwrap();
+    let mut ss_1 = struqture_one::bosons::BosonLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
+    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
+    struqture_one::OperateOnDensityMatrix::set(
+        noise_mut_1,
+        (dp_1.clone(), dp_1.clone()),
+        1.0.into(),
+    )
+    .unwrap();
+
+    let pp_2 = HermitianBosonProduct::new([0], [1]).unwrap();
+    let dp_2 = BosonProduct::new([0], [0]).unwrap();
+    let mut ss_2 = BosonLindbladOpenSystem::new();
+    ss_2.system_mut().set(pp_2.clone(), 2.0.into()).unwrap();
+    ss_2.noise_mut()
+        .set((dp_2.clone(), dp_2.clone()), 1.0.into())
+        .unwrap();
+
+    assert!(BosonLindbladOpenSystem::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

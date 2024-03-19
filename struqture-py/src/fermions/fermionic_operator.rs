@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use crate::fermions::FermionProductWrapper;
-use crate::spins::SpinOperatorWrapper;
+use crate::spins::QubitOperatorWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -21,7 +21,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionOperator;
 use struqture::mappings::JordanWignerFermionToSpin;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
@@ -43,7 +43,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     ssystem = FermionOperator(2)
 ///     pp = FermionProduct([0], [0])
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_modes(), 2)
+///     npt.assert_equal(ssystem.current_number_modes(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///

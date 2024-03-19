@@ -28,8 +28,16 @@ use std::ops::Mul;
 use std::ops::Sub;
 use std::str::FromStr;
 use thiserror::Error;
+
+mod serialisation_meta_information;
+pub use serialisation_meta_information::{
+    check_can_be_deserialised, SerializationSupport, StruqtureSerialisationMeta, StruqtureType,
+};
+
 pub const STRUQTURE_VERSION: &str = env!("CARGO_PKG_VERSION");
-pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (1, 0, 0);
+// if it should be up
+pub const CURRENT_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
+pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
 use tinyvec::TinyVec;
 #[derive(
     Clone,
@@ -169,8 +177,8 @@ pub enum StruqtureError {
         /// Index that is occupied.
         index: String,
     },
-    /// Error when index of SpinIndex object exceeds that of the Spin(Hamiltonian)System.
-    #[error("Index of SpinIndex object exceeds that of the Spin(Hamiltonian)System")]
+    /// Error when index of SpinIndex object exceeds that of the QubitHamiltonian/QubitOperator.
+    #[error("Index of SpinIndex object exceeds that of the QubitHamiltonian/QubitOperator")]
     NumberSpinsExceeded,
     /// Error when number of spins between system and noise missmatched.
     #[error("Number of spins between system and noise missmatched")]
@@ -237,6 +245,26 @@ pub enum StruqtureError {
         /// Minor version of the data
         data_minor_version: u32,
     },
+    #[error("Trying to deserialize a {name_type} with incompatible version of struqture. Library version: {library_major_version}.{library_minor_version} Data version: {data_major_version}.{data_minor_version}.")]
+    NewVersionMissmatch {
+        /// Major version of the library
+        library_major_version: u32,
+        /// Minor version of the library
+        library_minor_version: u32,
+        /// Major version of the data
+        data_major_version: u32,
+        /// Minor version of the data
+        data_minor_version: u32,
+        /// Type of object trying to be deserialized.
+        name_type: String,
+    },
+    #[error("Trying to use a struqture {source_type} object as a struqture {target_type} object. Did you maybe pass the wrong object into a function?")]
+    TypeMissmatch {
+        /// The type of the data that is deserialized.
+        source_type: String,
+        /// The type of the target that the data is supposed to be deserialized to.
+        target_type: String,
+    },
     /// Transparent propagation of CalculatorError.
     #[error(transparent)]
     CalculatorError(#[from] CalculatorError),
@@ -301,7 +329,7 @@ where
 {
     /// Type of operators on single spin in a SpinIndex.
     ///
-    /// This can either be a [crate::spins::SingleSpinOperator] (`I`, `X`, `Y` or `Z`)
+    /// This can either be a [crate::spins::SingleQubitOperator] (`I`, `X`, `Y` or `Z`)
     /// or a [crate::spins::SingleOperator/Hamiltonian] (`I`, `X`, `iY` or `Z`)
     type SingleSpinType;
 
@@ -348,7 +376,7 @@ where
     /// # Returns
     ///
     /// * `usize` - Maximum index.
-    fn number_spins(&self) -> usize {
+    fn current_number_spins(&self) -> usize {
         if let Some((max, _)) = self.iter().last() {
             *max + 1
         } else {
@@ -475,9 +503,9 @@ pub trait ModeIndex:
     /// maximal mode the product of operators in the index acts on.
     ///
     /// For example an index consisting of one creator acting on mode 0 would have
-    /// a number_modes of one. An index consisting of one annhihilator acting on 3
-    /// would have number_modes of four.
-    fn number_modes(&self) -> usize {
+    /// a current_number_modes of one. An index consisting of one annhihilator acting on 3
+    /// would have current_number_modes of four.
+    fn current_number_modes(&self) -> usize {
         let max_c = match self.creators().max() {
             Some(x) => x + 1,
             None => 0,
@@ -662,9 +690,9 @@ impl ConjugationTrait for CalculatorFloat {
 /// use qoqo_calculator::CalculatorComplex;
 /// use std::collections::HashMap;
 /// use struqture::prelude::*;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, QubitOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = QubitOperator::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// so.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 /// let mut mapping: HashMap<PauliProduct, CalculatorComplex> = HashMap::new();
@@ -706,15 +734,12 @@ where
     Self::Value: Add<Self::Value, Output = Self::Value>,
     Self::Value: Clone,
     Self::Value: TruncateTrait,
-    Self::IteratorType: ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)>,
-    Self::KeyIteratorType: ExactSizeIterator<Item = &'a Self::Index>,
-    Self::ValueIteratorType: ExactSizeIterator<Item = &'a Self::Value>,
 {
     type Index;
     type Value;
-    type IteratorType;
-    type KeyIteratorType;
-    type ValueIteratorType;
+    // type IteratorType; // can be removed (and two below) + in where clause
+    // type KeyIteratorType;
+    // type ValueIteratorType;
 
     /// Gets the Self::Value typed coefficient corresponding to the key.
     ///
@@ -732,21 +757,21 @@ where
     /// # Returns
     ///
     /// * `Iter<'_, Self::Index, Self::Value>` - Self in iterator form.
-    fn iter(&'a self) -> Self::IteratorType;
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)>;
 
     /// Returns the unsorted keys in Self.
     ///
     /// # Returns
     ///
     /// * `Keys<'_, Self::Index, Self::Value>` - The sequence of keys of Self.
-    fn keys(&'a self) -> Self::KeyIteratorType;
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index>; // use this here instead impl ExactSizeIterator + Iterator<Item = &'a <Self as OperateOnDensityMatrix<'a>>::Index>
 
     /// Returns the unsorted values in Self.
     ///
     /// # Returns
     ///
     /// * `Values<'_, Self::Index, Self::Value>` - The sequence of values of Self.
-    fn values(&'a self) -> Self::ValueIteratorType;
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value>;
 
     /// Returns number of entries in object.
     ///
@@ -848,21 +873,21 @@ where
     <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value: Clone,
     <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value: TruncateTrait,
     <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value: ConjugationTrait,
-    <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::IteratorType:
-        ExactSizeIterator<
-            Item = (
-                &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
-                &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
-            ),
-        >,
-    <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::KeyIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
-        >,
-    <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::ValueIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
-        >,
+    // <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::IteratorType:
+    //     ExactSizeIterator<
+    //         Item = (
+    //             &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
+    //             &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
+    //         ),
+    //     >,
+    // <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::KeyIteratorType:
+    //     ExactSizeIterator<
+    //         Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Index,
+    //     >,
+    // <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::ValueIteratorType:
+    //     ExactSizeIterator<
+    //         Item = &'a <<Self as OpenSystem<'a>>::System as OperateOnDensityMatrix<'a>>::Value,
+    //     >,
     Self::Noise: OperateOnDensityMatrix<'a>,
     Self::Noise: 'a,
     &'a Self::Noise: IntoIterator,
@@ -876,21 +901,6 @@ where
     <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value: Clone,
     <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value: TruncateTrait,
     <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value: ConjugationTrait,
-    <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::IteratorType:
-        ExactSizeIterator<
-            Item = (
-                &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Index,
-                &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value,
-            ),
-        >,
-    <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::KeyIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Index,
-        >,
-    <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::ValueIteratorType:
-        ExactSizeIterator<
-            Item = &'a <<Self as OpenSystem<'a>>::Noise as OperateOnDensityMatrix<'a>>::Value,
-        >,
 {
     type System;
     type Noise;
@@ -972,9 +982,9 @@ where
 /// use qoqo_calculator::CalculatorComplex;
 /// use std::collections::HashMap;
 /// use struqture::prelude::*;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, QubitOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = QubitOperator::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// so.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
@@ -1003,9 +1013,6 @@ where
     Self::Value: Clone,
     Self::Value: TruncateTrait,
     Self::Value: ConjugationTrait,
-    Self::IteratorType: ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)>,
-    Self::KeyIteratorType: ExactSizeIterator<Item = &'a Self::Index>,
-    Self::ValueIteratorType: ExactSizeIterator<Item = &'a Self::Value>,
 {
     /// Returns the hermitian conjugate of Self.
     ///
@@ -1034,17 +1041,17 @@ where
 /// let mut sh = BosonHamiltonian::new();
 ///
 /// // Functions provided in this :
-/// assert_eq!(sh.number_modes(), 0);
+/// assert_eq!(sh.current_number_modes(), 0);
 ///
 /// let pp_0z = HermitianBosonProduct::new([0], [0]).unwrap();
 /// sh.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
-/// assert_eq!(sh.number_modes(), 1);
+/// assert_eq!(sh.current_number_modes(), 1);
 /// ```
 ///
 pub trait OperateOnModes<'a>: PartialEq + Clone + Mul<CalculatorFloat> + Add + Sub {
     // Document locally
-    fn number_modes(&'a self) -> usize;
+    fn current_number_modes(&'a self) -> usize;
 }
 
 /// Shorthand type notation for a tuple of lists of indices of creators and annihilators
@@ -1060,14 +1067,3 @@ pub mod spins;
 /// Shorhand type for TinyVec representation of creators or annihilators
 #[cfg(test)]
 type ModeTinyVec = TinyVec<[usize; 2]>;
-
-/// Trait for implementing a function to determine the minimum supported version of struqture required.
-pub trait MinSupportedVersion {
-    /// Returns the minimum version of struqture required to deserialize this object.
-    ///
-    /// # Returns
-    /// (majon_verision, minor_version, patch_version)
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 0, 0)
-    }
-}

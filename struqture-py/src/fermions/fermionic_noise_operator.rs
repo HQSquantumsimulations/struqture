@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use crate::fermions::FermionProductWrapper;
-use crate::spins::SpinLindbladNoiseOperatorWrapper;
+use crate::spins::QubitLindbladNoiseOperatorWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -20,7 +20,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionLindbladNoiseOperator;
 use struqture::mappings::JordanWignerFermionToSpin;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 
@@ -66,38 +66,5 @@ impl FermionLindbladNoiseOperatorWrapper {
         Self {
             internal: FermionLindbladNoiseOperator::new(),
         }
-    }
-
-    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
-    ///
-    /// Args:
-    ///     number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
-    ///     number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
-    ///
-    /// Returns:
-    ///     Tuple[FermionLindbladNoiseOperator, FermionLindbladNoiseOperator]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-    ///
-    /// Raises:
-    ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_terms(
-        &self,
-        number_creators_annihilators_left: (usize, usize),
-        number_creators_annihilators_right: (usize, usize),
-    ) -> PyResult<(Self, Self)> {
-        let (separated, remainder) = self
-            .internal
-            .separate_into_n_terms(
-                number_creators_annihilators_left,
-                number_creators_annihilators_right,
-            )
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok((
-            Self {
-                internal: separated,
-            },
-            Self {
-                internal: remainder,
-            },
-        ))
     }
 }

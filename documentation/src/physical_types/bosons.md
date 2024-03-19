@@ -122,67 +122,22 @@ hamiltonian.add_operator_product(hbp, CalculatorComplex::new(1.5, 0.0)).unwrap()
 println!("{}", hamiltonian);
 ```
 
-In python, we need to use a `BosonSystem` and `BosonHamiltonianSystem` instead of a `BosonOperator` and `BosonHamiltonian`. See next section for more details.
-
-## Systems and HamiltonianSystems
-
-Following the intention to avoid unphysical behaviour, BosonSystems and BosonHamiltonianSystems are wrappers around BosonOperators and BosonHamiltonians that allow to explicitly set the number of spins of the systems.
-When setting or adding a BosonProduct/HermitianBosonProduct to the systems, it is guaranteed that the bosonic indices involved cannot exceed the number of bosonic modes in the system.
-Note that the user can decide to explicitly set the number of bosonic modes to be variable.
-
-### Examples
-
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::bosons::{HermitianBosonProduct, BosonHamiltonianSystem};
-
-let mut system = BosonHamiltonianSystem::new(Some(3));
-
-// This will work
-let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
-system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", system);
-
-// This will not work, as the bosonic index of the HermitianBosonProduct is larger than
-// the number of the bosonic modes in the system (the bosonic mode with the
-// smallest index is 0).
-let hbp_error = HermitianBosonProduct::new([3], [3]).unwrap();
-let error = system.add_operator_product(hbp_error, CalculatorComplex::new(1.0, 1.5));
-println!("{:?}", error);
-
-// This will work because we leave the number of spins dynamic
-let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
-let mut system = BosonHamiltonianSystem::new(None);
-system.add_operator_product(hbp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-```
-
 The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
-system = bosons.BosonHamiltonianSystem(3)
+system = bosons.BosonHamiltonian()
 
 # This will work
 hbp = bosons.HermitianBosonProduct([0, 1], [0, 2])
 system.add_operator_product(hbp, CalculatorComplex.from_pair(1.0, 1.5))
-print(system)
-
-# This will not work, as the bosoncic index of the HermitianBosonProduct
-# is larger than the number of the bosonic modes in the system (the bosonic
-# mode with the smallest index is 0).
-hbp_error = bosons.HermitianBosonProduct([3], [3])
-value = CalculatorComplex.from_pair(1.0, 1.5)
-# system.add_operator_product(hbp_error, value)  # Uncomment me!
-
-# This will work because we leave the number of spins dynamic
-system = bosons.BosonHamiltonianSystem()
 hbp = bosons.HermitianBosonProduct([3], [3])
 system.add_operator_product(hbp, CalculatorComplex.from_pair(1.0, 0.0))
+print(system)
 ```
 
-## Noise operators and systems
+## Noise operators
 
 We describe decoherence by representing it with the Lindblad equation.
 The Lindblad equation is a master equation determining the time evolution of the density matrix.
@@ -199,8 +154,6 @@ We use `BosonProducts` as the operator basis.
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `BosonProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `BosonLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`BosonProduct`, `BosonProduct`) as keys and the entries in the rate matrix as values.
 
-Similarly to BosonOperators, BosonLindbladNoiseOperators have a system equivalent: `BosonLindbladNoiseSystem`, with a number of involved bosonic modes defined by the user. For more information on these, see the [noise container](../container_types/noise_operators_and_systems) chapter.
-
 ### Examples
 
 Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
@@ -209,19 +162,19 @@ Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 
 ```rust
 use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
-use struqture::bosons::{BosonProduct, BosonLindbladNoiseSystem};
+use struqture::bosons::{BosonProduct, BosonLindbladNoiseOperator};
 
-// Setting up the system and the product we want to add to it
-let mut system = BosonLindbladNoiseSystem::new(Some(3));
+// Setting up the operator and the product we want to add to it
+let mut operator = BosonLindbladNoiseOperator::new();
 let bp = BosonProduct::new([0], [0]).unwrap();
 
-// Adding the product to the system
-system
+// Adding the product to the operator
+operator
     .add_operator_product(
         (bp.clone(), bp.clone()), CalculatorComplex::new(1.0, 0.0)
     ).unwrap();
-assert_eq!(system.get(&(bp.clone(), bp)), &CalculatorComplex::new(1.0, 0.0));
-println!("{}", system);
+assert_eq!(operator.get(&(bp.clone(), bp)), &CalculatorComplex::new(1.0, 0.0));
+println!("{}", operator);
 ```
 
 The equivalent code in python:
@@ -229,18 +182,18 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
-# Setting up the system and the product we want to add to it
-system = bosons.BosonLindbladNoiseSystem(3)
+# Setting up the operator and the product we want to add to it
+operator = bosons.BosonLindbladNoiseOperator()
 bp = bosons.BosonProduct([0], [0])
 
-# Adding the product to the system
-system.add_operator_product((bp, bp), CalculatorComplex.from_pair(1.0, 1.5))
-print(system)
+# Adding the product to the operator
+operator.add_operator_product((bp, bp), CalculatorComplex.from_pair(1.0, 1.5))
+print(operator)
 
 # In python we can also use the string representation
-system = bosons.BosonLindbladNoiseSystem(3)
-system.add_operator_product((str(bp), str(bp)), 1.0+1.5*1j)
-print(system)
+operator = bosons.BosonLindbladNoiseOperator()
+operator.add_operator_product((str(bp), str(bp)), 1.0+1.5*1j)
+print(operator)
 ```
 
 ## Open systems
@@ -250,7 +203,7 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a Hamiltonian (`BosonHamiltonianSystem`) and noise (`BosonLindbladNoiseSystem`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (`BosonHamiltonian`) and noise (`BosonLindbladNoiseOperator`). They have different ways to set terms in Rust and Python:
 
 ### Examples
 
@@ -259,14 +212,14 @@ use qoqo_calculator::CalculatorComplex;
 use struqture::prelude::*;
 use struqture::bosons::{BosonProduct, HermitianBosonProduct, BosonLindbladOpenSystem};
 
-let mut open_system = BosonLindbladOpenSystem::new(Some(3));
+let mut open_system = BosonLindbladOpenSystem::new();
 
 let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
 let bp = BosonProduct::new([0], [0]).unwrap();
 
 // Adding the c_0^dag c_1^dag c_0 c_2 term to the system part of the open system
-let system = open_system.system_mut();
-system.add_operator_product(hbp, CalculatorComplex::new(2.0, 0.0)).unwrap();
+let operator = open_system.system_mut();
+operator.add_operator_product(hbp, CalculatorComplex::new(2.0, 0.0)).unwrap();
 
 // Adding the c_0^dag c_0 part to the noise part of the open system
 let noise = open_system.noise_mut();
@@ -282,7 +235,7 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
-open_system = bosons.BosonLindbladOpenSystem(3)
+open_system = bosons.BosonLindbladOpenSystem()
 
 hbp = bosons.HermitianBosonProduct([0, 1], [0, 2])
 bp = bosons.BosonProduct([0], [0])

@@ -19,7 +19,7 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonOperator;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
 
@@ -41,7 +41,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     ssystem = BosonOperator(2)
 ///     pp = BosonProduct([0], [1])
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_modes(), 2)
+///     npt.assert_equal(ssystem.current_number_modes(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///

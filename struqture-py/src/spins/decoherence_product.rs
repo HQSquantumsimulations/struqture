@@ -21,8 +21,9 @@ use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{DecoherenceProduct, SingleDecoherenceOperator};
+use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{SpinIndex, SymmetricIndex};
 use struqture_py_macros::{mappings, product_wrapper};
 
@@ -35,7 +36,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// `DecoherenceProduct().x(0).z(2)`.
 ///
 /// DecoherenceProduct is  supposed to be used as input for the function `add_noise`,
-/// for instance in the spin system classes SpinLindbladOpenSystem, SpinLindbladNoiseSystem or SpinLindbladNoiseOperator,
+/// for instance in the spin system classes QubitLindbladOpenSystem, SpinLindbladNoiseSystem or QubitLindbladNoiseOperator,
 /// or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.
 ///
 /// Examples
@@ -58,7 +59,7 @@ pub struct DecoherenceProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[product_wrapper(SpinIndex, SymmetricIndex, Calculus)]
 impl DecoherenceProductWrapper {
     /// Create an empty DecoherenceProduct.
     ///

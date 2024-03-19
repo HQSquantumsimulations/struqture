@@ -13,7 +13,7 @@
 use super::FermionIndex;
 use crate::mappings::JordanWignerFermionToSpin;
 use crate::prelude::*;
-use crate::spins::{PauliProduct, SingleSpinOperator, SpinHamiltonian, SpinOperator};
+use crate::spins::{PauliProduct, QubitHamiltonian, QubitOperator, SingleQubitOperator};
 use crate::{
     CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, StruqtureError, SymmetricIndex,
 };
@@ -68,7 +68,11 @@ impl schemars::JsonSchema for FermionProduct {
     }
 }
 
-impl crate::MinSupportedVersion for FermionProduct {}
+impl crate::SerializationSupport for FermionProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///
@@ -276,6 +280,31 @@ impl ModeIndex for FermionProduct {
 }
 
 impl FermionIndex for FermionProduct {}
+
+impl FermionProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::fermions::FermionProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::fermions::FermionProduct::from_str(&self_string)
+            .map_err(|err| StruqtureError::GenericError {
+                msg: format!("{}", err),
+            })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::fermions::FermionProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
 
 impl CorrespondsTo<FermionProduct> for FermionProduct {
     /// Gets the FermionProduct corresponding to self (here, itself).
@@ -614,7 +643,11 @@ impl schemars::JsonSchema for HermitianFermionProduct {
     }
 }
 
-impl crate::MinSupportedVersion for HermitianFermionProduct {}
+impl crate::SerializationSupport for HermitianFermionProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::HermitianFermionProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///
@@ -885,6 +918,33 @@ impl ModeIndex for HermitianFermionProduct {
 }
 
 impl FermionIndex for HermitianFermionProduct {}
+
+impl HermitianFermionProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::fermions::HermitianFermionProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product = struqture_one::fermions::HermitianFermionProduct::from_str(
+            &self_string,
+        )
+        .map_err(|err| StruqtureError::GenericError {
+            msg: format!("{}", err),
+        })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::fermions::HermitianFermionProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
+    }
+}
 
 impl CorrespondsTo<HermitianFermionProduct> for HermitianFermionProduct {
     /// Gets the HermitianFermionProduct corresponding to self (here, itself).
@@ -1298,7 +1358,7 @@ fn sort_and_signal(indices: TinyVec<[usize; 2]>) -> (TinyVec<[usize; 2]>, bool, 
 }
 
 impl JordanWignerFermionToSpin for FermionProduct {
-    type Output = SpinOperator;
+    type Output = QubitOperator;
 
     /// Implements JordanWignerFermionToSpin for a FermionProduct.
     ///
@@ -1307,20 +1367,20 @@ impl JordanWignerFermionToSpin for FermionProduct {
     ///
     /// # Returns
     ///
-    /// `SpinOperator` - The spin operator that results from the transformation.
+    /// `QubitOperator` - The spin operator that results from the transformation.
     ///
     /// # Panics
     ///
-    /// * Unexpectedly failed to add a PauliProduct to a SpinOperator internal struqture bug.
+    /// * Unexpectedly failed to add a PauliProduct to a QubitOperator internal struqture bug.
     /// * Internal bug in `add_operator_product`.
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
-        let mut spin_operator = SpinOperator::new();
+        let mut qubit_operator = QubitOperator::new();
 
         let mut id = PauliProduct::new();
-        id = id.set_pauli(0, SingleSpinOperator::Identity);
-        spin_operator
+        id = id.set_pauli(0, SingleQubitOperator::Identity);
+        qubit_operator
             .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
             .expect("Internal bug in add_operator_product.");
 
@@ -1331,10 +1391,10 @@ impl JordanWignerFermionToSpin for FermionProduct {
         for (index, site) in self.creators().enumerate() {
             if index % 2 != number_creators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _lowering_operator(site);
+            qubit_operator = qubit_operator * _lowering_operator(site);
             previous = *site;
         }
 
@@ -1342,18 +1402,18 @@ impl JordanWignerFermionToSpin for FermionProduct {
         for (index, site) in self.annihilators().enumerate() {
             if index % 2 != number_annihilators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _raising_operator(site);
+            qubit_operator = qubit_operator * _raising_operator(site);
             previous = *site;
         }
-        spin_operator
+        qubit_operator
     }
 }
 
 impl JordanWignerFermionToSpin for HermitianFermionProduct {
-    type Output = SpinHamiltonian;
+    type Output = QubitHamiltonian;
 
     /// Implements JordanWignerFermionToSpin for a HermitianFermionProduct.
     ///
@@ -1362,7 +1422,7 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
     ///
     /// # Returns
     ///
-    /// `SpinHamiltonian` - The spin operator that results from the transformation.
+    /// `QubitHamiltonian` - The spin operator that results from the transformation.
     ///
     /// # Panics
     ///
@@ -1370,11 +1430,11 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
     fn jordan_wigner(&self) -> Self::Output {
         let number_creators = self.number_creators();
         let number_annihilators = self.number_annihilators();
-        let mut spin_operator = SpinOperator::new();
+        let mut qubit_operator = QubitOperator::new();
 
         let mut id = PauliProduct::new();
-        id = id.set_pauli(0, SingleSpinOperator::Identity);
-        spin_operator
+        id = id.set_pauli(0, SingleQubitOperator::Identity);
+        qubit_operator
             .add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
             .expect("Internal bug in add_operator_product.");
 
@@ -1385,10 +1445,10 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         for (index, site) in self.creators().enumerate() {
             if index % 2 != number_creators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _lowering_operator(site);
+            qubit_operator = qubit_operator * _lowering_operator(site);
             previous = *site;
         }
 
@@ -1396,18 +1456,18 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
         for (index, site) in self.annihilators().enumerate() {
             if index % 2 != number_annihilators % 2 {
                 for i in previous..*site {
-                    spin_operator = spin_operator * PauliProduct::new().z(i)
+                    qubit_operator = qubit_operator * PauliProduct::new().z(i)
                 }
             }
-            spin_operator = spin_operator * _raising_operator(site);
+            qubit_operator = qubit_operator * _raising_operator(site);
             previous = *site;
         }
 
         // Spin terms with imaginary coefficients are dropped, and
         // real coefficients are doubled.
         if !self.is_natural_hermitian() {
-            let mut out = SpinHamiltonian::new();
-            for (product, coeff) in spin_operator.iter() {
+            let mut out = QubitHamiltonian::new();
+            for (product, coeff) in qubit_operator.iter() {
                 if coeff.im == 0.0.into() {
                     out.add_operator_product(product.clone(), coeff.re.clone() * 2)
                         .expect("Internal bug in add_operator_product.");
@@ -1415,24 +1475,24 @@ impl JordanWignerFermionToSpin for HermitianFermionProduct {
             }
             return out;
         }
-        SpinHamiltonian::try_from(spin_operator).expect(
-            "Error in conversion from SpinOperator to
-SpinHamiltonian, despite the internal check that the HermitianFermionProduct in the jordan-wigner
+        QubitHamiltonian::try_from(qubit_operator).expect(
+            "Error in conversion from QubitOperator to
+QubitHamiltonian, despite the internal check that the HermitianFermionProduct in the jordan-wigner
 transform is hermitian.",
         )
     }
 }
 
-fn _lowering_operator(i: &usize) -> SpinOperator {
-    let mut out = SpinOperator::new();
+fn _lowering_operator(i: &usize) -> QubitOperator {
+    let mut out = QubitOperator::new();
     out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
         .expect("Internal bug in add_operator_product.");
     out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, -0.5))
         .expect("Internal bug in add_operator_product.");
     out
 }
-fn _raising_operator(i: &usize) -> SpinOperator {
-    let mut out = SpinOperator::new();
+fn _raising_operator(i: &usize) -> QubitOperator {
+    let mut out = QubitOperator::new();
     out.add_operator_product(PauliProduct::new().x(*i), CalculatorComplex::new(0.5, 0.0))
         .expect("Internal bug in add_operator_product.");
     out.add_operator_product(PauliProduct::new().y(*i), CalculatorComplex::new(0.0, 0.5))

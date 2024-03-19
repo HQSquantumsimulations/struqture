@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::MixedOperatorWrapper;
 use crate::mixed_systems::MixedPlusMinusProductWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -18,12 +19,10 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mixed_systems::{MixedOperator, MixedPlusMinusOperator, OperateOnMixedSystems};
+#[cfg(feature = "json_schema")]
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
-
-use super::MixedOperatorWrapper;
-#[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
 /// These are representations of systems of mixed_systems.
 ///
@@ -46,7 +45,7 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///     ssystem = MixedPlusMinusOperator(1, 1, 1)
 ///     pp = MixedPlusMinusProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), [2])
+///     npt.assert_equal(ssystem.current_number_spins(), [2])
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///
 #[pyclass(name = "MixedPlusMinusOperator", module = "struqture_py.mixed_systems")]
@@ -129,11 +128,6 @@ impl MixedPlusMinusOperatorWrapper {
     }
 
     /// Convert a MixedPlusMinusOperator into a MixedOperator.
-    ///
-    /// Args:
-    ///     number_spins (list[Optional[int]]): The number of spins to initialize the MixedOperator with.
-    ///     number_bosons (list[Optional[int]]): The number of bosons to initialize the MixedOperator with.
-    ///     number_fermions (list[Optional[int]]): The number of fermions to initialize the MixedOperator with.
     ///
     /// Returns:
     ///     MixedOperator: The operator created from the input MixedPlusMinusOperator and optional number of spins.

@@ -19,7 +19,7 @@ and a LindbladNoiseSystem:
 
 The open systems in struqture are
 
-* `SpinLindbladOpenSystem`
+* `QubitLindbladOpenSystem`
 * `BosonLindbladOpenSystem`
 * `FermionLindbladOpenSystem`
 * `MixedLindbladOpenSystem`

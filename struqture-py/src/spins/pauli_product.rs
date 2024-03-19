@@ -20,13 +20,14 @@ use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{PauliProduct, SingleSpinOperator};
+use struqture::spins::{PauliProduct, SingleQubitOperator};
+use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{SpinIndex, SymmetricIndex};
 use struqture_py_macros::{mappings, product_wrapper};
 
-/// PauliProducts are combinations of SingleSpinOperators on specific qubits.
+/// PauliProducts are combinations of SingleQubitOperators on specific qubits.
 ///
 /// PauliProducts can be used in either noise-free or a noisy system.
 /// They are representations of products of pauli matrices acting on qubits,
@@ -36,7 +37,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// `PauliProduct().x(0).x(2)`.
 ///
 /// PauliProduct is  supposed to be used as input for the function `set_pauli_product`,
-/// for instance in the spin system classes SpinLindbladOpenSystem, SpinHamiltonianSystem or SpinSystem,
+/// for instance in the spin system classes QubitLindbladOpenSystem, QubitHamiltonian or QubitOperator,
 /// or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
 /// or as part of `HermitianMixedProduct <mixed_systems.HermitianMixedProduct>`.
 ///
@@ -53,6 +54,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///     npt.assert_equal(pp.keys(), [0, 1, 2, 3])
 ///
 #[pyclass(name = "PauliProduct", module = "struqture_py.spins")]
+// #[pyo3(crate = "pyo3")]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct PauliProductWrapper {
     /// Internal storage of [struqture::spins::PauliProduct]
@@ -60,7 +62,7 @@ pub struct PauliProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[product_wrapper(SpinIndex, SymmetricIndex, Calculus)]
 impl PauliProductWrapper {
     /// Create an empty PauliProduct.
     ///
@@ -73,7 +75,7 @@ impl PauliProductWrapper {
         }
     }
 
-    /// Set a new entry for SingleSpinOperator X in the internal dictionary.
+    /// Set a new entry for SingleQubitOperator X in the internal dictionary.
     ///
     /// Args:
     ///     index (int): Index of set object.
@@ -86,7 +88,7 @@ impl PauliProductWrapper {
         }
     }
 
-    /// Set a new entry for SingleSpinOperator Y in the internal dictionary.
+    /// Set a new entry for SingleQubitOperator Y in the internal dictionary.
     ///
     /// Args:
     ///     index (int): Index of set object.
@@ -99,7 +101,7 @@ impl PauliProductWrapper {
         }
     }
 
-    /// Set a new entry for SingleSpinOperator Z in the internal dictionary.
+    /// Set a new entry for SingleQubitOperator Z in the internal dictionary.
     ///
     /// Args:
     ///     index (int): Index of set object.
@@ -121,7 +123,7 @@ impl PauliProductWrapper {
     /// Returns:
     ///     self: The entry was correctly set and the PauliProduct is returned.
     pub fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
-        let converted_pauli = SingleSpinOperator::from_str(pauli.as_str()).map_err(|err| {
+        let converted_pauli = SingleQubitOperator::from_str(pauli.as_str()).map_err(|err| {
             PyValueError::new_err(format!(
                 "pauli could not be converted to X, Y, Z: {:?}",
                 err

@@ -65,7 +65,7 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test number_modes function of MixedOperator
+/// Test current_number_modes function of MixedOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -81,7 +81,7 @@ fn test_number_modes_current() {
             )
             .unwrap();
 
-        let number_system = system.call_method0("number_spins").unwrap();
+        let number_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
@@ -90,7 +90,7 @@ fn test_number_modes_current() {
         .unwrap();
         assert!(comparison);
 
-        let number_system = system.call_method0("number_bosonic_modes").unwrap();
+        let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![2_u64],))
@@ -99,7 +99,9 @@ fn test_number_modes_current() {
         .unwrap();
         assert!(comparison);
 
-        let number_system = system.call_method0("number_fermionic_modes").unwrap();
+        let number_system = system
+            .call_method0("current_number_fermionic_modes")
+            .unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
@@ -491,7 +493,7 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of modes
 
-        let number_system = system.call_method0("number_spins").unwrap();
+        let number_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
@@ -500,7 +502,7 @@ fn test_default_partialeq_debug_clone() {
         .unwrap();
         assert!(comparison);
 
-        let number_system = system.call_method0("number_bosonic_modes").unwrap();
+        let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![2_u64],))
@@ -509,7 +511,9 @@ fn test_default_partialeq_debug_clone() {
         .unwrap();
         assert!(comparison);
 
-        let number_system = system.call_method0("number_fermionic_modes").unwrap();
+        let number_system = system
+            .call_method0("current_number_fermionic_modes")
+            .unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
@@ -596,7 +600,7 @@ fn test_default_partialeq_debug_clone() {
 
         let comparison = bool::extract(
             comp_op_ungroup
-                .call_method1("__eq__", ((system, noise),))
+                .call_method1("__eq__", ((mixed_system, noise),))
                 .unwrap(),
         )
         .unwrap();
@@ -605,7 +609,7 @@ fn test_default_partialeq_debug_clone() {
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
         let comp_op_group = new_system(py, number_spins, number_bosons, number_fermions)
-            .call_method1("group", (system, noise))
+            .call_method1("group", (mixed_system, noise))
             .unwrap();
         let comparison =
             bool::extract(comp_op_group.call_method1("__eq__", (new_sys,)).unwrap()).unwrap();
@@ -1834,7 +1838,103 @@ fn test_json_schema() {
         .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let new_system_1 = new_system(py, 1, 1, 2);
+        let mut sys_2 = new_system_1
+            .call_method1(
+                "system_add_operator_product",
+                (
+                    "S0X:Bc0a1:Fc0a0:Fc0a1",
+                    convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
+                ),
+            )
+            .unwrap();
+        sys_2 = sys_2
+            .call_method1(
+                "noise_add_operator_product",
+                (
+                    ("S0X:Bc0a1:Fc0a0:Fc0a1", "S0X:Bc0a1:Fc0a0:Fc0a1"),
+                    convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
+                ),
+            )
+            .unwrap();
+
+        let pp_1: struqture_one::mixed_systems::HermitianMixedProduct =
+            struqture_one::mixed_systems::MixedIndex::new(
+                [struqture_one::spins::PauliProduct::from_str("0X").unwrap()],
+                [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+                [
+                    struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                    struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+                ],
+            )
+            .unwrap();
+        let dp_1: struqture_one::mixed_systems::MixedDecoherenceProduct =
+            struqture_one::mixed_systems::MixedIndex::new(
+                [struqture_one::spins::DecoherenceProduct::from_str("0X").unwrap()],
+                [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+                [
+                    struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                    struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+                ],
+            )
+            .unwrap();
+        let mut sys_1 = struqture_one::mixed_systems::MixedLindbladOpenSystem::new(
+            [None],
+            [None],
+            [None, None],
+        );
+        let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut sys_1);
+        struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 0.1.into()).unwrap();
+        let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut sys_1);
+        struqture_one::OperateOnDensityMatrix::set(
+            noise_mut_1,
+            (dp_1.clone(), dp_1.clone()),
+            0.1.into(),
+        )
+        .unwrap();
+
+        let result =
+            MixedLindbladOpenSystemWrapper::from_pyany_to_struqture_one(sys_2.into()).unwrap();
+        assert_eq!(result, sys_1);
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}").into();
+        let sys_2 = new_system(py, 1, 1, 1);
+        sys_2
+            .call_method1("system_add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
+            .unwrap();
+        sys_2
+            .call_method1(
+                "noise_add_operator_product",
+                (("S0Z:Bc0a0:Fc1a1", "S0Z:Bc0a0:Fc1a1"), 1.0),
+            )
+            .unwrap();
+
+        let sys_from_1 = sys_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}").into();
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(sys_from_1.is_err());
     });
 }

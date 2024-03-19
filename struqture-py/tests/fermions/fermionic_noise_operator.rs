@@ -79,13 +79,13 @@ fn test_default_partialeq_debug_clone() {
         );
 
         // Number of fermions
-        let comp_op = system.call_method0("number_modes").unwrap();
+        let comp_op = system.call_method0("current_number_modes").unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
 
-/// Test number_modes function of FermionOperator
+/// Test current_number_modes function of FermionOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -95,7 +95,7 @@ fn test_number_modes_current() {
             .call_method1("add_operator_product", (("c0a0", "c0a0"), 0.1))
             .unwrap();
 
-        let number_system = system.call_method0("number_modes").unwrap();
+        let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
@@ -352,49 +352,6 @@ fn test_truncate(re: f64, im: f64) {
         .unwrap();
         assert!(comparison);
     });
-}
-
-#[test]
-fn test_separate() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let pmp = new_noisesystem(py);
-        pmp.call_method1("add_operator_product", (("c0a0", "c0a0"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("c0c1a0", "c0a0"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("c0c1a0", "c0c1a0"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("c0c2a0", "c0c1a0"), 1.0))
-            .unwrap();
-
-        let pmp_rem = new_noisesystem(py);
-        pmp_rem
-            .call_method1("add_operator_product", (("c0a0", "c0a0"), 1.0))
-            .unwrap();
-        pmp_rem
-            .call_method1("add_operator_product", (("c0c1a0", "c0a0"), 1.0))
-            .unwrap();
-
-        let pmp_sys = new_noisesystem(py);
-        pmp_sys
-            .call_method1("add_operator_product", (("c0c1a0", "c0c1a0"), 1.0))
-            .unwrap();
-        pmp_sys
-            .call_method1("add_operator_product", (("c0c2a0", "c0c1a0"), 1.0))
-            .unwrap();
-
-        let result = pmp
-            .call_method1("separate_into_n_terms", ((2, 1), (2, 1)))
-            .unwrap();
-        let equal = bool::extract(
-            result
-                .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(equal);
-    })
 }
 
 /// Test add magic method function of FermionOperator
@@ -785,9 +742,11 @@ fn test_jordan_wigner() {
         let empty = bool::extract(slns.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes = usize::extract(flns.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins = usize::extract(slns.call_method0("number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, number_spins)
+        let current_number_modes =
+            usize::extract(flns.call_method0("current_number_modes").unwrap()).unwrap();
+        let current_number_spins =
+            usize::extract(slns.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 
@@ -813,7 +772,58 @@ fn test_json_schema() {
             .unwrap();
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let sys_2 = new_noisesystem(py);
+        sys_2
+            .call_method1("add_operator_product", (("c0c1a0a1", "c0c1a0a1"), 0.1))
+            .unwrap();
+        let mut sys_1 = struqture_one::fermions::FermionLindbladNoiseSystem::new(None);
+        struqture_one::OperateOnDensityMatrix::set(
+            &mut sys_1,
+            (
+                struqture_one::fermions::FermionProduct::from_str("c0c1a0a1").unwrap(),
+                struqture_one::fermions::FermionProduct::from_str("c0c1a0a1").unwrap(),
+            ),
+            0.1.into(),
+        )
+        .unwrap();
+
+        let result =
+            FermionLindbladNoiseOperatorWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into())
+                .unwrap();
+        assert_eq!(result, sys_1);
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
+        let sys_2 = new_noisesystem(py);
+        sys_2
+            .call_method1("add_operator_product", (("c0a0", "c0a0"), 1.0))
+            .unwrap();
+
+        let sys_from_1 = sys_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}").into();
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(sys_from_1.is_err());
     });
 }

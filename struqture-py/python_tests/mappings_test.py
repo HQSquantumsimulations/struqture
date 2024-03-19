@@ -22,43 +22,43 @@ def test_jordan_wigner_spin_to_fermion():
     pmns.add_operator_product((pmp, pmp), 2.0)
     assert type(pmns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    ss = SpinOperator()
+    ss = QubitOperator()
     ss.add_operator_product(pp, 5.0)
     assert type(ss.jordan_wigner()) == FermionOperator
 
-    shs = SpinHamiltonian()
+    shs = QubitHamiltonian()
     shs.add_operator_product(pp, 5.0)
     assert type(shs.jordan_wigner()) == FermionHamiltonian
 
-    slns = SpinLindbladNoiseOperator()
+    slns = QubitLindbladNoiseOperator()
     slns.add_operator_product((dp, dp), 2.0)
     assert type(slns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    slos = SpinLindbladOpenSystem()
+    slos = QubitLindbladOpenSystem()
     slos.system_add_operator_product(pp, 2.0)
     slos.noise_add_operator_product((dp, dp), 2.0)
     assert type(slos.jordan_wigner()) == FermionLindbladOpenSystem
 
 def test_jordan_wigner_fermion_to_spin():
     fp = FermionProduct([0], [2, 3])
-    assert type(fp.jordan_wigner()) == SpinOperator
+    assert type(fp.jordan_wigner()) == QubitOperator
 
     hfp = HermitianFermionProduct([0], [2, 3])
-    assert type(hfp.jordan_wigner()) == SpinHamiltonian
+    assert type(hfp.jordan_wigner()) == QubitHamiltonian
 
     fs = FermionOperator()
     fs.add_operator_product(fp, 1.0)
-    assert type(fs.jordan_wigner()) == SpinOperator
+    assert type(fs.jordan_wigner()) == QubitOperator
 
     fh = FermionHamiltonian()
     fh.add_operator_product(hfp, 1.0)
-    assert type(fh.jordan_wigner()) == SpinHamiltonian
+    assert type(fh.jordan_wigner()) == QubitHamiltonian
 
     flns = FermionLindbladNoiseOperator()
     flns.add_operator_product((fp, fp), 1.0)
-    assert type(flns.jordan_wigner()) == SpinLindbladNoiseOperator
+    assert type(flns.jordan_wigner()) == QubitLindbladNoiseOperator
 
     flos = FermionLindbladOpenSystem()
     flos.system_add_operator_product(fp, 2.0)
     flos.noise_add_operator_product((fp, fp), 2.0)
-    assert type(flos.jordan_wigner()) == SpinLindbladOpenSystem
+    assert type(flos.jordan_wigner()) == QubitLindbladOpenSystem

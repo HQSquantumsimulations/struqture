@@ -150,8 +150,8 @@ fn test_jw_pauli_decoherence_product() {
 }
 
 #[test]
-fn test_jw_spin_operator() {
-    let mut so = SpinOperator::new();
+fn test_jw_qubit_operator() {
+    let mut so = QubitOperator::new();
     let pp1 = PauliProduct::new().z(0).y(1).x(2);
     let pp2 = PauliProduct::new().y(1).x(2).z(3);
     let cc1 = CalculatorComplex::new(1.0, 2.0);
@@ -165,8 +165,8 @@ fn test_jw_spin_operator() {
 }
 
 #[test]
-fn test_jw_spin_hamiltonian() {
-    let mut sh = SpinHamiltonian::new();
+fn test_jw_qubit_hamiltonian() {
+    let mut sh = QubitHamiltonian::new();
 
     let pp1 = PauliProduct::new().z(0).y(1).x(2);
     let pp2 = PauliProduct::new().y(1).x(2).z(3);
@@ -196,7 +196,7 @@ fn test_jw_spin_hamiltonian() {
 #[test]
 fn test_jw_spin_noise_operator() {
     let mut fno = FermionLindbladNoiseOperator::new();
-    let mut sno = SpinLindbladNoiseOperator::new();
+    let mut sno = QubitLindbladNoiseOperator::new();
 
     assert_eq!(sno.jordan_wigner(), fno);
 
@@ -212,19 +212,19 @@ fn test_jw_spin_noise_operator() {
 
 #[test]
 fn test_jw_spin_systems() {
-    let mut sh = SpinHamiltonian::new();
+    let mut sh = QubitHamiltonian::new();
     sh.add_operator_product(PauliProduct::new().x(1), 1.0.into())
         .unwrap();
     let fh = sh.jordan_wigner();
 
-    let mut sno = SpinLindbladNoiseOperator::new();
+    let mut sno = QubitLindbladNoiseOperator::new();
     let pp1 = DecoherenceProduct::new().x(1);
     let pp2 = DecoherenceProduct::new().iy(2);
     sno.add_operator_product((pp1, pp2), CalculatorComplex::new(1.0, 2.0))
         .unwrap();
     let fno = sno.jordan_wigner();
 
-    let sos = SpinLindbladOpenSystem::group(sh, sno).unwrap();
+    let sos = QubitLindbladOpenSystem::group(sh, sno).unwrap();
     let fos = FermionLindbladOpenSystem::group(fh, fno).unwrap();
 
     assert_eq!(sos.jordan_wigner(), fos);

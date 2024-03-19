@@ -25,9 +25,10 @@ use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::*;
 use struqture::spins::DecoherenceProduct;
+use struqture::SerializationSupport;
 use struqture::SymmetricIndex;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture_py_macros::product_wrapper;
 
 /// A mixed product of pauli products and boson products.

@@ -17,13 +17,15 @@ use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
     DecoherenceOperator, DecoherenceProduct, PauliProduct, PlusMinusOperator, PlusMinusProduct,
-    SpinHamiltonian, SpinOperator,
+    QubitHamiltonian, QubitOperator,
 };
 use struqture::OperateOnDensityMatrix;
-use test_case::test_case;
 
 // Test the new function of the PlusMinusOperator
 #[test]
@@ -48,17 +50,17 @@ fn empty_clone_options() {
     );
 }
 
-// // Test the number_spins function of the PlusMinusOperator
+// // Test the current_number_spins function of the PlusMinusOperator
 // #[test]
 // fn internal_map_number_spins() {
 //     let pp_0: PlusMinusProduct = PlusMinusProduct::new().plus(0);
 //     let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
 //     let mut so = PlusMinusOperator::new();
-//     assert_eq!(so.number_spins(), 0_usize);
+//     assert_eq!(so.current_number_spins(), 0_usize);
 //     so.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
-//     assert_eq!(so.number_spins(), 1_usize);
+//     assert_eq!(so.current_number_spins(), 1_usize);
 //     so.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
-//     assert_eq!(so.number_spins(), 3_usize);
+//     assert_eq!(so.current_number_spins(), 3_usize);
 // }
 
 // Test the len function of the PlusMinusOperator
@@ -74,7 +76,7 @@ fn internal_map_len() {
 #[test]
 fn internal_map_set_get_dict() {
     let mut system = PlusMinusOperator::new();
-    // assert_eq!(system.number_spins(), 0_usize);
+    // assert_eq!(system.current_number_spins(), 0_usize);
     let pp_0: PlusMinusProduct = PlusMinusProduct::new().z(0);
 
     // 1) Test try_set_pauli_product and get functions
@@ -85,7 +87,7 @@ fn internal_map_set_get_dict() {
     system
         .set(pp_0.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    // assert_eq!(system.number_spins(), 1_usize);
+    // assert_eq!(system.current_number_spins(), 1_usize);
     assert_eq!(system.get(&pp_0), &CalculatorComplex::from(0.5));
 
     // 2) Test iter, keys, values functions
@@ -344,82 +346,6 @@ fn clone_partial_eq() {
     assert!(so != so_2);
 }
 
-// Test the separation of terms
-#[test_case(1)]
-#[test_case(2)]
-#[test_case(3)]
-fn separate_out_terms(number_spins: usize) {
-    let pp_1_a: PlusMinusProduct = PlusMinusProduct::new().z(0);
-    let pp_1_b: PlusMinusProduct = PlusMinusProduct::new().plus(1);
-    let pp_2_a: PlusMinusProduct = PlusMinusProduct::new().z(0).plus(2);
-    let pp_2_b: PlusMinusProduct = PlusMinusProduct::new().plus(1).minus(2);
-    let pp_3_a: PlusMinusProduct = PlusMinusProduct::new().z(0).z(1).z(2);
-    let pp_3_b: PlusMinusProduct = PlusMinusProduct::new().plus(1).plus(2).z(0);
-
-    let mut allowed: Vec<(PlusMinusProduct, f64)> = Vec::new();
-    let mut not_allowed: Vec<(PlusMinusProduct, f64)> = vec![
-        (pp_1_a.clone(), 1.0),
-        (pp_1_b.clone(), 1.1),
-        (pp_2_a.clone(), 1.2),
-        (pp_2_b.clone(), 1.3),
-        (pp_3_a.clone(), 1.4),
-        (pp_3_b.clone(), 1.5),
-    ];
-
-    match number_spins {
-        1 => {
-            allowed.push((pp_1_a.clone(), 1.0));
-            allowed.push((pp_1_b.clone(), 1.1));
-            not_allowed.remove(0);
-            not_allowed.remove(0);
-        }
-        2 => {
-            allowed.push((pp_2_a.clone(), 1.2));
-            allowed.push((pp_2_b.clone(), 1.3));
-            not_allowed.remove(2);
-            not_allowed.remove(2);
-        }
-        3 => {
-            allowed.push((pp_3_a.clone(), 1.4));
-            allowed.push((pp_3_b.clone(), 1.5));
-            not_allowed.remove(4);
-            not_allowed.remove(4);
-        }
-        _ => panic!(),
-    }
-
-    let mut separated = PlusMinusOperator::new();
-    for (key, value) in allowed.iter() {
-        separated
-            .add_operator_product(key.clone(), value.into())
-            .unwrap();
-    }
-    let mut remainder = PlusMinusOperator::new();
-    for (key, value) in not_allowed.iter() {
-        remainder
-            .add_operator_product(key.clone(), value.into())
-            .unwrap();
-    }
-
-    let mut so = PlusMinusOperator::new();
-    so.add_operator_product(pp_1_a, CalculatorComplex::from(1.0))
-        .unwrap();
-    so.add_operator_product(pp_1_b, CalculatorComplex::from(1.1))
-        .unwrap();
-    so.add_operator_product(pp_2_a, CalculatorComplex::from(1.2))
-        .unwrap();
-    so.add_operator_product(pp_2_b, CalculatorComplex::from(1.3))
-        .unwrap();
-    so.add_operator_product(pp_3_a, CalculatorComplex::from(1.4))
-        .unwrap();
-    so.add_operator_product(pp_3_b, CalculatorComplex::from(1.5))
-        .unwrap();
-
-    let result = so.separate_into_n_terms(number_spins).unwrap();
-    assert_eq!(result.0, separated);
-    assert_eq!(result.1, remainder);
-}
-
 /// Test PlusMinusOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_json() {
@@ -435,9 +361,6 @@ fn serde_json() {
 /// Test PlusMinusOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    let major_version = 1;
-    let minor_version = 1;
-
     let pp = PlusMinusProduct::new().plus(0);
     let mut system = PlusMinusOperator::new();
     system.set(pp, 0.5.into()).unwrap();
@@ -456,15 +379,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("PlusMinusOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -488,9 +417,6 @@ fn bincode() {
 
 #[test]
 fn serde_compact() {
-    let major_version = 1;
-    let minor_version = 1;
-
     let pp = PlusMinusProduct::new().plus(0);
     let mut system = PlusMinusOperator::new();
     system.set(pp, 0.5.into()).unwrap();
@@ -526,15 +452,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("PlusMinusOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -698,9 +630,9 @@ fn sh_from_pmo() {
         (PauliProduct::new().z(0).z(1).z(2), 1.5.into()),
     ];
 
-    let mut spin_ham = SpinHamiltonian::new();
+    let mut qubit_ham = QubitHamiltonian::new();
     for (key, val) in pp_vec.iter() {
-        spin_ham
+        qubit_ham
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -712,7 +644,7 @@ fn sh_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(SpinHamiltonian::try_from(pm_op).unwrap(), spin_ham);
+    assert_eq!(QubitHamiltonian::try_from(pm_op).unwrap(), qubit_ham);
 }
 
 #[test]
@@ -755,9 +687,9 @@ fn so_from_pmo() {
         ),
     ];
 
-    let mut spin_op = SpinOperator::new();
+    let mut qubit_op = QubitOperator::new();
     for (key, val) in pp_vec.iter() {
-        spin_op
+        qubit_op
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -769,8 +701,8 @@ fn so_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(SpinOperator::from(pm_op.clone()), spin_op);
-    assert!(SpinHamiltonian::try_from(pm_op).is_err());
+    assert_eq!(QubitOperator::from(pm_op.clone()), qubit_op);
+    assert!(QubitHamiltonian::try_from(pm_op).is_err());
 }
 
 #[test]
@@ -822,9 +754,9 @@ fn pmo_from_sh() {
         ),
     ];
 
-    let mut spin_op = SpinHamiltonian::new();
+    let mut qubit_op = QubitHamiltonian::new();
     for (key, val) in pp_vec.iter() {
-        spin_op
+        qubit_op
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -836,7 +768,7 @@ fn pmo_from_sh() {
             .unwrap();
     }
 
-    assert_eq!(PlusMinusOperator::from(spin_op), pm_op);
+    assert_eq!(PlusMinusOperator::from(qubit_op), pm_op);
 }
 
 #[test]
@@ -891,9 +823,9 @@ fn pmo_from_so() {
         ),
     ];
 
-    let mut spin_op = SpinOperator::new();
+    let mut qubit_op = QubitOperator::new();
     for (key, val) in pp_vec.iter() {
-        spin_op
+        qubit_op
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -905,7 +837,7 @@ fn pmo_from_so() {
             .unwrap();
     }
 
-    assert_eq!(PlusMinusOperator::from(spin_op), pm_op);
+    assert_eq!(PlusMinusOperator::from(qubit_op), pm_op);
 }
 
 #[cfg(feature = "json_schema")]
@@ -922,4 +854,20 @@ fn test_plus_minus_operator_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_one::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
+    let mut ss_1 = struqture_one::spins::PlusMinusOperator::new();
+    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = PlusMinusProduct::new().plus(0).minus(1).z(25);
+    let mut ss_2 = PlusMinusOperator::new();
+    ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(PlusMinusOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }
