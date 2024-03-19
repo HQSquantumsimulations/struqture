@@ -224,7 +224,7 @@ impl<'a> OperateOnMixedSystems<'a> for MixedOperator {
     }
 
     // From trait
-    fn number_bosonic_modes(&self) -> Vec<usize> {
+    fn current_number_bosonic_modes(&self) -> Vec<usize> {
         let mut number_bosons: Vec<usize> = (0..self.n_bosons).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.bosons().enumerate() {
@@ -337,7 +337,10 @@ impl MixedOperator {
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new(
             struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
-            struqture_one::mixed_systems::OperateOnMixedSystems::number_bosonic_modes(value).len(),
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
+                value,
+            )
+            .len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
                 value,
             )

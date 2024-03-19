@@ -267,7 +267,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
-    pub fn number_bosonic_modes(&self) -> Vec<usize> {
+    pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
         self.bosons().map(|b| b.current_number_modes()).collect()
     }
 

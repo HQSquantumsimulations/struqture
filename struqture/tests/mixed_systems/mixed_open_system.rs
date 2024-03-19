@@ -34,7 +34,7 @@ fn new_system() {
     assert_eq!(system.system(), &MixedHamiltonian::new(1, 1, 1));
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
     assert_eq!(vec![0], system.current_number_spins());
-    assert_eq!(vec![0], system.number_bosonic_modes());
+    assert_eq!(vec![0], system.current_number_bosonic_modes());
     assert_eq!(vec![0], system.current_number_fermionic_modes());
 
     assert_eq!(
@@ -52,7 +52,7 @@ fn new_system_none() {
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
     assert_eq!(vec![0], system.current_number_spins());
-    assert_eq!(vec![0], system.number_bosonic_modes());
+    assert_eq!(vec![0], system.current_number_bosonic_modes());
     assert_eq!(vec![0], system.current_number_fermionic_modes());
 }
 

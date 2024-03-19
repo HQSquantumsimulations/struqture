@@ -455,8 +455,8 @@ pub fn noiselesswrapper(
                 ///
                 /// Returns:
                 ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
-                pub fn number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.number_bosonic_modes()
+                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_bosonic_modes()
                 }
 
                 /// Return the number of fermionic modes in each fermionic subsystem of self.

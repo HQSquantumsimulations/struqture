@@ -47,7 +47,7 @@ fn new(
     let mo = MixedLindbladNoiseOperator::new(n_pauli, n_bosons, n_fermions);
     assert!(mo.is_empty());
     assert_eq!(current_number_spins, mo.current_number_spins());
-    assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
+    assert_eq!(number_bosonic_modes, mo.current_number_bosonic_modes());
     assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
@@ -67,7 +67,7 @@ fn new_with_capacity(
     let mo = MixedLindbladNoiseOperator::new(n_pauli, n_bosons, n_fermions);
     assert!(mo.is_empty());
     assert_eq!(current_number_spins, mo.current_number_spins());
-    assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
+    assert_eq!(number_bosonic_modes, mo.current_number_bosonic_modes());
     assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
@@ -197,7 +197,7 @@ fn set_fail() {
     .unwrap();
     let mut mo = MixedLindbladNoiseOperator::new(0, 1, 1);
     assert_eq!(mo.current_number_spins(), Vec::<usize>::new());
-    assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
+    assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
     let err = mo.set((pp_0.clone(), pp_0), CalculatorComplex::from(0.5));
@@ -215,7 +215,7 @@ fn set_fail() {
 
     let mut mo = MixedLindbladNoiseOperator::new(1, 0, 1);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
-    assert_eq!(mo.number_bosonic_modes(), Vec::<usize>::new());
+    assert_eq!(mo.current_number_bosonic_modes(), Vec::<usize>::new());
     assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
     let err = mo.set((pp_2.clone(), pp_2.clone()), CalculatorComplex::from(0.5));
@@ -233,7 +233,7 @@ fn set_fail() {
 
     let mut mo = MixedLindbladNoiseOperator::new(1, 1, 0);
     assert_eq!(mo.current_number_spins(), vec![0_usize]);
-    assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
+    assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.current_number_fermionic_modes(), Vec::<usize>::new());
 
     let err = mo.set((pp_2.clone(), pp_2), CalculatorComplex::from(0.5));

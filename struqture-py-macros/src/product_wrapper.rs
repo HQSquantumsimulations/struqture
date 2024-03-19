@@ -371,8 +371,8 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     list[int]: Number of bosonic modes in each spin sub-system.
-                pub fn number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.number_bosonic_modes()
+                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_bosonic_modes()
                 }
 
                 /// Return the current number of fermionic modes each subsystem acts upon.

@@ -115,7 +115,7 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
-    fn number_bosonic_modes(&self) -> Vec<usize> {
+    fn current_number_bosonic_modes(&self) -> Vec<usize> {
         self.bosons().map(|b| b.current_number_modes()).collect()
     }
 
@@ -172,7 +172,7 @@ where
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
 /// assert_eq!(sh.current_number_spins(), vec![1]);
-/// assert_eq!(sh.number_bosonic_modes(), vec![2]);
+/// assert_eq!(sh.current_number_bosonic_modes(), vec![2]);
 /// assert_eq!(sh.current_number_fermionic_modes(), vec![2]);
 /// ```
 ///
@@ -189,7 +189,7 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of bosonic modes in each sub-system of Self.
-    fn number_bosonic_modes(&self) -> Vec<usize>;
+    fn current_number_bosonic_modes(&self) -> Vec<usize>;
 
     /// Returns the number of fermionic modes in each fermion sub-system of Self.
     ///
