@@ -741,7 +741,7 @@ fn sparse_lindblad_entries() {
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_spin_hamiltonian_schema() {
+fn test_qubit_hamiltonian_schema() {
     let mut op = QubitHamiltonian::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();

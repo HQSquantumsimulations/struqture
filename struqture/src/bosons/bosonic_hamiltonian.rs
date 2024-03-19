@@ -280,16 +280,16 @@ impl BosonHamiltonian {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_one::bosons::BosonHamiltonianSystem, StruqtureError> {
-        let mut new_spin_system = struqture_one::bosons::BosonHamiltonianSystem::new(None);
+        let mut new_boson_system = struqture_one::bosons::BosonHamiltonianSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_spin_system,
+                &mut new_boson_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_spin_system)
+        Ok(new_boson_system)
     }
 
     /// Export to struqture_1 format.
@@ -297,12 +297,12 @@ impl BosonHamiltonian {
     pub fn from_struqture_1(
         value: &struqture_one::bosons::BosonHamiltonianSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_spin_operator = Self::new();
+        let mut new_qubit_operator = Self::new();
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key = HermitianBosonProduct::from_struqture_1(key)?;
-            let _ = new_spin_operator.set(self_key, val.clone());
+            let _ = new_qubit_operator.set(self_key, val.clone());
         }
-        Ok(new_spin_operator)
+        Ok(new_qubit_operator)
     }
 }
 

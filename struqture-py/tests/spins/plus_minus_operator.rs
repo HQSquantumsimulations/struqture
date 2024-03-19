@@ -523,7 +523,7 @@ fn test_mul_error() {
 }
 
 #[test]
-fn test_from_spin_sys() {
+fn test_from_qubit_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -557,20 +557,20 @@ fn test_from_spin_sys() {
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_system", (pp,))
+            .call_method1("from_qubit_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_system", ("No",));
+            .call_method1("from_qubit_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_spin_sys() {
+fn test_to_qubit_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -604,14 +604,14 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp.call_method0("to_spin_system").unwrap();
+        let result = pmp.call_method0("to_qubit_operator").unwrap();
         let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
 
 #[test]
-fn test_from_spin_ham_sys() {
+fn test_from_qubit_ham() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -645,20 +645,20 @@ fn test_from_spin_ham_sys() {
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_hamiltonian_system", (pp,))
+            .call_method1("from_qubit_hamiltonian", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_spin_system", ("No",));
+            .call_method1("from_qubit_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_spin_ham_sys() {
+fn test_to_qubit_ham() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -673,13 +673,13 @@ fn test_to_spin_ham_sys() {
             .unwrap();
         sys.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
-        let result = pmp.call_method0("to_spin_hamiltonian_system").unwrap();
-        let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
+        let result = pmp.call_method0("to_qubit_hamiltonian").unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
 
         pmp.call_method1("add_operator_product", ("0+", 1.0))
             .unwrap();
-        let result = pmp.call_method0("to_spin_hamiltonian_system");
+        let result = pmp.call_method0("to_qubit_hamiltonian");
         assert!(result.is_err())
     })
 }
@@ -874,7 +874,7 @@ fn test_jordan_wigner() {
         let empty = bool::extract_bound(&fo.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let ss = pmo.call_method0("to_spin_system").unwrap();
+        let ss = pmo.call_method0("to_qubit_operator").unwrap();
 
         let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
         let number_spins = usize::extract(ss.call_method0("number_spins").unwrap()).unwrap();

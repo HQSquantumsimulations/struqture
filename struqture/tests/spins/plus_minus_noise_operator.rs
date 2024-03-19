@@ -615,10 +615,10 @@ fn so_from_pmo() {
         ),
     ];
 
-    let mut spin_op = QubitLindbladNoiseOperator::new();
+    let mut qubit_op = QubitLindbladNoiseOperator::new();
     for (key_l, val_l) in dp_vec.iter() {
         for (key_r, val_r) in dp_vec.iter() {
-            spin_op
+            qubit_op
                 .add_operator_product((key_l.clone(), key_r.clone()), val_l.clone() * val_r)
                 .unwrap();
         }
@@ -633,7 +633,7 @@ fn so_from_pmo() {
         }
     }
 
-    assert_eq!(QubitLindbladNoiseOperator::from(pm_op.clone()), spin_op);
+    assert_eq!(QubitLindbladNoiseOperator::from(pm_op.clone()), qubit_op);
 }
 
 #[test]
@@ -689,10 +689,10 @@ fn pmo_from_so() {
         ),
     ];
 
-    let mut spin_op = QubitLindbladNoiseOperator::new();
+    let mut qubit_op = QubitLindbladNoiseOperator::new();
     for (key_l, val_l) in dp_vec.iter() {
         for (key_r, val_r) in dp_vec.iter() {
-            spin_op
+            qubit_op
                 .add_operator_product((key_l.clone(), key_r.clone()), val_l.clone() * val_r)
                 .unwrap();
         }
@@ -707,7 +707,7 @@ fn pmo_from_so() {
         }
     }
 
-    assert_eq!(PlusMinusLindbladNoiseOperator::from(spin_op), pm_op);
+    assert_eq!(PlusMinusLindbladNoiseOperator::from(qubit_op), pm_op);
 }
 
 #[cfg(feature = "json_schema")]

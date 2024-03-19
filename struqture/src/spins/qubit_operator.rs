@@ -273,16 +273,16 @@ impl QubitOperator {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(&self) -> Result<struqture_one::spins::SpinSystem, StruqtureError> {
-        let mut new_spin_system = struqture_one::spins::SpinSystem::new(None);
+        let mut new_qubit_system = struqture_one::spins::SpinSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_spin_system,
+                &mut new_qubit_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_spin_system)
+        Ok(new_qubit_system)
     }
 
     /// Export to struqture_1 format.
@@ -290,12 +290,12 @@ impl QubitOperator {
     pub fn from_struqture_1(
         value: &struqture_one::spins::SpinSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_spin_operator = Self::new();
+        let mut new_qubit_operator = Self::new();
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key = PauliProduct::from_struqture_1(key)?;
-            let _ = new_spin_operator.set(self_key, val.clone());
+            let _ = new_qubit_operator.set(self_key, val.clone());
         }
-        Ok(new_spin_operator)
+        Ok(new_qubit_operator)
     }
 
     /// Creates a new QubitOperator with pre-allocated capacity.
@@ -466,18 +466,18 @@ impl ops::Mul<QubitOperator> for QubitOperator {
     ///
     /// * Internal error in add_operator_product.
     fn mul(self, other: QubitOperator) -> Self {
-        let mut spin_op = QubitOperator::with_capacity(self.len() * other.len());
+        let mut qubit_op = QubitOperator::with_capacity(self.len() * other.len());
         for (pps, vals) in self {
             for (ppo, valo) in other.iter() {
                 let (ppp, coefficient) = pps.clone() * ppo.clone();
                 let coefficient =
                     Into::<CalculatorComplex>::into(valo) * coefficient * vals.clone();
-                spin_op
+                qubit_op
                     .add_operator_product(ppp, coefficient)
                     .expect("Internal bug in add_operator_product");
             }
         }
-        spin_op
+        qubit_op
     }
 }
 
@@ -499,15 +499,15 @@ impl ops::Mul<PauliProduct> for QubitOperator {
     ///
     /// * Internal error in add_operator_product.
     fn mul(self, ppo: PauliProduct) -> Self {
-        let mut spin_op = QubitOperator::with_capacity(self.len());
+        let mut qubit_op = QubitOperator::with_capacity(self.len());
         for (pps, vals) in self {
             let (ppp, coefficient) = pps.clone() * ppo.clone();
             let coefficient = CalculatorComplex::from(coefficient) * vals.clone();
-            spin_op
+            qubit_op
                 .add_operator_product(ppp, coefficient)
                 .expect("Internal bug in add_operator_product");
         }
-        spin_op
+        qubit_op
     }
 }
 
@@ -529,15 +529,15 @@ impl ops::Mul<QubitOperator> for PauliProduct {
     ///
     /// * Internal error in add_operator_product.
     fn mul(self, other: QubitOperator) -> QubitOperator {
-        let mut spin_op = QubitOperator::with_capacity(other.len());
+        let mut qubit_op = QubitOperator::with_capacity(other.len());
         for (ppo, valo) in other.iter() {
             let (ppp, coefficient) = self.clone() * ppo.clone();
             let coefficient = valo.clone() * CalculatorComplex::from(coefficient);
-            spin_op
+            qubit_op
                 .add_operator_product(ppp, coefficient)
                 .expect("Internal bug in add_operator_product");
         }
-        spin_op
+        qubit_op
     }
 }
 

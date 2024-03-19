@@ -31,7 +31,7 @@ fn new_system(py: Python) -> &PyCell<QubitHamiltonianWrapper> {
         .unwrap()
         .to_owned()
 }
-fn new_spin_system(py: Python) -> &PyCell<QubitOperatorWrapper> {
+fn new_qubit_operator(py: Python) -> &PyCell<QubitOperatorWrapper> {
     let system_type = py.get_type::<QubitOperatorWrapper>();
     system_type
         .call0()
@@ -500,7 +500,7 @@ fn test_mul_cf() {
             .call_method1("add_operator_product", ("0X", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_spin_system(py);
+        let system_0_1 = new_qubit_operator(py);
         system_0_1
             .call_method1("add_operator_product", ("0X", 0.2))
             .unwrap();
@@ -522,7 +522,7 @@ fn test_mul_cc() {
             .call_method1("add_operator_product", ("0X", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_spin_system(py);
+        let system_0_1 = new_qubit_operator(py);
         system_0_1
             .call_method1("add_operator_product", ("0X", Complex64::new(0.0, 0.5)))
             .unwrap();
@@ -554,7 +554,7 @@ fn test_mul_self() {
         system_1
             .call_method1("add_operator_product", ("1Z", 1.0))
             .unwrap();
-        let system_0_1 = new_spin_system(py);
+        let system_0_1 = new_qubit_operator(py);
         system_0_1
             .call_method1("add_operator_product", ("0X1Z", 0.1))
             .unwrap();

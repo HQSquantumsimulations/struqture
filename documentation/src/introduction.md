@@ -18,7 +18,7 @@ To best support this use case, struqture has a number of design goals:
 Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
 Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
 The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported from [qoqo_calculator](https://github.com/HQSquantumsimulations/qoqo_calculator).
-Struqture is designed to also support the construction and (de)serialisation of large systems but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
+Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
 
 This documentation is split into two parts. The [first part](physical_types/intro.md) covers the basic usage for spins, bosons, fermions and mixed systems. The [second part](container_types/intro.md) covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world [example](example.md) is also included in.
 

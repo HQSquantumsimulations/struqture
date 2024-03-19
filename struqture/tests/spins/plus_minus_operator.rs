@@ -630,9 +630,9 @@ fn sh_from_pmo() {
         (PauliProduct::new().z(0).z(1).z(2), 1.5.into()),
     ];
 
-    let mut spin_ham = QubitHamiltonian::new();
+    let mut qubit_ham = QubitHamiltonian::new();
     for (key, val) in pp_vec.iter() {
-        spin_ham
+        qubit_ham
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -644,7 +644,7 @@ fn sh_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(QubitHamiltonian::try_from(pm_op).unwrap(), spin_ham);
+    assert_eq!(QubitHamiltonian::try_from(pm_op).unwrap(), qubit_ham);
 }
 
 #[test]
@@ -687,9 +687,9 @@ fn so_from_pmo() {
         ),
     ];
 
-    let mut spin_op = QubitOperator::new();
+    let mut qubit_op = QubitOperator::new();
     for (key, val) in pp_vec.iter() {
-        spin_op
+        qubit_op
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -701,7 +701,7 @@ fn so_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(QubitOperator::from(pm_op.clone()), spin_op);
+    assert_eq!(QubitOperator::from(pm_op.clone()), qubit_op);
     assert!(QubitHamiltonian::try_from(pm_op).is_err());
 }
 
@@ -754,9 +754,9 @@ fn pmo_from_sh() {
         ),
     ];
 
-    let mut spin_op = QubitHamiltonian::new();
+    let mut qubit_op = QubitHamiltonian::new();
     for (key, val) in pp_vec.iter() {
-        spin_op
+        qubit_op
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -768,7 +768,7 @@ fn pmo_from_sh() {
             .unwrap();
     }
 
-    assert_eq!(PlusMinusOperator::from(spin_op), pm_op);
+    assert_eq!(PlusMinusOperator::from(qubit_op), pm_op);
 }
 
 #[test]
@@ -823,9 +823,9 @@ fn pmo_from_so() {
         ),
     ];
 
-    let mut spin_op = QubitOperator::new();
+    let mut qubit_op = QubitOperator::new();
     for (key, val) in pp_vec.iter() {
-        spin_op
+        qubit_op
             .add_operator_product(key.clone(), val.clone())
             .unwrap();
     }
@@ -837,7 +837,7 @@ fn pmo_from_so() {
             .unwrap();
     }
 
-    assert_eq!(PlusMinusOperator::from(spin_op), pm_op);
+    assert_eq!(PlusMinusOperator::from(qubit_op), pm_op);
 }
 
 #[cfg(feature = "json_schema")]

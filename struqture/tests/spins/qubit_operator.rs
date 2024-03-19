@@ -744,7 +744,7 @@ fn sparse_lindblad_entries() {
 }
 
 #[test]
-fn test_spin_operator_pauli_multiplication() {
+fn test_qubit_operator_pauli_multiplication() {
     // We use this a bunch
     let one = CalculatorComplex::from(1.0);
     // This is to test the algebra of
@@ -756,45 +756,45 @@ fn test_spin_operator_pauli_multiplication() {
     let pauli_4 = PauliProduct::from_str("2Y").unwrap();
     let pauli_5 = PauliProduct::from_str("0X2Y").unwrap();
 
-    let mut spin_op_1 = QubitOperator::new();
-    let mut spin_op_2 = QubitOperator::new();
-    let mut spin_op_3 = QubitOperator::new();
-    let mut spin_op_4 = QubitOperator::new();
-    let mut spin_op_5 = QubitOperator::new();
+    let mut qubit_op_1 = QubitOperator::new();
+    let mut qubit_op_2 = QubitOperator::new();
+    let mut qubit_op_3 = QubitOperator::new();
+    let mut qubit_op_4 = QubitOperator::new();
+    let mut qubit_op_5 = QubitOperator::new();
 
-    spin_op_1.set(pauli_1.clone(), one.clone()).unwrap();
-    spin_op_2.set(pauli_2.clone(), one.clone()).unwrap();
-    spin_op_3.set(pauli_3.clone(), one.clone()).unwrap();
-    spin_op_4.set(pauli_4, one.clone()).unwrap();
-    spin_op_5.set(pauli_5, one).unwrap();
+    qubit_op_1.set(pauli_1.clone(), one.clone()).unwrap();
+    qubit_op_2.set(pauli_2.clone(), one.clone()).unwrap();
+    qubit_op_3.set(pauli_3.clone(), one.clone()).unwrap();
+    qubit_op_4.set(pauli_4, one.clone()).unwrap();
+    qubit_op_5.set(pauli_5, one).unwrap();
 
     // 0X2Y * 0X = 2Y,
-    let prod_1a = spin_op_5.clone() * pauli_1.clone();
+    let prod_1a = qubit_op_5.clone() * pauli_1.clone();
     //  0X * 0X2Y = 2Y
-    let prod_1b = pauli_1 * spin_op_5.clone();
+    let prod_1b = pauli_1 * qubit_op_5.clone();
 
     // Products match 2Y = 2Y
     assert_eq!(prod_1a, prod_1b);
     // Product 2Y matches predefined SpinOp = 2Y
-    assert_eq!(prod_1a, spin_op_4);
+    assert_eq!(prod_1a, qubit_op_4);
 
     // 0Z * 0Y = -i * 0X
-    let prod_2a = spin_op_3.clone() * pauli_2.clone();
+    let prod_2a = qubit_op_3.clone() * pauli_2.clone();
     // 0Y * 0Z = i * 0X
-    let prod_2b = pauli_2.clone() * spin_op_3.clone();
+    let prod_2b = pauli_2.clone() * qubit_op_3.clone();
 
     // 0Z * 0Y = -0Y * 0Z, -i * 0X = -(i * 0X)
     assert_eq!(prod_2a, -prod_2b);
-    assert_eq!(prod_2a, spin_op_1 * CalculatorComplex::from((0.0, -1.0)));
+    assert_eq!(prod_2a, qubit_op_1 * CalculatorComplex::from((0.0, -1.0)));
 
     // 0X2Y * 0Y = i * 0Z2Y, i * 0Z2Y * 0Z = i * 2Y
-    let prod_3 = (spin_op_5 * pauli_2) * pauli_3;
-    assert_eq!(prod_3, spin_op_4 * CalculatorComplex::from((0.0, 1.0)));
+    let prod_3 = (qubit_op_5 * pauli_2) * pauli_3;
+    assert_eq!(prod_3, qubit_op_4 * CalculatorComplex::from((0.0, 1.0)));
 }
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_spin_operator_schema() {
+fn test_qubit_operator_schema() {
     let mut op = QubitOperator::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();

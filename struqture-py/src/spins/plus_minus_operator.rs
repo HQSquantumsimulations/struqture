@@ -111,7 +111,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create QubitOperator from input.
     #[staticmethod]
-    pub fn from_spin_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_qubit_operator(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = QubitOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -130,7 +130,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create QubitHamiltonian from input.
     #[staticmethod]
-    pub fn from_spin_hamiltonian_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_qubit_hamiltonian(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = QubitHamiltonianWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -145,7 +145,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create QubitOperator from PlusMinusOperator.
-    pub fn to_spin_system(&self) -> PyResult<QubitOperatorWrapper> {
+    pub fn to_qubit_operator(&self) -> PyResult<QubitOperatorWrapper> {
         let result: QubitOperator = QubitOperator::from(self.internal.clone());
         Ok(QubitOperatorWrapper { internal: result })
     }
@@ -157,7 +157,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create QubitHamiltonian from PlusMinusOperator.
-    pub fn to_spin_hamiltonian_system(&self) -> PyResult<QubitHamiltonianWrapper> {
+    pub fn to_qubit_hamiltonian(&self) -> PyResult<QubitHamiltonianWrapper> {
         let result: QubitHamiltonian = QubitHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(QubitHamiltonianWrapper { internal: result })
