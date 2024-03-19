@@ -59,10 +59,10 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     ssystem = QubitHamiltonian(2)
 ///     pp = PauliProduct().z(0)
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), 2)
+///     npt.assert_equal(ssystem.current_number_spins(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
-///     dimension = 4**ssystem.number_spins()
+///     dimension = 4**ssystem.current_number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
 #[pyclass(name = "QubitHamiltonian", module = "struqture_py.spins")]

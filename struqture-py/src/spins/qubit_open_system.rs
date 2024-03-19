@@ -52,7 +52,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     slns.system_add_operator_product(dp, 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
-///     dimension = 4**slns.number_spins()
+///     dimension = 4**slns.current_number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
 #[pyclass(name = "QubitLindbladOpenSystem", module = "struqture_py.spins")]

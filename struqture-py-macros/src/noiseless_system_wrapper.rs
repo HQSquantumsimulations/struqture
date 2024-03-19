@@ -309,12 +309,12 @@ pub fn noiselesswrapper(
     };
     let operate_on_spins_quote = if attribute_arguments.contains("OperateOnSpins") {
         quote! {
-            /// Return the number_spins input of self.
+            /// Return the current_number_spins input of self.
             ///
             /// Returns:
             ///     int: The number of spins in self.
-            pub fn number_spins(&self) -> usize {
-                self.internal.number_spins()
+            pub fn current_number_spins(&self) -> usize {
+                self.internal.current_number_spins()
             }
         }
     } else {
@@ -453,12 +453,12 @@ pub fn noiselesswrapper(
     };
     let operate_on_mixedsystems_quote = if attribute_arguments.contains("OperateOnMixedSystems") {
         quote! {
-                /// Return the number_spins input of each spin subsystem of self.
+                /// Return the current_number_spins input of each spin subsystem of self.
                 ///
                 /// Returns:
                 ///     int: The number of spins in each spin subsystem of self.
-                pub fn number_spins(&self) -> Vec<usize> {
-                    self.internal.number_spins()
+                pub fn current_number_spins(&self) -> Vec<usize> {
+                    self.internal.current_number_spins()
                 }
 
                 /// Return the number of bosonic modes in each bosonic subsystem of self.

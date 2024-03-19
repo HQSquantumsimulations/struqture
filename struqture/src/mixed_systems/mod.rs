@@ -106,8 +106,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of spins in each spin sub-system.
-    fn number_spins(&self) -> Vec<usize> {
-        self.spins().map(|s| s.number_spins()).collect()
+    fn current_number_spins(&self) -> Vec<usize> {
+        self.spins().map(|s| s.current_number_spins()).collect()
     }
 
     /// Returns the current number of bosonic modes each subsystem acts upon.
@@ -171,7 +171,7 @@ where
 /// sh.set(mp_1.clone(), CalculatorComplex::from(0.5)).unwrap();
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
-/// assert_eq!(sh.number_spins(), vec![1]);
+/// assert_eq!(sh.current_number_spins(), vec![1]);
 /// assert_eq!(sh.number_bosonic_modes(), vec![2]);
 /// assert_eq!(sh.number_fermionic_modes(), vec![2]);
 /// ```
@@ -182,7 +182,7 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of spins in each sub-system of Self.
-    fn number_spins(&self) -> Vec<usize>;
+    fn current_number_spins(&self) -> Vec<usize>;
 
     /// Returns the number of bosonic modes in each boson sub-system of Self.
     ///

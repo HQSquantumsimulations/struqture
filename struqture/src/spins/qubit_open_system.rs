@@ -117,8 +117,10 @@ impl<'a> OperateOnSpins<'a> for QubitLindbladOpenSystem {
     /// # Returns
     ///
     /// * `usize` - The number of spins in the QubitLindbladOpenSystem.
-    fn number_spins(&self) -> usize {
-        self.system.number_spins().max(self.noise.number_spins())
+    fn current_number_spins(&self) -> usize {
+        self.system
+            .current_number_spins()
+            .max(self.noise.current_number_spins())
     }
 }
 
@@ -161,8 +163,8 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitLindbladOpenSystem {
             Vec::<(CooSparseMatrix, CooSparseMatrix, Complex64)>::with_capacity(self.noise.len());
         for ((left, right), val) in self.noise.iter() {
             coo_matrices.push((
-                left.to_coo(self.number_spins()).unwrap(),
-                right.to_coo(self.number_spins()).unwrap(),
+                left.to_coo(self.current_number_spins()).unwrap(),
+                right.to_coo(self.current_number_spins()).unwrap(),
                 Complex64 {
                     re: *val.re.float()?,
                     im: *val.im.float()?,

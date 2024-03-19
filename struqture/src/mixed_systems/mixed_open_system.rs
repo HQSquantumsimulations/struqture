@@ -134,11 +134,11 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
 
 impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     // From trait
-    fn number_spins(&self) -> Vec<usize> {
+    fn current_number_spins(&self) -> Vec<usize> {
         self.system
-            .number_spins()
+            .current_number_spins()
             .iter()
-            .zip(self.noise.number_spins().iter())
+            .zip(self.noise.current_number_spins().iter())
             .map(|(s, n)| *(s.max(n)))
             .collect()
     }

@@ -34,7 +34,7 @@ fn new_system() {
     let system = QubitLindbladOpenSystem::new();
     assert_eq!(system.system(), &QubitHamiltonian::new());
     assert_eq!(system.noise(), &QubitLindbladNoiseOperator::new());
-    assert_eq!(system.number_spins(), 0_usize)
+    assert_eq!(system.current_number_spins(), 0_usize)
 }
 
 // Test the new function of the QubitLindbladOpenSystem with no spins specified
@@ -45,7 +45,7 @@ fn new_system_none() {
     assert_eq!(system.system(), &QubitHamiltonian::default());
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &QubitLindbladNoiseOperator::default());
-    assert_eq!(system.number_spins(), 0_usize);
+    assert_eq!(system.current_number_spins(), 0_usize);
 }
 
 // Test the group function of the QubitLindbladOpenSystem

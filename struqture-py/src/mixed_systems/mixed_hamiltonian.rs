@@ -58,7 +58,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     ssystem = MixedHamiltonian(1, 1, 1)
 ///     pp = HermitianMixedProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), [2])
+///     npt.assert_equal(ssystem.current_number_spins(), [2])
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///
 #[pyclass(name = "MixedHamiltonian", module = "struqture_py.mixed_systems")]
@@ -109,7 +109,7 @@ impl MixedHamiltonianWrapper {
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonian.
     pub fn __mul__(&self, value: &PyAny) -> PyResult<MixedOperatorWrapper> {
         let mut mixed_system = MixedOperator::new(
-            self.number_spins().len(),
+            self.current_number_spins().len(),
             self.number_bosonic_modes().len(),
             self.number_fermionic_modes().len(),
         );

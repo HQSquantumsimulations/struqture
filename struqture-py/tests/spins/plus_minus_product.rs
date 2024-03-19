@@ -210,7 +210,7 @@ fn test_keys_len() {
     });
 }
 
-/// Test number_spins function of PlusMinusProduct
+/// Test current_number_spins function of PlusMinusProduct
 #[test]
 fn test_number_spins() {
     pyo3::prepare_freethreaded_python();
@@ -221,9 +221,10 @@ fn test_number_spins() {
         pp = pp.call_method1("set_pauli", (2_u64, "Z")).unwrap();
         pp = pp.call_method1("set_pauli", (5_u64, "-")).unwrap();
 
-        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
+        let current_number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
 
-        assert_eq!(number_spins, 6);
+        assert_eq!(current_number_spins, 6);
     });
 }
 
@@ -670,8 +671,9 @@ fn test_jordan_wigner() {
             .unwrap();
 
         let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, number_spins)
+        let current_number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, current_number_spins)
     });
 }
 

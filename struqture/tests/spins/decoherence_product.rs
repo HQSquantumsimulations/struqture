@@ -38,7 +38,7 @@ fn new() {
     let mut dp_compare = DecoherenceProduct::new();
     assert!(dp_compare.is_empty());
     assert!(dp_compare.is_natural_hermitian());
-    assert_eq!(dp_compare.number_spins(), 0_usize);
+    assert_eq!(dp_compare.current_number_spins(), 0_usize);
     dp_compare = dp_compare.set_pauli(0, SingleDecoherenceOperator::X);
 
     assert_eq!(dp, dp_compare);

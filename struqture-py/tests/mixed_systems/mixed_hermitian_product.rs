@@ -160,7 +160,7 @@ fn test_from_string() {
             bool::extract_bound(&string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let nbr_spins = string_pp.call_method0("number_spins").unwrap();
+        let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
         let comparison =
             bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);

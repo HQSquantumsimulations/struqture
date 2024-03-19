@@ -48,17 +48,17 @@ fn empty_clone_options() {
     assert_eq!(system.empty_clone(full), QubitHamiltonian::with_capacity(1));
 }
 
-// Test the number_spins function of the QubitHamiltonian
+// Test the current_number_spins function of the QubitHamiltonian
 #[test]
 fn internal_map_number_spins() {
     let pp_0: PauliProduct = PauliProduct::new().x(0);
     let pp_2: PauliProduct = PauliProduct::new().z(2);
     let mut so = QubitHamiltonian::new();
-    assert_eq!(so.number_spins(), 0_usize);
+    assert_eq!(so.current_number_spins(), 0_usize);
     so.set(pp_0, CalculatorFloat::from(0.5)).unwrap();
-    assert_eq!(so.number_spins(), 1_usize);
+    assert_eq!(so.current_number_spins(), 1_usize);
     so.set(pp_2, CalculatorFloat::from(0.5)).unwrap();
-    assert_eq!(so.number_spins(), 3_usize);
+    assert_eq!(so.current_number_spins(), 3_usize);
 }
 
 // Test the len function of the QubitHamiltonian
@@ -73,7 +73,7 @@ fn internal_map_len() {
 #[test]
 fn internal_map_set_get_dict() {
     let mut system = QubitHamiltonian::new();
-    assert_eq!(system.number_spins(), 0_usize);
+    assert_eq!(system.current_number_spins(), 0_usize);
     let pp_0: PauliProduct = PauliProduct::new().z(0);
 
     // 1) Test try_set_pauli_product and get functions
@@ -84,7 +84,7 @@ fn internal_map_set_get_dict() {
     system
         .set(pp_0.clone(), CalculatorFloat::from(0.5))
         .unwrap();
-    assert_eq!(system.number_spins(), 1_usize);
+    assert_eq!(system.current_number_spins(), 1_usize);
     assert_eq!(system.get(&pp_0), &CalculatorFloat::from(0.5));
 
     // 2) Test iter, keys, values functions

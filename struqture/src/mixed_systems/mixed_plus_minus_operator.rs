@@ -213,17 +213,17 @@ impl OperateOnState<'_> for MixedPlusMinusOperator {
 
 impl OperateOnMixedSystems<'_> for MixedPlusMinusOperator {
     // From trait
-    fn number_spins(&self) -> Vec<usize> {
-        let mut number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
+    fn current_number_spins(&self) -> Vec<usize> {
+        let mut current_number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.spins().enumerate() {
-                let maxk = s.number_spins();
-                if maxk > number_spins[index] {
-                    number_spins[index] = maxk
+                let maxk = s.current_number_spins();
+                if maxk > current_number_spins[index] {
+                    current_number_spins[index] = maxk
                 }
             }
         }
-        number_spins
+        current_number_spins
     }
 
     // From trait
@@ -339,7 +339,7 @@ impl MixedPlusMinusOperator {
         value: &struqture_one::mixed_systems::MixedPlusMinusOperator,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new(
-            struqture_one::mixed_systems::OperateOnMixedSystems::number_spins(value).len(),
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_bosonic_modes(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_fermionic_modes(value)
                 .len(),
@@ -394,7 +394,7 @@ impl From<MixedOperator> for MixedPlusMinusOperator {
     /// * `Self` - The MixedOperator converted into a MixedPlusMinusOperator.
     fn from(value: MixedOperator) -> Self {
         let mut new_operator = MixedPlusMinusOperator::with_capacity(
-            value.number_spins().len(),
+            value.current_number_spins().len(),
             value.number_bosonic_modes().len(),
             value.number_fermionic_modes().len(),
             2 * value.len(),

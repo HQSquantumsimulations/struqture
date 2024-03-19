@@ -33,7 +33,7 @@ fn new_system() {
     let system = MixedLindbladOpenSystem::new(1, 1, 1);
     assert_eq!(system.system(), &MixedHamiltonian::new(1, 1, 1));
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
-    assert_eq!(vec![0], system.number_spins());
+    assert_eq!(vec![0], system.current_number_spins());
     assert_eq!(vec![0], system.number_bosonic_modes());
     assert_eq!(vec![0], system.number_fermionic_modes());
 
@@ -51,7 +51,7 @@ fn new_system_none() {
     assert_eq!(system.system(), &MixedHamiltonian::new(1, 1, 1));
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
-    assert_eq!(vec![0], system.number_spins());
+    assert_eq!(vec![0], system.current_number_spins());
     assert_eq!(vec![0], system.number_bosonic_modes());
     assert_eq!(vec![0], system.number_fermionic_modes());
 }

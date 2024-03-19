@@ -236,8 +236,8 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     int: Maximum index.
-                pub fn number_spins(&self) -> usize {
-                    self.internal.number_spins()
+                pub fn current_number_spins(&self) -> usize {
+                    self.internal.current_number_spins()
                 }
 
                 /// Return number of entries in object.
@@ -363,8 +363,8 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     list[int]: Number of spins in each spin sub-system.
-                pub fn number_spins(&self) -> Vec<usize> {
-                    self.internal.number_spins()
+                pub fn current_number_spins(&self) -> Vec<usize> {
+                    self.internal.current_number_spins()
                 }
 
                 /// Return the current number of bosonic modes each subsystem acts upon.

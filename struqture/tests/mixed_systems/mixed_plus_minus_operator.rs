@@ -41,13 +41,13 @@ fn new(
     n_pauli: usize,
     n_bosons: usize,
     n_fermions: usize,
-    number_spins: Vec<usize>,
+    current_number_spins: Vec<usize>,
     number_bosonic_modes: Vec<usize>,
     number_fermionic_modes: Vec<usize>,
 ) {
     let mo = MixedPlusMinusOperator::new(n_pauli, n_bosons, n_fermions);
     assert!(mo.is_empty());
-    assert_eq!(number_spins, mo.number_spins());
+    assert_eq!(current_number_spins, mo.current_number_spins());
     assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
     assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
 }
@@ -159,7 +159,7 @@ fn set_fail() {
         [FermionProduct::new([0], [2]).unwrap()],
     );
     let mut mo = MixedPlusMinusOperator::new(0, 1, 1);
-    assert_eq!(mo.number_spins(), Vec::<usize>::new());
+    assert_eq!(mo.current_number_spins(), Vec::<usize>::new());
     assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.number_fermionic_modes(), vec![0_usize]);
 
@@ -177,7 +177,7 @@ fn set_fail() {
     );
 
     let mut mo = MixedPlusMinusOperator::new(1, 0, 1);
-    assert_eq!(mo.number_spins(), vec![0_usize]);
+    assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.number_bosonic_modes(), Vec::<usize>::new());
     assert_eq!(mo.number_fermionic_modes(), vec![0_usize]);
 
@@ -195,7 +195,7 @@ fn set_fail() {
     );
 
     let mut mo = MixedPlusMinusOperator::new(1, 1, 0);
-    assert_eq!(mo.number_spins(), vec![0_usize]);
+    assert_eq!(mo.current_number_spins(), vec![0_usize]);
     assert_eq!(mo.number_bosonic_modes(), vec![0_usize]);
     assert_eq!(mo.number_fermionic_modes(), Vec::<usize>::new());
 

@@ -79,13 +79,13 @@ fn test_default_partialeq_debug_clone() {
         );
 
         // Number of spins
-        let comp_op = system.call_method0("number_spins").unwrap();
+        let comp_op = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
 
-/// Test number_spins function of SpinSystem
+/// Test current_number_spins function of SpinSystem
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -95,7 +95,7 @@ fn test_number_spins_current() {
             .call_method1("add_operator_product", (("0X", "0X"), 0.1))
             .unwrap();
 
-        let number_system = system.call_method0("number_spins").unwrap();
+        let number_system = system.call_method0("current_number_spins").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
@@ -767,8 +767,9 @@ fn test_jordan_wigner() {
         assert!(!empty);
 
         let number_modes = usize::extract(flns.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins = usize::extract(slns.call_method0("number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, number_spins)
+        let current_number_spins =
+            usize::extract(slns.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(number_modes, current_number_spins)
     });
 }
 

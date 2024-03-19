@@ -236,12 +236,12 @@ impl PlusMinusOperator {
     /// # Returns
     ///
     /// * `usize` - The number of spins in the PlusMinusOperator.
-    pub fn number_spins(&self) -> usize {
+    pub fn current_number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
             for key in self.internal_map.keys() {
-                if key.number_spins() > max_mode {
-                    max_mode = key.number_spins()
+                if key.current_number_spins() > max_mode {
+                    max_mode = key.current_number_spins()
                 }
             }
         }
