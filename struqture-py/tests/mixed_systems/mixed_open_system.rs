@@ -65,7 +65,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
     }
 }
 
-/// Test number_modes function of MixedOperator
+/// Test current_number_modes function of MixedOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();

@@ -59,9 +59,8 @@ fn test_default_partialeq_debug_clone() {
         );
 
         // Number of fermions
-        let comp_op = new_system.call_method0("number_modes").unwrap();
-        let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
+        let comp_op = new_system.call_method0("current_number_modes").unwrap();
+        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
@@ -76,7 +75,7 @@ fn test_number_fermions_current() {
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
 
-        let number_system = system.call_method0("number_modes").unwrap();
+        let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
@@ -772,10 +771,11 @@ fn test_jordan_wigner() {
         let empty = bool::extract_bound(&ss.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes = usize::extract(fs.call_method0("number_modes").unwrap()).unwrap();
+        let current_number_modes =
+            usize::extract(fs.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
             usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, current_number_spins)
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 

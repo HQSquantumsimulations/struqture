@@ -876,10 +876,11 @@ fn test_jordan_wigner() {
 
         let ss = pmo.call_method0("to_qubit_operator").unwrap();
 
-        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
+        let current_number_modes =
+            usize::extract(fo.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
             usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, current_number_spins)
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 

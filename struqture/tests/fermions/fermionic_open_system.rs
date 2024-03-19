@@ -32,7 +32,7 @@ fn new_system() {
     let system = FermionLindbladOpenSystem::new();
     assert_eq!(system.system(), &FermionHamiltonian::new());
     assert_eq!(system.noise(), &FermionLindbladNoiseOperator::new());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 
     assert_eq!(
         FermionLindbladOpenSystem::new(),
@@ -48,7 +48,7 @@ fn new_system_none() {
     assert_eq!(system.system(), &FermionHamiltonian::default());
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &FermionLindbladNoiseOperator::default());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the group function of the FermionLindbladOpenSystem

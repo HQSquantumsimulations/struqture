@@ -32,7 +32,7 @@ fn new_system() {
     let system = BosonLindbladOpenSystem::new();
     assert_eq!(system.system(), &BosonHamiltonian::new());
     assert_eq!(system.noise(), &BosonLindbladNoiseOperator::new());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the new function of the BosonLindbladOpenSystem with no modes specified
@@ -43,7 +43,7 @@ fn new_system_none() {
     assert_eq!(system.system(), &BosonHamiltonian::default());
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &BosonLindbladNoiseOperator::default());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the group function of the BosonLindbladOpenSystem

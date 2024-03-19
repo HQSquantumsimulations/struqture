@@ -231,7 +231,7 @@ impl OperateOnMixedSystems<'_> for MixedPlusMinusOperator {
         let mut number_bosons: Vec<usize> = (0..self.n_bosons).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.bosons().enumerate() {
-                let maxk = s.number_modes();
+                let maxk = s.current_number_modes();
                 if maxk > number_bosons[index] {
                     number_bosons[index] = maxk
                 }
@@ -245,7 +245,7 @@ impl OperateOnMixedSystems<'_> for MixedPlusMinusOperator {
         let mut number_fermions: Vec<usize> = (0..self.n_fermions).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.fermions().enumerate() {
-                let maxk = s.number_modes();
+                let maxk = s.current_number_modes();
                 if maxk > number_fermions[index] {
                     number_fermions[index] = maxk
                 }

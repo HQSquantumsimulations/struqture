@@ -107,13 +107,15 @@ impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
 }
 
 impl<'a> OperateOnModes<'a> for BosonLindbladOpenSystem {
-    /// Gets the maximum number_modes of the BosonHamiltonian/BosonLindbladNoiseOperator.
+    /// Gets the maximum current_number_modes of the BosonHamiltonian/BosonLindbladNoiseOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of bosons in the BosonLindbladOpenSystem.
-    fn number_modes(&self) -> usize {
-        self.system.number_modes().max(self.noise.number_modes())
+    fn current_number_modes(&self) -> usize {
+        self.system
+            .current_number_modes()
+            .max(self.noise.current_number_modes())
     }
 }
 

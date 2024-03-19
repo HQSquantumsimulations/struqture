@@ -189,11 +189,11 @@ impl<'a> OperateOnModes<'a> for FermionOperator {
     /// # Returns
     ///
     /// * `usize` - The number of fermions in the FermionOperator.
-    fn number_modes(&'a self) -> usize {
+    fn current_number_modes(&'a self) -> usize {
         let mut max_mode: usize = 0;
         if !self.is_empty() {
             for key in self.keys() {
-                let maxk = key.number_modes();
+                let maxk = key.current_number_modes();
                 if maxk > max_mode {
                     max_mode = maxk;
                 }

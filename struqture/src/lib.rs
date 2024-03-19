@@ -503,9 +503,9 @@ pub trait ModeIndex:
     /// maximal mode the product of operators in the index acts on.
     ///
     /// For example an index consisting of one creator acting on mode 0 would have
-    /// a number_modes of one. An index consisting of one annhihilator acting on 3
-    /// would have number_modes of four.
-    fn number_modes(&self) -> usize {
+    /// a current_number_modes of one. An index consisting of one annhihilator acting on 3
+    /// would have current_number_modes of four.
+    fn current_number_modes(&self) -> usize {
         let max_c = match self.creators().max() {
             Some(x) => x + 1,
             None => 0,
@@ -1041,17 +1041,17 @@ where
 /// let mut sh = BosonHamiltonian::new();
 ///
 /// // Functions provided in this :
-/// assert_eq!(sh.number_modes(), 0);
+/// assert_eq!(sh.current_number_modes(), 0);
 ///
 /// let pp_0z = HermitianBosonProduct::new([0], [0]).unwrap();
 /// sh.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
-/// assert_eq!(sh.number_modes(), 1);
+/// assert_eq!(sh.current_number_modes(), 1);
 /// ```
 ///
 pub trait OperateOnModes<'a>: PartialEq + Clone + Mul<CalculatorFloat> + Add + Sub {
     // Document locally
-    fn number_modes(&'a self) -> usize;
+    fn current_number_modes(&'a self) -> usize;
 }
 
 /// Shorthand type notation for a tuple of lists of indices of creators and annihilators

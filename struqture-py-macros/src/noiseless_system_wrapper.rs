@@ -296,12 +296,12 @@ pub fn noiselesswrapper(
     };
     let operate_on_modes_quote = if attribute_arguments.contains("OperateOnModes") {
         quote! {
-            /// Return the number_modes input of self.
+            /// Return the current_number_modes input of self.
             ///
             /// Returns:
             ///     int: The number of modes in self.
-            pub fn number_modes(&self) -> usize {
-                self.internal.number_modes()
+            pub fn current_number_modes(&self) -> usize {
+                self.internal.current_number_modes()
             }
         }
     } else {

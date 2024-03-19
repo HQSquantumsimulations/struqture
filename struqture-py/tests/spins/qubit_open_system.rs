@@ -1530,10 +1530,11 @@ fn test_jordan_wigner() {
             .unwrap();
         let flos = slos.call_method0("jordan_wigner").unwrap();
 
-        let number_modes = usize::extract(flos.call_method0("number_modes").unwrap()).unwrap();
+        let current_number_modes =
+            usize::extract(flos.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
             usize::extract(slos.call_method0("current_number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, current_number_spins)
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 

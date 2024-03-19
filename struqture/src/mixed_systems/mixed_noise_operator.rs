@@ -262,13 +262,13 @@ impl OperateOnMixedSystems<'_> for MixedLindbladNoiseOperator {
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, b) in key_left.bosons().enumerate() {
-                    let maxk = (b.number_modes()).max(b.number_modes());
+                    let maxk = (b.current_number_modes()).max(b.current_number_modes());
                     if maxk > number_bosons[index] {
                         number_bosons[index] = maxk
                     }
                 }
                 for (index, b) in key_right.bosons().enumerate() {
-                    let maxk = (b.number_modes()).max(b.number_modes());
+                    let maxk = (b.current_number_modes()).max(b.current_number_modes());
                     if maxk > number_bosons[index] {
                         number_bosons[index] = maxk
                     }
@@ -284,13 +284,13 @@ impl OperateOnMixedSystems<'_> for MixedLindbladNoiseOperator {
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, f) in key_left.fermions().enumerate() {
-                    let maxk = (f.number_modes()).max(f.number_modes());
+                    let maxk = (f.current_number_modes()).max(f.current_number_modes());
                     if maxk > number_fermions[index] {
                         number_fermions[index] = maxk
                     }
                 }
                 for (index, f) in key_right.fermions().enumerate() {
-                    let maxk = (f.number_modes()).max(f.number_modes());
+                    let maxk = (f.current_number_modes()).max(f.current_number_modes());
                     if maxk > number_fermions[index] {
                         number_fermions[index] = maxk
                     }

@@ -42,7 +42,7 @@ use indexmap::IndexMap;
 /// system.set((bp_0.clone(), bp_0.clone()), CalculatorComplex::from(0.2)).unwrap();
 ///
 /// // Access what you set:
-/// assert_eq!(system.number_modes(), 2_usize);
+/// assert_eq!(system.current_number_modes(), 2_usize);
 /// assert_eq!(system.get(&(bp_0_1.clone(), bp_0_1.clone())), &CalculatorComplex::from(0.5));
 /// assert_eq!(system.get(&(bp_0.clone(), bp_0.clone())), &CalculatorComplex::from(0.2));
 /// ```
@@ -195,11 +195,14 @@ impl<'a> OperateOnModes<'a> for BosonLindbladNoiseOperator {
     /// # Returns
     ///
     /// * `usize` - The number of bosons in the BosonLindbladNoiseOperator.
-    fn number_modes(&'a self) -> usize {
+    fn current_number_modes(&'a self) -> usize {
         let mut max_mode: usize = 0;
         if !self.is_empty() {
             for key in self.keys() {
-                let maxk = key.0.number_modes().max(key.1.number_modes());
+                let maxk = key
+                    .0
+                    .current_number_modes()
+                    .max(key.1.current_number_modes());
                 if maxk > max_mode {
                     max_mode = maxk;
                 }
