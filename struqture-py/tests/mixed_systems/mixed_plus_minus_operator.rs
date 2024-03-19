@@ -98,7 +98,7 @@ fn test_number_bosons_current() {
 <<<<<<< HEAD
 =======
 
-        let number_system = system.call_method0("number_bosonic_modes").unwrap();
+        let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![2_u64],))

@@ -110,7 +110,7 @@ impl MixedHamiltonianWrapper {
     pub fn __mul__(&self, value: &PyAny) -> PyResult<MixedOperatorWrapper> {
         let mut mixed_system = MixedOperator::new(
             self.current_number_spins().len(),
-            self.number_bosonic_modes().len(),
+            self.current_number_bosonic_modes().len(),
             self.current_number_fermionic_modes().len(),
         );
         for (key, val) in self.internal.clone().into_iter() {

@@ -486,9 +486,9 @@ pub fn noisywrapper(
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
-                ///     List[int]: The number of bosonic modes in each bosonic subsystem of self.
-                pub fn number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.number_bosonic_modes()
+                ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
+                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_bosonic_modes()
                 }
 
                 /// Return the number of fermionic modes in each fermionic subsystem of self.

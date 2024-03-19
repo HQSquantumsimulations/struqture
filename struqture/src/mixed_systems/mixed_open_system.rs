@@ -144,11 +144,11 @@ impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     }
 
     // From trait
-    fn number_bosonic_modes(&self) -> Vec<usize> {
+    fn current_number_bosonic_modes(&self) -> Vec<usize> {
         self.system
-            .number_bosonic_modes()
+            .current_number_bosonic_modes()
             .iter()
-            .zip(self.noise.number_bosonic_modes().iter())
+            .zip(self.noise.current_number_bosonic_modes().iter())
             .map(|(s, n)| *(s.max(n)))
             .collect()
     }
