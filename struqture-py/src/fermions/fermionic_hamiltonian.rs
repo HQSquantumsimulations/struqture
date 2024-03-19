@@ -44,7 +44,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     ssystem = FermionHamiltonian()
 ///     pp = HermitianFermionProduct([0], [0])
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_modes(), 2)
+///     npt.assert_equal(ssystem.current_number_modes(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///

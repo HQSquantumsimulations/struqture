@@ -116,7 +116,7 @@ where
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
     fn number_bosonic_modes(&self) -> Vec<usize> {
-        self.bosons().map(|b| b.number_modes()).collect()
+        self.bosons().map(|b| b.current_number_modes()).collect()
     }
 
     /// Returns the current number of fermionic modes each subsystem acts upon.
@@ -125,7 +125,7 @@ where
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
     fn number_fermionic_modes(&self) -> Vec<usize> {
-        self.fermions().map(|f| f.number_modes()).collect()
+        self.fermions().map(|f| f.current_number_modes()).collect()
     }
 
     // Document locally

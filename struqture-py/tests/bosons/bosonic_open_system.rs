@@ -56,7 +56,7 @@ fn convert_cf_to_pyobject(
     }
 }
 
-/// Test number_modes function of BosonOperator
+/// Test current_number_modes function of BosonOperator
 #[test]
 fn test_number_modes_current() {
     pyo3::prepare_freethreaded_python();
@@ -66,7 +66,7 @@ fn test_number_modes_current() {
             .call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 0.1))
             .unwrap();
 
-        let number_system = system.call_method0("number_modes").unwrap();
+        let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
             bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
@@ -354,7 +354,7 @@ fn test_default_partialeq_debug_clone() {
         );
 
         // Number of bosons
-        let comp_op = new_sys.call_method0("number_modes").unwrap();
+        let comp_op = new_sys.call_method0("current_number_modes").unwrap();
         let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 

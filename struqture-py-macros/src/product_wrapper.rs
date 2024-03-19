@@ -139,13 +139,13 @@ pub fn productwrapper(
                 /// There is only a lower bound of the dimension or number of modes based on the
                 /// maximal mode the product of operators in the index acts on.
                 /// For example an index consisting of one creator acting on mode 0 would have
-                /// a number_modes of one. An index consisting of one annhihilator acting on 3
-                /// would have number_modes of four.
+                /// a current_number_modes of one. An index consisting of one annhihilator acting on 3
+                /// would have current_number_modes of four.
                 ///
                 /// Returns:
                 ///     int: The maximal number of modes self acts on.
-                pub fn number_modes(&self) -> usize {
-                    self.internal.number_modes()
+                pub fn current_number_modes(&self) -> usize {
+                    self.internal.current_number_modes()
                 }
 
                 /// Return list of creator indices.

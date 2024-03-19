@@ -57,7 +57,7 @@ fn internal_map_len() {
 #[test]
 fn internal_map_set_get_dict() {
     let mut system = BosonOperator::new();
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.current_number_modes(), 0_usize);
     let pp_0: BosonProduct = BosonProduct::new([0], [0]).unwrap();
 
     // 1) Test try_set_pauli_product and get functions
@@ -68,7 +68,7 @@ fn internal_map_set_get_dict() {
     system
         .set(pp_0.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    assert_eq!(system.number_modes(), 1_usize);
+    assert_eq!(system.current_number_modes(), 1_usize);
     assert_eq!(system.get(&pp_0), &CalculatorComplex::from(0.5));
 
     // 2) Test iter, keys, values functions

@@ -185,11 +185,11 @@ impl<'a> OperateOnModes<'a> for BosonOperator {
     /// # Returns
     ///
     /// * `usize` - The number of bosons in the BosonOperator.
-    fn number_modes(&'a self) -> usize {
+    fn current_number_modes(&'a self) -> usize {
         let mut max_mode: usize = 0;
         if !self.is_empty() {
             for key in self.keys() {
-                let maxk = key.number_modes();
+                let maxk = key.current_number_modes();
                 if maxk > max_mode {
                     max_mode = maxk;
                 }

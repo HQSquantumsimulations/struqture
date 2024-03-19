@@ -108,13 +108,15 @@ impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
 }
 
 impl<'a> OperateOnModes<'a> for FermionLindbladOpenSystem {
-    /// Gets the maximum number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
+    /// Gets the maximum current_number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of fermions in the FermionLindbladOpenSystem.
-    fn number_modes(&self) -> usize {
-        self.system.number_modes().max(self.noise.number_modes())
+    fn current_number_modes(&self) -> usize {
+        self.system
+            .current_number_modes()
+            .max(self.noise.current_number_modes())
     }
 }
 

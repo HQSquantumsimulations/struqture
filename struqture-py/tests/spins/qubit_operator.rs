@@ -791,10 +791,11 @@ fn test_jordan_wigner() {
         let empty = bool::extract(fs.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let number_modes = usize::extract(fs.call_method0("number_modes").unwrap()).unwrap();
+        let current_number_modes =
+            usize::extract(fs.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
             usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, current_number_spins)
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 

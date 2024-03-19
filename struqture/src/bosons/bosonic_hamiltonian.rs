@@ -223,12 +223,12 @@ impl<'a> OperateOnModes<'a> for BosonHamiltonian {
     /// # Returns
     ///
     /// * `usize` - The number of modes in the BosonHamiltonian.
-    fn number_modes(&self) -> usize {
+    fn current_number_modes(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
             for key in self.internal_map.keys() {
-                if key.number_modes() > max_mode {
-                    max_mode = key.number_modes()
+                if key.current_number_modes() > max_mode {
+                    max_mode = key.current_number_modes()
                 }
             }
         }
