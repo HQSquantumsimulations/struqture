@@ -111,7 +111,7 @@ impl MixedHamiltonianWrapper {
         let mut mixed_system = MixedOperator::new(
             self.current_number_spins().len(),
             self.number_bosonic_modes().len(),
-            self.number_fermionic_modes().len(),
+            self.current_number_fermionic_modes().len(),
         );
         for (key, val) in self.internal.clone().into_iter() {
             let bp = MixedProduct::get_key(&key);

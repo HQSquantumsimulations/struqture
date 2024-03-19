@@ -112,7 +112,9 @@ fn test_number_bosons_current() {
         .unwrap();
         assert!(comparison);
 
-        let number_system = system.call_method0("number_fermionic_modes").unwrap();
+        let number_system = system
+            .call_method0("current_number_fermionic_modes")
+            .unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))

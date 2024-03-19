@@ -108,7 +108,9 @@ fn test_number_bosons_current() {
         assert!(comparison);
 >>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
 
-        let number_system = system.call_method0("number_fermionic_modes").unwrap();
+        let number_system = system
+            .call_method0("current_number_fermionic_modes")
+            .unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))

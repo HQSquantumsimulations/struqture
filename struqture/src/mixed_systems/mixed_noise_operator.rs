@@ -279,7 +279,7 @@ impl OperateOnMixedSystems<'_> for MixedLindbladNoiseOperator {
     }
 
     // From trait
-    fn number_fermionic_modes(&self) -> Vec<usize> {
+    fn current_number_fermionic_modes(&self) -> Vec<usize> {
         let mut number_fermions: Vec<usize> = (0..self.n_fermions).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
@@ -388,8 +388,10 @@ impl MixedLindbladNoiseOperator {
         let mut new_qubit_operator = Self::new(
             struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_bosonic_modes(value).len(),
-            struqture_one::mixed_systems::OperateOnMixedSystems::number_fermionic_modes(value)
-                .len(),
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
+                value,
+            )
+            .len(),
         );
         for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
             let self_key_left = MixedDecoherenceProduct::from_struqture_1(&key.0)?;

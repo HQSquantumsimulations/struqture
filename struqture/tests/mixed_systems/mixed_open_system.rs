@@ -35,7 +35,7 @@ fn new_system() {
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
     assert_eq!(vec![0], system.current_number_spins());
     assert_eq!(vec![0], system.number_bosonic_modes());
-    assert_eq!(vec![0], system.number_fermionic_modes());
+    assert_eq!(vec![0], system.current_number_fermionic_modes());
 
     assert_eq!(
         MixedLindbladOpenSystem::new(0, 0, 0),
@@ -53,7 +53,7 @@ fn new_system_none() {
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
     assert_eq!(vec![0], system.current_number_spins());
     assert_eq!(vec![0], system.number_bosonic_modes());
-    assert_eq!(vec![0], system.number_fermionic_modes());
+    assert_eq!(vec![0], system.current_number_fermionic_modes());
 }
 
 // Test the group function of the MixedLindbladOpenSystem
