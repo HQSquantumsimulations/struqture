@@ -46,7 +46,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     npt.assert_equal(slns.current_number_spins(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///     npt.assert_equal(slns.keys(), [(dp, dp)])
-///     dimension = 4**slns.number_spins()
+///     dimension = 4**slns.current_number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
 #[pyclass(name = "QubitLindbladNoiseOperator", module = "struqture_py.spins")]

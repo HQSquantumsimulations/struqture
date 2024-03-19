@@ -258,8 +258,8 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of spins in each spin sub-system.
-    pub fn number_spins(&self) -> Vec<usize> {
-        self.spins().map(|s| s.number_spins()).collect()
+    pub fn current_number_spins(&self) -> Vec<usize> {
+        self.spins().map(|s| s.current_number_spins()).collect()
     }
 
     /// Returns the current number of bosonic modes each subsystem acts upon.

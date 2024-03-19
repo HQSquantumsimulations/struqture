@@ -48,7 +48,7 @@ use std::collections::HashMap;
 /// system.set((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(0.2)).unwrap();
 ///
 /// // Access what you set:
-/// assert_eq!(system.number_spins(), 2_usize);
+/// assert_eq!(system.current_number_spins(), 2_usize);
 /// assert_eq!(system.get(&(pp_01.clone(), pp_01.clone())), &CalculatorComplex::from(0.5));
 /// assert_eq!(system.get(&(pp_0.clone(), pp_0.clone())), &CalculatorComplex::from(0.2));
 /// ```
@@ -205,11 +205,11 @@ impl<'a> OperateOnSpins<'a> for QubitLindbladNoiseOperator {
     /// # Returns
     ///
     /// * `usize` - The number of spins in the QubitLindbladNoiseOperator.
-    fn number_spins(&self) -> usize {
+    fn current_number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
             for key in self.internal_map.keys() {
-                let maxk = (key.0.number_spins()).max(key.1.number_spins());
+                let maxk = (key.0.current_number_spins()).max(key.1.current_number_spins());
                 if maxk > max_mode {
                     max_mode = maxk
                 }
@@ -266,8 +266,8 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitLindbladNoiseOperator {
             Vec::<(CooSparseMatrix, CooSparseMatrix, Complex64)>::with_capacity(self.len());
         for ((left, right), val) in self.iter() {
             coo_matrices.push((
-                left.to_coo(self.number_spins()).unwrap(),
-                right.to_coo(self.number_spins()).unwrap(),
+                left.to_coo(self.current_number_spins()).unwrap(),
+                right.to_coo(self.current_number_spins()).unwrap(),
                 Complex64 {
                     re: *val.re.float()?,
                     im: *val.im.float()?,

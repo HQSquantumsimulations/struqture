@@ -42,7 +42,7 @@ fn new() {
 
     let mut pp_compare = PlusMinusProduct::new();
     // assert!(pp_compare.is_empty());
-    // assert_eq!(pp_compare.number_spins(), 0_usize);
+    // assert_eq!(pp_compare.current_number_spins(), 0_usize);
     pp_compare = pp_compare.set_pauli(0, SinglePlusMinusOperator::Z);
     pp_compare = pp_compare.set_pauli(1, SinglePlusMinusOperator::Minus);
 
@@ -72,7 +72,7 @@ fn internal_map_set_get() {
     assert_eq!(pmp.get(&3), None);
     let pmp = pmp.set_pauli(3, SinglePlusMinusOperator::Plus);
 
-    // assert_eq!(pmp.number_spins(), 4_usize);
+    // assert_eq!(pmp.current_number_spins(), 4_usize);
     // assert_eq!(pmp.len(), 3_usize);
 
     let mut internal: BTreeMap<usize, SinglePlusMinusOperator> = BTreeMap::new();

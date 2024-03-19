@@ -100,7 +100,7 @@ fn test_number_bosons_current() {
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1))
             .unwrap();
 
-        let number_system = system.call_method0("number_spins").unwrap();
+        let number_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))

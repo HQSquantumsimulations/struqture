@@ -376,7 +376,7 @@ where
     /// # Returns
     ///
     /// * `usize` - Maximum index.
-    fn number_spins(&self) -> usize {
+    fn current_number_spins(&self) -> usize {
         if let Some((max, _)) = self.iter().last() {
             *max + 1
         } else {

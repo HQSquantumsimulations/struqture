@@ -210,17 +210,17 @@ impl<'a> OperateOnState<'a> for MixedOperator {
 
 impl<'a> OperateOnMixedSystems<'a> for MixedOperator {
     // From trait
-    fn number_spins(&self) -> Vec<usize> {
-        let mut number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
+    fn current_number_spins(&self) -> Vec<usize> {
+        let mut current_number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
         for key in self.keys() {
             for (index, s) in key.spins().enumerate() {
-                let maxk = s.number_spins();
-                if maxk > number_spins[index] {
-                    number_spins[index] = maxk
+                let maxk = s.current_number_spins();
+                if maxk > current_number_spins[index] {
+                    current_number_spins[index] = maxk
                 }
             }
         }
-        number_spins
+        current_number_spins
     }
 
     // From trait
@@ -336,7 +336,7 @@ impl MixedOperator {
         value: &struqture_one::mixed_systems::MixedSystem,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new(
-            struqture_one::mixed_systems::OperateOnMixedSystems::number_spins(value).len(),
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_bosonic_modes(value).len(),
             struqture_one::mixed_systems::OperateOnMixedSystems::number_fermionic_modes(value)
                 .len(),

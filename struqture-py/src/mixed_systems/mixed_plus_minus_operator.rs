@@ -45,7 +45,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     ssystem = MixedPlusMinusOperator(1, 1, 1)
 ///     pp = MixedPlusMinusProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), [2])
+///     npt.assert_equal(ssystem.current_number_spins(), [2])
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///
 #[pyclass(name = "MixedPlusMinusOperator", module = "struqture_py.mixed_systems")]
@@ -128,11 +128,6 @@ impl MixedPlusMinusOperatorWrapper {
     }
 
     /// Convert a MixedPlusMinusOperator into a MixedOperator.
-    ///
-    /// Args:
-    ///     number_spins (list[Optional[int]]): The number of spins to initialize the MixedOperator with.
-    ///     number_bosons (list[Optional[int]]): The number of bosons to initialize the MixedOperator with.
-    ///     number_fermions (list[Optional[int]]): The number of fermions to initialize the MixedOperator with.
     ///
     /// Returns:
     ///     MixedOperator: The operator created from the input MixedPlusMinusOperator and optional number of spins.

@@ -85,7 +85,7 @@ use crate::CooSparseMatrix;
 ///
 pub trait OperateOnSpins<'a>: PartialEq + Clone + Mul<CalculatorFloat> + Add + Sub {
     // Document locally
-    fn number_spins(&self) -> usize;
+    fn current_number_spins(&self) -> usize;
 }
 
 pub trait ToSparseMatrixOperator<'a>:
@@ -118,7 +118,7 @@ where
         number_spins: Option<usize>,
     ) -> Result<HashMap<(usize, usize), Complex64>, StruqtureError> {
         let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
+            None => 2usize.pow(self.current_number_spins() as u32),
             Some(num_spins) => 2usize.pow(num_spins as u32),
         };
         let mut matrix: HashMap<(usize, usize), Complex64> = HashMap::new();
@@ -145,7 +145,7 @@ where
         number_spins: Option<usize>,
     ) -> Result<CooSparseMatrix, StruqtureError> {
         let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
+            None => 2usize.pow(self.current_number_spins() as u32),
             Some(num_spins) => 2usize.pow(num_spins as u32),
         };
 
@@ -346,11 +346,11 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
         number_spins: Option<usize>,
     ) -> Result<HashMap<(usize, usize), Complex64>, StruqtureError> {
         let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
+            None => 2usize.pow(self.current_number_spins() as u32),
             Some(num_spins) => 2usize.pow(num_spins as u32),
         };
         let number_spins = match number_spins {
-            None => self.number_spins(),
+            None => self.current_number_spins(),
             Some(num_spins) => num_spins,
         };
         let mut matrix: HashMap<(usize, usize), Complex64> = HashMap::new();
@@ -384,11 +384,11 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
         number_spins: Option<usize>,
     ) -> Result<CooSparseMatrix, StruqtureError> {
         let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
+            None => 2usize.pow(self.current_number_spins() as u32),
             Some(num_spins) => 2usize.pow(num_spins as u32),
         };
         let number_spins = match number_spins {
-            None => self.number_spins(),
+            None => self.current_number_spins(),
             Some(num_spins) => num_spins,
         };
         let capacity = dimension;
