@@ -1,7 +1,6 @@
 [project]
 name = "struqture-py"
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
-version = "2.0.0"
+version = "2.0.0-alpha.0"
 dependencies = [
   'numpy',
   'qoqo_calculator_pyo3>=1.1.2',

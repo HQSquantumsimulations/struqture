@@ -702,7 +702,7 @@ mod test {
             serialisation_meta: crate::StruqtureSerialisationMeta {
                 type_name: "MixedLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
-                version: "2.0.0".to_string(),
+                version: "2.0.0-alpha.0".to_string(),
             },
         };
         let mut so = MixedLindbladNoiseOperator::new(1, 1, 1);
