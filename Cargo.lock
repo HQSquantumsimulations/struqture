@@ -1545,6 +1545,8 @@ dependencies = [
 [[package]]
 name = "struqture"
 version = "2.0.0-alpha.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d30228e6c118df62608bfd1941f6818649526f1bc211ed1239d8f5df1695dfe"
 dependencies = [
  "indexmap",
  "itertools 0.12.1",
