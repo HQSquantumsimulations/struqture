@@ -20,11 +20,11 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionLindbladNoiseSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
-    PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
+    PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem, PlusMinusProduct
 };
 use struqture::OperateOnDensityMatrix;
 use struqture_py_macros::{mappings, noisy_system_wrapper};
-
+use std::str::FromStr;
 use super::SpinLindbladNoiseSystemWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
@@ -183,6 +183,61 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         Ok(SpinLindbladNoiseSystemWrapper {
             internal: SpinLindbladNoiseSystem::from_operator(result, number_spinss)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+        })
+    }
+
+    // add in a function converting struqture_one (not py) to struqture 2
+    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+    // #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
+        Python::with_gil(|py| -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
+            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let source_serialisation_meta: struqture_two::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let target_serialisation_meta = <struqture_two::spins::PlusMinusLindbladNoiseOperator as struqture_two::SerializationSupport>::target_serialisation_meta();
+
+            struqture_two::check_can_be_deserialised(
+                &target_serialisation_meta,
+                &source_serialisation_meta,
+            )
+            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
+
+            let input = input.as_ref(py);
+            let get_bytes = input
+                .call_method0("to_bincode")
+                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+            let bytes = get_bytes
+                .extract::<Vec<u8>>()
+                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+            let two_import: struqture_two::spins::PlusMinusLindbladNoiseOperator = deserialize(&bytes[..])
+                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+            let mut spin_system = PlusMinusLindbladNoiseOperator::new();
+            for (key, val) in struqture_two::OperateOnDensityMatrix::iter(&two_import) {
+                let value_string_left = key.0.to_string();
+                let self_key_left = PlusMinusProduct::from_str(&value_string_left).map_err(
+                    |_err| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x PlusMinusLindbladNoiseOperator from struqture 2.x SpinOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+                let value_string_right = key.1.to_string();
+                let self_key_right = PlusMinusProduct::from_str(&value_string_right).map_err(
+                    |_err| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x PlusMinusLindbladNoiseOperator from struqture 2.x SpinOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+
+                let _ = spin_system.set((self_key_left, self_key_right), val.clone());
+            }
+
+            Ok(PlusMinusLindbladNoiseOperatorWrapper {
+                internal: spin_system,
+            })
         })
     }
 }
