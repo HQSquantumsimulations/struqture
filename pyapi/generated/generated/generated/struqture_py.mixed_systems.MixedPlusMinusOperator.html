@@ -58,21 +58,21 @@
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedProduct.html">struqture_py.mixed_systems.MixedProduct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.HermitianMixedProduct.html">struqture_py.mixed_systems.HermitianMixedProduct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedDecoherenceProduct.html">struqture_py.mixed_systems.MixedDecoherenceProduct</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedSystem.html">struqture_py.mixed_systems.MixedSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedHamiltonianSystem.html">struqture_py.mixed_systems.MixedHamiltonianSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedLindbladNoiseSystem.html">struqture_py.mixed_systems.MixedLindbladNoiseSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedOperator.html">struqture_py.mixed_systems.MixedOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedHamiltonian.html">struqture_py.mixed_systems.MixedHamiltonian</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedLindbladNoiseOperator.html">struqture_py.mixed_systems.MixedLindbladNoiseOperator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedLindbladOpenSystem.html">struqture_py.mixed_systems.MixedLindbladOpenSystem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedPlusMinusProduct.html">struqture_py.mixed_systems.MixedPlusMinusProduct</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.mixed_systems.MixedPlusMinusOperator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.HermitianMixedProduct"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedDecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonianSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedHamiltonian"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">MixedLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedOperator"><code class="docutils literal notranslate"><span class="pre">MixedOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct"><code class="docutils literal notranslate"><span class="pre">MixedProduct</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedSystem"><code class="docutils literal notranslate"><span class="pre">MixedSystem</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -128,7 +128,7 @@ and an optional number of mixed_systems.</p>
 <span class="n">ssystem</span> <span class="o">=</span> <span class="n">MixedPlusMinusOperator</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">MixedPlusMinusProduct</span><span class="p">([</span><span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="p">[</span><span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="p">[</span><span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
 <span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -147,13 +147,13 @@ and an optional number of mixed_systems.</p>
 <td><p>Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_bosonic_modes" title="struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_bosonic_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_bosonic_modes</span></code></a>()</p></td>
-<td><p>Return the number of bosonic modes each bosonic subsystem of self acts on.</p></td>
+<td><p>Return the number of bosonic modes in each bosonic subsystem of self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_fermionic_modes" title="struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_fermionic_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_fermionic_modes</span></code></a>()</p></td>
-<td><p>Return the number of fermionic modes each fermionic subsystem of self acts on.</p></td>
+<td><p>Return the number of fermionic modes in each fermionic subsystem of self.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_spins" title="struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_spins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_spins</span></code></a>()</p></td>
-<td><p>Return maximum spin index in each spin subsystem of self.</p></td>
+<td><p>Return the current_number_spins input of each spin subsystem of self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.current_version" title="struqture_py.mixed_systems.MixedPlusMinusOperator.current_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_version</span></code></a>()</p></td>
 <td><p>Returns the current version of the struqture library .</p></td>
@@ -168,7 +168,7 @@ and an optional number of mixed_systems.</p>
 <td><p>Convert the json representation of self to an instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_system" title="struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_mixed_system</span></code></a>(value)</p></td>
-<td><p>Convert a MixedSystem into a MixedPlusMinusOperator.</p></td>
+<td><p>Convert a MixedOperator into a MixedPlusMinusOperator.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.get" title="struqture_py.mixed_systems.MixedPlusMinusOperator.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(key)</p></td>
 <td><p>Get the coefficient corresponding to the key.</p></td>
@@ -188,34 +188,25 @@ and an optional number of mixed_systems.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.min_supported_version" title="struqture_py.mixed_systems.MixedPlusMinusOperator.min_supported_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_supported_version</span></code></a>()</p></td>
 <td><p>Return the minimum version of struqture that supports this object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.number_bosonic_modes" title="struqture_py.mixed_systems.MixedPlusMinusOperator.number_bosonic_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_bosonic_modes</span></code></a>()</p></td>
-<td><p>Return the number of bosonic modes in each bosonic subsystem of self.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.number_fermionic_modes" title="struqture_py.mixed_systems.MixedPlusMinusOperator.number_fermionic_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_fermionic_modes</span></code></a>()</p></td>
-<td><p>Return the number of fermionic modes in each fermionic subsystem of self.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.number_spins" title="struqture_py.mixed_systems.MixedPlusMinusOperator.number_spins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_spins</span></code></a>()</p></td>
-<td><p>Return the number_spins input of each spin subsystem of self.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.remove" title="struqture_py.mixed_systems.MixedPlusMinusOperator.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(key)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.remove" title="struqture_py.mixed_systems.MixedPlusMinusOperator.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(key)</p></td>
 <td><p>Remove the value of the input key.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.set" title="struqture_py.mixed_systems.MixedPlusMinusOperator.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.set" title="struqture_py.mixed_systems.MixedPlusMinusOperator.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
 <td><p>Overwrite an existing entry or set a new entry in self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.to_bincode" title="struqture_py.mixed_systems.MixedPlusMinusOperator.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.to_bincode" title="struqture_py.mixed_systems.MixedPlusMinusOperator.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of self using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.to_json" title="struqture_py.mixed_systems.MixedPlusMinusOperator.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.to_json" title="struqture_py.mixed_systems.MixedPlusMinusOperator.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system" title="struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_mixed_system</span></code></a>(number_spins, number_bosons, ...)</p></td>
-<td><p>Convert a MixedPlusMinusOperator into a MixedSystem.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system" title="struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_mixed_system</span></code></a>()</p></td>
+<td><p>Convert a MixedPlusMinusOperator into a MixedOperator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.truncate" title="struqture_py.mixed_systems.MixedPlusMinusOperator.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.truncate" title="struqture_py.mixed_systems.MixedPlusMinusOperator.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
 <td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.values" title="struqture_py.mixed_systems.MixedPlusMinusOperator.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator.values" title="struqture_py.mixed_systems.MixedPlusMinusOperator.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
 <td><p>Return unsorted values in self.</p></td>
 </tr>
 </tbody>
@@ -238,10 +229,10 @@ and an optional number of mixed_systems.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_bosonic_modes">
 <span class="sig-name descname"><span class="pre">current_number_bosonic_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_bosonic_modes" title="Link to this definition"></a></dt>
-<dd><p>Return the number of bosonic modes each bosonic subsystem of self acts on.</p>
+<dd><p>Return the number of bosonic modes in each bosonic subsystem of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Maximum bosonic mode index currently used in each bosonic subsystem of self.</p>
+<dd class="field-odd"><p>The number of bosonic modes in each bosonic subsystem of self.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list[int]</p>
@@ -252,10 +243,10 @@ and an optional number of mixed_systems.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_fermionic_modes">
 <span class="sig-name descname"><span class="pre">current_number_fermionic_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_fermionic_modes" title="Link to this definition"></a></dt>
-<dd><p>Return the number of fermionic modes each fermionic subsystem of self acts on.</p>
+<dd><p>Return the number of fermionic modes in each fermionic subsystem of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Maximum fermionic mode index currently used in each fermionic subsystem of self.</p>
+<dd class="field-odd"><p>The number of fermionic modes in each fermionic subsystem of self.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list[int]</p>
@@ -266,10 +257,10 @@ and an optional number of mixed_systems.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_spins">
 <span class="sig-name descname"><span class="pre">current_number_spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.current_number_spins" title="Link to this definition"></a></dt>
-<dd><p>Return maximum spin index in each spin subsystem of self.</p>
+<dd><p>Return the current_number_spins input of each spin subsystem of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Maximum index in each spin subsystem of self.</p>
+<dd class="field-odd"><p>The number of spins in each spin subsystem of self.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
@@ -348,19 +339,19 @@ and an optional number of mixed_systems.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_system">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_mixed_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_system" title="Link to this definition"></a></dt>
-<dd><p>Convert a MixedSystem into a MixedPlusMinusOperator.</p>
+<dd><p>Convert a MixedOperator into a MixedPlusMinusOperator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedSystem" title="struqture_py.mixed_systems.MixedSystem"><em>MixedSystem</em></a>) -- The MixedSystem to create the MixedPlusMinusOperator from.</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedOperator" title="struqture_py.mixed_systems.MixedOperator"><em>MixedOperator</em></a>) -- The MixedOperator to create the MixedPlusMinusOperator from.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The operator created from the input MixedSystem.</p>
+<dd class="field-even"><p>The operator created from the input MixedOperator.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator" title="struqture_py.mixed_systems.MixedPlusMinusOperator">MixedPlusMinusOperator</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> -- Could not create MixedSystem from input.</p>
+<dd class="field-even"><p><strong>ValueError</strong> -- Could not create MixedOperator from input.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -456,48 +447,6 @@ and an optional number of mixed_systems.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.number_bosonic_modes">
-<span class="sig-name descname"><span class="pre">number_bosonic_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.number_bosonic_modes" title="Link to this definition"></a></dt>
-<dd><p>Return the number of bosonic modes in each bosonic subsystem of self.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of bosonic modes in each bosonic subsystem of self.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[int]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.number_fermionic_modes">
-<span class="sig-name descname"><span class="pre">number_fermionic_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.number_fermionic_modes" title="Link to this definition"></a></dt>
-<dd><p>Return the number of fermionic modes in each fermionic subsystem of self.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of fermionic modes in each fermionic subsystem of self.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[int]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.number_spins">
-<span class="sig-name descname"><span class="pre">number_spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.number_spins" title="Link to this definition"></a></dt>
-<dd><p>Return the number_spins input of each spin subsystem of self.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of spins in each spin subsystem of self.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.remove">
 <span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
@@ -567,26 +516,19 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system">
-<span class="sig-name descname"><span class="pre">to_mixed_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system" title="Link to this definition"></a></dt>
-<dd><p>Convert a MixedPlusMinusOperator into a MixedSystem.</p>
+<span class="sig-name descname"><span class="pre">to_mixed_system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.to_mixed_system" title="Link to this definition"></a></dt>
+<dd><p>Convert a MixedPlusMinusOperator into a MixedOperator.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The operator created from the input MixedPlusMinusOperator and optional number of spins.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedOperator" title="struqture_py.mixed_systems.MixedOperator">MixedOperator</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>number_spins</strong> (<em>list</em><em>[</em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em>) -- The number of spins to initialize the MixedSystem with.</p></li>
-<li><p><strong>number_bosons</strong> (<em>list</em><em>[</em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em>) -- The number of bosons to initialize the MixedSystem with.</p></li>
-<li><p><strong>number_fermions</strong> (<em>list</em><em>[</em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em>) -- The number of fermions to initialize the MixedSystem with.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The operator created from the input MixedPlusMinusOperator and optional number of spins.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedSystem" title="struqture_py.mixed_systems.MixedSystem">MixedSystem</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> -- Could not create MixedOperator from MixedPlusMinusOperator.</p></li>
-<li><p><strong>ValueError</strong> -- Could not create MixedSystem from MixedOperator.</p></li>
+<li><p><strong>ValueError</strong> -- Could not create MixedOperator from MixedOperator.</p></li>
 </ul>
 </dd>
 </dl>

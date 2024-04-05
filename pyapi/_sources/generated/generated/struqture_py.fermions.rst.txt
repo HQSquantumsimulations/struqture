@@ -17,11 +17,11 @@ struqture\_py.fermions
 
    .. autosummary::
    
-      FermionHamiltonianSystem
-      FermionLindbladNoiseSystem
+      FermionHamiltonian
+      FermionLindbladNoiseOperator
       FermionLindbladOpenSystem
+      FermionOperator
       FermionProduct
-      FermionSystem
       HermitianFermionProduct
    
    

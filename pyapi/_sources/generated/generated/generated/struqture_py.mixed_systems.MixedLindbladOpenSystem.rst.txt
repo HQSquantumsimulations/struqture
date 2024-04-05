@@ -28,9 +28,6 @@ struqture\_py.mixed\_systems.MixedLindbladOpenSystem
       ~MixedLindbladOpenSystem.noise_add_operator_product
       ~MixedLindbladOpenSystem.noise_get
       ~MixedLindbladOpenSystem.noise_set
-      ~MixedLindbladOpenSystem.number_bosonic_modes
-      ~MixedLindbladOpenSystem.number_fermionic_modes
-      ~MixedLindbladOpenSystem.number_spins
       ~MixedLindbladOpenSystem.system
       ~MixedLindbladOpenSystem.system_add_operator_product
       ~MixedLindbladOpenSystem.system_get

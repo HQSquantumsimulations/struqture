@@ -24,7 +24,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="struqture_py.spins.SpinSystem" href="struqture_py.spins.SpinSystem.html" />
+    <link rel="next" title="struqture_py.spins.QubitOperator" href="struqture_py.spins.QubitOperator.html" />
     <link rel="prev" title="struqture_py.spins.PauliProduct" href="struqture_py.spins.PauliProduct.html" /> 
 </head>
 
@@ -57,19 +57,19 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.spins.html">struqture_py.spins</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.PauliProduct.html">struqture_py.spins.PauliProduct</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.spins.DecoherenceProduct</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.SpinSystem.html">struqture_py.spins.SpinSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.SpinHamiltonianSystem.html">struqture_py.spins.SpinHamiltonianSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.SpinLindbladNoiseSystem.html">struqture_py.spins.SpinLindbladNoiseSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.SpinLindbladOpenSystem.html">struqture_py.spins.SpinLindbladOpenSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.QubitOperator.html">struqture_py.spins.QubitOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.QubitHamiltonian.html">struqture_py.spins.QubitHamiltonian</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.QubitLindbladNoiseOperator.html">struqture_py.spins.QubitLindbladNoiseOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.spins.QubitLindbladOpenSystem.html">struqture_py.spins.QubitLindbladOpenSystem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.DecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PauliProduct"><code class="docutils literal notranslate"><span class="pre">PauliProduct</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">SpinHamiltonianSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">SpinLindbladNoiseSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">SpinLindbladOpenSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.SpinSystem"><code class="docutils literal notranslate"><span class="pre">SpinSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.QubitHamiltonian"><code class="docutils literal notranslate"><span class="pre">QubitHamiltonian</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.QubitLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">QubitLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.QubitLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">QubitLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.QubitOperator"><code class="docutils literal notranslate"><span class="pre">QubitOperator</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.bosons.html">struqture_py.bosons</a></li>
@@ -119,7 +119,7 @@ matrices acting on qubits in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{x}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{z}\)</span>:</p>
 <p><cite>DecoherenceProduct().x(0).z(2)</cite>.</p>
 <p>DecoherenceProduct is  supposed to be used as input for the function <cite>add_noise</cite>,
-for instance in the spin system classes SpinLindbladOpenSystem, SpinLindbladNoiseSystem or SpinLindbladNoiseOperator,
+for instance in the spin system classes QubitLindbladOpenSystem, SpinLindbladNoiseSystem or QubitLindbladNoiseOperator,
 or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_systems.MixedDecoherenceProduct&gt;</cite>.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
@@ -576,7 +576,7 @@ the Jordan Wigner mapping.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="struqture_py.spins.PauliProduct.html" class="btn btn-neutral float-left" title="struqture_py.spins.PauliProduct" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="struqture_py.spins.SpinSystem.html" class="btn btn-neutral float-right" title="struqture_py.spins.SpinSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="struqture_py.spins.QubitOperator.html" class="btn btn-neutral float-right" title="struqture_py.spins.QubitOperator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
