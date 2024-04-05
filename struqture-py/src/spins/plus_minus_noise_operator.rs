@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::SpinLindbladNoiseSystemWrapper;
 use crate::fermions::FermionLindbladNoiseSystemWrapper;
 use crate::spins::PlusMinusProductWrapper;
 use bincode::deserialize;
@@ -17,17 +18,17 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use std::str::FromStr;
 use struqture::fermions::FermionLindbladNoiseSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
-    PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem, PlusMinusProduct
+    PlusMinusLindbladNoiseOperator, PlusMinusProduct, SpinLindbladNoiseOperator,
+    SpinLindbladNoiseSystem,
 };
 use struqture::OperateOnDensityMatrix;
-use struqture_py_macros::{mappings, noisy_system_wrapper};
-use std::str::FromStr;
-use super::SpinLindbladNoiseSystemWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
@@ -217,8 +218,10 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
             let bytes = get_bytes
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_two::spins::PlusMinusLindbladNoiseOperator = deserialize(&bytes[..])
-                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+            let two_import: struqture_two::spins::PlusMinusLindbladNoiseOperator =
+                deserialize(&bytes[..]).map_err(|err| {
+                    PyTypeError::new_err(format!("Type conversion failed: {}", err))
+                })?;
             let mut spin_system = PlusMinusLindbladNoiseOperator::new();
             for (key, val) in struqture_two::OperateOnDensityMatrix::iter(&two_import) {
                 let value_string_left = key.0.to_string();
