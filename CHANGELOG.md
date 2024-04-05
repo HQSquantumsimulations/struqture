@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.7.0-alpha.0
+
+* Added methods to convert from struqture 2.0.0-alpha.0
+
 ## 1.6.2
 
 * Updated VersionMissmatch error message

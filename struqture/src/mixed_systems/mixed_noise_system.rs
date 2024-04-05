@@ -29,6 +29,7 @@ use indexmap::map::{Iter, Keys, Values};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
 
+#[allow(dead_code)]
 #[cfg(feature = "json_schema")]
 #[derive(schemars::JsonSchema)]
 #[serde(remote = "TinyVec<[Option<usize>; 2]>")]
