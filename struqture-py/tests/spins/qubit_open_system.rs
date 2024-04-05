@@ -26,21 +26,12 @@ use struqture_py::spins::{
 use test_case::test_case;
 
 // helper functions
-<<<<<<< HEAD
-fn new_system(py: Python) -> Bound<SpinLindbladOpenSystemWrapper> {
-    let system_type = py.get_type::<SpinLindbladOpenSystemWrapper>();
-    system_type
-        .call0()
-        .unwrap()
-        .downcast::<SpinLindbladOpenSystemWrapper>()
-=======
 fn new_system(py: Python) -> &PyCell<QubitLindbladOpenSystemWrapper> {
     let system_type = py.get_type::<QubitLindbladOpenSystemWrapper>();
     system_type
         .call0()
         .unwrap()
         .downcast::<PyCell<QubitLindbladOpenSystemWrapper>>()
->>>>>>> c2f6461 (Renamed Spin objects to Qubit objects)
         .unwrap()
         .to_owned()
 }

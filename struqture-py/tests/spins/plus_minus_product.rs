@@ -699,13 +699,8 @@ fn test_json_schema() {
 
         let pp = new.call_method1("set_pauli", (0_u64, "Z")).unwrap();
         let min_version: String =
-<<<<<<< HEAD
-            String::extract_bound(&pp.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.1.0");
-=======
             String::extract(pp.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
->>>>>>> c070cd6 (Fixed from_pyany for products)
         assert_eq!(min_version, rust_min_version);
     });
 }

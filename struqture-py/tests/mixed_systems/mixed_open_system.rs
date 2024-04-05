@@ -1871,17 +1871,13 @@ fn test_json_schema() {
         )
         .unwrap();
         let min_version: String =
-<<<<<<< HEAD
-            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
-=======
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
->>>>>>> c070cd6 (Fixed from_pyany for products)
         assert_eq!(min_version, rust_min_version);
     });
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #[cfg(feature = "unstable_struqture_2_import")]
 #[test]
@@ -1911,6 +1907,8 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
         assert!(sys_from_1.is_err());
 =======
+=======
+>>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_pyany_to_struqture_one() {
@@ -1975,7 +1973,10 @@ fn test_from_pyany_to_struqture_one() {
         let result =
             MixedLindbladOpenSystemWrapper::from_pyany_to_struqture_one(sys_2.into()).unwrap();
         assert_eq!(result, sys_1);
+<<<<<<< HEAD
 >>>>>>> 0a57076 (Added pyo3 tests for from_pyany_to_struqture_one)
+=======
+>>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
     });
 }
 

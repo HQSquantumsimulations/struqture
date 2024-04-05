@@ -204,17 +204,10 @@ impl<'a> OperateOnSpins<'a> for QubitHamiltonian {
     }
 }
 
-<<<<<<< HEAD
-impl HermitianOperateOnSpins<'_> for SpinHamiltonian {}
-
-impl ToSparseMatrixOperator<'_> for SpinHamiltonian {}
-impl<'a> ToSparseMatrixSuperOperator<'a> for SpinHamiltonian {
-=======
 impl<'a> HermitianOperateOnSpins<'a> for QubitHamiltonian {}
 
 impl<'a> ToSparseMatrixOperator<'a> for QubitHamiltonian {}
 impl<'a> ToSparseMatrixSuperOperator<'a> for QubitHamiltonian {
->>>>>>> c2f6461 (Renamed Spin objects to Qubit objects)
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,

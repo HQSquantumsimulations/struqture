@@ -21,11 +21,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorFloatWrapper;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
-#[cfg(feature = "unstable_struqture_2_import")]
-use struqture::spins::PauliProduct;
 use struqture::spins::{
     OperateOnSpins, QubitHamiltonian, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
@@ -40,12 +36,15 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// QubitHamiltonians are characterized by a QubitOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
+<<<<<<< HEAD
 /// Args:
 ///     number_spins (Optional[int]): The number of spins in the SpinHamiltonianSystem.
 ///
 /// Returns:
 ///     self: The new SpinHamiltonianSystem with the input number of spins.
 ///
+=======
+>>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 /// Examples
 /// --------
 ///
@@ -116,7 +115,11 @@ impl QubitHamiltonianWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
+<<<<<<< HEAD
                         let bhs_value = Self::from_pyany(value);
+=======
+                        let bhs_value = Self::from_pyany(value.into());
+>>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = self.clone().internal * x;
@@ -131,6 +134,7 @@ impl QubitHamiltonianWrapper {
             }
         }
     }
+<<<<<<< HEAD
 
     /// Converts a json corresponding to struqture 2.x PauliHamiltonian to a struqture 1.x SpinHamiltonianSystem.
     ///
@@ -174,6 +178,8 @@ impl Default for SpinHamiltonianWrapper {
     fn default() -> Self {
         Self::new()
     }
+=======
+>>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 }
 
 impl Default for QubitHamiltonianWrapper {

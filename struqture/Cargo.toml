@@ -41,13 +41,5 @@ criterion = "0.5"
 [features]
 default = ["json_schema"]
 json_schema = ["schemars", "qoqo_calculator/json_schema"]
-<<<<<<< HEAD
-indexed_map_iterators = ["indexmap"]
-<<<<<<< HEAD
-unstable_struqture_2_import = []
-=======
->>>>>>> ed59565 (Made the indexed_map feature the default and removed non-feature code)
-=======
 struqture_1_export = ["struqture_one"]
 struqture_1_import = ["struqture_one"]
->>>>>>> e8488b1 (WIP: Experimenting with struqture 2.0 compatibility)

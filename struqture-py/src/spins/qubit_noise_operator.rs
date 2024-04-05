@@ -19,8 +19,6 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{OperateOnSpins, QubitLindbladNoiseOperator, ToSparseMatrixSuperOperator};
 #[cfg(feature = "json_schema")]
@@ -106,6 +104,7 @@ impl QubitLindbladNoiseOperatorWrapper {
             },
         ))
     }
+<<<<<<< HEAD
 
     /// Converts a json struqture 2.x PauliLindbladNoiseOperator to a struqture 1.x SpinLindbladNoiseSystem.
     ///
@@ -150,4 +149,6 @@ impl QubitLindbladNoiseOperatorWrapper {
             internal: new_operator,
         })
     }
+=======
+>>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 }

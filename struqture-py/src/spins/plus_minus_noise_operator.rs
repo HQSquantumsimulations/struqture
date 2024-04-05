@@ -29,9 +29,6 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a PlusMinusLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
-/// Returns:
-///     self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
-///
 /// Examples
 /// --------
 ///
