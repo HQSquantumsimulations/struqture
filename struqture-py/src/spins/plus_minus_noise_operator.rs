@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::QubitLindbladNoiseOperatorWrapper;
 use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::PlusMinusProductWrapper;
 use bincode::deserialize;
@@ -18,17 +19,15 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator};
+use struqture::spins::{PlusMinusLindbladNoiseOperator, QubitLindbladNoiseOperator};
 use struqture::OperateOnDensityMatrix;
-use struqture_py_macros::{mappings, noisy_system_wrapper};
-
-use super::SpinLindbladNoiseOperatorWrapper;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
+use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
-/// In a PlusMinusLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+/// In a PlusMinusLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
 /// Examples
 /// --------
@@ -53,7 +52,7 @@ pub struct PlusMinusLindbladNoiseOperatorWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[noisy_system_wrapper(OperateOnDensityMatrix)]
+#[noisy_system_wrapper(OperateOnDensityMatrix, Calculus)]
 impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Create a new PlusMinusLindbladNoiseOperator.
     ///
@@ -65,112 +64,38 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
             internal: PlusMinusLindbladNoiseOperator::new(),
         }
     }
-    /// Implement `-1` for self.
-    ///
-    /// Returns:
-    ///     self: The object * -1.
-    pub fn __neg__(&self) -> PlusMinusLindbladNoiseOperatorWrapper {
-        PlusMinusLindbladNoiseOperatorWrapper {
-            internal: -self.clone().internal,
-        }
-    }
 
-    /// Implement `+` for self with self-type.
+    /// Convert a QubitLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
     ///
     /// Args:
-    ///     other (self): value by which to add to self.
+    ///     value (QubitLindbladNoiseOperator): The QubitLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
     ///
     /// Returns:
-    ///     self: The two objects added.
+    ///     PlusMinusLindbladNoiseOperator: The operator created from the input QubitLindbladNoiseOperator.
     ///
     /// Raises:
-    ///     ValueError: Objects could not be added.
-    pub fn __add__(
-        &self,
-        other: PlusMinusLindbladNoiseOperatorWrapper,
-    ) -> PlusMinusLindbladNoiseOperatorWrapper {
-        let new_self = self.clone().internal + other.internal;
-        PlusMinusLindbladNoiseOperatorWrapper { internal: new_self }
-    }
-
-    /// Implement `-` for self with self-type.
-    ///
-    /// Args:
-    ///     other (self): value by which to subtract from self.
-    ///
-    /// Returns:
-    ///     self: The two objects subtracted.
-    ///
-    /// Raises:
-    ///     ValueError: Objects could not be subtracted.
-    pub fn __sub__(
-        &self,
-        other: PlusMinusLindbladNoiseOperatorWrapper,
-    ) -> PlusMinusLindbladNoiseOperatorWrapper {
-        let new_self = self.clone().internal - other.internal;
-        PlusMinusLindbladNoiseOperatorWrapper { internal: new_self }
-    }
-
-    /// Separate self into an operator with the terms of given number of spins (left and right) and an operator with the remaining operations.
-    ///
-    /// Args
-    ///     number_spins_left (int): Number of spin to filter for in the left key.
-    ///     number_spins_right (int): Number of spin to filter for in the right key.
-    ///
-    /// Returns
-    ///     Tuple[PlusMinusLindbladNoiseOperator, PlusMinusLindbladNoiseOperator]: Operator with the noise terms where number_spins (left and right) matches the number of spins the operator product acts on and Operator with all other contributions.
-    ///
-    /// Raises:
-    ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_terms(
-        &self,
-        number_spins_left: usize,
-        number_spins_right: usize,
-    ) -> PyResult<(
-        PlusMinusLindbladNoiseOperatorWrapper,
-        PlusMinusLindbladNoiseOperatorWrapper,
-    )> {
-        let result = self
-            .internal
-            .separate_into_n_terms(number_spins_left, number_spins_right)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok((
-            PlusMinusLindbladNoiseOperatorWrapper { internal: result.0 },
-            PlusMinusLindbladNoiseOperatorWrapper { internal: result.1 },
-        ))
-    }
-
-    /// Convert a SpinLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
-    ///
-    /// Args:
-    ///     value (SpinLindbladNoiseOperator): The SpinLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
-    ///
-    /// Returns:
-    ///     PlusMinusLindbladNoiseOperator: The operator created from the input SpinLindbladNoiseOperator.
-    ///
-    /// Raises:
-    ///     ValueError: Could not create SpinLindbladNoiseOperator from input.
+    ///     ValueError: Could not create QubitLindbladNoiseOperator from input.
     #[staticmethod]
-    pub fn from_spin_noise_system(
+    pub fn from_qubit_noise_operator(
         value: Py<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
-        let system = SpinLindbladNoiseOperatorWrapper::from_pyany(value)
+        let system = QubitLindbladNoiseOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusLindbladNoiseOperatorWrapper {
             internal: PlusMinusLindbladNoiseOperator::from(system.clone()),
         })
     }
 
-    /// Convert a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseOperator.
+    /// Convert a PlusMinusLindbladNoiseOperator into a QubitLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     SpinLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
+    ///     QubitLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
-    pub fn to_spin_noise_system(&self) -> PyResult<SpinLindbladNoiseOperatorWrapper> {
-        let result: SpinLindbladNoiseOperator =
-            SpinLindbladNoiseOperator::from(self.internal.clone());
-        Ok(SpinLindbladNoiseOperatorWrapper { internal: result })
+    ///     ValueError: Could not create QubitLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
+    pub fn to_qubit_noise_operator(&self) -> PyResult<QubitLindbladNoiseOperatorWrapper> {
+        let result: QubitLindbladNoiseOperator =
+            QubitLindbladNoiseOperator::from(self.internal.clone());
+        Ok(QubitLindbladNoiseOperatorWrapper { internal: result })
     }
 }

@@ -17,7 +17,7 @@
 //!
 //! This module can be used to represent mixed quantum operators, mixed quantum Hamiltonians and mixed open quantum systems.
 //!
-//! In general the enduser should use the high-level [crate::mixed_systems::MixedSystem] and [crate::mixed_systems::MixedHamiltonianSystem] structs
+//! In general the enduser should use the high-level [crate::mixed_systems::MixedSystem] and [crate::mixed_systems::MixedHamiltonian] structs
 //! to represent mixed quantum Operators and mixed Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [crate::mixed_systems::MixedLindbladOpenSystem].
@@ -106,8 +106,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of spins in each spin sub-system.
-    fn number_spins(&self) -> Vec<usize> {
-        self.spins().map(|s| s.number_spins()).collect()
+    fn current_number_spins(&self) -> Vec<usize> {
+        self.spins().map(|s| s.current_number_spins()).collect()
     }
 
     /// Returns the current number of bosonic modes each subsystem acts upon.
@@ -115,8 +115,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of bosons in each boson sub-system.
-    fn number_bosonic_modes(&self) -> Vec<usize> {
-        self.bosons().map(|b| b.number_modes()).collect()
+    fn current_number_bosonic_modes(&self) -> Vec<usize> {
+        self.bosons().map(|b| b.current_number_modes()).collect()
     }
 
     /// Returns the current number of fermionic modes each subsystem acts upon.
@@ -124,8 +124,8 @@ where
     /// # Returns
     ///
     /// * `Vec<usize>` - Number of fermions in each fermion sub-system.
-    fn number_fermionic_modes(&self) -> Vec<usize> {
-        self.fermions().map(|f| f.number_modes()).collect()
+    fn current_number_fermionic_modes(&self) -> Vec<usize> {
+        self.fermions().map(|f| f.current_number_modes()).collect()
     }
 
     // Document locally
@@ -171,9 +171,9 @@ where
 /// sh.set(mp_1.clone(), CalculatorComplex::from(0.5)).unwrap();
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
-/// assert_eq!(sh.number_spins(), vec![1]);
-/// assert_eq!(sh.number_bosonic_modes(), vec![2]);
-/// assert_eq!(sh.number_fermionic_modes(), vec![2]);
+/// assert_eq!(sh.current_number_spins(), vec![1]);
+/// assert_eq!(sh.current_number_bosonic_modes(), vec![2]);
+/// assert_eq!(sh.current_number_fermionic_modes(), vec![2]);
 /// ```
 ///
 pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
@@ -182,21 +182,21 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of spins in each sub-system of Self.
-    fn number_spins(&self) -> Vec<usize>;
+    fn current_number_spins(&self) -> Vec<usize>;
 
     /// Returns the number of bosonic modes in each boson sub-system of Self.
     ///
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of bosonic modes in each sub-system of Self.
-    fn number_bosonic_modes(&self) -> Vec<usize>;
+    fn current_number_bosonic_modes(&self) -> Vec<usize>;
 
     /// Returns the number of fermionic modes in each fermion sub-system of Self.
     ///
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of fermionic modes in each sub-system of Self.
-    fn number_fermionic_modes(&self) -> Vec<usize>;
+    fn current_number_fermionic_modes(&self) -> Vec<usize>;
 }
 
 pub trait HermitianOperateOnMixedSystems<'a>:

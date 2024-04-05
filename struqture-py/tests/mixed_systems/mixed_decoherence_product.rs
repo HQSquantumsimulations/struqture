@@ -154,17 +154,21 @@ fn test_from_string() {
         let comparison = bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
-        let nbr_spins = string_pp.call_method0("number_spins").unwrap();
+        let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
         let comparison =
             bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
-        let nbr_spins = string_pp.call_method0("number_bosonic_modes").unwrap();
+        let nbr_spins = string_pp
+            .call_method0("current_number_bosonic_modes")
+            .unwrap();
         let comparison =
             bool::extract(nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
-        let nbr_spins = string_pp.call_method0("number_fermionic_modes").unwrap();
+        let nbr_spins = string_pp
+            .call_method0("current_number_fermionic_modes")
+            .unwrap();
         let comparison =
             bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);
@@ -624,7 +628,60 @@ fn test_json_schema() {
 
         let min_version: String =
             String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let pp_2 = new_pp(
+            py,
+            vec!["0Z".to_string()],
+            vec!["c0a0".to_string()],
+            vec!["c1a1".to_string()],
+        );
+        let pp_1: struqture_one::mixed_systems::MixedDecoherenceProduct =
+            struqture_one::mixed_systems::MixedIndex::new(
+                [struqture_one::spins::DecoherenceProduct::from_str("0Z").unwrap()],
+                [struqture_one::bosons::BosonProduct::from_str("c0a0").unwrap()],
+                [struqture_one::fermions::FermionProduct::from_str("c1a1").unwrap()],
+            )
+            .unwrap();
+
+        let result =
+            MixedDecoherenceProductWrapper::from_pyany_to_struqture_one(pp_2.as_ref().into())
+                .unwrap();
+        assert_eq!(result, pp_1);
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"").into();
+        let pp_2 = new_pp(
+            py,
+            vec!["0Z".to_string()],
+            vec!["c1a1".to_string()],
+            vec!["c0a0".to_string()],
+        );
+
+        let pp_from_1 = pp_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny =
+            pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0b0\"").into();
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(pp_from_1.is_err());
     });
 }

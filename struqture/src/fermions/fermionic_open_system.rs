@@ -12,7 +12,7 @@
 
 use super::{FermionHamiltonian, FermionLindbladNoiseOperator};
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::SpinLindbladOpenSystem;
+use crate::spins::QubitLindbladOpenSystem;
 use crate::{OpenSystem, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
@@ -50,8 +50,11 @@ pub struct FermionLindbladOpenSystem {
     noise: FermionLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for FermionLindbladOpenSystem {}
-
+impl crate::SerializationSupport for FermionLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionLindbladOpenSystem
+    }
+}
 impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     type System = FermionHamiltonian;
     type Noise = FermionLindbladNoiseOperator;
@@ -105,13 +108,15 @@ impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
 }
 
 impl<'a> OperateOnModes<'a> for FermionLindbladOpenSystem {
-    /// Gets the maximum number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
+    /// Gets the maximum current_number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of fermions in the FermionLindbladOpenSystem.
-    fn number_modes(&self) -> usize {
-        self.system.number_modes().max(self.noise.number_modes())
+    fn current_number_modes(&self) -> usize {
+        self.system
+            .current_number_modes()
+            .max(self.noise.current_number_modes())
     }
 }
 
@@ -128,6 +133,32 @@ impl FermionLindbladOpenSystem {
             system: FermionHamiltonian::new(),
             noise: FermionLindbladNoiseOperator::new(),
         }
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::fermions::FermionLindbladOpenSystem, StruqtureError> {
+        let new_system = self.system().to_struqture_1()?;
+        let new_noise = self.noise().to_struqture_1()?;
+
+        struqture_one::OpenSystem::group(new_system, new_noise).map_err(
+            |err| StruqtureError::GenericError { msg:
+                format!("Could not convert struqture 2.x FermionLindbladOpenSystem to 1.x FermionLindbladOpenSystem, group function failed: {:?}.", err)
+            }
+        )
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::fermions::FermionLindbladOpenSystem,
+    ) -> Result<Self, StruqtureError> {
+        let (system_one, noise_one) = struqture_one::OpenSystem::ungroup(value.clone());
+        let new_system = FermionHamiltonian::from_struqture_1(&system_one)?;
+        let new_noise = FermionLindbladNoiseOperator::from_struqture_1(&noise_one)?;
+        Self::group(new_system, new_noise)
     }
 }
 
@@ -245,7 +276,7 @@ impl fmt::Display for FermionLindbladOpenSystem {
 }
 
 impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
-    type Output = SpinLindbladOpenSystem;
+    type Output = QubitLindbladOpenSystem;
 
     /// Implements JordanWignerFermionToSpin for a FermionLindbladOpenSystem.
     ///
@@ -254,11 +285,11 @@ impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// `SpinLindbladOpenSystem` - The spin open system that results from the transformation.
+    /// `QubitLindbladOpenSystem` - The spin open system that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
-        SpinLindbladOpenSystem::group(jw_system, jw_noise)
+        QubitLindbladOpenSystem::group(jw_system, jw_noise)
             .expect("Internal bug in jordan_wigner() for FermionHamiltonian or FermionLindbladNoiseOperator. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

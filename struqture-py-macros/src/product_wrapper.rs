@@ -28,6 +28,62 @@ pub fn productwrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
+    let (struqture_one_module, struqture_one_ident) = if struct_name.contains("PauliProduct") {
+        (
+            quote::format_ident!("spins"),
+            quote::format_ident!("PauliProduct"),
+        )
+    } else if struct_name.contains("MixedDecoherenceProduct") {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("MixedDecoherenceProduct"),
+        )
+    } else if struct_name.contains("HermitianMixedProduct") {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("HermitianMixedProduct"),
+        )
+    } else if struct_name.contains("MixedPlusMinusProduct") {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("MixedPlusMinusProduct"),
+        )
+    } else if struct_name.contains("DecoherenceProduct") {
+        (
+            quote::format_ident!("spins"),
+            quote::format_ident!("DecoherenceProduct"),
+        )
+    } else if struct_name.contains("HermitianBosonProduct") {
+        (
+            quote::format_ident!("bosons"),
+            quote::format_ident!("HermitianBosonProduct"),
+        )
+    } else if struct_name.contains("BosonProduct") {
+        (
+            quote::format_ident!("bosons"),
+            quote::format_ident!("BosonProduct"),
+        )
+    } else if struct_name.contains("HermitianFermionProduct") {
+        (
+            quote::format_ident!("fermions"),
+            quote::format_ident!("HermitianFermionProduct"),
+        )
+    } else if struct_name.contains("FermionProduct") {
+        (
+            quote::format_ident!("fermions"),
+            quote::format_ident!("FermionProduct"),
+        )
+    } else if struct_name.contains("PlusMinusProduct") {
+        (
+            quote::format_ident!("spins"),
+            quote::format_ident!("PlusMinusProduct"),
+        )
+    } else {
+        (
+            quote::format_ident!("mixed_systems"),
+            quote::format_ident!("MixedProduct"),
+        )
+    };
     // ------------
     // Start the generating part of the macro
     let symmetric_index_quote = if attribute_arguments.contains("SymmetricIndex") {
@@ -83,13 +139,13 @@ pub fn productwrapper(
                 /// There is only a lower bound of the dimension or number of modes based on the
                 /// maximal mode the product of operators in the index acts on.
                 /// For example an index consisting of one creator acting on mode 0 would have
-                /// a number_modes of one. An index consisting of one annhihilator acting on 3
-                /// would have number_modes of four.
+                /// a current_number_modes of one. An index consisting of one annhihilator acting on 3
+                /// would have current_number_modes of four.
                 ///
                 /// Returns:
                 ///     int: The maximal number of modes self acts on.
-                pub fn number_modes(&self) -> usize {
-                    self.internal.number_modes()
+                pub fn current_number_modes(&self) -> usize {
+                    self.internal.current_number_modes()
                 }
 
                 /// Return list of creator indices.
@@ -180,8 +236,8 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     int: Maximum index.
-                pub fn number_spins(&self) -> usize {
-                    self.internal.number_spins()
+                pub fn current_number_spins(&self) -> usize {
+                    self.internal.current_number_spins()
                 }
 
                 /// Return number of entries in object.
@@ -229,7 +285,12 @@ pub fn productwrapper(
                         internal: concatenated
                     })
                 }
-
+        }
+    } else {
+        TokenStream::new()
+    };
+    let calculus_quote = if attribute_arguments.contains("Calculus") {
+        quote! {
                 /// Multiplication function for a self-typed object by a self-typed object.
                 ///
                 /// Args:
@@ -302,24 +363,24 @@ pub fn productwrapper(
                 ///
                 /// Returns:
                 ///     list[int]: Number of spins in each spin sub-system.
-                pub fn number_spins(&self) -> Vec<usize> {
-                    self.internal.number_spins()
+                pub fn current_number_spins(&self) -> Vec<usize> {
+                    self.internal.current_number_spins()
                 }
 
                 /// Return the current number of bosonic modes each subsystem acts upon.
                 ///
                 /// Returns:
                 ///     list[int]: Number of bosonic modes in each spin sub-system.
-                pub fn number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.number_bosonic_modes()
+                pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_bosonic_modes()
                 }
 
                 /// Return the current number of fermionic modes each subsystem acts upon.
                 ///
                 /// Returns:
                 ///     list[int]: Number of fermionic modes in each spin sub-system.
-                pub fn number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.number_fermionic_modes()
+                pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
+                    self.internal.current_number_fermionic_modes()
                 }
         }
     } else {
@@ -329,32 +390,69 @@ pub fn productwrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: Py<PyAny>
-            ) -> PyResult<#struct_ident> {
+            pub fn from_pyany( input: Py<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                let input = input.as_ref(py);
-                if let Ok(try_downcast) = input.extract::<#ident>() {
-                    Ok(try_downcast.internal)
-                }
-                else {
-                let get_str = input.call_method0("__str__").map_err(|_| {
-                    PyTypeError::new_err("Type conversion failed".to_string())
-                })?;
-                let string = get_str.extract::<String>().map_err(|_| {
-                    PyTypeError::new_err("Type conversion failed".to_string())
-                })?;
-                #struct_ident::from_str(string.as_str()).map_err(|err|
-                    PyTypeError::new_err(format!(
-                        "Type conversion failed: {}",
-                        err
-                    )))
+                    let input = input.as_ref(py);
+                    if let Ok(try_downcast) = input.extract::<#ident>() {
+                        return Ok(try_downcast.internal);
+                    } else {
+                        let get_str = input.call_method0("__str__").map_err(|_| {
+                            PyTypeError::new_err("Type conversion failed".to_string())
+                        })?;
+                        let string = get_str.extract::<String>().map_err(|_| {
+                            PyTypeError::new_err("Type conversion failed".to_string())
+                        })?;
+                        let res = #struct_ident::from_str(string.as_str()).map_err(|err|
+                            PyTypeError::new_err(format!(
+                                "Type conversion failed: {}",
+                                err
+                            )))?;
+                        let source_serialisation_meta = res.struqture_serialisation_meta();
 
+                        let target_serialisation_meta = <#struct_ident as struqture::SerializationSupport>::target_serialisation_meta();
+
+                        struqture::check_can_be_deserialised(&target_serialisation_meta, &source_serialisation_meta).map_err(|err| {
+                            PyTypeError::new_err(err.to_string())
+                        })?;
+
+                        Ok(res)
+
+                    }
+                })
             }
-                }
 
-            )
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_import")]
+            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let get_str = input.call_method0(py, "__str__").map_err(|_| {
+                        PyTypeError::new_err("Type conversion failed".to_string())
+                    })?;
+                    let string = get_str.extract::<String>(py).map_err(|_| {
+                        PyTypeError::new_err("Type conversion failed".to_string())
+                    })?;
+                    let one_import = struqture_one::#struqture_one_module::#struqture_one_ident::from_str(string.as_str()).map_err(|err|
+                        PyTypeError::new_err(format!(
+                            "Type conversion failed: {}",
+                            err
+                        )))?;
+
+                    let qubit_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
+                        |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
+                    ))?;
+                    Ok(qubit_operator)
+                })
+            }
+
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_export")]
+            pub fn from_pyany_to_struqture_one(input: Py<PyAny>) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+                let res = <#ident>::from_pyany(input)?;
+                <#struct_ident>::to_struqture_1(&res).map_err(
+                    |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? Error message: {:?}", err)
+                ))
+            }
         }
-    }
 
         #[pymethods]
         impl #ident {
@@ -365,9 +463,43 @@ pub fn productwrapper(
             #mode_index_quote
             #spin_index_quote
             #mixed_index_quote
+            #calculus_quote
 
             // ----------------------------------
             // Default pyo3 implementations
+
+            // add in a function converting struqture_one (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            #[cfg(feature = "struqture_1_import")]
+            #[staticmethod]
+            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
+                let qubit_operator: #struct_ident = #ident::from_pyany_struqture_one(input)?;
+                Ok(#ident {
+                    internal: qubit_operator,
+                })
+            }
+
+            // add in a function converting struqture_one (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            #[cfg(feature = "struqture_1_import")]
+            #[pyo3(text_signature = "(input)")]
+            #[staticmethod]
+            pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
+                let qubit_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+                    serde_json::from_str(&input).map_err(|err| {
+                        PyValueError::new_err(format!(
+                            "Input cannot be deserialized from json to struqture 1.x: {}",
+                            err
+                        ))
+                    })?;
+                Ok(#ident {
+                    internal: #struct_ident::from_struqture_1(&qubit_operator).map_err(|err| {
+                        PyValueError::new_err(format!(
+                            "Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err
+                        ))
+                    })?,
+                })
+            }
 
             /// Return a copy of self (copy here produces a deepcopy).
             ///
@@ -559,8 +691,15 @@ pub fn productwrapper(
             /// Returns:
             ///     str: The minimum version of the struqture library to deserialize this object.
             pub fn min_supported_version(&self) -> String {
-                let min_version: (usize, usize, usize) = #struct_ident::min_supported_version();
+                let min_version: (usize, usize, usize) = struqture::SerializationSupport::min_supported_version(&self.internal);
                 return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
+            }
+
+            /// Returns the StruqtureSerialisationMeta of the object.
+            fn _get_serialisation_meta(&self) -> PyResult<String>{
+                let meta = struqture::SerializationSupport::struqture_serialisation_meta(&self.internal);
+                let string = serde_json::to_string(&meta).map_err(|err| PyValueError::new_err(err.to_string()))?;
+                Ok(string)
             }
 
             #[cfg(feature = "json_schema")]

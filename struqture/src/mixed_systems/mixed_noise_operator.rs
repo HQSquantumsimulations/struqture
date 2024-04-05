@@ -12,23 +12,15 @@
 
 use super::{MixedDecoherenceProduct, MixedIndex, OperateOnMixedSystems};
 use crate::prelude::*;
-use crate::{
-    OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{OperateOnDensityMatrix, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// MixedLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -59,14 +51,11 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "MixedLindbladNoiseOperatorSerialize")]
+#[serde(try_from = "MixedLindbladNoiseOperatorSerialize")]
 #[serde(into = "MixedLindbladNoiseOperatorSerialize")]
 pub struct MixedLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>,
     /// Number of Spin subsystems
     pub(crate) n_spins: usize,
     /// Number of Boson subsystems
@@ -75,8 +64,11 @@ pub struct MixedLindbladNoiseOperator {
     pub(crate) n_fermions: usize,
 }
 
-impl crate::MinSupportedVersion for MixedLindbladNoiseOperator {}
-
+impl crate::SerializationSupport for MixedLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedLindbladNoiseOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedLindbladNoiseOperator {
     fn schema_name() -> String {
@@ -102,12 +94,15 @@ struct MixedLindbladNoiseOperatorSerialize {
     n_spins: usize,
     n_bosons: usize,
     n_fermions: usize,
-    /// The struqture version
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
-    fn from(value: MixedLindbladNoiseOperatorSerialize) -> Self {
+impl TryFrom<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
+    type Error = StruqtureError;
+    fn try_from(value: MixedLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let mut new_noise_op =
             MixedLindbladNoiseOperator::new(value.n_spins, value.n_bosons, value.n_fermions);
         for (key_l, key_r, real, imag) in value.items.iter() {
@@ -118,12 +113,13 @@ impl From<MixedLindbladNoiseOperatorSerialize> for MixedLindbladNoiseOperator {
                 )
                 .expect("Internal bug in add_operator_product");
         }
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
     fn from(value: MixedLindbladNoiseOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(
             MixedDecoherenceProduct,
             MixedDecoherenceProduct,
@@ -134,16 +130,12 @@ impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
             n_spins: value.n_spins,
             n_bosons: value.n_bosons,
             n_fermions: value.n_fermions,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -151,12 +143,6 @@ impl From<MixedLindbladNoiseOperator> for MixedLindbladNoiseOperatorSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
     type Index = (MixedDecoherenceProduct, MixedDecoherenceProduct);
     type Value = CalculatorComplex;
-    type IteratorType =
-        Iter<'a, (MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>;
-    type KeyIteratorType =
-        Keys<'a, (MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>;
-    type ValueIteratorType =
-        Values<'a, (MixedDecoherenceProduct, MixedDecoherenceProduct), CalculatorComplex>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -167,30 +153,23 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -248,10 +227,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -259,40 +235,40 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
 }
 impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseOperator {
     // From trait
-    fn number_spins(&self) -> Vec<usize> {
-        let mut number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
+    fn current_number_spins(&self) -> Vec<usize> {
+        let mut current_number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, s) in key_left.spins().enumerate() {
-                    let maxk = (s.number_spins()).max(s.number_spins());
-                    if maxk > number_spins[index] {
-                        number_spins[index] = maxk
+                    let maxk = (s.current_number_spins()).max(s.current_number_spins());
+                    if maxk > current_number_spins[index] {
+                        current_number_spins[index] = maxk
                     }
                 }
                 for (index, s) in key_right.spins().enumerate() {
-                    let maxk = (s.number_spins()).max(s.number_spins());
-                    if maxk > number_spins[index] {
-                        number_spins[index] = maxk
+                    let maxk = (s.current_number_spins()).max(s.current_number_spins());
+                    if maxk > current_number_spins[index] {
+                        current_number_spins[index] = maxk
                     }
                 }
             }
         }
-        number_spins
+        current_number_spins
     }
 
     // From trait
-    fn number_bosonic_modes(&self) -> Vec<usize> {
+    fn current_number_bosonic_modes(&self) -> Vec<usize> {
         let mut number_bosons: Vec<usize> = (0..self.n_bosons).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, b) in key_left.bosons().enumerate() {
-                    let maxk = (b.number_modes()).max(b.number_modes());
+                    let maxk = (b.current_number_modes()).max(b.current_number_modes());
                     if maxk > number_bosons[index] {
                         number_bosons[index] = maxk
                     }
                 }
                 for (index, b) in key_right.bosons().enumerate() {
-                    let maxk = (b.number_modes()).max(b.number_modes());
+                    let maxk = (b.current_number_modes()).max(b.current_number_modes());
                     if maxk > number_bosons[index] {
                         number_bosons[index] = maxk
                     }
@@ -303,18 +279,18 @@ impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseOperator {
     }
 
     // From trait
-    fn number_fermionic_modes(&self) -> Vec<usize> {
+    fn current_number_fermionic_modes(&self) -> Vec<usize> {
         let mut number_fermions: Vec<usize> = (0..self.n_fermions).map(|_| 0).collect();
         if !self.internal_map.is_empty() {
             for (key_left, key_right) in self.keys() {
                 for (index, f) in key_left.fermions().enumerate() {
-                    let maxk = (f.number_modes()).max(f.number_modes());
+                    let maxk = (f.current_number_modes()).max(f.current_number_modes());
                     if maxk > number_fermions[index] {
                         number_fermions[index] = maxk
                     }
                 }
                 for (index, f) in key_right.fermions().enumerate() {
-                    let maxk = (f.number_modes()).max(f.number_modes());
+                    let maxk = (f.current_number_modes()).max(f.current_number_modes());
                     if maxk > number_fermions[index] {
                         number_fermions[index] = maxk
                     }
@@ -349,9 +325,6 @@ impl MixedLindbladNoiseOperator {
     /// * `Self` - The new (empty) MixedLindbladNoiseOperator.
     pub fn new(n_spins: usize, n_bosons: usize, n_fermions: usize) -> Self {
         MixedLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
             n_spins,
             n_bosons,
@@ -378,9 +351,6 @@ impl MixedLindbladNoiseOperator {
         capacity: usize,
     ) -> Self {
         MixedLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
             n_spins,
             n_bosons,
@@ -388,42 +358,51 @@ impl MixedLindbladNoiseOperator {
         }
     }
 
-    // /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations
-    // ///
-    // /// # Arguments
-    // ///
-    // /// * `number_particles_left` - Number of spins, bosons and fermions to filter for in the left term of the keys.
-    // /// * `number_particles_right` - Number of spins, bosons and fermions to filter for in the right term of the keys.
-    // ///
-    // /// # Returns
-    // ///
-    // /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-    // pub fn separate_into_n_terms(
-    //     &self,
-    //     number_particles_left: (usize, usize, usize),
-    //     number_particles_right: (usize, usize, usize),
-    // ) -> Result<(Self, Self), StruqtureError> {
-    //     let mut separated = Self::default();
-    //     let mut remainder = Self::default();
-    //     for ((prod_l, prod_r), val) in self.iter() {
-    //         if (
-    //             prod_l.spins().len(),
-    //             prod_l.bosons().len(),
-    //             prod_l.fermions().len(),
-    //         ) == number_particles_left
-    //             && (
-    //                 prod_r.spins().len(),
-    //                 prod_r.bosons().len(),
-    //                 prod_r.fermions().len(),
-    //             ) == number_particles_right
-    //         {
-    //             separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-    //         } else {
-    //             remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-    //         }
-    //     }
-    //     Ok((separated, remainder))
-    // }
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::mixed_systems::MixedLindbladNoiseSystem, StruqtureError> {
+        let mut new_mixed_system = struqture_one::mixed_systems::MixedLindbladNoiseSystem::new(
+            vec![None; self.n_spins],
+            vec![None; self.n_bosons],
+            vec![None; self.n_fermions],
+        );
+        for (key, val) in self.iter() {
+            let one_key_left = key.0.to_struqture_1()?;
+            let one_key_right = key.1.to_struqture_1()?;
+            let _ = struqture_one::OperateOnDensityMatrix::set(
+                &mut new_mixed_system,
+                (one_key_left, one_key_right),
+                val.clone(),
+            );
+        }
+        Ok(new_mixed_system)
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::mixed_systems::MixedLindbladNoiseSystem,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_qubit_operator = Self::new(
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
+                value,
+            )
+            .len(),
+            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
+                value,
+            )
+            .len(),
+        );
+        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+            let self_key_left = MixedDecoherenceProduct::from_struqture_1(&key.0)?;
+            let self_key_right = MixedDecoherenceProduct::from_struqture_1(&key.1)?;
+            let _ = new_qubit_operator.set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(new_qubit_operator)
+    }
 }
 
 /// Implements the negative sign function of MixedLindbladNoiseOperator.
@@ -436,9 +415,6 @@ impl ops::Neg for MixedLindbladNoiseOperator {
     ///
     /// * `Self` - The MixedLindbladNoiseOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         let n_spins = self.n_spins;
         let n_bosons = self.n_bosons;
@@ -533,9 +509,6 @@ where
     /// * `Self` - The MixedLindbladNoiseOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         let n_spins = self.n_spins;
         let n_bosons = self.n_bosons;
@@ -559,12 +532,6 @@ impl IntoIterator for MixedLindbladNoiseOperator {
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,
     );
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<
-        (MixedDecoherenceProduct, MixedDecoherenceProduct),
-        CalculatorComplex,
-    >;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<
         (MixedDecoherenceProduct, MixedDecoherenceProduct),
         CalculatorComplex,
@@ -717,7 +684,7 @@ mod test {
     use serde_test::{assert_tokens, Configure, Token};
     use std::str::FromStr;
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn so_from_sos() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -732,19 +699,23 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let mut so = MixedLindbladNoiseOperator::new(1, 1, 1);
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
-        assert_eq!(MixedLindbladNoiseOperator::from(sos.clone()), so);
+        assert_eq!(
+            MixedLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            so
+        );
         assert_eq!(MixedLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of QubitOperator
     #[test]
     fn clone_partial_eq() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -758,9 +729,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -779,9 +751,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -795,9 +768,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -806,7 +780,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of QubitOperator
     #[test]
     fn debug() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -820,19 +794,20 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, serialisation_meta: StruqtureSerialisationMeta { type_name: \"MixedLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test QubitOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -846,9 +821,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -874,22 +850,28 @@ mod test {
                 Token::U64(1),
                 Token::Str("n_fermions"),
                 Token::U64(1),
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("MixedLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test QubitOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -903,9 +885,10 @@ mod test {
             n_spins: 1,
             n_bosons: 1,
             n_fermions: 1,
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "MixedLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -1003,15 +986,21 @@ mod test {
                 Token::U64(1),
                 Token::Str("n_fermions"),
                 Token::U64(1),
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("MixedLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

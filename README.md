@@ -14,7 +14,7 @@ To best support this use case, struqture has a number of design goals:
 
 Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
 Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
-Struqture is designed to also support the construction and (de)serialisation of large systems but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
+Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
 
 ## Documentation
 

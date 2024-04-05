@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::SpinOperatorWrapper;
+use super::QubitOperatorWrapper;
 use crate::fermions::FermionHamiltonianWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
@@ -23,16 +23,17 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorFloatWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
-    OperateOnSpins, SpinHamiltonian, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
+    OperateOnSpins, QubitHamiltonian, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
+
 /// These are representations of systems of spins.
 ///
-/// SpinHamiltonians are characterized by a SpinOperator to represent the hamiltonian of the spin system
+/// QubitHamiltonians are characterized by a QubitOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
 /// Examples
@@ -43,22 +44,22 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import SpinHamiltonian, PauliProduct
+///     from struqture_py.spins import QubitHamiltonian, PauliProduct
 ///
-///     ssystem = SpinHamiltonian(2)
+///     ssystem = QubitHamiltonian(2)
 ///     pp = PauliProduct().z(0)
 ///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), 2)
+///     npt.assert_equal(ssystem.current_number_spins(), 2)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
-///     dimension = 4**ssystem.number_spins()
+///     dimension = 4**ssystem.current_number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinHamiltonian", module = "struqture_py.spins")]
+#[pyclass(name = "QubitHamiltonian", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
-pub struct SpinHamiltonianWrapper {
-    /// Internal storage of [struqture::spins::SpinHamiltonian]
-    pub internal: SpinHamiltonian,
+pub struct QubitHamiltonianWrapper {
+    /// Internal storage of [struqture::spins::QubitHamiltonian]
+    pub internal: QubitHamiltonian,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -70,38 +71,38 @@ pub struct SpinHamiltonianWrapper {
     OperateOnDensityMatrix,
     Calculus
 )]
-impl SpinHamiltonianWrapper {
-    /// Create an empty SpinHamiltonian.
+impl QubitHamiltonianWrapper {
+    /// Create an empty QubitHamiltonian.
     ///
     /// Returns:
-    ///     self: The new SpinHamiltonian with the input number of spins.
+    ///     self: The new QubitHamiltonian with the input number of spins.
     #[new]
     pub fn new() -> Self {
         Self {
-            internal: SpinHamiltonian::new(),
+            internal: QubitHamiltonian::new(),
         }
     }
 
-    /// Implement `*` for SpinHamiltonian and SpinHamiltonian/CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for QubitHamiltonian and QubitHamiltonian/CalculatorComplex/CalculatorFloat.
     ///
     /// Args:
-    ///     value (Union[SpinHamiltonian, CalculatorComplex, CalculatorFloat]): value by which to multiply the self SpinHamiltonian
+    ///     value (Union[QubitHamiltonian, CalculatorComplex, CalculatorFloat]): value by which to multiply the self QubitHamiltonian
     ///
     /// Returns:
-    ///     SpinOperator: The SpinHamiltonian multiplied by the value.
+    ///     QubitOperator: The QubitHamiltonian multiplied by the value.
     ///
     /// Raises:
-    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonian.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<SpinOperatorWrapper> {
+    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor QubitHamiltonian.
+    pub fn __mul__(&self, value: &PyAny) -> PyResult<QubitOperatorWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
-            Ok(x) => Ok(SpinOperatorWrapper {
+            Ok(x) => Ok(QubitOperatorWrapper {
                 internal: self.clone().internal * CalculatorComplex::from(x),
             }),
             Err(_) => {
                 let cc_value = qoqo_calculator_pyo3::convert_into_calculator_complex(value);
                 match cc_value {
-                    Ok(x) => Ok(SpinOperatorWrapper {
+                    Ok(x) => Ok(QubitOperatorWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
@@ -109,10 +110,10 @@ impl SpinHamiltonianWrapper {
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = self.clone().internal * x;
-                                Ok(SpinOperatorWrapper { internal: new_self })
+                                Ok(QubitOperatorWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonian: {:?}",
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor QubitHamiltonian: {:?}",
                                 err)))
                         }
                     }
@@ -122,7 +123,7 @@ impl SpinHamiltonianWrapper {
     }
 }
 
-impl Default for SpinHamiltonianWrapper {
+impl Default for QubitHamiltonianWrapper {
     fn default() -> Self {
         Self::new()
     }

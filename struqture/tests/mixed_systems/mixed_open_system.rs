@@ -15,6 +15,9 @@
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::{
@@ -30,9 +33,9 @@ fn new_system() {
     let system = MixedLindbladOpenSystem::new(1, 1, 1);
     assert_eq!(system.system(), &MixedHamiltonian::new(1, 1, 1));
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
-    assert_eq!(vec![0], system.number_spins());
-    assert_eq!(vec![0], system.number_bosonic_modes());
-    assert_eq!(vec![0], system.number_fermionic_modes());
+    assert_eq!(vec![0], system.current_number_spins());
+    assert_eq!(vec![0], system.current_number_bosonic_modes());
+    assert_eq!(vec![0], system.current_number_fermionic_modes());
 
     assert_eq!(
         MixedLindbladOpenSystem::new(0, 0, 0),
@@ -48,9 +51,9 @@ fn new_system_none() {
     assert_eq!(system.system(), &MixedHamiltonian::new(1, 1, 1));
     assert!(system.noise().is_empty());
     assert_eq!(system.noise(), &MixedLindbladNoiseOperator::new(1, 1, 1));
-    assert_eq!(vec![0], system.number_spins());
-    assert_eq!(vec![0], system.number_bosonic_modes());
-    assert_eq!(vec![0], system.number_fermionic_modes());
+    assert_eq!(vec![0], system.current_number_spins());
+    assert_eq!(vec![0], system.current_number_bosonic_modes());
+    assert_eq!(vec![0], system.current_number_fermionic_modes());
 }
 
 // Test the group function of the MixedLindbladOpenSystem
@@ -627,10 +630,6 @@ fn serde_json() {
 
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianMixedProduct = HermitianMixedProduct::new(
         [PauliProduct::new().x(0)],
         [BosonProduct::new([0], [1]).unwrap()],
@@ -677,15 +676,21 @@ fn serde_readable() {
             Token::U64(1),
             Token::Str("n_fermions"),
             Token::U64(1),
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("MixedHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -708,15 +713,21 @@ fn serde_readable() {
             Token::U64(1),
             Token::Str("n_fermions"),
             Token::U64(1),
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("MixedLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -758,10 +769,6 @@ fn bincode() {
 /// Test MixedLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianMixedProduct = HermitianMixedProduct::new(
         [PauliProduct::new().x(0)],
         [BosonProduct::new([0], [1]).unwrap()],
@@ -803,7 +810,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(0),
             Token::UnitVariant {
-                name: "SingleSpinOperator",
+                name: "SingleQubitOperator",
                 variant: "X",
             },
             Token::TupleEnd,
@@ -848,15 +855,21 @@ fn serde_compact() {
             Token::U64(1),
             Token::Str("n_fermions"),
             Token::U64(1),
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("MixedHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -951,15 +964,21 @@ fn serde_compact() {
             Token::U64(1),
             Token::Str("n_fermions"),
             Token::U64(1),
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("MixedLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str("2.0.0"),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -1271,4 +1290,68 @@ fn test_mixed_open_system_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1: struqture_one::mixed_systems::HermitianMixedProduct =
+        struqture_one::mixed_systems::MixedIndex::new(
+            [struqture_one::spins::PauliProduct::from_str("0X").unwrap()],
+            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+            [
+                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+            ],
+        )
+        .unwrap();
+    let dp_1: struqture_one::mixed_systems::MixedDecoherenceProduct =
+        struqture_one::mixed_systems::MixedIndex::new(
+            [struqture_one::spins::DecoherenceProduct::from_str("0X").unwrap()],
+            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+            [
+                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+            ],
+        )
+        .unwrap();
+    let mut ss_1 =
+        struqture_one::mixed_systems::MixedLindbladOpenSystem::new([None], [None], [None, None]);
+    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
+    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
+    struqture_one::OperateOnDensityMatrix::set(
+        noise_mut_1,
+        (dp_1.clone(), dp_1.clone()),
+        1.0.into(),
+    )
+    .unwrap();
+
+    let pp_2 = HermitianMixedProduct::new(
+        [PauliProduct::new().x(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [
+            FermionProduct::new([0], [0]).unwrap(),
+            FermionProduct::new([0], [1]).unwrap(),
+        ],
+    )
+    .unwrap();
+    let dp_2 = MixedDecoherenceProduct::new(
+        [DecoherenceProduct::new().x(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [
+            FermionProduct::new([0], [0]).unwrap(),
+            FermionProduct::new([0], [1]).unwrap(),
+        ],
+    )
+    .unwrap();
+    let mut ss_2 = MixedLindbladOpenSystem::new(1, 1, 2);
+    ss_2.system_mut().set(pp_2.clone(), 2.0.into()).unwrap();
+    ss_2.noise_mut()
+        .set((dp_2.clone(), dp_2.clone()), 1.0.into())
+        .unwrap();
+
+    assert!(MixedLindbladOpenSystem::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

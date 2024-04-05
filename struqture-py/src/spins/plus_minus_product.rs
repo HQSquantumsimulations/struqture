@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::{DecoherenceProductWrapper, PauliProductWrapper};
 use crate::fermions::FermionOperatorWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -25,12 +26,11 @@ use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
+use struqture::SerializationSupport;
 use struqture::SymmetricIndex;
-use struqture_py_macros::{mappings, product_wrapper};
-
-use super::{DecoherenceProductWrapper, PauliProductWrapper};
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
+use struqture_py_macros::{mappings, product_wrapper};
 
 /// PlusMinusProducts are combinations of SinglePlusMinusOperators on specific qubits.
 ///
@@ -62,7 +62,7 @@ pub struct PlusMinusProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SymmetricIndex)]
+#[product_wrapper(SymmetricIndex, SpinIndex)]
 impl PlusMinusProductWrapper {
     /// Create an empty PlusMinusProduct.
     ///
@@ -131,77 +131,6 @@ impl PlusMinusProductWrapper {
         })?;
         Ok(Self {
             internal: self.internal.clone().set_pauli(index, converted_pauli),
-        })
-    }
-
-    /// Get the pauli matrix corresponding to the index.
-    ///
-    /// Args:
-    ///     index (int): Index of get object.
-    ///
-    /// Returns:
-    ///     Optional[str]: The key's corresponding value (if it exists).
-    pub fn get(&self, index: usize) -> Option<String> {
-        self.internal.get(&index).map(|x| format!("{}", x))
-    }
-
-    /// Return a list of the unsorted keys in self.
-    ///
-    /// Returns:
-    ///     list[int]: The sequence of qubit index keys of self.
-    pub fn keys(&self) -> Vec<usize> {
-        let keys: Vec<usize> = self.internal.iter().map(|(k, _)| k).copied().collect();
-        keys
-    }
-
-    /// Return maximum index in self.
-    ///
-    /// Returns:
-    ///     int: Maximum index.
-    pub fn number_spins(&self) -> usize {
-        self.internal.number_spins()
-    }
-
-    /// Return number of entries in object.
-    ///
-    /// Returns:
-    ///     int: The length of the content of the object.
-    pub fn __len__(&self) -> usize {
-        self.internal.iter().len()
-    }
-
-    /// Remap the qubits in a new instance of self (returned).
-    ///
-    /// Args:
-    ///     mapping (dict[int, int]): The map containing the {qubit: qubit} mapping to use.
-    ///
-    /// Returns:
-    ///     self: The new instance of self with the qubits remapped.
-    pub fn remap_qubits(&self, mapping: HashMap<usize, usize>) -> PlusMinusProductWrapper {
-        PlusMinusProductWrapper {
-            internal: self.internal.remap_qubits(&mapping),
-        }
-    }
-
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
-    ///
-    /// Args:
-    ///     other (self): The object to concatenate self with.
-    ///
-    /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
-    ///
-    /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
-    pub fn concatenate(&self, other: PlusMinusProductWrapper) -> PyResult<PlusMinusProductWrapper> {
-        let concatenated = self.internal.concatenate(other.internal).map_err(|err| {
-            PyValueError::new_err(format!(
-                "The two objects could not be concatenated: {:?}",
-                err
-            ))
-        })?;
-        Ok(PlusMinusProductWrapper {
-            internal: concatenated,
         })
     }
 

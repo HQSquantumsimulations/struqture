@@ -12,7 +12,7 @@
 
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::SingleSpinOperator;
+use crate::spins::SingleQubitOperator;
 use crate::{CooSparseMatrix, CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
@@ -165,7 +165,7 @@ impl SingleDecoherenceOperator {
         result_vec
     }
 
-    /// Conversion function from SingleDecoherenceOperator to SingleSpinOperator.
+    /// Conversion function from SingleDecoherenceOperator to SingleQubitOperator.
     ///
     /// # Arguments
     ///
@@ -176,18 +176,18 @@ impl SingleDecoherenceOperator {
     /// * `Vec<(SingleDecoherenceOperator, Complex64)>` - Vector of tuples of SingleDecoherenceOperator with a corresponding Complex64 coefficient.
     pub fn decoherence_to_spin(
         decoherence: SingleDecoherenceOperator,
-    ) -> (SingleSpinOperator, Complex64) {
+    ) -> (SingleQubitOperator, Complex64) {
         match decoherence {
             SingleDecoherenceOperator::Identity => {
-                (SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))
+                (SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))
             }
-            SingleDecoherenceOperator::X => (SingleSpinOperator::X, Complex64::new(1.0, 0.0)),
-            SingleDecoherenceOperator::IY => (SingleSpinOperator::Y, Complex64::new(0.0, 1.0)),
-            SingleDecoherenceOperator::Z => (SingleSpinOperator::Z, Complex64::new(1.0, 0.0)),
+            SingleDecoherenceOperator::X => (SingleQubitOperator::X, Complex64::new(1.0, 0.0)),
+            SingleDecoherenceOperator::IY => (SingleQubitOperator::Y, Complex64::new(0.0, 1.0)),
+            SingleDecoherenceOperator::Z => (SingleQubitOperator::Z, Complex64::new(1.0, 0.0)),
         }
     }
 
-    /// Conversion function from SingleSpinOperator to SingleDecoherenceOperator.
+    /// Conversion function from SingleQubitOperator to SingleDecoherenceOperator.
     ///
     /// # Arguments
     ///
@@ -196,15 +196,17 @@ impl SingleDecoherenceOperator {
     /// # Returns
     ///
     /// * `Vec<(SingleDecoherenceOperator, Complex64)>` - Vector of tuples of SingleDecoherenceOperator with a corresponding Complex64 coefficient.
-    pub fn spin_to_decoherence(spin: SingleSpinOperator) -> (SingleDecoherenceOperator, Complex64) {
+    pub fn spin_to_decoherence(
+        spin: SingleQubitOperator,
+    ) -> (SingleDecoherenceOperator, Complex64) {
         match spin {
-            SingleSpinOperator::Identity => (
+            SingleQubitOperator::Identity => (
                 SingleDecoherenceOperator::Identity,
                 Complex64::new(1.0, 0.0),
             ),
-            SingleSpinOperator::X => (SingleDecoherenceOperator::X, Complex64::new(1.0, 0.0)),
-            SingleSpinOperator::Y => (SingleDecoherenceOperator::IY, Complex64::new(0.0, -1.0)),
-            SingleSpinOperator::Z => (SingleDecoherenceOperator::Z, Complex64::new(1.0, 0.0)),
+            SingleQubitOperator::X => (SingleDecoherenceOperator::X, Complex64::new(1.0, 0.0)),
+            SingleQubitOperator::Y => (SingleDecoherenceOperator::IY, Complex64::new(0.0, -1.0)),
+            SingleQubitOperator::Z => (SingleDecoherenceOperator::Z, Complex64::new(1.0, 0.0)),
         }
     }
 
@@ -270,7 +272,11 @@ impl schemars::JsonSchema for DecoherenceProduct {
     }
 }
 
-impl crate::MinSupportedVersion for DecoherenceProduct {}
+impl crate::SerializationSupport for DecoherenceProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::DecoherenceProduct
+    }
+}
 
 /// Implementing serde serialization writing directly to string.
 ///
@@ -682,6 +688,31 @@ impl GetValue<(DecoherenceProduct, DecoherenceProduct)>
 /// Functions for the DecoherenceProduct
 ///
 impl DecoherenceProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_one::spins::DecoherenceProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_one_product =
+            struqture_one::spins::DecoherenceProduct::from_str(&self_string).map_err(|err| {
+                StruqtureError::GenericError {
+                    msg: format!("{}", err),
+                }
+            })?;
+        Ok(struqture_one_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_one::spins::DecoherenceProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let decoh_product = Self::from_str(&value_string)?;
+        Ok(decoh_product)
+    }
+
     /// Sets a new entry for SingleDecoherenceOperator X in the internal dictionary. This function consumes Self.
     ///
     /// # Arguments

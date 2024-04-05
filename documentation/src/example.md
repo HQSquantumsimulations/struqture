@@ -1,13 +1,13 @@
 # Applied example
 
-In this example, we will create the spin-boson Hamiltonian we have used for open-system research in our [paper](https://arxiv.org/abs/2210.12138), for 1 spin and 3 bosonic modes.
+In this example, we will create the qubit-boson Hamiltonian we have used for open-system research in our [paper](https://arxiv.org/abs/2210.12138), for 1 qubit and 3 bosonic modes.
 
 The Hamiltonian is as follows:
 \\[
     \hat{H} = \hat{H}_S + \hat{H}_B + \hat{H}_C
 \\]
 
-with the spin system Hamiltonian \\(\hat{H}_S\\) :
+with the qubit (system) Hamiltonian \\(\hat{H}_S\\) :
 
 \\[
     \hat{H} = \frac {\hbar \Delta} {2} \sigma^z_0,
@@ -32,12 +32,12 @@ Rust implementation:
 use qoqo_calculator::CalculatorComplex;
 use struqture::bosons::BosonProduct;
 use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedHamiltonianSystem,
+    HermitianMixedProduct, MixedHamiltonian,
 };
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 
-let mut system = MixedHamiltonianSystem::new([Some(1)], [Some(3)], []);
+let mut operator = MixedHamiltonian::new(1, 1, 0);
 
 // Setting up constants:
 let delta = 1.0;
@@ -49,7 +49,7 @@ let pp = PauliProduct::new().z(1);
 let hmp = HermitianMixedProduct::new(
     [pp], [BosonProduct::new([], []).unwrap()], []
 ).unwrap();
-system
+operator
     .add_operator_product(hmp, CalculatorComplex::new(delta / 2.0, 0.0))
     .unwrap();
 
@@ -59,7 +59,7 @@ for k in 0..3 {
     let hmp = HermitianMixedProduct::new(
         [PauliProduct::new()], [bp], []
     ).unwrap();
-    system
+    operator
         .add_operator_product(
             hmp, CalculatorComplex::new(v_k[k] / 2.0, 0.0)
         ).unwrap();
@@ -71,14 +71,14 @@ let pp = PauliProduct::new().x(0);
 for k in 0..3 {
     let bp = BosonProduct::new([], [k]).unwrap();
     let hmp = HermitianMixedProduct::new([pp.clone()], [bp], []).unwrap();
-    system
+    operator
         .add_operator_product(
             hmp, CalculatorComplex::new(omega_k[k], 0.0)
         ).unwrap();
 }
 
 // Our resulting H:
-println!("{}", system);
+println!("{}", operator);
 ```
 
 Python implementation:
@@ -86,12 +86,12 @@ Python implementation:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py.bosons import BosonProduct
 from struqture_py.mixed_systems import (
-    HermitianMixedProduct, HermitianMixedProduct, MixedHamiltonianSystem,
+    HermitianMixedProduct, HermitianMixedProduct, MixedHamiltonian,
 )
 from struqture_py.spins import (PauliProduct, PauliProduct)
 
 
-system = MixedHamiltonianSystem([1], [3], [])
+operator = MixedHamiltonian(1, 1, 0)
 
 # Setting up constants:
 delta = 1.0
@@ -101,7 +101,7 @@ v_k = [5.0, 6.0, 7.0]
 # First, H_S:
 pp = PauliProduct().z(1)
 hmp = HermitianMixedProduct([pp], [BosonProduct([], [])], [])
-system.add_operator_product(
+operator.add_operator_product(
     hmp, CalculatorComplex.from_pair(delta / 2.0, 0.0)
 )
 
@@ -109,7 +109,7 @@ system.add_operator_product(
 for k in range(3):
     bp = BosonProduct([k], [k])
     hmp = HermitianMixedProduct([PauliProduct()], [bp], [])
-    system.add_operator_product(
+    operator.add_operator_product(
         hmp, CalculatorComplex.from_pair(v_k[k] / 2.0, 0.0)
     )
 
@@ -119,11 +119,11 @@ pp = PauliProduct().x(0)
 for k in range(3):
     bp = BosonProduct([], [k])
     hmp = HermitianMixedProduct([pp], [bp], [])
-    system.add_operator_product(
+    operator.add_operator_product(
         hmp, CalculatorComplex.from_pair(omega_k[k], 0.0)
     )
 
 
 # Our resulting H:
-print(system)
+print(operator)
 ```

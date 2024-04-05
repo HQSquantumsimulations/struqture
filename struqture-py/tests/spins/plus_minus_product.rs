@@ -201,7 +201,7 @@ fn test_keys_len() {
     });
 }
 
-/// Test number_spins function of PlusMinusProduct
+/// Test current_number_spins function of PlusMinusProduct
 #[test]
 fn test_number_spins() {
     pyo3::prepare_freethreaded_python();
@@ -212,9 +212,10 @@ fn test_number_spins() {
         pp = pp.call_method1("set_pauli", (2_u64, "Z")).unwrap();
         pp = pp.call_method1("set_pauli", (5_u64, "-")).unwrap();
 
-        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
+        let current_number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
 
-        assert_eq!(number_spins, 6);
+        assert_eq!(current_number_spins, 6);
     });
 }
 
@@ -656,9 +657,11 @@ fn test_jordan_wigner() {
             .get_item(0)
             .unwrap();
 
-        let number_modes = usize::extract(fo.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins = usize::extract(pp.call_method0("number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, number_spins)
+        let current_number_modes =
+            usize::extract(fo.call_method0("current_number_modes").unwrap()).unwrap();
+        let current_number_spins =
+            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 
@@ -683,7 +686,45 @@ fn test_json_schema() {
         let pp = new.call_method1("set_pauli", (0_u64, "Z")).unwrap();
         let min_version: String =
             String::extract(pp.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.1.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_pyany_to_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        use std::str::FromStr;
+        let new_pp = new_pp(py);
+        let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "+")).unwrap();
+
+        let result = PlusMinusProductWrapper::from_pyany_to_struqture_one(pp_2.into()).unwrap();
+        assert_eq!(
+            result,
+            struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap()
+        );
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_one() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"0Z\"").into();
+        let pp_2 = new_pp(py);
+        let pp_2 = pp_2.call_method1("set_pauli", (0_u64, "Z")).unwrap();
+
+        let pp_from_1 = pp_2
+            .call_method1("from_json_struqture_one", (json_string,))
+            .unwrap();
+        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "\"0A\"").into();
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        assert!(pp_from_1.is_err());
     });
 }

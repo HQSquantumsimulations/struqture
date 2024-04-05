@@ -637,7 +637,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(0),
             Token::UnitVariant {
-                name: "SingleSpinOperator",
+                name: "SingleQubitOperator",
                 variant: "X",
             },
             Token::TupleEnd,
@@ -683,4 +683,25 @@ fn test_mixed_product_schema() {
     let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1: struqture_one::mixed_systems::MixedProduct =
+        struqture_one::mixed_systems::MixedIndex::new(
+            [struqture_one::spins::PauliProduct::from_str("0X").unwrap()],
+            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+            [struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap()],
+        )
+        .unwrap();
+    let pp_2 = MixedProduct::new(
+        [PauliProduct::new().x(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [FermionProduct::new([0], [0]).unwrap()],
+    )
+    .unwrap();
+    assert!(MixedProduct::from_struqture_1(&pp_1).unwrap() == pp_2);
+    assert!(pp_1 == pp_2.to_struqture_1().unwrap());
 }
