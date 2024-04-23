@@ -576,7 +576,7 @@ pub fn noiselesswrapper(
             pub fn from_pyany(input: Py<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref(py);
+                    let input = input.bind(py);
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -644,8 +644,9 @@ pub fn noiselesswrapper(
             ///     TypeError: Input cannot be converted to byte array.
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
-            pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+            pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -671,7 +672,7 @@ pub fn noiselesswrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }

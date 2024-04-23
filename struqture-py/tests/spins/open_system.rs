@@ -26,32 +26,32 @@ use struqture_py::spins::{
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> &PyCell<SpinLindbladOpenSystemWrapper> {
-    let system_type = py.get_type::<SpinLindbladOpenSystemWrapper>();
+fn new_system(py: Python) -> Bound<SpinLindbladOpenSystemWrapper> {
+    let system_type = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
+        .downcast::<SpinLindbladOpenSystemWrapper>()
         .unwrap()
+        .to_owned()
 }
 
 // helper function to convert CalculatorFloat into a python object
-fn convert_cf_to_pyobject(
-    py: Python,
-    parameter: CalculatorFloat,
-) -> &PyCell<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .downcast::<PyCell<CalculatorFloatWrapper>>()
-            .unwrap(),
+            .downcast::<CalculatorFloatWrapper>()
+            .unwrap()
+            .to_owned(),
         CalculatorFloat::Str(x) => parameter_type
             .call1((x,))
             .unwrap()
-            .downcast::<PyCell<CalculatorFloatWrapper>>()
-            .unwrap(),
+            .downcast::<CalculatorFloatWrapper>()
+            .unwrap()
+            .to_owned(),
     }
 }
 
@@ -69,10 +69,10 @@ fn test_number_spins_current() {
         let current_system = system.call_method0("current_number_spins").unwrap();
 
         let comparison =
-            bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
         let comparison =
-            bool::extract(current_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&current_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -85,13 +85,13 @@ fn test_empty_clone() {
         let system = new_system(py);
         let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
-            bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
         let system = new_system(py);
         let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
-            bool::extract(some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -101,13 +101,10 @@ fn test_empty_clone() {
 fn spin_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
         let number_spins: Option<usize> = Some(4);
-        let system = new_system
-            .call1((number_spins,))
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let binding = new_system.call1((number_spins,)).unwrap();
+        let system = binding.downcast::<SpinLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1("system_add_operator_product", ("0X", 0.1))
             .unwrap();
@@ -120,20 +117,24 @@ fn spin_system_test_add_operator_product_remove_system() {
 
         // test access at index 0
         let comp_op = system.call_method1("system_get", ("0X",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("system_get", ("1Z",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("system_get", ("3Y",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("system_get", ("2X",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
@@ -163,13 +164,10 @@ fn spin_system_test_add_operator_product_remove_system() {
 fn spin_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
         let number_spins: Option<usize> = Some(4);
-        let system = new_system
-            .call1((number_spins,))
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let binding = new_system.call1((number_spins,)).unwrap();
+        let system = binding.downcast::<SpinLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1("noise_add_operator_product", (("0X", "0X"), 0.1))
             .unwrap();
@@ -182,20 +180,24 @@ fn spin_system_test_add_operator_product_remove_noise() {
 
         // test access at index 0
         let comp_op = system.call_method1("noise_get", (("0X", "0X"),)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("noise_get", (("0X", "1Z"),)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("noise_get", (("0X", "3iY"),)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("noise_get", (("0X", "2X"),)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
@@ -236,7 +238,7 @@ fn test_neg() {
 
         let negated = system_0.call_method0("__neg__").unwrap();
         let comparison =
-            bool::extract(negated.call_method1("__eq__", (system_1,)).unwrap()).unwrap();
+            bool::extract_bound(&negated.call_method1("__eq__", (system_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -264,7 +266,7 @@ fn test_add() {
 
         let added = system_0.call_method1("__add__", (system_1,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -292,7 +294,7 @@ fn test_sub() {
 
         let added = system_0.call_method1("__sub__", (system_1,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -314,7 +316,7 @@ fn test_mul_cf() {
 
         let added = system_0.call_method1("__mul__", (2.0,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -360,42 +362,40 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of spins
         let comp_op = new_sys.call_method0("number_spins").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Current number of spins
         let comp_op = new_sys.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let system_type = py.get_type_bound::<SpinHamiltonianSystemWrapper>();
         let number_spins: Option<usize> = None;
-        let spin_system = system_type
-            .call1((number_spins,))
-            .unwrap()
-            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
-            .unwrap();
+        let spin_system = system_type.call1((number_spins,)).unwrap();
         spin_system
+            .downcast::<SpinHamiltonianSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "add_operator_product",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
             )
             .unwrap();
         let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (spin_system,)).unwrap()).unwrap();
+            bool::extract_bound(&comp_op.call_method1("__eq__", (spin_system,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let noise = noise_type
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
-            .unwrap();
+        let noise_type = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
+        let noise = noise_type.call0().unwrap();
         noise
+            .downcast::<SpinLindbladNoiseSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -404,19 +404,18 @@ fn test_default_partialeq_debug_clone() {
                 ),
             )
             .unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (noise,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (noise,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let noise = noise_type
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladNoiseSystemWrapper>>()
-            .unwrap();
+        let noise_type = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
+        let noise = noise_type.call0().unwrap();
         noise
+            .downcast::<SpinLindbladNoiseSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -426,23 +425,21 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let system_type = py.get_type_bound::<SpinHamiltonianSystemWrapper>();
         let number_spins: Option<usize> = None;
-        let spin_system = system_type
-            .call1((number_spins,))
-            .unwrap()
-            .downcast::<PyCell<SpinHamiltonianSystemWrapper>>()
-            .unwrap();
+        let spin_system = system_type.call1((number_spins,)).unwrap();
         spin_system
+            .downcast::<SpinHamiltonianSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "add_operator_product",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
             )
             .unwrap();
 
-        let comparison = bool::extract(
-            comp_op_ungroup
-                .call_method1("__eq__", ((system, noise),))
+        let comparison = bool::extract_bound(
+            &comp_op_ungroup
+                .call_method1("__eq__", ((&system, &noise),))
                 .unwrap(),
         )
         .unwrap();
@@ -451,7 +448,8 @@ fn test_default_partialeq_debug_clone() {
             .call_method1("group", (system, noise))
             .unwrap();
         let comparison =
-            bool::extract(comp_op_group.call_method1("__eq__", (new_sys,)).unwrap()).unwrap();
+            bool::extract_bound(&comp_op_group.call_method1("__eq__", (new_sys,)).unwrap())
+                .unwrap();
         assert!(comparison);
     })
 }
@@ -461,13 +459,11 @@ fn test_default_partialeq_debug_clone() {
 fn test_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
+            .downcast::<SpinLindbladOpenSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "system_set",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
@@ -491,8 +487,8 @@ fn test_set_pauli_get_pauli() {
 
         // test access at index 0
         let comp_op = system.call_method1("system_get", ("0X",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
@@ -503,8 +499,8 @@ fn test_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("system_get", ("1Z",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
@@ -515,8 +511,8 @@ fn test_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("system_get", ("3Y",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
@@ -528,8 +524,8 @@ fn test_set_pauli_get_pauli() {
 
         // Get zero
         let comp_op = system.call_method1("system_get", ("2X",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
@@ -561,13 +557,11 @@ fn test_set_pauli_get_pauli() {
 fn test_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
+        let system = new_system.call0().unwrap();
         system
+            .downcast::<SpinLindbladOpenSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "noise_set",
                 (
@@ -597,8 +591,8 @@ fn test_set_noise_get_noise() {
 
         // test access at index 0
         let comp_op = system.call_method1("noise_get", (("0X", "1Z"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
@@ -609,8 +603,8 @@ fn test_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("noise_get", (("1Z", "3iY"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
@@ -621,8 +615,8 @@ fn test_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("noise_get", (("0X", "0X"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
@@ -634,8 +628,8 @@ fn test_set_noise_get_noise() {
 
         // Get zero
         let comp_op = system.call_method1("noise_get", (("2iY", "2iY"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
@@ -688,13 +682,11 @@ fn test_set_noise_get_noise() {
 fn test_try_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
+            .downcast::<SpinLindbladOpenSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "system_set",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
@@ -718,8 +710,8 @@ fn test_try_set_pauli_get_pauli() {
 
         // test access at index 0
         let comp_op = system.call_method1("system_get", ("0X",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
@@ -730,8 +722,8 @@ fn test_try_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("system_get", ("1Z",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
@@ -742,8 +734,8 @@ fn test_try_set_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("system_get", ("3Y",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
@@ -755,8 +747,8 @@ fn test_try_set_pauli_get_pauli() {
 
         // Get zero
         let comp_op = system.call_method1("system_get", ("2X",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
@@ -784,13 +776,11 @@ fn test_try_set_pauli_get_pauli() {
 fn test_try_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
+            .downcast::<SpinLindbladOpenSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "noise_set",
                 (
@@ -820,8 +810,8 @@ fn test_try_set_noise_get_noise() {
 
         // test access at index 0
         let comp_op = system.call_method1("noise_get", (("0X", "1Z"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
@@ -832,8 +822,8 @@ fn test_try_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("noise_get", (("1Z", "3iY"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
@@ -844,8 +834,8 @@ fn test_try_set_noise_get_noise() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("noise_get", (("0X", "0X"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
@@ -857,8 +847,8 @@ fn test_try_set_noise_get_noise() {
 
         // Get zero
         let comp_op = system.call_method1("noise_get", (("2iY", "2iY"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
@@ -899,13 +889,11 @@ fn test_try_set_noise_get_noise() {
 fn test_add_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
+            .downcast::<SpinLindbladOpenSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "system_add_operator_product",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
@@ -929,8 +917,8 @@ fn test_add_pauli_get_pauli() {
 
         // test access at index 0
         let comp_op = system.call_method1("system_get", ("0X",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
@@ -941,8 +929,8 @@ fn test_add_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("system_get", ("1Z",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
@@ -953,8 +941,8 @@ fn test_add_pauli_get_pauli() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("system_get", ("3Y",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
@@ -966,8 +954,8 @@ fn test_add_pauli_get_pauli() {
 
         // Get zero
         let comp_op = system.call_method1("system_get", ("2X",)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
@@ -1003,13 +991,11 @@ fn test_add_pauli_get_pauli() {
 fn test_add_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<SpinLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<SpinLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
+            .downcast::<SpinLindbladOpenSystemWrapper>()
+            .unwrap()
             .call_method1(
                 "noise_add_operator_product",
                 (
@@ -1039,8 +1025,8 @@ fn test_add_noise_get_noise() {
 
         // test access at index 0
         let comp_op = system.call_method1("noise_get", (("0X", "1Z"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
@@ -1051,8 +1037,8 @@ fn test_add_noise_get_noise() {
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("noise_get", (("1Z", "3iY"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
@@ -1063,8 +1049,8 @@ fn test_add_noise_get_noise() {
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("noise_get", (("0X", "0X"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
@@ -1076,8 +1062,8 @@ fn test_add_noise_get_noise() {
 
         // Get zero
         let comp_op = system.call_method1("noise_get", (("2iY", "2iY"),)).unwrap();
-        let comparison = bool::extract(
-            comp_op
+        let comparison = bool::extract_bound(
+            &comp_op
                 .call_method1(
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
@@ -1228,8 +1214,8 @@ fn test_truncate(re: f64, im: f64) {
             .unwrap();
 
         let comparison_system1 = system.call_method1("truncate", (5.0_f64,)).unwrap();
-        let comparison = bool::extract(
-            comparison_system1
+        let comparison = bool::extract_bound(
+            &comparison_system1
                 .call_method1("__eq__", (test_system1,))
                 .unwrap(),
         )
@@ -1237,8 +1223,8 @@ fn test_truncate(re: f64, im: f64) {
         assert!(comparison);
 
         let comparison_system2 = system.call_method1("truncate", (50.0_f64,)).unwrap();
-        let comparison = bool::extract(
-            comparison_system2
+        let comparison = bool::extract_bound(
+            &comparison_system2
                 .call_method1("__eq__", (test_system2,))
                 .unwrap(),
         )
@@ -1274,10 +1260,11 @@ fn test_copy_deepcopy() {
         // let copy_deepcopy_param: &PyAny = system.clone();
 
         let comparison_copy =
-            bool::extract(copy_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&copy_system.call_method1("__eq__", (&system,)).unwrap()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract(deepcopy_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&deepcopy_system.call_method1("__eq__", (system,)).unwrap())
+                .unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -1306,7 +1293,7 @@ fn test_to_from_bincode() {
 
         let serialised = system.call_method0("to_bincode").unwrap();
         let new = new_system(py);
-        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+        let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -1323,7 +1310,7 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -1362,7 +1349,7 @@ fn test_to_from_json() {
 
         let serialised = system.call_method0("to_json").unwrap();
         let new = new_system(py);
-        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+        let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
 
         let deserialised_error =
             new.call_method1("from_json", (serde_json::to_string("fails").unwrap(),));
@@ -1379,7 +1366,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -1427,15 +1414,15 @@ fn test_format_repr() {
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
-        let format_op: &str = <&str>::extract(to_format).unwrap();
+        let format_op: String = String::extract_bound(&to_format).unwrap();
         assert_eq!(format_op, test_string);
 
         let to_repr = system.call_method0("__repr__").unwrap();
-        let repr_op: &str = <&str>::extract(to_repr).unwrap();
+        let repr_op: String = String::extract_bound(&to_repr).unwrap();
         assert_eq!(repr_op, test_string);
 
         let to_str = system.call_method0("__str__").unwrap();
-        let str_op: &str = <&str>::extract(to_str).unwrap();
+        let str_op: String = String::extract_bound(&to_str).unwrap();
         assert_eq!(str_op, test_string);
     });
 }
@@ -1479,17 +1466,19 @@ fn test_richcmp() {
             .unwrap();
 
         let comparison =
-            bool::extract(system_one.call_method1("__eq__", (system_two,)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__eq__", (&system_two,)).unwrap())
+                .unwrap();
         assert!(!comparison);
         let comparison =
-            bool::extract(system_one.call_method1("__eq__", ("0X",)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__eq__", ("0X",)).unwrap()).unwrap();
         assert!(!comparison);
 
         let comparison =
-            bool::extract(system_one.call_method1("__ne__", (system_two,)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__ne__", (system_two,)).unwrap())
+                .unwrap();
         assert!(comparison);
         let comparison =
-            bool::extract(system_one.call_method1("__ne__", ("0X",)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__ne__", ("0X",)).unwrap()).unwrap();
         assert!(comparison);
 
         let comparison = system_one.call_method1("__ge__", ("0X",));
@@ -1509,9 +1498,10 @@ fn test_jordan_wigner() {
             .unwrap();
         let flos = slos.call_method0("jordan_wigner").unwrap();
 
-        let number_modes = usize::extract(flos.call_method0("number_modes").unwrap()).unwrap();
+        let number_modes =
+            usize::extract_bound(&flos.call_method0("number_modes").unwrap()).unwrap();
         let number_spins =
-            usize::extract(slos.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&slos.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(number_modes, number_spins)
     });
 }
@@ -1523,20 +1513,21 @@ fn test_json_schema() {
     pyo3::Python::with_gil(|py| {
         let new = new_system(py);
 
-        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let schema: String =
+            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(SpinLindbladOpenSystem)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         new.call_method1("noise_add_operator_product", (("0Z", "1Z"), 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("1.0.0");
         assert_eq!(min_version, rust_min_version);
     });

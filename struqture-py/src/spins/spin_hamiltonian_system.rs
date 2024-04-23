@@ -96,7 +96,7 @@ impl SpinHamiltonianSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<SpinSystemWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<SpinSystemWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(SpinSystemWrapper {
@@ -109,7 +109,7 @@ impl SpinHamiltonianSystemWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value.as_gil_ref().into());
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {

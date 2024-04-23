@@ -132,11 +132,11 @@ impl MixedProductWrapper {
     ///     ValueError: Valid pair could not be constructed.
     #[classmethod]
     pub fn create_valid_pair(
-        _cls: &PyType,
+        _cls: &Bound<PyType>,
         spins: Vec<String>,
         bosons: Vec<String>,
         fermions: Vec<String>,
-        value: &PyAny,
+        value: &Bound<PyAny>,
     ) -> PyResult<(Self, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
         let mut converted_spins: Vec<PauliProduct> = Vec::new();
         for s in spins {
