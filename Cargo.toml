@@ -1,8 +1,5 @@
 [workspace]
-members = [
-    "struqture",
-    "struqture-py",
-]
+members = ["struqture", "struqture-py"]
 
 resolver = "2"
 
@@ -12,3 +9,6 @@ lto = true
 [profile.bench]
 lto = true
 
+[patch.crates-io]
+qoqo_calculator = { git = "https://github.com/dberthault/qoqo_calculator.git" }
+qoqo_calculator_pyo3 = { git = "https://github.com/dberthault/qoqo_calculator.git" }

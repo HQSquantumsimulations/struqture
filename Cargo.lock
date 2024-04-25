@@ -1173,6 +1173,7 @@ dependencies = [
 [[package]]
 name = "qoqo_calculator"
 version = "1.2.0"
+source = "git+https://github.com/dberthault/qoqo_calculator.git#b8b770bf9c8391e8e5a9217d92481564415fad18"
 dependencies = [
  "num-complex",
  "schemars",
@@ -1183,6 +1184,7 @@ dependencies = [
 [[package]]
 name = "qoqo_calculator_pyo3"
 version = "1.2.0"
+source = "git+https://github.com/dberthault/qoqo_calculator.git#b8b770bf9c8391e8e5a9217d92481564415fad18"
 dependencies = [
  "num-complex",
  "pyo3",
