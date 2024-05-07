@@ -176,7 +176,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create SpinSystem from input.
     #[staticmethod]
-    pub fn from_spin_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_spin_system(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -195,7 +195,9 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create SpinHamiltonianSystem from input.
     #[staticmethod]
-    pub fn from_spin_hamiltonian_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_spin_hamiltonian_system(
+        value: &Bound<PyAny>,
+    ) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinHamiltonianSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {

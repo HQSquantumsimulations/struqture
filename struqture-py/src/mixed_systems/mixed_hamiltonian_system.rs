@@ -131,7 +131,7 @@ impl MixedHamiltonianSystemWrapper {
                 internal: mixed_system * x,
             }),
             Err(_) => {
-                let bhs_value = Self::from_pyany(value.as_gil_ref().into());
+                let bhs_value = Self::from_pyany(value);
                 match bhs_value {
                     Ok(x) => {
                         let new_self = (self.clone().internal * x).map_err(|err| {

@@ -121,7 +121,7 @@ pub fn noiselesswrapper(
                 ///
                 /// Raises:
                 ///     ValueError: Product could not be constructed from key.
-                pub fn get(&self, key: Py<PyAny>) -> PyResult<#value_type> {
+                pub fn get(&self, key: &Bound<PyAny>) -> PyResult<#value_type> {
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Product could not be constructed: {:?}",
@@ -140,7 +140,7 @@ pub fn noiselesswrapper(
                 ///
                 /// Raises:
                 ///     ValueError: Product could not be constructed.
-                pub fn remove(&mut self, key: Py<PyAny>) -> PyResult<Option<#value_type>> {
+                pub fn remove(&mut self, key: &Bound<PyAny>) -> PyResult<Option<#value_type>> {
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Product could not be constructed: {:?}",
@@ -162,8 +162,8 @@ pub fn noiselesswrapper(
                 ///     ValueError: Product could not be constructed.
                 pub fn set(
                     &mut self,
-                    key: Py<PyAny>,
-                    value: Py<PyAny>,
+                    key: &Bound<PyAny>,
+                    value: &Bound<PyAny>,
                 ) -> PyResult<Option<#value_type>> {
                     let value = #value_type::from_pyany(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex or CalculatorFloat"))?;
@@ -190,7 +190,7 @@ pub fn noiselesswrapper(
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
                 ///     ValueError: Product could not be constructed.
                 ///     ValueError: Error in add_operator_product function of self.
-                pub fn add_operator_product(&mut self, key: Py<PyAny>, value: Py<PyAny>) -> PyResult<()> {
+                pub fn add_operator_product(&mut self, key: &Bound<PyAny>, value: &Bound<PyAny>) -> PyResult<()> {
                     let value = #value_type::from_pyany(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex or CalculatorFloat"))?;
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
@@ -573,10 +573,9 @@ pub fn noiselesswrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object.
-            pub fn from_pyany(input: Py<PyAny>
+            pub fn from_pyany(input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.bind(py);
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -597,6 +596,26 @@ pub fn noiselesswrapper(
                 }
 
                 )
+        }
+
+            pub fn from_bound_pyany(input: &Bound<PyAny>
+            ) -> PyResult<#struct_ident> {
+                    if let Ok(try_downcast) = input.extract::<#ident>() {
+                        return Ok(try_downcast.internal);
+                    } else {
+                    let get_bytes = input.call_method0("to_bincode").map_err(|_| {
+                        PyTypeError::new_err("Serialisation failed".to_string())
+                    })?;
+                    let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
+                        PyTypeError::new_err("Deserialisation failed".to_string())
+                    })?;
+                    deserialize(&bytes[..]).map_err(|err| {
+                        PyTypeError::new_err(format!(
+                            "Type conversion failed: {}",
+                            err
+                        ))}
+                    )
+                    }
         }
     }
         #[pymethods]
@@ -628,7 +647,7 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     self: A deep copy of self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+            pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
                 self.clone()
             }
 
@@ -740,7 +759,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                 match op {
                     pyo3::class::basic::CompareOp::Eq => match other {

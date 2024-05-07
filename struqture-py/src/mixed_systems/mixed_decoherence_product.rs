@@ -96,17 +96,20 @@ impl MixedDecoherenceProductWrapper {
         fermions: Vec<Py<PyAny>>,
     ) -> PyResult<Self> {
         let mut spinsv: Vec<DecoherenceProduct> = Vec::new();
-        for s in spins {
-            spinsv.push(DecoherenceProductWrapper::from_pyany(s)?);
-        }
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
-        for b in bosons {
-            bosonsv.push(BosonProductWrapper::from_pyany(b)?);
-        }
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        for f in fermions {
-            fermionsv.push(FermionProductWrapper::from_pyany(f)?);
-        }
+        Python::with_gil(|py| -> PyResult<()> {
+            for s in spins {
+                spinsv.push(DecoherenceProductWrapper::from_pyany(s.bind(py))?);
+            }
+            for b in bosons {
+                bosonsv.push(BosonProductWrapper::from_pyany(b.bind(py))?);
+            }
+            for f in fermions {
+                fermionsv.push(FermionProductWrapper::from_pyany(f.bind(py))?);
+            }
+            Ok(())
+        })?;
         Ok(Self {
             internal: MixedDecoherenceProduct::new(spinsv, bosonsv, fermionsv).map_err(|err| {
                 PyValueError::new_err(format!(

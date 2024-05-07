@@ -329,10 +329,9 @@ pub fn productwrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: Py<PyAny>
+            pub fn from_pyany( input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                let input = input.bind(py);
                 if let Ok(try_downcast) = input.extract::<#ident>() {
                     Ok(try_downcast.internal)
                 }
@@ -381,7 +380,7 @@ pub fn productwrapper(
             ///
             /// Returns:
             ///     self: A deep copy of Self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+            pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
                 self.clone()
             }
 
@@ -516,7 +515,7 @@ pub fn productwrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {

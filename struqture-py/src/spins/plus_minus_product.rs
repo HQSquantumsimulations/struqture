@@ -218,9 +218,9 @@ impl PlusMinusProductWrapper {
     ///     ValueError: Input is neither a PauliProduct nor a DecoherenceProduct.
     #[staticmethod]
     pub fn from_product(
-        value: Py<PyAny>,
+        value: &Bound<PyAny>,
     ) -> PyResult<Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)>> {
-        match PauliProductWrapper::from_pyany(value.clone()) {
+        match PauliProductWrapper::from_pyany(&value) {
             Ok(x) => {
                 let result: Vec<(PlusMinusProduct, Complex64)> =
                     Vec::<(PlusMinusProduct, Complex64)>::from(x);

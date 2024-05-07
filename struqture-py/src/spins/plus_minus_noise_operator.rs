@@ -155,7 +155,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     ///     ValueError: Could not create SpinLindbladNoiseSystem from input.
     #[staticmethod]
     pub fn from_spin_noise_system(
-        value: Py<PyAny>,
+        value: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         let system = SpinLindbladNoiseSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;

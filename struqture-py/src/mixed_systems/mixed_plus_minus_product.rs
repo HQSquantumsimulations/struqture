@@ -96,17 +96,20 @@ impl MixedPlusMinusProductWrapper {
         fermions: Vec<Py<PyAny>>,
     ) -> PyResult<Self> {
         let mut spinsv: Vec<PlusMinusProduct> = Vec::new();
-        for s in spins {
-            spinsv.push(PlusMinusProductWrapper::from_pyany(s)?);
-        }
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
-        for b in bosons {
-            bosonsv.push(BosonProductWrapper::from_pyany(b)?);
-        }
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        for f in fermions {
-            fermionsv.push(FermionProductWrapper::from_pyany(f)?);
-        }
+        Python::with_gil(|py| -> PyResult<()> {
+            for s in spins {
+                spinsv.push(PlusMinusProductWrapper::from_pyany(s.bind(py))?);
+            }
+            for b in bosons {
+                bosonsv.push(BosonProductWrapper::from_pyany(b.bind(py))?);
+            }
+            for f in fermions {
+                fermionsv.push(FermionProductWrapper::from_pyany(f.bind(py))?);
+            }
+            Ok(())
+        })?;
         Ok(Self {
             internal: MixedPlusMinusProduct::new(spinsv, bosonsv, fermionsv),
         })
@@ -124,7 +127,7 @@ impl MixedPlusMinusProductWrapper {
     ///     ValueError: Input is not a MixedProduct.
     #[staticmethod]
     pub fn from_mixed_product(
-        value: Py<PyAny>,
+        value: &Bound<PyAny>,
     ) -> PyResult<Vec<(MixedPlusMinusProductWrapper, CalculatorComplexWrapper)>> {
         match MixedProductWrapper::from_pyany(value) {
             Ok(x) => {

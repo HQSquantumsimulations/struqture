@@ -1995,7 +1995,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-anyhow 1.0.82
+anyhow 1.0.83
 https://github.com/dtolnay/anyhow
 by David Tolnay <dtolnay@gmail.com>
 Flexible concrete Error type built on std::error::Error
@@ -2422,7 +2422,7 @@ LICENSE:
 
 
 ====================================================
-autocfg 1.2.0
+autocfg 1.3.0
 https://github.com/cuviper/autocfg
 by Josh Stone <cuviper@gmail.com>
 Automatic cfg for Rust compiler features
@@ -4993,7 +4993,7 @@ limitations under the License.
 
 
 ====================================================
-cc 1.0.96
+cc 1.0.97
 https://github.com/rust-lang/cc-rs
 by Alex Crichton <alex@alexcrichton.com>
 A build-time dependency for Cargo build scripts to assist in invoking the native
@@ -12423,7 +12423,7 @@ limitations under the License.
 
 
 ====================================================
-getrandom 0.2.14
+getrandom 0.2.15
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -19923,7 +19923,7 @@ limitations under the License.
 
 
 ====================================================
-num-bigint 0.4.4
+num-bigint 0.4.5
 https://github.com/rust-num/num-bigint
 by The Rust Project Developers
 Big integer implementation for Rust
@@ -21286,7 +21286,7 @@ limitations under the License.
 
 
 ====================================================
-num-iter 0.1.44
+num-iter 0.1.45
 https://github.com/rust-num/num-iter
 by The Rust Project Developers
 External iterators for generic mathematics
@@ -21768,7 +21768,7 @@ limitations under the License.
 
 
 ====================================================
-num-traits 0.2.18
+num-traits 0.2.19
 https://github.com/rust-num/num-traits
 by The Rust Project Developers
 Numeric traits for generic mathematics
@@ -23038,7 +23038,7 @@ limitations under the License.
 
 
 ====================================================
-paste 1.0.14
+paste 1.0.15
 https://github.com/dtolnay/paste
 by David Tolnay <dtolnay@gmail.com>
 Macros for all your token pasting needs
@@ -24680,7 +24680,7 @@ limitations under the License.
 
 
 ====================================================
-proc-macro2 1.0.81
+proc-macro2 1.0.82
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
@@ -26268,7 +26268,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-qoqo_calculator 1.2.1
+qoqo_calculator 1.2.2
 https://github.com/HQSquantumsimulations/qoqo_calculator
 by HQS Quantum Simulations <info@quantumsimulations.de>
 qoqo-calculator is the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -26480,7 +26480,7 @@ LICENSE:
 
 
 ====================================================
-qoqo_calculator_pyo3 1.2.1
+qoqo_calculator_pyo3 1.2.2
 https://github.com/HQSquantumsimulations/qoqo_calculator_pyo3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface to qoqo calculator, the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -29798,7 +29798,7 @@ limitations under the License.
 
 
 ====================================================
-ryu 1.0.17
+ryu 1.0.18
 https://github.com/dtolnay/ryu
 by David Tolnay <dtolnay@gmail.com>
 Fast floating point to string conversion
@@ -30180,7 +30180,7 @@ You may use this code under the terms of either license.
 
 
 ====================================================
-schemars 0.8.17
+schemars 0.8.19
 https://graham.cool/schemars/
 by Graham Esau <gesau@hotmail.co.uk>
 Generate JSON Schemas from Rust code
@@ -30212,7 +30212,7 @@ SOFTWARE.
 
 
 ====================================================
-schemars_derive 0.8.17
+schemars_derive 0.8.19
 https://graham.cool/schemars/
 by Graham Esau <gesau@hotmail.co.uk>
 Macros for #[derive(JsonSchema)], for use with schemars
@@ -33416,7 +33416,7 @@ limitations under the License.
 
 
 ====================================================
-syn 2.0.60
+syn 2.0.61
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -34159,7 +34159,7 @@ SOFTWARE.
 
 
 ====================================================
-thiserror 1.0.59
+thiserror 1.0.60
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -34373,7 +34373,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-thiserror-impl 1.0.59
+thiserror-impl 1.0.60
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate
@@ -36075,7 +36075,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-tokio-util 0.7.10
+tokio-util 0.7.11
 https://tokio.rs
 by Tokio Contributors <team@tokio.rs>
 Additional utilities for working with Tokio.
@@ -45273,7 +45273,7 @@ THE SOFTWARE.
 
 
 ====================================================
-zerocopy 0.7.32
+zerocopy 0.7.34
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>
 Utilities for zero-copy parsing and serialization
@@ -45544,7 +45544,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-zerocopy-derive 0.7.32
+zerocopy-derive 0.7.34
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>
 Custom derive for traits from the zerocopy crate
