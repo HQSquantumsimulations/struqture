@@ -597,26 +597,6 @@ pub fn noiselesswrapper(
 
                 )
         }
-
-            pub fn from_bound_pyany(input: &Bound<PyAny>
-            ) -> PyResult<#struct_ident> {
-                    if let Ok(try_downcast) = input.extract::<#ident>() {
-                        return Ok(try_downcast.internal);
-                    } else {
-                    let get_bytes = input.call_method0("to_bincode").map_err(|_| {
-                        PyTypeError::new_err("Serialisation failed".to_string())
-                    })?;
-                    let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
-                        PyTypeError::new_err("Deserialisation failed".to_string())
-                    })?;
-                    deserialize(&bytes[..]).map_err(|err| {
-                        PyTypeError::new_err(format!(
-                            "Type conversion failed: {}",
-                            err
-                        ))}
-                    )
-                    }
-        }
     }
         #[pymethods]
         impl #ident {
