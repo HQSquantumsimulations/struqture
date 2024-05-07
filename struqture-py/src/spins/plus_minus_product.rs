@@ -220,7 +220,7 @@ impl PlusMinusProductWrapper {
     pub fn from_product(
         value: &Bound<PyAny>,
     ) -> PyResult<Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)>> {
-        match PauliProductWrapper::from_pyany(&value) {
+        match PauliProductWrapper::from_pyany(value) {
             Ok(x) => {
                 let result: Vec<(PlusMinusProduct, Complex64)> =
                     Vec::<(PlusMinusProduct, Complex64)>::from(x);
