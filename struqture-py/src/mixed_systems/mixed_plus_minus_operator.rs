@@ -91,7 +91,7 @@ impl MixedPlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedPlusMinusOperator.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(Self {
@@ -122,7 +122,7 @@ impl MixedPlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create MixedSystem from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: Py<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {

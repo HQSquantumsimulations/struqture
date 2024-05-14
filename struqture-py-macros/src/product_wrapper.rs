@@ -118,8 +118,8 @@ pub fn productwrapper(
                 ///
                 /// Raises:
                 ///    ValueError: Input reordering dictionary is not a permutation of the indices.
-                pub fn remap_modes(&self, reordering_dictionary: &PyAny) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
-                    let remap_dict = reordering_dictionary.extract::<HashMap<usize, usize>>()?;
+                pub fn remap_modes(&self, reordering_dictionary: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
+                    let remap_dict = reordering_dictionary.as_gil_ref().extract::<HashMap<usize, usize>>()?;
                     let (index, value) = self.internal.remap_modes(&remap_dict).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
                 }
@@ -142,7 +142,7 @@ pub fn productwrapper(
                 ///     TypeError: Value is not CalculatorComplex.
                 ///     ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
                 #[classmethod]
-                pub fn create_valid_pair(_cls: &PyType, creators: Vec<usize>, annihilators: Vec<usize>, value: &PyAny) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
+                pub fn create_valid_pair(_cls: Bound<PyType>, creators: Vec<usize>, annihilators: Vec<usize>, value: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
                     let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value).map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
                     let (index, value) = #struct_ident::create_valid_pair(creators, annihilators, value).map_err(|err| PyValueError::new_err(format!("Valid pair could not be constructed: {:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
@@ -329,10 +329,9 @@ pub fn productwrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: Py<PyAny>
+            pub fn from_pyany( input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                let input = input.as_ref(py);
                 if let Ok(try_downcast) = input.extract::<#ident>() {
                     Ok(try_downcast.internal)
                 }
@@ -381,7 +380,7 @@ pub fn productwrapper(
             ///
             /// Returns:
             ///     self: A deep copy of Self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+            pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
                 self.clone()
             }
 
@@ -397,8 +396,9 @@ pub fn productwrapper(
             ///     TypeError: Input cannot be converted to byte array.
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
-            pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+            pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -424,7 +424,7 @@ pub fn productwrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
@@ -515,7 +515,7 @@ pub fn productwrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {

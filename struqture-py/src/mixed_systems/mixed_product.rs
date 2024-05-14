@@ -93,17 +93,20 @@ impl MixedProductWrapper {
         fermions: Vec<Py<PyAny>>,
     ) -> PyResult<Self> {
         let mut spinsv: Vec<PauliProduct> = Vec::new();
-        for s in spins {
-            spinsv.push(PauliProductWrapper::from_pyany(s)?);
-        }
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
-        for b in bosons {
-            bosonsv.push(BosonProductWrapper::from_pyany(b)?);
-        }
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        for f in fermions {
-            fermionsv.push(FermionProductWrapper::from_pyany(f)?);
-        }
+        Python::with_gil(|py| -> PyResult<()> {
+            for s in spins {
+                spinsv.push(PauliProductWrapper::from_pyany(s.bind(py))?);
+            }
+            for b in bosons {
+                bosonsv.push(BosonProductWrapper::from_pyany(b.bind(py))?);
+            }
+            for f in fermions {
+                fermionsv.push(FermionProductWrapper::from_pyany(f.bind(py))?);
+            }
+            Ok(())
+        })?;
         Ok(Self {
             internal: MixedProduct::new(spinsv, bosonsv, fermionsv).map_err(|err| {
                 PyValueError::new_err(format!("Could not construct MixedProduct: {:?}", err))
@@ -132,11 +135,11 @@ impl MixedProductWrapper {
     ///     ValueError: Valid pair could not be constructed.
     #[classmethod]
     pub fn create_valid_pair(
-        _cls: &PyType,
+        _cls: &Bound<PyType>,
         spins: Vec<String>,
         bosons: Vec<String>,
         fermions: Vec<String>,
-        value: &PyAny,
+        value: &Bound<PyAny>,
     ) -> PyResult<(Self, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
         let mut converted_spins: Vec<PauliProduct> = Vec::new();
         for s in spins {

@@ -89,7 +89,7 @@ impl FermionHamiltonianSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<FermionSystemWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<FermionSystemWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(FermionSystemWrapper {
@@ -104,7 +104,7 @@ impl FermionHamiltonianSystemWrapper {
                             .map_err(|_| PyTypeError::new_err("System cannot be multiplied"))?,
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value);
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {

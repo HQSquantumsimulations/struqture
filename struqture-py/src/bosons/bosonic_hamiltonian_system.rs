@@ -85,7 +85,7 @@ impl BosonHamiltonianSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<BosonSystemWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<BosonSystemWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(BosonSystemWrapper {
@@ -98,7 +98,7 @@ impl BosonHamiltonianSystemWrapper {
                         internal: (self.clone().internal * x),
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value);
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
