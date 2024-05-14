@@ -17,11 +17,11 @@ struqture\_py.bosons
 
    .. autosummary::
    
-      BosonHamiltonian
-      BosonLindbladNoiseOperator
+      BosonHamiltonianSystem
+      BosonLindbladNoiseSystem
       BosonLindbladOpenSystem
-      BosonOperator
       BosonProduct
+      BosonSystem
       HermitianBosonProduct
    
    

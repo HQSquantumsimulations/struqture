@@ -16,14 +16,14 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=b193eeef"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="struqture_py.mixed_systems" href="../struqture_py.mixed_systems.html" />
-    <link rel="prev" title="struqture_py.fermions.FermionLindbladNoiseOperator" href="struqture_py.fermions.FermionLindbladNoiseOperator.html" /> 
+    <link rel="prev" title="struqture_py.fermions.FermionLindbladNoiseSystem" href="struqture_py.fermions.FermionLindbladNoiseSystem.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,15 +57,15 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.fermions.html">struqture_py.fermions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionProduct.html">struqture_py.fermions.FermionProduct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.HermitianFermionProduct.html">struqture_py.fermions.HermitianFermionProduct</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionOperator.html">struqture_py.fermions.FermionOperator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionHamiltonian.html">struqture_py.fermions.FermionHamiltonian</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionLindbladNoiseOperator.html">struqture_py.fermions.FermionLindbladNoiseOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionSystem.html">struqture_py.fermions.FermionSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionHamiltonianSystem.html">struqture_py.fermions.FermionHamiltonianSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionLindbladNoiseSystem.html">struqture_py.fermions.FermionLindbladNoiseSystem</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.fermions.FermionLindbladOpenSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionHamiltonian"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonianSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladOpenSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionOperator"><code class="docutils literal notranslate"><span class="pre">FermionOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionProduct"><code class="docutils literal notranslate"><span class="pre">FermionProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionSystem"><code class="docutils literal notranslate"><span class="pre">FermionSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct</span></code></a></li>
 </ul>
 </li>
@@ -107,7 +107,7 @@
 <h1>struqture_py.fermions.FermionLindbladOpenSystem<a class="headerlink" href="#struqture-py-fermions-fermionlindbladopensystem" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.fermions.</span></span><span class="sig-name descname"><span class="pre">FermionLindbladOpenSystem</span></span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.fermions.</span></span><span class="sig-name descname"><span class="pre">FermionLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of fermions.</p>
 <p>In a FermionLindbladOpenSystem is characterized by a FermionLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of fermions.</p>
 <p class="rubric">Examples</p>
@@ -135,7 +135,7 @@
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.current_number_modes" title="struqture_py.fermions.FermionLindbladOpenSystem.current_number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_modes</span></code></a>()</p></td>
-<td><p>Return the current_number_modes input of self.</p></td>
+<td><p>Return maximum index in object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.current_version" title="struqture_py.fermions.FermionLindbladOpenSystem.current_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_version</span></code></a>()</p></td>
 <td><p>Returns the current version of the struqture library .</p></td>
@@ -173,28 +173,31 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.noise_set" title="struqture_py.fermions.FermionLindbladOpenSystem.noise_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_set</span></code></a>(key, value)</p></td>
 <td><p>Set a new entry in the noise of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system" title="struqture_py.fermions.FermionLindbladOpenSystem.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.number_modes" title="struqture_py.fermions.FermionLindbladOpenSystem.number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_modes</span></code></a>()</p></td>
+<td><p>Return the number_modes input of self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system" title="struqture_py.fermions.FermionLindbladOpenSystem.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>()</p></td>
 <td><p>Return the system part of self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product" title="struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_add_operator_product</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product" title="struqture_py.fermions.FermionLindbladOpenSystem.system_add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_add_operator_product</span></code></a>(key, value)</p></td>
 <td><p>Add a new entry to the system of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_get" title="struqture_py.fermions.FermionLindbladOpenSystem.system_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_get</span></code></a>(key)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_get" title="struqture_py.fermions.FermionLindbladOpenSystem.system_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_get</span></code></a>(key)</p></td>
 <td><p>Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_set" title="struqture_py.fermions.FermionLindbladOpenSystem.system_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_set</span></code></a>(key, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.system_set" title="struqture_py.fermions.FermionLindbladOpenSystem.system_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_set</span></code></a>(key, value)</p></td>
 <td><p>Set a new entry in the system of the open system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_bincode" title="struqture_py.fermions.FermionLindbladOpenSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_bincode" title="struqture_py.fermions.FermionLindbladOpenSystem.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
 <td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_json" title="struqture_py.fermions.FermionLindbladOpenSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.to_json" title="struqture_py.fermions.FermionLindbladOpenSystem.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
 <td><p>Return the json representation of the object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.truncate" title="struqture_py.fermions.FermionLindbladOpenSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.truncate" title="struqture_py.fermions.FermionLindbladOpenSystem.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
 <td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.ungroup" title="struqture_py.fermions.FermionLindbladOpenSystem.ungroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ungroup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem.ungroup" title="struqture_py.fermions.FermionLindbladOpenSystem.ungroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ungroup</span></code></a>()</p></td>
 <td><p>Return a tuple of the system and the noise of self.</p></td>
 </tr>
 </tbody>
@@ -202,10 +205,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem.current_number_modes">
 <span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.current_number_modes" title="Link to this definition"></a></dt>
-<dd><p>Return the current_number_modes input of self.</p>
+<dd><p>Return maximum index in object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of modes in self.</p>
+<dd class="field-odd"><p>Maximum index.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
@@ -432,6 +435,20 @@ the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem.number_modes">
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the number_modes input of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of modes in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladOpenSystem.system">
 <span class="sig-name descname"><span class="pre">system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladOpenSystem.system" title="Link to this definition"></a></dt>
 <dd><p>Return the system part of self.</p>
@@ -590,7 +607,7 @@ the Jordan Wigner mapping.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="struqture_py.fermions.FermionLindbladNoiseOperator.html" class="btn btn-neutral float-left" title="struqture_py.fermions.FermionLindbladNoiseOperator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="struqture_py.fermions.FermionLindbladNoiseSystem.html" class="btn btn-neutral float-left" title="struqture_py.fermions.FermionLindbladNoiseSystem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../struqture_py.mixed_systems.html" class="btn btn-neutral float-right" title="struqture_py.mixed_systems" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

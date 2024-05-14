@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=b193eeef"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -56,15 +56,15 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.bosons.html">struqture_py.bosons</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.bosons.BosonProduct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.HermitianBosonProduct.html">struqture_py.bosons.HermitianBosonProduct</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonOperator.html">struqture_py.bosons.BosonOperator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonHamiltonian.html">struqture_py.bosons.BosonHamiltonian</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonLindbladNoiseOperator.html">struqture_py.bosons.BosonLindbladNoiseOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonSystem.html">struqture_py.bosons.BosonSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonHamiltonianSystem.html">struqture_py.bosons.BosonHamiltonianSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonLindbladNoiseSystem.html">struqture_py.bosons.BosonLindbladNoiseSystem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.bosons.BosonLindbladOpenSystem.html">struqture_py.bosons.BosonLindbladOpenSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonianSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonOperator"><code class="docutils literal notranslate"><span class="pre">BosonOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct"><code class="docutils literal notranslate"><span class="pre">BosonProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonSystem"><code class="docutils literal notranslate"><span class="pre">BosonSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.HermitianBosonProduct"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a></li>
 </ul>
 </li>
@@ -428,7 +428,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 <dd><p>Remap modes according to an input dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>) -- </p>
+<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.</p>

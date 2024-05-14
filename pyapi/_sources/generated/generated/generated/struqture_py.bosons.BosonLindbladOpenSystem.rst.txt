@@ -26,6 +26,7 @@ struqture\_py.bosons.BosonLindbladOpenSystem
       ~BosonLindbladOpenSystem.noise_add_operator_product
       ~BosonLindbladOpenSystem.noise_get
       ~BosonLindbladOpenSystem.noise_set
+      ~BosonLindbladOpenSystem.number_modes
       ~BosonLindbladOpenSystem.system
       ~BosonLindbladOpenSystem.system_add_operator_product
       ~BosonLindbladOpenSystem.system_get

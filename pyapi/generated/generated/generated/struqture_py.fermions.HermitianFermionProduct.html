@@ -16,13 +16,13 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=b193eeef"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="struqture_py.fermions.FermionOperator" href="struqture_py.fermions.FermionOperator.html" />
+    <link rel="next" title="struqture_py.fermions.FermionSystem" href="struqture_py.fermions.FermionSystem.html" />
     <link rel="prev" title="struqture_py.fermions.FermionProduct" href="struqture_py.fermions.FermionProduct.html" /> 
 </head>
 
@@ -57,15 +57,15 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.fermions.html">struqture_py.fermions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionProduct.html">struqture_py.fermions.FermionProduct</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.fermions.HermitianFermionProduct</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionOperator.html">struqture_py.fermions.FermionOperator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionHamiltonian.html">struqture_py.fermions.FermionHamiltonian</a></li>
-<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionLindbladNoiseOperator.html">struqture_py.fermions.FermionLindbladNoiseOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionSystem.html">struqture_py.fermions.FermionSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionHamiltonianSystem.html">struqture_py.fermions.FermionHamiltonianSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionLindbladNoiseSystem.html">struqture_py.fermions.FermionLindbladNoiseSystem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionLindbladOpenSystem.html">struqture_py.fermions.FermionLindbladOpenSystem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionHamiltonian"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonianSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladOpenSystem</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionOperator"><code class="docutils literal notranslate"><span class="pre">FermionOperator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionProduct"><code class="docutils literal notranslate"><span class="pre">FermionProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionSystem"><code class="docutils literal notranslate"><span class="pre">FermionSystem</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct</span></code></a></li>
 </ul>
 </li>
@@ -437,7 +437,7 @@ the Jordan Wigner mapping.</p>
 <dd><p>Remap modes according to an input dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>) -- </p>
+<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.</p>
@@ -491,7 +491,7 @@ the Jordan Wigner mapping.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="struqture_py.fermions.FermionProduct.html" class="btn btn-neutral float-left" title="struqture_py.fermions.FermionProduct" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="struqture_py.fermions.FermionOperator.html" class="btn btn-neutral float-right" title="struqture_py.fermions.FermionOperator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="struqture_py.fermions.FermionSystem.html" class="btn btn-neutral float-right" title="struqture_py.fermions.FermionSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
