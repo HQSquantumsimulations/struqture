@@ -19,8 +19,11 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{OperateOnSpins, SpinLindbladNoiseSystem, ToSparseMatrixSuperOperator};
+use struqture::spins::{
+    DecoherenceProduct, OperateOnSpins, SpinLindbladNoiseSystem, ToSparseMatrixSuperOperator,
+};
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, StruqtureError};
@@ -106,5 +109,62 @@ impl SpinLindbladNoiseSystemWrapper {
                 internal: remainder,
             },
         ))
+    }
+
+    // add in a function converting struqture_one (not py) to struqture 2
+    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+    // #[cfg(feature = "struqture_2_import")]
+    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<Self> {
+        Python::with_gil(|py| -> PyResult<Self> {
+            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let source_serialisation_meta: struqture_two::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let target_serialisation_meta = <struqture_two::spins::QubitLindbladNoiseOperator as struqture_two::SerializationSupport>::target_serialisation_meta();
+
+            struqture_two::check_can_be_deserialised(
+                &target_serialisation_meta,
+                &source_serialisation_meta,
+            )
+            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
+
+            let input = input.as_ref(py);
+            let get_bytes = input
+                .call_method0("to_bincode")
+                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+            let bytes = get_bytes
+                .extract::<Vec<u8>>()
+                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+            let two_import: struqture_two::spins::QubitLindbladNoiseOperator =
+                deserialize(&bytes[..]).map_err(|err| {
+                    PyTypeError::new_err(format!("Type conversion failed: {}", err))
+                })?;
+            let mut spin_system = SpinLindbladNoiseSystem::new(None);
+            for (key, val) in struqture_two::OperateOnDensityMatrix::iter(&two_import) {
+                let left = key.0.to_string();
+                let right = key.1.to_string();
+                let self_left = DecoherenceProduct::from_str(&left).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x SpinLindbladNoiseSystem from struqture 2.x QubitLindbladNoiseOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+                let self_right = DecoherenceProduct::from_str(&right).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x SpinLindbladNoiseSystem from struqture 2.x QubitLindbladNoiseOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+
+                let _ = spin_system.set((self_left, self_right), val.clone());
+            }
+
+            Ok(Self {
+                internal: spin_system,
+            })
+        })
     }
 }

@@ -164,7 +164,7 @@ impl SpinSystemWrapper {
                 let value_string = key.to_string();
                 let self_key = PauliProduct::from_str(&value_string).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x SpinSystem from struqture 2.x SpinOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x SpinSystem from struqture 2.x QubitOperator. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?;
 
                 let _ = spin_system.set(self_key, val.clone());

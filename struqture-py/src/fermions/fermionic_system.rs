@@ -18,11 +18,12 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::fermions::FermionSystem;
+use std::str::FromStr;
+use struqture::fermions::{FermionProduct, FermionSystem};
 use struqture::mappings::JordanWignerFermionToSpin;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
-use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
+use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of fermions.
@@ -115,5 +116,55 @@ impl FermionSystemWrapper {
                 }
             }
         }
+    }
+
+    // add in a function converting struqture_one (not py) to struqture 2
+    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+    // #[cfg(feature = "struqture_2_import")]
+    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<FermionSystemWrapper> {
+        Python::with_gil(|py| -> PyResult<FermionSystemWrapper> {
+            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let source_serialisation_meta: struqture_two::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let target_serialisation_meta = <struqture_two::fermions::FermionOperator as struqture_two::SerializationSupport>::target_serialisation_meta();
+
+            struqture_two::check_can_be_deserialised(
+                &target_serialisation_meta,
+                &source_serialisation_meta,
+            )
+            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
+
+            let input = input.as_ref(py);
+            let get_bytes = input
+                .call_method0("to_bincode")
+                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+            let bytes = get_bytes
+                .extract::<Vec<u8>>()
+                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+            let two_import: struqture_two::fermions::FermionOperator = deserialize(&bytes[..])
+                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+            let mut fermion_system = FermionSystem::new(None);
+            for (key, val) in struqture_two::OperateOnDensityMatrix::iter(&two_import) {
+                let value_string = key.to_string();
+                let self_key = FermionProduct::from_str(&value_string).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x FermionSystem from struqture 2.x FermionOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+
+                let _ = fermion_system.set(self_key, val.clone());
+            }
+
+            Ok(FermionSystemWrapper {
+                internal: fermion_system,
+            })
+        })
     }
 }
