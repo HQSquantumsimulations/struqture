@@ -4616,7 +4616,7 @@ SOFTWARE.
 
 
 ====================================================
-bytemuck 1.15.0
+bytemuck 1.16.0
 https://github.com/Lokathor/bytemuck
 by Lokathor <zefria@gmail.com>
 A crate for mucking around with piles of bytes.
@@ -9449,7 +9449,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-either 1.11.0
+either 1.12.0
 https://github.com/rayon-rs/either
 by bluss
 The enum `Either` with variants `Left` and `Right` is a general purpose sum type with two cases.
@@ -12423,7 +12423,7 @@ limitations under the License.
 
 
 ====================================================
-getrandom 0.2.15
+getrandom 0.2.14
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -17340,7 +17340,7 @@ limitations under the License.
 
 
 ====================================================
-libc 0.2.154
+libc 0.2.153
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -19675,7 +19675,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-num 0.4.2
+num 0.4.3
 https://github.com/rust-num/num
 by The Rust Project Developers
 A collection of numeric types and traits for Rust, including bigint,
@@ -20560,7 +20560,7 @@ limitations under the License.
 
 
 ====================================================
-num-complex 0.4.5
+num-complex 0.4.6
 https://github.com/rust-num/num-complex
 by The Rust Project Developers
 Complex numbers implementation for Rust
@@ -21522,7 +21522,7 @@ limitations under the License.
 
 
 ====================================================
-num-rational 0.4.1
+num-rational 0.4.2
 https://github.com/rust-num/num-rational
 by The Rust Project Developers
 Rational numbers implementation for Rust
@@ -29312,8 +29312,8 @@ limitations under the License.
 
 
 ====================================================
-rustc-demangle 0.1.23
-https://github.com/alexcrichton/rustc-demangle
+rustc-demangle 0.1.24
+https://github.com/rust-lang/rustc-demangle
 by Alex Crichton <alex@alexcrichton.com>
 Rust compiler symbol demangling.
 
@@ -30485,7 +30485,7 @@ limitations under the License.
 
 
 ====================================================
-serde 1.0.200
+serde 1.0.202
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -30699,7 +30699,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-serde_derive 1.0.200
+serde_derive 1.0.202
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -30913,7 +30913,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-serde_derive_internals 0.29.0
+serde_derive_internals 0.29.1
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 AST representation used by Serde derive macros. Unstable.
@@ -31127,7 +31127,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-serde_json 1.0.116
+serde_json 1.0.117
 https://github.com/serde-rs/json
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A JSON serialization file format
@@ -33411,7 +33411,7 @@ limitations under the License.
 
 
 ====================================================
-syn 2.0.61
+syn 2.0.64
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -40646,7 +40646,7 @@ limitations under the License.
 
 
 ====================================================
-wide 0.7.17
+wide 0.7.19
 https://github.com/Lokathor/wide
 by Lokathor <zefria@gmail.com>
 A crate to help you go wide.
