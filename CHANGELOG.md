@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.5.3
+
+* Fixed dependencies issues
+
 ## 1.5.2
 
 * Updated to pyo3 0.20
