@@ -97,7 +97,7 @@ impl From<SpinHamiltonianSerialize> for SpinHamiltonian {
 impl From<SpinHamiltonian> for SpinHamiltonianSerialize {
     fn from(value: SpinHamiltonian) -> Self {
         let new_noise_op: Vec<(PauliProduct, CalculatorFloat)> =
-            value.into_iter().map(|(key, val)| (key, val)).collect();
+            value.into_iter().collect();
         let current_version = StruqtureVersionSerializable {
             major_version: MINIMUM_STRUQTURE_VERSION.0,
             minor_version: MINIMUM_STRUQTURE_VERSION.1,
