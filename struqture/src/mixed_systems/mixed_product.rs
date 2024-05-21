@@ -488,7 +488,7 @@ impl Mul<MixedProduct> for MixedProduct {
                         internal_tmp_bosons.push(tmp_entry);
                     }
                 }
-                tmp_bosons = internal_tmp_bosons.clone();
+                tmp_bosons.clone_from(&internal_tmp_bosons);
             } else {
                 for bp in boson_multiplication.clone() {
                     tmp_bosons.push(vec![bp]);
@@ -621,7 +621,7 @@ impl Mul<HermitianMixedProduct> for MixedProduct {
                             internal_tmp_bosons.push(tmp_entry);
                         }
                     }
-                    tmp_bosons = internal_tmp_bosons.clone();
+                    tmp_bosons.clone_from(&internal_tmp_bosons);
                 } else {
                     for bp in boson_multiplication.clone() {
                         tmp_bosons.push(vec![bp]);
