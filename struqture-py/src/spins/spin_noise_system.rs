@@ -28,6 +28,12 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 /// These are representations of noisy systems of spins.
 ///
 /// In a SpinLindbladNoiseSystem is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+///  
+/// Args:
+///     number_spins (Optional[int]): The number of spins in the SpinLindbladNoiseSystem.
+///
+/// Returns:
+///     self: The new SpinLindbladNoiseSystem with the input number of spins.
 ///
 /// Examples
 /// --------

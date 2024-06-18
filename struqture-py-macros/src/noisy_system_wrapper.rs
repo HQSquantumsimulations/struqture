@@ -47,7 +47,7 @@ pub fn noisywrapper(
                 /// Get the coefficient corresponding to the key.
                 ///
                 /// Args:
-                ///     key: Product to get the value of.
+                ///     key (Tuple[Product type, Product type]): Product to get the value of.
                 ///
                 /// Returns:
                 ///     CalculatorComplex: Value at key (or 0.0).
@@ -83,6 +83,9 @@ pub fn noisywrapper(
 
                 /// Remove the value of the input object key.
                 ///
+                /// Args:
+                ///     key (Tuple[Product type, Product type]): The key of the value to remove.
+                ///
                 /// Returns:
                 ///     Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was removed.
                 ///
@@ -117,6 +120,9 @@ pub fn noisywrapper(
 
                 /// Overwrite an existing entry or set a new entry in self.
                 ///
+                /// Args:
+                ///     key (Tuple[Product type, Product type]): The key of the value to set.
+                ///     value (CalculatorComplex): The value to set.
                 /// Returns:
                 ///     Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was overwritten.
                 ///
@@ -158,6 +164,10 @@ pub fn noisywrapper(
                 }
 
                 /// Adds a new (key object, CalculatorComplex) pair to existing entries.
+                ///
+                /// Args:
+                ///     key (Tuple[Product type, Product type]): The key of the value to add.
+                ///     value (CalculatorComplex): The value to add.
                 ///
                 /// Raises:
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -201,7 +211,7 @@ pub fn noisywrapper(
                 /// Return unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
+                ///     List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
                 pub fn keys(&self) -> Vec<(#index_type, #index_type)> {
                     let mut system_keys: Vec<(#index_type, #index_type)> = Vec::new();
                     for (key_l, key_r) in self.internal.keys() {
@@ -215,7 +225,7 @@ pub fn noisywrapper(
                 /// Return unsorted values in self.
                 ///
                 /// Returns:
-                ///     list[CalculatorComplex]: The sequence of values of self.
+                ///     List[CalculatorComplex]: The sequence of values of self.
                 pub fn values(&self) -> Vec<CalculatorComplexWrapper> {
                     let mut system_values: Vec<CalculatorComplexWrapper> = Vec::new();
                     for val in self.internal.values() {
@@ -401,7 +411,7 @@ pub fn noisywrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The matrix representation of the noise part of self.
+                ///     List[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], complex]]: The matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -458,7 +468,7 @@ pub fn noisywrapper(
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
-                ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
+                ///     List[int]: The number of bosonic modes in each bosonic subsystem of self.
                 pub fn number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.number_bosonic_modes()
                 }
@@ -466,7 +476,7 @@ pub fn noisywrapper(
                 /// Return the number of bosonic modes each bosonic subsystem of self acts on.
                 ///
                 /// Returns:
-                ///     list[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
+                ///     List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -474,7 +484,7 @@ pub fn noisywrapper(
                 /// Return the number of fermionic modes in each fermionic subsystem of self.
                 ///
                 /// Returns:
-                ///     list[int]: The number of fermionic modes in each fermionic subsystem of self.
+                ///     List[int]: The number of fermionic modes in each fermionic subsystem of self.
                 pub fn number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.number_fermionic_modes()
                 }
@@ -482,7 +492,7 @@ pub fn noisywrapper(
                 /// Return the number of fermionic modes each fermionic subsystem of self acts on.
                 ///
                 /// Returns:
-                ///     list[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
+                ///     List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
@@ -636,7 +646,7 @@ pub fn noisywrapper(
             /// Set a new entry in the noise of the open system.
             ///
             /// Args:
-            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///     key (Tuple[Product type, Product type]): Tuple of Products of set object.
             ///     value (CalculatorComplex): CalculatorComplex value of set object.
             ///
             /// Returns:
@@ -690,7 +700,7 @@ pub fn noisywrapper(
             /// Get the CalculatorComplex coefficient corresponding to the key.
             ///
             /// Args:
-            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///     key (Tuple[Product type, Product type]): Tuple of Products of set object.
             ///
             /// Returns:
             ///     CalculatorComplex: Value at key (or 0.0).
@@ -744,7 +754,7 @@ pub fn noisywrapper(
             /// Add a new entry to the system of the open system.
             ///
             /// Args:
-            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///     key (Tuple[Product type, Product type]): Tuple of Products of set object.
             ///     value (CalculatorComplex): Value of set object.
             ///
             /// Returns:
@@ -906,7 +916,7 @@ pub fn noisywrapper(
             /// Convert the bincode representation of the object to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized object.
@@ -934,7 +944,7 @@ pub fn noisywrapper(
             /// Return the bincode representation of the object using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.

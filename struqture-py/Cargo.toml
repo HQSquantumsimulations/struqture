@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py"
-version = "1.7.1"
+version = "1.8.0"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.57"
@@ -38,13 +38,13 @@ test-case = "3.1"
 nalgebra = "0.32"
 ndarray = { version = "0.15" }
 
-
 [build-dependencies]
 quote = "1.0"
 syn = { version = "2.0", features = ["full", "visit"] }
 proc-macro2 = "1.0"
-pyo3-build-config = "0.20"
-
+pyo3-build-config = "0.21"
+pyo3 = "0.21"
+regex = "1.10"
 [package.metadata.docs.rs]
 no-default-features = true
 
@@ -54,4 +54,5 @@ extension-module = [
 ] #, "qoqo_calculator_pyo3/extension-module"]
 default = ["extension-module", "json_schema", "indexed_map_iterators"]
 json_schema = ["struqture/json_schema"]
+doc_generator = []
 indexed_map_iterators = ["struqture/indexed_map_iterators"]

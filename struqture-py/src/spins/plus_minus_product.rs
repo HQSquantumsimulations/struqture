@@ -42,6 +42,9 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///
 /// `PlusMinusProduct().plus(0).plus(2)`.
 ///
+/// Returns:
+///     self: The new, empty PlusMinusProduct.
+///
 /// Examples
 /// --------
 ///
@@ -149,7 +152,7 @@ impl PlusMinusProductWrapper {
     /// Return a list of the unsorted keys in self.
     ///
     /// Returns:
-    ///     list[int]: The sequence of qubit index keys of self.
+    ///     List[int]: The sequence of qubit index keys of self.
     pub fn keys(&self) -> Vec<usize> {
         let keys: Vec<usize> = self.internal.iter().map(|(k, _)| k).copied().collect();
         keys
@@ -174,7 +177,7 @@ impl PlusMinusProductWrapper {
     /// Remap the qubits in a new instance of self (returned).
     ///
     /// Args:
-    ///     mapping (dict[int, int]): The map containing the {qubit: qubit} mapping to use.
+    ///     mapping (Dict[int, int]): The map containing the {qubit: qubit} mapping to use.
     ///
     /// Returns:
     ///     self: The new instance of self with the qubits remapped.
@@ -190,7 +193,7 @@ impl PlusMinusProductWrapper {
     ///     other (self): The object to concatenate self with.
     ///
     /// Returns:
-    ///     list[int]: A list of the corresponding creator indices.
+    ///     List[int]: A list of the corresponding creator indices.
     ///
     /// Raises:
     ///     ValueError: The two objects could not be concatenated.
@@ -212,7 +215,7 @@ impl PlusMinusProductWrapper {
     ///     value (PauliProduct or DecoherenceProduct): The input object to convert.
     ///
     /// Returns:
-    ///     list[tuple[(PlusMinusProduct, CalculatorComplex)]]: The converted input.
+    ///     List[Tuple[(PlusMinusProduct, CalculatorComplex)]]: The converted input.
     ///
     /// Raises:
     ///     ValueError: Input is neither a PauliProduct nor a DecoherenceProduct.
@@ -271,7 +274,7 @@ impl PlusMinusProductWrapper {
     /// This function is deprecated, please use `to_pauli_product_list`
     ///
     /// Returns:
-    ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    ///     List[Tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_pauli_product(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
         self.to_pauli_product_list()
     }
@@ -279,7 +282,7 @@ impl PlusMinusProductWrapper {
     /// Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
     ///
     /// Returns:
-    ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    ///     List[Tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_pauli_product_list(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
         let result: Vec<(PauliProduct, Complex64)> =
             Vec::<(PauliProduct, Complex64)>::from(self.internal.clone());
@@ -304,7 +307,7 @@ impl PlusMinusProductWrapper {
     /// This function is deprecated, please use `to_decoherence_product_list`
     ///
     /// Returns:
-    ///     list[tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    ///     List[Tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_decoherence_product(
         &self,
     ) -> Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> {
@@ -314,7 +317,7 @@ impl PlusMinusProductWrapper {
     /// Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
     ///
     /// Returns:
-    ///     list[tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    ///     List[Tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_decoherence_product_list(
         &self,
     ) -> Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> {

@@ -28,6 +28,12 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// BosonSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
 /// and an optional number of bosons.
 ///
+/// Args:
+///     number_bosons (Optional[int]): The number of bosons in the BosonSystem.
+///
+/// Returns:
+///     self: The new BosonSystem with the input number of bosons.
+///
 /// Examples
 /// --------
 ///

@@ -47,6 +47,17 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 /// in presence of a `system-spin` part (PlusMinusProduct) and a `bath-spin` part (PlusMinusProduct),
 /// as shown in the example below.
 ///
+/// Args:
+///     spins (List[PlusMinusProduct]): Products of pauli operators acting on qubits.
+///     bosons (List[BosonProduct]): Products of bosonic creation and annihilation operators.
+///     fermions (List[FermionProduct]): Products of fermionic creation and annihilation operators.
+///
+/// Returns:
+///     MixedPlusMinusProduct: a new MixedPlusMinusProduct with the input of spins, bosons and fermions.
+///
+/// Raises:
+///     ValueError: MixedPlusMinusProduct can not be constructed from the input.
+///
 /// Examples
 /// --------
 ///
@@ -121,7 +132,7 @@ impl MixedPlusMinusProductWrapper {
     ///     value (MixedProduct): The MixedProduct object to convert.
     ///
     /// Returns:
-    ///     list[tuple[(MixedPlusMinusProduct, CalculatorComplex)]]: The converted input.
+    ///     List[Tuple[(MixedPlusMinusProduct, CalculatorComplex)]]: The converted input.
     ///
     /// Raises:
     ///     ValueError: Input is not a MixedProduct.
@@ -156,7 +167,7 @@ impl MixedPlusMinusProductWrapper {
     /// Convert the `self` instance to the corresponding list of (MixedProduct, CalculatorComplex) instances.
     ///
     /// Returns:
-    ///     list[tuple[(MixedProduct, CalculatorComplex)]]: The converted MixedPlusMinusProduct.
+    ///     List[Tuple[(MixedProduct, CalculatorComplex)]]: The converted MixedPlusMinusProduct.
     ///
     /// Raises:
     ///     ValueError: The conversion was not successful.

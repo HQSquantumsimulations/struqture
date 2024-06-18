@@ -28,6 +28,14 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// MixedSystems are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedSystem.
+///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedSystem.
+///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedSystem.
+///
+/// Returns:
+///     self: The new (empty) MixedSystem.
+///
 /// Examples
 /// --------
 ///
