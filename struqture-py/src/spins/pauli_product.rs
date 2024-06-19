@@ -41,6 +41,10 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
 /// or as part of `HermitianMixedProduct <mixed_systems.HermitianMixedProduct>`.
 ///
+/// Returns:
+///
+///     self: The new, empty PauliProduct.
+///
 /// Examples
 /// --------
 ///

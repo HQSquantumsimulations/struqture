@@ -95,7 +95,7 @@ pub fn productwrapper(
                 /// Return list of creator indices.
                 ///
                 /// Returns:
-                ///     list[int]: A list of the corresponding creator indices.
+                ///     List[int]: A list of the corresponding creator indices.
                 pub fn creators(&self) -> Vec<usize> {
                     self.internal.creators().cloned().collect()
                 }
@@ -103,7 +103,7 @@ pub fn productwrapper(
                 /// Return list of annihilator indices.
                 ///
                 /// Returns:
-                ///     list[int]: A list of the corresponding annihilator indices.
+                ///     List[int]: A list of the corresponding annihilator indices.
                 pub fn annihilators(&self) -> Vec<usize> {
                     self.internal.annihilators().cloned().collect()
                 }
@@ -131,8 +131,8 @@ pub fn productwrapper(
                 /// The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.
                 ///
                 /// Args:
-                ///    creators (list[int]): The creator indices to have in the instance of self.
-                ///    annihilators (list[int]): The annihilators indices to have in the instance of self.
+                ///    creators (List[int]): The creator indices to have in the instance of self.
+                ///    annihilators (List[int]): The annihilators indices to have in the instance of self.
                 ///    value (CalculatorComplex): The CalculatorComplex to transform.
                 ///
                 /// Returns:
@@ -170,7 +170,7 @@ pub fn productwrapper(
                 /// Return a list of the unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[int]: The sequence of qubit index keys of self.
+                ///     List[int]: The sequence of qubit index keys of self.
                 pub fn keys(&self) -> Vec<usize> {
                     let keys: Vec<usize> = self.internal.iter().map(|(k, _)| k).copied().collect();
                     keys
@@ -203,7 +203,7 @@ pub fn productwrapper(
                 /// Remap the qubits in a new instance of self (returned).
                 ///
                 /// Args:
-                ///     mapping (dict[int, int]): The map containing the {qubit: qubit} mapping to use.
+                ///     mapping (Dict[int, int]): The map containing the {qubit: qubit} mapping to use.
                 ///
                 /// Returns:
                 ///     self: The new instance of self with the qubits remapped.
@@ -219,7 +219,7 @@ pub fn productwrapper(
                 ///     other (self): The object to concatenate self with.
                 ///
                 /// Returns:
-                ///     list[int]: A list of the corresponding creator indices.
+                ///     List[int]: A list of the corresponding creator indices.
                 ///
                 /// Raises:
                 ///     ValueError: The two objects could not be concatenated.
@@ -259,7 +259,7 @@ pub fn productwrapper(
                 /// Get the spin products of self.
                 ///
                 /// Returns:
-                ///     list[str]: The spin products of self.
+                ///     List[str]: The spin products of self.
                 pub fn spins(&self) -> Vec<#spin_type> {
                     let spins: Vec<#spin_type> = self
                         .internal
@@ -273,7 +273,7 @@ pub fn productwrapper(
                 /// Get the boson products of self.
                 ///
                 /// Returns:
-                ///     list[str]: The boson products of self.
+                ///     List[str]: The boson products of self.
                 pub fn bosons(&self) -> Vec<BosonProductWrapper> {
                     let bosons: Vec<BosonProductWrapper> = self
                         .internal
@@ -287,7 +287,7 @@ pub fn productwrapper(
                 /// Get the fermion products of self.
                 ///
                 /// Returns:
-                ///     list[str]: The fermion products of self.
+                ///     List[str]: The fermion products of self.
                 pub fn fermions(&self) -> Vec<FermionProductWrapper> {
                     let fermions: Vec<FermionProductWrapper> = self
                         .internal
@@ -301,7 +301,7 @@ pub fn productwrapper(
                 /// Return the current number of spins each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of spins in each spin sub-system.
+                ///     List[int]: Number of spins in each spin sub-system.
                 pub fn current_number_spins(&self) -> Vec<usize> {
                     self.internal.current_number_spins()
                 }
@@ -309,7 +309,7 @@ pub fn productwrapper(
                 /// Return the current number of bosonic modes each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of bosonic modes in each spin sub-system.
+                ///     List[int]: Number of bosonic modes in each spin sub-system.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -317,7 +317,7 @@ pub fn productwrapper(
                 /// Return the current number of fermionic modes each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of fermionic modes in each spin sub-system.
+                ///     List[int]: Number of fermionic modes in each spin sub-system.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
@@ -387,7 +387,7 @@ pub fn productwrapper(
             /// Convert the bincode representation of the object to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized Spin System.
@@ -415,7 +415,7 @@ pub fn productwrapper(
             /// Return the bincode representation of the object using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.

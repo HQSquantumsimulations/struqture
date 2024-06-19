@@ -31,6 +31,12 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// FermionHamiltonianSystems are characterized by a FermionOperator to represent the hamiltonian of the spin system
 /// and an optional number of fermions.
 ///
+/// Args:
+///     number_fermions (Optional[int]): The number of fermions in the FermionHamiltonianSystem.
+///
+/// Returns:
+///     self: The new FermionHamiltonianSystem with the input number of fermions.
+///
 /// Examples
 /// --------
 ///

@@ -31,6 +31,12 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a SpinLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.
 ///
+/// Args:
+///     number_spins (Optional[int]): The number of spins in the SpinLindbladOpenSystem.
+///
+/// Returns:
+///     SpinLindbladOpenSystem: The new SpinLindbladOpenSystem with the input number of spins.
+///
 /// Examples
 /// --------
 ///

@@ -44,6 +44,17 @@ use struqture_py_macros::product_wrapper;
 /// in presence of a `system-spin` part (DecoherenceProduct) and a `bath-spin` part (DecoherenceProduct),
 /// as shown in the example below.
 ///
+/// Args:
+///     spins (List[DecoherenceProduct]): products of pauli matrices acting on qubits.
+///     bosons (List[BosonProduct]): products of bosonic creation and annihilation operators.
+///     fermions (List[FermionProduct]): products of fermionic creation and annihilation operators.
+///
+/// Returns:
+///     MixedDecoherenceProduct: a new MixedDecoherenceProduct with the input of spins, bosons and fermions.
+///
+/// Raises:
+///     ValueError: if MixedDecoherenceProduct can not be constructed from the input.
+///
 /// Examples
 /// --------
 ///

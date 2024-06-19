@@ -35,6 +35,12 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// SpinSystems are characterized by a SpinOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
+///  Args:
+///     number_spins (Optional[int]): The number of spins in the SpinSystem.
+///
+/// Returns:
+///     self: The new SpinSystem with the input number of spins.
+///
 /// Examples
 /// --------
 ///

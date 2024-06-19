@@ -35,6 +35,9 @@ use super::SpinHamiltonianSystemWrapper;
 /// PlusMinusOperators are characterized by a SpinOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
+/// Returns:
+///     self: The new PlusMinusOperator with the input number of spins.
+///
 /// Examples
 /// --------
 ///

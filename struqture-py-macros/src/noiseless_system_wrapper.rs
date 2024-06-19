@@ -59,7 +59,7 @@ pub fn noiselesswrapper(
                 /// Return a list of the unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[OperatorProduct]: The sequence of keys of the self.
+                ///     List[OperatorProduct]: The sequence of keys of the self.
                 pub fn keys(&self) -> Vec<#index_type> {
                     let mut system_keys: Vec<#index_type> = Vec::new();
                     for key in self.internal.keys() {
@@ -103,7 +103,7 @@ pub fn noiselesswrapper(
                 /// Truncate self by returning a copy without entries under a threshold.
                 ///
                 /// Args:
-                ///     threshold: The threshold for inclusion.
+                ///     threshold (float): The threshold for inclusion.
                 ///
                 /// Returns:
                 ///     self: The truncated version of self.
@@ -135,7 +135,10 @@ pub fn noiselesswrapper(
 
                 /// Remove the value of the input key.
                 ///
-                /// Returns:
+                /// Args:
+                ///     key (Product type): The key of the value to remove.
+                ///
+                ///  Returns:
                 ///     Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
                 ///
                 /// Raises:
@@ -154,6 +157,10 @@ pub fn noiselesswrapper(
                 }
 
                 /// Overwrite an existing entry or set a new entry in self.
+                ///
+                /// Args:
+                ///     key (Product type): The key to set.
+                ///     value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
                 ///
                 /// Returns:
                 ///     Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
@@ -186,6 +193,9 @@ pub fn noiselesswrapper(
 
                 /// Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
                 ///
+                /// Args:
+                ///     key (Product type): The key object
+                ///
                 /// Raises:
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
                 ///     ValueError: Product could not be constructed.
@@ -212,7 +222,7 @@ pub fn noiselesswrapper(
                 /// Return unsorted values in self.
                 ///
                 /// Returns:
-                ///     list[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
+                ///     List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
                 pub fn values(&self) -> Vec<#value_type> {
                     let mut system_values: Vec<#value_type> = Vec::new();
                     for val in self.internal.values() {
@@ -325,7 +335,7 @@ pub fn noiselesswrapper(
                 /// Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
                 ///
                 /// Args:
-                ///     number_spins: The number of spins in self.
+                ///     number_spins (Optional[int]): The number of spins in self.
                 ///
                 /// Returns:
                 ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
@@ -413,7 +423,7 @@ pub fn noiselesswrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The matrix representation of the noise part of self.
+                ///     List[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], complex]]: The matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -470,7 +480,7 @@ pub fn noiselesswrapper(
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
-                ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
+                ///     List[int]: The number of bosonic modes in each bosonic subsystem of self.
                 pub fn number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.number_bosonic_modes()
                 }
@@ -478,7 +488,7 @@ pub fn noiselesswrapper(
                 /// Return the number of bosonic modes each bosonic subsystem of self acts on.
                 ///
                 /// Returns:
-                ///     list[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
+                ///     List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -486,7 +496,7 @@ pub fn noiselesswrapper(
                 /// Return the number of fermionic modes in each fermionic subsystem of self.
                 ///
                 /// Returns:
-                ///     list[int]: The number of fermionic modes in each fermionic subsystem of self.
+                ///     List[int]: The number of fermionic modes in each fermionic subsystem of self.
                 pub fn number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.number_fermionic_modes()
                 }
@@ -494,7 +504,7 @@ pub fn noiselesswrapper(
                 /// Return the number of fermionic modes each fermionic subsystem of self acts on.
                 ///
                 /// Returns:
-                ///     list[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
+                ///     List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
@@ -634,7 +644,7 @@ pub fn noiselesswrapper(
             /// Convert the bincode representation of self to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized object.
@@ -662,7 +672,7 @@ pub fn noiselesswrapper(
             /// Return the bincode representation of self using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.

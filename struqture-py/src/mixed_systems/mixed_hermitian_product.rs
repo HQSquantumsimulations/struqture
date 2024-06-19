@@ -45,6 +45,17 @@ use struqture_py_macros::product_wrapper;
 /// in presence of a `system-spin` part (PauliProduct) and a `bath-spin` part (PauliProduct),
 /// as shown in the example below.
 ///
+/// Args:
+///     spins (List[PauliProduct]): Products of pauli operators acting on qubits.
+///     bosons (List[BosonProduct]): Products of bosonic creation and annihilation operators.
+///     fermions (List[FermionProduct]): Products of fermionic creation and annihilation operators.
+///
+/// Returns:
+///     HermitianMixedProduct: a new HermitianMixedProduct with the input of spins,  bosons and fermions.
+///
+/// Raises:
+///     ValueError: if HermitianMixedProduct can not be constructed from the input.
+///
 /// Examples
 /// --------
 ///

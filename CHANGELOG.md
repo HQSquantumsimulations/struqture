@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.8.0
+
+* Added IDE hint support.
+
 ## 1.7.1
 
 * Fixed versioning bug

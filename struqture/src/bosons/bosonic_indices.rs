@@ -724,7 +724,7 @@ impl ModeIndex for HermitianBosonProduct {
         }
         if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
             return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                creators_min: creators.iter().nth(number_equal_indices).copied(),
+                creators_min: creators.get(number_equal_indices).copied(),
                 annihilators_min: None,
             });
         }

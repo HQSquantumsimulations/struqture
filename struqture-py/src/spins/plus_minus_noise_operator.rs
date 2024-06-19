@@ -33,6 +33,9 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///
 /// In a PlusMinusLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
+/// Returns:
+///     self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
+///
 /// Examples
 /// --------
 ///
