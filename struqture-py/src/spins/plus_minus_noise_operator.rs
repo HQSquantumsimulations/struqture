@@ -33,6 +33,9 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///
 /// In a PlusMinusLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
+/// Returns:
+///     self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
+///
 /// Examples
 /// --------
 ///
@@ -47,10 +50,7 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///     npt.assert_equal(slns.keys(), [(dp, dp)])
-///--------
 ///
-/// Returns:
-///     self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
 #[pyclass(name = "PlusMinusLindbladNoiseOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct PlusMinusLindbladNoiseOperatorWrapper {

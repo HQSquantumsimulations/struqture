@@ -35,6 +35,9 @@ use super::SpinHamiltonianSystemWrapper;
 /// PlusMinusOperators are characterized by a SpinOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
+/// Returns:
+///     self: The new PlusMinusOperator with the input number of spins.
+///
 /// Examples
 /// --------
 ///
@@ -49,10 +52,6 @@ use super::SpinHamiltonianSystemWrapper;
 ///     ssystem.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
-///--------
-///
-///  Returns:
-///     self: The new PlusMinusOperator with the input number of spins.
 #[pyclass(name = "PlusMinusOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PlusMinusOperatorWrapper {
