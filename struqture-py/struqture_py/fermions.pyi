@@ -2,6 +2,24 @@
 # You can find the full implementation on this page:
 # https://github.com/HQSquantumsimulations/struqture
 
+"""
+Fermions module of struqture Python interface
+
+Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionSystem and FermionHamiltonianSystem),
+and Lindblad type fermionic open systems (FermionLindbladNoiseSystem, FermionLindbladOpenSystem).
+
+.. autosummary::
+    :toctree: generated/
+
+    FermionProduct
+    HermitianFermionProduct
+    FermionSystem
+    FermionHamiltonianSystem
+    FermionLindbladNoiseSystem
+    FermionLindbladOpenSystem
+
+"""
+
 from .struqture_py import ProductType, SystemType, NoiseType
 from typing import Optional, List, Tuple, Union
 

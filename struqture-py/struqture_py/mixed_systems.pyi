@@ -2,6 +2,33 @@
 # You can find the full implementation on this page:
 # https://github.com/HQSquantumsimulations/struqture
 
+"""
+Module for representing mixed physical systems.
+
+A mixed physical system can contain any combination of none, one, or several subsystems
+of spin, bosonic, or fermionic types.
+For example a mixed system with two spin-subsystems or a mixed system with a bosonic-subsystem and a bosonic-subsystem would both be valid.
+
+This module, here the python inferface for struqture, can be used to represent
+mixed quantum indices (MixedProduct, HermitianMixedProduct and MixedDecoherenceProduct),
+mixed systems (MixedSystem and MixedHamiltonianSystem) and Lindblad type mixed open systems
+(MixedLindbladNoiseSystem and MixedLindbladOpenSystem).
+
+.. autosummary::
+    :toctree: generated/
+
+    MixedProduct
+    HermitianMixedProduct
+    MixedDecoherenceProduct
+    MixedSystem
+    MixedHamiltonianSystem
+    MixedLindbladNoiseSystem
+    MixedLindbladOpenSystem
+    MixedPlusMinusProduct
+    MixedPlusMinusOperator
+
+"""
+
 from .struqture_py import ProductType, SystemType, NoiseType
 from typing import Optional, List, Tuple, Union
 from .bosons import *

@@ -2,6 +2,24 @@
 # You can find the full implementation on this page:
 # https://github.com/HQSquantumsimulations/struqture
 
+"""
+Bosons module of struqture Python interface
+
+Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonSystem and BosonHamiltonianSystem),
+and Lindblad type bosonic open systems (BosonLindbladNoiseSystem, BosonLindbladOpenSystem).
+
+.. autosummary::
+    :toctree: generated/
+
+    BosonProduct
+    HermitianBosonProduct
+    BosonSystem
+    BosonHamiltonianSystem
+    BosonLindbladNoiseSystem
+    BosonLindbladOpenSystem
+
+"""
+
 from .struqture_py import ProductType, SystemType, NoiseType
 from typing import Optional, List, Tuple, Union
 

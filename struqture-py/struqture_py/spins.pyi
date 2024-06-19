@@ -2,6 +2,24 @@
 # You can find the full implementation on this page:
 # https://github.com/HQSquantumsimulations/struqture
 
+"""
+Spin module of struqture Python interface
+
+Module for representing spin indices (PauliProduct and DecoherenceProduct), spin systems (SpinSystem and SpinHamiltonianSystem)
+and Lindblad type spin open systems (SpinLindbladNoiseSystem and SpinLindbladOpenSystem).
+
+.. autosummary::
+    :toctree: generated/
+
+    PauliProduct
+    DecoherenceProduct
+    SpinSystem
+    SpinHamiltonianSystem
+    SpinLindbladNoiseSystem
+    SpinLindbladOpenSystem
+
+"""
+
 from .struqture_py import ProductType, SystemType, NoiseType
 import numpy
 from typing import Optional, List, Tuple, Dict, Union
@@ -2102,6 +2120,9 @@ class PlusMinusOperator:
     PlusMinusOperators are characterized by a SpinOperator to represent the hamiltonian of the spin system
     and an optional number of spins.
 
+    Returns:
+        self: The new PlusMinusOperator with the input number of spins.
+
     Examples
     --------
 
@@ -2116,10 +2137,7 @@ class PlusMinusOperator:
         ssystem.add_operator_product(pp, 5.0)
         npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
         npt.assert_equal(ssystem.keys(), [pp])
-    --------
 
-     Returns:
-        self: The new PlusMinusOperator with the input number of spins.
     """
 
     def __init__(self):
@@ -2392,6 +2410,9 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
 
     In a PlusMinusLindbladNoiseOperator is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 
+    Returns:
+        self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
+
     Examples
     --------
 
@@ -2406,10 +2427,7 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
         slns.add_operator_product((dp, dp), 2.0)
         npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
         npt.assert_equal(slns.keys(), [(dp, dp)])
-    --------
 
-    Returns:
-        self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
     """
 
     def __init__(self):

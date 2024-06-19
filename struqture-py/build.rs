@@ -109,11 +109,15 @@ const TYPING_POTENTIAL_IMPORTS: &[&str] = &["Optional", "List", "Tuple", "Dict",
 
 #[cfg(feature = "doc_generator")]
 fn create_doc(module: &str) -> PyResult<String> {
-    let mut module_doc = "".to_owned();
+    let mut main_doc = "".to_owned();
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| -> PyResult<String> {
         let python_module = PyModule::import_bound(py, module)?;
         let dict = python_module.as_gil_ref().getattr("__dict__")?;
+        let module_doc = python_module
+            .as_gil_ref()
+            .getattr("__doc__")?
+            .extract::<String>()?;
         let r_dict = dict.downcast::<PyDict>()?;
         for (fn_name, func) in r_dict.iter() {
             let name = fn_name.str()?.extract::<String>()?;
@@ -122,7 +126,7 @@ fn create_doc(module: &str) -> PyResult<String> {
             }
             let doc = func.getattr("__doc__")?.extract::<String>()?;
             let args = collect_args_from_doc(doc.as_str(), name.as_str()).join(", ");
-            module_doc.push_str(&format!(
+            main_doc.push_str(&format!(
                     "class {name}{}:\n    \"\"\"\n{doc}\n\"\"\"\n\n    def __init__(self{}):\n       return\n\n",
                     if name.contains("Product") { "(ProductType)"} else if name.contains("System") { "(SystemType)"} else if name.contains("Noise") { "(NoiseType)"} else { "" },
                     if args.is_empty() { "".to_owned() } else { format!(", {}", args) },
@@ -152,7 +156,7 @@ fn create_doc(module: &str) -> PyResult<String> {
                     }
                 };
                 let meth_args = collect_args_from_doc(meth_doc.as_str(), name.as_str()).join(", ");
-                module_doc.push_str(&format!(
+                main_doc.push_str(&format!(
                         "    def {meth_name}(self{}){}: # type: ignore\n        \"\"\"\n{meth_doc}\n\"\"\"\n\n",
                         if meth_args.is_empty() { "".to_owned() } else { format!(", {}", meth_args) },
                         collect_return_from_doc(
@@ -164,15 +168,16 @@ fn create_doc(module: &str) -> PyResult<String> {
         }
         let typing_imports: Vec<&str> = TYPING_POTENTIAL_IMPORTS
             .iter()
-            .filter(|&type_str| module_doc.contains(&format!("{type_str}[")))
+            .filter(|&type_str| main_doc.contains(&format!("{type_str}[")))
             .copied()
             .collect();
         Ok(
-            format!("# This is an auto generated file containing only the documentation.\n# You can find the full implementation on this page:\n# https://github.com/HQSquantumsimulations/struqture\n\nfrom .struqture_py import ProductType, SystemType, NoiseType\n{}{}{}\n{}",
-                if module_doc.lines().any(|line| line.contains("numpy") && !line.contains("import")) { "import numpy\n" } else { "" },
+            format!("# This is an auto generated file containing only the documentation.\n# You can find the full implementation on this page:\n# https://github.com/HQSquantumsimulations/struqture\n\n\"\"\"\n{}\n\"\"\"\n\nfrom .struqture_py import ProductType, SystemType, NoiseType\n{}{}{}\n{}",
+                module_doc,
+                if main_doc.lines().any(|line| line.contains("numpy") && !line.contains("import")) { "import numpy\n" } else { "" },
                 if typing_imports.is_empty() { "".to_owned() } else {format!("from typing import {}\n", typing_imports.join(", "))},
                 if module.eq("struqture_py.mixed_systems") { "from .bosons import *\nfrom .fermions import *\nfrom .spins import *\n" } else { "" },
-                module_doc
+                main_doc
             ),
         )
     })
