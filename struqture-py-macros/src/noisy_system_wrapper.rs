@@ -123,6 +123,7 @@ pub fn noisywrapper(
                 /// Args:
                 ///     key (Tuple[Product type, Product type]): The key of the value to set.
                 ///     value (CalculatorComplex): The value to set.
+                ///
                 /// Returns:
                 ///     Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was overwritten.
                 ///

@@ -32,6 +32,8 @@ fn str_to_type(res: &str, class_name: &str) -> Option<String> {
         ("CalculatorFloat", "Union[float, int, str]"),
         ("CalculatorComplex", "Union[float, int, str, complex]"),
         ("Product type", "ProductType"),
+        ("System type", "SystemType"),
+        ("Noise type", "NoiseType"),
         ("np.", "numpy."),
     ];
 
@@ -122,7 +124,7 @@ fn create_doc(module: &str) -> PyResult<String> {
             let args = collect_args_from_doc(doc.as_str(), name.as_str()).join(", ");
             module_doc.push_str(&format!(
                     "class {name}{}:\n    \"\"\"\n{doc}\n\"\"\"\n\n    def __init__(self{}):\n       return\n\n",
-                    name.contains("Product").then(|| "(ProductType)").unwrap_or_default(),
+                    if name.contains("Product") { "(ProductType)"} else if name.contains("System") { "(SystemType)"} else if name.contains("Noise") { "(NoiseType)"} else { "" },
                     if args.is_empty() { "".to_owned() } else { format!(", {}", args) },
                 ));
             let class_dict = func.getattr("__dict__")?;
@@ -133,26 +135,22 @@ fn create_doc(module: &str) -> PyResult<String> {
             let class_r_dict = dict_obj.as_gil_ref().downcast::<PyDict>()?;
             for (class_fn_name, meth) in class_r_dict.iter() {
                 let meth_name = class_fn_name.str()?.extract::<String>()?;
-                let meth_doc = match meth_name.as_str() {
-                    method if method.starts_with("__") => "".to_owned(),
-                    _ => {
-                        let tmp_doc = meth
+                let meth_doc = if meth_name.as_str().starts_with("__") {
+                    continue;
+                } else {
+                    let tmp_doc = meth
+                        .getattr("__doc__")?
+                        .extract::<String>()
+                        .unwrap_or_default();
+                    if tmp_doc.starts_with("staticmethod(function) -> method") {
+                        meth.getattr("__func__")?
                             .getattr("__doc__")?
                             .extract::<String>()
-                            .unwrap_or_default();
-                        if tmp_doc.starts_with("staticmethod(function) -> method") {
-                            meth.getattr("__func__")?
-                                .getattr("__doc__")?
-                                .extract::<String>()
-                                .unwrap_or_default()
-                        } else {
-                            tmp_doc
-                        }
+                            .unwrap_or_default()
+                    } else {
+                        tmp_doc
                     }
                 };
-                if meth_doc.eq("") {
-                    continue;
-                }
                 let meth_args = collect_args_from_doc(meth_doc.as_str(), name.as_str()).join(", ");
                 module_doc.push_str(&format!(
                         "    def {meth_name}(self{}){}: # type: ignore\n        \"\"\"\n{meth_doc}\n\"\"\"\n\n",
@@ -170,7 +168,7 @@ fn create_doc(module: &str) -> PyResult<String> {
             .copied()
             .collect();
         Ok(
-            format!("# This is an auto generated file containing only the documentation.\n# You can find the full implementation on this page:\n# https://github.com/HQSquantumsimulations/struqture\n\nfrom .struqture_py import ProductType\n{}{}{}\n{}",
+            format!("# This is an auto generated file containing only the documentation.\n# You can find the full implementation on this page:\n# https://github.com/HQSquantumsimulations/struqture\n\nfrom .struqture_py import ProductType, SystemType, NoiseType\n{}{}{}\n{}",
                 if module_doc.lines().any(|line| line.contains("numpy") && !line.contains("import")) { "import numpy\n" } else { "" },
                 if typing_imports.is_empty() { "".to_owned() } else {format!("from typing import {}\n", typing_imports.join(", "))},
                 if module.eq("struqture_py.mixed_systems") { "from .bosons import *\nfrom .fermions import *\nfrom .spins import *\n" } else { "" },
