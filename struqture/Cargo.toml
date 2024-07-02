@@ -39,7 +39,7 @@ jsonschema = "0.29"
 criterion = "0.5"
 
 [features]
-default = ["json_schema"]
+default = ["json_schema", "struqture_1_export", "struqture_1_import"]
 json_schema = ["schemars", "qoqo_calculator/json_schema"]
 struqture_1_export = ["struqture_1"]
 struqture_1_import = ["struqture_1"]
