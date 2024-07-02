@@ -233,8 +233,11 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitOperator {
     }
 
     // From trait
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<CooSparseMatrix, StruqtureError> {
-        self.sparse_matrix_coo(None)
+    fn unitary_sparse_matrix_coo(
+        &'a self,
+        number_spins: Option<usize>,
+    ) -> Result<CooSparseMatrix, StruqtureError> {
+        self.sparse_matrix_coo(number_spins)
     }
 
     // From trait

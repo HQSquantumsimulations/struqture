@@ -910,7 +910,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 
     let test_matrix = h;
 
-    let coo_test_matrix = system.unitary_sparse_matrix_coo().unwrap();
+    let coo_test_matrix = system.unitary_sparse_matrix_coo(Some(3)).unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(

@@ -254,7 +254,10 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitLindbladNoiseOperator {
     }
 
     // From trait
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<CooSparseMatrix, StruqtureError> {
+    fn unitary_sparse_matrix_coo(
+        &'a self,
+        _number_spins: Option<usize>,
+    ) -> Result<CooSparseMatrix, StruqtureError> {
         Ok((vec![], (vec![], vec![])) as CooSparseMatrix)
     }
 
