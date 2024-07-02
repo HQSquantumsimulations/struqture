@@ -22,13 +22,14 @@ use struqture_py::fermions::FermionOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> &PyCell<FermionOperatorWrapper> {
-    let system_type = py.get_type::<FermionOperatorWrapper>();
+fn new_system(py: Python) -> Bound<FermionOperatorWrapper> {
+    let system_type = py.get_type_bound::<FermionOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<FermionOperatorWrapper>>()
+        .downcast::<FermionOperatorWrapper>()
         .unwrap()
+        .to_owned()
 }
 
 /// Test default function of FermionOperatorWrapper
@@ -59,7 +60,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of fermions
         let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
@@ -77,7 +79,7 @@ fn test_number_fermions_current() {
         let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
-            bool::extract(number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -90,13 +92,13 @@ fn test_empty_clone() {
         let system = new_system(py);
         let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
-            bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
         let system = new_system(py);
         let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
-            bool::extract(some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -113,7 +115,7 @@ fn test_hermitian_conj() {
 
         let conjugate = system.call_method0("hermitian_conjugate").unwrap();
         let comparison =
-            bool::extract(conjugate.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&conjugate.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -123,32 +125,33 @@ fn test_hermitian_conj() {
 fn fermion_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionOperatorWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<FermionOperatorWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<FermionOperatorWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<FermionOperatorWrapper>().unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c2c3a1", 0.2)).unwrap();
         system.call_method1("set", ("c0a2a3", 0.05)).unwrap();
 
         // test access at index 0
         let comp_op = system.call_method1("get", ("c0c1a0a1",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("get", ("c2c3a1",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("get", ("c0a2a3",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("get", ("c0a2",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Try_set error 1: Key (FermionProduct) cannot be converted from string
@@ -170,12 +173,9 @@ fn fermion_system_test_set_get() {
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionOperatorWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<FermionOperatorWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<FermionOperatorWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<FermionOperatorWrapper>().unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -188,24 +188,29 @@ fn fermion_system_test_add_operator_product_remove() {
 
         // test access at index 0
         let comp_op = system.call_method1("get", ("c0c1a0a1",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         system.call_method1("remove", ("c0c1a0a1",)).unwrap();
         let comp_op = system.call_method1("get", ("c0c1a0a1",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("get", ("c2c3a1",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("get", ("c0a2a3",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("get", ("c3",)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
@@ -235,9 +240,9 @@ fn test_keys_values() {
 
         let len_system = system.call_method0("__len__").unwrap();
         let comparison =
-            bool::extract(len_system.call_method1("__eq__", (0_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&len_system.call_method1("__eq__", (0_u64,)).unwrap()).unwrap();
         assert!(comparison);
-        let empty_system = bool::extract(system.call_method0("is_empty").unwrap()).unwrap();
+        let empty_system = bool::extract_bound(&system.call_method0("is_empty").unwrap()).unwrap();
         assert!(empty_system);
 
         system
@@ -245,8 +250,8 @@ fn test_keys_values() {
             .unwrap();
 
         let keys_system = system.call_method0("keys").unwrap();
-        let comparison = bool::extract(
-            keys_system
+        let comparison = bool::extract_bound(
+            &keys_system
                 .call_method1("__eq__", (vec!["c0c1a0a1"],))
                 .unwrap(),
         )
@@ -255,14 +260,15 @@ fn test_keys_values() {
 
         let values_system = system.call_method0("values").unwrap();
         let comparison =
-            bool::extract(values_system.call_method1("__eq__", (vec![0.1],)).unwrap()).unwrap();
+            bool::extract_bound(&values_system.call_method1("__eq__", (vec![0.1],)).unwrap())
+                .unwrap();
         assert!(comparison);
 
         let len_system = system.call_method0("__len__").unwrap();
         let comparison =
-            bool::extract(len_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&len_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
-        let empty_system = bool::extract(system.call_method0("is_empty").unwrap()).unwrap();
+        let empty_system = bool::extract_bound(&system.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty_system);
     });
 }
@@ -378,8 +384,8 @@ fn test_truncate(re: f64, im: f64) {
             .unwrap();
 
         let comparison_system1 = system.call_method1("truncate", (5.0_f64,)).unwrap();
-        let comparison = bool::extract(
-            comparison_system1
+        let comparison = bool::extract_bound(
+            &comparison_system1
                 .call_method1("__eq__", (test_system1,))
                 .unwrap(),
         )
@@ -387,8 +393,8 @@ fn test_truncate(re: f64, im: f64) {
         assert!(comparison);
 
         let comparison_system2 = system.call_method1("truncate", (50.0_f64,)).unwrap();
-        let comparison = bool::extract(
-            comparison_system2
+        let comparison = bool::extract_bound(
+            &comparison_system2
                 .call_method1("__eq__", (test_system2,))
                 .unwrap(),
         )
@@ -413,7 +419,7 @@ fn test_neg() {
 
         let negated = system_0.call_method0("__neg__").unwrap();
         let comparison =
-            bool::extract(negated.call_method1("__eq__", (system_1,)).unwrap()).unwrap();
+            bool::extract_bound(&negated.call_method1("__eq__", (system_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -441,7 +447,7 @@ fn test_add() {
 
         let added = system_0.call_method1("__add__", (system_1,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -469,7 +475,7 @@ fn test_sub() {
 
         let added = system_0.call_method1("__sub__", (system_1,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -491,7 +497,7 @@ fn test_mul_cf() {
 
         let added = system_0.call_method1("__mul__", (2.0,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -523,7 +529,7 @@ fn test_mul_cc() {
             )
             .unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -548,7 +554,7 @@ fn test_mul_self() {
 
         let added = system_0.call_method1("__mul__", (system_1,)).unwrap();
         let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -580,13 +586,14 @@ fn test_copy_deepcopy() {
 
         let copy_system = system.call_method0("__copy__").unwrap();
         let deepcopy_system = system.call_method1("__deepcopy__", ("",)).unwrap();
-        // let copy_deepcopy_param: &PyAny = system.clone();
+        // let copy_deepcopy_param: Bound<pyo3::types::PyString> = system.clone();
 
         let comparison_copy =
-            bool::extract(copy_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&copy_system.call_method1("__eq__", (&system,)).unwrap()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract(deepcopy_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&deepcopy_system.call_method1("__eq__", (system,)).unwrap())
+                .unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -603,7 +610,9 @@ fn test_to_from_bincode() {
 
         let serialised = system.call_method0("to_bincode").unwrap();
         let new = new_system(py);
-        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+        let deserialised = new
+            .call_method1("from_bincode", (serialised.clone(),))
+            .unwrap();
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -620,7 +629,7 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -647,7 +656,9 @@ fn test_to_from_json() {
 
         let serialised = system.call_method0("to_json").unwrap();
         let new = new_system(py);
-        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+        let deserialised = new
+            .call_method1("from_json", (serialised.clone(),))
+            .unwrap();
 
         let deserialised_error =
             new.call_method1("from_json", (serde_json::to_string("fails").unwrap(),));
@@ -664,7 +675,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -686,13 +697,13 @@ fn test_format_repr() {
             )
             .unwrap();
         let to_format = system.call_method1("__format__", ("",)).unwrap();
-        let format_op: &str = <&str>::extract(to_format).unwrap();
+        let format_op: String = String::extract_bound(&to_format).unwrap();
 
         let to_repr = system.call_method0("__repr__").unwrap();
-        let repr_op: &str = <&str>::extract(to_repr).unwrap();
+        let repr_op: String = String::extract_bound(&to_repr).unwrap();
 
         let to_str = system.call_method0("__str__").unwrap();
-        let str_op: &str = <&str>::extract(to_str).unwrap();
+        let str_op: String = String::extract_bound(&to_str).unwrap();
 
         assert_eq!(
             format_op,
@@ -724,17 +735,21 @@ fn test_richcmp() {
             .unwrap();
 
         let comparison =
-            bool::extract(system_one.call_method1("__eq__", (system_two,)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__eq__", (&system_two,)).unwrap())
+                .unwrap();
         assert!(!comparison);
         let comparison =
-            bool::extract(system_one.call_method1("__eq__", ("c0c1a0a1",)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__eq__", ("c0c1a0a1",)).unwrap())
+                .unwrap();
         assert!(!comparison);
 
         let comparison =
-            bool::extract(system_one.call_method1("__ne__", (system_two,)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__ne__", (system_two,)).unwrap())
+                .unwrap();
         assert!(comparison);
         let comparison =
-            bool::extract(system_one.call_method1("__ne__", ("c0c1a0a1",)).unwrap()).unwrap();
+            bool::extract_bound(&system_one.call_method1("__ne__", ("c0c1a0a1",)).unwrap())
+                .unwrap();
         assert!(comparison);
 
         let comparison = system_one.call_method1("__ge__", ("c0c1a0a1",));
@@ -752,13 +767,13 @@ fn test_jordan_wigner() {
             .unwrap();
         let ss = fs.call_method0("jordan_wigner").unwrap();
 
-        let empty = bool::extract(ss.call_method0("is_empty").unwrap()).unwrap();
+        let empty = bool::extract_bound(&ss.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
         let current_number_modes =
-            usize::extract(fs.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&fs.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(ss.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&ss.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -770,20 +785,21 @@ fn test_json_schema() {
     pyo3::Python::with_gil(|py| {
         let new = new_system(py);
 
-        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let schema: String =
+            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(FermionOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         new.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -807,8 +823,7 @@ fn test_from_pyany_to_struqture_1() {
         )
         .unwrap();
 
-        let result =
-            FermionOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into()).unwrap();
+        let result = FermionOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -818,7 +833,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("add_operator_product", ("c0a0", 1.0))
@@ -827,10 +842,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{{\"number_modes\":null,\"operator\":{{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{{\"number_modes\":null,\"operator\":{{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

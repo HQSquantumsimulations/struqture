@@ -46,6 +46,17 @@ use struqture_py_macros::product_wrapper;
 /// in presence of a `system-spin` part (PauliProduct) and a `bath-spin` part (PauliProduct),
 /// as shown in the example below.
 ///
+/// Args:
+///     spins (List[PauliProduct]): Products of pauli operators acting on qubits.
+///     bosons (List[BosonProduct]): Products of bosonic creation and annihilation operators.
+///     fermions (List[FermionProduct]): Products of fermionic creation and annihilation operators.
+///
+/// Returns:
+///     HermitianMixedProduct: a new HermitianMixedProduct with the input of spins,  bosons and fermions.
+///
+/// Raises:
+///     ValueError: if HermitianMixedProduct can not be constructed from the input.
+///
 /// Examples
 /// --------
 ///
@@ -95,17 +106,20 @@ impl HermitianMixedProductWrapper {
         fermions: Vec<Py<PyAny>>,
     ) -> PyResult<Self> {
         let mut spinsv: Vec<PauliProduct> = Vec::new();
-        for s in spins {
-            spinsv.push(PauliProductWrapper::from_pyany(s)?);
-        }
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
-        for b in bosons {
-            bosonsv.push(BosonProductWrapper::from_pyany(b)?);
-        }
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        for f in fermions {
-            fermionsv.push(FermionProductWrapper::from_pyany(f)?);
-        }
+        Python::with_gil(|py| -> PyResult<()> {
+            for s in spins {
+                spinsv.push(PauliProductWrapper::from_pyany(s.bind(py))?);
+            }
+            for b in bosons {
+                bosonsv.push(BosonProductWrapper::from_pyany(b.bind(py))?);
+            }
+            for f in fermions {
+                fermionsv.push(FermionProductWrapper::from_pyany(f.bind(py))?);
+            }
+            Ok(())
+        })?;
         Ok(Self {
             internal: HermitianMixedProduct::new(spinsv, bosonsv, fermionsv).map_err(|err| {
                 PyValueError::new_err(format!(
@@ -137,11 +151,11 @@ impl HermitianMixedProductWrapper {
     ///     ValueError: Valid pair could not be constructed.
     #[classmethod]
     pub fn create_valid_pair(
-        _cls: &PyType,
+        _cls: Bound<PyType>,
         spins: Vec<String>,
         bosons: Vec<String>,
         fermions: Vec<String>,
-        value: &PyAny,
+        value: &Bound<PyAny>,
     ) -> PyResult<(Self, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
         let mut converted_spins: Vec<PauliProduct> = Vec::new();
         for s in spins {

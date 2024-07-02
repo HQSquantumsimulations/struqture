@@ -29,6 +29,9 @@ use struqture_py_macros::noisy_system_wrapper;
 ///
 /// In a BosonLindbladOpenSystem is characterized by a BosonLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of bosons.
 ///
+/// Returns:
+///     self: The new BosonLindbladOpenSystem with the input number of bosons.
+///
 /// Examples
 /// --------
 ///

@@ -28,6 +28,14 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// MixedOperators are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (int): The number of spin subsystems in the MixedOperator.
+///     number_bosons (int): The number of boson subsystems in the MixedOperator.
+///     number_fermions (int): The number of fermion subsystems in the MixedOperator.
+///
+/// Returns:
+///     self: The new (empty) MixedOperator.
+///
 /// Examples
 /// --------
 ///
@@ -93,7 +101,7 @@ impl MixedOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedOperator.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(Self {
@@ -106,7 +114,7 @@ impl MixedOperatorWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value);
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {

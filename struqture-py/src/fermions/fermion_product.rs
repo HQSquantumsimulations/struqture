@@ -34,6 +34,13 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// The FermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
 /// weight of a product of operators in the sum.
 ///
+/// Args:
+///     creators (List[int]): List of creator sub-indices.
+///     annihilators (List[int]): List of annihilator sub-indices.
+///
+/// Returns:
+///     self: The new (empty) FermionProduct.
+///
 /// Examples
 /// --------
 ///

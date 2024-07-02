@@ -29,6 +29,14 @@ use struqture_py_macros::noisy_system_wrapper;
 ///
 /// In a MixedLindbladOpenSystem is characterized by a MixedLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (int): The number of spin subsystems in the MixedLindbladOpenSystem.
+///     number_bosons (int): The number of boson subsystems in the MixedLindbladOpenSystem.
+///     number_fermions (int): The number of fermion subsystems in the MixedLindbladOpenSystem.
+///
+/// Returns:
+///     self: The new MixedLindbladOpenSystem.
+///
 /// Examples
 /// --------
 ///

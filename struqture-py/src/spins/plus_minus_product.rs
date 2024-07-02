@@ -41,6 +41,9 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///
 /// `PlusMinusProduct().plus(0).plus(2)`.
 ///
+/// Returns:
+///     self: The new, empty PlusMinusProduct.
+///
 /// Examples
 /// --------
 ///
@@ -140,15 +143,15 @@ impl PlusMinusProductWrapper {
     ///     value (PauliProduct or DecoherenceProduct): The input object to convert.
     ///
     /// Returns:
-    ///     list[tuple[(PlusMinusProduct, CalculatorComplex)]]: The converted input.
+    ///     List[Tuple[(PlusMinusProduct, CalculatorComplex)]]: The converted input.
     ///
     /// Raises:
     ///     ValueError: Input is neither a PauliProduct nor a DecoherenceProduct.
     #[staticmethod]
     pub fn from_product(
-        value: Py<PyAny>,
+        value: &Bound<PyAny>,
     ) -> PyResult<Vec<(PlusMinusProductWrapper, CalculatorComplexWrapper)>> {
-        match PauliProductWrapper::from_pyany(value.clone()) {
+        match PauliProductWrapper::from_pyany(value) {
             Ok(x) => {
                 let result: Vec<(PlusMinusProduct, Complex64)> =
                     Vec::<(PlusMinusProduct, Complex64)>::from(x);
@@ -197,7 +200,7 @@ impl PlusMinusProductWrapper {
     /// Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
     ///
     /// Returns:
-    ///     list[tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    ///     List[Tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_pauli_product_list(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
         let result: Vec<(PauliProduct, Complex64)> =
             Vec::<(PauliProduct, Complex64)>::from(self.internal.clone());
@@ -220,7 +223,7 @@ impl PlusMinusProductWrapper {
     /// Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
     ///
     /// Returns:
-    ///     list[tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+    ///     List[Tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
     pub fn to_decoherence_product_list(
         &self,
     ) -> Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> {

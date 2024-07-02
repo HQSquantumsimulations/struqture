@@ -30,6 +30,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a QubitLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
+/// Returns:
+///     self: The new QubitLindbladNoiseOperator.
+///
 /// Examples
 /// --------
 ///
@@ -67,7 +70,7 @@ impl QubitLindbladNoiseOperatorWrapper {
     /// Create a new QubitLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     self: The new QubitLindbladNoiseOperator with the input number of spins.
+    ///     self: The new QubitLindbladNoiseOperator.
     #[new]
     pub fn new() -> Self {
         Self {
