@@ -1075,18 +1075,14 @@ fn test_qubit_noise_system_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::PauliProduct::from_str("0X1Y3Z").unwrap();
-    let dp_1 = struqture_one::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::SpinLindbladOpenSystem::new(None);
-    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
-    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(
-        noise_mut_1,
-        (dp_1.clone(), dp_1.clone()),
-        1.0.into(),
-    )
-    .unwrap();
+    let pp_1 = struqture_1::spins::PauliProduct::from_str("0X1Y3Z").unwrap();
+    let dp_1 = struqture_1::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::SpinLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(noise_mut_1, (dp_1.clone(), dp_1.clone()), 1.0.into())
+        .unwrap();
 
     let pp_2 = PauliProduct::new().x(0).y(1).z(3);
     let dp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);

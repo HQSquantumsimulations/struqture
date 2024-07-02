@@ -635,7 +635,7 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
@@ -645,16 +645,16 @@ fn test_from_pyany_to_struqture_one() {
             vec!["c0a0".to_string()],
             vec!["c1a1".to_string()],
         );
-        let pp_1: struqture_one::mixed_systems::MixedDecoherenceProduct =
-            struqture_one::mixed_systems::MixedIndex::new(
-                [struqture_one::spins::DecoherenceProduct::from_str("0Z").unwrap()],
-                [struqture_one::bosons::BosonProduct::from_str("c0a0").unwrap()],
-                [struqture_one::fermions::FermionProduct::from_str("c1a1").unwrap()],
+        let pp_1: struqture_1::mixed_systems::MixedDecoherenceProduct =
+            struqture_1::mixed_systems::MixedIndex::new(
+                [struqture_1::spins::DecoherenceProduct::from_str("0Z").unwrap()],
+                [struqture_1::bosons::BosonProduct::from_str("c0a0").unwrap()],
+                [struqture_1::fermions::FermionProduct::from_str("c1a1").unwrap()],
             )
             .unwrap();
 
         let result =
-            MixedDecoherenceProductWrapper::from_pyany_to_struqture_one(pp_2.as_ref().into())
+            MixedDecoherenceProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref().into())
                 .unwrap();
         assert_eq!(result, pp_1);
     });
@@ -662,7 +662,7 @@ fn test_from_pyany_to_struqture_one() {
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let json_string: &PyAny = pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"").into();
@@ -674,14 +674,14 @@ fn test_from_json_struqture_one() {
         );
 
         let pp_from_1 = pp_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: &PyAny =
             pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0b0\"").into();
-        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });
 }

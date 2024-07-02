@@ -557,9 +557,9 @@ fn test_fermion_hamiltonian_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::fermions::HermitianFermionProduct::from_str("c0a1").unwrap();
-    let mut ss_1 = struqture_one::fermions::FermionHamiltonianSystem::new(None);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+    let pp_1 = struqture_1::fermions::HermitianFermionProduct::from_str("c0a1").unwrap();
+    let mut ss_1 = struqture_1::fermions::FermionHamiltonianSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = HermitianFermionProduct::new([0], [1]).unwrap();
     let mut ss_2 = FermionHamiltonian::new();

@@ -639,7 +639,7 @@ fn test_decoherence_product_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp = struqture_one::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
+    let pp = struqture_1::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
     let pp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);
     assert!(DecoherenceProduct::from_struqture_1(&pp).unwrap() == pp_2);
     assert!(pp == pp_2.to_struqture_1().unwrap());

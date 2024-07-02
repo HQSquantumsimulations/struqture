@@ -758,9 +758,9 @@ fn test_qubit_hamiltonian_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::PauliProduct::from_str("0X1Y25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::SpinHamiltonianSystem::new(None);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+    let pp_1 = struqture_1::spins::PauliProduct::from_str("0X1Y25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::SpinHamiltonianSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = PauliProduct::new().x(0).y(1).z(25);
     let mut ss_2 = QubitHamiltonian::new();

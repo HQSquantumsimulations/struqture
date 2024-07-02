@@ -26,7 +26,7 @@ ndarray = {version="0.15"}
 tinyvec = {version="1.6", features=["alloc", "serde"]}
 schemars ={version="0.8.12", optional=true}
 indexmap = {version="2"}
-struqture_one = {package = "struqture", version="=1.7.0-alpha.0", optional=true, default-features=false, path="../../test_struqture/struqture/struqture"}
+struqture_1 = {package = "struqture", version="=1.7.0-alpha.0", optional=true, default-features=false, path="../../test_struqture/struqture/struqture"}
 
 [dev-dependencies]
 nalgebra = "0.32"
@@ -40,5 +40,5 @@ criterion = {version = "0.5"}
 [features]
 default = ["json_schema"]
 json_schema = ["schemars", "qoqo_calculator/json_schema"]
-struqture_1_export = ["struqture_one"]
-struqture_1_import = ["struqture_one"]
+struqture_1_export = ["struqture_1"]
+struqture_1_import = ["struqture_1"]

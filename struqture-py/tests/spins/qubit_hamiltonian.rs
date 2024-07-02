@@ -823,7 +823,7 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
@@ -831,23 +831,23 @@ fn test_from_pyany_to_struqture_one() {
         sys_2
             .call_method1("add_operator_product", ("0Z", 0.1))
             .unwrap();
-        let mut sys_1 = struqture_one::spins::SpinHamiltonianSystem::new(None);
-        struqture_one::OperateOnDensityMatrix::set(
+        let mut sys_1 = struqture_1::spins::SpinHamiltonianSystem::new(None);
+        struqture_1::OperateOnDensityMatrix::set(
             &mut sys_1,
-            struqture_one::spins::PauliProduct::from_str("0Z").unwrap(),
+            struqture_1::spins::PauliProduct::from_str("0Z").unwrap(),
             0.1.into(),
         )
         .unwrap();
 
         let result =
-            QubitHamiltonianWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into()).unwrap();
+            QubitHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
@@ -857,13 +857,13 @@ fn test_from_json_struqture_one() {
             .unwrap();
 
         let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{{\"number_spins\":null,\"hamiltonian\":{{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}").into();
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
 }
