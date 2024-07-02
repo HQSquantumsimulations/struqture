@@ -797,7 +797,10 @@ fn unitary_matrix() {
     let _ = system.set((pp0, pp1), CalculatorComplex::from(1.0));
 
     let unitary_matrix: CooSparseMatrix = (vec![], (vec![], vec![]));
-    assert_eq!(system.unitary_sparse_matrix_coo().unwrap(), unitary_matrix);
+    assert_eq!(
+        system.unitary_sparse_matrix_coo(Some(2)).unwrap(),
+        unitary_matrix
+    );
 }
 
 #[test]

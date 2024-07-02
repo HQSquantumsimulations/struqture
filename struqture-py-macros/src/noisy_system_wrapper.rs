@@ -389,7 +389,7 @@ pub fn noisywrapper(
                 ///     number_spins: The number of spins in self.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -412,16 +412,20 @@ pub fn noisywrapper(
 
                 /// Return the unitary part of the superoperator in the sparse COO format.
                 ///
+                /// Args:
+                ///     number_spins: The number of spins in self.
+                ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of the unitary part of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                pub fn unitary_sparse_matrix_coo(&self) -> PyResult<PyCooMatrix> {
+                #[pyo3(signature = (number_spins = None))]
+                pub fn unitary_sparse_matrix_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
-                        .unitary_sparse_matrix_coo()
+                        .unitary_sparse_matrix_coo(number_spins)
                         .map_err(|err| match err {
                             StruqtureError::CalculatorError(c_err) => {
                                 PyValueError::new_err(format!("{}", c_err))
@@ -436,7 +440,7 @@ pub fn noisywrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     List[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], complex]]: The matrix representation of the noise part of self.
+                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The little endian matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.

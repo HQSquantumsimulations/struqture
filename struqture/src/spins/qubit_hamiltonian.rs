@@ -222,8 +222,11 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitHamiltonian {
     }
 
     // From trait
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<crate::CooSparseMatrix, StruqtureError> {
-        self.sparse_matrix_coo(None)
+    fn unitary_sparse_matrix_coo(
+        &'a self,
+        number_spins: Option<usize>,
+    ) -> Result<crate::CooSparseMatrix, StruqtureError> {
+        self.sparse_matrix_coo(number_spins)
     }
 
     // From trait

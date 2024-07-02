@@ -151,8 +151,11 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitLindbladOpenSystem {
     }
 
     // From trait
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<CooSparseMatrix, StruqtureError> {
-        self.system.unitary_sparse_matrix_coo()
+    fn unitary_sparse_matrix_coo(
+        &'a self,
+        number_spins: Option<usize>,
+    ) -> Result<CooSparseMatrix, StruqtureError> {
+        self.system.unitary_sparse_matrix_coo(number_spins)
     }
 
     // From trait

@@ -689,7 +689,9 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let coo_test_matrix = system.unitary_sparse_matrix_coo().unwrap();
+    let coo_test_matrix = system
+        .unitary_sparse_matrix_coo(Some(pauli_operators.len()))
+        .unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(

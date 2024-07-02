@@ -423,7 +423,10 @@ fn matrices() {
 
     let unitary_matrix: CooSparseMatrix =
         (vec![1.0.into(), (-1.0).into()], (vec![0, 1], vec![0, 1]));
-    assert_eq!(system.unitary_sparse_matrix_coo().unwrap(), unitary_matrix);
+    assert_eq!(
+        system.unitary_sparse_matrix_coo(Some(1)).unwrap(),
+        unitary_matrix
+    );
 
     let mut superoperator_matrix: HashMap<usize, HashMap<usize, Complex64>> = HashMap::new();
     let mut row_0: HashMap<usize, Complex64> = HashMap::new();
@@ -693,7 +696,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let coo_test_matrix = system.unitary_sparse_matrix_coo().unwrap();
+    let coo_test_matrix = system.unitary_sparse_matrix_coo(None).unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(

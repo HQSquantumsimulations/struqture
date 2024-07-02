@@ -111,7 +111,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of the operator-like object.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix(
         &'a self,
@@ -138,7 +138,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>)))` - The matrix representation of the operator-like object.
+    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>)))` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_coo(
         &'a self,
@@ -173,7 +173,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of Self.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_entries_on_row(
         &'a self,
@@ -243,7 +243,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of the operator-like object.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,
@@ -339,7 +339,7 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     ///
     /// # Returns
     ///
-    /// * `HashMap<(usize, usize), CalculatorComplex>` - The matrix representation of Self.
+    /// * `HashMap<(usize, usize), CalculatorComplex>` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator(
         &'a self,
@@ -377,7 +377,7 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     ///
     /// # Returns
     ///
-    /// * `(Vec<Complex64>, (Vec<usize>, Vec<usize>)` - The matrix representation of Self.
+    /// * `(Vec<Complex64>, (Vec<usize>, Vec<usize>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_coo(
         &'a self,
@@ -418,7 +418,7 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of Self.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,
@@ -428,17 +428,24 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
 
     /// Return the unitary part of the superoperator in the sparse COO format.
     ///
+    /// # Arguments
+    ///
+    /// * `number_spins` - The number of spins for which to construct the unitary sparse matrix.
+    ///
     /// # Returns
     ///
-    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>))` - The matrix representation of Self.
+    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>))` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<CooSparseMatrix, StruqtureError>;
+    fn unitary_sparse_matrix_coo(
+        &'a self,
+        number_spins: Option<usize>,
+    ) -> Result<CooSparseMatrix, StruqtureError>;
 
     /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
     ///
     /// # Returns
     ///
-    /// * `Ok(Vec<((Vec<Complex64>, (Vec<usize>, Vec<usize>), (Vec<Complex64>, (Vec<usize>, Vec<usize>), Complex64)>)` - The matrix representation of Self.
+    /// * `Ok(Vec<((Vec<Complex64>, (Vec<usize>, Vec<usize>), (Vec<Complex64>, (Vec<usize>, Vec<usize>), Complex64)>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_lindblad_entries(
         &'a self,
