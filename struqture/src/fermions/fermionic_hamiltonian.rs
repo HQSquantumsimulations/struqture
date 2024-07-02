@@ -287,11 +287,11 @@ impl FermionHamiltonian {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::fermions::FermionHamiltonianSystem, StruqtureError> {
-        let mut new_fermion_system = struqture_one::fermions::FermionHamiltonianSystem::new(None);
+    ) -> Result<struqture_1::fermions::FermionHamiltonianSystem, StruqtureError> {
+        let mut new_fermion_system = struqture_1::fermions::FermionHamiltonianSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
-            let _ = struqture_one::OperateOnDensityMatrix::set(
+            let _ = struqture_1::OperateOnDensityMatrix::set(
                 &mut new_fermion_system,
                 one_key,
                 val.clone(),
@@ -303,10 +303,10 @@ impl FermionHamiltonian {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::fermions::FermionHamiltonianSystem,
+        value: &struqture_1::fermions::FermionHamiltonianSystem,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new();
-        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = HermitianFermionProduct::from_struqture_1(key)?;
             let _ = new_qubit_operator.set(self_key, val.clone());
         }

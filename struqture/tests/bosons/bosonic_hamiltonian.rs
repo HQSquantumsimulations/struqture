@@ -523,9 +523,9 @@ fn test_boson_hamiltonian_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
-    let mut ss_1 = struqture_one::bosons::BosonHamiltonianSystem::new(None);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+    let pp_1 = struqture_1::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
+    let mut ss_1 = struqture_1::bosons::BosonHamiltonianSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = HermitianBosonProduct::new([0], [1]).unwrap();
     let mut ss_2 = BosonHamiltonian::new();

@@ -833,19 +833,19 @@ impl PlusMinusProduct {
     }
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
-    pub fn to_struqture_1(&self) -> Result<struqture_one::spins::PlusMinusProduct, StruqtureError> {
+    pub fn to_struqture_1(&self) -> Result<struqture_1::spins::PlusMinusProduct, StruqtureError> {
         let self_string = self.to_string();
-        let struqture_one_product = struqture_one::spins::PlusMinusProduct::from_str(&self_string)
+        let struqture_1_product = struqture_1::spins::PlusMinusProduct::from_str(&self_string)
             .map_err(|err| StruqtureError::GenericError {
                 msg: format!("{}", err),
             })?;
-        Ok(struqture_one_product)
+        Ok(struqture_1_product)
     }
 
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::spins::PlusMinusProduct,
+        value: &struqture_1::spins::PlusMinusProduct,
     ) -> Result<Self, StruqtureError> {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;

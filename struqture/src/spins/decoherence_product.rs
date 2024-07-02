@@ -687,23 +687,19 @@ impl GetValue<(DecoherenceProduct, DecoherenceProduct)>
 impl DecoherenceProduct {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
-    pub fn to_struqture_1(
-        &self,
-    ) -> Result<struqture_one::spins::DecoherenceProduct, StruqtureError> {
+    pub fn to_struqture_1(&self) -> Result<struqture_1::spins::DecoherenceProduct, StruqtureError> {
         let self_string = self.to_string();
-        let struqture_one_product =
-            struqture_one::spins::DecoherenceProduct::from_str(&self_string).map_err(|err| {
-                StruqtureError::GenericError {
-                    msg: format!("{}", err),
-                }
+        let struqture_1_product = struqture_1::spins::DecoherenceProduct::from_str(&self_string)
+            .map_err(|err| StruqtureError::GenericError {
+                msg: format!("{}", err),
             })?;
-        Ok(struqture_one_product)
+        Ok(struqture_1_product)
     }
 
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::spins::DecoherenceProduct,
+        value: &struqture_1::spins::DecoherenceProduct,
     ) -> Result<Self, StruqtureError> {
         let value_string = value.to_string();
         let decoh_product = Self::from_str(&value_string)?;

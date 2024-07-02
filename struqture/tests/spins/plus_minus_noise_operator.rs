@@ -747,9 +747,9 @@ fn test_plus_minus_noise_operator_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::PlusMinusLindbladNoiseOperator::new();
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
+    let pp_1 = struqture_1::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::PlusMinusLindbladNoiseOperator::new();
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
         .unwrap();
 
     let pp_2 = PlusMinusProduct::new().plus(0).minus(1).z(25);

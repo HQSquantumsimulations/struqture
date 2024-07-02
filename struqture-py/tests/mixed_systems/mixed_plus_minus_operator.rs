@@ -945,7 +945,7 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
@@ -954,19 +954,19 @@ fn test_from_pyany_to_struqture_one() {
             .call_method1("add_operator_product", ("S0+:Bc0a1:Fc0a0:Fc0a1:", 0.1))
             .unwrap();
 
-        let pp_1 = struqture_one::mixed_systems::MixedPlusMinusProduct::new(
-            [struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap()],
-            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+        let pp_1 = struqture_1::mixed_systems::MixedPlusMinusProduct::new(
+            [struqture_1::spins::PlusMinusProduct::from_str("0+").unwrap()],
+            [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
             [
-                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
-                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap(),
             ],
         );
-        let mut sys_1 = struqture_one::mixed_systems::MixedPlusMinusOperator::new(1, 1, 2);
-        struqture_one::OperateOnDensityMatrix::set(&mut sys_1, pp_1.clone(), 0.1.into()).unwrap();
+        let mut sys_1 = struqture_1::mixed_systems::MixedPlusMinusOperator::new(1, 1, 2);
+        struqture_1::OperateOnDensityMatrix::set(&mut sys_1, pp_1.clone(), 0.1.into()).unwrap();
 
         let result =
-            MixedPlusMinusOperatorWrapper::from_pyany_to_struqture_one(sys_2.as_ref().into())
+            MixedPlusMinusOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into())
                 .unwrap();
         assert_eq!(result, sys_1);
     });
@@ -974,7 +974,7 @@ fn test_from_pyany_to_struqture_one() {
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}").into();
@@ -984,13 +984,13 @@ fn test_from_json_struqture_one() {
             .unwrap();
 
         let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}").into();
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
 }

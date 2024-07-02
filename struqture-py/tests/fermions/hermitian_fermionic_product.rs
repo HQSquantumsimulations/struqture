@@ -492,38 +492,38 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
         let pp_2 = new_pp(py, vec![0, 1], vec![1, 2]);
 
         let result =
-            HermitianFermionProductWrapper::from_pyany_to_struqture_one(pp_2.as_ref().into())
+            HermitianFermionProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref().into())
                 .unwrap();
         assert_eq!(
             result,
-            struqture_one::fermions::HermitianFermionProduct::from_str("c0c1a1a2").unwrap()
+            struqture_1::fermions::HermitianFermionProduct::from_str("c0c1a1a2").unwrap()
         );
     });
 }
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let json_string: &PyAny = pyo3::types::PyString::new(py, "\"c0a1\"").into();
         let pp_2 = new_pp(py, vec![0], vec![1]);
 
         let pp_from_1 = pp_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: &PyAny = pyo3::types::PyString::new(py, "\"c0b1\"").into();
-        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });
 }

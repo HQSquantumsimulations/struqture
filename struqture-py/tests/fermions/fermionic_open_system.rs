@@ -1614,7 +1614,7 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
@@ -1638,13 +1638,13 @@ fn test_from_pyany_to_struqture_one() {
             )
             .unwrap();
 
-        let pp_1 = struqture_one::fermions::HermitianFermionProduct::from_str("c0a0").unwrap();
-        let dp_1 = struqture_one::fermions::FermionProduct::from_str("c1a1").unwrap();
-        let mut sys_1 = struqture_one::fermions::FermionLindbladOpenSystem::new(None);
-        let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut sys_1);
-        struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 0.1.into()).unwrap();
-        let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut sys_1);
-        struqture_one::OperateOnDensityMatrix::set(
+        let pp_1 = struqture_1::fermions::HermitianFermionProduct::from_str("c0a0").unwrap();
+        let dp_1 = struqture_1::fermions::FermionProduct::from_str("c1a1").unwrap();
+        let mut sys_1 = struqture_1::fermions::FermionLindbladOpenSystem::new(None);
+        let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut sys_1);
+        struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 0.1.into()).unwrap();
+        let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut sys_1);
+        struqture_1::OperateOnDensityMatrix::set(
             noise_mut_1,
             (dp_1.clone(), dp_1.clone()),
             0.1.into(),
@@ -1652,14 +1652,14 @@ fn test_from_pyany_to_struqture_one() {
         .unwrap();
 
         let result =
-            FermionLindbladOpenSystemWrapper::from_pyany_to_struqture_one(sys_2.into()).unwrap();
+            FermionLindbladOpenSystemWrapper::from_pyany_to_struqture_1(sys_2.into()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_modes\":null,\"operator\":{\"items\":[[\"c1a1\",\"c1a1\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}").into();
@@ -1672,13 +1672,13 @@ fn test_from_json_struqture_one() {
             .unwrap();
 
         let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_modes\":null,\"operator\":{\"items\":[[\"c1a1\",\"c1a1\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}").into();
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
 }
