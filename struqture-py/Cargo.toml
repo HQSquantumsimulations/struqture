@@ -52,7 +52,7 @@ no-default-features = true
 
 [features]
 extension-module = ["pyo3/extension-module"]
-default = ["extension-module", "json_schema"]
+default = ["extension-module", "json_schema", "struqture_1_export", "struqture_1_import"]
 json_schema = ["struqture/json_schema"]
 struqture_1_export = ["struqture_1", "struqture/struqture_1_export", "struqture/struqture_1_import"]
 struqture_1_import = ["struqture_1", "struqture/struqture_1_import", "struqture/struqture_1_export"]

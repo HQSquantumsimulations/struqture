@@ -356,6 +356,17 @@ pub fn noisywrapper(
             pub fn current_number_spins(&self) -> usize {
                 self.internal.current_number_spins()
             }
+
+            /// Return maximum index in self.
+            ///
+            /// Returns:
+            ///     int: Maximum index.
+            pub fn number_spins(&self) -> usize {
+                Python::with_gil(|py| {
+                    py.run("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                });
+                self.internal.current_number_spins()
+            }
         }
     } else {
         TokenStream::new()
@@ -469,6 +480,17 @@ pub fn noisywrapper(
                 /// Returns:
                 ///     int: The number of spins in each spin subsystem of self.
                 pub fn current_number_spins(&self) -> Vec<usize> {
+                    self.internal.current_number_spins()
+                }
+
+                /// Return maximum index in self.
+                ///
+                /// Returns:
+                ///     int: Maximum index.
+                pub fn number_spins(&self) -> Vec<usize> {
+                    Python::with_gil(|py| {
+                        py.run("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                    });
                     self.internal.current_number_spins()
                 }
 
