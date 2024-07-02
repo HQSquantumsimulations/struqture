@@ -768,10 +768,10 @@ fn test_mixed_plus_minus_product_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::mixed_systems::MixedPlusMinusProduct::new(
-        [struqture_one::spins::PlusMinusProduct::from_str("0+").unwrap()],
-        [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
-        [struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap()],
+    let pp_1 = struqture_1::mixed_systems::MixedPlusMinusProduct::new(
+        [struqture_1::spins::PlusMinusProduct::from_str("0+").unwrap()],
+        [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
+        [struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap()],
     );
     let pp_2 = MixedPlusMinusProduct::new(
         [PlusMinusProduct::new().plus(0)],

@@ -860,9 +860,9 @@ fn test_plus_minus_operator_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::PlusMinusOperator::new();
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+    let pp_1 = struqture_1::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::PlusMinusOperator::new();
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = PlusMinusProduct::new().plus(0).minus(1).z(25);
     let mut ss_2 = PlusMinusOperator::new();

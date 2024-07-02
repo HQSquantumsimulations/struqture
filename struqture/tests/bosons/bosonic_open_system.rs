@@ -824,18 +824,14 @@ fn test_boson_open_system_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
-    let dp_1 = struqture_one::bosons::BosonProduct::from_str("c0a0").unwrap();
-    let mut ss_1 = struqture_one::bosons::BosonLindbladOpenSystem::new(None);
-    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
-    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(
-        noise_mut_1,
-        (dp_1.clone(), dp_1.clone()),
-        1.0.into(),
-    )
-    .unwrap();
+    let pp_1 = struqture_1::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
+    let dp_1 = struqture_1::bosons::BosonProduct::from_str("c0a0").unwrap();
+    let mut ss_1 = struqture_1::bosons::BosonLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(noise_mut_1, (dp_1.clone(), dp_1.clone()), 1.0.into())
+        .unwrap();
 
     let pp_2 = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp_2 = BosonProduct::new([0], [0]).unwrap();

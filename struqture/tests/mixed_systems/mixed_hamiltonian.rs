@@ -820,19 +820,19 @@ fn test_mixed_hamiltonian_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1: struqture_one::mixed_systems::HermitianMixedProduct =
-        struqture_one::mixed_systems::MixedIndex::new(
-            [struqture_one::spins::PauliProduct::from_str("0X").unwrap()],
-            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+    let pp_1: struqture_1::mixed_systems::HermitianMixedProduct =
+        struqture_1::mixed_systems::MixedIndex::new(
+            [struqture_1::spins::PauliProduct::from_str("0X").unwrap()],
+            [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
             [
-                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
-                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap(),
             ],
         )
         .unwrap();
     let mut ss_1 =
-        struqture_one::mixed_systems::MixedHamiltonianSystem::new([None], [None], [None, None]);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+        struqture_1::mixed_systems::MixedHamiltonianSystem::new([None], [None], [None, None]);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = HermitianMixedProduct::new(
         [PauliProduct::new().x(0)],

@@ -586,9 +586,9 @@ fn test_fermion_noise_operator_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap();
-    let mut ss_1 = struqture_one::fermions::FermionLindbladNoiseSystem::new(None);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
+    let pp_1 = struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap();
+    let mut ss_1 = struqture_1::fermions::FermionLindbladNoiseSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
         .unwrap();
 
     let pp_2 = FermionProduct::new([0], [1]).unwrap();

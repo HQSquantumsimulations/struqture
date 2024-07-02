@@ -211,21 +211,21 @@ impl HermitianMixedProduct {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::mixed_systems::HermitianMixedProduct, StruqtureError> {
+    ) -> Result<struqture_1::mixed_systems::HermitianMixedProduct, StruqtureError> {
         let self_string = self.to_string();
-        let struqture_one_product = struqture_one::mixed_systems::HermitianMixedProduct::from_str(
+        let struqture_1_product = struqture_1::mixed_systems::HermitianMixedProduct::from_str(
             &self_string,
         )
         .map_err(|err| StruqtureError::GenericError {
             msg: format!("{}", err),
         })?;
-        Ok(struqture_one_product)
+        Ok(struqture_1_product)
     }
 
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::mixed_systems::HermitianMixedProduct,
+        value: &struqture_1::mixed_systems::HermitianMixedProduct,
     ) -> Result<Self, StruqtureError> {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;
@@ -663,7 +663,7 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
                                 internal_tmp_bosons.push(tmp_entry);
                             }
                         }
-                        tmp_bosons = internal_tmp_bosons.clone();
+                        tmp_bosons.clone_from(&internal_tmp_bosons);
                     } else {
                         for bp in boson_multiplication.clone() {
                             tmp_bosons.push(vec![bp]);
@@ -813,7 +813,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
                             internal_tmp_bosons.push(tmp_entry);
                         }
                     }
-                    tmp_bosons = internal_tmp_bosons.clone();
+                    tmp_bosons.clone_from(&internal_tmp_bosons);
                 } else {
                     for bp in boson_multiplication.clone() {
                         tmp_bosons.push(vec![bp]);

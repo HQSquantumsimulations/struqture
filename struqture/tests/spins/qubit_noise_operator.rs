@@ -797,7 +797,10 @@ fn unitary_matrix() {
     let _ = system.set((pp0, pp1), CalculatorComplex::from(1.0));
 
     let unitary_matrix: CooSparseMatrix = (vec![], (vec![], vec![]));
-    assert_eq!(system.unitary_sparse_matrix_coo().unwrap(), unitary_matrix);
+    assert_eq!(
+        system.unitary_sparse_matrix_coo(Some(2)).unwrap(),
+        unitary_matrix
+    );
 }
 
 #[test]
@@ -960,9 +963,9 @@ fn test_qubit_noise_operator_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::SpinLindbladNoiseSystem::new(None);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
+    let pp_1 = struqture_1::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::SpinLindbladNoiseSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
         .unwrap();
 
     let pp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);

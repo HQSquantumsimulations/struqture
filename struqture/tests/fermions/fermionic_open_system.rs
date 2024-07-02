@@ -837,18 +837,14 @@ fn test_fermion_noise_system_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::fermions::HermitianFermionProduct::from_str("c0a1").unwrap();
-    let dp_1 = struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap();
-    let mut ss_1 = struqture_one::fermions::FermionLindbladOpenSystem::new(None);
-    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
-    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(
-        noise_mut_1,
-        (dp_1.clone(), dp_1.clone()),
-        1.0.into(),
-    )
-    .unwrap();
+    let pp_1 = struqture_1::fermions::HermitianFermionProduct::from_str("c0a1").unwrap();
+    let dp_1 = struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap();
+    let mut ss_1 = struqture_1::fermions::FermionLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(noise_mut_1, (dp_1.clone(), dp_1.clone()), 1.0.into())
+        .unwrap();
 
     let pp_2 = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp_2 = FermionProduct::new([0], [0]).unwrap();

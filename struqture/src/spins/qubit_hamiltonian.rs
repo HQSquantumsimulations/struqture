@@ -222,8 +222,11 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for QubitHamiltonian {
     }
 
     // From trait
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<crate::CooSparseMatrix, StruqtureError> {
-        self.sparse_matrix_coo(None)
+    fn unitary_sparse_matrix_coo(
+        &'a self,
+        number_spins: Option<usize>,
+    ) -> Result<crate::CooSparseMatrix, StruqtureError> {
+        self.sparse_matrix_coo(number_spins)
     }
 
     // From trait
@@ -278,11 +281,11 @@ impl QubitHamiltonian {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::spins::SpinHamiltonianSystem, StruqtureError> {
-        let mut new_qubit_system = struqture_one::spins::SpinHamiltonianSystem::new(None);
+    ) -> Result<struqture_1::spins::SpinHamiltonianSystem, StruqtureError> {
+        let mut new_qubit_system = struqture_1::spins::SpinHamiltonianSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
-            let _ = struqture_one::OperateOnDensityMatrix::set(
+            let _ = struqture_1::OperateOnDensityMatrix::set(
                 &mut new_qubit_system,
                 one_key,
                 val.clone(),
@@ -294,10 +297,10 @@ impl QubitHamiltonian {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::spins::SpinHamiltonianSystem,
+        value: &struqture_1::spins::SpinHamiltonianSystem,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new();
-        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = PauliProduct::from_struqture_1(key)?;
             let _ = new_qubit_operator.set(self_key, val.clone());
         }

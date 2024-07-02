@@ -1296,37 +1296,33 @@ fn test_mixed_open_system_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1: struqture_one::mixed_systems::HermitianMixedProduct =
-        struqture_one::mixed_systems::MixedIndex::new(
-            [struqture_one::spins::PauliProduct::from_str("0X").unwrap()],
-            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+    let pp_1: struqture_1::mixed_systems::HermitianMixedProduct =
+        struqture_1::mixed_systems::MixedIndex::new(
+            [struqture_1::spins::PauliProduct::from_str("0X").unwrap()],
+            [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
             [
-                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
-                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap(),
             ],
         )
         .unwrap();
-    let dp_1: struqture_one::mixed_systems::MixedDecoherenceProduct =
-        struqture_one::mixed_systems::MixedIndex::new(
-            [struqture_one::spins::DecoherenceProduct::from_str("0X").unwrap()],
-            [struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap()],
+    let dp_1: struqture_1::mixed_systems::MixedDecoherenceProduct =
+        struqture_1::mixed_systems::MixedIndex::new(
+            [struqture_1::spins::DecoherenceProduct::from_str("0X").unwrap()],
+            [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
             [
-                struqture_one::fermions::FermionProduct::from_str("c0a0").unwrap(),
-                struqture_one::fermions::FermionProduct::from_str("c0a1").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap(),
             ],
         )
         .unwrap();
     let mut ss_1 =
-        struqture_one::mixed_systems::MixedLindbladOpenSystem::new([None], [None], [None, None]);
-    let system_mut_1 = struqture_one::OpenSystem::system_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
-    let noise_mut_1 = struqture_one::OpenSystem::noise_mut(&mut ss_1);
-    struqture_one::OperateOnDensityMatrix::set(
-        noise_mut_1,
-        (dp_1.clone(), dp_1.clone()),
-        1.0.into(),
-    )
-    .unwrap();
+        struqture_1::mixed_systems::MixedLindbladOpenSystem::new([None], [None], [None, None]);
+    let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(noise_mut_1, (dp_1.clone(), dp_1.clone()), 1.0.into())
+        .unwrap();
 
     let pp_2 = HermitianMixedProduct::new(
         [PauliProduct::new().x(0)],

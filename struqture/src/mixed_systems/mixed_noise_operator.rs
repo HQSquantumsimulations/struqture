@@ -362,8 +362,8 @@ impl MixedLindbladNoiseOperator {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::mixed_systems::MixedLindbladNoiseSystem, StruqtureError> {
-        let mut new_mixed_system = struqture_one::mixed_systems::MixedLindbladNoiseSystem::new(
+    ) -> Result<struqture_1::mixed_systems::MixedLindbladNoiseSystem, StruqtureError> {
+        let mut new_mixed_system = struqture_1::mixed_systems::MixedLindbladNoiseSystem::new(
             vec![None; self.n_spins],
             vec![None; self.n_bosons],
             vec![None; self.n_fermions],
@@ -371,7 +371,7 @@ impl MixedLindbladNoiseOperator {
         for (key, val) in self.iter() {
             let one_key_left = key.0.to_struqture_1()?;
             let one_key_right = key.1.to_struqture_1()?;
-            let _ = struqture_one::OperateOnDensityMatrix::set(
+            let _ = struqture_1::OperateOnDensityMatrix::set(
                 &mut new_mixed_system,
                 (one_key_left, one_key_right),
                 val.clone(),
@@ -383,20 +383,18 @@ impl MixedLindbladNoiseOperator {
     /// Import from struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::mixed_systems::MixedLindbladNoiseSystem,
+        value: &struqture_1::mixed_systems::MixedLindbladNoiseSystem,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new(
-            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
-            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
-                value,
-            )
-            .len(),
-            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
+            struqture_1::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
+            struqture_1::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(value)
+                .len(),
+            struqture_1::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
                 value,
             )
             .len(),
         );
-        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key_left = MixedDecoherenceProduct::from_struqture_1(&key.0)?;
             let self_key_right = MixedDecoherenceProduct::from_struqture_1(&key.1)?;
             let _ = new_qubit_operator.set((self_key_left, self_key_right), val.clone());

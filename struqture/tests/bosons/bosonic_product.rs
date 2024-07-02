@@ -557,7 +557,7 @@ fn test_boson_product_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::bosons::BosonProduct::from_str("c0a1").unwrap();
+    let pp_1 = struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap();
     let pp_2 = BosonProduct::new([0], [1]).unwrap();
     assert!(BosonProduct::from_struqture_1(&pp_1).unwrap() == pp_2);
     assert!(pp_1 == pp_2.to_struqture_1().unwrap());

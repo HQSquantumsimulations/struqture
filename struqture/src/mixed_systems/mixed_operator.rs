@@ -313,15 +313,15 @@ impl MixedOperator {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::mixed_systems::MixedSystem, StruqtureError> {
-        let mut new_mixed_system = struqture_one::mixed_systems::MixedSystem::new(
+    ) -> Result<struqture_1::mixed_systems::MixedSystem, StruqtureError> {
+        let mut new_mixed_system = struqture_1::mixed_systems::MixedSystem::new(
             vec![None; self.n_spins],
             vec![None; self.n_bosons],
             vec![None; self.n_fermions],
         );
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
-            let _ = struqture_one::OperateOnDensityMatrix::set(
+            let _ = struqture_1::OperateOnDensityMatrix::set(
                 &mut new_mixed_system,
                 one_key,
                 val.clone(),
@@ -333,20 +333,18 @@ impl MixedOperator {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::mixed_systems::MixedSystem,
+        value: &struqture_1::mixed_systems::MixedSystem,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new(
-            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
-            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
-                value,
-            )
-            .len(),
-            struqture_one::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
+            struqture_1::mixed_systems::OperateOnMixedSystems::current_number_spins(value).len(),
+            struqture_1::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(value)
+                .len(),
+            struqture_1::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
                 value,
             )
             .len(),
         );
-        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = MixedProduct::from_struqture_1(key)?;
             let _ = new_qubit_operator.set(self_key, val.clone());
         }

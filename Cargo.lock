@@ -1504,15 +1504,12 @@ checksum = "5ee073c9e4cd00e28217186dbe12796d692868f432bf2e97ee73bed0c56dfa01"
 
 [[package]]
 name = "struqture"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5e6a6fae203fb8098042ab51364cf5ff79020312e68b63038371d627029ab08"
+version = "1.7.0-alpha.0"
 dependencies = [
  "itertools 0.12.1",
  "ndarray",
  "num-complex",
  "qoqo_calculator",
- "schemars",
  "serde",
  "test-case",
  "thiserror",
@@ -1537,7 +1534,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
- "struqture 1.6.1",
+ "struqture 1.7.0-alpha.0",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1561,7 +1558,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.6.1",
+ "struqture 1.7.0-alpha.0",
  "struqture 2.0.0-alpha.0",
  "struqture-py-macros",
  "syn 2.0.52",

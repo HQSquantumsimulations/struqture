@@ -28,7 +28,7 @@ pub fn noisywrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
-    let (index_type, struqture_one_module, struqture_one_ident) =
+    let (index_type, struqture_1_module, struqture_1_ident) =
         if struct_name.contains("QubitLindbladNoiseOperator") {
             (
                 quote::format_ident!("DecoherenceProductWrapper"),
@@ -356,6 +356,17 @@ pub fn noisywrapper(
             pub fn current_number_spins(&self) -> usize {
                 self.internal.current_number_spins()
             }
+
+            /// Return maximum index in self.
+            ///
+            /// Returns:
+            ///     int: Maximum index.
+            pub fn number_spins(&self) -> usize {
+                Python::with_gil(|py| {
+                    py.run("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                });
+                self.internal.current_number_spins()
+            }
         }
     } else {
         TokenStream::new()
@@ -374,7 +385,7 @@ pub fn noisywrapper(
                 ///     number_spins: The number of spins in self.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -397,16 +408,20 @@ pub fn noisywrapper(
 
                 /// Return the unitary part of the superoperator in the sparse COO format.
                 ///
+                /// Args:
+                ///     number_spins: The number of spins in self.
+                ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of the unitary part of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                pub fn unitary_sparse_matrix_coo(&self) -> PyResult<PyCooMatrix> {
+                #[pyo3(signature = (number_spins = None))]
+                pub fn unitary_sparse_matrix_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
-                        .unitary_sparse_matrix_coo()
+                        .unitary_sparse_matrix_coo(number_spins)
                         .map_err(|err| match err {
                             StruqtureError::CalculatorError(c_err) => {
                                 PyValueError::new_err(format!("{}", c_err))
@@ -421,7 +436,7 @@ pub fn noisywrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The matrix representation of the noise part of self.
+                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The little endian matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -465,6 +480,17 @@ pub fn noisywrapper(
                 /// Returns:
                 ///     int: The number of spins in each spin subsystem of self.
                 pub fn current_number_spins(&self) -> Vec<usize> {
+                    self.internal.current_number_spins()
+                }
+
+                /// Return maximum index in self.
+                ///
+                /// Returns:
+                ///     int: Maximum index.
+                pub fn number_spins(&self) -> Vec<usize> {
+                    Python::with_gil(|py| {
+                        py.run("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                    });
                     self.internal.current_number_spins()
                 }
 
@@ -933,7 +959,7 @@ pub fn noisywrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
-            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany_struqture_1(input: Py<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
                     let input = input.as_ref(py);
                     let get_bytes = input
@@ -953,9 +979,9 @@ pub fn noisywrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_one(
+            pub fn from_pyany_to_struqture_1(
                 input: Py<PyAny>,
-            ) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+            ) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
                 let res = #ident::from_pyany(input)?;
                 let one_export = #struct_ident::to_struqture_1(&res).map_err(
                     |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
@@ -980,24 +1006,24 @@ pub fn noisywrapper(
             // ----------------------------------
             // Default pyo3 implementations
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
+            pub fn from_struqture_1(input: Py<PyAny>) -> PyResult<#ident> {
                 let qubit_operator: #struct_ident =
-                    #ident::from_pyany_struqture_one(input)?;
+                    #ident::from_pyany_struqture_1(input)?;
                 Ok(#ident {
                     internal: qubit_operator,
                 })
             }
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
-                let qubit_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+            pub fn from_json_struqture_1(input: String) -> PyResult<#ident> {
+                let qubit_operator: struqture_1::#struqture_1_module::#struqture_1_ident =
                     serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from json to struqture 1.x: {}",

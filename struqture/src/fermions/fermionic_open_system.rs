@@ -139,11 +139,11 @@ impl FermionLindbladOpenSystem {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::fermions::FermionLindbladOpenSystem, StruqtureError> {
+    ) -> Result<struqture_1::fermions::FermionLindbladOpenSystem, StruqtureError> {
         let new_system = self.system().to_struqture_1()?;
         let new_noise = self.noise().to_struqture_1()?;
 
-        struqture_one::OpenSystem::group(new_system, new_noise).map_err(
+        struqture_1::OpenSystem::group(new_system, new_noise).map_err(
             |err| StruqtureError::GenericError { msg:
                 format!("Could not convert struqture 2.x FermionLindbladOpenSystem to 1.x FermionLindbladOpenSystem, group function failed: {:?}.", err)
             }
@@ -153,9 +153,9 @@ impl FermionLindbladOpenSystem {
     /// Import from struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::fermions::FermionLindbladOpenSystem,
+        value: &struqture_1::fermions::FermionLindbladOpenSystem,
     ) -> Result<Self, StruqtureError> {
-        let (system_one, noise_one) = struqture_one::OpenSystem::ungroup(value.clone());
+        let (system_one, noise_one) = struqture_1::OpenSystem::ungroup(value.clone());
         let new_system = FermionHamiltonian::from_struqture_1(&system_one)?;
         let new_noise = FermionLindbladNoiseOperator::from_struqture_1(&noise_one)?;
         Self::group(new_system, new_noise)

@@ -28,7 +28,7 @@ pub fn productwrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
-    let (struqture_one_module, struqture_one_ident) = if struct_name.contains("PauliProduct") {
+    let (struqture_1_module, struqture_1_ident) = if struct_name.contains("PauliProduct") {
         (
             quote::format_ident!("spins"),
             quote::format_ident!("PauliProduct"),
@@ -423,7 +423,7 @@ pub fn productwrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
-            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany_struqture_1(input: Py<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
                     let get_str = input.call_method0(py, "__str__").map_err(|_| {
                         PyTypeError::new_err("Type conversion failed".to_string())
@@ -431,7 +431,7 @@ pub fn productwrapper(
                     let string = get_str.extract::<String>(py).map_err(|_| {
                         PyTypeError::new_err("Type conversion failed".to_string())
                     })?;
-                    let one_import = struqture_one::#struqture_one_module::#struqture_one_ident::from_str(string.as_str()).map_err(|err|
+                    let one_import = struqture_1::#struqture_1_module::#struqture_1_ident::from_str(string.as_str()).map_err(|err|
                         PyTypeError::new_err(format!(
                             "Type conversion failed: {}",
                             err
@@ -446,7 +446,7 @@ pub fn productwrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_one(input: Py<PyAny>) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+            pub fn from_pyany_to_struqture_1(input: Py<PyAny>) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
                 let res = <#ident>::from_pyany(input)?;
                 <#struct_ident>::to_struqture_1(&res).map_err(
                     |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? Error message: {:?}", err)
@@ -468,24 +468,24 @@ pub fn productwrapper(
             // ----------------------------------
             // Default pyo3 implementations
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
-                let qubit_operator: #struct_ident = #ident::from_pyany_struqture_one(input)?;
+            pub fn from_struqture_1(input: Py<PyAny>) -> PyResult<#ident> {
+                let qubit_operator: #struct_ident = #ident::from_pyany_struqture_1(input)?;
                 Ok(#ident {
                     internal: qubit_operator,
                 })
             }
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[pyo3(text_signature = "(input)")]
             #[staticmethod]
-            pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
-                let qubit_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+            pub fn from_json_struqture_1(input: String) -> PyResult<#ident> {
+                let qubit_operator: struqture_1::#struqture_1_module::#struqture_1_ident =
                     serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from json to struqture 1.x: {}",
