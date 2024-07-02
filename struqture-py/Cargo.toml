@@ -22,7 +22,7 @@ features = ["num-complex", "multiple-pymethods"]
 
 [dependencies]
 struqture = {version="2.0.0-alpha.0", path="../struqture", default-features=false}
-struqture_one = {package = "struqture", version="=1.6", optional=true, default-features=false}
+struqture_one = {package = "struqture", version="=1.7.0-alpha.0", optional=true, default-features=false, path="../../test_struqture/struqture/struqture"}
 
 serde = { version = "1.0", features = ["derive"] }
 numpy = "0.20"
