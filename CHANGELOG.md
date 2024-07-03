@@ -4,7 +4,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.9.0-alpha.0
 
-* Added methods to convert from struqture 2.0.0-alpha.0
+* Added methods to convert from struqture 2.0.0-alpha.1
 
 ## 1.8.0
 
