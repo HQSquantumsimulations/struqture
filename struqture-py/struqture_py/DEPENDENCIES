@@ -32314,7 +32314,7 @@ SOFTWARE.
 
 
 ====================================================
-struqture 1.7.0-alpha.0
+struqture 1.8.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32525,7 +32525,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.0.0-alpha.0
+struqture 2.0.0-alpha.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32736,7 +32736,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.0.0-alpha.0
+struqture-py 2.0.0-alpha.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32947,7 +32947,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.0.0-alpha.0
+struqture-py-macros 2.0.0-alpha.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -45011,7 +45011,7 @@ THE SOFTWARE.
 
 
 ====================================================
-zerocopy 0.7.34
+zerocopy 0.7.35
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>
 Utilities for zero-copy parsing and serialization
@@ -45282,7 +45282,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
-zerocopy-derive 0.7.34
+zerocopy-derive 0.7.35
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>
 Custom derive for traits from the zerocopy crate

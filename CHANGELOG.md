@@ -2,6 +2,14 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 2.0.0-alpha.1
+
+* Additional changes from feedback regarding struqture 2.0
+
+## 2.0.0-alpha.0
+
+* First draft of the changes for struqture 2.0
+
 ## 1.8.0
 
 * Added IDE hint support.
