@@ -172,9 +172,7 @@ impl FermionHamiltonianSystemWrapper {
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
             let two_import: struqture_2::fermions::FermionHamiltonian = deserialize(&bytes[..])
-                .map_err(|err| {
-                PyTypeError::new_err(format!("Type conversion failed: {}", err))
-            })?;
+                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
             let mut fermion_system = FermionHamiltonianSystem::new(None);
             for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {
                 let value_string = key.to_string();

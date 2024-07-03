@@ -199,10 +199,8 @@ impl MixedHamiltonianSystemWrapper {
             let bytes = get_bytes
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_2::mixed_systems::MixedHamiltonian =
-                deserialize(&bytes[..]).map_err(|err| {
-                    PyTypeError::new_err(format!("Type conversion failed: {}", err))
-                })?;
+            let two_import: struqture_2::mixed_systems::MixedHamiltonian = deserialize(&bytes[..])
+                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
             let number_spins: usize = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::mixed_systems::OperateOnMixedSystems>::current_number_spins(&two_import).len();
             let spin_systems: Vec<Option<usize>> = vec![None; number_spins];
             let number_bosons: usize = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::mixed_systems::OperateOnMixedSystems>::current_number_bosonic_modes(&two_import).len();
