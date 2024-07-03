@@ -1550,9 +1550,9 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.0.0-alpha.1"
+version = "2.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "458ef2eb48395435081edf18e744addab1f24cd90d8248b78e42edac550230d8"
+checksum = "6c019bdef17cd9239a7255bd793ccb69c54b716ce4c266207c23fd818b1203d6"
 dependencies = [
  "indexmap",
  "itertools 0.12.1",
@@ -1586,7 +1586,7 @@ dependencies = [
  "serde",
  "serde_json",
  "struqture 1.9.0-alpha.0",
- "struqture 2.0.0-alpha.1",
+ "struqture 2.0.0-alpha.2",
  "struqture-py-macros",
  "syn",
  "test-case",

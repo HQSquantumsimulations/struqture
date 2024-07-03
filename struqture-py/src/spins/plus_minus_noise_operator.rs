@@ -194,7 +194,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
     // #[cfg(feature = "struqture_1_import")]
     #[staticmethod]
-    pub fn from_struqture_two(
+    pub fn from_struqture_2(
         input: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         Python::with_gil(|_| -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
@@ -205,13 +205,13 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
-            let source_serialisation_meta: struqture_two::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
-            let target_serialisation_meta = <struqture_two::spins::PlusMinusLindbladNoiseOperator as struqture_two::SerializationSupport>::target_serialisation_meta();
+            let target_serialisation_meta = <struqture_2::spins::PlusMinusLindbladNoiseOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
 
-            struqture_two::check_can_be_deserialised(
+            struqture_2::check_can_be_deserialised(
                 &target_serialisation_meta,
                 &source_serialisation_meta,
             )
@@ -223,12 +223,12 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
             let bytes = get_bytes
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_two::spins::PlusMinusLindbladNoiseOperator =
+            let two_import: struqture_2::spins::PlusMinusLindbladNoiseOperator =
                 deserialize(&bytes[..]).map_err(|err| {
                     PyTypeError::new_err(format!("Type conversion failed: {}", err))
                 })?;
             let mut spin_system = PlusMinusLindbladNoiseOperator::new();
-            for (key, val) in struqture_two::OperateOnDensityMatrix::iter(&two_import) {
+            for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {
                 let value_string_left = key.0.to_string();
                 let self_key_left = PlusMinusProduct::from_str(&value_string_left).map_err(
                     |_err| PyValueError::new_err(

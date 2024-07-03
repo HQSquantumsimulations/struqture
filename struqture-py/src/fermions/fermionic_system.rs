@@ -136,7 +136,7 @@ impl FermionSystemWrapper {
     ///     TypeError: If the input is not a struqture 2.x FermionOperator.
     ///     ValueError: Conversion failed.
     #[staticmethod]
-    pub fn from_struqture_two(input: &Bound<PyAny>) -> PyResult<FermionSystemWrapper> {
+    pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<FermionSystemWrapper> {
         Python::with_gil(|_| -> PyResult<FermionSystemWrapper> {
             let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
@@ -145,13 +145,13 @@ impl FermionSystemWrapper {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
-            let source_serialisation_meta: struqture_two::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
-            let target_serialisation_meta = <struqture_two::fermions::FermionOperator as struqture_two::SerializationSupport>::target_serialisation_meta();
+            let target_serialisation_meta = <struqture_2::fermions::FermionOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
 
-            struqture_two::check_can_be_deserialised(
+            struqture_2::check_can_be_deserialised(
                 &target_serialisation_meta,
                 &source_serialisation_meta,
             )
@@ -163,10 +163,10 @@ impl FermionSystemWrapper {
             let bytes = get_bytes
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_two::fermions::FermionOperator = deserialize(&bytes[..])
+            let two_import: struqture_2::fermions::FermionOperator = deserialize(&bytes[..])
                 .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
             let mut fermion_system = FermionSystem::new(None);
-            for (key, val) in struqture_two::OperateOnDensityMatrix::iter(&two_import) {
+            for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {
                 let value_string = key.to_string();
                 let self_key = FermionProduct::from_str(&value_string).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
