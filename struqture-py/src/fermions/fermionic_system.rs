@@ -124,9 +124,17 @@ impl FermionSystemWrapper {
         }
     }
 
-    // add in a function converting struqture_one (not py) to struqture 2
-    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
-    // #[cfg(feature = "struqture_2_import")]
+    /// Converts a struqture 2.x FermionOperator to a struqture 1.x FermionSystem.
+    ///
+    /// Args:
+    ///     input (FermionOperator): The struqture 2.x FermionOperator to convert to struqture 1.x.
+    ///
+    /// Returns:
+    ///     FermionSystem: The struqture 1.x FermionSystem created from the struqture 2.x FermionOperator.
+    ///
+    /// Raises:
+    ///     TypeError: If the input is not a struqture 2.x FermionOperator.
+    ///     ValueError: Conversion failed.
     #[staticmethod]
     pub fn from_struqture_two(input: &Bound<PyAny>) -> PyResult<FermionSystemWrapper> {
         Python::with_gil(|_| -> PyResult<FermionSystemWrapper> {

@@ -138,9 +138,17 @@ impl SpinHamiltonianSystemWrapper {
         }
     }
 
-    // add in a function converting struqture_one (not py) to struqture 2
-    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
-    // #[cfg(feature = "struqture_2_import")]
+    /// Converts a struqture 2.x QubitHamiltonian to a struqture 1.x SpinHamiltonianSystem.
+    ///
+    /// Args:
+    ///     input (QubitHamiltonian): The struqture 2.x QubitHamiltonian to convert to struqture 1.x.
+    ///
+    /// Returns:
+    ///     SpinHamiltonianSystem: The struqture 1.x SpinHamiltonianSystem created from the struqture 2.x QubitHamiltonian.
+    ///
+    /// Raises:
+    ///     TypeError: If the input is not a struqture 2.x QubitHamiltonian.
+    ///     ValueError: Conversion failed.
     #[staticmethod]
     pub fn from_struqture_two(input: &Bound<PyAny>) -> PyResult<SpinHamiltonianSystemWrapper> {
         Python::with_gil(|_| -> PyResult<SpinHamiltonianSystemWrapper> {
