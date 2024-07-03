@@ -16,23 +16,27 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 #[cfg(feature = "json_schema")]
 use struqture::{fermions::FermionLindbladNoiseOperator, STRUQTURE_VERSION};
-use struqture_py::fermions::{FermionLindbladNoiseOperatorWrapper, FermionProductWrapper};
+use struqture_py::fermions::FermionLindbladNoiseOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_noisesystem(py: Python) -> &PyCell<FermionLindbladNoiseOperatorWrapper> {
-    let system_type = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
+fn new_noisesystem(py: Python) -> Bound<FermionLindbladNoiseOperatorWrapper> {
+    let system_type = py.get_type_bound::<FermionLindbladNoiseOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
+        .downcast::<FermionLindbladNoiseOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
+<<<<<<< HEAD
     let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+=======
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
+>>>>>>> 4734624 (Struqture 2.0 (#123))
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -80,7 +84,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of fermions
         let comp_op = system.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
@@ -98,7 +103,7 @@ fn test_number_modes_current() {
         let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
-            bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -127,11 +132,10 @@ fn test_empty_clone() {
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionLindbladNoiseOperatorWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<FermionLindbladNoiseOperatorWrapper>>()
+        let new_system = py.get_type_bound::<FermionLindbladNoiseOperatorWrapper>();
+        let system = new_system.call0().unwrap();
+        system
+            .downcast::<FermionLindbladNoiseOperatorWrapper>()
             .unwrap();
         system
             .call_method1("add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -625,16 +629,6 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system = FermionLindbladNoiseOperatorWrapper::new();
-        let pp_type = py.get_type::<FermionProductWrapper>();
-        let new_pp = pp_type.call1(([0], [0])).unwrap();
-
-        rust_system
-            .add_operator_product(
-                (new_pp.clone().into(), new_pp.into()),
-                &convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
-            )
-            .unwrap();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
         let format_op: String = String::extract_bound(&to_format).unwrap();
@@ -657,33 +651,6 @@ fn test_format_repr() {
             str_op,
             "FermionLindbladNoiseOperator{\n(c0a0, c0a0): (1e-1 + i * 0e0),\n}".to_string()
         );
-    });
-}
-
-/// Test keys function of FermionLindbladNoiseOperator
-#[test]
-fn test_keys_noise() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let system = new_noisesystem(py);
-        system
-            .call_method1(
-                "add_operator_product",
-                (
-                    ("c0a0", "c0a0"),
-                    convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
-                ),
-            )
-            .unwrap();
-
-        let keys_system = system.call_method0("keys").unwrap();
-        let comparison = bool::extract_bound(
-            &keys_system
-                .call_method1("__eq__", (vec![("c0a0".to_string(), "c0a0".to_string())],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
     });
 }
 
@@ -748,9 +715,9 @@ fn test_jordan_wigner() {
         assert!(!empty);
 
         let current_number_modes =
-            usize::extract(flns.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&flns.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(slns.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&slns.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -777,7 +744,7 @@ fn test_json_schema() {
         new.call_method1("add_operator_product", (("c0a0", "c0a0"), 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -805,8 +772,7 @@ fn test_from_pyany_to_struqture_1() {
         .unwrap();
 
         let result =
-            FermionLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into())
-                .unwrap();
+            FermionLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -816,7 +782,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_noisesystem(py);
         sys_2
             .call_method1("add_operator_product", (("c0a0", "c0a0"), 1.0))
@@ -825,10 +791,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_modes\":null,\"operator\":{\"items\":[[\"c0a0\",\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

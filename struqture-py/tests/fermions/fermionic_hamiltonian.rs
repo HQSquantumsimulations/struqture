@@ -20,22 +20,22 @@ use struqture_py::fermions::{FermionHamiltonianWrapper, FermionOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> &PyCell<FermionHamiltonianWrapper> {
-    let system_type = py.get_type::<FermionHamiltonianWrapper>();
+fn new_system(py: Python) -> Bound<FermionHamiltonianWrapper> {
+    let system_type = py.get_type_bound::<FermionHamiltonianWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<FermionHamiltonianWrapper>>()
+        .downcast::<FermionHamiltonianWrapper>()
         .unwrap()
         .to_owned()
 }
 // helper functions
-fn new_fermionic_system(py: Python) -> &PyCell<FermionOperatorWrapper> {
-    let system_type = py.get_type::<FermionOperatorWrapper>();
+fn new_fermionic_system(py: Python) -> Bound<FermionOperatorWrapper> {
+    let system_type = py.get_type_bound::<FermionOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<FermionOperatorWrapper>>()
+        .downcast::<FermionOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -68,11 +68,13 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of fermions
         let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
 
         let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
@@ -90,7 +92,7 @@ fn test_number_fermions_current() {
         let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
-            bool::extract(number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -136,12 +138,9 @@ fn test_hermitian_conj() {
 fn fermion_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionHamiltonianWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<FermionHamiltonianWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<FermionHamiltonianWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<FermionHamiltonianWrapper>().unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c1c2a3", 0.2)).unwrap();
         system.call_method1("set", ("c0a2a3", 0.05)).unwrap();
@@ -187,12 +186,9 @@ fn fermion_system_test_set_get() {
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionHamiltonianWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<FermionHamiltonianWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<FermionHamiltonianWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<FermionHamiltonianWrapper>().unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -612,7 +608,7 @@ fn test_copy_deepcopy() {
 
         let copy_system = system.call_method0("__copy__").unwrap();
         let deepcopy_system = system.call_method1("__deepcopy__", ("",)).unwrap();
-        // let copy_deepcopy_param: &PyAny = system.clone();
+        // let copy_deepcopy_param: Bound<pyo3::types::PyString> = system.clone();
 
         let comparison_copy =
             bool::extract_bound(&copy_system.call_method1("__eq__", (&system,)).unwrap()).unwrap();
@@ -636,7 +632,9 @@ fn test_to_from_bincode() {
 
         let serialised = system.call_method0("to_bincode").unwrap();
         let new = new_system(py);
-        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+        let deserialised = new
+            .call_method1("from_bincode", (serialised.clone(),))
+            .unwrap();
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -680,7 +678,9 @@ fn test_to_from_json() {
 
         let serialised = system.call_method0("to_json").unwrap();
         let new = new_system(py);
-        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+        let deserialised = new
+            .call_method1("from_json", (serialised.clone(),))
+            .unwrap();
 
         let deserialised_error =
             new.call_method1("from_json", (serde_json::to_string("fails").unwrap(),));
@@ -793,9 +793,9 @@ fn test_jordan_wigner() {
         assert!(!empty);
 
         let current_number_modes =
-            usize::extract(fhs.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&fhs.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(shs.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&shs.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -816,7 +816,7 @@ fn test_json_schema() {
         new.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -840,8 +840,7 @@ fn test_from_pyany_to_struqture_1() {
         )
         .unwrap();
 
-        let result =
-            FermionHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into()).unwrap();
+        let result = FermionHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -851,7 +850,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("add_operator_product", ("c0a0", 1.0))
@@ -860,10 +859,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{{\"number_modes\":null,\"hamiltonian\":{{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{{\"number_modes\":null,\"hamiltonian\":{{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

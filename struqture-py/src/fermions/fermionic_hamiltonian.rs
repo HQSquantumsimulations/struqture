@@ -31,9 +31,6 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// FermionHamiltonians are characterized by a FermionOperator to represent the hamiltonian of the spin system
 /// and an optional number of fermions.
 ///
-/// Args:
-///     number_fermions (Optional[int]): The number of fermions in the FermionHamiltonianSystem.
-///
 /// Returns:
 ///     self: The new FermionHamiltonianSystem with the input number of fermions.
 ///
@@ -91,7 +88,7 @@ impl FermionHamiltonianWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonian.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<FermionOperatorWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<FermionOperatorWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(FermionOperatorWrapper {

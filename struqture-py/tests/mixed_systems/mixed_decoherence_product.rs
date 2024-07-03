@@ -32,7 +32,7 @@ fn new_pp(
     boson_sub: Vec<String>,
     fermion_sub: Vec<String>,
 ) -> Bound<MixedDecoherenceProductWrapper> {
-    let pp_type = py.get_type::<MixedDecoherenceProductWrapper>();
+    let pp_type = py.get_type_bound::<MixedDecoherenceProductWrapper>();
     pp_type
         .call1((spin_sub, boson_sub, fermion_sub))
         .unwrap()
@@ -107,7 +107,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_new_no_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp_type = py.get_type::<MixedDecoherenceProductWrapper>();
+        let pp_type = py.get_type_bound::<MixedDecoherenceProductWrapper>();
 
         let pp = pp_type.call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]));
         assert!(pp.is_ok());
@@ -119,7 +119,7 @@ fn test_new_no_error() {
 fn test_new_errors() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp = py.get_type::<MixedDecoherenceProductWrapper>();
+        let pp = py.get_type_bound::<MixedDecoherenceProductWrapper>();
 
         let valid = pp.call1((
             vec!["0J"],
@@ -176,7 +176,7 @@ fn test_from_string() {
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("spins").unwrap();
-        let noise_type = py.get_type::<DecoherenceProductWrapper>();
+        let noise_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let spins = noise_type
             .call0()
             .unwrap()
@@ -189,7 +189,7 @@ fn test_from_string() {
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("bosons").unwrap();
-        let noise_type = py.get_type::<BosonProductWrapper>();
+        let noise_type = py.get_type_bound::<BosonProductWrapper>();
         let bosons = noise_type.call1(([0], [1])).unwrap();
         let comparison = bool::extract_bound(
             &comp_op
@@ -203,7 +203,7 @@ fn test_from_string() {
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("fermions").unwrap();
-        let noise_type = py.get_type::<FermionProductWrapper>();
+        let noise_type = py.get_type_bound::<FermionProductWrapper>();
         let fermions = noise_type.call1(([0], [0])).unwrap();
         let comparison =
             bool::extract_bound(&comp_op.call_method1("__eq__", (vec![fermions],)).unwrap())
@@ -634,7 +634,7 @@ fn test_json_schema() {
         assert_eq!(version, rust_version);
 
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -661,8 +661,7 @@ fn test_from_pyany_to_struqture_1() {
             .unwrap();
 
         let result =
-            MixedDecoherenceProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref().into())
-                .unwrap();
+            MixedDecoherenceProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref()).unwrap();
         assert_eq!(result, pp_1);
     });
 }
@@ -672,7 +671,8 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"").into();
+        let json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"S0Z:Bc1a1:Fc0a0\"");
         let pp_2 = new_pp(
             py,
             vec!["0Z".to_string()],
@@ -683,11 +683,12 @@ fn test_from_json_struqture_1() {
         let pp_from_1 = pp_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny =
-            pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0b0\"").into();
+        let error_json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"S0Z:Bc1a1:Fc0b0\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });

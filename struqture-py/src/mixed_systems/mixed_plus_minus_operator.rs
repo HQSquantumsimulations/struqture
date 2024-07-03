@@ -30,9 +30,9 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// and an optional number of mixed_systems.
 ///
 /// Args:
-///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedPlusMinusOperator.
-///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedPlusMinusOperator.
-///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedPlusMinusOperator.
+///     number_spins (int): The number of spin subsystems in the MixedPlusMinusOperator.
+///     number_bosons (int): The number of boson subsystems in the MixedPlusMinusOperator.
+///     number_fermions (int): The number of fermion subsystems in the MixedPlusMinusOperator.
 ///
 /// Returns:
 ///     self: The new (empty) MixedPlusMinusOperator.
@@ -73,9 +73,9 @@ impl MixedPlusMinusOperatorWrapper {
     /// Create an empty MixedPlusMinusOperator.
     ///
     /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedPlusMinusOperator.
-    ///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedPlusMinusOperator.
-    ///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedPlusMinusOperator.
+    ///     number_spins (int): The number of spin subsystems in the MixedPlusMinusOperator.
+    ///     number_bosons (int): The number of boson subsystems in the MixedPlusMinusOperator.
+    ///     number_fermions (int): The number of fermion subsystems in the MixedPlusMinusOperator.
     ///
     /// Returns:
     ///     self: The new (empty) MixedPlusMinusOperator.
@@ -127,7 +127,7 @@ impl MixedPlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create MixedOperator from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: Py<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {

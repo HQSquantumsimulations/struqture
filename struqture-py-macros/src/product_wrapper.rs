@@ -175,7 +175,7 @@ pub fn productwrapper(
                 /// Raises:
                 ///    ValueError: Input reordering dictionary is not a permutation of the indices.
                 pub fn remap_modes(&self, reordering_dictionary: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
-                    let remap_dict = reordering_dictionary.as_ref().extract::<HashMap<usize, usize>>()?;
+                    let remap_dict = reordering_dictionary.as_gil_ref().extract::<HashMap<usize, usize>>()?;
                     let (index, value) = self.internal.remap_modes(&remap_dict).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
                 }
@@ -362,7 +362,7 @@ pub fn productwrapper(
                 /// Return the current number of spins each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of spins in each spin sub-system.
+                ///     List[int]: Number of spins in each spin sub-system.
                 pub fn current_number_spins(&self) -> Vec<usize> {
                     self.internal.current_number_spins()
                 }
@@ -370,7 +370,7 @@ pub fn productwrapper(
                 /// Return the current number of bosonic modes each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of bosonic modes in each spin sub-system.
+                ///     List[int]: Number of bosonic modes in each spin sub-system.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -378,7 +378,7 @@ pub fn productwrapper(
                 /// Return the current number of fermionic modes each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of fermionic modes in each spin sub-system.
+                ///     List[int]: Number of fermionic modes in each spin sub-system.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
@@ -390,12 +390,12 @@ pub fn productwrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref(py);
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
+                        let input = input.as_ref();
                         let get_str = input.call_method0("__str__").map_err(|_| {
                             PyTypeError::new_err("Type conversion failed".to_string())
                         })?;
@@ -423,12 +423,13 @@ pub fn productwrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
-            pub fn from_pyany_struqture_1(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let get_str = input.call_method0(py, "__str__").map_err(|_| {
+                    let input = input.as_ref();
+                    let get_str = input.call_method0("__str__").map_err(|_| {
                         PyTypeError::new_err("Type conversion failed".to_string())
                     })?;
-                    let string = get_str.extract::<String>(py).map_err(|_| {
+                    let string = get_str.extract::<String>().map_err(|_| {
                         PyTypeError::new_err("Type conversion failed".to_string())
                     })?;
                     let one_import = struqture_1::#struqture_1_module::#struqture_1_ident::from_str(string.as_str()).map_err(|err|
@@ -446,7 +447,7 @@ pub fn productwrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_1(input: Py<PyAny>) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
+            pub fn from_pyany_to_struqture_1(input: &Bound<PyAny>) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
                 let res = <#ident>::from_pyany(input)?;
                 <#struct_ident>::to_struqture_1(&res).map_err(
                     |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? Error message: {:?}", err)
@@ -472,7 +473,7 @@ pub fn productwrapper(
             // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_struqture_1(input: Py<PyAny>) -> PyResult<#ident> {
+            pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let qubit_operator: #struct_ident = #ident::from_pyany_struqture_1(input)?;
                 Ok(#ident {
                     internal: qubit_operator,
@@ -531,7 +532,7 @@ pub fn productwrapper(
             #[staticmethod]
             pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
-                    .as_ref()
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -557,7 +558,7 @@ pub fn productwrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
@@ -663,7 +664,6 @@ pub fn productwrapper(
                             "Other comparison not implemented",
                         )),
                     }
-
             }
 
             /// Return the __hash__ magic method.

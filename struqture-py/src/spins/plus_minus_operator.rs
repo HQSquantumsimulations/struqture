@@ -34,7 +34,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// and an optional number of spins.
 ///
 /// Returns:
-///     self: The new PlusMinusOperator with the input number of spins.
+///     self: The new PlusMinusOperator.
 ///
 /// Examples
 /// --------
@@ -64,7 +64,7 @@ impl PlusMinusOperatorWrapper {
     /// Create an empty PlusMinusOperator.
     ///
     /// Returns:
-    ///     self: The new PlusMinusOperator with the input number of spins.
+    ///     self: The new PlusMinusOperator.
     #[new]
     pub fn new() -> Self {
         Self {
@@ -111,7 +111,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create QubitOperator from input.
     #[staticmethod]
-    pub fn from_qubit_operator(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_qubit_operator(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = QubitOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -130,7 +130,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create QubitHamiltonian from input.
     #[staticmethod]
-    pub fn from_qubit_hamiltonian(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_qubit_hamiltonian(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = QubitHamiltonianWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {

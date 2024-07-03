@@ -36,8 +36,8 @@ fn new_system(
     number_spins: usize,
     number_bosons: usize,
     number_fermions: usize,
-) -> &PyCell<MixedLindbladOpenSystemWrapper> {
-    let system_type = py.get_type::<MixedLindbladOpenSystemWrapper>();
+) -> Bound<MixedLindbladOpenSystemWrapper> {
+    let system_type = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -48,7 +48,7 @@ fn new_system(
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -82,8 +82,8 @@ fn test_number_modes_current() {
             .unwrap();
 
         let number_system = system.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -91,8 +91,8 @@ fn test_number_modes_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
@@ -102,8 +102,8 @@ fn test_number_modes_current() {
         let number_system = system
             .call_method0("current_number_fermionic_modes")
             .unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -142,12 +142,9 @@ fn test_empty_clone() {
 fn mixed_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let system = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let system = new_system.call1((1, 1, 1)).unwrap();
+        system.downcast::<MixedLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1("system_add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -214,12 +211,9 @@ fn mixed_system_test_add_operator_product_remove_system() {
 fn mixed_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let system = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let system = new_system.call1((1, 1, 1)).unwrap();
+        system.downcast::<MixedLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1(
                 "noise_add_operator_product",
@@ -502,8 +496,8 @@ fn test_default_partialeq_debug_clone() {
         // Number of modes
 
         let number_system = system.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -511,8 +505,8 @@ fn test_default_partialeq_debug_clone() {
         assert!(comparison);
 
         let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
@@ -522,8 +516,8 @@ fn test_default_partialeq_debug_clone() {
         let number_system = system
             .call_method0("current_number_fermionic_modes")
             .unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -532,12 +526,9 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type::<MixedHamiltonianWrapper>();
-        let mixed_system = system_type
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedHamiltonianWrapper>>()
-            .unwrap();
+        let system_type = py.get_type_bound::<MixedHamiltonianWrapper>();
+        let mixed_system = system_type.call1((1, 1, 1)).unwrap();
+        mixed_system.downcast::<MixedHamiltonianWrapper>().unwrap();
         mixed_system
             .downcast::<MixedHamiltonianSystemWrapper>()
             .unwrap()
@@ -555,11 +546,10 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
-        let noise = noise_type
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+        let noise_type = py.get_type_bound::<MixedLindbladNoiseOperatorWrapper>();
+        let noise = noise_type.call1((1, 1, 1)).unwrap();
+        noise
+            .downcast::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
             .downcast::<MixedLindbladNoiseSystemWrapper>()
@@ -579,11 +569,10 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
-        let noise = noise_type
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+        let noise_type = py.get_type_bound::<MixedLindbladNoiseOperatorWrapper>();
+        let noise = noise_type.call1((1, 1, 1)).unwrap();
+        noise
+            .downcast::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
             .downcast::<MixedLindbladNoiseSystemWrapper>()
@@ -597,12 +586,9 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type::<MixedHamiltonianWrapper>();
-        let mixed_system = system_type
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedHamiltonianWrapper>>()
-            .unwrap();
+        let system_type = py.get_type_bound::<MixedHamiltonianWrapper>();
+        let mixed_system = system_type.call1((1, 1, 1)).unwrap();
+        mixed_system.downcast::<MixedHamiltonianWrapper>().unwrap();
         mixed_system
             .downcast::<MixedHamiltonianSystemWrapper>()
             .unwrap()
@@ -615,9 +601,9 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let comparison = bool::extract(
-            comp_op_ungroup
-                .call_method1("__eq__", ((mixed_system, noise),))
+        let comparison = bool::extract_bound(
+            &comp_op_ungroup
+                .call_method1("__eq__", ((mixed_system.clone(), noise.clone()),))
                 .unwrap(),
         )
         .unwrap();
@@ -640,11 +626,10 @@ fn test_default_partialeq_debug_clone() {
 fn test_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call1((1, 1, 1)).unwrap();
+        new_system_1
+            .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
             .downcast::<MixedLindbladOpenSystemWrapper>()
@@ -756,12 +741,9 @@ fn test_set_pauli_get_pauli() {
 fn test_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let system = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let system = new_system.call1((1, 1, 1)).unwrap();
+        system.downcast::<MixedLindbladOpenSystemWrapper>().unwrap();
         system
             .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap()
@@ -894,11 +876,10 @@ fn test_set_noise_get_noise() {
 fn test_try_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call1((1, 1, 1)).unwrap();
+        new_system_1
+            .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
             .downcast::<MixedLindbladOpenSystemWrapper>()
@@ -1006,11 +987,10 @@ fn test_try_set_pauli_get_pauli() {
 fn test_try_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call1((1, 1, 1)).unwrap();
+        new_system_1
+            .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
             .downcast::<MixedLindbladOpenSystemWrapper>()
@@ -1134,11 +1114,10 @@ fn test_try_set_noise_get_noise() {
 fn test_add_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call1((1, 1, 1)).unwrap();
+        new_system_1
+            .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
             .downcast::<MixedLindbladOpenSystemWrapper>()
@@ -1257,11 +1236,10 @@ fn test_add_pauli_get_pauli() {
 fn test_add_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladOpenSystemWrapper>();
-        let new_system_1 = new_system
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladOpenSystemWrapper>>()
+        let new_system = py.get_type_bound::<MixedLindbladOpenSystemWrapper>();
+        let new_system_1 = new_system.call1((1, 1, 1)).unwrap();
+        new_system_1
+            .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
             .downcast::<MixedLindbladOpenSystemWrapper>()
@@ -1871,44 +1849,12 @@ fn test_json_schema() {
         )
         .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-#[cfg(feature = "unstable_struqture_2_import")]
-#[test]
-fn test_from_json_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"items\":[[\"S0X:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}},\"noise\":{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}}");
-        let sys_2 = new_system(py, vec![None], vec![None], vec![None]);
-        sys_2
-            .call_method1("system_add_operator_product", ("S0X:Bc1a1:Fc0a0", 1.0))
-            .unwrap();
-        sys_2
-            .call_method1(
-                "noise_add_operator_product",
-                (("S0Z:Bc1a1:Fc0a0", "S0Z:Bc1a1:Fc0a0"), 1.0),
-            )
-            .unwrap();
-
-        let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_2", (json_string,))
-            .unwrap();
-        let equal =
-            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
-        assert!(equal);
-
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"items\":[[\"S0X:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}},\"noise\":{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}}");
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
-        assert!(sys_from_1.is_err());
-=======
-=======
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_pyany_to_struqture_1() {
@@ -1968,12 +1914,8 @@ fn test_from_pyany_to_struqture_1() {
         .unwrap();
 
         let result =
-            MixedLindbladOpenSystemWrapper::from_pyany_to_struqture_1(sys_2.into()).unwrap();
+            MixedLindbladOpenSystemWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
-<<<<<<< HEAD
->>>>>>> 0a57076 (Added pyo3 tests for from_pyany_to_struqture_one)
-=======
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
     });
 }
 
@@ -1982,7 +1924,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}");
         let sys_2 = new_system(py, 1, 1, 1);
         sys_2
             .call_method1("system_add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
@@ -1997,10 +1939,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"system\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"hamiltonian\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

@@ -22,22 +22,22 @@ use struqture_py::bosons::{BosonHamiltonianWrapper, BosonOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> &PyCell<BosonHamiltonianWrapper> {
-    let system_type = py.get_type::<BosonHamiltonianWrapper>();
+fn new_system(py: Python) -> Bound<BosonHamiltonianWrapper> {
+    let system_type = py.get_type_bound::<BosonHamiltonianWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<BosonHamiltonianWrapper>>()
+        .downcast::<BosonHamiltonianWrapper>()
         .unwrap()
         .to_owned()
 }
 // helper functions
-fn new_bosonic_system(py: Python) -> &PyCell<BosonOperatorWrapper> {
-    let system_type = py.get_type::<BosonOperatorWrapper>();
+fn new_bosonic_system(py: Python) -> Bound<BosonOperatorWrapper> {
+    let system_type = py.get_type_bound::<BosonOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<BosonOperatorWrapper>>()
+        .downcast::<BosonOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -70,7 +70,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Number of bosons
         let comp_op = new_system.call_method0("current_number_modes").unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", (2,)).unwrap()).unwrap();
         assert!(comparison);
     })
 }
@@ -88,7 +89,7 @@ fn test_number_bosons_current() {
         let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
-            bool::extract(number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
+            bool::extract_bound(&number_system.call_method1("__eq__", (2_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -134,12 +135,9 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<BosonHamiltonianWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<BosonHamiltonianWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<BosonHamiltonianWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<BosonHamiltonianWrapper>().unwrap();
         system.call_method1("set", ("c0c1a0a1", 0.1)).unwrap();
         system.call_method1("set", ("c1c2a3", 0.2)).unwrap();
         system.call_method1("set", ("c0a2a3", 0.05)).unwrap();
@@ -185,12 +183,9 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<BosonHamiltonianWrapper>();
-        let system = new_system
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<BosonHamiltonianWrapper>>()
-            .unwrap();
+        let new_system = py.get_type_bound::<BosonHamiltonianWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<BosonHamiltonianWrapper>().unwrap();
         system
             .call_method1("add_operator_product", ("c0c1a0a1", 0.1))
             .unwrap();
@@ -632,16 +627,10 @@ fn test_to_from_bincode() {
             .unwrap();
 
         let serialised = system.call_method0("to_bincode").unwrap();
-<<<<<<< HEAD
-<<<<<<< HEAD
-        let new = new_system(py, number_bosons);
-        let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
-=======
-=======
->>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
         let new = new_system(py);
-        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
->>>>>>> 63d1cba (Fixed boson tests)
+        let deserialised = new
+            .call_method1("from_bincode", (serialised.clone(),))
+            .unwrap();
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -684,16 +673,10 @@ fn test_to_from_json() {
             .unwrap();
 
         let serialised = system.call_method0("to_json").unwrap();
-<<<<<<< HEAD
-<<<<<<< HEAD
-        let new = new_system(py, number_bosons);
-        let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
-=======
-=======
->>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
         let new = new_system(py);
-        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
->>>>>>> 63d1cba (Fixed boson tests)
+        let deserialised = new
+            .call_method1("from_json", (serialised.clone(),))
+            .unwrap();
 
         let deserialised_error =
             new.call_method1("from_json", (serde_json::to_string("fails").unwrap(),));
@@ -813,7 +796,7 @@ fn test_json_schema() {
         new.call_method1("add_operator_product", ("c0a0", 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -837,8 +820,7 @@ fn test_from_pyany_to_struqture_1() {
         )
         .unwrap();
 
-        let result =
-            BosonHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into()).unwrap();
+        let result = BosonHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -848,7 +830,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("add_operator_product", ("c0a0", 1.0))
@@ -857,10 +839,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{{\"number_modes\":null,\"hamiltonian\":{{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":3-,\"minor_version\":0}}}}}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{{\"number_modes\":null,\"hamiltonian\":{{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":3-,\"minor_version\":0}}}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

@@ -35,12 +35,12 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// and an optional number of mixed_systems.
 ///
 /// Args:
-///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedHamiltonianSystem.
-///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedHamiltonianSystem.
-///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedHamiltonianSystem.
+///     number_spins (int): The number of spin subsystems in the MixedHamiltonian.
+///     number_bosons (int): The number of boson subsystems in the MixedHamiltonian.
+///     number_fermions (int): The number of fermion subsystems in the MixedHamiltonian.
 ///
 /// Returns:
-///     self: The new (empty) MixedHamiltonianSystem.
+///     self: The new (empty) MixedHamiltonian.
 ///
 /// Examples
 /// --------
@@ -107,7 +107,7 @@ impl MixedHamiltonianWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonian.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<MixedOperatorWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<MixedOperatorWrapper> {
         let mut mixed_system = MixedOperator::new(
             self.current_number_spins().len(),
             self.current_number_bosonic_modes().len(),

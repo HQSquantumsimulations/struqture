@@ -31,12 +31,12 @@ fn new_system(
     number_spins: usize,
     number_bosons: usize,
     number_fermions: usize,
-) -> &PyCell<MixedLindbladNoiseOperatorWrapper> {
-    let system_type = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+) -> Bound<MixedLindbladNoiseOperatorWrapper> {
+    let system_type = py.get_type_bound::<MixedLindbladNoiseOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
-        .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+        .downcast::<MixedLindbladNoiseOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -95,8 +95,8 @@ fn test_number_bosons_current() {
             .unwrap();
 
         let number_system = system.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -104,8 +104,8 @@ fn test_number_bosons_current() {
         assert!(comparison);
 
         let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
@@ -115,8 +115,8 @@ fn test_number_bosons_current() {
         let number_system = system
             .call_method0("current_number_fermionic_modes")
             .unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -155,15 +155,16 @@ fn test_empty_clone() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+        let new_system = py.get_type_bound::<MixedLindbladNoiseOperatorWrapper>();
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
 
         let binding = new_system
             .call1((number_spins, number_bosons, number_fermions))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+            .unwrap();
+        system
+            .downcast::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
         system
             .call_method1("set", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 0.1))
@@ -238,14 +239,15 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedLindbladNoiseOperatorWrapper>();
+        let new_system = py.get_type_bound::<MixedLindbladNoiseOperatorWrapper>();
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
         let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
-            .unwrap()
-            .downcast::<PyCell<MixedLindbladNoiseOperatorWrapper>>()
+            .unwrap();
+        system
+            .downcast::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
         system
             .call_method1(
@@ -989,7 +991,7 @@ fn test_json_schema() {
         )
         .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -1028,8 +1030,7 @@ fn test_from_pyany_to_struqture_1() {
         .unwrap();
 
         let result =
-            MixedLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into())
-                .unwrap();
+            MixedLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -1039,7 +1040,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py, 1, 1, 1);
         sys_2
             .call_method1(
@@ -1051,10 +1052,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

@@ -36,15 +36,9 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// QubitHamiltonians are characterized by a QubitOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
-<<<<<<< HEAD
-/// Args:
-///     number_spins (Optional[int]): The number of spins in the SpinHamiltonianSystem.
-///
 /// Returns:
-///     self: The new SpinHamiltonianSystem with the input number of spins.
+///     self: The new QubitHamiltonian.
 ///
-=======
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 /// Examples
 /// --------
 ///
@@ -84,7 +78,7 @@ impl QubitHamiltonianWrapper {
     /// Create an empty QubitHamiltonian.
     ///
     /// Returns:
-    ///     self: The new QubitHamiltonian with the input number of spins.
+    ///     self: The new QubitHamiltonian.
     #[new]
     pub fn new() -> Self {
         Self {
@@ -102,7 +96,7 @@ impl QubitHamiltonianWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor QubitHamiltonian.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<QubitOperatorWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<QubitOperatorWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(QubitOperatorWrapper {
@@ -115,11 +109,7 @@ impl QubitHamiltonianWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
-<<<<<<< HEAD
                         let bhs_value = Self::from_pyany(value);
-=======
-                        let bhs_value = Self::from_pyany(value.into());
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = self.clone().internal * x;
@@ -134,52 +124,6 @@ impl QubitHamiltonianWrapper {
             }
         }
     }
-<<<<<<< HEAD
-
-    /// Converts a json corresponding to struqture 2.x PauliHamiltonian to a struqture 1.x SpinHamiltonianSystem.
-    ///
-    /// Args:
-    ///     input (str): the json of the struqture 2.x PauliHamiltonian to convert to struqture 1.x.
-    ///
-    /// Returns:
-    ///     SpinHamiltonianSystem: The struqture 1.x SpinHamiltonianSystem created from the struqture 2.x PauliHamiltonian.
-    ///
-    /// Raises:
-    ///     ValueError: Input could not be deserialised from json to struqture 2.x.
-    ///     ValueError: Struqture 2.x object could not be converted to struqture 1.x.
-    #[staticmethod]
-    #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_json_struqture_2(input: String) -> PyResult<SpinHamiltonianSystemWrapper> {
-        let operator: struqture_2::spins::PauliHamiltonian =
-            serde_json::from_str(&input).map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Input cannot be deserialized from json to struqture 2.x: {}",
-                    err
-                ))
-            })?;
-        let mut new_operator = SpinHamiltonianSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
-            let self_key =
-                PauliProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
-                    PyValueError::new_err(format!(
-                        "Struqture 2.x PauliProduct cannot be converted to struqture 1.x: {}",
-                        err
-                    ))
-                })?;
-            let _ = new_operator.set(self_key, val.clone());
-        }
-        Ok(SpinHamiltonianSystemWrapper {
-            internal: new_operator,
-        })
-    }
-}
-
-impl Default for SpinHamiltonianWrapper {
-    fn default() -> Self {
-        Self::new()
-    }
-=======
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 }
 
 impl Default for QubitHamiltonianWrapper {

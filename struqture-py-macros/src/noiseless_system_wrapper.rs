@@ -323,7 +323,7 @@ pub fn noiselesswrapper(
             ///     int: Maximum index.
             pub fn number_spins(&self) -> usize {
                 Python::with_gil(|py| {
-                    py.run("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                    py.run_bound("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
                 });
                 self.internal.current_number_spins()
             }
@@ -597,12 +597,12 @@ pub fn noiselesswrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object.
-            pub fn from_pyany(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                    let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
-                    let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                    let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
 
@@ -616,7 +616,7 @@ pub fn noiselesswrapper(
                         PyTypeError::new_err(err.to_string())
                     })?;
 
-                    let input = input.as_ref(py);
+                    let input = input.as_ref();
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -638,9 +638,9 @@ pub fn noiselesswrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
-            pub fn from_pyany_struqture_1(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref(py);
+                    let input = input.as_ref();
                     let get_bytes = input
                         .call_method0("to_bincode")
                         .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
@@ -659,7 +659,7 @@ pub fn noiselesswrapper(
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_export")]
             pub fn from_pyany_to_struqture_1(
-                input: Py<PyAny>,
+                input: &Bound<PyAny>,
             ) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
                 let res = #ident::from_pyany(input)?;
                 let one_export = #struct_ident::to_struqture_1(&res).map_err(
@@ -690,7 +690,7 @@ pub fn noiselesswrapper(
             // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_struqture_1(input: Py<PyAny>) -> PyResult<#ident> {
+            pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let qubit_operator: #struct_ident =
                     #ident::from_pyany_struqture_1(input)?;
                 Ok(#ident {
@@ -749,7 +749,7 @@ pub fn noiselesswrapper(
             #[staticmethod]
             pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
-                    .as_ref()
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -775,7 +775,7 @@ pub fn noiselesswrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }

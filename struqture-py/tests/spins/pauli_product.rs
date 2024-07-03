@@ -19,7 +19,7 @@ use struqture_py::spins::PauliProductWrapper;
 
 // helper functions
 fn new_pp(py: Python) -> Bound<PauliProductWrapper> {
-    let pp_type = py.get_type::<PauliProductWrapper>();
+    let pp_type = py.get_type_bound::<PauliProductWrapper>();
     pp_type
         .call0()
         .unwrap()
@@ -93,7 +93,8 @@ fn test_from_string() {
         assert!(comparison);
 
         let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(nbr_spins.call_method1("__eq__", (4,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&nbr_spins.call_method1("__eq__", (4,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -515,9 +516,9 @@ fn test_jordan_wigner() {
         assert!(!empty);
 
         let current_number_modes =
-            usize::extract(fo.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&fo.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&pp.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -543,7 +544,7 @@ fn test_json_schema() {
 
         let pp = new.call_method1("set_pauli", (0_u64, "X")).unwrap();
         let min_version: String =
-            String::extract(pp.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&pp.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -571,14 +572,16 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"0Z\"").into();
+        let json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"0Z\"");
         let pp_2 = new_pp(py);
         let pp_2 = pp_2.call_method1("set_pauli", (0_u64, "Z")).unwrap();
 
         let pp_from_1 = pp_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: &PyAny = pyo3::types::PyString::new(py, "\"0A\"").into();

@@ -31,6 +31,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a QubitLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.
 ///
+/// Returns:
+///     SpinLindbladOpenSystem: The new SpinLindbladOpenSystem.
+///
 /// Examples
 /// --------
 ///
@@ -67,7 +70,7 @@ impl QubitLindbladOpenSystemWrapper {
     /// Create a new QubitLindbladOpenSystem.
     ///
     /// Returns:
-    ///     QubitLindbladOpenSystem: The new QubitLindbladOpenSystem with the input number of spins.
+    ///     QubitLindbladOpenSystem: The new QubitLindbladOpenSystem.
     #[new]
     pub fn new() -> Self {
         Self {

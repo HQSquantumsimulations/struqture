@@ -25,7 +25,7 @@ use struqture_py::spins::{
 
 // helper functions
 fn new_pp(py: Python) -> Bound<PlusMinusProductWrapper> {
-    let pp_type = py.get_type::<PlusMinusProductWrapper>();
+    let pp_type = py.get_type_bound::<PlusMinusProductWrapper>();
     pp_type
         .call0()
         .unwrap()
@@ -222,7 +222,7 @@ fn test_number_spins() {
         pp = pp.call_method1("set_pauli", (5_u64, "-")).unwrap();
 
         let current_number_spins =
-            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&pp.call_method0("current_number_spins").unwrap()).unwrap();
 
         assert_eq!(current_number_spins, 6);
     });
@@ -497,7 +497,7 @@ fn test_from_pp() {
         let pmp_1 = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
         let pmp_2 = new_pmp.call_method1("set_pauli", (0_u64, "-")).unwrap();
 
-        let pp_type = py.get_type::<PauliProductWrapper>();
+        let pp_type = py.get_type_bound::<PauliProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
             .downcast::<PauliProductWrapper>()
@@ -506,7 +506,7 @@ fn test_from_pp() {
             .unwrap();
 
         let result = py
-            .get_type::<PlusMinusProductWrapper>()
+            .get_type_bound::<PlusMinusProductWrapper>()
             .call_method1("from_product", (pp,))
             .unwrap();
         let comp = vec![
@@ -536,7 +536,7 @@ fn test_from_dp() {
         let pmp_1 = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
         let pmp_2 = new_pmp.call_method1("set_pauli", (0_u64, "-")).unwrap();
 
-        let pp_type = py.get_type::<DecoherenceProductWrapper>();
+        let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
             .downcast::<DecoherenceProductWrapper>()
@@ -545,7 +545,7 @@ fn test_from_dp() {
             .unwrap();
 
         let result = py
-            .get_type::<PlusMinusProductWrapper>()
+            .get_type_bound::<PlusMinusProductWrapper>()
             .call_method1("from_product", (pp,))
             .unwrap();
         let comp = vec![
@@ -574,7 +574,7 @@ fn test_to_pp() {
         let new_pmp = new_pp(py);
         let pmp = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
 
-        let pp_type = py.get_type::<PauliProductWrapper>();
+        let pp_type = py.get_type_bound::<PauliProductWrapper>();
         let binding = pp_type.call0().unwrap();
         let new_pp = binding.downcast::<PauliProductWrapper>().unwrap();
         let pp_1 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
@@ -608,7 +608,7 @@ fn test_to_dp() {
         let new_pmp = new_pp(py);
         let pmp = new_pmp.call_method1("set_pauli", (0_u64, "+")).unwrap();
 
-        let pp_type = py.get_type::<DecoherenceProductWrapper>();
+        let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let binding = pp_type.call0().unwrap();
         let new_pp = binding.downcast::<DecoherenceProductWrapper>().unwrap();
         let pp_1 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
@@ -640,7 +640,7 @@ fn test_from_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let result = py
-            .get_type::<PlusMinusProductWrapper>()
+            .get_type_bound::<PlusMinusProductWrapper>()
             .call_method1("from_product", ("0J",));
         assert!(result.is_err());
     })
@@ -671,9 +671,9 @@ fn test_jordan_wigner() {
             .unwrap();
 
         let current_number_modes =
-            usize::extract(fo.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&fo.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(pp.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&pp.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -699,7 +699,7 @@ fn test_json_schema() {
 
         let pp = new.call_method1("set_pauli", (0_u64, "Z")).unwrap();
         let min_version: String =
-            String::extract(pp.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&pp.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -714,7 +714,7 @@ fn test_from_pyany_to_struqture_1() {
         let new_pp = new_pp(py);
         let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "+")).unwrap();
 
-        let result = PlusMinusProductWrapper::from_pyany_to_struqture_1(pp_2.into()).unwrap();
+        let result = PlusMinusProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref()).unwrap();
         assert_eq!(
             result,
             struqture_1::spins::PlusMinusProduct::from_str("0+").unwrap()
@@ -727,17 +727,20 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"0Z\"").into();
+        let json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"0Z\"");
         let pp_2 = new_pp(py);
         let pp_2 = pp_2.call_method1("set_pauli", (0_u64, "Z")).unwrap();
 
         let pp_from_1 = pp_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "\"0A\"").into();
+        let error_json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"0A\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });

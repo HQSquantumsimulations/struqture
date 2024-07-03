@@ -31,7 +31,7 @@ fn new_system(
     number_bosons: usize,
     number_fermions: usize,
 ) -> Bound<MixedPlusMinusOperatorWrapper> {
-    let system_type = py.get_type::<MixedPlusMinusOperatorWrapper>();
+    let system_type = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -88,31 +88,28 @@ fn test_number_bosons_current() {
             .unwrap();
 
         let number_system = system.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
-<<<<<<< HEAD
-=======
 
         let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![2_u64],))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
->>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
 
         let number_system = system
             .call_method0("current_number_fermionic_modes")
             .unwrap();
-        let comparison = bool::extract(
-            number_system
+        let comparison = bool::extract_bound(
+            &number_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -168,7 +165,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedPlusMinusOperatorWrapper>();
+        let new_system = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
 
         let binding = new_system.call1((1, 1, 1)).unwrap();
         let system = binding.downcast::<MixedPlusMinusOperatorWrapper>().unwrap();
@@ -229,7 +226,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedPlusMinusOperatorWrapper>();
+        let new_system = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
         let binding = new_system.call1((1, 1, 1)).unwrap();
         let system = binding.downcast::<MixedPlusMinusOperatorWrapper>().unwrap();
         system
@@ -661,37 +658,29 @@ fn test_from_mixed_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<MixedOperatorWrapper>();
-        let pp = pp_type
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedOperatorWrapper>>()
-<<<<<<< HEAD
-            .unwrap();
-        pp.downcast::<MixedSystemWrapper>()
-            .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    "S0Z:Bc0a1:Fc0a0:",
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(1.0, 0.0),
-                    },
-                ),
-            )
-=======
->>>>>>> 753ff2a (Draft: trimming down for Struqture 2.0 (#105))
-            .unwrap();
+        let pp_type = py.get_type_bound::<MixedOperatorWrapper>();
+        let pp = pp_type.call1((1, 1, 1)).unwrap();
+        pp.downcast::<MixedOperatorWrapper>().unwrap();
+        pp.call_method1(
+            "add_operator_product",
+            (
+                "S0Z:Bc0a1:Fc0a0:",
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(1.0, 0.0),
+                },
+            ),
+        )
+        .unwrap();
 
         let result = py
-            .get_type::<MixedPlusMinusOperatorWrapper>()
+            .get_type_bound::<MixedPlusMinusOperatorWrapper>()
             .call_method1("from_mixed_system", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type::<MixedPlusMinusOperatorWrapper>()
+            .get_type_bound::<MixedPlusMinusOperatorWrapper>()
             .call_method1("from_mixed_system", ("No",));
         assert!(result.is_err())
     })
@@ -713,12 +702,9 @@ fn test_to_mixed_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<MixedOperatorWrapper>();
-        let sys = pp_type
-            .call1((1, 1, 1))
-            .unwrap()
-            .downcast::<PyCell<MixedOperatorWrapper>>()
-            .unwrap();
+        let pp_type = py.get_type_bound::<MixedOperatorWrapper>();
+        let sys = pp_type.call1((1, 1, 1)).unwrap();
+        sys.downcast::<MixedOperatorWrapper>().unwrap();
         sys.call_method1(
             "add_operator_product",
             (
@@ -731,7 +717,7 @@ fn test_to_mixed_sys() {
         .unwrap();
 
         let result = pmp.call_method0("to_mixed_system").unwrap();
-        let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
+        let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
@@ -937,7 +923,7 @@ fn test_json_schema() {
         new.call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -966,8 +952,7 @@ fn test_from_pyany_to_struqture_1() {
         struqture_1::OperateOnDensityMatrix::set(&mut sys_1, pp_1.clone(), 0.1.into()).unwrap();
 
         let result =
-            MixedPlusMinusOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into())
-                .unwrap();
+            MixedPlusMinusOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -977,7 +962,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}");
         let sys_2 = new_system(py, 1, 1, 1);
         sys_2
             .call_method1("add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
@@ -986,10 +971,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

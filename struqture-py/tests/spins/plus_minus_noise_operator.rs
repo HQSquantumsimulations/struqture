@@ -24,7 +24,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
-    let system_type = py.get_type::<PlusMinusLindbladNoiseOperatorWrapper>();
+    let system_type = py.get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -35,7 +35,7 @@ fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -603,7 +603,7 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = PlusMinusLindbladNoiseOperatorWrapper::new();
-        let pp_type = py.get_type::<PlusMinusProductWrapper>();
+        let pp_type = py.get_type_bound::<PlusMinusProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
             .downcast::<PlusMinusProductWrapper>()
@@ -735,22 +735,30 @@ fn test_from_qubit_op() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<QubitLindbladNoiseOperatorWrapper>();
-        let pp = pp_type
-            .call0()
+        let pp_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let pp = pp_type.call0().unwrap();
+        pp.downcast::<QubitLindbladNoiseOperatorWrapper>()
             .unwrap()
-            .downcast::<PyCell<QubitLindbladNoiseOperatorWrapper>>()
+            .call_method1(
+                "add_operator_product",
+                (
+                    ("0iY", "0iY"),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(1.0, 0.0),
+                    },
+                ),
+            )
             .unwrap();
 
         let result = py
-            .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
+            .get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>()
             .call_method1("from_qubit_noise_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
+            .get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>()
             .call_method1("from_qubit_noise_operator", ("No",));
         assert!(result.is_err())
     })
@@ -772,12 +780,9 @@ fn test_to_qubit_noise_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type::<QubitLindbladNoiseOperatorWrapper>();
-        let sys = pp_type
-            .call0()
-            .unwrap()
-            .downcast::<PyCell<QubitLindbladNoiseOperatorWrapper>>()
-            .unwrap();
+        let pp_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let sys = pp_type.call0().unwrap();
+        sys.downcast::<QubitLindbladNoiseOperatorWrapper>().unwrap();
         sys.call_method1(
             "add_operator_product",
             (
@@ -810,7 +815,7 @@ fn test_to_qubit_noise_operator() {
         .unwrap();
 
         let result = pmp.call_method0("to_qubit_noise_operator").unwrap();
-        let equal = bool::extract(result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
+        let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
@@ -831,9 +836,9 @@ fn test_jordan_wigner() {
         let slno = pmno.call_method0("to_qubit_noise_operator").unwrap();
 
         let current_number_modes =
-            usize::extract(flno.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&flno.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(slno.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&slno.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -860,7 +865,7 @@ fn test_json_schema() {
         new.call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
             .unwrap();
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -888,7 +893,7 @@ fn test_from_pyany_to_struqture_1() {
         .unwrap();
 
         let result =
-            PlusMinusLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref().into())
+            PlusMinusLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref())
                 .unwrap();
         assert_eq!(result, sys_1);
     });
@@ -899,7 +904,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}").into();
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
         let sys_2 = new_noisesystem(py);
         sys_2
             .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
@@ -908,10 +913,11 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":1}}").into();
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":1}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
