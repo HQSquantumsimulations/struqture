@@ -284,21 +284,19 @@ impl FermionIndex for FermionProduct {}
 impl FermionProduct {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
-    pub fn to_struqture_1(
-        &self,
-    ) -> Result<struqture_one::fermions::FermionProduct, StruqtureError> {
+    pub fn to_struqture_1(&self) -> Result<struqture_1::fermions::FermionProduct, StruqtureError> {
         let self_string = self.to_string();
-        let struqture_one_product = struqture_one::fermions::FermionProduct::from_str(&self_string)
+        let struqture_1_product = struqture_1::fermions::FermionProduct::from_str(&self_string)
             .map_err(|err| StruqtureError::GenericError {
                 msg: format!("{}", err),
             })?;
-        Ok(struqture_one_product)
+        Ok(struqture_1_product)
     }
 
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::fermions::FermionProduct,
+        value: &struqture_1::fermions::FermionProduct,
     ) -> Result<Self, StruqtureError> {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;
@@ -812,7 +810,7 @@ impl ModeIndex for HermitianFermionProduct {
         }
         if creators.len() > number_equal_indices && annihilators.len() == number_equal_indices {
             return Err(StruqtureError::CreatorsAnnihilatorsMinimumIndex {
-                creators_min: creators.iter().nth(number_equal_indices).copied(),
+                creators_min: creators.get(number_equal_indices).copied(),
                 annihilators_min: None,
             });
         }
@@ -924,21 +922,21 @@ impl HermitianFermionProduct {
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(
         &self,
-    ) -> Result<struqture_one::fermions::HermitianFermionProduct, StruqtureError> {
+    ) -> Result<struqture_1::fermions::HermitianFermionProduct, StruqtureError> {
         let self_string = self.to_string();
-        let struqture_one_product = struqture_one::fermions::HermitianFermionProduct::from_str(
+        let struqture_1_product = struqture_1::fermions::HermitianFermionProduct::from_str(
             &self_string,
         )
         .map_err(|err| StruqtureError::GenericError {
             msg: format!("{}", err),
         })?;
-        Ok(struqture_one_product)
+        Ok(struqture_1_product)
     }
 
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::fermions::HermitianFermionProduct,
+        value: &struqture_1::fermions::HermitianFermionProduct,
     ) -> Result<Self, StruqtureError> {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;

@@ -250,17 +250,12 @@ impl PlusMinusOperator {
 
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
-    pub fn to_struqture_1(
-        &self,
-    ) -> Result<struqture_one::spins::PlusMinusOperator, StruqtureError> {
-        let mut new_pm_system = struqture_one::spins::PlusMinusOperator::new();
+    pub fn to_struqture_1(&self) -> Result<struqture_1::spins::PlusMinusOperator, StruqtureError> {
+        let mut new_pm_system = struqture_1::spins::PlusMinusOperator::new();
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
-            let _ = struqture_one::OperateOnDensityMatrix::set(
-                &mut new_pm_system,
-                one_key,
-                val.clone(),
-            );
+            let _ =
+                struqture_1::OperateOnDensityMatrix::set(&mut new_pm_system, one_key, val.clone());
         }
         Ok(new_pm_system)
     }
@@ -268,10 +263,10 @@ impl PlusMinusOperator {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
-        value: &struqture_one::spins::PlusMinusOperator,
+        value: &struqture_1::spins::PlusMinusOperator,
     ) -> Result<Self, StruqtureError> {
         let mut new_qubit_operator = Self::new();
-        for (key, val) in struqture_one::OperateOnDensityMatrix::iter(value) {
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = PlusMinusProduct::from_struqture_1(key)?;
             let _ = new_qubit_operator.set(self_key, val.clone());
         }

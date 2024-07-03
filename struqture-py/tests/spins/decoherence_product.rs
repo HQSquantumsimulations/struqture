@@ -18,13 +18,14 @@ use struqture::{spins::DecoherenceProduct, STRUQTURE_VERSION};
 use struqture_py::spins::DecoherenceProductWrapper;
 
 // helper functions
-fn new_pp(py: Python) -> &PyCell<DecoherenceProductWrapper> {
-    let pp_type = py.get_type::<DecoherenceProductWrapper>();
+fn new_pp(py: Python) -> Bound<DecoherenceProductWrapper> {
+    let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
     pp_type
         .call0()
         .unwrap()
-        .downcast::<PyCell<DecoherenceProductWrapper>>()
+        .downcast::<DecoherenceProductWrapper>()
         .unwrap()
+        .to_owned()
 }
 
 /// Test default function of DecoherenceProductWrapper
@@ -87,11 +88,13 @@ fn test_from_string() {
 
         let new_pp_1 = new_pp(py);
         let string_pp = new_pp_1.call_method1("from_string", ("0X1Z3iY",)).unwrap();
-        let comparison = bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
-        let comparison = bool::extract(nbr_spins.call_method1("__eq__", (4,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&nbr_spins.call_method1("__eq__", (4,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -119,22 +122,26 @@ fn test_set_pauli_get() {
 
         // test access at index 0
         let comp_op = pp.call_method1("get", (0_u64,)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", ("X",)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", ("X",)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = pp.call_method1("get", (1_u64,)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", ("Z",)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", ("Z",)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = pp.call_method1("get", (3_u64,)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", ("iY",)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", ("iY",)).unwrap()).unwrap();
         assert!(comparison);
 
         // test setting new operation at index 1
         pp = pp.call_method1("set_pauli", (1_u64, "X")).unwrap();
 
         let comp_op = pp.call_method1("get", (1_u64,)).unwrap();
-        let comparison = bool::extract(comp_op.call_method1("__eq__", ("X",)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&comp_op.call_method1("__eq__", ("X",)).unwrap()).unwrap();
         assert!(comparison);
 
         let comparison = pp.call_method1("get", (20_u64,)).unwrap();
@@ -168,7 +175,7 @@ fn test_x_iy_z() {
         let mut pp_1 = new_pp_1.call_method1("x", (0,)).unwrap();
         pp_1 = pp_1.call_method1("z", (1,)).unwrap();
         pp_1 = pp_1.call_method1("iy", (3,)).unwrap();
-        let comparison = bool::extract(pp_1.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison = bool::extract_bound(&pp_1.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -180,25 +187,28 @@ fn test_keys_len_is_empty() {
     pyo3::Python::with_gil(|py| {
         let new_pp_1 = new_pp(py);
 
-        let is_empty_1 = bool::extract(new_pp_1.call_method0("is_empty").unwrap()).unwrap();
+        let is_empty_1 = bool::extract_bound(&new_pp_1.call_method0("is_empty").unwrap()).unwrap();
         assert!(is_empty_1);
         let len_1 = new_pp_1.call_method0("__len__").unwrap();
-        let comparison = bool::extract(len_1.call_method1("__eq__", (0_u64,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&len_1.call_method1("__eq__", (0_u64,)).unwrap()).unwrap();
         assert!(comparison);
 
         let mut pp = new_pp_1.call_method1("set_pauli", (0, "X")).unwrap();
         pp = pp.call_method1("set_pauli", (1, "Z")).unwrap();
         pp = pp.call_method1("set_pauli", (3, "iY")).unwrap();
 
-        let is_empty_2 = bool::extract(pp.call_method0("is_empty").unwrap()).unwrap();
+        let is_empty_2 = bool::extract_bound(&pp.call_method0("is_empty").unwrap()).unwrap();
         assert!(!is_empty_2);
         let len_2 = pp.call_method0("__len__").unwrap();
-        let comparison = bool::extract(len_2.call_method1("__eq__", (3_u64,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&len_2.call_method1("__eq__", (3_u64,)).unwrap()).unwrap();
         assert!(comparison);
 
         let keys_pp = pp.call_method0("keys").unwrap();
         let comparison =
-            bool::extract(keys_pp.call_method1("__eq__", (vec![0, 1, 3],)).unwrap()).unwrap();
+            bool::extract_bound(&keys_pp.call_method1("__eq__", (vec![0, 1, 3],)).unwrap())
+                .unwrap();
         assert!(comparison);
     });
 }
@@ -214,16 +224,16 @@ fn test_hermitian_conj() {
         pp = pp.call_method1("set_pauli", (3_u64, "iY")).unwrap();
 
         let hermitian_conjugate_pp = pp.call_method0("hermitian_conjugate").unwrap();
-        let comparison = bool::extract(
-            hermitian_conjugate_pp
-                .call_method1("__eq__", ((pp, -1_f64),))
+        let comparison = bool::extract_bound(
+            &hermitian_conjugate_pp
+                .call_method1("__eq__", ((&pp, -1_f64),))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
 
         let is_natural_hermitian_pp =
-            bool::extract(pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
+            bool::extract_bound(&pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
         assert!(!is_natural_hermitian_pp);
     });
 }
@@ -250,7 +260,8 @@ fn test_remap_qubits() {
 
         let remapping_pp = pp.call_method1("remap_qubits", (mapping,)).unwrap();
         let comparison =
-            bool::extract(remapping_pp.call_method1("__eq__", (remapped_pp,)).unwrap()).unwrap();
+            bool::extract_bound(&remapping_pp.call_method1("__eq__", (remapped_pp,)).unwrap())
+                .unwrap();
         assert!(comparison);
     });
 }
@@ -275,7 +286,8 @@ fn test_concatenate() {
 
         let concatenated_pp = pp_0.call_method1("concatenate", (pp_1,)).unwrap();
         let comparison =
-            bool::extract(concatenated_pp.call_method1("__eq__", (pp_0_1,)).unwrap()).unwrap();
+            bool::extract_bound(&concatenated_pp.call_method1("__eq__", (pp_0_1,)).unwrap())
+                .unwrap();
         assert!(comparison);
     });
 }
@@ -315,8 +327,8 @@ fn test_multiply() {
 
         let new = new_pp(py);
         let multiplied = new.call_method1("multiply", (pp_0, pp_1)).unwrap();
-        let comparison = bool::extract(
-            multiplied
+        let comparison = bool::extract_bound(
+            &multiplied
                 .call_method1("__eq__", ((pp_0_1, Complex64::new(-1.0, 0.0)),))
                 .unwrap(),
         )
@@ -338,10 +350,10 @@ fn test_copy_deepcopy() {
         // let copy_deepcopy_param = pp.clone();
 
         let comparison_copy =
-            bool::extract(copy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&copy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract(deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&deepcopy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -356,7 +368,7 @@ fn test_to_from_bincode() {
 
         let serialised = pp.call_method0("to_bincode").unwrap();
         let new = new_pp(py);
-        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+        let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -373,7 +385,7 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -398,9 +410,9 @@ fn test_to_from_json() {
 
         let serialised = pp.call_method0("to_json").unwrap();
         let new = new_pp(py);
-        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+        let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
 
-        let pp_type = py.get_type::<DecoherenceProductWrapper>();
+        let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let deserialised_error = pp_type.call_method1("from_json", ("fails".to_string(),));
         assert!(deserialised_error.is_err());
 
@@ -414,7 +426,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -429,13 +441,13 @@ fn test_format_repr() {
         let format_repr = "0X";
 
         let to_str = pp.call_method0("__str__").unwrap();
-        let str_op: &str = <&str>::extract(to_str).unwrap();
+        let str_op: String = String::extract_bound(&to_str).unwrap();
 
         let to_format = pp.call_method1("__format__", ("",)).unwrap();
-        let format_op: &str = <&str>::extract(to_format).unwrap();
+        let format_op: String = String::extract_bound(&to_format).unwrap();
 
         let to_repr = pp.call_method0("__repr__").unwrap();
-        let repr_op: &str = <&str>::extract(to_repr).unwrap();
+        let repr_op: String = String::extract_bound(&to_repr).unwrap();
 
         assert_eq!(str_op, format_repr);
         assert_eq!(format_op, format_repr);
@@ -453,14 +465,18 @@ fn test_richcmp() {
         let new_pp_1 = new_pp(py);
         let pp_two = new_pp_1.call_method1("set_pauli", (1, "X")).unwrap();
 
-        let comparison = bool::extract(pp_one.call_method1("__eq__", (pp_two,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&pp_one.call_method1("__eq__", (&pp_two,)).unwrap()).unwrap();
         assert!(!comparison);
-        let comparison = bool::extract(pp_one.call_method1("__eq__", ("0X",)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&pp_one.call_method1("__eq__", ("0X",)).unwrap()).unwrap();
         assert!(comparison);
 
-        let comparison = bool::extract(pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
         assert!(comparison);
-        let comparison = bool::extract(pp_one.call_method1("__ne__", ("0X",)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&pp_one.call_method1("__ne__", ("0X",)).unwrap()).unwrap();
         assert!(!comparison);
 
         let comparison = pp_one.call_method1("__ge__", ("0X",));
@@ -480,10 +496,12 @@ fn test_hash() {
         let hash_pp = pp.call_method0("__hash__").unwrap();
         let hash_other_pp = pp_other.call_method0("__hash__").unwrap();
 
-        let equal = bool::extract(hash_pp.call_method1("__eq__", (hash_pp,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap()).unwrap();
         assert!(equal);
         let not_equal =
-            bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap()).unwrap();
+            bool::extract_bound(&hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap())
+                .unwrap();
         assert!(!not_equal);
     });
 }
@@ -497,13 +515,13 @@ fn test_jordan_wigner() {
         let dp = new_dp.call_method1("set_pauli", (0_u64, "iY")).unwrap();
         let fo = dp.call_method0("jordan_wigner").unwrap();
 
-        let empty = bool::extract(fo.call_method0("is_empty").unwrap()).unwrap();
+        let empty = bool::extract_bound(&fo.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
         let current_number_modes =
-            usize::extract(fo.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&fo.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract(dp.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&dp.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -515,19 +533,20 @@ fn test_json_schema() {
     pyo3::Python::with_gil(|py| {
         let new = new_pp(py);
 
-        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let schema: String =
+            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(DecoherenceProduct)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         let pp = new.call_method1("set_pauli", (0_u64, "Z")).unwrap();
         let min_version: String =
-            String::extract(pp.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&pp.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -535,38 +554,41 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
         let new_pp = new_pp(py);
         let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
 
-        let result = DecoherenceProductWrapper::from_pyany_to_struqture_one(pp_2.into()).unwrap();
+        let result = DecoherenceProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref()).unwrap();
         assert_eq!(
             result,
-            struqture_one::spins::DecoherenceProduct::from_str("0X").unwrap()
+            struqture_1::spins::DecoherenceProduct::from_str("0X").unwrap()
         );
     });
 }
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"0Z\"").into();
+        let json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"0Z\"");
         let pp_2 = new_pp(py);
         let pp_2 = pp_2.call_method1("set_pauli", (0_u64, "Z")).unwrap();
 
         let pp_from_1 = pp_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "\"0A\"").into();
-        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let error_json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"0A\"");
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });
 }

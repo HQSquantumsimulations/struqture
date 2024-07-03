@@ -60,7 +60,7 @@ pub use bosonic_open_system::BosonLindbladOpenSystemWrapper;
 ///     BosonLindbladOpenSystem
 ///
 #[pymodule]
-pub fn bosons(_py: Python, m: &PyModule) -> PyResult<()> {
+pub fn bosons(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<BosonProductWrapper>()?;
     m.add_class::<HermitianBosonProductWrapper>()?;

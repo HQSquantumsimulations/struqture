@@ -45,6 +45,17 @@ use struqture_py_macros::product_wrapper;
 /// in presence of a `system-spin` part (DecoherenceProduct) and a `bath-spin` part (DecoherenceProduct),
 /// as shown in the example below.
 ///
+/// Args:
+///     spins (List[DecoherenceProduct]): products of pauli matrices acting on qubits.
+///     bosons (List[BosonProduct]): products of bosonic creation and annihilation operators.
+///     fermions (List[FermionProduct]): products of fermionic creation and annihilation operators.
+///
+/// Returns:
+///     MixedDecoherenceProduct: a new MixedDecoherenceProduct with the input of spins, bosons and fermions.
+///
+/// Raises:
+///     ValueError: if MixedDecoherenceProduct can not be constructed from the input.
+///
 /// Examples
 /// --------
 ///
@@ -97,17 +108,20 @@ impl MixedDecoherenceProductWrapper {
         fermions: Vec<Py<PyAny>>,
     ) -> PyResult<Self> {
         let mut spinsv: Vec<DecoherenceProduct> = Vec::new();
-        for s in spins {
-            spinsv.push(DecoherenceProductWrapper::from_pyany(s)?);
-        }
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
-        for b in bosons {
-            bosonsv.push(BosonProductWrapper::from_pyany(b)?);
-        }
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        for f in fermions {
-            fermionsv.push(FermionProductWrapper::from_pyany(f)?);
-        }
+        Python::with_gil(|py| -> PyResult<()> {
+            for s in spins {
+                spinsv.push(DecoherenceProductWrapper::from_pyany(s.bind(py))?);
+            }
+            for b in bosons {
+                bosonsv.push(BosonProductWrapper::from_pyany(b.bind(py))?);
+            }
+            for f in fermions {
+                fermionsv.push(FermionProductWrapper::from_pyany(f.bind(py))?);
+            }
+            Ok(())
+        })?;
         Ok(Self {
             internal: MixedDecoherenceProduct::new(spinsv, bosonsv, fermionsv).map_err(|err| {
                 PyValueError::new_err(format!(
@@ -139,11 +153,11 @@ impl MixedDecoherenceProductWrapper {
     ///     ValueError: Valid pair could not be constructed.
     #[classmethod]
     pub fn create_valid_pair(
-        _cls: &PyType,
+        _cls: Bound<PyType>,
         spins: Vec<String>,
         bosons: Vec<String>,
         fermions: Vec<String>,
-        value: &PyAny,
+        value: &Bound<PyAny>,
     ) -> PyResult<(Self, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
         let mut converted_spins: Vec<DecoherenceProduct> = Vec::new();
         for s in spins {

@@ -638,9 +638,9 @@ fn test_decoherence_operator_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::DecoherenceOperator::new();
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+    let pp_1 = struqture_1::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::DecoherenceOperator::new();
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);
     let mut ss_2 = DecoherenceOperator::new();

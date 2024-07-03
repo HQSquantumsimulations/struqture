@@ -720,7 +720,7 @@ fn test_hermitian_boson_product_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
+    let pp_1 = struqture_1::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
     let pp_2 = HermitianBosonProduct::new([0], [1]).unwrap();
     assert!(HermitianBosonProduct::from_struqture_1(&pp_1).unwrap() == pp_2);
     assert!(pp_1 == pp_2.to_struqture_1().unwrap());

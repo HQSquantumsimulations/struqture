@@ -29,6 +29,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a PlusMinusLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
+/// Returns:
+///     self: The new PlusMinusLindbladNoiseOperator.
+///
 /// Examples
 /// --------
 ///
@@ -57,7 +60,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     /// Create a new PlusMinusLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     self: The new PlusMinusLindbladNoiseOperator with the input number of spins.
+    ///     self: The new PlusMinusLindbladNoiseOperator.
     #[new]
     pub fn new() -> Self {
         Self {
@@ -77,7 +80,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     ///     ValueError: Could not create QubitLindbladNoiseOperator from input.
     #[staticmethod]
     pub fn from_qubit_noise_operator(
-        value: Py<PyAny>,
+        value: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         let system = QubitLindbladNoiseOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;

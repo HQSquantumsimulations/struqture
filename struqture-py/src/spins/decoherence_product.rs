@@ -39,6 +39,9 @@ use struqture_py_macros::{mappings, product_wrapper};
 /// for instance in the spin system classes QubitLindbladOpenSystem, SpinLindbladNoiseSystem or QubitLindbladNoiseOperator,
 /// or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.
 ///
+/// Returns:
+///     self: The new, empty DecoherenceProduct.
+///
 /// Examples
 /// --------
 ///

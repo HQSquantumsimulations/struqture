@@ -423,7 +423,10 @@ fn matrices() {
 
     let unitary_matrix: CooSparseMatrix =
         (vec![1.0.into(), (-1.0).into()], (vec![0, 1], vec![0, 1]));
-    assert_eq!(system.unitary_sparse_matrix_coo().unwrap(), unitary_matrix);
+    assert_eq!(
+        system.unitary_sparse_matrix_coo(Some(1)).unwrap(),
+        unitary_matrix
+    );
 
     let mut superoperator_matrix: HashMap<usize, HashMap<usize, Complex64>> = HashMap::new();
     let mut row_0: HashMap<usize, Complex64> = HashMap::new();
@@ -693,7 +696,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let coo_test_matrix = system.unitary_sparse_matrix_coo().unwrap();
+    let coo_test_matrix = system.unitary_sparse_matrix_coo(None).unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(
@@ -815,9 +818,9 @@ fn test_qubit_operator_schema() {
 #[cfg(feature = "struqture_1_export")]
 #[test]
 fn test_from_to_struqture_1() {
-    let pp_1 = struqture_one::spins::PauliProduct::from_str("0X1Y25Z").unwrap();
-    let mut ss_1 = struqture_one::spins::SpinSystem::new(None);
-    struqture_one::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+    let pp_1 = struqture_1::spins::PauliProduct::from_str("0X1Y25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::SpinSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
 
     let pp_2 = PauliProduct::new().x(0).y(1).z(25);
     let mut ss_2 = QubitOperator::new();

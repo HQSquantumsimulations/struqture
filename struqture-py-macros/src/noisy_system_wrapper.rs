@@ -28,7 +28,7 @@ pub fn noisywrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
-    let (index_type, struqture_one_module, struqture_one_ident) =
+    let (index_type, struqture_1_module, struqture_1_ident) =
         if struct_name.contains("QubitLindbladNoiseOperator") {
             (
                 quote::format_ident!("DecoherenceProductWrapper"),
@@ -92,7 +92,7 @@ pub fn noisywrapper(
                 /// Get the coefficient corresponding to the key.
                 ///
                 /// Args:
-                ///     key: Product to get the value of.
+                ///     key (Tuple[Product type, Product type]): Product to get the value of.
                 ///
                 /// Returns:
                 ///     CalculatorComplex: Value at key (or 0.0).
@@ -101,30 +101,35 @@ pub fn noisywrapper(
                 ///     ValueError: Left-hand product could not be constructed from key.
                 ///     ValueError: Right-hand product could not be constructed from key.
                 pub fn get(&self, key: (Py<PyAny>, Py<PyAny>)) -> PyResult<CalculatorComplexWrapper> {
-                    let (converted_left, converted_right) = (
-                        #index_type::from_pyany(key.0).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                        #index_type::from_pyany(key.1).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                    );
-                    Ok(CalculatorComplexWrapper {
-                        internal: self
-                            .clone()
-                            .internal
-                            .get(&(converted_left, converted_right))
-                            .clone(),
+                    Python::with_gil(|py| -> PyResult<CalculatorComplexWrapper> {
+                        let (converted_left, converted_right) = (
+                            #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                            #index_type::from_pyany(key.1.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                        );
+                        Ok(CalculatorComplexWrapper {
+                            internal: self
+                                .clone()
+                                .internal
+                                .get(&(converted_left, converted_right))
+                                .clone(),
+                        })
                     })
                 }
 
                 /// Remove the value of the input object key.
+                ///
+                /// Args:
+                ///     key (Tuple[Product type, Product type]): The key of the value to remove.
                 ///
                 /// Returns:
                 ///     Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was removed.
@@ -136,27 +141,33 @@ pub fn noisywrapper(
                     &mut self,
                     key: (Py<PyAny>, Py<PyAny>),
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    let (converted_left, converted_right) = (
-                        #index_type::from_pyany(key.0).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                        #index_type::from_pyany(key.1).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                    );
-                    match self.internal.remove(&(converted_left, converted_right)) {
-                        Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
-                        None => Ok(None),
-                    }
+                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
+                        let (converted_left, converted_right) = (
+                            #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                            #index_type::from_pyany(key.1.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                        );
+                        match self.internal.remove(&(converted_left, converted_right)) {
+                            Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
+                            None => Ok(None),
+                        }
+                    })
                 }
 
                 /// Overwrite an existing entry or set a new entry in self.
+                ///
+                /// Args:
+                ///     key (Tuple[Product type, Product type]): The key of the value to set.
+                ///     value (CalculatorComplex): The value to set.
                 ///
                 /// Returns:
                 ///     Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was overwritten.
@@ -167,36 +178,42 @@ pub fn noisywrapper(
                 pub fn set(
                     &mut self,
                     key: (Py<PyAny>, Py<PyAny>),
-                    value: &PyAny,
+                    value: &Bound<PyAny>,
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
-                        .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
-                    let (converted_left, converted_right) = (
-                        #index_type::from_pyany(key.0).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                        #index_type::from_pyany(key.1).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                    );
-                    match self
-                        .internal
-                        .set((converted_left, converted_right), value)
-                        .map_err(|err| {
-                            PyValueError::new_err(format!("Error in set function of FermionOperator: {:?}", err))
-                        })? {
-                        Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
-                        None => Ok(None),
-                    }
+                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
+                        let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
+                            .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
+                        let (converted_left, converted_right) = (
+                            #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                            #index_type::from_pyany(key.1.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                        );
+                        match self
+                            .internal
+                            .set((converted_left, converted_right), value)
+                            .map_err(|err| {
+                                PyValueError::new_err(format!("Error in set function of FermionOperator: {:?}", err))
+                            })? {
+                            Some(x) => Ok(Some(CalculatorComplexWrapper { internal: x })),
+                            None => Ok(None),
+                        }
+                    })
                 }
 
                 /// Adds a new (key object, CalculatorComplex) pair to existing entries.
+                ///
+                /// Args:
+                ///     key (Tuple[Product type, Product type]): The key of the value to add.
+                ///     value (CalculatorComplex): The value to add.
                 ///
                 /// Raises:
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -206,38 +223,40 @@ pub fn noisywrapper(
                 pub fn add_operator_product(
                     &mut self,
                     key: (Py<PyAny>, Py<PyAny>),
-                    value: &PyAny,
+                    value: &Bound<PyAny>,
                 ) -> PyResult<()> {
-                    let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
-                        .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
-                    let (converted_left, converted_right) = (
-                        #index_type::from_pyany(key.0).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                        #index_type::from_pyany(key.1).map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Product could not be constructed: {:?}",
-                                err
-                            ))
-                        })?,
-                    );
-                    self.internal
-                        .add_operator_product((converted_left, converted_right), value)
-                        .map_err(|err| {
-                            PyValueError::new_err(format!(
-                                "Error in add_operator_product function of Operator: {:?}",
-                                err
-                            ))
-                        })
+                    Python::with_gil(|py| -> PyResult<()> {
+                        let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
+                            .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
+                        let (converted_left, converted_right) = (
+                            #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                            #index_type::from_pyany(key.1.bind(py)).map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Product could not be constructed: {:?}",
+                                    err
+                                ))
+                            })?,
+                        );
+                        self.internal
+                            .add_operator_product((converted_left, converted_right), value)
+                            .map_err(|err| {
+                                PyValueError::new_err(format!(
+                                    "Error in add_operator_product function of Operator: {:?}",
+                                    err
+                                ))
+                            })
+                    })
                 }
 
                 /// Return unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
+                ///     List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
                 pub fn keys(&self) -> Vec<(#index_type, #index_type)> {
                     let mut system_keys: Vec<(#index_type, #index_type)> = Vec::new();
                     for (key_l, key_r) in self.internal.keys() {
@@ -251,7 +270,7 @@ pub fn noisywrapper(
                 /// Return unsorted values in self.
                 ///
                 /// Returns:
-                ///     list[CalculatorComplex]: The sequence of values of self.
+                ///     List[CalculatorComplex]: The sequence of values of self.
                 pub fn values(&self) -> Vec<CalculatorComplexWrapper> {
                     let mut system_values: Vec<CalculatorComplexWrapper> = Vec::new();
                     for val in self.internal.values() {
@@ -262,6 +281,7 @@ pub fn noisywrapper(
                     system_values
                 }
 
+                /// Return unsorted keys in self.
                 /// Return number of entries in object.
                 ///
                 /// Returns:
@@ -313,7 +333,7 @@ pub fn noisywrapper(
                 ///
                 /// Raises:
                 ///     ValueError: The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex.
-                pub fn __mul__(&self, value: &PyAny) -> PyResult<#ident> {
+                pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<#ident> {
                     let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
                     match cf_value {
                         Ok(x) => Ok(#ident {
@@ -356,6 +376,17 @@ pub fn noisywrapper(
             pub fn current_number_spins(&self) -> usize {
                 self.internal.current_number_spins()
             }
+
+            /// Return maximum index in self.
+            ///
+            /// Returns:
+            ///     int: Maximum index.
+            pub fn number_spins(&self) -> usize {
+                Python::with_gil(|py| {
+                    py.run_bound("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                });
+                self.internal.current_number_spins()
+            }
         }
     } else {
         TokenStream::new()
@@ -374,7 +405,7 @@ pub fn noisywrapper(
                 ///     number_spins: The number of spins in self.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -397,16 +428,20 @@ pub fn noisywrapper(
 
                 /// Return the unitary part of the superoperator in the sparse COO format.
                 ///
+                /// Args:
+                ///     number_spins: The number of spins in self.
+                ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of the unitary part of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                pub fn unitary_sparse_matrix_coo(&self) -> PyResult<PyCooMatrix> {
+                #[pyo3(signature = (number_spins = None))]
+                pub fn unitary_sparse_matrix_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
-                        .unitary_sparse_matrix_coo()
+                        .unitary_sparse_matrix_coo(number_spins)
                         .map_err(|err| match err {
                             StruqtureError::CalculatorError(c_err) => {
                                 PyValueError::new_err(format!("{}", c_err))
@@ -421,7 +456,7 @@ pub fn noisywrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The matrix representation of the noise part of self.
+                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The little endian matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -566,7 +601,7 @@ pub fn noisywrapper(
             ///     ValueError: Noise could not be constructed.
             ///     ValueError: Grouping could not be constructed.
             #[staticmethod]
-            pub fn group(system: Py<PyAny>, noise: Py<PyAny>) -> PyResult<Self> {
+            pub fn group(system: &Bound<PyAny>, noise: &Bound<PyAny>) -> PyResult<Self> {
                 let system = #system_type::from_pyany(system).map_err(|err| {
                     PyValueError::new_err(format!("System could not be constructed: {:?}", err))
                 })?;
@@ -616,8 +651,8 @@ pub fn noisywrapper(
             ///     TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
             pub fn system_set(
                 &mut self,
-                key: Py<PyAny>,
-                value: Py<PyAny>,
+                key: &Bound<PyAny>,
+                value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
                 let pp = #system_index_type::from_pyany(key)?;
                 let value = #value_type::from_pyany(value)
@@ -633,7 +668,7 @@ pub fn noisywrapper(
             /// Set a new entry in the noise of the open system.
             ///
             /// Args:
-            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///     key (Tuple[Product type, Product type]): Tuple of Products of set object.
             ///     value (CalculatorComplex): CalculatorComplex value of set object.
             ///
             /// Returns:
@@ -646,17 +681,19 @@ pub fn noisywrapper(
             pub fn noise_set(
                 &mut self,
                 key: (Py<PyAny>, Py<PyAny>),
-                value: Py<PyAny>,
+                value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
-                let dp_left = #index_type::from_pyany(key.0)?;
-                let dp_right = #index_type::from_pyany(key.1)?;
-                let value = CalculatorComplexWrapper::from_pyany(value)
-                    .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
+                Python::with_gil(|py| -> PyResult<#ident> {
+                    let dp_left = #index_type::from_pyany(key.0.bind(py))?;
+                    let dp_right = #index_type::from_pyany(key.1.bind(py))?;
+                    let value = CalculatorComplexWrapper::from_pyany(value)
+                        .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
 
-                self.internal.noise_mut().set((dp_left, dp_right), value).map_err(|_| PyTypeError::new_err("Couldn't set key and value combination"))?;
+                    self.internal.noise_mut().set((dp_left, dp_right), value).map_err(|_| PyTypeError::new_err("Couldn't set key and value combination"))?;
 
-                Ok(#ident {
-                    internal: self.internal.clone(),
+                    Ok(#ident {
+                        internal: self.internal.clone(),
+                    })
                 })
             }
 
@@ -672,7 +709,7 @@ pub fn noisywrapper(
             ///     ValueError: key element cannot be converted to product.
             pub fn system_get(
                 &mut self,
-                key: Py<PyAny>,
+                key: &Bound<PyAny>,
             ) -> PyResult<#value_type> {
                 let pp = #system_index_type::from_pyany(key)?;
                 let get_value = self.internal.system().get(&pp);
@@ -685,7 +722,7 @@ pub fn noisywrapper(
             /// Get the CalculatorComplex coefficient corresponding to the key.
             ///
             /// Args:
-            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///     key (Tuple[Product type, Product type]): Tuple of Products of set object.
             ///
             /// Returns:
             ///     CalculatorComplex: Value at key (or 0.0).
@@ -697,12 +734,14 @@ pub fn noisywrapper(
                 &mut self,
                 key: (Py<PyAny>, Py<PyAny>),
             ) -> PyResult<CalculatorComplexWrapper> {
-                let dp_left = #index_type::from_pyany(key.0)?;
-                let dp_right = #index_type::from_pyany(key.1)?;
-                let get_value = self.internal.noise().get(&(dp_left, dp_right));
+                Python::with_gil(|py| -> PyResult<CalculatorComplexWrapper> {
+                    let dp_left = #index_type::from_pyany(key.0.bind(py))?;
+                    let dp_right = #index_type::from_pyany(key.1.bind(py))?;
+                    let get_value = self.internal.noise().get(&(dp_left, dp_right));
 
-                Ok(CalculatorComplexWrapper {
-                    internal: get_value.into(),
+                    Ok(CalculatorComplexWrapper {
+                        internal: get_value.into(),
+                    })
                 })
             }
 
@@ -720,8 +759,8 @@ pub fn noisywrapper(
             ///     TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
             pub fn system_add_operator_product(
                 &mut self,
-                key: Py<PyAny>,
-                value: Py<PyAny>,
+                key: &Bound<PyAny>,
+                value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
                 let pp = #system_index_type::from_pyany(key)?;
                 let value = #value_type::from_pyany(value)
@@ -737,7 +776,7 @@ pub fn noisywrapper(
             /// Add a new entry to the system of the open system.
             ///
             /// Args:
-            ///     key (Tuple(Product type, Product type)): Tuple of Products of set object.
+            ///     key (Tuple[Product type, Product type]): Tuple of Products of set object.
             ///     value (CalculatorComplex): Value of set object.
             ///
             /// Returns:
@@ -750,17 +789,19 @@ pub fn noisywrapper(
             pub fn noise_add_operator_product(
                 &mut self,
                 key: (Py<PyAny>, Py<PyAny>),
-                value: Py<PyAny>,
+                value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
-                let dp_left = #index_type::from_pyany(key.0)?;
-                let dp_right = #index_type::from_pyany(key.1)?;
-                let value = CalculatorComplexWrapper::from_pyany(value)
-                    .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
+                Python::with_gil(|py| -> PyResult<#ident> {
+                    let dp_left = #index_type::from_pyany(key.0.bind(py))?;
+                    let dp_right = #index_type::from_pyany(key.1.bind(py))?;
+                    let value = CalculatorComplexWrapper::from_pyany(value)
+                        .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
 
-                self.internal.noise_mut().add_operator_product((dp_left, dp_right), value).map_err(|_| PyTypeError::new_err("Number of spins exceeded"))?;
+                    self.internal.noise_mut().add_operator_product((dp_left, dp_right), value).map_err(|_| PyTypeError::new_err("Number of spins exceeded"))?;
 
-                Ok(#ident {
-                    internal: self.internal.clone(),
+                    Ok(#ident {
+                        internal: self.internal.clone(),
+                    })
                 })
             }
 
@@ -774,7 +815,7 @@ pub fn noisywrapper(
                 ///
                 /// Raises:
                 ///     ValueError: The rhs of the multiplication cannot be converted to CalculatorFloat.
-                pub fn __mul__(&self, value: &PyAny) -> PyResult<#ident> {
+                pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<#ident> {
                 let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
                 match cf_value {
                     Ok(x) => Ok(#ident {
@@ -892,12 +933,12 @@ pub fn noisywrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                    let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
-                    let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                    let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
 
@@ -911,7 +952,7 @@ pub fn noisywrapper(
                         PyTypeError::new_err(err.to_string())
                     })?;
 
-                    let input = input.as_ref(py);
+                    let input = input.as_ref();
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -933,9 +974,9 @@ pub fn noisywrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
-            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref(py);
+                    let input = input.as_ref();
                     let get_bytes = input
                         .call_method0("to_bincode")
                         .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
@@ -953,9 +994,9 @@ pub fn noisywrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_one(
-                input: Py<PyAny>,
-            ) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+            pub fn from_pyany_to_struqture_1(
+                input: &Bound<PyAny>,
+            ) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
                 let res = #ident::from_pyany(input)?;
                 let one_export = #struct_ident::to_struqture_1(&res).map_err(
                     |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
@@ -980,24 +1021,24 @@ pub fn noisywrapper(
             // ----------------------------------
             // Default pyo3 implementations
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
+            pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let qubit_operator: #struct_ident =
-                    #ident::from_pyany_struqture_one(input)?;
+                    #ident::from_pyany_struqture_1(input)?;
                 Ok(#ident {
                     internal: qubit_operator,
                 })
             }
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
-                let qubit_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+            pub fn from_json_struqture_1(input: String) -> PyResult<#ident> {
+                let qubit_operator: struqture_1::#struqture_1_module::#struqture_1_ident =
                     serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from json to struqture 1.x: {}",
@@ -1032,7 +1073,7 @@ pub fn noisywrapper(
             /// Convert the bincode representation of the object to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized object.
@@ -1041,8 +1082,9 @@ pub fn noisywrapper(
             ///     TypeError: Input cannot be converted to byte array.
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
-            pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+            pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -1059,7 +1101,7 @@ pub fn noisywrapper(
             /// Return the bincode representation of the object using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
@@ -1068,7 +1110,7 @@ pub fn noisywrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
@@ -1136,7 +1178,7 @@ pub fn noisywrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {

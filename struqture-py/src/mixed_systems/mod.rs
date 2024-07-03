@@ -64,7 +64,7 @@ pub use mixed_open_system::MixedLindbladOpenSystemWrapper;
 ///     MixedPlusMinusOperator
 ///
 #[pymodule]
-pub fn mixed_systems(_py: Python, m: &PyModule) -> PyResult<()> {
+pub fn mixed_systems(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<MixedProductWrapper>()?;
     m.add_class::<HermitianMixedProductWrapper>()?;

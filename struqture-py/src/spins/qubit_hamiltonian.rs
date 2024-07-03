@@ -36,6 +36,9 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// QubitHamiltonians are characterized by a QubitOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
+/// Returns:
+///     self: The new QubitHamiltonian.
+///
 /// Examples
 /// --------
 ///
@@ -75,7 +78,7 @@ impl QubitHamiltonianWrapper {
     /// Create an empty QubitHamiltonian.
     ///
     /// Returns:
-    ///     self: The new QubitHamiltonian with the input number of spins.
+    ///     self: The new QubitHamiltonian.
     #[new]
     pub fn new() -> Self {
         Self {
@@ -93,7 +96,7 @@ impl QubitHamiltonianWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor QubitHamiltonian.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<QubitOperatorWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<QubitOperatorWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(QubitOperatorWrapper {
@@ -106,7 +109,7 @@ impl QubitHamiltonianWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value);
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = self.clone().internal * x;

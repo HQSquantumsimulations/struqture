@@ -2,6 +2,34 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 2.0.0-alpha.1
+
+* Additional changes from feedback regarding struqture 2.0
+
+## 2.0.0-alpha.0
+
+* First draft of the changes for struqture 2.0
+
+## 1.8.0
+
+* Added IDE hint support.
+
+## 1.7.1
+
+* Fixed versioning bug
+
+## 1.7.0
+
+* Updated to pyo3 0.21
+
+## 1.6.2
+
+* Updated VersionMissmatch error message
+
+## 1.6.1
+
+* Updated Cargo.lock (particularly mio 0.8.10->0.8.11)
+
 ## 1.6.0
 
 * Add optional feature `indexed_map_iterators` switching internal HashMaps to `indexmap` implementation. Using this feature will change the type of iterators returned by `keys`, `values` and `iter` methods.

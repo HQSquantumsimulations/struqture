@@ -30,6 +30,14 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// MixedHamiltonians are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (int): The number of spin subsystems in the MixedHamiltonian.
+///     number_bosons (int): The number of boson subsystems in the MixedHamiltonian.
+///     number_fermions (int): The number of fermion subsystems in the MixedHamiltonian.
+///
+/// Returns:
+///     self: The new (empty) MixedHamiltonian.
+///
 /// Examples
 /// --------
 ///
@@ -95,7 +103,7 @@ impl MixedHamiltonianWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonian.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<MixedOperatorWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<MixedOperatorWrapper> {
         let mut mixed_system = MixedOperator::new(
             self.current_number_spins().len(),
             self.current_number_bosonic_modes().len(),
@@ -119,7 +127,7 @@ impl MixedHamiltonianWrapper {
                 internal: mixed_system * x,
             }),
             Err(_) => {
-                let bhs_value = Self::from_pyany(value.into());
+                let bhs_value = Self::from_pyany(value);
                 match bhs_value {
                     Ok(x) => {
                         let new_self = (self.clone().internal * x).map_err(|err| {

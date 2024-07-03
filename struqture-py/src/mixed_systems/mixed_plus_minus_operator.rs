@@ -29,6 +29,14 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// MixedPlusMinusOperators are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (int): The number of spin subsystems in the MixedPlusMinusOperator.
+///     number_bosons (int): The number of boson subsystems in the MixedPlusMinusOperator.
+///     number_fermions (int): The number of fermion subsystems in the MixedPlusMinusOperator.
+///
+/// Returns:
+///     self: The new (empty) MixedPlusMinusOperator.
+///
 /// Examples
 /// --------
 ///
@@ -65,9 +73,9 @@ impl MixedPlusMinusOperatorWrapper {
     /// Create an empty MixedPlusMinusOperator.
     ///
     /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedPlusMinusOperator.
-    ///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedPlusMinusOperator.
-    ///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedPlusMinusOperator.
+    ///     number_spins (int): The number of spin subsystems in the MixedPlusMinusOperator.
+    ///     number_bosons (int): The number of boson subsystems in the MixedPlusMinusOperator.
+    ///     number_fermions (int): The number of fermion subsystems in the MixedPlusMinusOperator.
     ///
     /// Returns:
     ///     self: The new (empty) MixedPlusMinusOperator.
@@ -88,7 +96,7 @@ impl MixedPlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedPlusMinusOperator.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(Self {
@@ -119,7 +127,7 @@ impl MixedPlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create MixedOperator from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: Py<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {

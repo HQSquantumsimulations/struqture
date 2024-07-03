@@ -54,7 +54,7 @@ pub use qubit_open_system::QubitLindbladOpenSystemWrapper;
 ///     QubitLindbladOpenSystem
 ///
 #[pymodule]
-pub fn spins(_py: Python, m: &PyModule) -> PyResult<()> {
+pub fn spins(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<PauliProductWrapper>()?;
     m.add_class::<DecoherenceProductWrapper>()?;

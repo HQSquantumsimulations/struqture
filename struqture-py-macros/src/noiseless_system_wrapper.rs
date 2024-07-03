@@ -27,7 +27,7 @@ pub fn noiselesswrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
-    let (index_type, struqture_one_module, struqture_one_ident) =
+    let (index_type, struqture_1_module, struqture_1_ident) =
         if struct_name.contains("QubitOperator") {
             (
                 quote::format_ident!("PauliProductWrapper"),
@@ -102,7 +102,7 @@ pub fn noiselesswrapper(
                 /// Return a list of the unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[OperatorProduct]: The sequence of keys of the self.
+                ///     List[OperatorProduct]: The sequence of keys of the self.
                 pub fn keys(&self) -> Vec<#index_type> {
                     let mut system_keys: Vec<#index_type> = Vec::new();
                     for key in self.internal.keys() {
@@ -146,7 +146,7 @@ pub fn noiselesswrapper(
                 /// Truncate self by returning a copy without entries under a threshold.
                 ///
                 /// Args:
-                ///     threshold: The threshold for inclusion.
+                ///     threshold (float): The threshold for inclusion.
                 ///
                 /// Returns:
                 ///     self: The truncated version of self.
@@ -164,7 +164,7 @@ pub fn noiselesswrapper(
                 ///
                 /// Raises:
                 ///     ValueError: Product could not be constructed from key.
-                pub fn get(&self, key: Py<PyAny>) -> PyResult<#value_type> {
+                pub fn get(&self, key: &Bound<PyAny>) -> PyResult<#value_type> {
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Product could not be constructed: {:?}",
@@ -178,12 +178,15 @@ pub fn noiselesswrapper(
 
                 /// Remove the value of the input key.
                 ///
-                /// Returns:
+                /// Args:
+                ///     key (Product type): The key of the value to remove.
+                ///
+                ///  Returns:
                 ///     Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
                 ///
                 /// Raises:
                 ///     ValueError: Product could not be constructed.
-                pub fn remove(&mut self, key: Py<PyAny>) -> PyResult<Option<#value_type>> {
+                pub fn remove(&mut self, key: &Bound<PyAny>) -> PyResult<Option<#value_type>> {
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Product could not be constructed: {:?}",
@@ -198,6 +201,10 @@ pub fn noiselesswrapper(
 
                 /// Overwrite an existing entry or set a new entry in self.
                 ///
+                /// Args:
+                ///     key (Product type): The key to set.
+                ///     value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
+                ///
                 /// Returns:
                 ///     Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
                 ///
@@ -205,8 +212,8 @@ pub fn noiselesswrapper(
                 ///     ValueError: Product could not be constructed.
                 pub fn set(
                     &mut self,
-                    key: Py<PyAny>,
-                    value: Py<PyAny>,
+                    key: &Bound<PyAny>,
+                    value: &Bound<PyAny>,
                 ) -> PyResult<Option<#value_type>> {
                     let value = #value_type::from_pyany(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex or CalculatorFloat"))?;
@@ -229,11 +236,14 @@ pub fn noiselesswrapper(
 
                 /// Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
                 ///
+                /// Args:
+                ///     key (Product type): The key object
+                ///
                 /// Raises:
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
                 ///     ValueError: Product could not be constructed.
                 ///     ValueError: Error in add_operator_product function of self.
-                pub fn add_operator_product(&mut self, key: Py<PyAny>, value: Py<PyAny>) -> PyResult<()> {
+                pub fn add_operator_product(&mut self, key: &Bound<PyAny>, value: &Bound<PyAny>) -> PyResult<()> {
                     let value = #value_type::from_pyany(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex or CalculatorFloat"))?;
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
@@ -255,7 +265,7 @@ pub fn noiselesswrapper(
                 /// Return unsorted values in self.
                 ///
                 /// Returns:
-                ///     list[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
+                ///     List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
                 pub fn values(&self) -> Vec<#value_type> {
                     let mut system_values: Vec<#value_type> = Vec::new();
                     for val in self.internal.values() {
@@ -306,6 +316,17 @@ pub fn noiselesswrapper(
             pub fn current_number_spins(&self) -> usize {
                 self.internal.current_number_spins()
             }
+
+            /// Return maximum index in self.
+            ///
+            /// Returns:
+            ///     int: Maximum index.
+            pub fn number_spins(&self) -> usize {
+                Python::with_gil(|py| {
+                    py.run_bound("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                });
+                self.internal.current_number_spins()
+            }
         }
     } else {
         TokenStream::new()
@@ -316,10 +337,10 @@ pub fn noiselesswrapper(
                 /// Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
                 ///
                 /// Args:
-                ///     number_spins: The number of spins in self.
+                ///     number_spins (Optional[int]): The number of spins in self.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -357,7 +378,7 @@ pub fn noiselesswrapper(
                 ///     number_spins: The number of spins to construct the matrix for.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -380,16 +401,20 @@ pub fn noiselesswrapper(
 
                 /// Return the unitary part of the superoperator in the sparse COO format.
                 ///
+                /// Args:
+                ///     number_spins: The number of spins to construct the matrix for.
+                ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of the unitary part of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                pub fn unitary_sparse_matrix_coo(&self) -> PyResult<PyCooMatrix> {
+                #[pyo3(signature = (number_spins = None))]
+                pub fn unitary_sparse_matrix_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
-                        .unitary_sparse_matrix_coo()
+                        .unitary_sparse_matrix_coo(number_spins)
                         .map_err(|err| match err {
                             StruqtureError::CalculatorError(c_err) => {
                                 PyValueError::new_err(format!("{}", c_err))
@@ -404,7 +429,7 @@ pub fn noiselesswrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The matrix representation of the noise part of self.
+                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The little endian matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -572,12 +597,12 @@ pub fn noiselesswrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object.
-            pub fn from_pyany(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                    let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
-                    let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                    let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
 
@@ -591,7 +616,7 @@ pub fn noiselesswrapper(
                         PyTypeError::new_err(err.to_string())
                     })?;
 
-                    let input = input.as_ref(py);
+                    let input = input.as_ref();
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -613,9 +638,9 @@ pub fn noiselesswrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
-            pub fn from_pyany_struqture_one(input: Py<PyAny>) -> PyResult<#struct_ident> {
+            pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref(py);
+                    let input = input.as_ref();
                     let get_bytes = input
                         .call_method0("to_bincode")
                         .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
@@ -633,9 +658,9 @@ pub fn noiselesswrapper(
 
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_one(
-                input: Py<PyAny>,
-            ) -> PyResult<struqture_one::#struqture_one_module::#struqture_one_ident> {
+            pub fn from_pyany_to_struqture_1(
+                input: &Bound<PyAny>,
+            ) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
                 let res = #ident::from_pyany(input)?;
                 let one_export = #struct_ident::to_struqture_1(&res).map_err(
                     |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
@@ -661,24 +686,24 @@ pub fn noiselesswrapper(
             // ----------------------------------
             // Default pyo3 implementations
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_struqture_one(input: Py<PyAny>) -> PyResult<#ident> {
+            pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let qubit_operator: #struct_ident =
-                    #ident::from_pyany_struqture_one(input)?;
+                    #ident::from_pyany_struqture_1(input)?;
                 Ok(#ident {
                     internal: qubit_operator,
                 })
             }
 
-            // add in a function converting struqture_one (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+            // add in a function converting struqture_1 (not py) to struqture 2
+            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
-            pub fn from_json_struqture_one(input: String) -> PyResult<#ident> {
-                let qubit_operator: struqture_one::#struqture_one_module::#struqture_one_ident =
+            pub fn from_json_struqture_1(input: String) -> PyResult<#ident> {
+                let qubit_operator: struqture_1::#struqture_1_module::#struqture_1_ident =
                     serde_json::from_str(&input).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from json to struqture 1.x: {}",
@@ -706,14 +731,14 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     self: A deep copy of self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+            pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
                 self.clone()
             }
 
             /// Convert the bincode representation of self to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized object.
@@ -722,8 +747,9 @@ pub fn noiselesswrapper(
             ///     TypeError: Input cannot be converted to byte array.
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
-            pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+            pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -740,7 +766,7 @@ pub fn noiselesswrapper(
             /// Return the bincode representation of self using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
@@ -749,7 +775,7 @@ pub fn noiselesswrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
@@ -817,7 +843,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                 match op {
                     pyo3::class::basic::CompareOp::Eq => match other {

@@ -32,13 +32,14 @@ fn new_pp(
     spin_sub: Vec<String>,
     boson_sub: Vec<String>,
     fermion_sub: Vec<String>,
-) -> &PyCell<HermitianMixedProductWrapper> {
-    let pp_type = py.get_type::<HermitianMixedProductWrapper>();
+) -> Bound<HermitianMixedProductWrapper> {
+    let pp_type = py.get_type_bound::<HermitianMixedProductWrapper>();
     pp_type
         .call1((spin_sub, boson_sub, fermion_sub))
         .unwrap()
-        .downcast::<PyCell<HermitianMixedProductWrapper>>()
+        .downcast::<HermitianMixedProductWrapper>()
         .unwrap()
+        .to_owned()
 }
 
 /// Test default function of HermitianMixedProductWrapper
@@ -107,7 +108,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_new_no_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp_type = py.get_type::<HermitianMixedProductWrapper>();
+        let pp_type = py.get_type_bound::<HermitianMixedProductWrapper>();
 
         let pp = pp_type.call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]));
         assert!(pp.is_ok());
@@ -119,7 +120,7 @@ fn test_new_no_error() {
 fn test_new_errors() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp = py.get_type::<HermitianMixedProductWrapper>();
+        let pp = py.get_type_bound::<HermitianMixedProductWrapper>();
 
         let valid = pp.call1((
             vec!["0J"],
@@ -155,61 +156,68 @@ fn test_from_string() {
         let string_pp = pp
             .call_method1("from_string", (":S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
-        let comparison = bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
         let comparison =
-            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_bosonic_modes")
             .unwrap();
         let comparison =
-            bool::extract(nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
+            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_fermionic_modes")
             .unwrap();
         let comparison =
-            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("spins").unwrap();
-        let noise_type = py.get_type::<PauliProductWrapper>();
+        let noise_type = py.get_type_bound::<PauliProductWrapper>();
         let spins = noise_type
             .call0()
             .unwrap()
-            .downcast::<PyCell<PauliProductWrapper>>()
+            .downcast::<PauliProductWrapper>()
             .unwrap()
             .call_method1("z", ((0),))
             .unwrap();
         let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (vec![spins],)).unwrap()).unwrap();
+            bool::extract_bound(&comp_op.call_method1("__eq__", (vec![spins],)).unwrap()).unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("bosons").unwrap();
-        let noise_type = py.get_type::<BosonProductWrapper>();
-        let bosons = noise_type
-            .call1(([0], [1]))
-            .unwrap()
-            .downcast::<PyCell<BosonProductWrapper>>()
-            .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (vec![bosons],)).unwrap()).unwrap();
+        let noise_type = py.get_type_bound::<BosonProductWrapper>();
+        let bosons = noise_type.call1(([0], [1])).unwrap();
+        let comparison = bool::extract_bound(
+            &comp_op
+                .call_method1(
+                    "__eq__",
+                    (vec![bosons.downcast::<BosonProductWrapper>().unwrap()],),
+                )
+                .unwrap(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("fermions").unwrap();
-        let noise_type = py.get_type::<FermionProductWrapper>();
-        let fermions = noise_type
-            .call1(([0], [0]))
-            .unwrap()
-            .downcast::<PyCell<FermionProductWrapper>>()
-            .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (vec![fermions],)).unwrap()).unwrap();
+        let noise_type = py.get_type_bound::<FermionProductWrapper>();
+        let fermions = noise_type.call1(([0], [0])).unwrap();
+        let comparison = bool::extract_bound(
+            &comp_op
+                .call_method1(
+                    "__eq__",
+                    (vec![fermions.downcast::<FermionProductWrapper>().unwrap()],),
+                )
+                .unwrap(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -237,16 +245,16 @@ fn test_hermitian_conj() {
             vec!["c0a0".into()],
         );
         let hermitian_conjugate_pp = pp.call_method0("hermitian_conjugate").unwrap();
-        let comparison = bool::extract(
-            hermitian_conjugate_pp
-                .call_method1("__eq__", ((pp, 1_f64),))
+        let comparison = bool::extract_bound(
+            &hermitian_conjugate_pp
+                .call_method1("__eq__", ((&pp, 1_f64),))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
 
         let is_natural_hermitian_pp =
-            bool::extract(pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
+            bool::extract_bound(&pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
         assert!(!is_natural_hermitian_pp);
     });
 }
@@ -274,8 +282,8 @@ fn test_create_valid_pair() {
                 ),
             )
             .unwrap();
-        let comparison = bool::extract(
-            valid
+        let comparison = bool::extract_bound(
+            &valid
                 .call_method1("__eq__", ((pp, Complex64::new(1.0, 2.0)),))
                 .unwrap(),
         )
@@ -443,7 +451,8 @@ fn test_multiply() {
 
         let multiplied = pp_0.call_method1("__mul__", (pp_1,)).unwrap();
         let result =
-            bool::extract(multiplied.call_method1("__eq__", (comparison,)).unwrap()).unwrap();
+            bool::extract_bound(&multiplied.call_method1("__eq__", (comparison,)).unwrap())
+                .unwrap();
         assert!(result);
 
         let pp_error = new_pp(
@@ -474,10 +483,10 @@ fn test_copy_deepcopy() {
         // let copy_deepcopy_param = pp.clone();
 
         let comparison_copy =
-            bool::extract(copy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&copy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract(deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -501,7 +510,7 @@ fn test_to_from_bincode() {
             vec!["c0a1".into()],
             vec!["c0a0".into()],
         );
-        let deserialised = new.call_method1("from_bincode", (serialised,)).unwrap();
+        let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
 
         let deserialised_error =
             new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
@@ -518,7 +527,7 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -557,7 +566,7 @@ fn test_to_from_json() {
             vec!["c0a1".into()],
             vec!["c0a0".into()],
         );
-        let deserialised = new.call_method1("from_json", (serialised,)).unwrap();
+        let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
 
         let deserialised_error = new.call_method1("from_json", ("fails".to_string(),));
         assert!(deserialised_error.is_err());
@@ -572,7 +581,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -591,13 +600,13 @@ fn test_format_repr() {
         let format_repr = "S0Z:Bc0a1:Fc0a0:";
 
         let to_str = pp.call_method0("__str__").unwrap();
-        let str_op: &str = <&str>::extract(to_str).unwrap();
+        let str_op: String = String::extract_bound(&to_str).unwrap();
 
         let to_format = pp.call_method1("__format__", ("",)).unwrap();
-        let format_op: &str = <&str>::extract(to_format).unwrap();
+        let format_op: String = String::extract_bound(&to_format).unwrap();
 
         let to_repr = pp.call_method0("__repr__").unwrap();
-        let repr_op: &str = <&str>::extract(to_repr).unwrap();
+        let repr_op: String = String::extract_bound(&to_repr).unwrap();
 
         assert_eq!(str_op, format_repr);
         assert_eq!(format_op, format_repr);
@@ -623,20 +632,22 @@ fn test_richcmp() {
             vec!["c0a0".into()],
         );
 
-        let comparison = bool::extract(pp_one.call_method1("__eq__", (pp_two,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&pp_one.call_method1("__eq__", (&pp_two,)).unwrap()).unwrap();
         assert!(!comparison);
-        let comparison = bool::extract(
-            pp_one
+        let comparison = bool::extract_bound(
+            &pp_one
                 .call_method1("__eq__", ("S0Z:Bc0a1:Fc0a0:",))
                 .unwrap(),
         )
         .unwrap();
         assert!(comparison);
 
-        let comparison = bool::extract(pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
+        let comparison =
+            bool::extract_bound(&pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
         assert!(comparison);
-        let comparison = bool::extract(
-            pp_one
+        let comparison = bool::extract_bound(
+            &pp_one
                 .call_method1("__ne__", ("S0Z:Bc0a1:Fc0a0:",))
                 .unwrap(),
         )
@@ -669,10 +680,12 @@ fn test_hash() {
         let hash_pp = pp.call_method0("__hash__").unwrap();
         let hash_other_pp = pp_other.call_method0("__hash__").unwrap();
 
-        let equal = bool::extract(hash_pp.call_method1("__eq__", (hash_pp,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap()).unwrap();
         assert!(equal);
         let not_equal =
-            bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap()).unwrap();
+            bool::extract_bound(&hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap())
+                .unwrap();
         assert!(!not_equal);
     });
 }
@@ -689,18 +702,19 @@ fn test_json_schema() {
             vec!["c1a1".to_string()],
         );
 
-        let schema: String = String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+        let schema: String =
+            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(HermitianMixedProduct)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -708,7 +722,7 @@ fn test_json_schema() {
 
 #[cfg(feature = "struqture_1_export")]
 #[test]
-fn test_from_pyany_to_struqture_one() {
+fn test_from_pyany_to_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         use std::str::FromStr;
@@ -718,27 +732,27 @@ fn test_from_pyany_to_struqture_one() {
             vec!["c0a0".to_string()],
             vec!["c1a1".to_string()],
         );
-        let pp_1: struqture_one::mixed_systems::HermitianMixedProduct =
-            struqture_one::mixed_systems::MixedIndex::new(
-                [struqture_one::spins::PauliProduct::from_str("0Z").unwrap()],
-                [struqture_one::bosons::BosonProduct::from_str("c0a0").unwrap()],
-                [struqture_one::fermions::FermionProduct::from_str("c1a1").unwrap()],
+        let pp_1: struqture_1::mixed_systems::HermitianMixedProduct =
+            struqture_1::mixed_systems::MixedIndex::new(
+                [struqture_1::spins::PauliProduct::from_str("0Z").unwrap()],
+                [struqture_1::bosons::BosonProduct::from_str("c0a0").unwrap()],
+                [struqture_1::fermions::FermionProduct::from_str("c1a1").unwrap()],
             )
             .unwrap();
 
         let result =
-            HermitianMixedProductWrapper::from_pyany_to_struqture_one(pp_2.as_ref().into())
-                .unwrap();
+            HermitianMixedProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref()).unwrap();
         assert_eq!(result, pp_1);
     });
 }
 
 #[cfg(feature = "struqture_1_import")]
 #[test]
-fn test_from_json_struqture_one() {
+fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: &PyAny = pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"").into();
+        let json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"S0Z:Bc1a1:Fc0a0\"");
         let pp_2 = new_pp(
             py,
             vec!["0Z".to_string()],
@@ -747,14 +761,15 @@ fn test_from_json_struqture_one() {
         );
 
         let pp_from_1 = pp_2
-            .call_method1("from_json_struqture_one", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal = bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        let equal =
+            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny =
-            pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0b0\"").into();
-        let pp_from_1 = pp_2.call_method1("from_json_struqture_one", (error_json_string,));
+        let error_json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new_bound(py, "\"S0Z:Bc1a1:Fc0b0\"");
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });
 }
