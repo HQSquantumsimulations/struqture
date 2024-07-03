@@ -217,7 +217,6 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
             )
             .map_err(|err| PyTypeError::new_err(err.to_string()))?;
 
-            let input = input.as_ref();
             let get_bytes = input
                 .call_method0("to_bincode")
                 .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
