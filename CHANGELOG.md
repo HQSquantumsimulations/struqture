@@ -2,47 +2,13 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
-## Unreleased
+## 2.0.0-alpha.1
 
-## 1.12.2
+* Additional changes from feedback regarding struqture 2.0
 
-* Added a readme in struqture-py.
-* Updated the `deny.toml` to the carg-deny 1.18 standard.
+## 2.0.0-alpha.0
 
-## 1.12.1
-
-* Updated to struqture 2.0 v2.0.0-alpha.11.
-* Moved the struqture 2.0 conversion code from struqture to struqture-py, thereby removing the struqture 2.0 dependency of struqture.
-
-## 1.12.0
-
-* Updated to pyo3 0.23 (includes updating to qoqo-calculator 1.5.0 and struqture 2.0.0-alpha.10).
-* Updated to new struqture 2.0 naming (Qubit -> Pauli).
-* Switched from `from_struqture_2` to `from_json_struqture_2` in the `unstable_struqture_2_import` feature.
-* Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
-
-## 1.11.0 - 1.11.1
-
-* Updated to struqture 2.0.0-alpha.7.
-* Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14), qoqo-calculator (1.2 -> 1.4).
-* Updated minimum supported Rust version from 1.57 to 1.76.
-* Updated minimum supported Python version from 3.8 to 3.9.
-
-## 1.10.1
-
-* Fixed a build issue in 1.10.0.
-
-## 1.10.0
-
-* Updated to pyo3 0.22 and python 3.13.
-
-## 1.9.2
-
-* Fixed a bug when creating a Product from a bad JSON
-
-## 1.9.0 - 1.9.1
-
-* Added methods to convert from struqture 2.0.0-alpha.3
+* First draft of the changes for struqture 2.0
 
 ## 1.8.0
 
