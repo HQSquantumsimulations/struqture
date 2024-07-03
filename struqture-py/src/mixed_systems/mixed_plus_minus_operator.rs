@@ -32,6 +32,14 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 /// MixedPlusMinusOperators are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedPlusMinusOperator.
+///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedPlusMinusOperator.
+///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedPlusMinusOperator.
+///
+/// Returns:
+///     self: The new (empty) MixedPlusMinusOperator.
+///
 /// Examples
 /// --------
 ///
@@ -91,7 +99,7 @@ impl MixedPlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedPlusMinusOperator.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(Self {
@@ -122,7 +130,7 @@ impl MixedPlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create MixedSystem from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: Py<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {
@@ -133,9 +141,9 @@ impl MixedPlusMinusOperatorWrapper {
     /// Convert a MixedPlusMinusOperator into a MixedSystem.
     ///
     /// Args:
-    ///     number_spins (list[Optional[int]]): The number of spins to initialize the MixedSystem with.
-    ///     number_bosons (list[Optional[int]]): The number of bosons to initialize the MixedSystem with.
-    ///     number_fermions (list[Optional[int]]): The number of fermions to initialize the MixedSystem with.
+    ///     number_spins (List[Optional[int]]): The number of spins to initialize the MixedSystem with.
+    ///     number_bosons (List[Optional[int]]): The number of bosons to initialize the MixedSystem with.
+    ///     number_fermions (List[Optional[int]]): The number of fermions to initialize the MixedSystem with.
     ///
     /// Returns:
     ///     MixedSystem: The operator created from the input MixedPlusMinusOperator and optional number of spins.

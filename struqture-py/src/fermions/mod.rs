@@ -60,7 +60,7 @@ pub use fermionic_open_system::FermionLindbladOpenSystemWrapper;
 ///     FermionLindbladOpenSystem
 ///
 #[pymodule]
-pub fn fermions(_py: Python, m: &PyModule) -> PyResult<()> {
+pub fn fermions(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<FermionProductWrapper>()?;
     m.add_class::<HermitianFermionProductWrapper>()?;

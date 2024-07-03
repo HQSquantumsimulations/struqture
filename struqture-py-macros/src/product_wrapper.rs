@@ -95,7 +95,7 @@ pub fn productwrapper(
                 /// Return list of creator indices.
                 ///
                 /// Returns:
-                ///     list[int]: A list of the corresponding creator indices.
+                ///     List[int]: A list of the corresponding creator indices.
                 pub fn creators(&self) -> Vec<usize> {
                     self.internal.creators().cloned().collect()
                 }
@@ -103,7 +103,7 @@ pub fn productwrapper(
                 /// Return list of annihilator indices.
                 ///
                 /// Returns:
-                ///     list[int]: A list of the corresponding annihilator indices.
+                ///     List[int]: A list of the corresponding annihilator indices.
                 pub fn annihilators(&self) -> Vec<usize> {
                     self.internal.annihilators().cloned().collect()
                 }
@@ -118,8 +118,8 @@ pub fn productwrapper(
                 ///
                 /// Raises:
                 ///    ValueError: Input reordering dictionary is not a permutation of the indices.
-                pub fn remap_modes(&self, reordering_dictionary: &PyAny) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
-                    let remap_dict = reordering_dictionary.extract::<HashMap<usize, usize>>()?;
+                pub fn remap_modes(&self, reordering_dictionary: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
+                    let remap_dict = reordering_dictionary.as_gil_ref().extract::<HashMap<usize, usize>>()?;
                     let (index, value) = self.internal.remap_modes(&remap_dict).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
                 }
@@ -131,8 +131,8 @@ pub fn productwrapper(
                 /// The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.
                 ///
                 /// Args:
-                ///    creators (list[int]): The creator indices to have in the instance of self.
-                ///    annihilators (list[int]): The annihilators indices to have in the instance of self.
+                ///    creators (List[int]): The creator indices to have in the instance of self.
+                ///    annihilators (List[int]): The annihilators indices to have in the instance of self.
                 ///    value (CalculatorComplex): The CalculatorComplex to transform.
                 ///
                 /// Returns:
@@ -142,7 +142,7 @@ pub fn productwrapper(
                 ///     TypeError: Value is not CalculatorComplex.
                 ///     ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
                 #[classmethod]
-                pub fn create_valid_pair(_cls: &PyType, creators: Vec<usize>, annihilators: Vec<usize>, value: &PyAny) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
+                pub fn create_valid_pair(_cls: Bound<PyType>, creators: Vec<usize>, annihilators: Vec<usize>, value: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
                     let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value).map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
                     let (index, value) = #struct_ident::create_valid_pair(creators, annihilators, value).map_err(|err| PyValueError::new_err(format!("Valid pair could not be constructed: {:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
@@ -170,7 +170,7 @@ pub fn productwrapper(
                 /// Return a list of the unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[int]: The sequence of qubit index keys of self.
+                ///     List[int]: The sequence of qubit index keys of self.
                 pub fn keys(&self) -> Vec<usize> {
                     let keys: Vec<usize> = self.internal.iter().map(|(k, _)| k).copied().collect();
                     keys
@@ -203,7 +203,7 @@ pub fn productwrapper(
                 /// Remap the qubits in a new instance of self (returned).
                 ///
                 /// Args:
-                ///     mapping (dict[int, int]): The map containing the {qubit: qubit} mapping to use.
+                ///     mapping (Dict[int, int]): The map containing the {qubit: qubit} mapping to use.
                 ///
                 /// Returns:
                 ///     self: The new instance of self with the qubits remapped.
@@ -219,7 +219,7 @@ pub fn productwrapper(
                 ///     other (self): The object to concatenate self with.
                 ///
                 /// Returns:
-                ///     list[int]: A list of the corresponding creator indices.
+                ///     List[int]: A list of the corresponding creator indices.
                 ///
                 /// Raises:
                 ///     ValueError: The two objects could not be concatenated.
@@ -259,7 +259,7 @@ pub fn productwrapper(
                 /// Get the spin products of self.
                 ///
                 /// Returns:
-                ///     list[str]: The spin products of self.
+                ///     List[str]: The spin products of self.
                 pub fn spins(&self) -> Vec<#spin_type> {
                     let spins: Vec<#spin_type> = self
                         .internal
@@ -273,7 +273,7 @@ pub fn productwrapper(
                 /// Get the boson products of self.
                 ///
                 /// Returns:
-                ///     list[str]: The boson products of self.
+                ///     List[str]: The boson products of self.
                 pub fn bosons(&self) -> Vec<BosonProductWrapper> {
                     let bosons: Vec<BosonProductWrapper> = self
                         .internal
@@ -287,7 +287,7 @@ pub fn productwrapper(
                 /// Get the fermion products of self.
                 ///
                 /// Returns:
-                ///     list[str]: The fermion products of self.
+                ///     List[str]: The fermion products of self.
                 pub fn fermions(&self) -> Vec<FermionProductWrapper> {
                     let fermions: Vec<FermionProductWrapper> = self
                         .internal
@@ -301,7 +301,7 @@ pub fn productwrapper(
                 /// Return the current number of spins each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of spins in each spin sub-system.
+                ///     List[int]: Number of spins in each spin sub-system.
                 pub fn current_number_spins(&self) -> Vec<usize> {
                     self.internal.current_number_spins()
                 }
@@ -309,7 +309,7 @@ pub fn productwrapper(
                 /// Return the current number of bosonic modes each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of bosonic modes in each spin sub-system.
+                ///     List[int]: Number of bosonic modes in each spin sub-system.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -317,7 +317,7 @@ pub fn productwrapper(
                 /// Return the current number of fermionic modes each subsystem acts upon.
                 ///
                 /// Returns:
-                ///     list[int]: Number of fermionic modes in each spin sub-system.
+                ///     List[int]: Number of fermionic modes in each spin sub-system.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
@@ -329,10 +329,9 @@ pub fn productwrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object..
-            pub fn from_pyany( input: Py<PyAny>
+            pub fn from_pyany( input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                let input = input.as_ref(py);
                 if let Ok(try_downcast) = input.extract::<#ident>() {
                     Ok(try_downcast.internal)
                 }
@@ -381,14 +380,14 @@ pub fn productwrapper(
             ///
             /// Returns:
             ///     self: A deep copy of Self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+            pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
                 self.clone()
             }
 
             /// Convert the bincode representation of the object to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized Spin System.
@@ -397,8 +396,9 @@ pub fn productwrapper(
             ///     TypeError: Input cannot be converted to byte array.
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
-            pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+            pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
+                    .as_gil_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -415,7 +415,7 @@ pub fn productwrapper(
             /// Return the bincode representation of the object using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
@@ -424,7 +424,7 @@ pub fn productwrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
@@ -515,7 +515,7 @@ pub fn productwrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                     match op {
                         pyo3::class::basic::CompareOp::Eq => match other {

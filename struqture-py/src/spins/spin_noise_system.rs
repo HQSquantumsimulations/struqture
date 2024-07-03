@@ -31,6 +31,12 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 /// These are representations of noisy systems of spins.
 ///
 /// In a SpinLindbladNoiseSystem is characterized by a SpinLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+///  
+/// Args:
+///     number_spins (Optional[int]): The number of spins in the SpinLindbladNoiseSystem.
+///
+/// Returns:
+///     self: The new SpinLindbladNoiseSystem with the input number of spins.
 ///
 /// Examples
 /// --------
@@ -114,12 +120,13 @@ impl SpinLindbladNoiseSystemWrapper {
     // add in a function converting struqture_one (not py) to struqture 2
     // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
     // #[cfg(feature = "struqture_2_import")]
-    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<Self> {
-        Python::with_gil(|py| -> PyResult<Self> {
-            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+    #[staticmethod]
+    pub fn from_struqture_two(input: &Bound<PyAny>) -> PyResult<Self> {
+        Python::with_gil(|_| -> PyResult<Self> {
+            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
@@ -135,7 +142,7 @@ impl SpinLindbladNoiseSystemWrapper {
             )
             .map_err(|err| PyTypeError::new_err(err.to_string()))?;
 
-            let input = input.as_ref(py);
+            let input = input.as_ref();
             let get_bytes = input
                 .call_method0("to_bincode")
                 .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;

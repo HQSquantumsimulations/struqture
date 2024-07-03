@@ -32,6 +32,14 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// MixedHamiltonianSystems are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
 ///
+/// Args:
+///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedHamiltonianSystem.
+///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedHamiltonianSystem.
+///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedHamiltonianSystem.
+///
+/// Returns:
+///     self: The new (empty) MixedHamiltonianSystem.
+///
 /// Examples
 /// --------
 ///
@@ -101,7 +109,7 @@ impl MixedHamiltonianSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<MixedSystemWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<MixedSystemWrapper> {
         let mut new_spins: Vec<Option<usize>> = Vec::new();
         for spin in self.internal.number_spins() {
             new_spins.push(Some(spin))
@@ -133,7 +141,7 @@ impl MixedHamiltonianSystemWrapper {
                 internal: mixed_system * x,
             }),
             Err(_) => {
-                let bhs_value = Self::from_pyany(value.into());
+                let bhs_value = Self::from_pyany(value);
                 match bhs_value {
                     Ok(x) => {
                         let new_self = (self.clone().internal * x).map_err(|err| {
@@ -155,12 +163,13 @@ impl MixedHamiltonianSystemWrapper {
     // add in a function converting struqture_one (not py) to struqture 2
     // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
     // #[cfg(feature = "struqture_2_import")]
-    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<MixedHamiltonianSystemWrapper> {
-        Python::with_gil(|py| -> PyResult<MixedHamiltonianSystemWrapper> {
-            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+    #[staticmethod]
+    pub fn from_struqture_two(input: &Bound<PyAny>) -> PyResult<MixedHamiltonianSystemWrapper> {
+        Python::with_gil(|_| -> PyResult<MixedHamiltonianSystemWrapper> {
+            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
@@ -176,7 +185,7 @@ impl MixedHamiltonianSystemWrapper {
             )
             .map_err(|err| PyTypeError::new_err(err.to_string()))?;
 
-            let input = input.as_ref(py);
+            let input = input.as_ref();
             let get_bytes = input
                 .call_method0("to_bincode")
                 .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;

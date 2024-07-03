@@ -32,6 +32,12 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 /// FermionHamiltonianSystems are characterized by a FermionOperator to represent the hamiltonian of the spin system
 /// and an optional number of fermions.
 ///
+/// Args:
+///     number_fermions (Optional[int]): The number of fermions in the FermionHamiltonianSystem.
+///
+/// Returns:
+///     self: The new FermionHamiltonianSystem with the input number of fermions.
+///
 /// Examples
 /// --------
 ///
@@ -90,7 +96,7 @@ impl FermionHamiltonianSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<FermionSystemWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<FermionSystemWrapper> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(FermionSystemWrapper {
@@ -105,7 +111,7 @@ impl FermionHamiltonianSystemWrapper {
                             .map_err(|_| PyTypeError::new_err("System cannot be multiplied"))?,
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value);
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
@@ -129,12 +135,13 @@ impl FermionHamiltonianSystemWrapper {
     // add in a function converting struqture_one (not py) to struqture 2
     // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
     // #[cfg(feature = "struqture_2_import")]
-    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<FermionHamiltonianSystemWrapper> {
-        Python::with_gil(|py| -> PyResult<FermionHamiltonianSystemWrapper> {
-            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+    #[staticmethod]
+    pub fn from_struqture_two(input: &Bound<PyAny>) -> PyResult<FermionHamiltonianSystemWrapper> {
+        Python::with_gil(|_| -> PyResult<FermionHamiltonianSystemWrapper> {
+            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
                 PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
             })?;
 
@@ -150,7 +157,7 @@ impl FermionHamiltonianSystemWrapper {
             )
             .map_err(|err| PyTypeError::new_err(err.to_string()))?;
 
-            let input = input.as_ref(py);
+            let input = input.as_ref();
             let get_bytes = input
                 .call_method0("to_bincode")
                 .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
