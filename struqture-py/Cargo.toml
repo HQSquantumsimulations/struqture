@@ -8,7 +8,7 @@ categories = ["science", "simulation"]
 description = "Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems."
 license = "Apache-2.0"
 include = ["src*", "struqture_py", "Cargo.toml", "build.rs", "pyproject.toml"]
-readme = "../README.md"
+readme = "README.md"
 
 [lib]
 name = "struqture_py"
