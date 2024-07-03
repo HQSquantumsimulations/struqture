@@ -10,6 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::str::FromStr;
+
 use super::{
     HermitianMixedProductWrapper, MixedDecoherenceProductWrapper, MixedHamiltonianSystemWrapper,
     MixedLindbladNoiseSystemWrapper,
@@ -19,10 +21,12 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::mixed_systems::{MixedLindbladOpenSystem, OperateOnMixedSystems};
+use struqture::mixed_systems::{
+    HermitianMixedProduct, MixedDecoherenceProduct, MixedLindbladOpenSystem, OperateOnMixedSystems,
+};
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
-use struqture::{OpenSystem, OperateOnDensityMatrix};
+use struqture::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of mixed_systems.
@@ -82,5 +86,82 @@ impl MixedLindbladOpenSystemWrapper {
         Self {
             internal: MixedLindbladOpenSystem::new(number_spins, number_bosons, number_fermions),
         }
+    }
+
+    // add in a function converting struqture_one (not py) to struqture 2
+    // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
+    // #[cfg(feature = "struqture_2_import")]
+    pub fn from_struqture_two(input: Py<PyAny>) -> PyResult<MixedLindbladOpenSystemWrapper> {
+        Python::with_gil(|py| -> PyResult<MixedLindbladOpenSystemWrapper> {
+            let source_serialisation_meta = input.call_method0(py, "_get_serialisation_meta").map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+            let source_serialisation_meta: String = source_serialisation_meta.extract(py).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let source_serialisation_meta: struqture_two::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+            })?;
+
+            let target_serialisation_meta = <struqture_two::mixed_systems::MixedLindbladOpenSystem as struqture_two::SerializationSupport>::target_serialisation_meta();
+
+            struqture_two::check_can_be_deserialised(
+                &target_serialisation_meta,
+                &source_serialisation_meta,
+            )
+            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
+
+            let input = input.as_ref(py);
+            let get_bytes = input
+                .call_method0("to_bincode")
+                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+            let bytes = get_bytes
+                .extract::<Vec<u8>>()
+                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+            let two_import: struqture_two::mixed_systems::MixedLindbladOpenSystem =
+                deserialize(&bytes[..]).map_err(|err| {
+                    PyTypeError::new_err(format!("Type conversion failed: {}", err))
+                })?;
+            let number_spins: usize = <struqture_two::mixed_systems::MixedLindbladOpenSystem as struqture_two::mixed_systems::OperateOnMixedSystems>::current_number_spins(&two_import).len();
+            let spin_systems: Vec<Option<usize>> = vec![None; number_spins];
+            let number_bosons: usize = <struqture_two::mixed_systems::MixedLindbladOpenSystem as struqture_two::mixed_systems::OperateOnMixedSystems>::current_number_bosonic_modes(&two_import).len();
+            let bosonic_systems: Vec<Option<usize>> = vec![None; number_bosons];
+            let number_fermions: usize = <struqture_two::mixed_systems::MixedLindbladOpenSystem as struqture_two::mixed_systems::OperateOnMixedSystems>::current_number_fermionic_modes(&two_import).len();
+            let fermionic_systems: Vec<Option<usize>> = vec![None; number_fermions];
+            let mut mixed_system: MixedLindbladOpenSystem = MixedLindbladOpenSystem::new(
+                spin_systems.iter().cloned(),
+                bosonic_systems.iter().cloned(),
+                fermionic_systems.iter().cloned(),
+            );
+            let system = struqture_two::OpenSystem::system(&two_import);
+            for (key, val) in struqture_two::OperateOnDensityMatrix::iter(system) {
+                let value_string = key.to_string();
+                let self_key = HermitianMixedProduct::from_str(&value_string).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x MixedLindbladOpenSystem from struqture 2.x MixedLindbladOpenSystem. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+
+                let _ = mixed_system.system_mut().set(self_key, val.clone());
+            }
+            let noise = struqture_two::OpenSystem::noise(&two_import);
+            for ((key_left, key_right), val) in struqture_two::OperateOnDensityMatrix::iter(noise) {
+                let value_string_left = key_left.to_string();
+                let value_string_right = key_right.to_string();
+                let self_key = (MixedDecoherenceProduct::from_str(&value_string_left).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x MixedLindbladOpenSystem from struqture 2.x MixedLindbladOpenSystem. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?, MixedDecoherenceProduct::from_str(&value_string_right).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x MixedLindbladOpenSystem from struqture 2.x MixedLindbladOpenSystem. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?);
+
+                let _ = mixed_system.noise_mut().set(self_key, val.clone());
+            }
+
+            Ok(MixedLindbladOpenSystemWrapper {
+                internal: mixed_system,
+            })
+        })
     }
 }

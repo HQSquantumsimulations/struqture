@@ -1162,9 +1162,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator"
-version = "1.1.5"
+version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67110647e68fb28b7afaec29245b7a40d2908635065df84361d99dbd4c75053e"
+checksum = "6fa8b27bb34103af09afcca6d21ccb52dfa66a34c0ffa0f8103003bb1afd9d53"
 dependencies = [
  "num-complex",
  "schemars",
@@ -1500,23 +1500,6 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "struqture"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5e6a6fae203fb8098042ab51364cf5ff79020312e68b63038371d627029ab08"
-dependencies = [
- "itertools 0.12.1",
- "ndarray",
- "num-complex",
- "qoqo_calculator",
- "schemars",
- "serde",
- "test-case",
- "thiserror",
- "tinyvec",
-]
-
-[[package]]
-name = "struqture"
 version = "1.7.0-alpha.0"
 dependencies = [
  "bincode",
@@ -1541,8 +1524,6 @@ dependencies = [
 [[package]]
 name = "struqture"
 version = "2.0.0-alpha.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d30228e6c118df62608bfd1941f6818649526f1bc211ed1239d8f5df1695dfe"
 dependencies = [
  "indexmap",
  "itertools 0.12.1",
@@ -1550,7 +1531,7 @@ dependencies = [
  "num-complex",
  "qoqo_calculator",
  "serde",
- "struqture 1.6.1",
+ "struqture 1.7.0-alpha.0",
  "test-case",
  "thiserror",
  "tinyvec",

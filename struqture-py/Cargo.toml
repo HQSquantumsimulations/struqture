@@ -22,7 +22,7 @@ features = ["num-complex", "multiple-pymethods"]
 
 [dependencies]
 struqture = {version="1.7.0-alpha.0", path="../struqture", default-features=false}
-struqture_two = {package = "struqture", version="=2.0.0-alpha.0", default-features=false, features=["struqture_1_import", "struqture_1_export"]}
+struqture_two = {package = "struqture", version="=2.0.0-alpha.0", default-features=false, features=["struqture_1_import", "struqture_1_export"], path="../../../struqture/struqture"}
 serde = { version = "1.0", features = ["derive"] }
 numpy = "0.20"
 qoqo_calculator = {version="1.1.2", default-features=false}
