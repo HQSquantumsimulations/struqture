@@ -21,7 +21,9 @@ struqture\_py.fermions.HermitianFermionProduct
       ~HermitianFermionProduct.current_version
       ~HermitianFermionProduct.from_bincode
       ~HermitianFermionProduct.from_json
+      ~HermitianFermionProduct.from_json_struqture_1
       ~HermitianFermionProduct.from_string
+      ~HermitianFermionProduct.from_struqture_1
       ~HermitianFermionProduct.hermitian_conjugate
       ~HermitianFermionProduct.is_natural_hermitian
       ~HermitianFermionProduct.jordan_wigner
