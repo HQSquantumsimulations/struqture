@@ -22,10 +22,10 @@ struqture\_py.spins
       PlusMinusLindbladNoiseOperator
       PlusMinusOperator
       PlusMinusProduct
-      QubitHamiltonian
-      QubitLindbladNoiseOperator
-      QubitLindbladOpenSystem
-      QubitOperator
+      SpinHamiltonianSystem
+      SpinLindbladNoiseSystem
+      SpinLindbladOpenSystem
+      SpinSystem
    
    
 
