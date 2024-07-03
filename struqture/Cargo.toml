@@ -1,6 +1,6 @@
 [package]
 name = "struqture"
-version = "2.0.0-alpha.1"
+version = "2.0.0-alpha.2"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.57"
@@ -8,7 +8,7 @@ categories = ["science", "simulation"]
 description = "HQS tool for representing operators, Hamiltonians and open systems."
 license = "Apache-2.0"
 include = ["Cargo.toml", "src*", "LICENSE", "../README.md"]
-readme = "../README.md"
+readme = "README.md"
 
 [lib]
 name = "struqture"
