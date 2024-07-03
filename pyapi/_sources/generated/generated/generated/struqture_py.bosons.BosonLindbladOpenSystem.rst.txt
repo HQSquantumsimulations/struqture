@@ -19,6 +19,8 @@ struqture\_py.bosons.BosonLindbladOpenSystem
       ~BosonLindbladOpenSystem.empty_clone
       ~BosonLindbladOpenSystem.from_bincode
       ~BosonLindbladOpenSystem.from_json
+      ~BosonLindbladOpenSystem.from_json_struqture_1
+      ~BosonLindbladOpenSystem.from_struqture_1
       ~BosonLindbladOpenSystem.group
       ~BosonLindbladOpenSystem.json_schema
       ~BosonLindbladOpenSystem.min_supported_version
@@ -26,7 +28,6 @@ struqture\_py.bosons.BosonLindbladOpenSystem
       ~BosonLindbladOpenSystem.noise_add_operator_product
       ~BosonLindbladOpenSystem.noise_get
       ~BosonLindbladOpenSystem.noise_set
-      ~BosonLindbladOpenSystem.number_modes
       ~BosonLindbladOpenSystem.system
       ~BosonLindbladOpenSystem.system_add_operator_product
       ~BosonLindbladOpenSystem.system_get

@@ -23,7 +23,9 @@ struqture\_py.mixed\_systems.MixedDecoherenceProduct
       ~MixedDecoherenceProduct.fermions
       ~MixedDecoherenceProduct.from_bincode
       ~MixedDecoherenceProduct.from_json
+      ~MixedDecoherenceProduct.from_json_struqture_1
       ~MixedDecoherenceProduct.from_string
+      ~MixedDecoherenceProduct.from_struqture_1
       ~MixedDecoherenceProduct.hermitian_conjugate
       ~MixedDecoherenceProduct.is_natural_hermitian
       ~MixedDecoherenceProduct.json_schema

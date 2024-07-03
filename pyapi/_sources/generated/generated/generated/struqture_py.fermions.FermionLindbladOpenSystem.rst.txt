@@ -19,6 +19,8 @@ struqture\_py.fermions.FermionLindbladOpenSystem
       ~FermionLindbladOpenSystem.empty_clone
       ~FermionLindbladOpenSystem.from_bincode
       ~FermionLindbladOpenSystem.from_json
+      ~FermionLindbladOpenSystem.from_json_struqture_1
+      ~FermionLindbladOpenSystem.from_struqture_1
       ~FermionLindbladOpenSystem.group
       ~FermionLindbladOpenSystem.jordan_wigner
       ~FermionLindbladOpenSystem.json_schema
@@ -27,7 +29,6 @@ struqture\_py.fermions.FermionLindbladOpenSystem
       ~FermionLindbladOpenSystem.noise_add_operator_product
       ~FermionLindbladOpenSystem.noise_get
       ~FermionLindbladOpenSystem.noise_set
-      ~FermionLindbladOpenSystem.number_modes
       ~FermionLindbladOpenSystem.system
       ~FermionLindbladOpenSystem.system_add_operator_product
       ~FermionLindbladOpenSystem.system_get

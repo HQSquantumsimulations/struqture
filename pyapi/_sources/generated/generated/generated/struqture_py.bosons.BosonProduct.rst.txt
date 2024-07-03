@@ -21,7 +21,9 @@ struqture\_py.bosons.BosonProduct
       ~BosonProduct.current_version
       ~BosonProduct.from_bincode
       ~BosonProduct.from_json
+      ~BosonProduct.from_json_struqture_1
       ~BosonProduct.from_string
+      ~BosonProduct.from_struqture_1
       ~BosonProduct.hermitian_conjugate
       ~BosonProduct.is_natural_hermitian
       ~BosonProduct.json_schema
