@@ -29,11 +29,11 @@ use indexmap::map::{Iter, Keys, Values};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
 
+#[allow(dead_code)]
 #[cfg(feature = "json_schema")]
 #[derive(schemars::JsonSchema)]
 #[serde(remote = "TinyVec<[Option<usize>; 2]>")]
 #[serde(transparent)]
-#[allow(dead_code)]
 pub(crate) struct TinyVecDef(Vec<Option<usize>>);
 
 /// MixedLindbladNoiseSystems are representations of systems of spins, with a MixedLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
