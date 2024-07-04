@@ -17,36 +17,36 @@
 
    .. autosummary::
    
-      BosonHamiltonian
-      BosonLindbladNoiseOperator
+      BosonHamiltonianSystem
+      BosonLindbladNoiseSystem
       BosonLindbladOpenSystem
-      BosonOperator
       BosonProduct
+      BosonSystem
       DecoherenceProduct
-      FermionHamiltonian
-      FermionLindbladNoiseOperator
+      FermionHamiltonianSystem
+      FermionLindbladNoiseSystem
       FermionLindbladOpenSystem
-      FermionOperator
       FermionProduct
+      FermionSystem
       HermitianBosonProduct
       HermitianFermionProduct
       HermitianMixedProduct
       MixedDecoherenceProduct
-      MixedHamiltonian
-      MixedLindbladNoiseOperator
+      MixedHamiltonianSystem
+      MixedLindbladNoiseSystem
       MixedLindbladOpenSystem
-      MixedOperator
       MixedPlusMinusOperator
       MixedPlusMinusProduct
       MixedProduct
+      MixedSystem
       PauliProduct
       PlusMinusLindbladNoiseOperator
       PlusMinusOperator
       PlusMinusProduct
-      QubitHamiltonian
-      QubitLindbladNoiseOperator
-      QubitLindbladOpenSystem
-      QubitOperator
+      SpinHamiltonianSystem
+      SpinLindbladNoiseSystem
+      SpinLindbladOpenSystem
+      SpinSystem
    
    
 

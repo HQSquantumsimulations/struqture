@@ -183,16 +183,25 @@ For pure noise terms it is given by
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
 with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
-<p>Each Lindblad operator is an operator product (in the qubit case, a decoherence operator product - for more information see <a href="../physical_types/spins">spins container</a> chapter). LindbladNoiseOperators are built as HashMaps (Dictionaries) of Lindblad operators and values, in order to build the non-coherent part of the Lindblad master equation:
+<p>Each Lindblad operator is an operator product (in the spins case, a decoherence operator product - for more information see <a href="../physical_types/spins">spins container</a> chapter). LindbladNoiseOperators are built as HashMaps (Dictionaries) of Lindblad operators and values, in order to build the non-coherent part of the Lindblad master equation:
 \[
 \sum_{j,k} \Gamma_{j,k} \left( L_{j} \rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho\} \right)
 \].</p>
 <p>The noise operators in struqture are</p>
 <ul>
-<li><code>QubitLindbladNoiseOperator</code></li>
+<li><code>SpinLindbladNoiseOperator</code></li>
 <li><code>BosonLindbladNoiseOperator</code></li>
 <li><code>FermionLindbladNoiseOperator</code></li>
 <li><code>MixedLindbladNoiseOperator</code></li>
+</ul>
+<h1 id="noise-systems"><a class="header" href="#noise-systems">Noise Systems</a></h1>
+<p>Noise systems are noise operators with a fixed size, which is given by the user in the <code>new</code> function.</p>
+<p>The noise systems in struqture are</p>
+<ul>
+<li><code>SpinLindbladNoiseSystem</code></li>
+<li><code>BosonLindbladNoiseSystem</code></li>
+<li><code>FermionLindbladNoiseSystem</code></li>
+<li><code>MixedLindbladNoiseSystem</code></li>
 </ul>
 
                     </main>
