@@ -146,16 +146,17 @@ impl FermionHamiltonianSystemWrapper {
     #[staticmethod]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<FermionHamiltonianSystemWrapper> {
         Python::with_gil(|_| -> PyResult<FermionHamiltonianSystemWrapper> {
-            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
+            let source_serialisation_meta = input
+                .call_method0("_get_serialisation_meta")
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
+            let source_serialisation_meta: String = source_serialisation_meta
+                .extract()
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
 
-            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
+                serde_json::from_str(&source_serialisation_meta)
+                    .map_err(|_| PyTypeError::new_err(error_message))?;
 
             let target_serialisation_meta = <struqture_2::fermions::FermionHamiltonian as struqture_2::SerializationSupport>::target_serialisation_meta();
 
@@ -178,10 +179,17 @@ impl FermionHamiltonianSystemWrapper {
                 let value_string = key.to_string();
                 let self_key = HermitianFermionProduct::from_str(&value_string).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x FermionHamiltonianSystem from struqture 2.x FermionHamiltonian. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x HermitianFermionProduct from struqture 2.x HermitianFermionProduct. Conversion failed. Was the right type passed?".to_string()
                 ))?;
 
-                let _ = fermion_system.set(self_key, val.clone());
+                fermion_system
+                    .set(self_key, val.clone())
+                    .map_err(|_err: StruqtureError| {
+                        PyValueError::new_err(
+                            "Could not set key in resulting 1.x FermionHamiltonianSystem"
+                                .to_string(),
+                        )
+                    })?;
             }
 
             Ok(FermionHamiltonianSystemWrapper {

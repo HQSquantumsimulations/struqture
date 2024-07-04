@@ -25,9 +25,9 @@ use struqture::spins::{
     PlusMinusLindbladNoiseOperator, PlusMinusProduct, SpinLindbladNoiseOperator,
     SpinLindbladNoiseSystem,
 };
-use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::{OperateOnDensityMatrix, StruqtureError};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
@@ -198,16 +198,17 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         input: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         Python::with_gil(|_| -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
-            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
+            let source_serialisation_meta = input
+                .call_method0("_get_serialisation_meta")
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
+            let source_serialisation_meta: String = source_serialisation_meta
+                .extract()
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
 
-            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
+                serde_json::from_str(&source_serialisation_meta)
+                    .map_err(|_| PyTypeError::new_err(error_message))?;
 
             let target_serialisation_meta = <struqture_2::spins::PlusMinusLindbladNoiseOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
 
@@ -232,15 +233,22 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
                 let value_string_left = key.0.to_string();
                 let self_key_left = PlusMinusProduct::from_str(&value_string_left).map_err(
                     |_err| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x PlusMinusLindbladNoiseOperator from struqture 2.x SpinOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x PlusMinusProduct from struqture 2.x PlusMinusProduct. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?;
                 let value_string_right = key.1.to_string();
                 let self_key_right = PlusMinusProduct::from_str(&value_string_right).map_err(
                     |_err| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x PlusMinusLindbladNoiseOperator from struqture 2.x SpinOperator. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x PlusMinusProduct from struqture 2.x PlusMinusProduct. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?;
 
-                let _ = spin_system.set((self_key_left, self_key_right), val.clone());
+                spin_system
+                    .set((self_key_left, self_key_right), val.clone())
+                    .map_err(|_err: StruqtureError| {
+                        PyValueError::new_err(
+                            "Could not set key in resulting 1.x PlusMinusLindbladNoiseOperator"
+                                .to_string(),
+                        )
+                    })?;
             }
 
             Ok(PlusMinusLindbladNoiseOperatorWrapper {

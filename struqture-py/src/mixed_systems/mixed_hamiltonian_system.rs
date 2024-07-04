@@ -174,16 +174,17 @@ impl MixedHamiltonianSystemWrapper {
     #[staticmethod]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<MixedHamiltonianSystemWrapper> {
         Python::with_gil(|_| -> PyResult<MixedHamiltonianSystemWrapper> {
-            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
+            let source_serialisation_meta = input
+                .call_method0("_get_serialisation_meta")
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
+            let source_serialisation_meta: String = source_serialisation_meta
+                .extract()
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
 
-            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
+                serde_json::from_str(&source_serialisation_meta)
+                    .map_err(|_| PyTypeError::new_err(error_message))?;
 
             let target_serialisation_meta = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::SerializationSupport>::target_serialisation_meta();
 
@@ -216,10 +217,16 @@ impl MixedHamiltonianSystemWrapper {
                 let value_string = key.to_string();
                 let self_key = HermitianMixedProduct::from_str(&value_string).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x MixedHamiltonianSystem from struqture 2.x MixedHamiltonian. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x HermitianMixedProduct from struqture 2.x HermitianMixedProduct. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?;
 
-                let _ = fermion_system.set(self_key, val.clone());
+                fermion_system
+                    .set(self_key, val.clone())
+                    .map_err(|_err: StruqtureError| {
+                        PyValueError::new_err(
+                            "Could not set key in resulting 1.x MixedHamiltonianSystem".to_string(),
+                        )
+                    })?;
             }
 
             Ok(MixedHamiltonianSystemWrapper {

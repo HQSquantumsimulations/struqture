@@ -110,16 +110,17 @@ impl MixedLindbladOpenSystemWrapper {
     #[staticmethod]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<MixedLindbladOpenSystemWrapper> {
         Python::with_gil(|_| -> PyResult<MixedLindbladOpenSystemWrapper> {
-            let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
-            let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
+            let source_serialisation_meta = input
+                .call_method0("_get_serialisation_meta")
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
+            let source_serialisation_meta: String = source_serialisation_meta
+                .extract()
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
 
-            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
-                PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
-            })?;
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
+                serde_json::from_str(&source_serialisation_meta)
+                    .map_err(|_| PyTypeError::new_err(error_message))?;
 
             let target_serialisation_meta = <struqture_2::mixed_systems::MixedLindbladOpenSystem as struqture_2::SerializationSupport>::target_serialisation_meta();
 
@@ -155,10 +156,18 @@ impl MixedLindbladOpenSystemWrapper {
                 let value_string = key.to_string();
                 let self_key = HermitianMixedProduct::from_str(&value_string).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x MixedLindbladOpenSystem from struqture 2.x MixedLindbladOpenSystem. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x HermitianMixedProduct from struqture 2.x HermitianMixedProduct. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?;
 
-                let _ = mixed_system.system_mut().set(self_key, val.clone());
+                mixed_system
+                    .system_mut()
+                    .set(self_key, val.clone())
+                    .map_err(|_err: StruqtureError| {
+                        PyValueError::new_err(
+                            "Could not set system key in resulting 1.x MixedLindbladOpenSystem"
+                                .to_string(),
+                        )
+                    })?;
             }
             let noise = struqture_2::OpenSystem::noise(&two_import);
             for ((key_left, key_right), val) in struqture_2::OperateOnDensityMatrix::iter(noise) {
@@ -166,13 +175,21 @@ impl MixedLindbladOpenSystemWrapper {
                 let value_string_right = key_right.to_string();
                 let self_key = (MixedDecoherenceProduct::from_str(&value_string_left).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x MixedLindbladOpenSystem from struqture 2.x MixedLindbladOpenSystem. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x MixedDecoherenceProduct from struqture 2.x MixedDecoherenceProduct. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?, MixedDecoherenceProduct::from_str(&value_string_right).map_err(
                     |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x MixedLindbladOpenSystem from struqture 2.x MixedLindbladOpenSystem. Conversion failed. Was the right type passed to all functions?".to_string()
+                        "Trying to obtain struqture 1.x MixedDecoherenceProduct from struqture 2.x MixedDecoherenceProduct. Conversion failed. Was the right type passed to all functions?".to_string()
                 ))?);
 
-                let _ = mixed_system.noise_mut().set(self_key, val.clone());
+                mixed_system
+                    .noise_mut()
+                    .set(self_key, val.clone())
+                    .map_err(|_err: StruqtureError| {
+                        PyValueError::new_err(
+                            "Could not set noise key in resulting 1.x MixedLindbladOpenSystem"
+                                .to_string(),
+                        )
+                    })?;
             }
 
             Ok(MixedLindbladOpenSystemWrapper {
