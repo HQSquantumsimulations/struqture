@@ -18,17 +18,17 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use std::str::FromStr;
 use struqture::fermions::FermionLindbladNoiseSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use struqture::spins::PlusMinusProduct;
 use struqture::spins::{
     PlusMinusLindbladNoiseOperator, SpinLindbladNoiseOperator, SpinLindbladNoiseSystem,
 };
 use struqture::OperateOnDensityMatrix;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
@@ -198,7 +198,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_one internally) and wrap the result in a struqture 2 spin operator wrapper
     // #[cfg(feature = "struqture_1_import")]
     #[staticmethod]
-    #[cfg(feature = "struqture_2_import")]
+    #[cfg(feature = "unstable_struqture_2_import")]
     pub fn from_struqture_2(
         input: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
