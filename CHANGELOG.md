@@ -2,7 +2,7 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
-## 2.0.0-alpha.1 - 2.0.0-alpha.2
+## 2.0.0-alpha.1 - 2.0.0-alpha.3
 
 * Additional changes from feedback regarding struqture 2.0
 
