@@ -10,8 +10,6 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[cfg(feature = "struqture_2_import")]
-use std::str::FromStr;
 use super::{
     HermitianMixedProductWrapper, MixedDecoherenceProductWrapper, MixedHamiltonianSystemWrapper,
     MixedLindbladNoiseSystemWrapper,
@@ -21,18 +19,16 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::mixed_systems::{
-    MixedLindbladOpenSystem, OperateOnMixedSystems,
-};
 #[cfg(feature = "struqture_2_import")]
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedDecoherenceProduct,
-};
+use std::str::FromStr;
+#[cfg(feature = "struqture_2_import")]
+use struqture::mixed_systems::{HermitianMixedProduct, MixedDecoherenceProduct};
+use struqture::mixed_systems::{MixedLindbladOpenSystem, OperateOnMixedSystems};
+#[cfg(feature = "struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OpenSystem, OperateOnDensityMatrix};
-#[cfg(feature = "struqture_2_import")]
-use struqture::StruqtureError;
 use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of mixed_systems.

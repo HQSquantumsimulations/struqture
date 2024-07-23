@@ -19,17 +19,16 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 #[cfg(feature = "struqture_2_import")]
 use std::str::FromStr;
-use struqture::mixed_systems::{
-    GetValueMixed, MixedHamiltonianSystem, MixedProduct, MixedSystem,
-    OperateOnMixedSystems,
-};
 #[cfg(feature = "struqture_2_import")]
 use struqture::mixed_systems::HermitianMixedProduct;
+use struqture::mixed_systems::{
+    GetValueMixed, MixedHamiltonianSystem, MixedProduct, MixedSystem, OperateOnMixedSystems,
+};
+#[cfg(feature = "struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState, SymmetricIndex};
-#[cfg(feature = "struqture_2_import")]
-use struqture::StruqtureError;
 use struqture_py_macros::noiseless_system_wrapper;
 
 /// These are representations of systems of mixed_systems.

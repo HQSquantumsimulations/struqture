@@ -25,11 +25,11 @@ use struqture::fermions::FermionHamiltonianSystem;
 #[cfg(feature = "struqture_2_import")]
 use struqture::fermions::HermitianFermionProduct;
 use struqture::mappings::JordanWignerFermionToSpin;
+#[cfg(feature = "struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
-#[cfg(feature = "struqture_2_import")]
-use struqture::StruqtureError;
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of fermions.

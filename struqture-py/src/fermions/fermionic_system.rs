@@ -20,15 +20,15 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 #[cfg(feature = "struqture_2_import")]
 use std::str::FromStr;
-use struqture::fermions::FermionSystem;
 #[cfg(feature = "struqture_2_import")]
 use struqture::fermions::FermionProduct;
+use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerFermionToSpin;
+#[cfg(feature = "struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
-#[cfg(feature = "struqture_2_import")]
-use struqture::StruqtureError;
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of fermions.

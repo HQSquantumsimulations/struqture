@@ -23,11 +23,11 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 #[cfg(feature = "struqture_2_import")]
 use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
+#[cfg(feature = "struqture_2_import")]
+use struqture::spins::PauliProduct;
 use struqture::spins::{
     OperateOnSpins, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
-#[cfg(feature = "struqture_2_import")]
-use struqture::spins::PauliProduct;
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
