@@ -4718,7 +4718,7 @@ limitations under the License.
 
 
 ====================================================
-bytes 1.6.0
+bytes 1.6.1
 https://github.com/tokio-rs/bytes
 by Carl Lerche <me@carllerche.com>, Sean McArthur <sean@seanmonstar.com>
 Types and traits for working with bytes
@@ -4995,7 +4995,7 @@ limitations under the License.
 
 
 ====================================================
-cc 1.0.104
+cc 1.1.6
 https://github.com/rust-lang/cc-rs
 by Alex Crichton <alex@alexcrichton.com>
 A build-time dependency for Cargo build scripts to assist in invoking the native
@@ -6119,7 +6119,7 @@ LICENSE:
 
 
 ====================================================
-clap 4.5.8
+clap 4.5.9
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -6355,7 +6355,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-clap_builder 4.5.8
+clap_builder 4.5.9
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -14664,7 +14664,7 @@ limitations under the License.
 
 
 ====================================================
-hyper 0.14.29
+hyper 0.14.30
 https://hyper.rs
 by Sean McArthur <sean@seanmonstar.com>
 A fast and correct HTTP library.
@@ -22526,8 +22526,8 @@ limitations under the License.
 
 
 ====================================================
-oorandom 11.1.3
-https://sr.ht/~icefox/oorandom/
+oorandom 11.1.4
+https://hg.sr.ht/~icefox/oorandom
 by Simon Heath <icefox@dreamquest.io>
 A tiny, robust PRNG implementation.
 License: MIT
@@ -23985,7 +23985,7 @@ LICENSE:
 ../LICENSE
 
 ====================================================
-portable-atomic 1.6.0
+portable-atomic 1.7.0
 https://github.com/taiki-e/portable-atomic
 by 
 Portable atomic types including support for 128-bit atomics, atomic float, etc.
@@ -28095,7 +28095,7 @@ limitations under the License.
 
 
 ====================================================
-redox_syscall 0.5.2
+redox_syscall 0.5.3
 https://gitlab.redox-os.org/redox-os/syscall
 by Jeremy Soller <jackpot51@gmail.com>
 A Rust library to access raw Redox system calls
@@ -30262,7 +30262,7 @@ limitations under the License.
 
 
 ====================================================
-serde 1.0.203
+serde 1.0.204
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -30476,7 +30476,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-serde_derive 1.0.203
+serde_derive 1.0.204
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -32527,7 +32527,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.0.0-alpha.2
+struqture 2.0.0-alpha.3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32738,7 +32738,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.0.0-alpha.2
+struqture-py 2.0.0-alpha.3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32949,7 +32949,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.0.0-alpha.2
+struqture-py-macros 2.0.0-alpha.3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -33160,7 +33160,7 @@ LICENSE:
 
 
 ====================================================
-syn 2.0.68
+syn 2.0.72
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -33576,7 +33576,7 @@ Low level bindings to SystemConfiguration framework for macOS
 License: MIT OR Apache-2.0
 
 ====================================================
-target-lexicon 0.12.14
+target-lexicon 0.12.15
 https://github.com/bytecodealliance/target-lexicon
 by Dan Gohman <sunfish@mozilla.com>
 Targeting utilities for compilers and related tools
@@ -33903,7 +33903,7 @@ SOFTWARE.
 
 
 ====================================================
-thiserror 1.0.61
+thiserror 1.0.63
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -34117,7 +34117,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-thiserror-impl 1.0.61
+thiserror-impl 1.0.63
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate
@@ -35282,7 +35282,7 @@ limitations under the License.
 
 
 ====================================================
-tinyvec 1.6.1
+tinyvec 1.8.0
 https://github.com/Lokathor/tinyvec
 by Lokathor <zefria@gmail.com>
 `tinyvec` provides 100% safe vec-like data structures.
@@ -35781,7 +35781,7 @@ SOFTWARE.
 
 
 ====================================================
-tokio 1.38.0
+tokio 1.38.1
 https://tokio.rs
 by Tokio Contributors <team@tokio.rs>
 An event-driven, non-blocking I/O platform for writing asynchronous I/O
@@ -37659,7 +37659,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-uuid 1.9.1
+uuid 1.10.0
 https://github.com/uuid-rs/uuid
 by Ashley Mannix<ashleymannix@live.com.au>, Dylan DPC<dylan.dpc@gmail.com>, Hunar Roop Kahlon<hunar.roop@gmail.com>
 A library to generate and parse UUIDs.
@@ -40391,7 +40391,7 @@ limitations under the License.
 
 
 ====================================================
-wide 0.7.25
+wide 0.7.26
 https://github.com/Lokathor/wide
 by Lokathor <zefria@gmail.com>
 A crate to help you go wide.
@@ -41191,7 +41191,7 @@ license-mit:
 
 
 ====================================================
-windows-targets 0.52.5
+windows-targets 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import libs for Windows
@@ -41665,7 +41665,7 @@ license-mit:
 
 
 ====================================================
-windows_aarch64_gnullvm 0.52.5
+windows_aarch64_gnullvm 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -42139,7 +42139,7 @@ license-mit:
 
 
 ====================================================
-windows_aarch64_msvc 0.52.5
+windows_aarch64_msvc 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -42613,7 +42613,7 @@ license-mit:
 
 
 ====================================================
-windows_i686_gnu 0.52.5
+windows_i686_gnu 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -42850,7 +42850,7 @@ license-mit:
 
 
 ====================================================
-windows_i686_gnullvm 0.52.5
+windows_i686_gnullvm 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -43324,7 +43324,7 @@ license-mit:
 
 
 ====================================================
-windows_i686_msvc 0.52.5
+windows_i686_msvc 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -43798,7 +43798,7 @@ license-mit:
 
 
 ====================================================
-windows_x86_64_gnu 0.52.5
+windows_x86_64_gnu 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -44272,7 +44272,7 @@ license-mit:
 
 
 ====================================================
-windows_x86_64_gnullvm 0.52.5
+windows_x86_64_gnullvm 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -44746,7 +44746,7 @@ license-mit:
 
 
 ====================================================
-windows_x86_64_msvc 0.52.5
+windows_x86_64_msvc 0.52.6
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows

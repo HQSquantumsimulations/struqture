@@ -659,7 +659,7 @@ mod test {
             serialisation_meta: crate::StruqtureSerialisationMeta {
                 type_name: "PlusMinusOperator".to_string(),
                 min_version: (2, 0, 0),
-                version: "2.0.0-alpha.0".to_string(),
+                version: "2.0.0-alpha.3".to_string(),
             },
         };
         let mut so = PlusMinusOperator::new();
