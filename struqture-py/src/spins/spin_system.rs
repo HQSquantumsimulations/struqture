@@ -24,7 +24,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
-    OperateOnSpins, PauliProduct, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
+    OperateOnSpins, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 #[cfg(feature = "struqture_2_import")]
 use struqture::spins::PauliProduct;
