@@ -21,7 +21,8 @@ struqture\_py.mixed\_systems.MixedLindbladOpenSystem
       ~MixedLindbladOpenSystem.empty_clone
       ~MixedLindbladOpenSystem.from_bincode
       ~MixedLindbladOpenSystem.from_json
-      ~MixedLindbladOpenSystem.from_struqture_2
+      ~MixedLindbladOpenSystem.from_json_struqture_1
+      ~MixedLindbladOpenSystem.from_struqture_1
       ~MixedLindbladOpenSystem.group
       ~MixedLindbladOpenSystem.json_schema
       ~MixedLindbladOpenSystem.min_supported_version
@@ -29,9 +30,6 @@ struqture\_py.mixed\_systems.MixedLindbladOpenSystem
       ~MixedLindbladOpenSystem.noise_add_operator_product
       ~MixedLindbladOpenSystem.noise_get
       ~MixedLindbladOpenSystem.noise_set
-      ~MixedLindbladOpenSystem.number_bosonic_modes
-      ~MixedLindbladOpenSystem.number_fermionic_modes
-      ~MixedLindbladOpenSystem.number_spins
       ~MixedLindbladOpenSystem.system
       ~MixedLindbladOpenSystem.system_add_operator_product
       ~MixedLindbladOpenSystem.system_get

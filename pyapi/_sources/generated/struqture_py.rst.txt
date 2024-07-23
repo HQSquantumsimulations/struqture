@@ -4,55 +4,38 @@
 .. automodule:: struqture_py
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
    
-      BosonHamiltonianSystem
-      BosonLindbladNoiseSystem
+      BosonHamiltonian
+      BosonLindbladNoiseOperator
       BosonLindbladOpenSystem
+      BosonOperator
       BosonProduct
-      BosonSystem
       DecoherenceProduct
-      FermionHamiltonianSystem
-      FermionLindbladNoiseSystem
+      FermionHamiltonian
+      FermionLindbladNoiseOperator
       FermionLindbladOpenSystem
+      FermionOperator
       FermionProduct
-      FermionSystem
       HermitianBosonProduct
       HermitianFermionProduct
       HermitianMixedProduct
       MixedDecoherenceProduct
-      MixedHamiltonianSystem
-      MixedLindbladNoiseSystem
+      MixedHamiltonian
+      MixedLindbladNoiseOperator
       MixedLindbladOpenSystem
+      MixedOperator
       MixedPlusMinusOperator
       MixedPlusMinusProduct
       MixedProduct
-      MixedSystem
       PauliProduct
       PlusMinusLindbladNoiseOperator
       PlusMinusOperator
       PlusMinusProduct
-      SpinHamiltonianSystem
-      SpinLindbladNoiseSystem
-      SpinLindbladOpenSystem
-      SpinSystem
+      QubitHamiltonian
+      QubitLindbladNoiseOperator
+      QubitLindbladOpenSystem
+      QubitOperator
    
-   
-
-   
-   
-   
-
-
-

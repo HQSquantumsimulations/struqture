@@ -19,7 +19,9 @@ struqture\_py.spins.PauliProduct
       ~PauliProduct.current_version
       ~PauliProduct.from_bincode
       ~PauliProduct.from_json
+      ~PauliProduct.from_json_struqture_1
       ~PauliProduct.from_string
+      ~PauliProduct.from_struqture_1
       ~PauliProduct.get
       ~PauliProduct.hermitian_conjugate
       ~PauliProduct.is_empty

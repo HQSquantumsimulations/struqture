@@ -175,52 +175,45 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="operators-and-systems"><a class="header" href="#operators-and-systems">Operators and Systems</a></h1>
-<p>Operators and systems act on a state space using HashMaps (Dictionaries) of operator products and values. The distinction between operators and systems is that systems are given a fixed system size by the user when creating the object.</p>
-<p>For spins, the operators and systems represent
+                        <h1 id="operators"><a class="header" href="#operators">Operators</a></h1>
+<p>Operators act on a state space using HashMaps (Dictionaries) of operator products and values.</p>
+<p>For qubits, the operators represent
 \[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
 \sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \}
 \]
 where the \(\sigma_{j, k}\) are <code>SinglePauliOperators</code>.</p>
-<p>For bosons, the operators and systems represent
+<p>For bosons, the operators represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l, j} \]
 with
 \(c^{\dagger}\) the bosonic creation operator, \(c\) the bosonic annihilation operator
 \[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\
 \lbrack c_k, c_j \rbrack = 0, \\
 \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \]</p>
-<p>For fermions, the operators and systems represent
+<p>For fermions, the operators represent
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \prod_{k, l} c_{k, j}^{\dagger} c_{l,j}  \]
 with
 \(c^{\dagger}\) the fermionionic creation operator, \(c\) the fermionionic annihilation operator
 \[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\
 \lbrace c_k, c_j \rbrace = 0, \\
 \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \]</p>
-<p>The operators and systems in struqture are</p>
+<p>The operators in struqture are</p>
 <ul>
-<li><code>SpinOperator</code></li>
-<li><code>SpinSystem</code></li>
+<li><code>QubitOperator</code></li>
 <li><code>DecoherenceOperator</code></li>
+<li><code>PlusMinusOperator</code></li>
 <li><code>FermionOperator</code></li>
-<li><code>FermionSystem</code></li>
 <li><code>BosonOperator</code></li>
-<li><code>BosonSystem</code></li>
 <li><code>MixedOperator</code></li>
-<li><code>MixedSystem</code></li>
 </ul>
-<h1 id="hamiltonians-and-hamiltoniansystems"><a class="header" href="#hamiltonians-and-hamiltoniansystems">Hamiltonians and HamiltonianSystems</a></h1>
-<p>Hamiltonians are hermitian equivalents to Operators, and HamiltonionSystems are the hermitian equivalents to Systems. The operator products for Hamiltonian and Hamiltonian systems are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the Hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.</p>
-<p>The Hamiltonians and Hamiltonian systems in struqture are</p>
+<h1 id="hamiltonians"><a class="header" href="#hamiltonians">Hamiltonians</a></h1>
+<p>Hamiltonians are hermitian equivalents to Operators. The operator products for Hamiltonian are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the Hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.</p>
+<p>The Hamiltonians in struqture are</p>
 <ul>
-<li><code>SpinHamiltonian</code></li>
-<li><code>SpinHamiltonianSystem</code></li>
+<li><code>QubitHamiltonian</code></li>
 <li><code>FermionHamiltonian</code></li>
-<li><code>FermionHamiltonianSystem</code></li>
 <li><code>BosonHamiltonian</code></li>
-<li><code>BosonHamiltonianSystem</code></li>
 <li><code>MixedHamiltonian</code></li>
-<li><code>MixedHamiltonianSystem</code></li>
 </ul>
 
                     </main>
