@@ -53,7 +53,7 @@ no-default-features = true
 extension-module = [
     "pyo3/extension-module",
 ] #, "qoqo_calculator_pyo3/extension-module"]
-default = ["extension-module", "json_schema", "indexed_map_iterators"]
+default = ["extension-module", "json_schema", "indexed_map_iterators", "unstable_struqture_2_import"]
 json_schema = ["struqture/json_schema"]
 doc_generator = []
 indexed_map_iterators = ["struqture/indexed_map_iterators"]
