@@ -10,8 +10,6 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::str::FromStr;
-
 use super::{
     HermitianMixedProductWrapper, MixedDecoherenceProductWrapper, MixedHamiltonianSystemWrapper,
     MixedLindbladNoiseSystemWrapper,
@@ -21,12 +19,16 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedDecoherenceProduct, MixedLindbladOpenSystem, OperateOnMixedSystems,
-};
+#[cfg(feature = "struqture_2_import")]
+use std::str::FromStr;
+#[cfg(feature = "struqture_2_import")]
+use struqture::mixed_systems::{HermitianMixedProduct, MixedDecoherenceProduct};
+use struqture::mixed_systems::{MixedLindbladOpenSystem, OperateOnMixedSystems};
+#[cfg(feature = "struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
-use struqture::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
+use struqture::{OpenSystem, OperateOnDensityMatrix};
 use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of mixed_systems.
@@ -108,6 +110,7 @@ impl MixedLindbladOpenSystemWrapper {
     ///     TypeError: If the input is not a struqture 2.x MixedLindbladOpenSystem.
     ///     ValueError: Conversion failed.
     #[staticmethod]
+    #[cfg(feature = "struqture_2_import")]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<MixedLindbladOpenSystemWrapper> {
         Python::with_gil(|_| -> PyResult<MixedLindbladOpenSystemWrapper> {
             let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();

@@ -19,12 +19,17 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+#[cfg(feature = "struqture_2_import")]
 use std::str::FromStr;
-use struqture::fermions::{FermionHamiltonianSystem, HermitianFermionProduct};
+use struqture::fermions::FermionHamiltonianSystem;
+#[cfg(feature = "struqture_2_import")]
+use struqture::fermions::HermitianFermionProduct;
 use struqture::mappings::JordanWignerFermionToSpin;
+#[cfg(feature = "struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
-use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
+use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of fermions.
@@ -144,6 +149,7 @@ impl FermionHamiltonianSystemWrapper {
     ///     TypeError: If the input is not a struqture 2.x FermionHamiltonian.
     ///     ValueError: Conversion failed.
     #[staticmethod]
+    #[cfg(feature = "struqture_2_import")]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<FermionHamiltonianSystemWrapper> {
         Python::with_gil(|_| -> PyResult<FermionHamiltonianSystemWrapper> {
             let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
