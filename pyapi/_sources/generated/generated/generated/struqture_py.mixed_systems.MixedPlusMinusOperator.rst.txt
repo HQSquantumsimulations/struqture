@@ -22,15 +22,16 @@ struqture\_py.mixed\_systems.MixedPlusMinusOperator
       ~MixedPlusMinusOperator.empty_clone
       ~MixedPlusMinusOperator.from_bincode
       ~MixedPlusMinusOperator.from_json
-      ~MixedPlusMinusOperator.from_json_struqture_1
       ~MixedPlusMinusOperator.from_mixed_system
-      ~MixedPlusMinusOperator.from_struqture_1
       ~MixedPlusMinusOperator.get
       ~MixedPlusMinusOperator.hermitian_conjugate
       ~MixedPlusMinusOperator.is_empty
       ~MixedPlusMinusOperator.json_schema
       ~MixedPlusMinusOperator.keys
       ~MixedPlusMinusOperator.min_supported_version
+      ~MixedPlusMinusOperator.number_bosonic_modes
+      ~MixedPlusMinusOperator.number_fermionic_modes
+      ~MixedPlusMinusOperator.number_spins
       ~MixedPlusMinusOperator.remove
       ~MixedPlusMinusOperator.set
       ~MixedPlusMinusOperator.to_bincode

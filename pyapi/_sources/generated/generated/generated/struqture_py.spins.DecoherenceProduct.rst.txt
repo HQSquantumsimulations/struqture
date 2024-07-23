@@ -19,9 +19,7 @@ struqture\_py.spins.DecoherenceProduct
       ~DecoherenceProduct.current_version
       ~DecoherenceProduct.from_bincode
       ~DecoherenceProduct.from_json
-      ~DecoherenceProduct.from_json_struqture_1
       ~DecoherenceProduct.from_string
-      ~DecoherenceProduct.from_struqture_1
       ~DecoherenceProduct.get
       ~DecoherenceProduct.hermitian_conjugate
       ~DecoherenceProduct.is_empty
