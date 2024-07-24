@@ -226,13 +226,13 @@ fn from_str() {
         })
     );
 
-    let string_err = " +";
+    let string_err = "3 +";
     let error = PlusMinusProduct::from_str(string_err);
     assert!(error.is_err());
     assert_eq!(
         error,
         Err(StruqtureError::FromStringFailed {
-            msg: "Using   instead of unsigned integer as spin index".to_string()
+            msg: "Using 3  instead of unsigned integer as spin index".to_string()
         })
     );
 
@@ -243,6 +243,16 @@ fn from_str() {
         error,
         Err(StruqtureError::FromStringFailed {
             msg: "At least one spin index is used more than once.".to_string()
+        })
+    );
+
+    let string_err = "X";
+    let error = PlusMinusProduct::from_str(string_err);
+    assert!(error.is_err());
+    assert_eq!(
+        error,
+        Err(StruqtureError::FromStringFailed {
+            msg: "Missing spin index in the following PlusMinusProduct: X".to_string()
         })
     );
 }

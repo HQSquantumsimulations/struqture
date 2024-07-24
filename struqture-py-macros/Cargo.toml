@@ -1,13 +1,13 @@
 [package]
 name = "struqture-py-macros"
-version = "1.9.0"
+version = "1.9.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.57"
 categories = ["science", "simulation"]
 description = "Macros for struqture-py crate."
 license = "Apache-2.0"
-include=["src*", "Cargo.toml", "LICENSE"]
+include = ["src*", "Cargo.toml", "LICENSE"]
 
 [lib]
 proc-macro = true

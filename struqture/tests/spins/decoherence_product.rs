@@ -214,13 +214,23 @@ fn from_str() {
         })
     );
 
-    let string_err = " X";
+    let string_err = "3.2X";
     let error = DecoherenceProduct::from_str(string_err);
     assert!(error.is_err());
     assert_eq!(
         error,
         Err(StruqtureError::FromStringFailed {
-            msg: "Using   instead of unsigned integer as spin index".to_string()
+            msg: "Using 3.2 instead of unsigned integer as spin index".to_string()
+        })
+    );
+
+    let string_err = "X";
+    let error = DecoherenceProduct::from_str(string_err);
+    assert!(error.is_err());
+    assert_eq!(
+        error,
+        Err(StruqtureError::FromStringFailed {
+            msg: "Missing spin index in the following DecoherenceProduct: X".to_string()
         })
     );
 }
