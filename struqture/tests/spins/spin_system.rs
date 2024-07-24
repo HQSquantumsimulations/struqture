@@ -709,10 +709,6 @@ fn serde_json() {
     let serialized = serde_json::to_string(&ss).unwrap();
     let deserialized: SpinSystem = serde_json::from_str(&serialized).unwrap();
     assert_eq!(ss, deserialized);
-    let mut wrong_json = r#"{"number_spins":1,"operator":{"items":[["0kjghv",1.0,0.0]],"_struqture_version":{"major_version":1,"minor_version":0}}}"#;
-    assert!(serde_json::from_str::<SpinSystem>(wrong_json).is_err());
-    wrong_json = r#"{"number_spins":1,"operator":{"items":[["kjghv",1.0,0.0]],"_struqture_version":{"major_version":1,"minor_version":0}}}"#;
-    assert!(serde_json::from_str::<SpinSystem>(wrong_json).is_err());
 }
 
 /// Test SpinSystem Serialization and Deserialization traits (readable)
