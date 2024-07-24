@@ -711,6 +711,32 @@ fn serde_json() {
     assert_eq!(ss, deserialized);
 }
 
+/// Tests that trying to create a SpinSystem from a wrong JSON properly fails.
+/// There was a bug before 1.9.1 where this JSON would result the following SpinSystem:
+/// SpinSystem(2){
+///    I: (0e0 + i * 4e-1),
+/// }
+/// It was fixed by checking that the string starts with a number in the from_str implementation of PauliProduct.
+#[test]
+fn serde_wrong_json() {
+    let wrong_json = r#"{
+        "number_spins": 2,
+        "operator": {
+          "_struqture_version": {
+            "major_version": 1,
+            "minor_version": 0
+          },
+          "items": [
+            [
+              "PauliZ",
+              0,
+              0.4
+            ]
+          ]
+        }
+      }}"#;
+    assert!(serde_json::from_str::<SpinSystem>(wrong_json).is_err());
+}
 /// Test SpinSystem Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
