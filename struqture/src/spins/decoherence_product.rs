@@ -909,9 +909,18 @@ impl FromStr for DecoherenceProduct {
     ///
     /// * Cannot compare two unsigned integers internal error in struqture.spins.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s == "I" {
+        if s == "I" || s.is_empty() {
             Ok(Self::new()) // If identity it's just an empty decoherence product.
         } else {
+            if !s.starts_with(char::is_numeric) {
+                return Err(StruqtureError::FromStringFailed {
+                    msg: format!(
+                        "Missing spin index in the following DecoherenceProduct: {}",
+                        s
+                    ),
+                });
+            }
+
             let value = s.to_string();
             let vec_paulis = value.split(char::is_numeric).filter(|s| !s.is_empty());
             let vec_indices = value.split(char::is_alphabetic).filter(|s| !s.is_empty());

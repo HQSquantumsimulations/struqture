@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.9.2
+
+* Fixed a bug when creating a Product from a bad JSON
+
 ## 1.9.0 - 1.9.1
 
 * Added methods to convert from struqture 2.0.0-alpha.3

@@ -238,9 +238,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.5.9"
+version = "4.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64acc1846d54c1fe936a78dc189c34e28d3f5afc348403f28ecf53660b9b8462"
+checksum = "8f6b81fb3c84f5563d509c59b5a48d935f689e993afa90fe39047f05adef9142"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -248,9 +248,9 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.5.9"
+version = "4.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fb8393d67ba2e7bfaf28a23458e4e2b543cc73a99595511eb207fdb8aede942"
+checksum = "5ca6706fd5224857d9ac5eb9355f6683563cc0541c7cd9d014043b57cbec78ac"
 dependencies = [
  "anstream",
  "anstyle",
@@ -969,9 +969,9 @@ dependencies = [
 
 [[package]]
 name = "object"
-version = "0.36.1"
+version = "0.36.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "081b846d1d56ddfc18fdf1a922e4f6e07a11768ea1b92dec44e42b72712ccfce"
+checksum = "3f203fa8daa7bb185f760ae12bd8e097f63d17041dcdcaf675ac54cdf863170e"
 dependencies = [
  "memchr",
 ]
@@ -1515,9 +1515,9 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "struqture"
-version = "1.9.0"
+version = "1.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9cab3e62fa12890257748aca82c4224ee892b67b0c1fe4ba42f05647dd967245"
+checksum = "06dcbf646241a3425eab2aa566b768f36951ad6512c6c8052d3c7d56df8c9f43"
 dependencies = [
  "itertools 0.13.0",
  "ndarray",
@@ -1531,7 +1531,7 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "1.9.1"
+version = "1.9.2"
 dependencies = [
  "bincode",
  "criterion",
@@ -1564,7 +1564,7 @@ dependencies = [
  "num-complex",
  "qoqo_calculator",
  "serde",
- "struqture 1.9.0",
+ "struqture 1.9.1",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1572,7 +1572,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.9.1"
+version = "1.9.2"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1589,7 +1589,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.9.1",
+ "struqture 1.9.2",
  "struqture 2.0.0-alpha.3",
  "struqture-py-macros",
  "syn",
@@ -1599,7 +1599,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.9.1"
+version = "1.9.2"
 dependencies = [
  "num-complex",
  "proc-macro2",
@@ -1741,9 +1741,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.39.0"
+version = "1.39.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c3318c4fc7126c339a40fbc025927d0328ca32259f68bfe4321660644c1f626"
+checksum = "d040ac2b29ab03b09d4129c2f5bbd012a3ac2f79d38ff506a4bf8dd34b0eac8a"
 dependencies = [
  "backtrace",
  "libc",
