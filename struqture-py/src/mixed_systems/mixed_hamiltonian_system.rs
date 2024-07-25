@@ -17,14 +17,14 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use std::str::FromStr;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use struqture::mixed_systems::HermitianMixedProduct;
 use struqture::mixed_systems::{
     GetValueMixed, MixedHamiltonianSystem, MixedProduct, MixedSystem, OperateOnMixedSystems,
 };
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
@@ -176,7 +176,7 @@ impl MixedHamiltonianSystemWrapper {
     ///     TypeError: If the input is not a struqture 2.x MixedHamiltonian.
     ///     ValueError: Conversion failed.
     #[staticmethod]
-    #[cfg(feature = "struqture_2_import")]
+    #[cfg(feature = "unstable_struqture_2_import")]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<MixedHamiltonianSystemWrapper> {
         Python::with_gil(|_| -> PyResult<MixedHamiltonianSystemWrapper> {
             let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();

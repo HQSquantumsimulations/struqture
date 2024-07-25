@@ -712,7 +712,7 @@ fn serde_json() {
 }
 
 /// Tests that trying to create a SpinSystem from a wrong JSON properly fails.
-/// There was a bug before 1.9.1 where this JSON would result the following SpinSystem:
+/// There was a bug before 1.9.2 where this JSON would result the following SpinSystem:
 /// SpinSystem(2){
 ///    I: (0e0 + i * 4e-1),
 /// }

@@ -20,10 +20,10 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
-#[cfg(feature = "struqture_2_import")]
+#[cfg(feature = "unstable_struqture_2_import")]
 use struqture::spins::PauliProduct;
 use struqture::spins::{
     OperateOnSpins, SpinSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
@@ -147,7 +147,7 @@ impl SpinSystemWrapper {
     ///     TypeError: If the input is not a struqture 2.x QubitOperator.
     ///     ValueError: Conversion failed.
     #[staticmethod]
-    #[cfg(feature = "struqture_2_import")]
+    #[cfg(feature = "unstable_struqture_2_import")]
     pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<SpinSystemWrapper> {
         Python::with_gil(|_| -> PyResult<SpinSystemWrapper> {
             let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();

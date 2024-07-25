@@ -679,7 +679,7 @@ impl FromStr for PauliProduct {
                                 "Using {} instead of unsigned integer as spin index",
                                 index
                             ),
-                        });
+                        })
                     }
                 }
             }
