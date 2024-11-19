@@ -1698,7 +1698,7 @@ dependencies = [
 [[package]]
 name = "struqture"
 version = "1.10.0"
-source = "git+https://github.com/dberthault/struqture.git#20e12459970a06c2f131d7d552bcec5555ef28e7"
+source = "git+https://github.com/dberthault/struqture.git#311855e7c0c39a762c5164c07ac2b15502dcb17d"
 dependencies = [
  "itertools 0.13.0",
  "ndarray 0.15.6",
@@ -1713,7 +1713,7 @@ dependencies = [
 [[package]]
 name = "struqture"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/dberthault/struqture.git?branch=Pyo3UpdateFor2#4811d5e55de9db99468d0455420e1ffd4b20ea75"
+source = "git+https://github.com/dberthault/struqture.git?branch=Pyo3UpdateFor2#1201b1011f911358f967114d6cc1b0083bf51544"
 dependencies = [
  "indexmap",
  "itertools 0.12.1",

@@ -12,7 +12,7 @@
 
 #[cfg(feature = "doc_generator")]
 use pyo3::{
-    types::{PyAnyMethods, PyDict, PyModule},
+    types::{PyAnyMethods, PyDict, PyDictMethods, PyModule},
     PyResult, Python,
 };
 
