@@ -1572,7 +1572,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.9.2"
+version = "1.10.0"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1599,7 +1599,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.9.2"
+version = "1.9.3"
 dependencies = [
  "num-complex",
  "proc-macro2",
