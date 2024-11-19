@@ -1702,7 +1702,7 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 [[package]]
 name = "struqture"
 version = "1.10.0"
-source = "git+https://github.com/dberthault/struqture.git#356e2bfddb9be0c6352af9230e8badae52a78aa7"
+source = "git+https://github.com/dberthault/struqture.git#d10a1a3d81e2908787f4d4f68035d261cd2262c5"
 dependencies = [
  "itertools 0.13.0",
  "ndarray 0.15.6",
