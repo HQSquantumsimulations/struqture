@@ -667,7 +667,7 @@ mod test {
             serialisation_meta: crate::StruqtureSerialisationMeta {
                 type_name: "MixedPlusMinusOperator".to_string(),
                 min_version: (2, 0, 0),
-                version: "2.0.0-alpha.3".to_string(),
+                version: "2.0.0-alpha.4".to_string(),
             },
         };
         let mut mpmo = MixedPlusMinusOperator::new(1, 1, 1);
