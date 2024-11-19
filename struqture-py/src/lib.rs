@@ -59,7 +59,8 @@ fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
     module.add_wrapped(wrapper3)?;
 
     let system = PyModule::import_bound(_py, "sys")?;
-    let system_modules: &PyDict = system.as_gil_ref().getattr("modules")?.downcast()?;
+    let binding = system.as_ref().getattr("modules")?;
+    let system_modules: &Bound<PyDict> = binding.downcast()?;
     system_modules.set_item("struqture_py.spins", module.getattr("spins")?)?;
     system_modules.set_item("struqture_py.fermions", module.getattr("fermions")?)?;
     system_modules.set_item(

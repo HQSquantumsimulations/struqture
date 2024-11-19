@@ -175,7 +175,7 @@ pub fn productwrapper(
                 /// Raises:
                 ///    ValueError: Input reordering dictionary is not a permutation of the indices.
                 pub fn remap_modes(&self, reordering_dictionary: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
-                    let remap_dict = reordering_dictionary.as_gil_ref().extract::<HashMap<usize, usize>>()?;
+                    let remap_dict = reordering_dictionary.as_ref().extract::<HashMap<usize, usize>>()?;
                     let (index, value) = self.internal.remap_modes(&remap_dict).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
                 }
@@ -532,7 +532,7 @@ pub fn productwrapper(
             #[staticmethod]
             pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
-                    .as_gil_ref()
+                    .as_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
