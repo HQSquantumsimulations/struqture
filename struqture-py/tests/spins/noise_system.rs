@@ -694,7 +694,7 @@ fn test_format_repr() {
 
         rust_system
             .add_operator_product(
-                (pp.as_ref().clone().into(), pp.as_ref().clone().into()),
+                (pp.clone().into(), pp.into()),
                 &convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
             )
             .unwrap();
