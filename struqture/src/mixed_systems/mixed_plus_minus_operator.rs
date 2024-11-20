@@ -649,6 +649,7 @@ mod test {
     use crate::bosons::BosonProduct;
     use crate::fermions::FermionProduct;
     use crate::spins::PlusMinusProduct;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
     // Test the Clone and PartialEq traits of MixedOperator
@@ -667,7 +668,7 @@ mod test {
             serialisation_meta: crate::StruqtureSerialisationMeta {
                 type_name: "MixedPlusMinusOperator".to_string(),
                 min_version: (2, 0, 0),
-                version: "2.0.0-alpha.4".to_string(),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut mpmo = MixedPlusMinusOperator::new(1, 1, 1);
