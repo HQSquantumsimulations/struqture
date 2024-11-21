@@ -22,8 +22,8 @@ use struqture::fermions::{
     FermionHamiltonian, FermionLindbladNoiseOperator, FermionLindbladOpenSystem, FermionProduct,
     HermitianFermionProduct,
 };
-use struqture::prelude::*;
 use struqture::ModeIndex;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 
 #[cfg(feature = "json_schema")]
 // Test the new function of the FermionLindbladOpenSystem
@@ -502,7 +502,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -533,7 +533,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -624,7 +624,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -677,7 +677,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,

@@ -26,6 +26,7 @@ use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::{HermitianMixedProduct, MixedHamiltonian, MixedOperator};
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex, StruqtureError};
 use test_case::test_case;
 
@@ -670,7 +671,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -782,7 +783,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
