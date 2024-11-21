@@ -1,0 +1,48 @@
+struqture\_py.spins.QubitOperator
+=================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: QubitOperator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~QubitOperator.__init__
+      ~QubitOperator.add_operator_product
+      ~QubitOperator.current_number_spins
+      ~QubitOperator.current_version
+      ~QubitOperator.empty_clone
+      ~QubitOperator.from_bincode
+      ~QubitOperator.from_json
+      ~QubitOperator.from_json_struqture_1
+      ~QubitOperator.from_struqture_1
+      ~QubitOperator.get
+      ~QubitOperator.hermitian_conjugate
+      ~QubitOperator.is_empty
+      ~QubitOperator.jordan_wigner
+      ~QubitOperator.json_schema
+      ~QubitOperator.keys
+      ~QubitOperator.min_supported_version
+      ~QubitOperator.number_spins
+      ~QubitOperator.remove
+      ~QubitOperator.set
+      ~QubitOperator.sparse_lindblad_entries
+      ~QubitOperator.sparse_matrix_coo
+      ~QubitOperator.sparse_matrix_superoperator_coo
+      ~QubitOperator.to_bincode
+      ~QubitOperator.to_json
+      ~QubitOperator.truncate
+      ~QubitOperator.unitary_sparse_matrix_coo
+      ~QubitOperator.values
+   
+   
+
+   
+   
+   
