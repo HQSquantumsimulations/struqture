@@ -187,9 +187,9 @@ checksum = "5ce89b21cab1437276d2650d57e971f9d548a2d9037cc231abdc0562b97498ce"
 
 [[package]]
 name = "bytemuck"
-version = "1.19.0"
+version = "1.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8334215b81e418a0a7bdb8ef0849474f40bb10c8b71f1c4ed315cff49f32494d"
+checksum = "8b37c88a63ffd85d15b406896cc343916d7cf57838a847b3a6f2ca5d39a5695a"
 
 [[package]]
 name = "byteorder"
@@ -853,9 +853,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.11"
+version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49f1f14873335454500d59611f1cf4a4b0f786f9ac11f4312a78e4cf2566695b"
+checksum = "540654e97a3f4470a492cd30ff187bc95d89557a903a2bbf112e2fae98104ef2"
 
 [[package]]
 name = "js-sys"
@@ -1282,9 +1282,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.89"
+version = "1.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f139b0662de085916d1fb67d2b4169d1addddda1919e696f3252b740b629986e"
+checksum = "307e3004becf10f5a6e0d59d20f3cd28231b0e0827a96cd3e0ce6d14bc1e4bb3"
 dependencies = [
  "unicode-ident",
 ]
@@ -1356,9 +1356,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator"
-version = "1.3.0"
+version = "1.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b67eeafe2b1f3f0ef15e1dfd6c1dbf06d5b52692c2a4fc2d6a9cbd64589f23b6"
+checksum = "c6e28a55d15becd3c5793245b83f8652e5eb44e60ce1e234c6b9ae373e67ef5d"
 dependencies = [
  "num-complex",
  "schemars",
@@ -1368,9 +1368,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator_pyo3"
-version = "1.3.0"
+version = "1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0299ca20e22e9c97054636a565c4d9e90aae4eaea9c4ca9c71e61219a12ed259"
+checksum = "d04c0a32412b697c56d18882677933cc116a7afb65cee3e2f9b8840794f77f66"
 dependencies = [
  "num-complex",
  "pyo3",
@@ -1701,8 +1701,9 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "struqture"
-version = "1.10.0"
-source = "git+https://github.com/dberthault/struqture.git#d10a1a3d81e2908787f4d4f68035d261cd2262c5"
+version = "1.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d2f2566561f41f3ea377bd6d952bdec12430fc9f322ee0fb291080e2a012f42"
 dependencies = [
  "itertools 0.13.0",
  "ndarray 0.15.6",
@@ -1732,7 +1733,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
- "struqture 1.10.0",
+ "struqture 1.9.2",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1757,7 +1758,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.10.0",
+ "struqture 1.9.2",
  "struqture 2.0.0-alpha.4",
  "struqture-py-macros",
  "syn",
@@ -1777,9 +1778,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.87"
+version = "2.0.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "25aa4ce346d03a6dcd68dd8b4010bcb74e54e62c90c573f394c46eae99aba32d"
+checksum = "44d46482f1c1c87acd84dea20c1bf5ebff4c757009ed6bf19cfd36fb10e92c4e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2016,9 +2017,9 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.13"
+version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e91b56cd4cadaeb79bbf1a5645f6b4f8dc5bde8834ad5894a8db35fda9efa1fe"
+checksum = "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83"
 
 [[package]]
 name = "unindent"
@@ -2171,9 +2172,9 @@ dependencies = [
 
 [[package]]
 name = "wide"
-version = "0.7.28"
+version = "0.7.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b828f995bf1e9622031f8009f8481a85406ce1f4d4588ff746d872043e855690"
+checksum = "58e6db2670d2be78525979e9a5f9c69d296fd7d670549fe9ebf70f8708cb5019"
 dependencies = [
  "bytemuck",
  "safe_arch",
