@@ -668,6 +668,7 @@ impl JordanWignerSpinToFermion for QubitOperator {
 mod test {
     use super::*;
     use crate::StruqtureSerialisationMeta;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
     // Test the Clone and PartialEq traits of QubitOperator
@@ -679,7 +680,7 @@ mod test {
             serialisation_meta: StruqtureSerialisationMeta {
                 type_name: "QubitOperator".to_string(),
                 min_version: (2, 0, 0),
-                version: "2.0.0-alpha.3".to_string(),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = QubitOperator::new();

@@ -24,7 +24,7 @@ use struqture::spins::{
     DecoherenceProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct,
     QubitLindbladNoiseOperator,
 };
-use struqture::{OperateOnDensityMatrix, SpinIndex};
+use struqture::{OperateOnDensityMatrix, SpinIndex, STRUQTURE_VERSION};
 
 // Test the new function of the PlusMinusLindbladNoiseOperator
 #[test]
@@ -473,7 +473,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -558,7 +558,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

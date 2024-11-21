@@ -19,9 +19,9 @@ use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
-use struqture::prelude::*;
 use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, QubitOperator};
 use struqture::SpinIndex;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 use test_case::test_case;
 
 // Test the new function of the DecoherenceOperator
@@ -537,7 +537,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -611,7 +611,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

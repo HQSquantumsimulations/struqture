@@ -650,6 +650,7 @@ impl JordanWignerSpinToFermion for PlusMinusLindbladNoiseOperator {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
     // Test the Clone and PartialEq traits of QubitOperator
@@ -661,7 +662,7 @@ mod test {
             serialisation_meta: crate::StruqtureSerialisationMeta {
                 type_name: "PlusMinusLindbladNoiseOperator".to_string(),
                 min_version: (2, 0, 0),
-                version: "2.0.0-alpha.3".to_string(),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = PlusMinusLindbladNoiseOperator::new();
