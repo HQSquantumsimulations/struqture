@@ -20,12 +20,12 @@ use std::ops::{Add, Sub};
 #[cfg(feature = "struqture_1_import")]
 #[cfg(feature = "struqture_1_export")]
 use std::str::FromStr;
-use struqture::prelude::*;
 use struqture::spins::{
     DecoherenceOperator, DecoherenceProduct, PauliProduct, PlusMinusOperator, PlusMinusProduct,
     QubitHamiltonian, QubitOperator,
 };
 use struqture::OperateOnDensityMatrix;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 
 // Test the new function of the PlusMinusOperator
 #[test]
@@ -393,7 +393,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -466,7 +466,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

@@ -21,7 +21,9 @@ use std::iter::{FromIterator, IntoIterator};
 #[cfg(feature = "struqture_1_export")]
 use std::str::FromStr;
 use struqture::bosons::{BosonHamiltonian, BosonOperator, BosonProduct, HermitianBosonProduct};
-use struqture::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState};
+use struqture::{
+    ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, STRUQTURE_VERSION,
+};
 use test_case::test_case;
 
 // Test the new function of the BosonOperator
@@ -403,7 +405,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -475,7 +477,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

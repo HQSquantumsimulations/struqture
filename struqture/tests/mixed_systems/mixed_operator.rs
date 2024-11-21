@@ -23,6 +23,7 @@ use struqture::fermions::FermionProduct;
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 use struqture::StruqtureError;
+use struqture::STRUQTURE_VERSION;
 
 #[cfg(feature = "struqture_1_import")]
 #[cfg(feature = "struqture_1_export")]
@@ -692,7 +693,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -804,7 +805,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

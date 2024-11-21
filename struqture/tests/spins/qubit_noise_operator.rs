@@ -22,8 +22,8 @@ use std::collections::{BTreeMap, HashMap};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
-use struqture::prelude::*;
 use struqture::spins::{DecoherenceOperator, DecoherenceProduct, QubitLindbladNoiseOperator};
+use struqture::{prelude::*, STRUQTURE_VERSION};
 use struqture::{CooSparseMatrix, OperateOnDensityMatrix, SpinIndex};
 use test_case::test_case;
 
@@ -600,7 +600,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -685,7 +685,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

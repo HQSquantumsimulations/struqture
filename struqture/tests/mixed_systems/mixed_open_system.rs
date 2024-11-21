@@ -24,8 +24,8 @@ use struqture::mixed_systems::{
     HermitianMixedProduct, MixedDecoherenceProduct, MixedHamiltonian, MixedLindbladNoiseOperator,
     MixedLindbladOpenSystem,
 };
-use struqture::prelude::*;
 use struqture::spins::{DecoherenceProduct, PauliProduct};
+use struqture::{prelude::*, STRUQTURE_VERSION};
 
 // Test the new function of the MixedLindbladOpenSystem
 #[test]
@@ -690,7 +690,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -727,7 +727,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -869,7 +869,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -978,7 +978,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,

@@ -30,6 +30,7 @@ use struqture::spins::PauliProduct;
 use struqture::spins::PlusMinusProduct;
 use struqture::OperateOnDensityMatrix;
 use struqture::StruqtureError;
+use struqture::STRUQTURE_VERSION;
 use test_case::test_case;
 
 // Test the new function of the MixedPlusMinusOperator
@@ -855,7 +856,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -965,7 +966,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],

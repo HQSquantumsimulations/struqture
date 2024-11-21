@@ -22,8 +22,8 @@ use struqture::bosons::{
     BosonHamiltonian, BosonLindbladNoiseOperator, BosonLindbladOpenSystem, BosonProduct,
     HermitianBosonProduct,
 };
-use struqture::prelude::*;
 use struqture::ModeIndex;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 
 #[cfg(feature = "json_schema")]
 // Test the new function of the BosonLindbladOpenSystem
@@ -494,7 +494,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -525,7 +525,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -616,7 +616,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
@@ -669,7 +669,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.4"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
