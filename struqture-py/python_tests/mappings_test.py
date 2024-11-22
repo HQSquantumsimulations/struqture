@@ -39,6 +39,7 @@ def test_jordan_wigner_spin_to_fermion():
     slos.noise_add_operator_product((dp, dp), 2.0)
     assert type(slos.jordan_wigner()) == FermionLindbladOpenSystem
 
+
 def test_jordan_wigner_fermion_to_spin():
     fp = FermionProduct([0], [2, 3])
     assert type(fp.jordan_wigner()) == SpinSystem

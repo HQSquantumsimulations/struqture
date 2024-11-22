@@ -182,14 +182,15 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create SpinLindbladNoiseSystem from PlusMinusLindbladNoiseOperator.
+    #[pyo3(signature = (number_spins=None))]
     pub fn to_spin_noise_system(
         &self,
-        number_spinss: Option<usize>,
+        number_spins: Option<usize>,
     ) -> PyResult<SpinLindbladNoiseSystemWrapper> {
         let result: SpinLindbladNoiseOperator =
             SpinLindbladNoiseOperator::from(self.internal.clone());
         Ok(SpinLindbladNoiseSystemWrapper {
-            internal: SpinLindbladNoiseSystem::from_operator(result, number_spinss)
+            internal: SpinLindbladNoiseSystem::from_operator(result, number_spins)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
         })
     }

@@ -12,7 +12,7 @@
 
 #[cfg(feature = "doc_generator")]
 use pyo3::{
-    types::{PyAnyMethods, PyDict, PyModule},
+    types::{PyAnyMethods, PyDict, PyDictMethods, PyModule},
     PyResult, Python,
 };
 
@@ -113,9 +113,9 @@ fn create_doc(module: &str) -> PyResult<String> {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| -> PyResult<String> {
         let python_module = PyModule::import_bound(py, module)?;
-        let dict = python_module.as_gil_ref().getattr("__dict__")?;
+        let dict = python_module.as_ref().getattr("__dict__")?;
         let module_doc = python_module
-            .as_gil_ref()
+            .as_ref()
             .getattr("__doc__")?
             .extract::<String>()?;
         let r_dict = dict.downcast::<PyDict>()?;
@@ -136,7 +136,7 @@ fn create_doc(module: &str) -> PyResult<String> {
             let dict_obj = py
                 .import_bound("builtins")?
                 .call_method1("dict", (items,))?;
-            let class_r_dict = dict_obj.as_gil_ref().downcast::<PyDict>()?;
+            let class_r_dict = dict_obj.as_ref().downcast::<PyDict>()?;
             for (class_fn_name, meth) in class_r_dict.iter() {
                 let meth_name = class_fn_name.str()?.extract::<String>()?;
                 let meth_doc = if meth_name.as_str().starts_with("__") {

@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py"
-version = "1.9.2"
+version = "1.10.0"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.57"
@@ -17,21 +17,21 @@ doctest = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
-version = "0.21"
+version = "0.22"
 features = ["num-complex", "multiple-pymethods"]
 
 [dependencies]
-struqture = { version = "~1.9.2", path = "../struqture", default-features = false }
-struqture_2 = { package = "struqture", version = "2.0.0-alpha.3", default-features = false, features = [
+struqture = { version = "~1.10", path = "../struqture", default-features = false }
+struqture_2 = { package = "struqture", version = "2.0.0-alpha.4", default-features = false, features = [
     "struqture_1_import",
     "struqture_1_export",
 ], optional = true }
-struqture-py-macros = { version = "~1.9.2", path = "../struqture-py-macros" }
-qoqo_calculator = { version = "~1.2", default-features = false }
-qoqo_calculator_pyo3 = { version = " ~1.2", default-features = false }
+struqture-py-macros = { version = "~1.10.0", path = "../struqture-py-macros" }
+qoqo_calculator = { version = "<=1.2", default-features = false }
+qoqo_calculator_pyo3 = { version = " ~1.3", default-features = false }
 
 serde = { version = "1.0", features = ["derive"] }
-numpy = "0.21"
+numpy = "0.22"
 bincode = "1.3"
 serde_json = "1.0"
 thiserror = "1.0"
@@ -47,8 +47,8 @@ ndarray = { version = "0.15" }
 quote = "1.0"
 syn = { version = "2.0", features = ["full", "visit"] }
 proc-macro2 = "1.0"
-pyo3-build-config = "0.21"
-pyo3 = "0.21"
+pyo3-build-config = "0.22"
+pyo3 = "0.22"
 regex = "1.10"
 [package.metadata.docs.rs]
 no-default-features = true

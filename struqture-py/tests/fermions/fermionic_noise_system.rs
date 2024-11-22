@@ -688,12 +688,11 @@ fn test_format_repr() {
             .unwrap();
         let mut rust_system = FermionLindbladNoiseSystemWrapper::new(None);
         let pp_type = py.get_type_bound::<FermionProductWrapper>();
-        let binding = pp_type.call1(([0], [0])).unwrap();
-        let new_pp = binding.downcast::<FermionProductWrapper>().unwrap();
+        let new_pp = pp_type.call1(([0], [0])).unwrap();
 
         rust_system
             .add_operator_product(
-                (new_pp.as_gil_ref().into(), new_pp.as_gil_ref().into()),
+                (new_pp.clone().into(), new_pp.into()),
                 &convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
             )
             .unwrap();
