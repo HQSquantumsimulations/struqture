@@ -687,7 +687,6 @@ fn test_format_repr() {
         let mut rust_system = BosonLindbladNoiseSystemWrapper::new(None);
         let pp_type = py.get_type_bound::<BosonProductWrapper>();
         let new_pp = pp_type.call1(([0], [0])).unwrap();
-        // let new_pp = binding.downcast::<BosonProductWrapper>().unwrap();
 
         rust_system
             .add_operator_product(
