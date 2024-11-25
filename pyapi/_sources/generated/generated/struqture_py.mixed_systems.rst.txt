@@ -10,11 +10,11 @@ struqture\_py.mixed\_systems
    
       HermitianMixedProduct
       MixedDecoherenceProduct
-      MixedHamiltonian
-      MixedLindbladNoiseOperator
+      MixedHamiltonianSystem
+      MixedLindbladNoiseSystem
       MixedLindbladOpenSystem
-      MixedOperator
       MixedPlusMinusOperator
       MixedPlusMinusProduct
       MixedProduct
+      MixedSystem
    

@@ -22,10 +22,8 @@ struqture\_py.mixed\_systems.MixedPlusMinusProduct
       ~MixedPlusMinusProduct.fermions
       ~MixedPlusMinusProduct.from_bincode
       ~MixedPlusMinusProduct.from_json
-      ~MixedPlusMinusProduct.from_json_struqture_1
       ~MixedPlusMinusProduct.from_mixed_product
       ~MixedPlusMinusProduct.from_string
-      ~MixedPlusMinusProduct.from_struqture_1
       ~MixedPlusMinusProduct.hermitian_conjugate
       ~MixedPlusMinusProduct.is_natural_hermitian
       ~MixedPlusMinusProduct.json_schema

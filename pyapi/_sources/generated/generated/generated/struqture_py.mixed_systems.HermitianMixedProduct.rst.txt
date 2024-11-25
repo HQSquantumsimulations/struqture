@@ -23,9 +23,7 @@ struqture\_py.mixed\_systems.HermitianMixedProduct
       ~HermitianMixedProduct.fermions
       ~HermitianMixedProduct.from_bincode
       ~HermitianMixedProduct.from_json
-      ~HermitianMixedProduct.from_json_struqture_1
       ~HermitianMixedProduct.from_string
-      ~HermitianMixedProduct.from_struqture_1
       ~HermitianMixedProduct.hermitian_conjugate
       ~HermitianMixedProduct.is_natural_hermitian
       ~HermitianMixedProduct.json_schema

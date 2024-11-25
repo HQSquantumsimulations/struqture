@@ -309,11 +309,79 @@ let mut hamiltonian = MixedHamiltonian::new(1, 1, 1);
 hamiltonian.add_operator_product(hmp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
 hamiltonian.add_operator_product(hmp_1, CalculatorComplex::from(2.0)).unwrap();
 println!("{}", hamiltonian);</code></pre>
+<p>In python, we need to use a <code>MixedSystem</code> and <code>MixedHamiltonianSystem</code> instead of a <code>MixedOperator</code> and <code>MixedHamiltonian</code>. See next section for more details.</p>
+<h2 id="systems-and-hamiltoniansystems"><a class="header" href="#systems-and-hamiltoniansystems">Systems and HamiltonianSystems</a></h2>
+<p>Following the intention to avoid unphysical behaviour, MixedSystems and MixedHamiltonianSystems are wrappers around MixedOperators and MixedHamiltonians that allow to explicitly set the number of spins, the number of bosonic modes and the number of fermionic modes in each subsystem of the systems.
+When setting or adding a MixedProduct/HermitianMixedProduct to the systems, it is guaranteed that the mixed indices involved cannot exceed the number of spins, bosonic modes, and fermionic modes (for each subsystem) in the system.
+Additionally, the correct number of subsystems needs to have been specified for each type.
+Note that the user can decide to explicitly set the number of of each particle type to be variable.</p>
+<h3 id="examples-2"><a class="header" href="#examples-2">Examples</a></h3>
+<pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
+use struqture::bosons::BosonProduct;
+use struqture::fermions::FermionProduct;
+use struqture::mixed_systems::{HermitianMixedProduct, MixedHamiltonianSystem};
+use struqture::prelude::*;
+use struqture::spins::PauliProduct;
+
+let mut system = MixedHamiltonianSystem::new([Some(2), Some(1)], [Some(3)], [Some(3)]);
+
+// Building the spin term sigma^x_0 sigma^z_1
+let pp_0 = PauliProduct::new().x(0).z(1);
+// Building the spin term sigma^y_0
+let pp_1 = PauliProduct::new().y(0);
+// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
+let bp = BosonProduct::new([1, 2], [1]).unwrap();
+// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
+
+// This will work
+let hmp = HermitianMixedProduct::new(
+    [pp_0.clone(), pp_1.clone()],
+    [bp],
+    [fp.clone()]
+).unwrap();
+system
+    .add_operator_product(hmp, CalculatorComplex::new(1.0, 1.5))
+    .unwrap();
+println!("{}", system);
+
+// This will not work, as the number of subsystems of the system and
+// product do not match.
+let hmp_error = HermitianMixedProduct::new(
+    [pp_0, pp_1.clone()],
+    [],
+    [fp.clone()]
+).unwrap();
+let error = system.add_operator_product(hmp_error, CalculatorComplex::new(1.0, 1.5));
+println!("{:?}", error);
+
+// This will not work, as the number of spins in the first
+// subsystem of the system and product do not match.
+let pp_error = PauliProduct::new().x(10);
+let hmp_error = HermitianMixedProduct::new(
+    [pp_error.clone(), pp_1.clone()],
+    [BosonProduct::new([], []).unwrap()],
+    [fp.clone()],
+)
+.unwrap();
+let error = system.add_operator_product(hmp_error, CalculatorComplex::new(1.0, 1.5));
+println!("{:?}", error);
+
+// This will work because we leave the number of spins dynamic
+let hmp = HermitianMixedProduct::new(
+    [pp_error, pp_1],
+    [BosonProduct::new([], []).unwrap()],
+    [fp]
+).unwrap();
+let mut system = MixedHamiltonianSystem::new([None, None], [None], [None]);
+system
+    .add_operator_product(hmp, CalculatorComplex::new(1.0, 0.0))
+    .unwrap();</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
-operator = mixed_systems.MixedHamiltonian(2, 1, 1)
+system = mixed_systems.MixedHamiltonianSystem([2, 1], [3], [3])
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp_0 = spins.PauliProduct().x(0).z(1)
@@ -326,16 +394,29 @@ fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # This will work
 hmp = mixed_systems.HermitianMixedProduct([pp_0, pp_1], [bp], [fp])
-operator.add_operator_product(hmp, CalculatorComplex.from_pair(1.0, 1.5))
-print(operator)
+system.add_operator_product(hmp, CalculatorComplex.from_pair(1.0, 1.5))
+print(system)
 
 # This will not work, as the number of subsystems of the
-# operator and product do not match.
+# system and product do not match.
 hmp_error = mixed_systems.HermitianMixedProduct([pp_0, pp_1], [], [fp])
 value = CalculatorComplex.from_pair(1.0, 1.5)
-# operator.add_operator_product(hmp_error, value)  # Uncomment me!
+# system.add_operator_product(hmp_error, value)  # Uncomment me!
+
+# This will not work, as the number of spins in the first subsystem
+# of the system and product do not match.
+pp_error = spins.PauliProduct().x(10)
+hmp_error = mixed_systems.HermitianMixedProduct(
+    [pp_error, pp_1], [bosons.BosonProduct([], [])], [fp])
+# system.add_operator_product(hmp_error, value)  # Uncomment me!
+
+# This will work because we leave the number of spins dynamic.
+hmp = mixed_systems.HermitianMixedProduct(
+    [pp_error, pp_1], [bosons.BosonProduct([], [])], [fp])
+system = mixed_systems.MixedHamiltonianSystem([None, None], [None], [None])
+system.add_operator_product(hmp_error, CalculatorComplex.from_pair(1.0, 0.0))
 </code></pre>
-<h2 id="noise-operators"><a class="header" href="#noise-operators">Noise operators</a></h2>
+<h2 id="noise-operators-and-systems"><a class="header" href="#noise-operators-and-systems">Noise operators and systems</a></h2>
 <p>We describe decoherence by representing it with the Lindblad equation.
 The Lindblad equation is a master equation determining the time evolution of the density matrix.
 It is given by
@@ -347,17 +428,18 @@ To describe the pure noise part of the Lindblad equation one needs the rate matr
 We use <code>MixedDecoherenceProducts</code> as the operator basis. To describe mixed noise we use the Lindblad equation with \(\hat{H}=0\).</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>MixedDecoherenceProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>MixedLindbladNoiseOperators</code> is given by a HashMap or Dictionary with the tuple (<code>MixedDecoherenceProduct</code>, <code>MixedDecoherenceProduct</code>) as keys and the entries in the rate matrix as values.</p>
-<h3 id="examples-2"><a class="header" href="#examples-2">Examples</a></h3>
+<p>Similarly to MixedOperators, MixedLindbladNoiseOperators have a system equivalent: <code>MixedLindbladNoiseOperators</code>, with a number of involved spins, bosonic modes and fermionic modes (for each subsystem) defined by the user. For more information on these, see the <a href="../container_types/noise_operators_and_systems">noise container</a> chapter.</p>
+<h3 id="examples-3"><a class="header" href="#examples-3">Examples</a></h3>
 <p>Here, we add the terms \(L_0 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\) and \(L_1 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\) with coefficient 1.0:
 \( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{MixedDecoherenceProduct, MixedLindbladNoiseOperator};
+use struqture::mixed_systems::{MixedDecoherenceProduct, MixedLindbladNoiseSystem};
 use struqture::prelude::*;
 use struqture::spins::DecoherenceProduct;
 
-let mut operator = MixedLindbladNoiseOperator::new(1, 1, 1);
+let mut system = MixedLindbladNoiseSystem::new([Some(3)], [Some(3)], [Some(3)]);
 
 // Building the spin term sigma^x_0 sigma^z_1
 let pp = DecoherenceProduct::new().x(0).z(1);
@@ -375,24 +457,24 @@ let mdp = MixedDecoherenceProduct::new(
 ).unwrap();
 
 // Adding in the mixed decoherence product
-operator
+system
     .add_operator_product(
         (mdp.clone(), mdp.clone()),
         CalculatorComplex::new(1.0, 1.5),
     )
     .unwrap();
 
-// Checking the operator
+// Checking the system
 assert_eq!(
-    operator.get(&amp;(mdp.clone(), mdp)),
+    system.get(&amp;(mdp.clone(), mdp)),
     &amp;CalculatorComplex::new(1.0, 1.5)
 );
-println!("{}", operator);</code></pre>
+println!("{}", system);</code></pre>
 <p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
-operator = mixed_systems.MixedLindbladNoiseOperator(1, 1, 1)
+system = mixed_systems.MixedLindbladNoiseSystem([3], [3], [3])
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp_0 = spins.DecoherenceProduct().x(0).z(1)
@@ -406,14 +488,14 @@ fp = fermions.FermionProduct([0, 1], [0, 1])
 mdp = mixed_systems.MixedDecoherenceProduct([pp], [bp], [fp])
 
 # Adding in the mixed decoherence product
-operator.add_operator_product(
+system.add_operator_product(
     (mdp, mdp), CalculatorComplex.from_pair(1.0, 1.5))
-print(operator)
+print(system)
 
 # In python we can also use the string representation
-operator = mixed_systems.MixedLindbladNoiseOperator(1, 1, 1)
-operator.add_operator_product((str(mdp), str(mdp)), 1.0+1.5*1j)
-print(operator)
+system = mixed_systems.MixedLindbladNoiseSystem([3], [3], [3])
+system.add_operator_product((str(mdp), str(mdp)), 1.0+1.5*1j)
+print(system)
 </code></pre>
 <h2 id="open-systems"><a class="header" href="#open-systems">Open systems</a></h2>
 <p>Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
@@ -421,8 +503,8 @@ The Lindblad master equation is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]</p>
-<p>In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator). They have different ways to set terms in Rust and Python:</p>
-<h3 id="examples-3"><a class="header" href="#examples-3">Examples</a></h3>
+<p>In struqture they are composed of a Hamiltonian (MixedHamiltonianSystem) and noise (MixedLindbladNoiseSystem). They have different ways to set terms in Rust and Python:</p>
+<h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
 <pre><code class="language-rust">use qoqo_calculator::CalculatorComplex;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
@@ -458,8 +540,8 @@ let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
 let mdp = MixedDecoherenceProduct::new([pp], [bp], [fp]).unwrap();
 
 // Adding in the system term
-let operator = open_system.system_mut();
-operator
+let system = open_system.system_mut();
+system
     .add_operator_product(hmp, CalculatorComplex::new(2.0, 0.0))
     .unwrap();
 
