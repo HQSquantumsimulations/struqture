@@ -4,7 +4,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.10.1
 
-* Fixed a build issue.
+* Fixed a build issue in 1.10.0.
 
 ## 1.10.0
 
