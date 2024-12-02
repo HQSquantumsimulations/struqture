@@ -2,6 +2,10 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## Unreleased
+
+* Added links to examples in container types of the user documentation
+
 ## 2.0.0-alpha.4
 
 * Updated to pyo3 0.22
