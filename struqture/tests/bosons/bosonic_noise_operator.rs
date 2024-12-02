@@ -21,7 +21,7 @@ use std::iter::{FromIterator, IntoIterator};
 #[cfg(feature = "struqture_1_export")]
 use std::str::FromStr;
 use struqture::bosons::{BosonLindbladNoiseOperator, BosonProduct};
-use struqture::{ModeIndex, OperateOnDensityMatrix, OperateOnModes};
+use struqture::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, STRUQTURE_VERSION};
 
 // Test the new function of the BosonLindbladNoiseOperator
 #[test]
@@ -379,7 +379,7 @@ fn serde_readable() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -461,7 +461,7 @@ fn serde_compact() {
             Token::U64(0),
             Token::TupleEnd,
             Token::Str("version"),
-            Token::Str("2.0.0-alpha.3"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
