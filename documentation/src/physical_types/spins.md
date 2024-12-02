@@ -168,27 +168,6 @@ hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
 println!("{}", hamiltonian);
 ```
 
-## Operators and Hamiltonians
-
-### Examples
-
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::spins::{PauliProduct, QubitOperator};
-
-let mut operator = QubitOperator::new();
-
-let pp = PauliProduct::new().x(0).z(2);
-operator
-    .add_operator_product(pp, CalculatorComplex::new(1.0, 1.5))
-    .unwrap();
-operator
-    .add_operator_product(PauliProduct::new().z(3), CalculatorComplex::new(1.0, 1.5))
-    .unwrap();
-println!("{}", operator);
-```
-
 The equivalent code in python:
 
 ```python

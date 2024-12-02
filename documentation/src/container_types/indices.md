@@ -22,3 +22,8 @@ The operator products in struqture are
 * `MixedProduct`
 * `HermitianMixedProduct`
 * `MixedDecoherenceProduct`
+
+For examples showing how to use `PauliProduct`s and `DecoherenceProduct`s, please see the [the spins section](../physical_types/spins.md#examples).
+For examples showing how to use `FermionProduct`s and `HermitianFermionProduct`s, please see the [the fermions section](../physical_types/fermions.md#examples).
+For examples showing how to use `BosonProduct`s and `HermitianBosonProdcut`s, please see the [the bosons section](../physical_types/bosons.md#examples).
+For examples showing how to use `MixedProduct`s, `HermitianMixedProduct`s and `MixedDecoherenceProduct`s, please see the [the mixed system section](../physical_types/mixed_systems.md#examples).
