@@ -46,3 +46,8 @@ The Hamiltonians in struqture are
 * `FermionHamiltonian`
 * `BosonHamiltonian`
 * `MixedHamiltonian`
+
+For examples showing how to use `QubitOperator`s, `DecoherenceOperator`s, `PlusMinusOperator`s and `QubitHamiltonian`s, please see the [the spins section](../physical_types/spins.md#examples-1).
+For examples showing how to use `FermionOperator`s and `FermionHamiltonian`s, please see the [the fermions section](../physical_types/fermions.md#examples-1).
+For examples showing how to use `BosonOperator`s and `BosonHamiltonian`s, please see the [the bosons section](../physical_types/bosons.md#examples-1).
+For examples showing how to use `MixedOperator`s and `MixedHamiltonian`s, please see the [the mixed system section](../physical_types/mixed_systems.md#examples-1).

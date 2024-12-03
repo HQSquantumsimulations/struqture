@@ -20,3 +20,8 @@ The noise operators in struqture are
 * `BosonLindbladNoiseOperator`
 * `FermionLindbladNoiseOperator`
 * `MixedLindbladNoiseOperator`
+
+For examples showing how to use `QubitLindbladNoiseOperator`s, please see the [the spins section](../physical_types/spins.md#examples-2).
+For examples showing how to use `FermionLindbladNoiseOperator`s, please see the [the fermions section](../physical_types/fermions.md#examples-2).
+For examples showing how to use `BosonLindbladNoiseOperator`s, please see the [the bosons section](../physical_types/bosons.md#examples-2).
+For examples showing how to use `MixedLindbladNoiseOperator`s, please see the [the mixed system section](../physical_types/mixed_systems.md#examples-2).
