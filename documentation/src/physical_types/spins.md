@@ -156,7 +156,7 @@ println!("{}", operator);
 
 // Or when overwriting the previous value
 let mut operator = QubitOperator::new();
-operator.set(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
+operator.set(pp.clone(), 1.0.into()).unwrap();
 println!("{}", operator);
 
 // A complex entry is not valid for a QubitHamiltonian
@@ -174,13 +174,27 @@ The equivalent code in python:
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import spins
 
-operator = spins.QubitOperator()
-
-# This will work
+# Building the term sigma^x_0 * sigma^z_2: sigma_x acting on qubit 0
+# and sigma_z acting on qubit 2
 pp = spins.PauliProduct().x(0).z(2)
+
+# O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
+operator = spins.QubitOperator()
 operator.add_operator_product(pp, CalculatorComplex.from_pair(1.0, 1.5))
-operator.add_operator_product(spins.PauliProduct().z(3), 1.0)
+assert operator.get(pp) == complex(1.0, 1.5)
 print(operator)
+
+# Or when overwriting the previous value
+operator.set(pp, 1.0)
+print(operator)
+
+# A complex extry is not valid for a QubitHamiltonian
+hamiltonian = spins.QubitHamiltonian()
+# This would fail
+hamiltonian.add_operator_product(pp, CalculatorComplex.from_pair(1.0, 1.5))
+# This is possible
+hamiltonian.add_operator_product(pp, 1.0)
+print(hamiltonian)
 ```
 
 ## Noise operators
