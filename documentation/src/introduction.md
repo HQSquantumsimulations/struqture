@@ -12,6 +12,9 @@ To best support this use case, struqture has a number of design goals:
 * Preventing construction of unphysical objects by using well defined types for all objects in struqture
 * Support of symbolic values in operators, Hamiltonians and open systems
 
+ <img src="./docu graphic.png" alt="struqture" width="90%">
+
+
 Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
 Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
 The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported from [qoqo_calculator](https://github.com/HQSquantumsimulations/qoqo_calculator).
