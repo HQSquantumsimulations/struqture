@@ -168,14 +168,14 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonianSystem {
     }
 }
 
-impl<'a> OperateOnState<'a> for FermionHamiltonianSystem {
+impl OperateOnState<'_> for FermionHamiltonianSystem {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl<'a> OperateOnModes<'a> for FermionHamiltonianSystem {
+impl OperateOnModes<'_> for FermionHamiltonianSystem {
     /// Gets the number_modes input of the FermionHamiltonianSystem, or the current_number_modes if number_modes is None.
     ///
     /// # Returns
@@ -198,7 +198,7 @@ impl<'a> OperateOnModes<'a> for FermionHamiltonianSystem {
     }
 }
 
-impl<'a> OperateOnFermions<'a> for FermionHamiltonianSystem {}
+impl OperateOnFermions<'_> for FermionHamiltonianSystem {}
 
 /// Functions for the FermionHamiltonianSystem
 ///

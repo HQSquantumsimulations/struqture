@@ -167,14 +167,14 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinHamiltonianSystem {
     }
 }
 
-impl<'a> OperateOnState<'a> for SpinHamiltonianSystem {
+impl OperateOnState<'_> for SpinHamiltonianSystem {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinHamiltonianSystem {
+impl OperateOnSpins<'_> for SpinHamiltonianSystem {
     /// Gets the number_spins input of the SpinHamiltonianSystem, or the current_number_spins if number_spins is None.
     ///
     /// # Returns
@@ -193,9 +193,9 @@ impl<'a> OperateOnSpins<'a> for SpinHamiltonianSystem {
     }
 }
 
-impl<'a> HermitianOperateOnSpins<'a> for SpinHamiltonianSystem {}
+impl HermitianOperateOnSpins<'_> for SpinHamiltonianSystem {}
 
-impl<'a> ToSparseMatrixOperator<'a> for SpinHamiltonianSystem {}
+impl ToSparseMatrixOperator<'_> for SpinHamiltonianSystem {}
 impl<'a> ToSparseMatrixSuperOperator<'a> for SpinHamiltonianSystem {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(

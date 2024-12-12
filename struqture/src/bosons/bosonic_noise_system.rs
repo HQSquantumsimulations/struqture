@@ -189,7 +189,7 @@ impl<'a> OperateOnModes<'a> for BosonLindbladNoiseSystem {
     }
 }
 
-impl<'a> OperateOnBosons<'a> for BosonLindbladNoiseSystem {}
+impl OperateOnBosons<'_> for BosonLindbladNoiseSystem {}
 
 /// Functions for the BosonLindbladNoiseSystem.
 ///

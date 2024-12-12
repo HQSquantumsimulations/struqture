@@ -646,10 +646,10 @@ impl PlusMinusProduct {
     ///
     /// * `Iter<usize, SinglePlusMinusOperator>` - The iterator form of Self.
     pub fn iter(&self) -> std::slice::Iter<(usize, SinglePlusMinusOperator)> {
-        return match &self.items {
+        match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
-        };
+        }
     }
 
     /// Returns maximum index in Self.

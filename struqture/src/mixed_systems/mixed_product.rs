@@ -317,7 +317,7 @@ impl FromStr for MixedProduct {
     }
 }
 
-impl<'a> GetValueMixed<'a, MixedProduct> for MixedProduct {
+impl GetValueMixed<'_, MixedProduct> for MixedProduct {
     /// Gets the key corresponding to the input index (here, itself).
     ///
     /// # Arguments
@@ -349,7 +349,7 @@ impl<'a> GetValueMixed<'a, MixedProduct> for MixedProduct {
     }
 }
 
-impl<'a> GetValueMixed<'a, HermitianMixedProduct> for MixedProduct {
+impl GetValueMixed<'_, HermitianMixedProduct> for MixedProduct {
     /// Gets the key corresponding to the input index.
     ///
     /// # Arguments

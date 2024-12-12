@@ -219,7 +219,7 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinLindbladNoiseOperator {
+impl OperateOnSpins<'_> for SpinLindbladNoiseOperator {
     /// Gets the maximum index of the SpinLindbladNoiseOperator.
     ///
     /// # Returns

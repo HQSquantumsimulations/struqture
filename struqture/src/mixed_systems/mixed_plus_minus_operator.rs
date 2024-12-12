@@ -228,14 +228,14 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedPlusMinusOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for MixedPlusMinusOperator {
+impl OperateOnState<'_> for MixedPlusMinusOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl<'a> OperateOnMixedSystems<'a> for MixedPlusMinusOperator {
+impl OperateOnMixedSystems<'_> for MixedPlusMinusOperator {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
         self.current_number_spins()

@@ -353,7 +353,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseSystem {
     }
 }
 
-impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseSystem {
+impl OperateOnMixedSystems<'_> for MixedLindbladNoiseSystem {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
         self.number_spins

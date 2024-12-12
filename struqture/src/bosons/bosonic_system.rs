@@ -166,7 +166,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonSystem {
     }
 }
 
-impl<'a> OperateOnState<'a> for BosonSystem {}
+impl OperateOnState<'_> for BosonSystem {}
 
 impl<'a> OperateOnModes<'a> for BosonSystem {
     /// Gets the number_modes input of the BosonSystem, or the current_number_modes if number_modes is None.
@@ -187,7 +187,7 @@ impl<'a> OperateOnModes<'a> for BosonSystem {
     }
 }
 
-impl<'a> OperateOnBosons<'a> for BosonSystem {}
+impl OperateOnBosons<'_> for BosonSystem {}
 
 /// Functions for the BosonSystem
 ///

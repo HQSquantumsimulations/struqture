@@ -277,14 +277,14 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedSystem {
     }
 }
 
-impl<'a> OperateOnState<'a> for MixedSystem {
+impl OperateOnState<'_> for MixedSystem {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl<'a> OperateOnMixedSystems<'a> for MixedSystem {
+impl OperateOnMixedSystems<'_> for MixedSystem {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
         self.number_spins
@@ -355,7 +355,7 @@ impl<'a> OperateOnMixedSystems<'a> for MixedSystem {
     }
 }
 
-impl<'a> HermitianOperateOnMixedSystems<'a> for MixedSystem {}
+impl HermitianOperateOnMixedSystems<'_> for MixedSystem {}
 
 /// Functions for the MixedSystem
 ///
