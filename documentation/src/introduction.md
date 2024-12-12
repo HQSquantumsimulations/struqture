@@ -12,7 +12,7 @@ To best support this use case, struqture has a number of design goals:
 * Preventing construction of unphysical objects by using well defined types for all objects in struqture
 * Support of symbolic values in operators, Hamiltonians and open systems
 
- <img src="./docu graphic.png" alt="struqture" width="90%">
+ <img src="../../docu graphic.png" alt="struqture" width="90%">
 
 
 Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
