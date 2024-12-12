@@ -217,8 +217,8 @@ impl OperateOnState<'_> for BosonHamiltonian {
     }
 }
 
-impl<'a> OperateOnModes<'a> for BosonHamiltonian {
-    /// Gets the maximum index of the BosonHamiltonian.
+impl OperateOnModes<'_> for BosonHamiltonian {
+    /// Returns maximum index in BosonHamiltonian internal_map.
     ///
     /// # Returns
     ///

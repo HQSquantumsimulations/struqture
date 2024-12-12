@@ -54,9 +54,9 @@ impl crate::SerializationSupport for BosonLindbladOpenSystem {
     }
 }
 
-impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
-    type System = BosonHamiltonian;
-    type Noise = BosonLindbladNoiseOperator;
+impl OpenSystem<'_> for BosonLindbladOpenSystem {
+    type System = BosonHamiltonianSystem;
+    type Noise = BosonLindbladNoiseSystem;
 
     // From trait
     fn noise(&self) -> &Self::Noise {
@@ -106,8 +106,8 @@ impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnModes<'a> for BosonLindbladOpenSystem {
-    /// Gets the maximum current_number_modes of the BosonHamiltonian/BosonLindbladNoiseOperator.
+impl OperateOnModes<'_> for BosonLindbladOpenSystem {
+    /// Gets the maximum number_modes of the BosonHamiltonianSystem/BosonLindbladNoiseSystem.
     ///
     /// # Returns
     ///

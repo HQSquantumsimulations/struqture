@@ -194,8 +194,8 @@ impl OperateOnState<'_> for DecoherenceOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for DecoherenceOperator {
-    /// Gets the maximum index of the DecoherenceOperator.
+impl OperateOnSpins<'_> for DecoherenceOperator {
+    /// Returns maximum index in DecoherenceOperator internal_map.
     ///
     /// # Returns
     ///

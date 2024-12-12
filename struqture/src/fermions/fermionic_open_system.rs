@@ -50,6 +50,7 @@ pub struct FermionLindbladOpenSystem {
     noise: FermionLindbladNoiseOperator,
 }
 
+<<<<<<< HEAD
 impl crate::SerializationSupport for FermionLindbladOpenSystem {
     fn struqture_type() -> crate::StruqtureType {
         crate::StruqtureType::FermionLindbladOpenSystem
@@ -58,6 +59,13 @@ impl crate::SerializationSupport for FermionLindbladOpenSystem {
 impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     type System = FermionHamiltonian;
     type Noise = FermionLindbladNoiseOperator;
+=======
+impl crate::MinSupportedVersion for FermionLindbladOpenSystem {}
+
+impl OpenSystem<'_> for FermionLindbladOpenSystem {
+    type System = FermionHamiltonianSystem;
+    type Noise = FermionLindbladNoiseSystem;
+>>>>>>> ecc39bb (Fixed new clippy warnings)
 
     // From trait
     fn noise(&self) -> &Self::Noise {
@@ -107,8 +115,8 @@ impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnModes<'a> for FermionLindbladOpenSystem {
-    /// Gets the maximum current_number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
+impl OperateOnModes<'_> for FermionLindbladOpenSystem {
+    /// Gets the maximum number_modes of the FermionHamiltonianSystem/FermionLindbladNoiseSystem.
     ///
     /// # Returns
     ///

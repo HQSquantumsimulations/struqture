@@ -199,8 +199,8 @@ impl<'a> OperateOnDensityMatrix<'a> for QubitLindbladNoiseOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for QubitLindbladNoiseOperator {
-    /// Gets the maximum index of the QubitLindbladNoiseOperator.
+impl OperateOnSpins<'_> for SpinLindbladNoiseOperator {
+    /// Gets the maximum index of the SpinLindbladNoiseOperator.
     ///
     /// # Returns
     ///
