@@ -151,7 +151,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
         }
         let mut system = system;
         let mut noise = noise;
-        system.number_spins = variable_number_spins.clone();
+        system.number_spins.clone_from(&variable_number_spins);
         noise.number_spins = variable_number_spins;
 
         // Checking boson compatibility
@@ -187,7 +187,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
             }
         }
 
-        system.number_bosons = variable_number_bosons.clone();
+        system.number_bosons.clone_from(&variable_number_bosons);
         noise.number_bosons = variable_number_bosons;
 
         // Checking Fermion compatibility
@@ -223,7 +223,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
             }
         }
 
-        system.number_fermions = variable_number_fermions.clone();
+        system.number_fermions.clone_from(&variable_number_fermions);
         noise.number_fermions = variable_number_fermions;
 
         Ok(Self { system, noise })

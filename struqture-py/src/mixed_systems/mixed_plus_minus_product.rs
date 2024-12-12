@@ -47,6 +47,17 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 /// in presence of a `system-spin` part (PlusMinusProduct) and a `bath-spin` part (PlusMinusProduct),
 /// as shown in the example below.
 ///
+/// Args:
+///     spins (List[PlusMinusProduct]): Products of pauli operators acting on qubits.
+///     bosons (List[BosonProduct]): Products of bosonic creation and annihilation operators.
+///     fermions (List[FermionProduct]): Products of fermionic creation and annihilation operators.
+///
+/// Returns:
+///     MixedPlusMinusProduct: a new MixedPlusMinusProduct with the input of spins, bosons and fermions.
+///
+/// Raises:
+///     ValueError: MixedPlusMinusProduct can not be constructed from the input.
+///
 /// Examples
 /// --------
 ///
@@ -96,17 +107,20 @@ impl MixedPlusMinusProductWrapper {
         fermions: Vec<Py<PyAny>>,
     ) -> PyResult<Self> {
         let mut spinsv: Vec<PlusMinusProduct> = Vec::new();
-        for s in spins {
-            spinsv.push(PlusMinusProductWrapper::from_pyany(s)?);
-        }
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
-        for b in bosons {
-            bosonsv.push(BosonProductWrapper::from_pyany(b)?);
-        }
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        for f in fermions {
-            fermionsv.push(FermionProductWrapper::from_pyany(f)?);
-        }
+        Python::with_gil(|py| -> PyResult<()> {
+            for s in spins {
+                spinsv.push(PlusMinusProductWrapper::from_pyany(s.bind(py))?);
+            }
+            for b in bosons {
+                bosonsv.push(BosonProductWrapper::from_pyany(b.bind(py))?);
+            }
+            for f in fermions {
+                fermionsv.push(FermionProductWrapper::from_pyany(f.bind(py))?);
+            }
+            Ok(())
+        })?;
         Ok(Self {
             internal: MixedPlusMinusProduct::new(spinsv, bosonsv, fermionsv),
         })
@@ -118,13 +132,13 @@ impl MixedPlusMinusProductWrapper {
     ///     value (MixedProduct): The MixedProduct object to convert.
     ///
     /// Returns:
-    ///     list[tuple[(MixedPlusMinusProduct, CalculatorComplex)]]: The converted input.
+    ///     List[Tuple[(MixedPlusMinusProduct, CalculatorComplex)]]: The converted input.
     ///
     /// Raises:
     ///     ValueError: Input is not a MixedProduct.
     #[staticmethod]
     pub fn from_mixed_product(
-        value: Py<PyAny>,
+        value: &Bound<PyAny>,
     ) -> PyResult<Vec<(MixedPlusMinusProductWrapper, CalculatorComplexWrapper)>> {
         match MixedProductWrapper::from_pyany(value) {
             Ok(x) => {
@@ -153,7 +167,7 @@ impl MixedPlusMinusProductWrapper {
     /// Convert the `self` instance to the corresponding list of (MixedProduct, CalculatorComplex) instances.
     ///
     /// Returns:
-    ///     list[tuple[(MixedProduct, CalculatorComplex)]]: The converted MixedPlusMinusProduct.
+    ///     List[Tuple[(MixedProduct, CalculatorComplex)]]: The converted MixedPlusMinusProduct.
     ///
     /// Raises:
     ///     ValueError: The conversion was not successful.

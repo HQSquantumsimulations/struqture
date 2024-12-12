@@ -44,7 +44,7 @@ pub enum StruqturePyError {
 ///     spins
 ///
 #[pymodule]
-fn struqture_py(_py: Python, module: &PyModule) -> PyResult<()> {
+fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     let wrapper1 = wrap_pymodule!(spins::spins);
     module.add_wrapped(wrapper1)?;
@@ -58,8 +58,9 @@ fn struqture_py(_py: Python, module: &PyModule) -> PyResult<()> {
     let wrapper3 = wrap_pymodule!(bosons::bosons);
     module.add_wrapped(wrapper3)?;
 
-    let system = PyModule::import(_py, "sys")?;
-    let system_modules: &PyDict = system.getattr("modules")?.downcast()?;
+    let system = PyModule::import_bound(_py, "sys")?;
+    let binding = system.as_ref().getattr("modules")?;
+    let system_modules: &Bound<PyDict> = binding.downcast()?;
     system_modules.set_item("struqture_py.spins", module.getattr("spins")?)?;
     system_modules.set_item("struqture_py.fermions", module.getattr("fermions")?)?;
     system_modules.set_item(
@@ -84,9 +85,9 @@ pub type PyCooMatrix = (
 // it expects a CooSparseMatrix so any error handling should be done before using it.
 fn to_py_coo(coo: CooSparseMatrix) -> PyResult<PyCooMatrix> {
     Python::with_gil(|py| -> PyResult<PyCooMatrix> {
-        let values: Py<PyArray1<Complex64>> = coo.0.into_pyarray(py).to_owned();
-        let rows: Py<PyArray1<usize>> = coo.1 .0.into_pyarray(py).to_owned();
-        let columns: Py<PyArray1<usize>> = coo.1 .1.into_pyarray(py).to_owned();
+        let values: Py<PyArray1<Complex64>> = coo.0.into_pyarray_bound(py).into();
+        let rows: Py<PyArray1<usize>> = coo.1 .0.into_pyarray_bound(py).into();
+        let columns: Py<PyArray1<usize>> = coo.1 .1.into_pyarray_bound(py).into();
         Ok((values, (rows, columns)))
     })
 }

@@ -31,6 +31,12 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a FermionLindbladOpenSystem is characterized by a FermionLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of fermions.
 ///
+/// Args:
+///     number_fermions (Optional[int]): The number of fermions in the FermionLindbladOpenSystem.
+///
+/// Returns:
+///     self: The new FermionLindbladOpenSystem with the input number of fermions.
+///
 /// Examples
 /// --------
 ///
@@ -60,7 +66,7 @@ impl FermionLindbladOpenSystemWrapper {
     /// Create a new FermionLindbladOpenSystem.
     ///
     /// Args:
-    ///     number_fermions (Optional(int)): The number of fermions in the FermionLindbladOpenSystem.
+    ///     number_fermions (Optional[int]): The number of fermions in the FermionLindbladOpenSystem.
     ///
     /// Returns:
     ///     self: The new FermionLindbladOpenSystem with the input number of fermions.

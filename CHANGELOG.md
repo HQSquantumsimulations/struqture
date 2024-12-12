@@ -2,6 +2,38 @@
 
 This changelog track changes to the struqture project starting at version v1.0.0
 
+## 1.10.1
+
+* Fixed a build issue in 1.10.0.
+
+## 1.10.0
+
+* Updated to pyo3 0.22 and python 3.13.
+
+## 1.9.2
+
+* Fixed a bug when creating a Product from a bad JSON
+
+## 1.9.0 - 1.9.1
+
+* Added methods to convert from struqture 2.0.0-alpha.3
+
+## 1.8.0
+
+* Added IDE hint support.
+
+## 1.7.1
+
+* Fixed versioning bug
+
+## 1.7.0
+
+* Updated to pyo3 0.21
+
+## 1.6.2
+
+* Updated VersionMissmatch error message
+
 ## 1.6.1
 
 * Updated Cargo.lock (particularly mio 0.8.10->0.8.11)

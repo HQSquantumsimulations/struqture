@@ -28,6 +28,12 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///
 /// In a FermionLindbladNoiseSystem is characterized by a FermionLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of fermions.
 ///
+/// Args:
+///     number_fermions (Optional[int]): The number of fermions in the FermionLindbladNoiseSystem.
+///
+/// Returns:
+///     self: The new FermionLindbladNoiseSystem with the input number of fermions.
+///
 /// Examples
 /// --------
 ///
@@ -57,7 +63,7 @@ impl FermionLindbladNoiseSystemWrapper {
     /// Create a new FermionLindbladNoiseSystem.
     ///
     /// Args:
-    ///     number_fermions (Optional(int)): The number of fermions in the FermionLindbladNoiseSystem.
+    ///     number_fermions (Optional[int]): The number of fermions in the FermionLindbladNoiseSystem.
     ///
     /// Returns:
     ///     self: The new FermionLindbladNoiseSystem with the input number of fermions.

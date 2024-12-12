@@ -59,7 +59,7 @@ pub fn noiselesswrapper(
                 /// Return a list of the unsorted keys in self.
                 ///
                 /// Returns:
-                ///     list[OperatorProduct]: The sequence of keys of the self.
+                ///     List[OperatorProduct]: The sequence of keys of the self.
                 pub fn keys(&self) -> Vec<#index_type> {
                     let mut system_keys: Vec<#index_type> = Vec::new();
                     for key in self.internal.keys() {
@@ -103,7 +103,7 @@ pub fn noiselesswrapper(
                 /// Truncate self by returning a copy without entries under a threshold.
                 ///
                 /// Args:
-                ///     threshold: The threshold for inclusion.
+                ///     threshold (float): The threshold for inclusion.
                 ///
                 /// Returns:
                 ///     self: The truncated version of self.
@@ -121,7 +121,7 @@ pub fn noiselesswrapper(
                 ///
                 /// Raises:
                 ///     ValueError: Product could not be constructed from key.
-                pub fn get(&self, key: Py<PyAny>) -> PyResult<#value_type> {
+                pub fn get(&self, key: &Bound<PyAny>) -> PyResult<#value_type> {
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Product could not be constructed: {:?}",
@@ -135,12 +135,15 @@ pub fn noiselesswrapper(
 
                 /// Remove the value of the input key.
                 ///
-                /// Returns:
+                /// Args:
+                ///     key (Product type): The key of the value to remove.
+                ///
+                ///  Returns:
                 ///     Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
                 ///
                 /// Raises:
                 ///     ValueError: Product could not be constructed.
-                pub fn remove(&mut self, key: Py<PyAny>) -> PyResult<Option<#value_type>> {
+                pub fn remove(&mut self, key: &Bound<PyAny>) -> PyResult<Option<#value_type>> {
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Product could not be constructed: {:?}",
@@ -155,6 +158,10 @@ pub fn noiselesswrapper(
 
                 /// Overwrite an existing entry or set a new entry in self.
                 ///
+                /// Args:
+                ///     key (Product type): The key to set.
+                ///     value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
+                ///
                 /// Returns:
                 ///     Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
                 ///
@@ -162,8 +169,8 @@ pub fn noiselesswrapper(
                 ///     ValueError: Product could not be constructed.
                 pub fn set(
                     &mut self,
-                    key: Py<PyAny>,
-                    value: Py<PyAny>,
+                    key: &Bound<PyAny>,
+                    value: &Bound<PyAny>,
                 ) -> PyResult<Option<#value_type>> {
                     let value = #value_type::from_pyany(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex or CalculatorFloat"))?;
@@ -186,11 +193,14 @@ pub fn noiselesswrapper(
 
                 /// Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
                 ///
+                /// Args:
+                ///     key (Product type): The key object
+                ///
                 /// Raises:
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
                 ///     ValueError: Product could not be constructed.
                 ///     ValueError: Error in add_operator_product function of self.
-                pub fn add_operator_product(&mut self, key: Py<PyAny>, value: Py<PyAny>) -> PyResult<()> {
+                pub fn add_operator_product(&mut self, key: &Bound<PyAny>, value: &Bound<PyAny>) -> PyResult<()> {
                     let value = #value_type::from_pyany(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex or CalculatorFloat"))?;
                     let converted_key = #index_type::from_pyany(key).map_err(|err| {
@@ -212,7 +222,7 @@ pub fn noiselesswrapper(
                 /// Return unsorted values in self.
                 ///
                 /// Returns:
-                ///     list[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
+                ///     List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
                 pub fn values(&self) -> Vec<#value_type> {
                     let mut system_values: Vec<#value_type> = Vec::new();
                     for val in self.internal.values() {
@@ -325,7 +335,7 @@ pub fn noiselesswrapper(
                 /// Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
                 ///
                 /// Args:
-                ///     number_spins: The number of spins in self.
+                ///     number_spins (Optional[int]): The number of spins in self.
                 ///
                 /// Returns:
                 ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
@@ -413,7 +423,7 @@ pub fn noiselesswrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The matrix representation of the noise part of self.
+                ///     List[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], complex]]: The matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -470,7 +480,7 @@ pub fn noiselesswrapper(
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
-                ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
+                ///     List[int]: The number of bosonic modes in each bosonic subsystem of self.
                 pub fn number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.number_bosonic_modes()
                 }
@@ -478,7 +488,7 @@ pub fn noiselesswrapper(
                 /// Return the number of bosonic modes each bosonic subsystem of self acts on.
                 ///
                 /// Returns:
-                ///     list[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
+                ///     List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -486,7 +496,7 @@ pub fn noiselesswrapper(
                 /// Return the number of fermionic modes in each fermionic subsystem of self.
                 ///
                 /// Returns:
-                ///     list[int]: The number of fermionic modes in each fermionic subsystem of self.
+                ///     List[int]: The number of fermionic modes in each fermionic subsystem of self.
                 pub fn number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.number_fermionic_modes()
                 }
@@ -494,7 +504,7 @@ pub fn noiselesswrapper(
                 /// Return the number of fermionic modes each fermionic subsystem of self acts on.
                 ///
                 /// Returns:
-                ///     list[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
+                ///     List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
@@ -573,10 +583,9 @@ pub fn noiselesswrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object.
-            pub fn from_pyany(input: Py<PyAny>
+            pub fn from_pyany(input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref(py);
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -628,14 +637,14 @@ pub fn noiselesswrapper(
             ///
             /// Returns:
             ///     self: A deep copy of self.
-            pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> #ident {
+            pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> #ident {
                 self.clone()
             }
 
             /// Convert the bincode representation of self to an instance using the [bincode] crate.
             ///
             /// Args:
-            ///     input (ByteArray): The serialized object (in [bincode] form).
+            ///     input (bytearray): The serialized object (in [bincode] form).
             ///
             /// Returns:
             ///    The deserialized object.
@@ -644,8 +653,9 @@ pub fn noiselesswrapper(
             ///     TypeError: Input cannot be converted to byte array.
             ///     ValueError: Input cannot be deserialized.
             #[staticmethod]
-            pub fn from_bincode(input: &PyAny) -> PyResult<#ident> {
+            pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
+                    .as_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
@@ -662,7 +672,7 @@ pub fn noiselesswrapper(
             /// Return the bincode representation of self using the [bincode] crate.
             ///
             /// Returns:
-            ///     ByteArray: The serialized object (in [bincode] form).
+            ///     bytearray: The serialized object (in [bincode] form).
             ///
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
@@ -671,7 +681,7 @@ pub fn noiselesswrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
@@ -739,7 +749,7 @@ pub fn noiselesswrapper(
             ///
             /// Raises:
             ///     NotImplementedError: Other comparison not implemented.
-            pub fn __richcmp__(&self, other: Py<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
+            pub fn __richcmp__(&self, other: &Bound<PyAny>, op: pyo3::class::basic::CompareOp) -> PyResult<bool> {
                 let other = Self::from_pyany(other);
                 match op {
                     pyo3::class::basic::CompareOp::Eq => match other {

@@ -16,14 +16,18 @@ jobs:
       windows: true
       # Run tests also on macos runners
       macos: true
+      # Run tests also on python 3.13
+      python_3_13: true
       rust_package_name: "struqture"
 
   build_tests:
     uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_tests_rust_pyo3.yml@main
-    with: 
+    with:
       # Run tests also on windows runners
       windows: true
-      # Run tests also on macos runners
+      # Don't run tests on macos runners
       macos: false
+      # Run tests also on python 3.13
+      python_3_13: true
       py_interface_folder: "struqture-py"
       has_python_tests: true

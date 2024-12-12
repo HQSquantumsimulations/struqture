@@ -35,6 +35,9 @@ use super::SpinHamiltonianSystemWrapper;
 /// PlusMinusOperators are characterized by a SpinOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
+/// Returns:
+///     self: The new PlusMinusOperator with the input number of spins.
+///
 /// Examples
 /// --------
 ///
@@ -81,7 +84,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor PlusMinusOperator.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(Self {
@@ -176,7 +179,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create SpinSystem from input.
     #[staticmethod]
-    pub fn from_spin_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_spin_system(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -195,7 +198,9 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create SpinHamiltonianSystem from input.
     #[staticmethod]
-    pub fn from_spin_hamiltonian_system(value: Py<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_spin_hamiltonian_system(
+        value: &Bound<PyAny>,
+    ) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinHamiltonianSystemWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -213,6 +218,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create SpinSystem from PlusMinusOperator.
+    #[pyo3(signature = (number_spins=None))]
     pub fn to_spin_system(&self, number_spins: Option<usize>) -> PyResult<SpinSystemWrapper> {
         let result: SpinOperator = SpinOperator::from(self.internal.clone());
         Ok(SpinSystemWrapper {
@@ -231,6 +237,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create SpinHamiltonianSystem from PlusMinusOperator.
+    #[pyo3(signature = (number_spins=None))]
     pub fn to_spin_hamiltonian_system(
         &self,
         number_spins: Option<usize>,

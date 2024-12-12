@@ -17,9 +17,15 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
+#[cfg(feature = "unstable_struqture_2_import")]
+use struqture::mixed_systems::HermitianMixedProduct;
 use struqture::mixed_systems::{
     GetValueMixed, MixedHamiltonianSystem, MixedProduct, MixedSystem, OperateOnMixedSystems,
 };
+#[cfg(feature = "unstable_struqture_2_import")]
+use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState, SymmetricIndex};
@@ -29,6 +35,14 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///
 /// MixedHamiltonianSystems are characterized by a MixedOperator to represent the hamiltonian of the spin system
 /// and an optional number of mixed_systems.
+///
+/// Args:
+///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedHamiltonianSystem.
+///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedHamiltonianSystem.
+///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedHamiltonianSystem.
+///
+/// Returns:
+///     self: The new (empty) MixedHamiltonianSystem.
 ///
 /// Examples
 /// --------
@@ -99,7 +113,7 @@ impl MixedHamiltonianSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonianSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<MixedSystemWrapper> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<MixedSystemWrapper> {
         let mut new_spins: Vec<Option<usize>> = Vec::new();
         for spin in self.internal.number_spins() {
             new_spins.push(Some(spin))
@@ -131,7 +145,7 @@ impl MixedHamiltonianSystemWrapper {
                 internal: mixed_system * x,
             }),
             Err(_) => {
-                let bhs_value = Self::from_pyany(value.into());
+                let bhs_value = Self::from_pyany(value);
                 match bhs_value {
                     Ok(x) => {
                         let new_self = (self.clone().internal * x).map_err(|err| {
@@ -148,5 +162,81 @@ impl MixedHamiltonianSystemWrapper {
                 }
             }
         }
+    }
+
+    /// Converts a struqture 2.x MixedHamiltonian to a struqture 1.x MixedHamiltonianSystem.
+    ///
+    /// Args:
+    ///     input (MixedHamiltonian): The struqture 2.x MixedHamiltonian to convert to struqture 1.x.
+    ///
+    /// Returns:
+    ///     MixedHamiltonianSystem: The struqture 1.x MixedHamiltonianSystem created from the struqture 2.x MixedHamiltonian.
+    ///
+    /// Raises:
+    ///     TypeError: If the input is not a struqture 2.x MixedHamiltonian.
+    ///     ValueError: Conversion failed.
+    #[staticmethod]
+    #[cfg(feature = "unstable_struqture_2_import")]
+    pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<MixedHamiltonianSystemWrapper> {
+        Python::with_gil(|_| -> PyResult<MixedHamiltonianSystemWrapper> {
+            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
+            let source_serialisation_meta = input
+                .call_method0("_get_serialisation_meta")
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
+            let source_serialisation_meta: String = source_serialisation_meta
+                .extract()
+                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
+
+            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
+                serde_json::from_str(&source_serialisation_meta)
+                    .map_err(|_| PyTypeError::new_err(error_message))?;
+
+            let target_serialisation_meta = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::SerializationSupport>::target_serialisation_meta();
+
+            struqture_2::check_can_be_deserialised(
+                &target_serialisation_meta,
+                &source_serialisation_meta,
+            )
+            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
+
+            let get_bytes = input
+                .call_method0("to_bincode")
+                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+            let bytes = get_bytes
+                .extract::<Vec<u8>>()
+                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+            let two_import: struqture_2::mixed_systems::MixedHamiltonian = deserialize(&bytes[..])
+                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+            let number_spins: usize = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::mixed_systems::OperateOnMixedSystems>::current_number_spins(&two_import).len();
+            let spin_systems: Vec<Option<usize>> = vec![None; number_spins];
+            let number_bosons: usize = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::mixed_systems::OperateOnMixedSystems>::current_number_bosonic_modes(&two_import).len();
+            let bosonic_systems: Vec<Option<usize>> = vec![None; number_bosons];
+            let number_fermions: usize = <struqture_2::mixed_systems::MixedHamiltonian as struqture_2::mixed_systems::OperateOnMixedSystems>::current_number_fermionic_modes(&two_import).len();
+            let fermionic_systems: Vec<Option<usize>> = vec![None; number_fermions];
+            let mut fermion_system: MixedHamiltonianSystem = MixedHamiltonianSystem::new(
+                spin_systems.iter().cloned(),
+                bosonic_systems.iter().cloned(),
+                fermionic_systems.iter().cloned(),
+            );
+            for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {
+                let value_string = key.to_string();
+                let self_key = HermitianMixedProduct::from_str(&value_string).map_err(
+                    |_err: StruqtureError| PyValueError::new_err(
+                        "Trying to obtain struqture 1.x HermitianMixedProduct from struqture 2.x HermitianMixedProduct. Conversion failed. Was the right type passed to all functions?".to_string()
+                ))?;
+
+                fermion_system
+                    .set(self_key, val.clone())
+                    .map_err(|_err: StruqtureError| {
+                        PyValueError::new_err(
+                            "Could not set key in resulting 1.x MixedHamiltonianSystem".to_string(),
+                        )
+                    })?;
+            }
+
+            Ok(MixedHamiltonianSystemWrapper {
+                internal: fermion_system,
+            })
+        })
     }
 }

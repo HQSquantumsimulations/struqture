@@ -28,6 +28,12 @@ use struqture_py_macros::noiseless_system_wrapper;
 /// BosonSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
 /// and an optional number of bosons.
 ///
+/// Args:
+///     number_bosons (Optional[int]): The number of bosons in the BosonSystem.
+///
+/// Returns:
+///     self: The new BosonSystem with the input number of bosons.
+///
 /// Examples
 /// --------
 ///
@@ -85,7 +91,7 @@ impl BosonSystemWrapper {
     ///
     /// Raises:
     ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonSystem.
-    pub fn __mul__(&self, value: &PyAny) -> PyResult<Self> {
+    pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
             Ok(x) => Ok(BosonSystemWrapper {
@@ -98,7 +104,7 @@ impl BosonSystemWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(_) => {
-                        let bhs_value = Self::from_pyany(value.into());
+                        let bhs_value = Self::from_pyany(value);
                         match bhs_value {
                             Ok(x) => {
                                 let new_self = self.clone().internal * x;

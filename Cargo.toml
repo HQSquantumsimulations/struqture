@@ -1,8 +1,5 @@
 [workspace]
-members = [
-    "struqture",
-    "struqture-py",
-]
+members = ["struqture", "struqture-py"]
 
 resolver = "2"
 
