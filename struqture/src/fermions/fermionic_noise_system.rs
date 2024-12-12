@@ -192,7 +192,7 @@ impl<'a> OperateOnModes<'a> for FermionLindbladNoiseSystem {
     }
 }
 
-impl<'a> OperateOnFermions<'a> for FermionLindbladNoiseSystem {}
+impl OperateOnFermions<'_> for FermionLindbladNoiseSystem {}
 
 /// Functions for the FermionLindbladNoiseSystem.
 ///

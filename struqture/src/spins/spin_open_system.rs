@@ -56,7 +56,7 @@ pub struct SpinLindbladOpenSystem {
 
 impl crate::MinSupportedVersion for SpinLindbladOpenSystem {}
 
-impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
+impl OpenSystem<'_> for SpinLindbladOpenSystem {
     type System = SpinHamiltonianSystem;
     type Noise = SpinLindbladNoiseSystem;
 
@@ -136,7 +136,7 @@ impl<'a> OpenSystem<'a> for SpinLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinLindbladOpenSystem {
+impl OperateOnSpins<'_> for SpinLindbladOpenSystem {
     /// Gets the maximum number_spins of the SpinHamiltonianSystem/SpinLindbladNoiseSystem.
     ///
     /// # Returns

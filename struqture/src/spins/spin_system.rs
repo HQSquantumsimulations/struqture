@@ -170,7 +170,7 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinSystem {
     }
 }
 
-impl<'a> OperateOnState<'a> for SpinSystem {
+impl OperateOnState<'_> for SpinSystem {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.number_spins, self.len());
@@ -184,7 +184,7 @@ impl<'a> OperateOnState<'a> for SpinSystem {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinSystem {
+impl OperateOnSpins<'_> for SpinSystem {
     /// Gets the number_spins input of the SpinSystem or returns the current_number_spins, if number_spins is None.
     ///
     /// # Returns
@@ -203,7 +203,7 @@ impl<'a> OperateOnSpins<'a> for SpinSystem {
     }
 }
 
-impl<'a> ToSparseMatrixOperator<'a> for SpinSystem {}
+impl ToSparseMatrixOperator<'_> for SpinSystem {}
 impl<'a> ToSparseMatrixSuperOperator<'a> for SpinSystem {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(

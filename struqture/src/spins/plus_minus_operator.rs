@@ -203,7 +203,7 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for PlusMinusOperator {
+impl OperateOnState<'_> for PlusMinusOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.len());

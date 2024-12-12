@@ -202,7 +202,7 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for SpinOperator {
+impl OperateOnState<'_> for SpinOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.len());
@@ -216,7 +216,7 @@ impl<'a> OperateOnState<'a> for SpinOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinOperator {
+impl OperateOnSpins<'_> for SpinOperator {
     // From trait
     fn current_number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
@@ -240,7 +240,7 @@ impl<'a> OperateOnSpins<'a> for SpinOperator {
     }
 }
 
-impl<'a> ToSparseMatrixOperator<'a> for SpinOperator {}
+impl ToSparseMatrixOperator<'_> for SpinOperator {}
 impl<'a> ToSparseMatrixSuperOperator<'a> for SpinOperator {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(

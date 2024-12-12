@@ -238,7 +238,7 @@ impl<'a> OperateOnModes<'a> for BosonLindbladNoiseOperator {
     }
 }
 
-impl<'a> OperateOnBosons<'a> for BosonLindbladNoiseOperator {}
+impl OperateOnBosons<'_> for BosonLindbladNoiseOperator {}
 
 /// Implements the default function (Default trait) of BosonLindbladNoiseOperator (an empty BosonLindbladNoiseOperator).
 ///

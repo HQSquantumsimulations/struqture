@@ -500,7 +500,7 @@ impl FromStr for HermitianMixedProduct {
     }
 }
 
-impl<'a> GetValueMixed<'a, HermitianMixedProduct> for HermitianMixedProduct {
+impl GetValueMixed<'_, HermitianMixedProduct> for HermitianMixedProduct {
     /// Gets the key corresponding to the input index (here, itself).
     ///
     /// # Arguments
