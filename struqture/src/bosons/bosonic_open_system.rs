@@ -50,7 +50,7 @@ pub struct BosonLindbladOpenSystem {
 
 impl crate::MinSupportedVersion for BosonLindbladOpenSystem {}
 
-impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
+impl OpenSystem<'_> for BosonLindbladOpenSystem {
     type System = BosonHamiltonianSystem;
     type Noise = BosonLindbladNoiseSystem;
 
@@ -130,7 +130,7 @@ impl<'a> OpenSystem<'a> for BosonLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnModes<'a> for BosonLindbladOpenSystem {
+impl OperateOnModes<'_> for BosonLindbladOpenSystem {
     /// Gets the maximum number_modes of the BosonHamiltonianSystem/BosonLindbladNoiseSystem.
     ///
     /// # Returns

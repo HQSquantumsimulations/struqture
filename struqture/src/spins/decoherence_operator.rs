@@ -60,7 +60,6 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(from = "DecoherenceOperatorSerialize")]
 #[serde(into = "DecoherenceOperatorSerialize")]
-
 pub struct DecoherenceOperator {
     /// The internal HashMap of DecoherenceProducts and coefficients (CalculatorComplex)
     #[cfg(feature = "indexed_map_iterators")]
@@ -200,7 +199,7 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for DecoherenceOperator {
+impl OperateOnState<'_> for DecoherenceOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.len());
@@ -214,7 +213,7 @@ impl<'a> OperateOnState<'a> for DecoherenceOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for DecoherenceOperator {
+impl OperateOnSpins<'_> for DecoherenceOperator {
     /// Returns maximum index in DecoherenceOperator internal_map.
     ///
     /// # Returns

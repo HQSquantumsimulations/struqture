@@ -197,7 +197,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for FermionOperator {}
+impl OperateOnState<'_> for FermionOperator {}
 
 impl<'a> OperateOnModes<'a> for FermionOperator {
     // From trait
@@ -224,7 +224,7 @@ impl<'a> OperateOnModes<'a> for FermionOperator {
     }
 }
 
-impl<'a> OperateOnFermions<'a> for FermionOperator {}
+impl OperateOnFermions<'_> for FermionOperator {}
 
 /// Implements the default function (Default trait) of FermionOperator (an empty FermionOperator).
 ///

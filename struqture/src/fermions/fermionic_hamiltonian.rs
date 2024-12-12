@@ -231,7 +231,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonian {
     }
 }
 
-impl<'a> OperateOnState<'a> for FermionHamiltonian {
+impl OperateOnState<'_> for FermionHamiltonian {
     /// Returns the hermitian conjugate of the FermionHamiltonian.
     ///
     /// # Returns
@@ -242,7 +242,7 @@ impl<'a> OperateOnState<'a> for FermionHamiltonian {
     }
 }
 
-impl<'a> OperateOnModes<'a> for FermionHamiltonian {
+impl OperateOnModes<'_> for FermionHamiltonian {
     /// Return maximum index in FermionHamiltonian internal_map.
     ///
     /// # Returns
@@ -270,7 +270,7 @@ impl<'a> OperateOnModes<'a> for FermionHamiltonian {
     }
 }
 
-impl<'a> OperateOnFermions<'a> for FermionHamiltonian {}
+impl OperateOnFermions<'_> for FermionHamiltonian {}
 
 /// Implements the default function (Default trait) of FermionHamiltonian (an empty FermionHamiltonian).
 ///

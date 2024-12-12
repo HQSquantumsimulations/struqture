@@ -167,7 +167,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionSystem {
     }
 }
 
-impl<'a> OperateOnState<'a> for FermionSystem {}
+impl OperateOnState<'_> for FermionSystem {}
 
 impl<'a> OperateOnModes<'a> for FermionSystem {
     /// Gets the number_modes input of the FermionSystem, or the current_number_modes if number_modes is None.
@@ -188,7 +188,7 @@ impl<'a> OperateOnModes<'a> for FermionSystem {
     }
 }
 
-impl<'a> OperateOnFermions<'a> for FermionSystem {}
+impl OperateOnFermions<'_> for FermionSystem {}
 
 /// Functions for the FermionSystem
 ///

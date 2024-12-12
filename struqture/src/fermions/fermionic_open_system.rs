@@ -52,7 +52,7 @@ pub struct FermionLindbladOpenSystem {
 
 impl crate::MinSupportedVersion for FermionLindbladOpenSystem {}
 
-impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
+impl OpenSystem<'_> for FermionLindbladOpenSystem {
     type System = FermionHamiltonianSystem;
     type Noise = FermionLindbladNoiseSystem;
 
@@ -132,7 +132,7 @@ impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnModes<'a> for FermionLindbladOpenSystem {
+impl OperateOnModes<'_> for FermionLindbladOpenSystem {
     /// Gets the maximum number_modes of the FermionHamiltonianSystem/FermionLindbladNoiseSystem.
     ///
     /// # Returns

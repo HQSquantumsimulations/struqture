@@ -250,7 +250,7 @@ impl<'a> OperateOnModes<'a> for FermionLindbladNoiseOperator {
     }
 }
 
-impl<'a> OperateOnFermions<'a> for FermionLindbladNoiseOperator {}
+impl OperateOnFermions<'_> for FermionLindbladNoiseOperator {}
 
 /// Implements the default function (Default trait) of FermionLindbladNoiseOperator (an empty FermionLindbladNoiseOperator).
 ///

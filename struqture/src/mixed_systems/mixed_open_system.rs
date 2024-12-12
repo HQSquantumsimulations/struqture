@@ -64,7 +64,7 @@ pub struct MixedLindbladOpenSystem {
 
 impl crate::MinSupportedVersion for MixedLindbladOpenSystem {}
 
-impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
+impl OpenSystem<'_> for MixedLindbladOpenSystem {
     type System = MixedHamiltonianSystem;
     type Noise = MixedLindbladNoiseSystem;
 
@@ -237,7 +237,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnMixedSystems<'a> for MixedLindbladOpenSystem {
+impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     // From trait
     fn number_spins(&self) -> Vec<usize> {
         self.system

@@ -171,7 +171,7 @@ impl<'a> OperateOnDensityMatrix<'a> for SpinLindbladNoiseSystem {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for SpinLindbladNoiseSystem {
+impl OperateOnSpins<'_> for SpinLindbladNoiseSystem {
     /// Gets the number_spins input of the SpinLindbladNoiseSystem or returns the current_number_spins, if number_spins is None.
     ///
     /// # Returns
