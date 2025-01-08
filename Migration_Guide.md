@@ -56,7 +56,7 @@ is now:
 hamiltonian = MixedHamiltonian(2, 0, 0)
 ```
 
-* The `number_modes`, `number_bosonic_modes` and `number_fermionic_modes` have been removed, in favour of the `current_number_modes``, current_number_bosonic_modes` and `current_number_fermionic_modes functions`. These functions now return the same thing, as there is no maximum index set.
+* The `number_modes`, `number_bosonic_modes` and `number_fermionic_modes` have been removed, in favour of the `current_number_modes`, `current_number_bosonic_modes` and `current_number_fermionic_modes` functions. These functions now return the same thing, as there is no maximum index set.
 
 * The `number_spins` function has been deprecated, in favour of the `current_number_spins` function. These functions now return the same thing, as there is no maximum index set. The `number_spins` function will be removed in a future version of struqture 2.0, but has been left in as deprecated for now, in order to minimise code breakage.
 
@@ -64,12 +64,12 @@ hamiltonian = MixedHamiltonian(2, 0, 0)
 
 * The conversion error message should now be much clearer, and there should no longer be any mistaken conversions from python to rust, as we have re-designed parts of the (de)serialisation.
 
-* We have added conversion functions, to convert a struqture 1.0 object to a struqture 2.0 object. This includes a from_json_struqture_1, so that users need not re-generate their json files. See the code snippet below.
+* We have added conversion functions, to convert a struqture 1.0 object to a struqture 2.0 object. This includes a `from_json_struqture_1` function, so that users need not re-generate their json files. See the code snippet below.
 
 ```python
 # given a struqture 1.0 FermionicHamiltonianSystem object "ham_struq_1", the following code will return a struqture 2.0 object
 hamiltonian = FermionHamiltonian().from_struqture_1(ham_struq_1)
-# given a struqture 1.0 FermionicHamiltonianSystem json object "ham_json_struq_1", the following code will return a struqture 2.0 object
+# given a struqture 1.0 FermionicHamiltonianSystem **json** object "ham_json_struq_1", the following code will return a struqture 2.0 object
 hamiltonian = FermionHamiltonian().from_json_struqture_1(ham_json_struq_1)
 ```
 
