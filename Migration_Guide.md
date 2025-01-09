@@ -45,7 +45,7 @@ fermionic_noisy = FermionLindbladNoiseOperator()
 ```
 The exact same holds for the bosonic objects and spin objects.
 
-**NOTE**: For mixed objects, the above changes mean that the initialisation function no longer needs to know how many particles are in each subsystem of the mixed object. However, it does need to know how many subsystems there are in the mixed object. Here is an example:
+**NOTE**: For mixed objects, the above changes mean that the initialisation function no longer needs to know how many spins or modes are in each subsystem of the mixed object. However, it does need to know how many subsystems there are in the mixed object. Here is an example:
 ```python
 # struqture 1.0 
 hamiltonian = MixedHamiltonianSystem([3, 2], [], [])
