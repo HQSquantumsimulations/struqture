@@ -56,9 +56,9 @@ is now:
 hamiltonian = MixedHamiltonian(2, 0, 0)
 ```
 
-* The `number_modes`, `number_bosonic_modes` and `number_fermionic_modes` have been removed, in favour of the `current_number_modes`, `current_number_bosonic_modes` and `current_number_fermionic_modes` functions. These functions now return the same thing, as there is no maximum index set.
+* The `number_modes`, `number_bosonic_modes` and `number_fermionic_modes` have been removed, in favour of the `current_number_modes`, `current_number_bosonic_modes` and `current_number_fermionic_modes` functions. These functions now return the same result, as there is no maximum index set.
 
-* The `number_spins` function has been deprecated, in favour of the `current_number_spins` function. These functions now return the same thing, as there is no maximum index set. The `number_spins` function will be removed in a future version of struqture 2.0, but has been left in as deprecated for now, in order to minimise code breakage.
+* The `number_spins` function has been deprecated, in favour of the `current_number_spins` function. These functions now return the same result, as there is no maximum index set. The `number_spins` function will be removed in a future version of struqture 2.0, but has been left in as deprecated for now, in order to minimise code breakage.
 
 3) Added functionality
 
@@ -73,4 +73,4 @@ hamiltonian = FermionHamiltonian().from_struqture_1(ham_struq_1)
 hamiltonian = FermionHamiltonian().from_json_struqture_1(ham_json_struq_1)
 ```
 
-* Additionally, as of struqture 1.9, there are conversion functions to convert from struqture 2.0 to struqture 1.0 objects, which can be used analogously to the ones in the code snippet above. Should you wish to use them, please ensure you have installed struqture 1.9 or higher, using the `--features` flag in maturin, with the following feature specified: `unstable_struqture_2_import`.
+* Additionally, as of struqture 1.9, there are conversion functions to convert from struqture 2.0 to struqture 1.0 objects, which can be used analogously to the ones in the code snippet above. Should you wish to use them, you will need to install struqture manually, using [maturin](https://github.com/PyO3/maturin). When running maturin, please ensure you are installing struqture 1.9 or higher, using the `--features` flag with the following feature specified: `unstable_struqture_2_import`.
