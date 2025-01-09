@@ -456,7 +456,7 @@ pub fn noisywrapper(
                 /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
                 ///
                 /// Returns:
-                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]: The little endian matrix representation of the noise part of self.
+                ///     list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]]: The little endian matrix representation of the noise part of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
@@ -1021,8 +1021,17 @@ pub fn noisywrapper(
             // ----------------------------------
             // Default pyo3 implementations
 
-            // add in a function converting struqture_1 (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
+            /// Convert a struqture 1 object to the equivalent object in struqture 2.
+            /// 
+            /// Args:
+            ///     input (Any): the struqture 1 object to convert.
+            ///
+            /// Returns:
+            ///     Any: the input object in struqture 2 form.
+            ///
+            /// Raises:
+            ///     ValueError: Input could not be deserialised.
+            ///     ValueError: Struqture 1 object could not be converted to struqture 2.
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
             pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
@@ -1033,8 +1042,17 @@ pub fn noisywrapper(
                 })
             }
 
-            // add in a function converting struqture_1 (not py) to struqture 2
-            // take a pyany, implement from_pyany by hand (or use from_pyany_struqture_1 internally) and wrap the result in a struqture 2 spin operator wrapper
+            /// Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+            /// 
+            /// Args:
+            ///     input (Any): the json of the struqture 1 object to convert.
+            ///
+            /// Returns:
+            ///     Any: the input object in struqture 2 form.
+            ///
+            /// Raises:
+            ///     ValueError: Input could not be deserialised form json.
+            ///     ValueError: Struqture 1 object could not be converted to struqture 2.
             #[cfg(feature = "struqture_1_import")]
             #[staticmethod]
             pub fn from_json_struqture_1(input: String) -> PyResult<#ident> {

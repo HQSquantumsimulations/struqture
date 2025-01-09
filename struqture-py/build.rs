@@ -105,7 +105,7 @@ fn collect_return_from_doc(doc: &str, class_name: &str) -> String {
 }
 
 #[cfg(feature = "doc_generator")]
-const TYPING_POTENTIAL_IMPORTS: &[&str] = &["Optional", "List", "Tuple", "Dict", "Set", "Union"];
+const TYPING_POTENTIAL_IMPORTS: &[&str] = &["Optional", "List", "Tuple", "Dict", "Set", "Union", "Any"];
 
 #[cfg(feature = "doc_generator")]
 fn create_doc(module: &str) -> PyResult<String> {
@@ -168,7 +168,7 @@ fn create_doc(module: &str) -> PyResult<String> {
         }
         let typing_imports: Vec<&str> = TYPING_POTENTIAL_IMPORTS
             .iter()
-            .filter(|&type_str| main_doc.contains(&format!("{type_str}[")))
+            .filter(|&type_str| main_doc.contains(&format!("{type_str}")))
             .copied()
             .collect();
         Ok(
