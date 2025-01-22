@@ -348,7 +348,7 @@ impl FromStr for MixedDecoherenceProduct {
     }
 }
 
-impl<'a> GetValueMixed<'a, MixedDecoherenceProduct> for MixedDecoherenceProduct {
+impl GetValueMixed<'_, MixedDecoherenceProduct> for MixedDecoherenceProduct {
     /// Gets the key corresponding to the input index (here, itself).
     ///
     /// # Arguments

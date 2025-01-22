@@ -513,7 +513,7 @@ fn test_boson_hamiltonian_schema() {
     op.set(HermitianBosonProduct::new([1], [1]).unwrap(), "val".into())
         .unwrap();
     let schema = schemars::schema_for!(BosonHamiltonian);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let validation = schema_checker.validate(&value);

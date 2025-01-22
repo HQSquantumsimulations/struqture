@@ -747,8 +747,13 @@ fn test_qubit_hamiltonian_schema() {
     let mut op = QubitHamiltonian::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
+<<<<<<< HEAD:struqture/tests/spins/qubit_hamiltonian.rs
     let schema = schemars::schema_for!(QubitHamiltonian);
     let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+=======
+    let schema = schemars::schema_for!(SpinHamiltonian);
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
+>>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d:struqture/tests/spins/spin_hamiltonian.rs
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let validation = schema_checker.validate(&value);

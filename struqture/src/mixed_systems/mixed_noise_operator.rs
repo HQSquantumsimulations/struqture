@@ -233,7 +233,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
         }
     }
 }
-impl<'a> OperateOnMixedSystems<'a> for MixedLindbladNoiseOperator {
+impl OperateOnMixedSystems<'_> for MixedLindbladNoiseOperator {
     // From trait
     fn current_number_spins(&self) -> Vec<usize> {
         let mut current_number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();

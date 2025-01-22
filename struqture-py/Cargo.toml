@@ -3,7 +3,7 @@ name = "struqture-py"
 version = "2.0.0-alpha.4"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
-rust-version = "1.57"
+rust-version = "1.76"
 categories = ["science", "simulation"]
 description = "Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems."
 license = "Apache-2.0"
@@ -23,22 +23,20 @@ features = ["num-complex", "multiple-pymethods"]
 [dependencies]
 struqture = { version = "2.0.0-alpha.4", path = "../struqture", default-features = false }
 struqture_1 = { package = "struqture", version = ">=1.8,<2.0.0", optional = true, default-features = false }
-
-serde = { version = "1.0", features = ["derive"] }
-numpy = "0.22"
 qoqo_calculator = { version = ">= 1.2", default-features = false }
 qoqo_calculator_pyo3 = { version = "~1.3", default-features = false }
+struqture-py-macros = { version = "2.0.0-alpha.4", path = "../struqture-py-macros" }
+
 bincode = "1.3"
 serde_json = "1.0"
-thiserror = "1.0"
+thiserror = "2.0"
 num-complex = "0.4"
-struqture-py-macros = { version = "2.0.0-alpha.4", path = "../struqture-py-macros" }
 schemars = { version = "0.8" }
 
 [dev-dependencies]
 test-case = "3.1"
-nalgebra = "0.32"
-ndarray = { version = "0.15" }
+nalgebra = "0.33"
+ndarray = "0.16"
 
 [build-dependencies]
 quote = "1.0"
@@ -47,6 +45,7 @@ proc-macro2 = "1.0"
 pyo3-build-config = "0.22"
 pyo3 = "0.22"
 regex = "1.10"
+
 [package.metadata.docs.rs]
 no-default-features = true
 

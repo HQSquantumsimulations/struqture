@@ -215,7 +215,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonian {
     }
 }
 
-impl<'a> OperateOnState<'a> for MixedHamiltonian {
+impl OperateOnState<'_> for MixedHamiltonian {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()

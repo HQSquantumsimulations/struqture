@@ -546,7 +546,7 @@ fn clone_partial_eq_partial_ord() {
 fn test_boson_product_schema() {
     let pp = BosonProduct::new([0], [0]).unwrap();
     let schema = schemars::schema_for!(BosonProduct);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);

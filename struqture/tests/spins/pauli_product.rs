@@ -203,13 +203,23 @@ fn from_str() {
         })
     );
 
-    let string_err = " X";
+    let string_err = "3.2X";
     let error = PauliProduct::from_str(string_err);
     assert!(error.is_err());
     assert_eq!(
         error,
         Err(StruqtureError::FromStringFailed {
-            msg: "Using   instead of unsigned integer as spin index".to_string()
+            msg: "Using 3.2 instead of unsigned integer as spin index".to_string()
+        })
+    );
+
+    let string_err = "X";
+    let error = PauliProduct::from_str(string_err);
+    assert!(error.is_err());
+    assert_eq!(
+        error,
+        Err(StruqtureError::FromStringFailed {
+            msg: "Missing spin index in the following PauliProduct: X".to_string()
         })
     );
 }
@@ -547,7 +557,7 @@ fn test_singlequbitoperator_product() {
 fn test_pauli_product_schema() {
     let pp = PauliProduct::new();
     let schema = schemars::schema_for!(PauliProduct);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);

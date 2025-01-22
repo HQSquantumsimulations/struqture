@@ -210,7 +210,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonian {
     }
 }
 
-impl<'a> OperateOnState<'a> for BosonHamiltonian {
+impl OperateOnState<'_> for BosonHamiltonian {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
@@ -236,7 +236,7 @@ impl<'a> OperateOnModes<'a> for BosonHamiltonian {
     }
 }
 
-impl<'a> OperateOnBosons<'a> for BosonHamiltonian {}
+impl OperateOnBosons<'_> for BosonHamiltonian {}
 
 /// Implements the default function (Default trait) of BosonHamiltonian (an empty BosonHamiltonian).
 ///
