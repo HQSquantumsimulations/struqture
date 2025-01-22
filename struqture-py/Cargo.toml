@@ -54,7 +54,7 @@ no-default-features = true
 extension-module = [
     "pyo3/extension-module",
 ]
-default = ["extension-module", "json_schema", "indexed_map_iterators"]
+default = ["extension-module", "json_schema"]
 json_schema = ["struqture/json_schema"]
 struqture_1_export = [
     "struqture_1",
