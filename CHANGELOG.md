@@ -7,7 +7,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## 1.11.0
 
 * Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14).
-* Updated minimum Rust version from 1.57 to 1.76.
+* Updated minimum supported Rust version from 1.57 to 1.76.
 * Updated minimum supported Python version from 3.8 to 3.9.
 
 ## 1.10.1
