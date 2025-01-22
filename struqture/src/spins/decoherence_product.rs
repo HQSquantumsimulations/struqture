@@ -64,7 +64,9 @@ use super::PauliProduct;
 /// \end{pmatrix}
 /// $$
 ///
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
+#[derive(
+    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default,
+)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleDecoherenceOperator {
     #[default]

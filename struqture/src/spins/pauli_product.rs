@@ -64,7 +64,9 @@ const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_pr
 /// \end{pmatrix}
 /// $$
 ///
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
+#[derive(
+    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default,
+)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleSpinOperator {
     #[default]
