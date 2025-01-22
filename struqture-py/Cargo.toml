@@ -3,7 +3,7 @@ name = "struqture-py"
 version = "1.10.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
-rust-version = "1.57"
+rust-version = "1.76"
 categories = ["science", "simulation"]
 description = "Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems."
 license = "Apache-2.0"
@@ -30,18 +30,17 @@ struqture-py-macros = { version = "~1.10.1", path = "../struqture-py-macros" }
 qoqo_calculator = { version = ">=1.2", default-features = false }
 qoqo_calculator_pyo3 = { version = " ~1.3", default-features = false }
 
-serde = { version = "1.0", features = ["derive"] }
 numpy = "0.22"
 bincode = "1.3"
 serde_json = "1.0"
-thiserror = "1.0"
+thiserror = "2.0"
 num-complex = "0.4"
 schemars = { version = "0.8" }
 
 [dev-dependencies]
 test-case = "3.1"
 nalgebra = "0.33"
-ndarray = { version = "0.15" }
+ndarray = "0.16"
 
 [build-dependencies]
 quote = "1.0"
@@ -56,7 +55,7 @@ no-default-features = true
 [features]
 extension-module = [
     "pyo3/extension-module",
-] #, "qoqo_calculator_pyo3/extension-module"]
+]
 default = ["extension-module", "json_schema", "indexed_map_iterators"]
 json_schema = ["struqture/json_schema"]
 doc_generator = []

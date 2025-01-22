@@ -1137,7 +1137,7 @@ fn test_mixed_noise_system_schema(number_particles: Option<usize>) {
     .unwrap();
     op.set((pp.clone(), pp), "val".into()).unwrap();
     let schema = schemars::schema_for!(MixedLindbladNoiseSystem);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let validation = schema_checker.validate(&value);
