@@ -1059,13 +1059,8 @@ fn test_qubit_noise_system_schema() {
     op.noise_mut()
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
-<<<<<<< HEAD:struqture/tests/spins/qubit_open_system.rs
     let schema = schemars::schema_for!(QubitLindbladOpenSystem);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
-=======
-    let schema = schemars::schema_for!(SpinLindbladOpenSystem);
     let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d:struqture/tests/spins/spin_open_system.rs
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let val = match value {
