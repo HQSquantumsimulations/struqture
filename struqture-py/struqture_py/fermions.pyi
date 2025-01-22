@@ -5,17 +5,17 @@
 """
 Fermions module of struqture Python interface
 
-Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionOperator and FermionHamiltonian),
-and Lindblad type fermionic open systems (FermionLindbladNoiseOperator, FermionLindbladOpenSystem).
+Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionSystem and FermionHamiltonianSystem),
+and Lindblad type fermionic open systems (FermionLindbladNoiseSystem, FermionLindbladOpenSystem).
 
 .. autosummary::
     :toctree: generated/
 
     FermionProduct
     HermitianFermionProduct
-    FermionOperator
-    FermionHamiltonian
-    FermionLindbladNoiseOperator
+    FermionSystem
+    FermionHamiltonianSystem
+    FermionLindbladNoiseSystem
     FermionLindbladOpenSystem
 
 """
@@ -25,1631 +25,1282 @@ from typing import Optional, List, Tuple, Union
 
 class FermionProduct(ProductType):
     """
-A product of fermionic creation and annihilation operators.
+    A product of fermionic creation and annihilation operators.
 
-The FermionProduct is used as an index for non-hermitian, normal ordered fermionic operators.
-A fermionic operator can be written as a sum over normal ordered products of creation and annihilation operators.
-The FermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
-weight of a product of operators in the sum.
+    The FermionProduct is used as an index for non-hermitian, normal ordered fermionic operators.
+    A fermionic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+    The FermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
+    weight of a product of operators in the sum.
 
-Args:
-    creators (List[int]): List of creator sub-indices.
-    annihilators (List[int]): List of annihilator sub-indices.
+    Args:
+        creators (List[int]): List of creator sub-indices.
+        annihilators (List[int]): List of annihilator sub-indices.
 
-Returns:
-    self: The new (empty) FermionProduct.
+    Returns:
+        self: The new (empty) FermionProduct.
 
-Examples
---------
+    Examples
+    --------
 
-.. code-block:: python
+    .. code-block:: python
 
-    from struqture_py.fermions import FermionProduct
-    import numpy.testing as npt
-    # For instance, to represent $c_0a_0$
-    fp = FermionProduct([0], [0])
-    npt.assert_equal(fp.creators(), [0])
-    npt.assert_equal(fp.annihilators(), [0])
-    
-"""
+        from struqture_py.fermions import FermionProduct
+        import numpy.testing as npt
+        # For instance, to represent $c_0a_0$
+        fp = FermionProduct([0], [0])
+        npt.assert_equal(fp.creators(), [0])
+        npt.assert_equal(fp.annihilators(), [0])
+    """
 
     def __init__(self, creators: List[int], annihilators: List[int]):
-       return
-
-    def jordan_wigner(self): # type: ignore
+        return
+    def jordan_wigner(self):  # type: ignore
         """
-Transform the given fermionic object into a spin object using
-the Jordan Wigner mapping.
-"""
-
-    def hermitian_conjugate(self): # type: ignore
+        Transform the given fermionic object into a spin object using
+        the Jordan Wigner mapping."""
+    def hermitian_conjugate(self):  # type: ignore
         """
-Return the hermitian conjugate of self and its prefactor.
+        Return the hermitian conjugate of self and its prefactor.
 
-Returns:
-    (self, float): The hermitian conjugate of self and the potential sign it has picked up.
-"""
-
-    def is_natural_hermitian(self) -> bool: # type: ignore
+        Returns:
+            (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
-Return whether self is naturally hermitian.
-
-For spin objects, this is true when applying the hermitian conjugation does not change the sign.
-For bosonic and fermionic objects, this is true when creators == annihilators.
-For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
-
-Returns:
-    bool: Whether self is naturally hermitian or not.
-"""
-
-    def number_creators(self) -> int: # type: ignore
+    def is_natural_hermitian(self) -> bool:  # type: ignore
         """
-Get the number of creator indices of self.
+        Return whether self is naturally hermitian.
 
-Returns:
-    int: The number of creator indices in self.
-"""
+        For spin objects, this is true when applying the hermitian conjugation does not change the sign.
+        For bosonic and fermionic objects, this is true when creators == annihilators.
+        For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
-    def number_annihilators(self) -> int: # type: ignore
+        Returns:
+            bool: Whether self is naturally hermitian or not."""
+    def number_creators(self) -> int:  # type: ignore
         """
-Get the number of annihilator indices of self.
+        Get the number of creator indices of self.
 
-Returns:
-    int: The number of annihilator indices in self.
-"""
-
-    def current_number_modes(self) -> int: # type: ignore
+        Returns:
+            int: The number of creator indices in self."""
+    def number_annihilators(self) -> int:  # type: ignore
         """
-Returns the maximal number of modes self acts on.
+        Get the number of annihilator indices of self.
 
-Self acts on a state space of unknown dimension.
-There is only a lower bound of the dimension or number of modes based on the
-maximal mode the product of operators in the index acts on.
-For example an index consisting of one creator acting on mode 0 would have
-a current_number_modes of one. An index consisting of one annhihilator acting on 3
-would have current_number_modes of four.
-
-Returns:
-    int: The maximal number of modes self acts on.
-"""
-
-    def creators(self) -> List[int]: # type: ignore
+        Returns:
+            int: The number of annihilator indices in self."""
+    def current_number_modes(self) -> int:  # type: ignore
         """
-Return list of creator indices.
+        Returns the maximal number of modes self acts on.
 
-Returns:
-    List[int]: A list of the corresponding creator indices.
-"""
+        Self acts on a state space of unknown dimension.
+        There is only a lower bound of the dimension or number of modes based on the
+        maximal mode the product of operators in the index acts on.
+        For example an index consisting of one creator acting on mode 0 would have
+        a current_number_modes of one. An index consisting of one annhihilator acting on 3
+        would have current_number_modes of four.
 
-    def annihilators(self) -> List[int]: # type: ignore
+        Returns:
+            int: The maximal number of modes self acts on."""
+    def creators(self) -> List[int]:  # type: ignore
         """
-Return list of annihilator indices.
+        Return list of creator indices.
 
-Returns:
-    List[int]: A list of the corresponding annihilator indices.
-"""
-
-    def remap_modes(self): # type: ignore
+        Returns:
+            List[int]: A list of the corresponding creator indices."""
+    def annihilators(self) -> List[int]:  # type: ignore
         """
-Remap modes according to an input dictionary.
+        Return list of annihilator indices.
 
-Args:
-   reordering_dictionary (dict) - The dictionary specifying the remapping. It must represent a permutation.
-
-Returns:
-  (Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.
-
-Raises:
-   ValueError: Input reordering dictionary is not a permutation of the indices.
-"""
-
-    def create_valid_pair(self, creators: List[int], annihilators: List[int], value: Union[float, int, str, complex]): # type: ignore
+        Returns:
+            List[int]: A list of the corresponding annihilator indices."""
+    def remap_modes(self):  # type: ignore
         """
-Create valid pair of index and value to be set in an operator.
+        Remap modes according to an input dictionary.
 
-The first item is the valid instance of self created from the input creators and annihilators.
-The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.
+        Args:
+           reordering_dictionary (dict) - The dictionary specifying the remapping. It must represent a permutation.
 
-Args:
-   creators (List[int]): The creator indices to have in the instance of self.
-   annihilators (List[int]): The annihilators indices to have in the instance of self.
-   value (CalculatorComplex): The CalculatorComplex to transform.
+        Returns:
+          (Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.
 
-Returns:
-   (self, CalculatorComplex): The valid instance of self and the corresponding transformed CalculatorComplex.
-
-Raises:
-    TypeError: Value is not CalculatorComplex.
-    ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
-"""
-
-    def from_struqture_1(self, input: Any) -> Any: # type: ignore
+        Raises:
+           ValueError: Input reordering dictionary is not a permutation of the indices.
         """
-Convert a struqture 1 object to the equivalent object in struqture 2.
-
-Args:
-    input (Any): the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_json_struqture_1(self, input: Any) -> Any: # type: ignore
+    def create_valid_pair(self, creators: List[int], annihilators: List[int], value: Union[float, int, str, complex]):  # type: ignore
         """
-Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+        Create valid pair of index and value to be set in an operator.
 
-Args:
-    input (Any): the json of the struqture 1 object to convert.
+        The first item is the valid instance of self created from the input creators and annihilators.
+        The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.
 
-Returns:
-    Any: the input object in struqture 2 form.
+        Args:
+           creators (List[int]): The creator indices to have in the instance of self.
+           annihilators (List[int]): The annihilators indices to have in the instance of self.
+           value (CalculatorComplex): The CalculatorComplex to transform.
 
-Raises:
-    ValueError: Input could not be deserialised form json.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
+        Returns:
+           (self, CalculatorComplex): The valid instance of self and the corresponding transformed CalculatorComplex.
 
-    def from_bincode(self, input: bytearray): # type: ignore
+        Raises:
+            TypeError: Value is not CalculatorComplex.
+            ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
-Convert the bincode representation of the object to an instance using the [bincode] crate.
-
-Args:
-    input (bytearray): The serialized object (in [bincode] form).
-
-Returns:
-   The deserialized Spin System.
-
-Raises:
-    TypeError: Input cannot be converted to byte array.
-    ValueError: Input cannot be deserialized.
-"""
-
-    def to_bincode(self) -> bytearray: # type: ignore
+    def from_bincode(self, input: bytearray):  # type: ignore
         """
-Return the bincode representation of the object using the [bincode] crate.
+        Convert the bincode representation of the object to an instance using the [bincode] crate.
 
-Returns:
-    bytearray: The serialized object (in [bincode] form).
+        Args:
+            input (bytearray): The serialized object (in [bincode] form).
 
-Raises:
-    ValueError: Cannot serialize object to bytes.
-"""
+        Returns:
+           The deserialized Spin System.
 
-    def to_json(self) -> str: # type: ignore
+        Raises:
+            TypeError: Input cannot be converted to byte array.
+            ValueError: Input cannot be deserialized."""
+    def to_bincode(self) -> bytearray:  # type: ignore
         """
-Return the json representation of the object.
+        Return the bincode representation of the object using the [bincode] crate.
 
-Returns:
-    str: The serialized form of the object.
+        Returns:
+            bytearray: The serialized object (in [bincode] form).
 
-Raises:
-    ValueError: Cannot serialize object to json.
-"""
-
-    def from_json(self, input: str): # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to bytes."""
+    def to_json(self) -> str:  # type: ignore
         """
-Convert the json representation of the object to an instance.
+        Return the json representation of the object.
 
-Args:
-    input (str): The serialized object in json form.
+        Returns:
+            str: The serialized form of the object.
 
-Returns:
-    The deserialized object.
-
-Raises:
-    ValueError: Input cannot be deserialized.
-"""
-
-    def from_string(self, input: str) -> FermionProduct: # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to json."""
+    def from_json(self, input: str):  # type: ignore
         """
-Convert a string representation of the object to an instance.
+        Convert the json representation of the object to an instance.
 
-Args:
-    input (str): The serialized index in str representation.
+        Args:
+            input (str): The serialized object in json form.
 
-Returns:
-    self: The converted object.
+        Returns:
+            The deserialized object.
 
-Raises:
-    ValueError: Input cannot be converted from str.
-"""
-
-    def current_version(self) -> str: # type: ignore
+        Raises:
+            ValueError: Input cannot be deserialized."""
+    def from_string(self, input: str) -> FermionProduct:  # type: ignore
         """
-Returns the current version of the struqture library .
+        Convert a string representation of the object to an instance.
 
-Returns:
-    str: The current version of the library.
-"""
+        Args:
+            input (str): The serialized index in str representation.
 
-    def min_supported_version(self) -> str: # type: ignore
+        Returns:
+            self: The converted object.
+
+        Raises:
+            ValueError: Input cannot be converted from str."""
+    def current_version(self) -> str:  # type: ignore
         """
-Return the minimum version of struqture that supports this object.
+        Returns the current version of the struqture library .
 
-Returns:
-    str: The minimum version of the struqture library to deserialize this object.
-"""
-
-    def _get_serialisation_meta(self): # type: ignore
+        Returns:
+            str: The current version of the library."""
+    def min_supported_version(self) -> str:  # type: ignore
         """
-Returns the StruqtureSerialisationMeta of the object.
-"""
+        Return the minimum version of struqture that supports this object.
 
-    def json_schema(self) -> str: # type: ignore
+        Returns:
+            str: The minimum version of the struqture library to deserialize this object.
         """
-Return the JsonSchema for the json serialisation of the class.
+    def json_schema(self) -> str:  # type: ignore
+        """
+        Return the JsonSchema for the json serialisation of the class.
 
-Returns:
-    str: The json schema serialized to json
-"""
+        Returns:
+            str: The json schema serialized to json"""
 
 class HermitianFermionProduct(ProductType):
     """
-A product of fermionic creation and annihilation operators.
+    A product of fermionic creation and annihilation operators.
 
-The HermitianFermionProduct is used as an index for non-hermitian, normal ordered fermionic operators.
-A fermionic operator can be written as a sum over normal ordered products of creation and annihilation operators.
-The HermitianFermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
-weight of a product of operators in the sum.
+    The HermitianFermionProduct is used as an index for non-hermitian, normal ordered fermionic operators.
+    A fermionic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+    The HermitianFermionProduct is used as an index when setting or adding new summands to a fermionic operator and when querrying the
+    weight of a product of operators in the sum.
 
-Args:
-    creators (List[int]): List of creator sub-indices.
-    annihilators (List[int]): List of annihilator sub-indices.
+    Args:
+        creators (List[int]): List of creator sub-indices.
+        annihilators (List[int]): List of annihilator sub-indices.
 
-Returns:
-    self: The new (empty) HermitianFermionProduct.
+    Returns:
+        self: The new (empty) HermitianFermionProduct.
 
-Examples
---------
+    Examples
+    --------
 
-.. code-block:: python
+    .. code-block:: python
 
-    from struqture_py.fermions import HermitianFermionProduct
-    import numpy.testing as npt
-    # For instance, to represent $c_0a_1$
-    fp = HermitianFermionProduct([0], [0])
-    npt.assert_equal(fp.creators(), [0])
-    npt.assert_equal(fp.annihilators(), [0])
-    
-"""
+        from struqture_py.fermions import HermitianFermionProduct
+        import numpy.testing as npt
+        # For instance, to represent $c_0a_1$
+        fp = HermitianFermionProduct([0], [0])
+        npt.assert_equal(fp.creators(), [0])
+        npt.assert_equal(fp.annihilators(), [0])
+    """
 
     def __init__(self, creators: List[int], annihilators: List[int]):
-       return
-
-    def jordan_wigner(self): # type: ignore
+        return
+    def jordan_wigner(self):  # type: ignore
         """
-Transform the given fermionic object into a spin object using
-the Jordan Wigner mapping.
-"""
-
-    def hermitian_conjugate(self): # type: ignore
+        Transform the given fermionic object into a spin object using
+        the Jordan Wigner mapping."""
+    def hermitian_conjugate(self):  # type: ignore
         """
-Return the hermitian conjugate of self and its prefactor.
+        Return the hermitian conjugate of self and its prefactor.
 
-Returns:
-    (self, float): The hermitian conjugate of self and the potential sign it has picked up.
-"""
-
-    def is_natural_hermitian(self) -> bool: # type: ignore
+        Returns:
+            (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
-Return whether self is naturally hermitian.
-
-For spin objects, this is true when applying the hermitian conjugation does not change the sign.
-For bosonic and fermionic objects, this is true when creators == annihilators.
-For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
-
-Returns:
-    bool: Whether self is naturally hermitian or not.
-"""
-
-    def number_creators(self) -> int: # type: ignore
+    def is_natural_hermitian(self) -> bool:  # type: ignore
         """
-Get the number of creator indices of self.
+        Return whether self is naturally hermitian.
 
-Returns:
-    int: The number of creator indices in self.
-"""
+        For spin objects, this is true when applying the hermitian conjugation does not change the sign.
+        For bosonic and fermionic objects, this is true when creators == annihilators.
+        For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
-    def number_annihilators(self) -> int: # type: ignore
+        Returns:
+            bool: Whether self is naturally hermitian or not."""
+    def number_creators(self) -> int:  # type: ignore
         """
-Get the number of annihilator indices of self.
+        Get the number of creator indices of self.
 
-Returns:
-    int: The number of annihilator indices in self.
-"""
-
-    def current_number_modes(self) -> int: # type: ignore
+        Returns:
+            int: The number of creator indices in self."""
+    def number_annihilators(self) -> int:  # type: ignore
         """
-Returns the maximal number of modes self acts on.
+        Get the number of annihilator indices of self.
 
-Self acts on a state space of unknown dimension.
-There is only a lower bound of the dimension or number of modes based on the
-maximal mode the product of operators in the index acts on.
-For example an index consisting of one creator acting on mode 0 would have
-a current_number_modes of one. An index consisting of one annhihilator acting on 3
-would have current_number_modes of four.
-
-Returns:
-    int: The maximal number of modes self acts on.
-"""
-
-    def creators(self) -> List[int]: # type: ignore
+        Returns:
+            int: The number of annihilator indices in self."""
+    def current_number_modes(self) -> int:  # type: ignore
         """
-Return list of creator indices.
+        Returns the maximal number of modes self acts on.
 
-Returns:
-    List[int]: A list of the corresponding creator indices.
-"""
+        Self acts on a state space of unknown dimension.
+        There is only a lower bound of the dimension or number of modes based on the
+        maximal mode the product of operators in the index acts on.
+        For example an index consisting of one creator acting on mode 0 would have
+        a current_number_modes of one. An index consisting of one annhihilator acting on 3
+        would have current_number_modes of four.
 
-    def annihilators(self) -> List[int]: # type: ignore
+        Returns:
+            int: The maximal number of modes self acts on."""
+    def creators(self) -> List[int]:  # type: ignore
         """
-Return list of annihilator indices.
+        Return list of creator indices.
 
-Returns:
-    List[int]: A list of the corresponding annihilator indices.
-"""
-
-    def remap_modes(self): # type: ignore
+        Returns:
+            List[int]: A list of the corresponding creator indices."""
+    def annihilators(self) -> List[int]:  # type: ignore
         """
-Remap modes according to an input dictionary.
+        Return list of annihilator indices.
 
-Args:
-   reordering_dictionary (dict) - The dictionary specifying the remapping. It must represent a permutation.
-
-Returns:
-  (Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.
-
-Raises:
-   ValueError: Input reordering dictionary is not a permutation of the indices.
-"""
-
-    def create_valid_pair(self, creators: List[int], annihilators: List[int], value: Union[float, int, str, complex]): # type: ignore
+        Returns:
+            List[int]: A list of the corresponding annihilator indices."""
+    def remap_modes(self):  # type: ignore
         """
-Create valid pair of index and value to be set in an operator.
+        Remap modes according to an input dictionary.
 
-The first item is the valid instance of self created from the input creators and annihilators.
-The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.
+        Args:
+           reordering_dictionary (dict) - The dictionary specifying the remapping. It must represent a permutation.
 
-Args:
-   creators (List[int]): The creator indices to have in the instance of self.
-   annihilators (List[int]): The annihilators indices to have in the instance of self.
-   value (CalculatorComplex): The CalculatorComplex to transform.
+        Returns:
+          (Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.
 
-Returns:
-   (self, CalculatorComplex): The valid instance of self and the corresponding transformed CalculatorComplex.
-
-Raises:
-    TypeError: Value is not CalculatorComplex.
-    ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
-"""
-
-    def from_struqture_1(self, input: Any) -> Any: # type: ignore
+        Raises:
+           ValueError: Input reordering dictionary is not a permutation of the indices.
         """
-Convert a struqture 1 object to the equivalent object in struqture 2.
-
-Args:
-    input (Any): the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_json_struqture_1(self, input: Any) -> Any: # type: ignore
+    def create_valid_pair(self, creators: List[int], annihilators: List[int], value: Union[float, int, str, complex]):  # type: ignore
         """
-Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+        Create valid pair of index and value to be set in an operator.
 
-Args:
-    input (Any): the json of the struqture 1 object to convert.
+        The first item is the valid instance of self created from the input creators and annihilators.
+        The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.
 
-Returns:
-    Any: the input object in struqture 2 form.
+        Args:
+           creators (List[int]): The creator indices to have in the instance of self.
+           annihilators (List[int]): The annihilators indices to have in the instance of self.
+           value (CalculatorComplex): The CalculatorComplex to transform.
 
-Raises:
-    ValueError: Input could not be deserialised form json.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
+        Returns:
+           (self, CalculatorComplex): The valid instance of self and the corresponding transformed CalculatorComplex.
 
-    def from_bincode(self, input: bytearray): # type: ignore
+        Raises:
+            TypeError: Value is not CalculatorComplex.
+            ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
-Convert the bincode representation of the object to an instance using the [bincode] crate.
-
-Args:
-    input (bytearray): The serialized object (in [bincode] form).
-
-Returns:
-   The deserialized Spin System.
-
-Raises:
-    TypeError: Input cannot be converted to byte array.
-    ValueError: Input cannot be deserialized.
-"""
-
-    def to_bincode(self) -> bytearray: # type: ignore
+    def from_bincode(self, input: bytearray):  # type: ignore
         """
-Return the bincode representation of the object using the [bincode] crate.
+        Convert the bincode representation of the object to an instance using the [bincode] crate.
 
-Returns:
-    bytearray: The serialized object (in [bincode] form).
+        Args:
+            input (bytearray): The serialized object (in [bincode] form).
 
-Raises:
-    ValueError: Cannot serialize object to bytes.
-"""
+        Returns:
+           The deserialized Spin System.
 
-    def to_json(self) -> str: # type: ignore
+        Raises:
+            TypeError: Input cannot be converted to byte array.
+            ValueError: Input cannot be deserialized."""
+    def to_bincode(self) -> bytearray:  # type: ignore
         """
-Return the json representation of the object.
+        Return the bincode representation of the object using the [bincode] crate.
 
-Returns:
-    str: The serialized form of the object.
+        Returns:
+            bytearray: The serialized object (in [bincode] form).
 
-Raises:
-    ValueError: Cannot serialize object to json.
-"""
-
-    def from_json(self, input: str): # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to bytes."""
+    def to_json(self) -> str:  # type: ignore
         """
-Convert the json representation of the object to an instance.
+        Return the json representation of the object.
 
-Args:
-    input (str): The serialized object in json form.
+        Returns:
+            str: The serialized form of the object.
 
-Returns:
-    The deserialized object.
-
-Raises:
-    ValueError: Input cannot be deserialized.
-"""
-
-    def from_string(self, input: str) -> HermitianFermionProduct: # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to json."""
+    def from_json(self, input: str):  # type: ignore
         """
-Convert a string representation of the object to an instance.
+        Convert the json representation of the object to an instance.
 
-Args:
-    input (str): The serialized index in str representation.
+        Args:
+            input (str): The serialized object in json form.
 
-Returns:
-    self: The converted object.
+        Returns:
+            The deserialized object.
 
-Raises:
-    ValueError: Input cannot be converted from str.
-"""
-
-    def current_version(self) -> str: # type: ignore
+        Raises:
+            ValueError: Input cannot be deserialized."""
+    def from_string(self, input: str) -> HermitianFermionProduct:  # type: ignore
         """
-Returns the current version of the struqture library .
+        Convert a string representation of the object to an instance.
 
-Returns:
-    str: The current version of the library.
-"""
+        Args:
+            input (str): The serialized index in str representation.
 
-    def min_supported_version(self) -> str: # type: ignore
+        Returns:
+            self: The converted object.
+
+        Raises:
+            ValueError: Input cannot be converted from str."""
+    def current_version(self) -> str:  # type: ignore
         """
-Return the minimum version of struqture that supports this object.
+        Returns the current version of the struqture library .
 
-Returns:
-    str: The minimum version of the struqture library to deserialize this object.
-"""
-
-    def _get_serialisation_meta(self): # type: ignore
+        Returns:
+            str: The current version of the library."""
+    def min_supported_version(self) -> str:  # type: ignore
         """
-Returns the StruqtureSerialisationMeta of the object.
-"""
+        Return the minimum version of struqture that supports this object.
 
-    def json_schema(self) -> str: # type: ignore
+        Returns:
+            str: The minimum version of the struqture library to deserialize this object.
         """
-Return the JsonSchema for the json serialisation of the class.
+    def json_schema(self) -> str:  # type: ignore
+        """
+        Return the JsonSchema for the json serialisation of the class.
 
-Returns:
-    str: The json schema serialized to json
-"""
+        Returns:
+            str: The json schema serialized to json"""
 
-class FermionOperator:
+class FermionSystem(SystemType):
     """
-These are representations of systems of fermions.
+    These are representations of systems of fermions.
 
-FermionOperators are characterized by a FermionOperator to represent the hamiltonian of the spin system
-and an optional number of fermions.
+    FermionSystems are characterized by a FermionOperator to represent the hamiltonian of the spin system
+    and an optional number of fermions.
 
-Returns:
-    self: The new FermionSystem with the input number of fermions.
+    Args:
+        number_fermions (Optional[int]): The number of fermions in the FermionSystem.
 
-Examples
---------
+    Returns:
+        self: The new FermionSystem with the input number of fermions.
 
-.. code-block:: python
+    Examples
+    --------
 
-    import numpy.testing as npt
-    import scipy.sparse as sp
-    from qoqo_calculator_pyo3 import CalculatorComplex
-    from struqture_py.fermions import FermionOperator, FermionProduct
+    .. code-block:: python
 
-    ssystem = FermionOperator(2)
-    pp = FermionProduct([0], [0])
-    ssystem.add_operator_product(pp, 5.0)
-    npt.assert_equal(ssystem.current_number_modes(), 2)
-    npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-    npt.assert_equal(ssystem.keys(), [pp])
+        import numpy.testing as npt
+        import scipy.sparse as sp
+        from qoqo_calculator_pyo3 import CalculatorComplex
+        from struqture_py.fermions import FermionSystem, FermionProduct
 
-"""
-
-    def __init__(self):
-       return
-
-    def jordan_wigner(self): # type: ignore
-        """
-Transform the given fermionic object into a spin object using
-the Jordan Wigner mapping.
-"""
-
-    def keys(self) -> List[OperatorProduct]: # type: ignore
-        """
-Return a list of the unsorted keys in self.
-
-Returns:
-    List[OperatorProduct]: The sequence of keys of the self.
-"""
-
-    def empty_clone(self, capacity: Optional[int]) -> FermionOperator: # type: ignore
-        """
-Return an instance of self that has no entries but clones all other properties, with the given capacity.
-
-Args:
-    capacity (Optional[int]): The capacity of the new instance to create.
-
-Returns:
-    self: An empty clone with the same properties as self, with the given capacity.
-"""
-
-    def is_empty(self) -> bool: # type: ignore
-        """
-Return true if self contains no values.
-
-Returns:
-    bool: Whether self is empty or not.
-"""
-
-    def truncate(self, threshold: float) -> FermionOperator: # type: ignore
-        """
-Truncate self by returning a copy without entries under a threshold.
-
-Args:
-    threshold (float): The threshold for inclusion.
-
-Returns:
-    self: The truncated version of self.
-"""
-
-    def get(self, key) -> Union[float, int, str, complex]: # type: ignore
-        """
-Get the coefficient corresponding to the key.
-
-Args:
-    key: Product to get the value of.
-
-Returns:
-    CalculatorComplex: Value at key (or 0.0).
-
-Raises:
-    ValueError: Product could not be constructed from key.
-"""
-
-    def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]: # type: ignore
-        """
-Remove the value of the input key.
-
-Args:
-    key (Product type): The key of the value to remove.
-
- Returns:
-    Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
-
-Raises:
-    ValueError: Product could not be constructed.
-"""
-
-    def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]: # type: ignore
-        """
-Overwrite an existing entry or set a new entry in self.
-
-Args:
-    key (Product type): The key to set.
-    value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
-
-Returns:
-    Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
-
-Raises:
-    ValueError: Product could not be constructed.
-"""
-
-    def add_operator_product(self, key: ProductType): # type: ignore
-        """
-Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
-
-Args:
-    key (Product type): The key object
-
-Raises:
-    TypeError: Value is not CalculatorComplex or CalculatorFloat.
-    ValueError: Product could not be constructed.
-    ValueError: Error in add_operator_product function of self.
-"""
-
-    def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]: # type: ignore
-        """
-Return unsorted values in self.
-
-Returns:
-    List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
-"""
-
-    def hermitian_conjugate(self) -> FermionOperator: # type: ignore
-        """
-Return the hermitian conjugate of self.
-
-Returns:
-    self: The hermitian conjugate of self.
-"""
-
-    def current_number_modes(self) -> int: # type: ignore
-        """
-Return the current_number_modes input of self.
-
-Returns:
-    int: The number of modes in self.
-"""
-
-    def from_struqture_1(self, input: Any) -> Any: # type: ignore
-        """
-Convert a struqture 1 object to the equivalent object in struqture 2.
-
-Args:
-    input (Any): the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_json_struqture_1(self, input: Any) -> Any: # type: ignore
-        """
-Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
-
-Args:
-    input (Any): the json of the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised form json.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_bincode(self, input: bytearray): # type: ignore
-        """
-Convert the bincode representation of self to an instance using the [bincode] crate.
-
-Args:
-    input (bytearray): The serialized object (in [bincode] form).
-
-Returns:
-   The deserialized object.
-
-Raises:
-    TypeError: Input cannot be converted to byte array.
-    ValueError: Input cannot be deserialized.
-"""
-
-    def to_bincode(self) -> bytearray: # type: ignore
-        """
-Return the bincode representation of self using the [bincode] crate.
-
-Returns:
-    bytearray: The serialized object (in [bincode] form).
-
-Raises:
-    ValueError: Cannot serialize object to bytes.
-"""
-
-    def to_json(self) -> str: # type: ignore
-        """
-Return the json representation of self.
-
-Returns:
-    str: The serialized form of self.
-
-Raises:
-    ValueError: Cannot serialize object to json.
-"""
-
-    def from_json(self, input: str): # type: ignore
-        """
-Convert the json representation of self to an instance.
-
-Args:
-    input (str): The serialized object in json form.
-
-Returns:
-    The deserialized object.
-
-Raises:
-    ValueError: Input cannot be deserialized.
-"""
-
-    def current_version(self) -> str: # type: ignore
-        """
-Returns the current version of the struqture library .
-
-Returns:
-    str: The current version of the library.
-"""
-
-    def min_supported_version(self) -> str: # type: ignore
-        """
-Return the minimum version of struqture that supports this object.
-
-Returns:
-    str: The minimum version of the struqture library to deserialize this object.
-"""
-
-    def _get_serialisation_meta(self): # type: ignore
-        """
-Returns the StruqtureSerialisationMeta of the object.
-"""
-
-    def json_schema(self) -> str: # type: ignore
-        """
-Return the JsonSchema for the json serialisation of the class.
-
-Returns:
-    str: The json schema serialized to json
-"""
-
-class FermionHamiltonian:
+        ssystem = FermionSystem(2)
+        pp = FermionProduct([0], [0])
+        ssystem.add_operator_product(pp, 5.0)
+        npt.assert_equal(ssystem.number_modes(), 2)
+        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
+        npt.assert_equal(ssystem.keys(), [pp])
     """
-These are representations of systems of fermions.
 
-FermionHamiltonians are characterized by a FermionOperator to represent the hamiltonian of the spin system
-and an optional number of fermions.
-
-Returns:
-    self: The new FermionHamiltonianSystem with the input number of fermions.
-
-Examples
---------
-
-.. code-block:: python
-
-    import numpy.testing as npt
-    import scipy.sparse as sp
-    from qoqo_calculator_pyo3 import CalculatorComplex
-    from struqture_py.fermions import FermionHamiltonian, HermitianFermionProduct
-
-    ssystem = FermionHamiltonian()
-    pp = HermitianFermionProduct([0], [0])
-    ssystem.add_operator_product(pp, 5.0)
-    npt.assert_equal(ssystem.current_number_modes(), 2)
-    npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-    npt.assert_equal(ssystem.keys(), [pp])
-
-"""
-
-    def __init__(self):
-       return
-
-    def jordan_wigner(self): # type: ignore
+    def __init__(self, number_fermions: Optional[int]):
+        return
+    def jordan_wigner(self):  # type: ignore
         """
-Transform the given fermionic object into a spin object using
-the Jordan Wigner mapping.
-"""
-
-    def keys(self) -> List[OperatorProduct]: # type: ignore
+        Transform the given fermionic object into a spin object using
+        the Jordan Wigner mapping."""
+    def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
-Return a list of the unsorted keys in self.
+        Return a list of the unsorted keys in self.
 
-Returns:
-    List[OperatorProduct]: The sequence of keys of the self.
-"""
-
-    def empty_clone(self, capacity: Optional[int]) -> FermionHamiltonian: # type: ignore
+        Returns:
+            List[OperatorProduct]: The sequence of keys of the self."""
+    def empty_clone(self, capacity: Optional[int]) -> FermionSystem:  # type: ignore
         """
-Return an instance of self that has no entries but clones all other properties, with the given capacity.
+        Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
-Args:
-    capacity (Optional[int]): The capacity of the new instance to create.
+        Args:
+            capacity (Optional[int]): The capacity of the new instance to create.
 
-Returns:
-    self: An empty clone with the same properties as self, with the given capacity.
-"""
-
-    def is_empty(self) -> bool: # type: ignore
+        Returns:
+            self: An empty clone with the same properties as self, with the given capacity.
         """
-Return true if self contains no values.
-
-Returns:
-    bool: Whether self is empty or not.
-"""
-
-    def truncate(self, threshold: float) -> FermionHamiltonian: # type: ignore
+    def is_empty(self) -> bool:  # type: ignore
         """
-Truncate self by returning a copy without entries under a threshold.
+        Return true if self contains no values.
 
-Args:
-    threshold (float): The threshold for inclusion.
-
-Returns:
-    self: The truncated version of self.
-"""
-
-    def get(self, key) -> Union[float, int, str, complex]: # type: ignore
+        Returns:
+            bool: Whether self is empty or not."""
+    def truncate(self, threshold: float) -> FermionSystem:  # type: ignore
         """
-Get the coefficient corresponding to the key.
+        Truncate self by returning a copy without entries under a threshold.
 
-Args:
-    key: Product to get the value of.
+        Args:
+            threshold (float): The threshold for inclusion.
 
-Returns:
-    CalculatorComplex: Value at key (or 0.0).
-
-Raises:
-    ValueError: Product could not be constructed from key.
-"""
-
-    def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]: # type: ignore
+        Returns:
+            self: The truncated version of self."""
+    def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
-Remove the value of the input key.
+        Get the coefficient corresponding to the key.
 
-Args:
-    key (Product type): The key of the value to remove.
+        Args:
+            key: Product to get the value of.
 
- Returns:
-    Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
+        Returns:
+            CalculatorComplex: Value at key (or 0.0).
 
-Raises:
-    ValueError: Product could not be constructed.
-"""
-
-    def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]: # type: ignore
+        Raises:
+            ValueError: Product could not be constructed from key."""
+    def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
-Overwrite an existing entry or set a new entry in self.
+        Remove the value of the input key.
 
-Args:
-    key (Product type): The key to set.
-    value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
+        Args:
+            key (Product type): The key of the value to remove.
 
-Returns:
-    Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
+         Returns:
+            Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
-Raises:
-    ValueError: Product could not be constructed.
-"""
-
-    def add_operator_product(self, key: ProductType): # type: ignore
+        Raises:
+            ValueError: Product could not be constructed."""
+    def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
-Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
+        Overwrite an existing entry or set a new entry in self.
 
-Args:
-    key (Product type): The key object
+        Args:
+            key (Product type): The key to set.
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
 
-Raises:
-    TypeError: Value is not CalculatorComplex or CalculatorFloat.
-    ValueError: Product could not be constructed.
-    ValueError: Error in add_operator_product function of self.
-"""
+        Returns:
+            Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
 
-    def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]: # type: ignore
+        Raises:
+            ValueError: Product could not be constructed."""
+    def add_operator_product(self, key: ProductType):  # type: ignore
         """
-Return unsorted values in self.
+        Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
-Returns:
-    List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
-"""
+        Args:
+            key (Product type): The key object
 
-    def hermitian_conjugate(self) -> FermionHamiltonian: # type: ignore
+        Raises:
+            TypeError: Value is not CalculatorComplex or CalculatorFloat.
+            ValueError: Product could not be constructed.
+            ValueError: Error in add_operator_product function of self."""
+    def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
-Return the hermitian conjugate of self.
+        Return unsorted values in self.
 
-Returns:
-    self: The hermitian conjugate of self.
-"""
-
-    def current_number_modes(self) -> int: # type: ignore
+        Returns:
+            List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-Return the current_number_modes input of self.
-
-Returns:
-    int: The number of modes in self.
-"""
-
-    def from_struqture_1(self, input: Any) -> Any: # type: ignore
+    def hermitian_conjugate(self) -> FermionSystem:  # type: ignore
         """
-Convert a struqture 1 object to the equivalent object in struqture 2.
+        Return the hermitian conjugate of self.
 
-Args:
-    input (Any): the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_json_struqture_1(self, input: Any) -> Any: # type: ignore
+        Returns:
+            self: The hermitian conjugate of self."""
+    def current_number_modes(self) -> int:  # type: ignore
         """
-Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+        Return maximum index in self.
 
-Args:
-    input (Any): the json of the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised form json.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_bincode(self, input: bytearray): # type: ignore
+        Returns:
+            int: Maximum index."""
+    def number_modes(self) -> int:  # type: ignore
         """
-Convert the bincode representation of self to an instance using the [bincode] crate.
+        Return the number_modes input of self.
 
-Args:
-    input (bytearray): The serialized object (in [bincode] form).
-
-Returns:
-   The deserialized object.
-
-Raises:
-    TypeError: Input cannot be converted to byte array.
-    ValueError: Input cannot be deserialized.
-"""
-
-    def to_bincode(self) -> bytearray: # type: ignore
+        Returns:
+            int: The number of modes in self."""
+    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
         """
-Return the bincode representation of self using the [bincode] crate.
+        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
 
-Returns:
-    bytearray: The serialized object (in [bincode] form).
+        Args:
+            number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
 
-Raises:
-    ValueError: Cannot serialize object to bytes.
-"""
+        Returns:
+            Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
 
-    def to_json(self) -> str: # type: ignore
+        Raises:
+            ValueError: Error in adding terms to return values."""
+    def from_bincode(self, input: bytearray):  # type: ignore
         """
-Return the json representation of self.
+        Convert the bincode representation of self to an instance using the [bincode] crate.
 
-Returns:
-    str: The serialized form of self.
+        Args:
+            input (bytearray): The serialized object (in [bincode] form).
 
-Raises:
-    ValueError: Cannot serialize object to json.
-"""
+        Returns:
+           The deserialized object.
 
-    def from_json(self, input: str): # type: ignore
+        Raises:
+            TypeError: Input cannot be converted to byte array.
+            ValueError: Input cannot be deserialized."""
+    def to_bincode(self) -> bytearray:  # type: ignore
         """
-Convert the json representation of self to an instance.
+        Return the bincode representation of self using the [bincode] crate.
 
-Args:
-    input (str): The serialized object in json form.
+        Returns:
+            bytearray: The serialized object (in [bincode] form).
 
-Returns:
-    The deserialized object.
-
-Raises:
-    ValueError: Input cannot be deserialized.
-"""
-
-    def current_version(self) -> str: # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to bytes."""
+    def to_json(self) -> str:  # type: ignore
         """
-Returns the current version of the struqture library .
+        Return the json representation of self.
 
-Returns:
-    str: The current version of the library.
-"""
+        Returns:
+            str: The serialized form of self.
 
-    def min_supported_version(self) -> str: # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to json."""
+    def from_json(self, input: str):  # type: ignore
         """
-Return the minimum version of struqture that supports this object.
+        Convert the json representation of self to an instance.
 
-Returns:
-    str: The minimum version of the struqture library to deserialize this object.
-"""
+        Args:
+            input (str): The serialized object in json form.
 
-    def _get_serialisation_meta(self): # type: ignore
+        Returns:
+            The deserialized object.
+
+        Raises:
+            ValueError: Input cannot be deserialized."""
+    def current_version(self) -> str:  # type: ignore
         """
-Returns the StruqtureSerialisationMeta of the object.
-"""
+        Returns the current version of the struqture library .
 
-    def json_schema(self) -> str: # type: ignore
+        Returns:
+            str: The current version of the library."""
+    def min_supported_version(self) -> str:  # type: ignore
         """
-Return the JsonSchema for the json serialisation of the class.
+        Return the minimum version of struqture that supports this object.
 
-Returns:
-    str: The json schema serialized to json
-"""
+        Returns:
+            str: The minimum version of the struqture library to deserialize this object.
+        """
+    def json_schema(self) -> str:  # type: ignore
+        """
+        Return the JsonSchema for the json serialisation of the class.
 
-class FermionLindbladNoiseOperator(NoiseType):
+        Returns:
+            str: The json schema serialized to json"""
+
+class FermionHamiltonianSystem(SystemType):
     """
-These are representations of noisy systems of fermions.
+    These are representations of systems of fermions.
 
-In a FermionLindbladNoiseOperator is characterized by a FermionLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of fermions.
+    FermionHamiltonianSystems are characterized by a FermionOperator to represent the hamiltonian of the spin system
+    and an optional number of fermions.
 
-Examples
---------
+    Args:
+        number_fermions (Optional[int]): The number of fermions in the FermionHamiltonianSystem.
 
-.. code-block:: python
+    Returns:
+        self: The new FermionHamiltonianSystem with the input number of fermions.
 
-    import numpy.testing as npt
-    import scipy.sparse as sp
-    from qoqo_calculator_pyo3 import CalculatorComplex
-    from struqture_py.fermions import FermionLindbladNoiseOperator, FermionProduct
+    Examples
+    --------
 
-    slns = FermionLindbladNoiseOperator()
-    dp = FermionProduct([0], [1])
-    slns.add_operator_product((dp, dp), 2.0)
-    npt.assert_equal(slns.current_number_modes(), 2)
-    npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
+    .. code-block:: python
 
-"""
+        import numpy.testing as npt
+        import scipy.sparse as sp
+        from qoqo_calculator_pyo3 import CalculatorComplex
+        from struqture_py.fermions import FermionHamiltonianSystem, HermitianFermionProduct
 
-    def __init__(self):
-       return
+        ssystem = FermionHamiltonianSystem(2)
+        pp = HermitianFermionProduct([0], [0])
+        ssystem.add_operator_product(pp, 5.0)
+        npt.assert_equal(ssystem.number_modes(), 2)
+        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
+        npt.assert_equal(ssystem.keys(), [pp])
+    """
 
-    def jordan_wigner(self): # type: ignore
+    def __init__(self, number_fermions: Optional[int]):
+        return
+    def jordan_wigner(self):  # type: ignore
         """
-Transform the given fermionic object into a spin object using
-the Jordan Wigner mapping.
-"""
-
-    def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]: # type: ignore
+        Transform the given fermionic object into a spin object using
+        the Jordan Wigner mapping."""
+    def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
-Get the coefficient corresponding to the key.
+        Return a list of the unsorted keys in self.
 
-Args:
-    key (Tuple[Product type, Product type]): Product to get the value of.
-
-Returns:
-    CalculatorComplex: Value at key (or 0.0).
-
-Raises:
-    ValueError: Left-hand product could not be constructed from key.
-    ValueError: Right-hand product could not be constructed from key.
-"""
-
-    def remove(self, key: Tuple[ProductType, ProductType]) -> Optional[Union[float, int, str, complex]]: # type: ignore
+        Returns:
+            List[OperatorProduct]: The sequence of keys of the self."""
+    def empty_clone(self, capacity: Optional[int]) -> FermionHamiltonianSystem:  # type: ignore
         """
-Remove the value of the input object key.
+        Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
-Args:
-    key (Tuple[Product type, Product type]): The key of the value to remove.
+        Args:
+            capacity (Optional[int]): The capacity of the new instance to create.
 
-Returns:
-    Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was removed.
-
-Raises:
-    ValueError: Left-hand Product could not be constructed.
-    ValueError: Right-hand Product could not be constructed.
-"""
-
-    def set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> Optional[Union[float, int, str, complex]]: # type: ignore
+        Returns:
+            self: An empty clone with the same properties as self, with the given capacity.
         """
-Overwrite an existing entry or set a new entry in self.
-
-Args:
-    key (Tuple[Product type, Product type]): The key of the value to set.
-    value (CalculatorComplex): The value to set.
-
-Returns:
-    Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was overwritten.
-
-Raises:
-    ValueError: Left-hand Product could not be constructed.
-    ValueError: Right-hand Product could not be constructed.
-"""
-
-    def add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]): # type: ignore
+    def is_empty(self) -> bool:  # type: ignore
         """
-Adds a new (key object, CalculatorComplex) pair to existing entries.
+        Return true if self contains no values.
 
-Args:
-    key (Tuple[Product type, Product type]): The key of the value to add.
-    value (CalculatorComplex): The value to add.
-
-Raises:
-    TypeError: Value is not CalculatorComplex or CalculatorFloat.
-    ValueError: Left-hand product could not be constructed.
-    ValueError: Right-hand product could not be constructed.
-    ValueError: Error in add_operator_product function of self.
-"""
-
-    def keys(self) -> List[(OperatorProduct, OperatorProduct)]: # type: ignore
+        Returns:
+            bool: Whether self is empty or not."""
+    def truncate(self, threshold: float) -> FermionHamiltonianSystem:  # type: ignore
         """
-Return unsorted keys in self.
+        Truncate self by returning a copy without entries under a threshold.
 
-Returns:
-    List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
-"""
+        Args:
+            threshold (float): The threshold for inclusion.
 
-    def values(self) -> List[Union[float, int, str, complex]]: # type: ignore
+        Returns:
+            self: The truncated version of self."""
+    def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
-Return unsorted values in self.
+        Get the coefficient corresponding to the key.
 
-Returns:
-    List[CalculatorComplex]: The sequence of values of self.
-"""
+        Args:
+            key: Product to get the value of.
 
-    def empty_clone(self, capacity) -> FermionLindbladNoiseOperator: # type: ignore
+        Returns:
+            CalculatorComplex: Value at key (or 0.0).
+
+        Raises:
+            ValueError: Product could not be constructed from key."""
+    def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
-Return an instance of self that has no entries but clones all other properties, with the given capacity.
+        Remove the value of the input key.
 
-Args:
-    capacity: The capacity of the object to create.
+        Args:
+            key (Product type): The key of the value to remove.
 
-Returns:
-    self: An empty clone with the same properties as self, with the given capacity.
-"""
+         Returns:
+            Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
-    def is_empty(self) -> bool: # type: ignore
+        Raises:
+            ValueError: Product could not be constructed."""
+    def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
-Return true if object contains no values.
+        Overwrite an existing entry or set a new entry in self.
 
-Returns:
-    bool: Whether self is empty or not.
-"""
+        Args:
+            key (Product type): The key to set.
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to set.
 
-    def truncate(self, threshold) -> FermionLindbladNoiseOperator: # type: ignore
+        Returns:
+            Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
+
+        Raises:
+            ValueError: Product could not be constructed."""
+    def add_operator_product(self, key: ProductType):  # type: ignore
         """
-Truncate self by returning a copy without entries under a threshold.
+        Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
-Args:
-    threshold: The threshold for inclusion.
+        Args:
+            key (Product type): The key object
 
-Returns:
-    self: The truncated version of self.
-"""
-
-    def current_number_modes(self) -> int: # type: ignore
+        Raises:
+            TypeError: Value is not CalculatorComplex or CalculatorFloat.
+            ValueError: Product could not be constructed.
+            ValueError: Error in add_operator_product function of self."""
+    def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
-Return the current_number_modes input of self.
+        Return unsorted values in self.
 
-Returns:
-    int: The number of modes in self.
-"""
-
-    def from_struqture_1(self, input: Any) -> Any: # type: ignore
+        Returns:
+            List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-Convert a struqture 1 object to the equivalent object in struqture 2.
-
-Args:
-    input (Any): the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_json_struqture_1(self, input: Any) -> Any: # type: ignore
+    def hermitian_conjugate(self) -> FermionHamiltonianSystem:  # type: ignore
         """
-Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+        Return the hermitian conjugate of self.
 
-Args:
-    input (Any): the json of the struqture 1 object to convert.
-
-Returns:
-    Any: the input object in struqture 2 form.
-
-Raises:
-    ValueError: Input could not be deserialised form json.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_bincode(self, input: bytearray): # type: ignore
+        Returns:
+            self: The hermitian conjugate of self."""
+    def current_number_modes(self) -> int:  # type: ignore
         """
-Convert the bincode representation of the object to an instance using the [bincode] crate.
+        Return maximum index in self.
 
-Args:
-    input (bytearray): The serialized object (in [bincode] form).
-
-Returns:
-   The deserialized object.
-
-Raises:
-    TypeError: Input cannot be converted to byte array.
-    ValueError: Input cannot be deserialized.
-"""
-
-    def to_bincode(self) -> bytearray: # type: ignore
+        Returns:
+            int: Maximum index."""
+    def number_modes(self) -> int:  # type: ignore
         """
-Return the bincode representation of the object using the [bincode] crate.
+        Return the number_modes input of self.
 
-Returns:
-    bytearray: The serialized object (in [bincode] form).
-
-Raises:
-    ValueError: Cannot serialize object to bytes.
-"""
-
-    def to_json(self) -> str: # type: ignore
+        Returns:
+            int: The number of modes in self."""
+    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
         """
-Return the json representation of the object.
+        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
 
-Returns:
-    str: The serialized form of the object.
+        Args:
+            number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
 
-Raises:
-    ValueError: Cannot serialize object to json.
-"""
+        Returns:
+            Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
 
-    def from_json(self, input: str): # type: ignore
+        Raises:
+            ValueError: Error in adding terms to return values."""
+    def from_bincode(self, input: bytearray):  # type: ignore
         """
-Convert the json representation of the object to an instance.
+        Convert the bincode representation of self to an instance using the [bincode] crate.
 
-Args:
-    input (str): The serialized object in json form.
+        Args:
+            input (bytearray): The serialized object (in [bincode] form).
 
-Returns:
-    The deserialized object.
+        Returns:
+           The deserialized object.
 
-Raises:
-    ValueError: Input cannot be deserialized.
-"""
-
-    def current_version(self) -> str: # type: ignore
+        Raises:
+            TypeError: Input cannot be converted to byte array.
+            ValueError: Input cannot be deserialized."""
+    def to_bincode(self) -> bytearray:  # type: ignore
         """
-Returns the current version of the struqture library .
+        Return the bincode representation of self using the [bincode] crate.
 
-Returns:
-    str: The current version of the library.
-"""
+        Returns:
+            bytearray: The serialized object (in [bincode] form).
 
-    def min_supported_version(self) -> str: # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to bytes."""
+    def to_json(self) -> str:  # type: ignore
         """
-Return the minimum version of struqture that supports this object.
+        Return the json representation of self.
 
-Returns:
-    str: The minimum version of the struqture library to deserialize this object.
-"""
+        Returns:
+            str: The serialized form of self.
 
-    def _get_serialisation_meta(self): # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to json."""
+    def from_json(self, input: str):  # type: ignore
         """
-Returns the StruqtureSerialisationMeta of the object.
-"""
+        Convert the json representation of self to an instance.
 
-    def json_schema(self) -> str: # type: ignore
+        Args:
+            input (str): The serialized object in json form.
+
+        Returns:
+            The deserialized object.
+
+        Raises:
+            ValueError: Input cannot be deserialized."""
+    def current_version(self) -> str:  # type: ignore
         """
-Return the JsonSchema for the json serialisation of the class.
+        Returns the current version of the struqture library .
 
-Returns:
-    str: The json schema serialized to json
-"""
+        Returns:
+            str: The current version of the library."""
+    def min_supported_version(self) -> str:  # type: ignore
+        """
+        Return the minimum version of struqture that supports this object.
+
+        Returns:
+            str: The minimum version of the struqture library to deserialize this object.
+        """
+    def json_schema(self) -> str:  # type: ignore
+        """
+        Return the JsonSchema for the json serialisation of the class.
+
+        Returns:
+            str: The json schema serialized to json"""
+
+class FermionLindbladNoiseSystem(SystemType):
+    """
+    These are representations of noisy systems of fermions.
+
+    In a FermionLindbladNoiseSystem is characterized by a FermionLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of fermions.
+
+    Args:
+        number_fermions (Optional[int]): The number of fermions in the FermionLindbladNoiseSystem.
+
+    Returns:
+        self: The new FermionLindbladNoiseSystem with the input number of fermions.
+
+    Examples
+    --------
+
+    .. code-block:: python
+
+        import numpy.testing as npt
+        import scipy.sparse as sp
+        from qoqo_calculator_pyo3 import CalculatorComplex
+        from struqture_py.fermions import FermionLindbladNoiseSystem, FermionProduct
+
+        slns = FermionLindbladNoiseSystem()
+        dp = FermionProduct([0], [1])
+        slns.add_operator_product((dp, dp), 2.0)
+        npt.assert_equal(slns.current_number_modes(), 2)
+        npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
+    """
+
+    def __init__(self, number_fermions: Optional[int]):
+        return
+    def jordan_wigner(self):  # type: ignore
+        """
+        Transform the given fermionic object into a spin object using
+        the Jordan Wigner mapping."""
+    def separate_into_n_terms(self, number_creators_annihilators_left: Tuple[int, int], number_creators_annihilators_right: Tuple[int, int]) -> Tuple[FermionLindbladNoiseSystem, FermionLindbladNoiseSystem]:  # type: ignore
+        """
+        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+
+        Args:
+            number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
+            number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
+
+        Returns:
+            Tuple[FermionLindbladNoiseSystem, FermionLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
+
+        Raises:
+            ValueError: Error in adding terms to return values."""
+    def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
+        """
+        Get the coefficient corresponding to the key.
+
+        Args:
+            key (Tuple[Product type, Product type]): Product to get the value of.
+
+        Returns:
+            CalculatorComplex: Value at key (or 0.0).
+
+        Raises:
+            ValueError: Left-hand product could not be constructed from key.
+            ValueError: Right-hand product could not be constructed from key."""
+    def remove(self, key: Tuple[ProductType, ProductType]) -> Optional[Union[float, int, str, complex]]:  # type: ignore
+        """
+        Remove the value of the input object key.
+
+        Args:
+            key (Tuple[Product type, Product type]): The key of the value to remove.
+
+        Returns:
+            Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was removed.
+
+        Raises:
+            ValueError: Left-hand Product could not be constructed.
+            ValueError: Right-hand Product could not be constructed."""
+    def set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> Optional[Union[float, int, str, complex]]:  # type: ignore
+        """
+        Overwrite an existing entry or set a new entry in self.
+
+        Args:
+            key (Tuple[Product type, Product type]): The key of the value to set.
+            value (CalculatorComplex): The value to set.
+
+        Returns:
+            Optional[CalculatorComplex]: Key existed if this is not None, and this is the value it had before it was overwritten.
+
+        Raises:
+            ValueError: Left-hand Product could not be constructed.
+            ValueError: Right-hand Product could not be constructed."""
+    def add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]):  # type: ignore
+        """
+        Adds a new (key object, CalculatorComplex) pair to existing entries.
+
+        Args:
+            key (Tuple[Product type, Product type]): The key of the value to add.
+            value (CalculatorComplex): The value to add.
+
+        Raises:
+            TypeError: Value is not CalculatorComplex or CalculatorFloat.
+            ValueError: Left-hand product could not be constructed.
+            ValueError: Right-hand product could not be constructed.
+            ValueError: Error in add_operator_product function of self."""
+    def keys(self) -> List[(OperatorProduct, OperatorProduct)]:  # type: ignore
+        """
+        Return unsorted keys in self.
+
+        Returns:
+            List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self."""
+    def values(self) -> List[Union[float, int, str, complex]]:  # type: ignore
+        """
+        Return unsorted values in self.
+
+        Returns:
+            List[CalculatorComplex]: The sequence of values of self."""
+    def empty_clone(self, capacity) -> FermionLindbladNoiseSystem:  # type: ignore
+        """
+        Return an instance of self that has no entries but clones all other properties, with the given capacity.
+
+        Args:
+            capacity: The capacity of the object to create.
+
+        Returns:
+            self: An empty clone with the same properties as self, with the given capacity.
+        """
+    def is_empty(self) -> bool:  # type: ignore
+        """
+        Return true if object contains no values.
+
+        Returns:
+            bool: Whether self is empty or not."""
+    def truncate(self, threshold) -> FermionLindbladNoiseSystem:  # type: ignore
+        """
+        Truncate self by returning a copy without entries under a threshold.
+
+        Args:
+            threshold: The threshold for inclusion.
+
+        Returns:
+            self: The truncated version of self."""
+    def current_number_modes(self) -> int:  # type: ignore
+        """
+        Return maximum index in object.
+
+        Returns:
+            int: Maximum index."""
+    def number_modes(self) -> int:  # type: ignore
+        """
+        Return the number_modes input of self.
+
+        Returns:
+            int: The number of modes in self."""
+    def from_bincode(self, input: bytearray):  # type: ignore
+        """
+        Convert the bincode representation of the object to an instance using the [bincode] crate.
+
+        Args:
+            input (bytearray): The serialized object (in [bincode] form).
+
+        Returns:
+           The deserialized object.
+
+        Raises:
+            TypeError: Input cannot be converted to byte array.
+            ValueError: Input cannot be deserialized."""
+    def to_bincode(self) -> bytearray:  # type: ignore
+        """
+        Return the bincode representation of the object using the [bincode] crate.
+
+        Returns:
+            bytearray: The serialized object (in [bincode] form).
+
+        Raises:
+            ValueError: Cannot serialize object to bytes."""
+    def to_json(self) -> str:  # type: ignore
+        """
+        Return the json representation of the object.
+
+        Returns:
+            str: The serialized form of the object.
+
+        Raises:
+            ValueError: Cannot serialize object to json."""
+    def from_json(self, input: str):  # type: ignore
+        """
+        Convert the json representation of the object to an instance.
+
+        Args:
+            input (str): The serialized object in json form.
+
+        Returns:
+            The deserialized object.
+
+        Raises:
+            ValueError: Input cannot be deserialized."""
+    def current_version(self) -> str:  # type: ignore
+        """
+        Returns the current version of the struqture library .
+
+        Returns:
+            str: The current version of the library."""
+    def min_supported_version(self) -> str:  # type: ignore
+        """
+        Return the minimum version of struqture that supports this object.
+
+        Returns:
+            str: The minimum version of the struqture library to deserialize this object.
+        """
+    def json_schema(self) -> str:  # type: ignore
+        """
+        Return the JsonSchema for the json serialisation of the class.
+
+        Returns:
+            str: The json schema serialized to json"""
 
 class FermionLindbladOpenSystem(SystemType):
     """
-These are representations of noisy systems of fermions.
+    These are representations of noisy systems of fermions.
 
-In a FermionLindbladOpenSystem is characterized by a FermionLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of fermions.
+    In a FermionLindbladOpenSystem is characterized by a FermionLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of fermions.
 
-Args:
-    number_fermions (Optional[int]): The number of fermions in the FermionLindbladOpenSystem.
+    Args:
+        number_fermions (Optional[int]): The number of fermions in the FermionLindbladOpenSystem.
 
-Returns:
-    self: The new FermionLindbladOpenSystem with the input number of fermions.
+    Returns:
+        self: The new FermionLindbladOpenSystem with the input number of fermions.
 
-Examples
---------
+    Examples
+    --------
 
-.. code-block:: python
+    .. code-block:: python
 
-    import numpy.testing as npt
-    import scipy.sparse as sp
-    from qoqo_calculator_pyo3 import CalculatorComplex
-    from struqture_py.fermions import FermionLindbladOpenSystem, FermionProduct
+        import numpy.testing as npt
+        import scipy.sparse as sp
+        from qoqo_calculator_pyo3 import CalculatorComplex
+        from struqture_py.fermions import FermionLindbladOpenSystem, FermionProduct
 
-    slns = FermionLindbladOpenSystem()
-    dp = FermionProduct([0], [1])
-    slns.system_add_operator_product(dp, 2.0)
-    npt.assert_equal(slns.current_number_modes(), 2)
-    npt.assert_equal(slns.system().get(dp), CalculatorComplex(2))
-
-"""
+        slns = FermionLindbladOpenSystem()
+        dp = FermionProduct([0], [1])
+        slns.system_add_operator_product(dp, 2.0)
+        npt.assert_equal(slns.current_number_modes(), 2)
+        npt.assert_equal(slns.system().get(dp), CalculatorComplex(2))
+    """
 
     def __init__(self, number_fermions: Optional[int]):
-       return
-
-    def jordan_wigner(self): # type: ignore
+        return
+    def jordan_wigner(self):  # type: ignore
         """
-Transform the given fermionic object into a spin object using
-the Jordan Wigner mapping.
-"""
-
-    def current_number_modes(self) -> int: # type: ignore
+        Transform the given fermionic object into a spin object using
+        the Jordan Wigner mapping."""
+    def current_number_modes(self) -> int:  # type: ignore
         """
-Return the current_number_modes input of self.
+        Return maximum index in object.
 
-Returns:
-    int: The number of modes in self.
-"""
-
-    def system(self) -> SystemType: # type: ignore
+        Returns:
+            int: Maximum index."""
+    def number_modes(self) -> int:  # type: ignore
         """
-Return the system part of self.
+        Return the number_modes input of self.
 
-Returns:
-    System type: The system of self.
-"""
-
-    def noise(self) -> NoiseType: # type: ignore
+        Returns:
+            int: The number of modes in self."""
+    def system(self) -> SystemType:  # type: ignore
         """
-Return the noise part of self.
+        Return the system part of self.
 
-Returns:
-    Noise type: The noise of self.
-"""
-
-    def ungroup(self): # type: ignore
+        Returns:
+            System type: The system of self."""
+    def noise(self) -> NoiseType:  # type: ignore
         """
-Return a tuple of the system and the noise of self.
+        Return the noise part of self.
 
-Returns:
-    (System, Noise): The system and noise of self.
-"""
-
-    def group(self, system, noise) -> FermionLindbladOpenSystem: # type: ignore
+        Returns:
+            Noise type: The noise of self."""
+    def ungroup(self):  # type: ignore
         """
-Take a tuple of a system term and a noise term and combines them to be a OpenSystem.
+        Return a tuple of the system and the noise of self.
 
-Args:
-    system: The system to have in the new instance.
-    noise: The noise to have in the new instance.
-
-Returns:
-    self: The OpenSystem with input system and noise terms.
-
-Raises:
-    ValueError: System could not be constructed.
-    ValueError: Noise could not be constructed.
-    ValueError: Grouping could not be constructed.
-"""
-
-    def empty_clone(self) -> FermionLindbladOpenSystem: # type: ignore
+        Returns:
+            (System, Noise): The system and noise of self."""
+    def group(self, system, noise) -> FermionLindbladOpenSystem:  # type: ignore
         """
-Return an instance of self that has no entries but clones all other properties, with the given capacity.
+        Take a tuple of a system term and a noise term and combines them to be a OpenSystem.
 
-Returns:
-    self: An empty clone with the same properties as self, with the given capacity.
-"""
+        Args:
+            system: The system to have in the new instance.
+            noise: The noise to have in the new instance.
 
-    def truncate(self, threshold) -> FermionLindbladOpenSystem: # type: ignore
+        Returns:
+            self: The OpenSystem with input system and noise terms.
+
+        Raises:
+            ValueError: System could not be constructed.
+            ValueError: Noise could not be constructed.
+            ValueError: Grouping could not be constructed."""
+    def empty_clone(self) -> FermionLindbladOpenSystem:  # type: ignore
         """
-Truncate self by returning a copy without entries under a threshold.
+        Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
-Args:
-    threshold: The threshold for inclusion.
-
-Returns:
-    self: The truncated version of self.
-"""
-
-    def system_set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem: # type: ignore
+        Returns:
+            self: An empty clone with the same properties as self, with the given capacity.
         """
-Set a new entry in the system of the open system.
-
-Args:
-    key (Product type): Product key of set object.
-    value (Union[CalculatorComplex, CalculatorFloat]): Value of set object.
-
-Returns:
-    OpenSystem: The OpenSystem with the new entry.
-
-Raises:
-    ValueError: key element cannot be converted to product.
-    TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
-"""
-
-    def noise_set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem: # type: ignore
+    def truncate(self, threshold) -> FermionLindbladOpenSystem:  # type: ignore
         """
-Set a new entry in the noise of the open system.
+        Truncate self by returning a copy without entries under a threshold.
 
-Args:
-    key (Tuple[Product type, Product type]): Tuple of Products of set object.
-    value (CalculatorComplex): CalculatorComplex value of set object.
+        Args:
+            threshold: The threshold for inclusion.
 
-Returns:
-    OpenSystem: The OpenSystem with the new entry.
-
-Raises:
-    ValueError: Left key element cannot be converted to product.
-    ValueError: Right key element cannot be converted to product.
-    TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
-"""
-
-    def system_get(self, key: ProductType) -> Union[float, int, str, complex] or Union[float, int, str]: # type: ignore
+        Returns:
+            self: The truncated version of self."""
+    def system_set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem:  # type: ignore
         """
-Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.
+        Set a new entry in the system of the open system.
 
-Args:
-    key (Product type): Product key of set object.
+        Args:
+            key (Product type): Product key of set object.
+            value (Union[CalculatorComplex, CalculatorFloat]): Value of set object.
 
-Returns:
-    CalculatorComplex or CalculatorFloat: Value at key (or 0.0).
+        Returns:
+            OpenSystem: The OpenSystem with the new entry.
 
-Raises:
-    ValueError: key element cannot be converted to product.
-"""
-
-    def noise_get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]: # type: ignore
+        Raises:
+            ValueError: key element cannot be converted to product.
+            TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
-Get the CalculatorComplex coefficient corresponding to the key.
-
-Args:
-    key (Tuple[Product type, Product type]): Tuple of Products of set object.
-
-Returns:
-    CalculatorComplex: Value at key (or 0.0).
-
-Raises:
-    ValueError: Left key element cannot be converted to product.
-    ValueError: Right key element cannot be converted to product.
-"""
-
-    def system_add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem: # type: ignore
+    def noise_set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem:  # type: ignore
         """
-Add a new entry to the system of the open system.
+        Set a new entry in the noise of the open system.
 
-Args:
-    key (Product type): Product key of set object.
-    value (Union[CalculatorComplex, CalculatorFloat]): Value of set object.
+        Args:
+            key (Tuple[Product type, Product type]): Tuple of Products of set object.
+            value (CalculatorComplex): CalculatorComplex value of set object.
 
-Returns:
-    OpenSystem: The OpenSystem with the new entry.
+        Returns:
+            OpenSystem: The OpenSystem with the new entry.
 
-Raises:
-    ValueError: key element cannot be converted to product.
-    TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
-"""
-
-    def noise_add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem: # type: ignore
+        Raises:
+            ValueError: Left key element cannot be converted to product.
+            ValueError: Right key element cannot be converted to product.
+            TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
-Add a new entry to the system of the open system.
-
-Args:
-    key (Tuple[Product type, Product type]): Tuple of Products of set object.
-    value (CalculatorComplex): Value of set object.
-
-Returns:
-    OpenSystem: The OpenSystem with the new entry.
-
-Raises:
-    ValueError: Left key element cannot be converted to product.
-    ValueError: Right key element cannot be converted to product.
-    TypeError: Value cannot be converted to CalculatorComplex.
-"""
-
-    def from_struqture_1(self, input: Any) -> Any: # type: ignore
+    def system_get(self, key: ProductType) -> Union[float, int, str, complex] or Union[float, int, str]:  # type: ignore
         """
-Convert a struqture 1 object to the equivalent object in struqture 2.
+        Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.
 
-Args:
-    input (Any): the struqture 1 object to convert.
+        Args:
+            key (Product type): Product key of set object.
 
-Returns:
-    Any: the input object in struqture 2 form.
+        Returns:
+            CalculatorComplex or CalculatorFloat: Value at key (or 0.0).
 
-Raises:
-    ValueError: Input could not be deserialised.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_json_struqture_1(self, input: Any) -> Any: # type: ignore
+        Raises:
+            ValueError: key element cannot be converted to product."""
+    def noise_get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
-Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+        Get the CalculatorComplex coefficient corresponding to the key.
 
-Args:
-    input (Any): the json of the struqture 1 object to convert.
+        Args:
+            key (Tuple[Product type, Product type]): Tuple of Products of set object.
 
-Returns:
-    Any: the input object in struqture 2 form.
+        Returns:
+            CalculatorComplex: Value at key (or 0.0).
 
-Raises:
-    ValueError: Input could not be deserialised form json.
-    ValueError: Struqture 1 object could not be converted to struqture 2.
-"""
-
-    def from_bincode(self, input: bytearray): # type: ignore
+        Raises:
+            ValueError: Left key element cannot be converted to product.
+            ValueError: Right key element cannot be converted to product."""
+    def system_add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem:  # type: ignore
         """
-Convert the bincode representation of the object to an instance using the [bincode] crate.
+        Add a new entry to the system of the open system.
 
-Args:
-    input (bytearray): The serialized object (in [bincode] form).
+        Args:
+            key (Product type): Product key of set object.
+            value (Union[CalculatorComplex, CalculatorFloat]): Value of set object.
 
-Returns:
-   The deserialized object.
+        Returns:
+            OpenSystem: The OpenSystem with the new entry.
 
-Raises:
-    TypeError: Input cannot be converted to byte array.
-    ValueError: Input cannot be deserialized.
-"""
-
-    def to_bincode(self) -> bytearray: # type: ignore
+        Raises:
+            ValueError: key element cannot be converted to product.
+            TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
-Return the bincode representation of the object using the [bincode] crate.
-
-Returns:
-    bytearray: The serialized object (in [bincode] form).
-
-Raises:
-    ValueError: Cannot serialize object to bytes.
-"""
-
-    def to_json(self) -> str: # type: ignore
+    def noise_add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem:  # type: ignore
         """
-Return the json representation of the object.
+        Add a new entry to the system of the open system.
 
-Returns:
-    str: The serialized form of the object.
+        Args:
+            key (Tuple[Product type, Product type]): Tuple of Products of set object.
+            value (CalculatorComplex): Value of set object.
 
-Raises:
-    ValueError: Cannot serialize object to json.
-"""
+        Returns:
+            OpenSystem: The OpenSystem with the new entry.
 
-    def from_json(self, input: str): # type: ignore
+        Raises:
+            ValueError: Left key element cannot be converted to product.
+            ValueError: Right key element cannot be converted to product.
+            TypeError: Value cannot be converted to CalculatorComplex."""
+    def from_bincode(self, input: bytearray):  # type: ignore
         """
-Convert the json representation of the object to an instance.
+        Convert the bincode representation of the object to an instance using the [bincode] crate.
 
-Args:
-    input (str): The serialized object in json form.
+        Args:
+            input (bytearray): The serialized object (in [bincode] form).
 
-Returns:
-    The deserialized object.
+        Returns:
+           The deserialized object.
 
-Raises:
-    ValueError: Input cannot be deserialized.
-"""
-
-    def current_version(self) -> str: # type: ignore
+        Raises:
+            TypeError: Input cannot be converted to byte array.
+            ValueError: Input cannot be deserialized."""
+    def to_bincode(self) -> bytearray:  # type: ignore
         """
-Returns the current version of the struqture library .
+        Return the bincode representation of the object using the [bincode] crate.
 
-Returns:
-    str: The current version of the library.
-"""
+        Returns:
+            bytearray: The serialized object (in [bincode] form).
 
-    def min_supported_version(self) -> str: # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to bytes."""
+    def to_json(self) -> str:  # type: ignore
         """
-Return the minimum version of struqture that supports this object.
+        Return the json representation of the object.
 
-Returns:
-    str: The minimum version of the struqture library to deserialize this object.
-"""
+        Returns:
+            str: The serialized form of the object.
 
-    def _get_serialisation_meta(self): # type: ignore
+        Raises:
+            ValueError: Cannot serialize object to json."""
+    def from_json(self, input: str):  # type: ignore
         """
-Returns the StruqtureSerialisationMeta of the object.
-"""
+        Convert the json representation of the object to an instance.
 
-    def json_schema(self) -> str: # type: ignore
+        Args:
+            input (str): The serialized object in json form.
+
+        Returns:
+            The deserialized object.
+
+        Raises:
+            ValueError: Input cannot be deserialized."""
+    def current_version(self) -> str:  # type: ignore
         """
-Return the JsonSchema for the json serialisation of the class.
+        Returns the current version of the struqture library .
 
-Returns:
-    str: The json schema serialized to json
-"""
+        Returns:
+            str: The current version of the library."""
+    def min_supported_version(self) -> str:  # type: ignore
+        """
+        Return the minimum version of struqture that supports this object.
 
+        Returns:
+            str: The minimum version of the struqture library to deserialize this object.
+        """
+    def json_schema(self) -> str:  # type: ignore
+        """
+        Return the JsonSchema for the json serialisation of the class.
+
+        Returns:
+            str: The json schema serialized to json"""
