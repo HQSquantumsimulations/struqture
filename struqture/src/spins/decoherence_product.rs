@@ -64,9 +64,12 @@ use super::PauliProduct;
 /// \end{pmatrix}
 /// $$
 ///
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default,
+)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleDecoherenceOperator {
+    #[default]
     Identity,
     X,
     IY,
@@ -96,12 +99,6 @@ impl FromStr for SingleDecoherenceOperator {
                 pauli: s.to_string(),
             }),
         }
-    }
-}
-
-impl Default for SingleDecoherenceOperator {
-    fn default() -> Self {
-        SingleDecoherenceOperator::Identity
     }
 }
 

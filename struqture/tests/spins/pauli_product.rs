@@ -557,7 +557,7 @@ fn test_singlespinoperator_product() {
 fn test_pauli_product_schema() {
     let pp = PauliProduct::new();
     let schema = schemars::schema_for!(PauliProduct);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);

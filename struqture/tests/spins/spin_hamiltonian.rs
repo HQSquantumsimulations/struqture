@@ -818,7 +818,7 @@ fn test_spin_hamiltonian_schema() {
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
     let schema = schemars::schema_for!(SpinHamiltonian);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let validation = schema_checker.validate(&value);

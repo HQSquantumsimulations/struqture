@@ -1430,7 +1430,7 @@ fn test_mixed_open_system_schema(number_particles: Option<usize>) {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
     let schema = schemars::schema_for!(MixedLindbladOpenSystem);
-    let schema_checker = jsonschema::JSONSchema::compile(&serde_json::to_value(&schema).unwrap())
+    let schema_checker = jsonschema::validator_for(&serde_json::to_value(&schema).unwrap())
         .expect("schema is valid");
     let value = serde_json::to_value(&op).unwrap();
     let validation = schema_checker.validate(&value);
