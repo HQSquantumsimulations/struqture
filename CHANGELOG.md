@@ -6,17 +6,47 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 * Added links to examples in container types of the user documentation
 
+## 2.0.0-alpha.5
+
+* Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14).
+* Updated minimum supported Rust version from 1.57 to 1.76.
+* Updated minimum supported Python version from 3.8 to 3.9.
+* Fixed a bug when creating a Product from a bad JSON.
+
+
 ## 2.0.0-alpha.4
 
-* Updated to pyo3 0.22
+* Updated to pyo3 0.22 and python 3.13.
 
 ## 2.0.0-alpha.1 - 2.0.0-alpha.3
 
-* Additional changes from feedback regarding struqture 2.0
+* Additional changes from feedback regarding struqture 2.0.
 
 ## 2.0.0-alpha.0
 
-* First draft of the changes for struqture 2.0
+* First draft of the changes for struqture 2.0.
+
+## 1.11.0
+
+* Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14).
+* Updated minimum supported Rust version from 1.57 to 1.76.
+* Updated minimum supported Python version from 3.8 to 3.9.
+
+## 1.10.1
+
+* Fixed a build issue in 1.10.0.
+
+## 1.10.0
+
+* Updated to pyo3 0.22 and python 3.13.
+
+## 1.9.2
+
+* Fixed a bug when creating a Product from a bad JSON.
+
+## 1.9.0 - 1.9.1
+
+* Added methods to convert from struqture 2.0.0-alpha.3
 
 ## 1.8.0
 
@@ -24,19 +54,19 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.7.1
 
-* Fixed versioning bug
+* Fixed versioning bug.
 
 ## 1.7.0
 
-* Updated to pyo3 0.21
+* Updated to pyo3 0.21.
 
 ## 1.6.2
 
-* Updated VersionMissmatch error message
+* Updated VersionMissmatch error message.
 
 ## 1.6.1
 
-* Updated Cargo.lock (particularly mio 0.8.10->0.8.11)
+* Updated Cargo.lock (particularly mio 0.8.10->0.8.11).
 
 ## 1.6.0
 
@@ -45,7 +75,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.5.2
 
-* Updated to pyo3 0.20
+* Updated to pyo3 0.20.
 
 ## 1.5.1
 
@@ -69,7 +99,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## 1.3.1
 
 * Fixed bug allowing the construction of Hermitian operator products with annihilator index lower than creator index when there are leading equal indices.
-* Updated pyo3 dependency to 0.19
+* Updated pyo3 dependency to 0.19.
 
 ## 1.3.0
 
@@ -85,13 +115,13 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 1.1.0
 
-* Added support for sigma +, sigma - and sigma z spin basis
+* Added support for sigma +, sigma - and sigma z spin basis.
 
 ## 1.0.1
 
-* Updated to pyo3 0.18 and test-case 3.0
+* Updated to pyo3 0.18 and test-case 3.0.
 
 ## 1.0.0
 
-* Added `noise_get` and `system_get` getters for all OpenSystems in python interface
-* Added a number of particles check to MixedHamiltonian, MixedSystem and MixedLindbladNoiseSystem
+* Added `noise_get` and `system_get` getters for all OpenSystems in python interface.
+* Added a number of particles check to MixedHamiltonian, MixedSystem and MixedLindbladNoiseSystem.
