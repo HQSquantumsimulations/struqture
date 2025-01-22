@@ -226,7 +226,7 @@ impl OperateOnState<'_> for FermionHamiltonian {
 }
 
 impl OperateOnModes<'_> for FermionHamiltonian {
-    /// Return maximum index in FermionHamiltonian internal_map.
+    /// Gets the maximum index of the FermionHamiltonian.
     ///
     /// # Returns
     ///

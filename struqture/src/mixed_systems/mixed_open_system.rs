@@ -66,7 +66,7 @@ impl crate::SerializationSupport for MixedLindbladOpenSystem {
         crate::StruqtureType::MixedLindbladOpenSystem
     }
 }
-impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
+impl OpenSystem<'_> for MixedLindbladOpenSystem {
     type System = MixedHamiltonian;
     type Noise = MixedLindbladNoiseOperator;
 

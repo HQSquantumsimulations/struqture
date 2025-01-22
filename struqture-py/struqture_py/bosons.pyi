@@ -145,6 +145,32 @@ class BosonProduct(ProductType):
             TypeError: Value is not CalculatorComplex.
             ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -213,6 +239,9 @@ class BosonProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -337,6 +366,32 @@ class HermitianBosonProduct(ProductType):
             TypeError: Value is not CalculatorComplex.
             ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -405,6 +460,9 @@ class HermitianBosonProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -452,7 +510,7 @@ class BosonOperator:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> BosonSystem:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> BosonOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -468,7 +526,7 @@ class BosonOperator:
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> BosonSystem:  # type: ignore
+    def truncate(self, threshold: float) -> BosonOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -532,7 +590,7 @@ class BosonOperator:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> BosonSystem:  # type: ignore
+    def hermitian_conjugate(self) -> BosonOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -543,16 +601,10 @@ class BosonOperator:
         Return maximum index in self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
-        """
-        Return the number_modes input of self.
-
-        Returns:
             int: The number of modes in self."""
-    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+        Convert a struqture 1 object to the equivalent object in struqture 2.
 
         Args:
             number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
@@ -561,7 +613,21 @@ class BosonOperator:
             Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
 
         Raises:
-            ValueError: Error in adding terms to return values."""
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -618,6 +684,9 @@ class BosonOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -662,7 +731,7 @@ class BosonHamiltonian:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> BosonHamiltonianSystem:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> BosonHamiltonian:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -678,7 +747,7 @@ class BosonHamiltonian:
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> BosonHamiltonianSystem:  # type: ignore
+    def truncate(self, threshold: float) -> BosonHamiltonian:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -742,7 +811,7 @@ class BosonHamiltonian:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> BosonHamiltonianSystem:  # type: ignore
+    def hermitian_conjugate(self) -> BosonHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -753,16 +822,10 @@ class BosonHamiltonian:
         Return maximum index in self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
-        """
-        Return the number_modes input of self.
-
-        Returns:
             int: The number of modes in self."""
-    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+        Convert a struqture 1 object to the equivalent object in struqture 2.
 
         Args:
             number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
@@ -771,7 +834,21 @@ class BosonHamiltonian:
             Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
 
         Raises:
-            ValueError: Error in adding terms to return values."""
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -828,6 +905,9 @@ class BosonHamiltonian:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -867,19 +947,6 @@ class BosonLindbladNoiseOperator(NoiseType):
 
     def __init__(self, number_bosons: Optional[int]):
         return
-    def separate_into_n_terms(self, number_creators_annihilators_left: Tuple[int, int], number_creators_annihilators_right: Tuple[int, int]) -> Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]:  # type: ignore
-        """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
-
-        Args:
-            number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
-            number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
-
-        Returns:
-            Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
     def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -945,7 +1012,7 @@ class BosonLindbladNoiseOperator(NoiseType):
 
         Returns:
             List[CalculatorComplex]: The sequence of values of self."""
-    def empty_clone(self, capacity) -> BosonLindbladNoiseSystem:  # type: ignore
+    def empty_clone(self, capacity) -> BosonLindbladNoiseOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -961,7 +1028,7 @@ class BosonLindbladNoiseOperator(NoiseType):
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold) -> BosonLindbladNoiseSystem:  # type: ignore
+    def truncate(self, threshold) -> BosonLindbladNoiseOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -975,13 +1042,33 @@ class BosonLindbladNoiseOperator(NoiseType):
         Return maximum index in object.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
+            int: The number of modes in self."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Return the number_modes input of self.
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
 
         Returns:
-            int: The number of modes in self."""
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1038,6 +1125,9 @@ class BosonLindbladNoiseOperator(NoiseType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1079,12 +1169,6 @@ class BosonLindbladOpenSystem(SystemType):
     def current_number_modes(self) -> int:  # type: ignore
         """
         Return maximum index in object.
-
-        Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
-        """
-        Return the number_modes input of self.
 
         Returns:
             int: The number of modes in self."""
@@ -1223,6 +1307,32 @@ class BosonLindbladOpenSystem(SystemType):
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to CalculatorComplex."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1279,6 +1389,9 @@ class BosonLindbladOpenSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.

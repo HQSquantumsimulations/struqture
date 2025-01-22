@@ -178,15 +178,15 @@ impl<'a> OperateOnDensityMatrix<'a> for QubitHamiltonian {
     }
 }
 
-impl OperateOnState<'_> for SpinHamiltonian {
+impl OperateOnState<'_> for QubitHamiltonian {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         self.clone()
     }
 }
 
-impl OperateOnSpins<'_> for SpinHamiltonian {
-    /// Gets the maximum index of the SpinHamiltonian.
+impl OperateOnSpins<'_> for QubitHamiltonian {
+    /// Gets the maximum index of the QubitHamiltonian.
     ///
     /// # Returns
     ///
@@ -204,10 +204,10 @@ impl OperateOnSpins<'_> for SpinHamiltonian {
     }
 }
 
-impl HermitianOperateOnSpins<'_> for SpinHamiltonian {}
+impl HermitianOperateOnSpins<'_> for QubitHamiltonian {}
 
-impl ToSparseMatrixOperator<'_> for SpinHamiltonian {}
-impl<'a> ToSparseMatrixSuperOperator<'a> for SpinHamiltonian {
+impl ToSparseMatrixOperator<'_> for QubitHamiltonian {}
+impl<'a> ToSparseMatrixSuperOperator<'a> for QubitHamiltonian {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,

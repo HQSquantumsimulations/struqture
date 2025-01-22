@@ -199,8 +199,13 @@ impl<'a> OperateOnDensityMatrix<'a> for QubitLindbladNoiseOperator {
     }
 }
 
+<<<<<<< HEAD
 impl OperateOnSpins<'_> for SpinLindbladNoiseOperator {
     /// Gets the maximum index of the SpinLindbladNoiseOperator.
+=======
+impl OperateOnSpins<'_> for QubitLindbladNoiseOperator {
+    /// Gets the maximum index of the QubitLindbladNoiseOperator.
+>>>>>>> 9f5df14 (Re-generated .pyi files)
     ///
     /// # Returns
     ///

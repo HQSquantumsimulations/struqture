@@ -181,6 +181,32 @@ class PauliProduct(ProductType):
 
         Returns:
             (self, complex):  The multiplied objects and the resulting prefactor."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -249,6 +275,9 @@ class PauliProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -404,6 +433,32 @@ class DecoherenceProduct(ProductType):
 
         Returns:
             (self, complex):  The multiplied objects and the resulting prefactor."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -472,6 +527,9 @@ class DecoherenceProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -525,7 +583,7 @@ class QubitOperator:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> SpinSystem:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> QubitOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -541,7 +599,7 @@ class QubitOperator:
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> SpinSystem:  # type: ignore
+    def truncate(self, threshold: float) -> QubitOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -605,7 +663,7 @@ class QubitOperator:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> SpinSystem:  # type: ignore
+    def hermitian_conjugate(self) -> QubitOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -616,25 +674,13 @@ class QubitOperator:
         Return maximum spin index in self.
 
         Returns:
-            int: Maximum index."""
+            int: The number of spins in self."""
     def number_spins(self) -> int:  # type: ignore
         """
         Return the number_spins input of self.
 
         Returns:
-            int: The number of spins in self."""
-    def separate_into_n_terms(self, number_spins: int) -> Tuple[Self, Self]:  # type: ignore
-        """
-        Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
-
-        Args:
-            number_spins (int): Number of spins to filter for in the keys.
-
-        Returns:
-            Tuple[Self, Self]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
+            int: Maximum index."""
     def sparse_matrix_coo(self, number_spins: Optional[int]) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
@@ -665,7 +711,7 @@ class QubitOperator:
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def unitary_sparse_matrix_coo(self) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Return the unitary part of the superoperator in the sparse COO format.
 
@@ -675,7 +721,7 @@ class QubitOperator:
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], complex]]:  # type: ignore
+    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]:  # type: ignore
         """
         Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
 
@@ -685,6 +731,32 @@ class QubitOperator:
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -741,6 +813,9 @@ class QubitOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -794,7 +869,7 @@ class QubitHamiltonian:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> SpinHamiltonianSystem:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> QubitHamiltonian:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -810,7 +885,7 @@ class QubitHamiltonian:
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> SpinHamiltonianSystem:  # type: ignore
+    def truncate(self, threshold: float) -> QubitHamiltonian:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -874,7 +949,7 @@ class QubitHamiltonian:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> SpinHamiltonianSystem:  # type: ignore
+    def hermitian_conjugate(self) -> QubitHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -885,25 +960,13 @@ class QubitHamiltonian:
         Return maximum spin index in self.
 
         Returns:
-            int: Maximum index."""
+            int: The number of spins in self."""
     def number_spins(self) -> int:  # type: ignore
         """
         Return the number_spins input of self.
 
         Returns:
-            int: The number of spins in self."""
-    def separate_into_n_terms(self, number_spins: int) -> Tuple[Self, Self]:  # type: ignore
-        """
-        Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
-
-        Args:
-            number_spins (int): Number of spins to filter for in the keys.
-
-        Returns:
-            Tuple[Self, Self]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
+            int: Maximum index."""
     def sparse_matrix_coo(self, number_spins: Optional[int]) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
@@ -934,7 +997,7 @@ class QubitHamiltonian:
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def unitary_sparse_matrix_coo(self) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Return the unitary part of the superoperator in the sparse COO format.
 
@@ -944,7 +1007,7 @@ class QubitHamiltonian:
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], complex]]:  # type: ignore
+    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]:  # type: ignore
         """
         Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
 
@@ -954,6 +1017,32 @@ class QubitHamiltonian:
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1010,6 +1099,9 @@ class QubitHamiltonian:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1056,7 +1148,7 @@ class QubitLindbladNoiseOperator(NoiseType):
         """
         Transform the given spin object into a fermionic object using
         the Jordan Wigner mapping."""
-    def separate_into_n_terms(self, number_spins_left: int, number_spins_right: int) -> Tuple[SpinLindbladNoiseSystem, SpinLindbladNoiseSystem]:  # type: ignore
+    def separate_into_n_terms(self, number_spins_left: int, number_spins_right: int) -> Tuple[QubitLindbladNoiseOperator, QubitLindbladNoiseOperator]:  # type: ignore
         """
         Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
 
@@ -1134,7 +1226,7 @@ class QubitLindbladNoiseOperator(NoiseType):
 
         Returns:
             List[CalculatorComplex]: The sequence of values of self."""
-    def empty_clone(self, capacity) -> SpinLindbladNoiseSystem:  # type: ignore
+    def empty_clone(self, capacity) -> QubitLindbladNoiseOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -1150,7 +1242,7 @@ class QubitLindbladNoiseOperator(NoiseType):
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold) -> SpinLindbladNoiseSystem:  # type: ignore
+    def truncate(self, threshold) -> QubitLindbladNoiseOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -1164,13 +1256,13 @@ class QubitLindbladNoiseOperator(NoiseType):
         Return maximum spin index in object.
 
         Returns:
-            int: Maximum index."""
+            int: The number of spins in self."""
     def number_spins(self) -> int:  # type: ignore
         """
         Return the number_spins input of self.
 
         Returns:
-            int: The number of spins in self."""
+            int: Maximum index."""
     def sparse_matrix_superoperator_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Construct the sparse matrix representation of the superoperator in COO representation.
@@ -1188,7 +1280,7 @@ class QubitLindbladNoiseOperator(NoiseType):
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def unitary_sparse_matrix_coo(self) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Return the unitary part of the superoperator in the sparse COO format.
 
@@ -1198,7 +1290,7 @@ class QubitLindbladNoiseOperator(NoiseType):
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], complex]]:  # type: ignore
+    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]:  # type: ignore
         """
         Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
 
@@ -1208,6 +1300,32 @@ class QubitLindbladNoiseOperator(NoiseType):
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1264,6 +1382,9 @@ class QubitLindbladNoiseOperator(NoiseType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1314,13 +1435,13 @@ class QubitLindbladOpenSystem(SystemType):
         Return maximum spin index in object.
 
         Returns:
-            int: Maximum index."""
+            int: The number of spins in self."""
     def number_spins(self) -> int:  # type: ignore
         """
         Return the number_spins input of self.
 
         Returns:
-            int: The number of spins in self."""
+            int: Maximum index."""
     def system(self) -> SystemType:  # type: ignore
         """
         Return the system part of self.
@@ -1339,7 +1460,7 @@ class QubitLindbladOpenSystem(SystemType):
 
         Returns:
             (System, Noise): The system and noise of self."""
-    def group(self, system, noise) -> SpinLindbladOpenSystem:  # type: ignore
+    def group(self, system, noise) -> QubitLindbladOpenSystem:  # type: ignore
         """
         Take a tuple of a system term and a noise term and combines them to be a OpenSystem.
 
@@ -1354,14 +1475,14 @@ class QubitLindbladOpenSystem(SystemType):
             ValueError: System could not be constructed.
             ValueError: Noise could not be constructed.
             ValueError: Grouping could not be constructed."""
-    def empty_clone(self) -> SpinLindbladOpenSystem:  # type: ignore
+    def empty_clone(self) -> QubitLindbladOpenSystem:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
-    def truncate(self, threshold) -> SpinLindbladOpenSystem:  # type: ignore
+    def truncate(self, threshold) -> QubitLindbladOpenSystem:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -1473,7 +1594,7 @@ class QubitLindbladOpenSystem(SystemType):
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def unitary_sparse_matrix_coo(self) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Return the unitary part of the superoperator in the sparse COO format.
 
@@ -1483,7 +1604,7 @@ class QubitLindbladOpenSystem(SystemType):
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], complex]]:  # type: ignore
+    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]:  # type: ignore
         """
         Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
 
@@ -1493,6 +1614,32 @@ class QubitLindbladOpenSystem(SystemType):
         Raises:
             ValueError: CalculatorError.
             RuntimeError: Could not convert to complex superoperator matrix."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1549,6 +1696,9 @@ class QubitLindbladOpenSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1627,48 +1777,6 @@ class PlusMinusProduct(ProductType):
 
         Returns:
             self: The entry was correctly set and the PlusMinusProduct is returned."""
-    def get(self, index: int) -> Optional[str]:  # type: ignore
-        """
-        Get the pauli matrix corresponding to the index.
-
-        Args:
-            index (int): Index of get object.
-
-        Returns:
-            Optional[str]: The key's corresponding value (if it exists)."""
-    def keys(self) -> List[int]:  # type: ignore
-        """
-        Return a list of the unsorted keys in self.
-
-        Returns:
-            List[int]: The sequence of qubit index keys of self."""
-    def current_number_spins(self) -> int:  # type: ignore
-        """
-        Return maximum index in self.
-
-        Returns:
-            int: Maximum index."""
-    def remap_qubits(self, mapping: Dict[int, int]) -> PlusMinusProduct:  # type: ignore
-        """
-        Remap the qubits in a new instance of self (returned).
-
-        Args:
-            mapping (Dict[int, int]): The map containing the {qubit: qubit} mapping to use.
-
-        Returns:
-            self: The new instance of self with the qubits remapped."""
-    def concatenate(self, other: PlusMinusProduct) -> List[int]:  # type: ignore
-        """
-        Return the concatenation of two objects of type `self` with no overlapping qubits.
-
-        Args:
-            other (self): The object to concatenate self with.
-
-        Returns:
-            List[int]: A list of the corresponding creator indices.
-
-        Raises:
-            ValueError: The two objects could not be concatenated."""
     def from_product(self, value: PauliProduct or DecoherenceProduct) -> List[Tuple[(PlusMinusProduct, Union[float, int, str, complex])]]:  # type: ignore
         """
         Creates a list of corresponding (PlusMinusProduct, CalculatorComplex) tuples from the input PauliProduct or DecoherenceProduct.
@@ -1681,30 +1789,12 @@ class PlusMinusProduct(ProductType):
 
         Raises:
             ValueError: Input is neither a PauliProduct nor a DecoherenceProduct."""
-    def to_pauli_product(self) -> List[Tuple[(PauliProduct, Union[float, int, str, complex])]]:  # type: ignore
-        """
-        DEPRECATED: Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
-
-        This function is deprecated, please use `to_pauli_product_list`
-
-        Returns:
-            List[Tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
-        """
     def to_pauli_product_list(self) -> List[Tuple[(PauliProduct, Union[float, int, str, complex])]]:  # type: ignore
         """
         Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
 
         Returns:
             List[Tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
-        """
-    def to_decoherence_product(self) -> List[Tuple[(DecoherenceProduct, Union[float, int, str, complex])]]:  # type: ignore
-        """
-        DEPRECATED: Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
-
-        This function is deprecated, please use `to_decoherence_product_list`
-
-        Returns:
-            List[Tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
         """
     def to_decoherence_product_list(self) -> List[Tuple[(DecoherenceProduct, Union[float, int, str, complex])]]:  # type: ignore
         """
@@ -1730,6 +1820,80 @@ class PlusMinusProduct(ProductType):
 
         Returns:
             bool: Whether self is naturally hermitian or not."""
+    def get(self, index: int) -> Optional[str]:  # type: ignore
+        """
+        Get the pauli matrix corresponding to the index.
+
+        Args:
+            index (int): Index of get object.
+
+        Returns:
+            Optional[str]: The key's corresponding value (if it exists)."""
+    def keys(self) -> List[int]:  # type: ignore
+        """
+        Return a list of the unsorted keys in self.
+
+        Returns:
+            List[int]: The sequence of qubit index keys of self."""
+    def current_number_spins(self) -> int:  # type: ignore
+        """
+        Return maximum index in self.
+
+        Returns:
+            int: Maximum index."""
+    def is_empty(self) -> bool:  # type: ignore
+        """
+        Return whether self is empty or not.
+
+        Returns:
+            bool: Whether self is empty or not."""
+    def remap_qubits(self, mapping: Dict[int, int]) -> PlusMinusProduct:  # type: ignore
+        """
+        Remap the qubits in a new instance of self (returned).
+
+        Args:
+            mapping (Dict[int, int]): The map containing the {qubit: qubit} mapping to use.
+
+        Returns:
+            self: The new instance of self with the qubits remapped."""
+    def concatenate(self, other: PlusMinusProduct) -> List[int]:  # type: ignore
+        """
+        Return the concatenation of two objects of type `self` with no overlapping qubits.
+
+        Args:
+            other (self): The object to concatenate self with.
+
+        Returns:
+            List[int]: A list of the corresponding creator indices.
+
+        Raises:
+            ValueError: The two objects could not be concatenated."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1798,6 +1962,9 @@ class PlusMinusProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1837,21 +2004,9 @@ class PlusMinusOperator:
         """
         Transform the given spin object into a fermionic object using
         the Jordan Wigner mapping."""
-    def separate_into_n_terms(self):  # type: ignore
+    def from_qubit_operator(self, value: QubitOperator) -> PlusMinusOperator:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
-
-        Args
-            number_spins (int): Number of spins to filter for in the keys.
-
-        Returns
-            (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
-    def from_spin_system(self, value: SpinSystem) -> PlusMinusOperator:  # type: ignore
-        """
-        Convert a SpinSystem into a PlusMinusOperator.
+        Convert a QubitOperator into a PlusMinusOperator.
 
         Args:
             value (SpinSystem): The SpinSystem to create the PlusMinusOperator from.
@@ -1860,10 +2015,10 @@ class PlusMinusOperator:
             PlusMinusOperator: The operator created from the input SpinSystem.
 
         Raises:
-            ValueError: Could not create SpinSystem from input."""
-    def from_spin_hamiltonian_system(self, value: SpinHamiltonianSystem) -> PlusMinusOperator:  # type: ignore
+            ValueError: Could not create QubitOperator from input."""
+    def from_qubit_hamiltonian(self, value: QubitHamiltonian) -> PlusMinusOperator:  # type: ignore
         """
-        Convert a SpinHamiltonianSystem into a PlusMinusOperator.
+        Convert a QubitHamiltonian into a PlusMinusOperator.
 
         Args:
             value (SpinHamiltonianSystem): The SpinHamiltonianSystem to create the PlusMinusOperator from.
@@ -1872,32 +2027,25 @@ class PlusMinusOperator:
             PlusMinusOperator: The operator created from the input SpinSystem.
 
         Raises:
-            ValueError: Could not create SpinHamiltonianSystem from input."""
-    def to_spin_system(self, number_spins: Optional[int]) -> SpinSystem:  # type: ignore
+            ValueError: Could not create QubitHamiltonian from input."""
+    def to_qubit_operator(self) -> QubitOperator:  # type: ignore
         """
-        Convert a PlusMinusOperator into a SpinSystem.
-
-        Args:
-            number_spins (Optional[int]): The number of spins to initialize the SpinSystem with.
+        Convert a PlusMinusOperator into a QubitOperator.
 
         Returns:
             SpinSystem: The operator created from the input PlusMinusOperator and optional number of spins.
 
         Raises:
-            ValueError: Could not create SpinSystem from PlusMinusOperator."""
-    def to_spin_hamiltonian_system(self, number_spins: Optional[int]) -> SpinHamiltonianSystem:  # type: ignore
+            ValueError: Could not create QubitOperator from PlusMinusOperator."""
+    def to_qubit_hamiltonian(self) -> QubitHamiltonian:  # type: ignore
         """
-        Convert a PlusMinusOperator into a SpinHamiltonianSystem.
-
-        Args:
-            number_spins (Optional[int]): The number of spins to initialize the SpinHamiltonianSystem with.
+        Convert a PlusMinusOperator into a QubitHamiltonian.
 
         Returns:
             SpinHamiltonianSystem: The operator created from the input PlusMinusOperator and optional number of spins.
 
         Raises:
-            ValueError: Could not create SpinHamiltonianSystem from PlusMinusOperator.
-        """
+            ValueError: Could not create QubitHamiltonian from PlusMinusOperator."""
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
@@ -1990,6 +2138,44 @@ class PlusMinusOperator:
 
         Returns:
             self: The hermitian conjugate of self."""
+    def current_number_spins(self) -> int:  # type: ignore
+        """
+        Return the current_number_spins input of self.
+
+        Returns:
+            int: The number of spins in self."""
+    def number_spins(self) -> int:  # type: ignore
+        """
+        Return maximum index in self.
+
+        Returns:
+            int: Maximum index."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -2046,6 +2232,9 @@ class PlusMinusOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -2084,22 +2273,9 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
         """
         Transform the given spin object into a fermionic object using
         the Jordan Wigner mapping."""
-    def separate_into_n_terms(self):  # type: ignore
+    def from_qubit_noise_operator(self, value: QubitLindbladNoiseOperator) -> PlusMinusLindbladNoiseOperator:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of spins (left and right) and an operator with the remaining operations.
-
-        Args
-            number_spins_left (int): Number of spin to filter for in the left key.
-            number_spins_right (int): Number of spin to filter for in the right key.
-
-        Returns
-            Tuple[PlusMinusLindbladNoiseOperator, PlusMinusLindbladNoiseOperator]: Operator with the noise terms where number_spins (left and right) matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
-    def from_spin_noise_system(self, value: SpinLindbladNoiseSystem) -> PlusMinusLindbladNoiseOperator:  # type: ignore
-        """
-        Convert a SpinLindbladNoiseSystem into a PlusMinusLindbladNoiseOperator.
+        Convert a QubitLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
 
         Args:
             value (SpinLindbladNoiseSystem): The SpinLindbladNoiseSystem to create the PlusMinusLindbladNoiseOperator from.
@@ -2108,13 +2284,10 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
             PlusMinusLindbladNoiseOperator: The operator created from the input SpinLindbladNoiseSystem.
 
         Raises:
-            ValueError: Could not create SpinLindbladNoiseSystem from input."""
-    def to_spin_noise_system(self, number_spinss: Optional[int]) -> SpinLindbladNoiseSystem:  # type: ignore
+            ValueError: Could not create QubitLindbladNoiseOperator from input."""
+    def to_qubit_noise_operator(self) -> QubitLindbladNoiseOperator:  # type: ignore
         """
-        Convert a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseSystem.
-
-        Args:
-            number_spinss (Optional[int]): The number of spins to initialize the SpinLindbladNoiseSystem with.
+        Convert a PlusMinusLindbladNoiseOperator into a QubitLindbladNoiseOperator.
 
         Returns:
             SpinLindbladNoiseSystem: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
@@ -2212,6 +2385,32 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -2268,6 +2467,9 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.

@@ -149,6 +149,32 @@ class FermionProduct(ProductType):
             TypeError: Value is not CalculatorComplex.
             ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -217,6 +243,9 @@ class FermionProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -345,6 +374,32 @@ class HermitianFermionProduct(ProductType):
             TypeError: Value is not CalculatorComplex.
             ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -413,6 +468,9 @@ class HermitianFermionProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -464,7 +522,7 @@ class FermionOperator:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> FermionSystem:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> FermionOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -480,7 +538,7 @@ class FermionOperator:
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> FermionSystem:  # type: ignore
+    def truncate(self, threshold: float) -> FermionOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -544,7 +602,7 @@ class FermionOperator:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> FermionSystem:  # type: ignore
+    def hermitian_conjugate(self) -> FermionOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -555,16 +613,10 @@ class FermionOperator:
         Return maximum index in self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
-        """
-        Return the number_modes input of self.
-
-        Returns:
             int: The number of modes in self."""
-    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+        Convert a struqture 1 object to the equivalent object in struqture 2.
 
         Args:
             number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
@@ -573,7 +625,21 @@ class FermionOperator:
             Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
 
         Raises:
-            ValueError: Error in adding terms to return values."""
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -630,6 +696,9 @@ class FermionOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -681,7 +750,7 @@ class FermionHamiltonian:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> FermionHamiltonianSystem:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> FermionHamiltonian:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -697,7 +766,7 @@ class FermionHamiltonian:
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> FermionHamiltonianSystem:  # type: ignore
+    def truncate(self, threshold: float) -> FermionHamiltonian:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -761,7 +830,7 @@ class FermionHamiltonian:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> FermionHamiltonianSystem:  # type: ignore
+    def hermitian_conjugate(self) -> FermionHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -772,16 +841,10 @@ class FermionHamiltonian:
         Return maximum index in self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
-        """
-        Return the number_modes input of self.
-
-        Returns:
             int: The number of modes in self."""
-    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+        Convert a struqture 1 object to the equivalent object in struqture 2.
 
         Args:
             number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
@@ -790,7 +853,21 @@ class FermionHamiltonian:
             Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
 
         Raises:
-            ValueError: Error in adding terms to return values."""
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -847,6 +924,9 @@ class FermionHamiltonian:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -890,19 +970,6 @@ class FermionLindbladNoiseOperator(NoiseType):
         """
         Transform the given fermionic object into a spin object using
         the Jordan Wigner mapping."""
-    def separate_into_n_terms(self, number_creators_annihilators_left: Tuple[int, int], number_creators_annihilators_right: Tuple[int, int]) -> Tuple[FermionLindbladNoiseSystem, FermionLindbladNoiseSystem]:  # type: ignore
-        """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
-
-        Args:
-            number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
-            number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
-
-        Returns:
-            Tuple[FermionLindbladNoiseSystem, FermionLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
     def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -968,7 +1035,7 @@ class FermionLindbladNoiseOperator(NoiseType):
 
         Returns:
             List[CalculatorComplex]: The sequence of values of self."""
-    def empty_clone(self, capacity) -> FermionLindbladNoiseSystem:  # type: ignore
+    def empty_clone(self, capacity) -> FermionLindbladNoiseOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -984,7 +1051,7 @@ class FermionLindbladNoiseOperator(NoiseType):
 
         Returns:
             bool: Whether self is empty or not."""
-    def truncate(self, threshold) -> FermionLindbladNoiseSystem:  # type: ignore
+    def truncate(self, threshold) -> FermionLindbladNoiseOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -998,13 +1065,33 @@ class FermionLindbladNoiseOperator(NoiseType):
         Return maximum index in object.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
+            int: The number of modes in self."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Return the number_modes input of self.
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
 
         Returns:
-            int: The number of modes in self."""
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1061,6 +1148,9 @@ class FermionLindbladNoiseOperator(NoiseType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1106,12 +1196,6 @@ class FermionLindbladOpenSystem(SystemType):
     def current_number_modes(self) -> int:  # type: ignore
         """
         Return maximum index in object.
-
-        Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
-        """
-        Return the number_modes input of self.
 
         Returns:
             int: The number of modes in self."""
@@ -1250,6 +1334,32 @@ class FermionLindbladOpenSystem(SystemType):
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to CalculatorComplex."""
+    def from_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1306,6 +1416,9 @@ class FermionLindbladOpenSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.

@@ -222,6 +222,8 @@ impl OperateOnState<'_> for MixedHamiltonian {
     }
 }
 
+impl HermitianOperateOnMixedSystems<'_> for MixedHamiltonian {}
+
 impl OperateOnMixedSystems<'_> for MixedHamiltonian {
     // From trait
     fn current_number_spins(&self) -> Vec<usize> {

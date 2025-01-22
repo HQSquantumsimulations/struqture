@@ -1585,9 +1585,19 @@ dependencies = [
  "serde_json",
  "struqture 1.12.2",
  "struqture 2.0.0-alpha.4",
+ "struqture-py-macros",
  "syn",
  "test-case",
  "thiserror 2.0.12",
+]
+
+[[package]]
+name = "struqture-py-macros"
+version = "2.0.0-alpha.4"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

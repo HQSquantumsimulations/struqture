@@ -105,7 +105,8 @@ fn collect_return_from_doc(doc: &str, class_name: &str) -> String {
 }
 
 #[cfg(feature = "doc_generator")]
-const TYPING_POTENTIAL_IMPORTS: &[&str] = &["Optional", "List", "Tuple", "Dict", "Set", "Union", "Any"];
+const TYPING_POTENTIAL_IMPORTS: &[&str] =
+    &["Optional", "List", "Tuple", "Dict", "Set", "Union", "Any"];
 
 #[cfg(feature = "doc_generator")]
 fn create_doc(module: &str) -> PyResult<String> {
