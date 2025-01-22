@@ -74,7 +74,6 @@ fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
 use num_complex::Complex64;
 use numpy::{IntoPyArray, PyArray1};
 use struqture::CooSparseMatrix;
-// use pyo3::prelude::*;
 
 pub type PyCooMatrix = (
     Py<PyArray1<Complex64>>,

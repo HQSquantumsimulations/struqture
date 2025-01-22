@@ -222,9 +222,9 @@ impl OperateOnState<'_> for MixedHamiltonian {
     }
 }
 
-impl<'a> HermitianOperateOnMixedSystems<'a> for MixedHamiltonian {}
+impl HermitianOperateOnMixedSystems<'_> for MixedHamiltonian {}
 
-impl<'a> OperateOnMixedSystems<'a> for MixedHamiltonian {
+impl OperateOnMixedSystems<'_> for MixedHamiltonian {
     // From trait
     fn current_number_spins(&self) -> Vec<usize> {
         let mut current_number_spins: Vec<usize> = (0..self.n_spins).map(|_| 0).collect();

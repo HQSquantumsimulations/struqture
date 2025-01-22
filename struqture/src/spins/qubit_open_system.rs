@@ -59,7 +59,7 @@ impl crate::SerializationSupport for QubitLindbladOpenSystem {
         crate::StruqtureType::QubitLindbladOpenSystem
     }
 }
-impl<'a> OpenSystem<'a> for QubitLindbladOpenSystem {
+impl OpenSystem<'_> for QubitLindbladOpenSystem {
     type System = QubitHamiltonian;
     type Noise = QubitLindbladNoiseOperator;
 
@@ -111,7 +111,7 @@ impl<'a> OpenSystem<'a> for QubitLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for QubitLindbladOpenSystem {
+impl OperateOnSpins<'_> for QubitLindbladOpenSystem {
     /// Gets the maximum number_spins of the QubitHamiltonian/QubitLindbladNoiseOperator.
     ///
     /// # Returns

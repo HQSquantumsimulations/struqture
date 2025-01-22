@@ -470,7 +470,7 @@ pub fn productwrapper(
             // Default pyo3 implementations
 
             /// Convert a struqture 1 object to the equivalent object in struqture 2.
-            /// 
+            ///
             /// Args:
             ///     input (Any): the struqture 1 object to convert.
             ///
@@ -490,7 +490,7 @@ pub fn productwrapper(
             }
 
             /// Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
-            /// 
+            ///
             /// Args:
             ///     input (Any): the json of the struqture 1 object to convert.
             ///

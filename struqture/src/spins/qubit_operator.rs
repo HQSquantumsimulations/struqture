@@ -184,7 +184,7 @@ impl<'a> OperateOnDensityMatrix<'a> for QubitOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for QubitOperator {
+impl OperateOnState<'_> for QubitOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.len());
@@ -198,7 +198,7 @@ impl<'a> OperateOnState<'a> for QubitOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for QubitOperator {
+impl OperateOnSpins<'_> for QubitOperator {
     /// Gets the maximum index of the QubitOperator.
     ///
     /// # Returns
@@ -217,7 +217,7 @@ impl<'a> OperateOnSpins<'a> for QubitOperator {
     }
 }
 
-impl<'a> ToSparseMatrixOperator<'a> for QubitOperator {}
+impl ToSparseMatrixOperator<'_> for QubitOperator {}
 impl<'a> ToSparseMatrixSuperOperator<'a> for QubitOperator {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(

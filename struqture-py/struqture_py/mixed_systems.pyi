@@ -165,7 +165,6 @@ class MixedProduct(ProductType):
 
         Returns:
             List[int]: Number of fermionic modes in each spin sub-system."""
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -192,8 +191,6 @@ class MixedProduct(ProductType):
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -262,12 +259,9 @@ class MixedProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -405,7 +399,6 @@ class HermitianMixedProduct(ProductType):
 
         Returns:
             List[int]: Number of fermionic modes in each spin sub-system."""
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -432,8 +425,6 @@ class HermitianMixedProduct(ProductType):
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -502,12 +493,9 @@ class HermitianMixedProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -645,7 +633,6 @@ class MixedDecoherenceProduct(ProductType):
 
         Returns:
             List[int]: Number of fermionic modes in each spin sub-system."""
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -672,8 +659,6 @@ class MixedDecoherenceProduct(ProductType):
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -742,12 +727,9 @@ class MixedDecoherenceProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -798,11 +780,7 @@ class MixedOperator:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-<<<<<<< HEAD
     def empty_clone(self, capacity: Optional[int]) -> MixedOperator:  # type: ignore
-=======
-    def empty_clone(self, capacity: Optional[int]) -> MixedSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -818,11 +796,7 @@ class MixedOperator:
 
         Returns:
             bool: Whether self is empty or not."""
-<<<<<<< HEAD
     def truncate(self, threshold: float) -> MixedOperator:  # type: ignore
-=======
-    def truncate(self, threshold: float) -> MixedSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -886,62 +860,31 @@ class MixedOperator:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-<<<<<<< HEAD
     def hermitian_conjugate(self) -> MixedOperator:  # type: ignore
-=======
-    def hermitian_conjugate(self) -> MixedSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the hermitian conjugate of self.
 
         Returns:
             self: The hermitian conjugate of self."""
-<<<<<<< HEAD
-=======
-    def number_spins(self) -> int:  # type: ignore
-        """
-        Return the number_spins input of each spin subsystem of self.
-
-        Returns:
-            int: The number of spins in each spin subsystem of self."""
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-=======
-            int: Maximum index in each spin subsystem of self."""
-    def number_bosonic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-=======
-            List[int]: The number of bosonic modes in each bosonic subsystem of self."""
-    def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of bosonic modes each bosonic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-        """
-    def number_fermionic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
 
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -968,15 +911,6 @@ class MixedOperator:
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
-    def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of fermionic modes each fermionic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-        """
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1033,12 +967,9 @@ class MixedOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1089,11 +1020,7 @@ class MixedHamiltonian:
 
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
-<<<<<<< HEAD
     def empty_clone(self, capacity: Optional[int]) -> MixedHamiltonian:  # type: ignore
-=======
-    def empty_clone(self, capacity: Optional[int]) -> MixedHamiltonianSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -1109,11 +1036,7 @@ class MixedHamiltonian:
 
         Returns:
             bool: Whether self is empty or not."""
-<<<<<<< HEAD
     def truncate(self, threshold: float) -> MixedHamiltonian:  # type: ignore
-=======
-    def truncate(self, threshold: float) -> MixedHamiltonianSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -1177,62 +1100,31 @@ class MixedHamiltonian:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-<<<<<<< HEAD
     def hermitian_conjugate(self) -> MixedHamiltonian:  # type: ignore
-=======
-    def hermitian_conjugate(self) -> MixedHamiltonianSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the hermitian conjugate of self.
 
         Returns:
             self: The hermitian conjugate of self."""
-<<<<<<< HEAD
-=======
-    def number_spins(self) -> int:  # type: ignore
-        """
-        Return the number_spins input of each spin subsystem of self.
-
-        Returns:
-            int: The number of spins in each spin subsystem of self."""
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-=======
-            int: Maximum index in each spin subsystem of self."""
-    def number_bosonic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-=======
-            List[int]: The number of bosonic modes in each bosonic subsystem of self."""
-    def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of bosonic modes each bosonic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-        """
-    def number_fermionic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
 
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1259,15 +1151,6 @@ class MixedHamiltonian:
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
-    def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of fermionic modes each fermionic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-        """
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1324,12 +1207,9 @@ class MixedHamiltonian:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1430,11 +1310,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Returns:
             List[CalculatorComplex]: The sequence of values of self."""
-<<<<<<< HEAD
     def empty_clone(self, capacity) -> MixedLindbladNoiseOperator:  # type: ignore
-=======
-    def empty_clone(self, capacity) -> MixedLindbladNoiseSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -1450,11 +1326,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Returns:
             bool: Whether self is empty or not."""
-<<<<<<< HEAD
     def truncate(self, threshold) -> MixedLindbladNoiseOperator:  # type: ignore
-=======
-    def truncate(self, threshold) -> MixedLindbladNoiseSystem:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -1463,52 +1335,25 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self."""
-<<<<<<< HEAD
-=======
-    def number_spins(self) -> int:  # type: ignore
-        """
-        Return the number_spins input of each spin subsystem of self.
-
-        Returns:
-            int: The number of spins in each spin subsystem of self."""
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-=======
-            int: Maximum index in each spin subsystem of self."""
-    def number_bosonic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-=======
-            List[int]: The number of bosonic modes in each bosonic subsystem of self."""
-    def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of bosonic modes each bosonic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-        """
-    def number_fermionic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
 
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1535,15 +1380,6 @@ class MixedLindbladNoiseOperator(NoiseType):
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
-    def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of fermionic modes each fermionic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-        """
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1600,12 +1436,9 @@ class MixedLindbladNoiseOperator(NoiseType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -1783,52 +1616,25 @@ class MixedLindbladOpenSystem(SystemType):
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to CalculatorComplex."""
-<<<<<<< HEAD
-=======
-    def number_spins(self) -> int:  # type: ignore
-        """
-        Return the number_spins input of each spin subsystem of self.
-
-        Returns:
-            int: The number of spins in each spin subsystem of self."""
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-=======
-            int: Maximum index in each spin subsystem of self."""
-    def number_bosonic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-=======
-            List[int]: The number of bosonic modes in each bosonic subsystem of self."""
-    def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of bosonic modes each bosonic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-        """
-    def number_fermionic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
 
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1855,15 +1661,6 @@ class MixedLindbladOpenSystem(SystemType):
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
-    def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of fermionic modes each fermionic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-        """
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1920,12 +1717,9 @@ class MixedLindbladOpenSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -2063,7 +1857,6 @@ class MixedPlusMinusProduct(ProductType):
 
         Returns:
             List[int]: Number of fermionic modes in each spin sub-system."""
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -2090,8 +1883,6 @@ class MixedPlusMinusProduct(ProductType):
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -2160,12 +1951,9 @@ class MixedPlusMinusProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
@@ -2210,11 +1998,7 @@ class MixedPlusMinusOperator:
 
     def __init__(self, number_spins: int, number_bosons: int, number_fermions: int):
         return
-<<<<<<< HEAD
     def from_mixed_system(self, value: MixedOperator) -> MixedPlusMinusOperator:  # type: ignore
-=======
-    def from_mixed_system(self, value: MixedSystem) -> MixedPlusMinusOperator:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Convert a MixedOperator into a MixedPlusMinusOperator.
 
@@ -2225,33 +2009,17 @@ class MixedPlusMinusOperator:
             MixedPlusMinusOperator: The operator created from the input MixedOperator.
 
         Raises:
-<<<<<<< HEAD
             ValueError: Could not create MixedOperator from input."""
     def to_mixed_system(self) -> MixedOperator:  # type: ignore
         """
         Convert a MixedPlusMinusOperator into a MixedOperator.
-=======
-            ValueError: Could not create MixedSystem from input."""
-    def to_mixed_system(self, number_spins: List[Optional[int]], number_bosons: List[Optional[int]], number_fermions: List[Optional[int]]) -> MixedSystem:  # type: ignore
-        """
-        Convert a MixedPlusMinusOperator into a MixedSystem.
-
-        Args:
-            number_spins (List[Optional[int]]): The number of spins to initialize the MixedSystem with.
-            number_bosons (List[Optional[int]]): The number of bosons to initialize the MixedSystem with.
-            number_fermions (List[Optional[int]]): The number of fermions to initialize the MixedSystem with.
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
 
         Returns:
             MixedOperator: The operator created from the input MixedPlusMinusOperator and optional number of spins.
 
         Raises:
             ValueError: Could not create MixedOperator from MixedPlusMinusOperator.
-<<<<<<< HEAD
             ValueError: Could not create MixedOperator from MixedOperator."""
-=======
-            ValueError: Could not create MixedSystem from MixedOperator."""
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
@@ -2344,52 +2112,25 @@ class MixedPlusMinusOperator:
 
         Returns:
             self: The hermitian conjugate of self."""
-<<<<<<< HEAD
-=======
-    def number_spins(self) -> int:  # type: ignore
-        """
-        Return the number_spins input of each spin subsystem of self.
-
-        Returns:
-            int: The number of spins in each spin subsystem of self."""
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-=======
-            int: Maximum index in each spin subsystem of self."""
-    def number_bosonic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-<<<<<<< HEAD
             list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-=======
-            List[int]: The number of bosonic modes in each bosonic subsystem of self."""
-    def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of bosonic modes each bosonic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
-        """
-    def number_fermionic_modes(self) -> List[int]:  # type: ignore
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
 
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-<<<<<<< HEAD
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -2416,15 +2157,6 @@ class MixedPlusMinusOperator:
         Raises:
             ValueError: Input could not be deserialised form json.
             ValueError: Struqture 1 object could not be converted to struqture 2."""
-=======
-    def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
-        """
-        Return the number of fermionic modes each fermionic subsystem of self acts on.
-
-        Returns:
-            List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
-        """
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -2481,12 +2213,9 @@ class MixedPlusMinusOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-<<<<<<< HEAD
     def _get_serialisation_meta(self):  # type: ignore
         """
         Returns the StruqtureSerialisationMeta of the object."""
-=======
->>>>>>> 6a8772f38a18fe9c23cdac0023a0efe8eacb461d
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.

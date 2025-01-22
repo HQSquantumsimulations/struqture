@@ -55,7 +55,7 @@ impl crate::SerializationSupport for FermionLindbladOpenSystem {
         crate::StruqtureType::FermionLindbladOpenSystem
     }
 }
-impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
+impl OpenSystem<'_> for FermionLindbladOpenSystem {
     type System = FermionHamiltonian;
     type Noise = FermionLindbladNoiseOperator;
 
@@ -107,7 +107,7 @@ impl<'a> OpenSystem<'a> for FermionLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnModes<'a> for FermionLindbladOpenSystem {
+impl OperateOnModes<'_> for FermionLindbladOpenSystem {
     /// Gets the maximum current_number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
     ///
     /// # Returns
