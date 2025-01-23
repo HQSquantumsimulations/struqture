@@ -17,5 +17,14 @@ bindings = "pyo3"
 compatibility = "manylinux2014"
 strip = true
 profile = "release"
-include = [{ path = "LICENSE", format = "sdist" }]
 
+[project.optional-dependencies]
+docs = [
+  "sphinx >= 2.1",
+  "nbsphinx",
+  "pygments",
+  "recommonmark",
+  "myst_parser",
+  "sphinx_rtd_theme",
+  "tomli",
+]
