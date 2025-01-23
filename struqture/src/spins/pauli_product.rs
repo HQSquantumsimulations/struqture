@@ -69,6 +69,7 @@ const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_pr
 )]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleQubitOperator {
+    #[default]
     Identity,
     X,
     Y,
@@ -98,12 +99,6 @@ impl FromStr for SingleQubitOperator {
                 pauli: s.to_string(),
             }),
         }
-    }
-}
-
-impl Default for SingleQubitOperator {
-    fn default() -> Self {
-        SingleQubitOperator::Identity
     }
 }
 
@@ -678,6 +673,11 @@ impl FromStr for PauliProduct {
         if s == "I" || s.is_empty() {
             Ok(Self::new()) // If the string is identity then it's an empty PauliProduct
         } else {
+            if !s.starts_with(char::is_numeric) {
+                return Err(StruqtureError::FromStringFailed {
+                    msg: format!("Missing spin index in the following PauliProduct: {}", s),
+                });
+            }
             let mut internal: TinyVec<[(usize, SingleQubitOperator); 5]> =
                 TinyVec::<[(usize, SingleQubitOperator); 5]>::with_capacity(10);
 
