@@ -3,7 +3,7 @@ authors = ["HQS Quantum Simulations", "Kirsten Bark", "Nicolas Vogt"]
 language = "en"
 multilingual = false
 src = "src"
-title = "HQS StruQture User Documentation"
+title = "HQS Struqture User Documentation"
 
 [output.html]
 mathjax-support = true
