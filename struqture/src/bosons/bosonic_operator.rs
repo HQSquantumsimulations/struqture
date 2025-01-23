@@ -177,7 +177,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for BosonOperator {}
+impl OperateOnState<'_> for BosonOperator {}
 
 impl<'a> OperateOnModes<'a> for BosonOperator {
     /// Gets the maximum index of the BosonOperator.
@@ -199,7 +199,7 @@ impl<'a> OperateOnModes<'a> for BosonOperator {
     }
 }
 
-impl<'a> OperateOnBosons<'a> for BosonOperator {}
+impl OperateOnBosons<'_> for BosonOperator {}
 
 /// Implements the default function (Default trait) of BosonOperator (an empty BosonOperator).
 ///

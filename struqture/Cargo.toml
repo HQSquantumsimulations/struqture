@@ -1,9 +1,9 @@
 [package]
 name = "struqture"
-version = "2.0.0-alpha.4"
+version = "2.0.0-alpha.5"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
-rust-version = "1.57"
+rust-version = "1.76"
 categories = ["science", "simulation"]
 description = "HQS tool for representing operators, Hamiltonians and open systems."
 license = "Apache-2.0"
@@ -16,26 +16,27 @@ path = "src/lib.rs"
 doctest = false
 
 [dependencies]
-qoqo_calculator = { version = ">= 1.2", default-features = false }
+qoqo_calculator = { version = ">=1.3", default-features = false }
+struqture_1 = { package = "struqture", version = ">=1.10,<2.0.0", optional = true, default-features = false }
+
 serde = { version = "1.0", features = ["derive"] }
 num-complex = { version = "0.4" }
-thiserror = "1.0"
+thiserror = "2.0"
 test-case = "3.1"
-itertools = "0.12"
-ndarray = { version = "0.15" }
+itertools = "0.14"
+ndarray = "0.16"
 tinyvec = { version = "1.6", features = ["alloc", "serde"] }
 schemars = { version = "0.8.12", optional = true }
 indexmap = { version = "2" }
-struqture_1 = { package = "struqture", version = ">=1.8,<2.0.0", optional = true, default-features = false }
 
 [dev-dependencies]
-nalgebra = "0.32"
-serde_test = { version = "1.0" }
+nalgebra = "0.33"
+serde_test = "1.0"
 bincode = "1.3"
 serde_json = "1.0"
 rand = "0.8"
-jsonschema = { version = "0.17" }
-criterion = { version = "0.5" }
+jsonschema = "0.28"
+criterion = "0.5"
 
 [features]
 default = ["json_schema", "struqture_1_export", "struqture_1_import"]

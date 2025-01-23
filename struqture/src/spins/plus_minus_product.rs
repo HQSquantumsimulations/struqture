@@ -646,10 +646,10 @@ impl PlusMinusProduct {
     ///
     /// * `Iter<usize, SinglePlusMinusOperator>` - The iterator form of Self.
     pub fn iter(&self) -> std::slice::Iter<(usize, SinglePlusMinusOperator)> {
-        return match &self.items {
+        match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
-        };
+        }
     }
 
     /// Returns maximum index in Self.
@@ -918,9 +918,17 @@ impl FromStr for PlusMinusProduct {
     ///
     /// * Cannot compare two unsigned integers internal error in struqture.spins.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s == "I" {
+        if s == "I" || s.is_empty() {
             Ok(Self::new()) // If the string is identity then it's an empty PlusMinusProduct
         } else {
+            if !s.starts_with(char::is_numeric) {
+                return Err(StruqtureError::FromStringFailed {
+                    msg: format!(
+                        "Missing spin index in the following PlusMinusProduct: {}",
+                        s
+                    ),
+                });
+            }
             let mut internal: TinyVec<[(usize, SinglePlusMinusOperator); 5]> =
                 TinyVec::<[(usize, SinglePlusMinusOperator); 5]>::with_capacity(10);
 

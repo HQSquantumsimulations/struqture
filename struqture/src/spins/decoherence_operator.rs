@@ -51,7 +51,6 @@ use indexmap::IndexMap;
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(try_from = "DecoherenceOperatorSerialize")]
 #[serde(into = "DecoherenceOperatorSerialize")]
-
 pub struct DecoherenceOperator {
     /// The internal HashMap of DecoherenceProducts and coefficients (CalculatorComplex)
     internal_map: IndexMap<DecoherenceProduct, CalculatorComplex>,
@@ -181,7 +180,7 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
     }
 }
 
-impl<'a> OperateOnState<'a> for DecoherenceOperator {
+impl OperateOnState<'_> for DecoherenceOperator {
     // From trait
     fn hermitian_conjugate(&self) -> Self {
         let mut new_operator = Self::with_capacity(self.len());
@@ -195,7 +194,7 @@ impl<'a> OperateOnState<'a> for DecoherenceOperator {
     }
 }
 
-impl<'a> OperateOnSpins<'a> for DecoherenceOperator {
+impl OperateOnSpins<'_> for DecoherenceOperator {
     /// Gets the maximum index of the DecoherenceOperator.
     ///
     /// # Returns

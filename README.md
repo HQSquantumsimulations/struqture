@@ -5,6 +5,8 @@ The library supports building [spin](https://hqsquantumsimulations.github.io/str
 
 Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.
 
+<img src="./docu graphic.png" alt="struqture" width="90%">
+
 To best support this use case, struqture has a number of design goals:
 
 * Support for arbitrary spin, bosonic, fermionic and mixed systems

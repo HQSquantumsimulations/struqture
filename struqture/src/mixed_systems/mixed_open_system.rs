@@ -66,7 +66,7 @@ impl crate::SerializationSupport for MixedLindbladOpenSystem {
         crate::StruqtureType::MixedLindbladOpenSystem
     }
 }
-impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
+impl OpenSystem<'_> for MixedLindbladOpenSystem {
     type System = MixedHamiltonian;
     type Noise = MixedLindbladNoiseOperator;
 
@@ -132,7 +132,7 @@ impl<'a> OpenSystem<'a> for MixedLindbladOpenSystem {
     }
 }
 
-impl<'a> OperateOnMixedSystems<'a> for MixedLindbladOpenSystem {
+impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     // From trait
     fn current_number_spins(&self) -> Vec<usize> {
         self.system

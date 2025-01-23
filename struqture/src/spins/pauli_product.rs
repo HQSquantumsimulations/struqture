@@ -64,9 +64,12 @@ const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str = "Internal bug in add_operator_pr
 /// \end{pmatrix}
 /// $$
 ///
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default,
+)]
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 pub enum SingleQubitOperator {
+    #[default]
     Identity,
     X,
     Y,
@@ -96,12 +99,6 @@ impl FromStr for SingleQubitOperator {
                 pauli: s.to_string(),
             }),
         }
-    }
-}
-
-impl Default for SingleQubitOperator {
-    fn default() -> Self {
-        SingleQubitOperator::Identity
     }
 }
 
@@ -382,10 +379,10 @@ impl SpinIndex for PauliProduct {
 
     // From trait
     fn iter(&self) -> std::slice::Iter<(usize, SingleQubitOperator)> {
-        return match &self.items {
+        match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
-        };
+        }
     }
 
     // From trait
@@ -673,9 +670,14 @@ impl FromStr for PauliProduct {
     ///
     /// * Cannot compare two unsigned integers internal error in struqture.spins.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s == "I" {
+        if s == "I" || s.is_empty() {
             Ok(Self::new()) // If the string is identity then it's an empty PauliProduct
         } else {
+            if !s.starts_with(char::is_numeric) {
+                return Err(StruqtureError::FromStringFailed {
+                    msg: format!("Missing spin index in the following PauliProduct: {}", s),
+                });
+            }
             let mut internal: TinyVec<[(usize, SingleQubitOperator); 5]> =
                 TinyVec::<[(usize, SingleQubitOperator); 5]>::with_capacity(10);
 
