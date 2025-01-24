@@ -729,15 +729,6 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.13.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
-dependencies = [
- "either",
-]
-
-[[package]]
-name = "itertools"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
@@ -890,19 +881,6 @@ dependencies = [
 
 [[package]]
 name = "ndarray"
-version = "0.15.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "adb12d4e967ec485a5f71c6311fe28158e9d6f4bc4a447b474184d0f91a8fa32"
-dependencies = [
- "matrixmultiply",
- "num-complex",
- "num-integer",
- "num-traits",
- "rawpointer",
-]
-
-[[package]]
-name = "ndarray"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "882ed72dce9365842bf196bdeedf5055305f11fc8c03dee7bb0194a6cad34841"
@@ -1003,7 +981,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "edb929bc0da91a4d85ed6c0a84deaa53d411abfb387fc271124f91bf6b89f14e"
 dependencies = [
  "libc",
- "ndarray 0.16.1",
+ "ndarray",
  "num-complex",
  "num-integer",
  "num-traits",
@@ -1197,7 +1175,7 @@ dependencies = [
  "num-complex",
  "schemars",
  "serde",
- "thiserror 2.0.11",
+ "thiserror",
 ]
 
 [[package]]
@@ -1211,7 +1189,7 @@ dependencies = [
  "pyo3-build-config",
  "qoqo_calculator",
  "serde",
- "thiserror 2.0.11",
+ "thiserror",
 ]
 
 [[package]]
@@ -1554,23 +1532,23 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "struqture"
-version = "1.10.1"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0680c81ffbf2e5abbbf66113bc1f580ab692da09199853dc24a026d50439a8b"
+checksum = "92495db7d97b342cf31be3989a2e77fa23f1d59b94d41896301a50cbcd2d079b"
 dependencies = [
- "itertools 0.13.0",
- "ndarray 0.15.6",
+ "itertools 0.14.0",
+ "ndarray",
  "num-complex",
  "qoqo_calculator",
  "serde",
  "test-case",
- "thiserror 1.0.69",
+ "thiserror",
  "tinyvec",
 ]
 
 [[package]]
 name = "struqture"
-version = "2.0.0-alpha.6"
+version = "2.0.0-alpha.7"
 dependencies = [
  "bincode",
  "criterion",
@@ -1578,7 +1556,7 @@ dependencies = [
  "itertools 0.14.0",
  "jsonschema",
  "nalgebra",
- "ndarray 0.16.1",
+ "ndarray",
  "num-complex",
  "qoqo_calculator",
  "rand",
@@ -1586,19 +1564,19 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
- "struqture 1.10.1",
+ "struqture 1.11.0",
  "test-case",
- "thiserror 2.0.11",
+ "thiserror",
  "tinyvec",
 ]
 
 [[package]]
 name = "struqture-py"
-version = "2.0.0-alpha.6"
+version = "2.0.0-alpha.7"
 dependencies = [
  "bincode",
  "nalgebra",
- "ndarray 0.16.1",
+ "ndarray",
  "num-complex",
  "numpy",
  "proc-macro2",
@@ -1610,17 +1588,17 @@ dependencies = [
  "regex",
  "schemars",
  "serde_json",
- "struqture 1.10.1",
- "struqture 2.0.0-alpha.6",
+ "struqture 1.11.0",
+ "struqture 2.0.0-alpha.7",
  "struqture-py-macros",
  "syn",
  "test-case",
- "thiserror 2.0.11",
+ "thiserror",
 ]
 
 [[package]]
 name = "struqture-py-macros"
-version = "2.0.0-alpha.6"
+version = "2.0.0-alpha.7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1699,31 +1677,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
-dependencies = [
- "thiserror-impl 1.0.69",
-]
-
-[[package]]
-name = "thiserror"
 version = "2.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d452f284b73e6d76dd36758a0c8684b1d5be31f92b89d07fd5822175732206fc"
 dependencies = [
- "thiserror-impl 2.0.11",
-]
-
-[[package]]
-name = "thiserror-impl"
-version = "1.0.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
+ "thiserror-impl",
 ]
 
 [[package]]
