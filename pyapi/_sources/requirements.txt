@@ -1,0 +1,8 @@
+struqture-py
+numpy
+sphinx >= 2.1
+nbsphinx
+pygments
+recommonmark
+myst_parser
+sphinx_rtd_theme

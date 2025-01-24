@@ -1,0 +1,39 @@
+struqture\_py.mixed\_systems.MixedProduct
+=========================================
+
+.. currentmodule:: struqture_py.mixed_systems
+
+.. autoclass:: MixedProduct
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MixedProduct.__init__
+      ~MixedProduct.bosons
+      ~MixedProduct.create_valid_pair
+      ~MixedProduct.current_number_bosonic_modes
+      ~MixedProduct.current_number_fermionic_modes
+      ~MixedProduct.current_number_spins
+      ~MixedProduct.current_version
+      ~MixedProduct.fermions
+      ~MixedProduct.from_bincode
+      ~MixedProduct.from_json
+      ~MixedProduct.from_string
+      ~MixedProduct.hermitian_conjugate
+      ~MixedProduct.is_natural_hermitian
+      ~MixedProduct.json_schema
+      ~MixedProduct.min_supported_version
+      ~MixedProduct.spins
+      ~MixedProduct.to_bincode
+      ~MixedProduct.to_json
+   
+   
+
+   
+   
+   

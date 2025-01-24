@@ -1,0 +1,2354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>struqture_py.bosons &mdash; struqture_py 0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b193eeef"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="struqture_py.bosons.BosonProduct" href="generated/struqture_py.bosons.BosonProduct.html" />
+    <link rel="prev" title="struqture_py.spins.SpinLindbladOpenSystem" href="generated/struqture_py.spins.SpinLindbladOpenSystem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            struqture_py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">struqture_py documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../struqture_py.html">struqture_py</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.spins.html">struqture_py.spins</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">struqture_py.bosons</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/struqture_py.bosons.BosonProduct.html">struqture_py.bosons.BosonProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/struqture_py.bosons.HermitianBosonProduct.html">struqture_py.bosons.HermitianBosonProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/struqture_py.bosons.BosonSystem.html">struqture_py.bosons.BosonSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/struqture_py.bosons.BosonHamiltonianSystem.html">struqture_py.bosons.BosonHamiltonianSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/struqture_py.bosons.BosonLindbladNoiseSystem.html">struqture_py.bosons.BosonLindbladNoiseSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/struqture_py.bosons.BosonLindbladOpenSystem.html">struqture_py.bosons.BosonLindbladOpenSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.bosons.BosonHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonianSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.bosons.BosonLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.bosons.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.bosons.BosonProduct"><code class="docutils literal notranslate"><span class="pre">BosonProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.bosons.BosonSystem"><code class="docutils literal notranslate"><span class="pre">BosonSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.bosons.HermitianBosonProduct"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.fermions.html">struqture_py.fermions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonianSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonProduct"><code class="docutils literal notranslate"><span class="pre">BosonProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonSystem"><code class="docutils literal notranslate"><span class="pre">BosonSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.DecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.FermionHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonianSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.FermionLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.FermionLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.FermionProduct"><code class="docutils literal notranslate"><span class="pre">FermionProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.FermionSystem"><code class="docutils literal notranslate"><span class="pre">FermionSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.HermitianBosonProduct"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.HermitianFermionProduct"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.HermitianMixedProduct"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedDecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonianSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedPlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedPlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedProduct"><code class="docutils literal notranslate"><span class="pre">MixedProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.MixedSystem"><code class="docutils literal notranslate"><span class="pre">MixedSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PauliProduct"><code class="docutils literal notranslate"><span class="pre">PauliProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.SpinHamiltonianSystem"><code class="docutils literal notranslate"><span class="pre">SpinHamiltonianSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.SpinLindbladNoiseSystem"><code class="docutils literal notranslate"><span class="pre">SpinLindbladNoiseSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.SpinLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">SpinLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.SpinSystem"><code class="docutils literal notranslate"><span class="pre">SpinSystem</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">struqture_py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">struqture_py documentation</a></li>
+          <li class="breadcrumb-item"><a href="../struqture_py.html">struqture_py</a></li>
+      <li class="breadcrumb-item active">struqture_py.bosons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/generated/struqture_py.bosons.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-struqture_py.bosons">
+<span id="struqture-py-bosons"></span><h1>struqture_py.bosons<a class="headerlink" href="#module-struqture_py.bosons" title="Link to this heading"></a></h1>
+<p>Bosons module of struqture Python interface</p>
+<p>Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonSystem and BosonHamiltonianSystem),
+and Lindblad type bosonic open systems (BosonLindbladNoiseSystem, BosonLindbladOpenSystem).</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonProduct" title="struqture_py.bosons.BosonProduct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonProduct</span></code></a>(creators, annihilators)</p></td>
+<td><p>A product of bosonic creation and annihilation operators.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.bosons.HermitianBosonProduct" title="struqture_py.bosons.HermitianBosonProduct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a>(creators, annihilators)</p></td>
+<td><p>A product of bosonic creation and annihilation operators.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonSystem" title="struqture_py.bosons.BosonSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of systems of bosons.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonHamiltonianSystem" title="struqture_py.bosons.BosonHamiltonianSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonHamiltonianSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of systems of bosons.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="struqture_py.bosons.BosonLindbladNoiseSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonLindbladNoiseSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of noisy systems of bosons.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonLindbladOpenSystem" title="struqture_py.bosons.BosonLindbladOpenSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of noisy systems of bosons.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonHamiltonianSystem" title="struqture_py.bosons.BosonHamiltonianSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonHamiltonianSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of systems of bosons.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="struqture_py.bosons.BosonLindbladNoiseSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonLindbladNoiseSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of noisy systems of bosons.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonLindbladOpenSystem" title="struqture_py.bosons.BosonLindbladOpenSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of noisy systems of bosons.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonProduct" title="struqture_py.bosons.BosonProduct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonProduct</span></code></a>(creators, annihilators)</p></td>
+<td><p>A product of bosonic creation and annihilation operators.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.bosons.BosonSystem" title="struqture_py.bosons.BosonSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BosonSystem</span></code></a>([number_bosons])</p></td>
+<td><p>These are representations of systems of bosons.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.bosons.HermitianBosonProduct" title="struqture_py.bosons.HermitianBosonProduct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a>(creators, annihilators)</p></td>
+<td><p>A product of bosonic creation and annihilation operators.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonHamiltonianSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem" title="Link to this definition"></a></dt>
+<dd><p>These are representations of systems of bosons.</p>
+<p>BosonHamiltonianSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
+and an optional number of bosons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new BosonHamiltonianSystem with the input number of bosons.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span>
+<span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonHamiltonianSystem</span><span class="p">,</span> <span class="n">HermitianBosonProduct</span>
+
+<span class="n">ssystem</span> <span class="o">=</span> <span class="n">BosonHamiltonianSystem</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pp</span> <span class="o">=</span> <span class="n">HermitianBosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.add_operator_product">
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.add_operator_product" title="Link to this definition"></a></dt>
+<dd><p>Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Product type</em>) -- The key object</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex or CalculatorFloat.</p></li>
+<li><p><strong>ValueError</strong> -- Product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Error in add_operator_product function of self.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return maximum index in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.empty_clone">
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.empty_clone" title="Link to this definition"></a></dt>
+<dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>capacity</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The capacity of the new instance to create.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An empty clone with the same properties as self, with the given capacity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of self to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.get" title="Link to this definition"></a></dt>
+<dd><p>Get the coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> -- Product to get the value of.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Product could not be constructed from key.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.hermitian_conjugate">
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.hermitian_conjugate" title="Link to this definition"></a></dt>
+<dd><p>Return the hermitian conjugate of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The hermitian conjugate of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.is_empty" title="Link to this definition"></a></dt>
+<dd><p>Return true if self contains no values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is empty or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.keys" title="Link to this definition"></a></dt>
+<dd><p>Return a list of the unsorted keys in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of keys of the self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[OperatorProduct]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.number_modes">
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the number_modes input of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of modes in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove the value of the input key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> -- The key of the value to remove.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.separate_into_n_terms" title="Link to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_creators_annihilators</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of modes to filter for in the keys.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Self, Self]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.set" title="Link to this definition"></a></dt>
+<dd><p>Overwrite an existing entry or set a new entry in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Product type</em>) -- The key to set.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>CalculatorComplex</em><em>, </em><em>CalculatorFloat</em><em>]</em>) -- The value to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Key existed if this is not None, and this is the value it had before it was overwritten.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Union[CalculatorComplex, CalculatorFloat]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of self using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.truncate">
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.truncate" title="Link to this definition"></a></dt>
+<dd><p>Truncate self by returning a copy without entries under a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>float</em>) -- The threshold for inclusion.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The truncated version of self.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonHamiltonianSystem.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonHamiltonianSystem.values" title="Link to this definition"></a></dt>
+<dd><p>Return unsorted values in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of values of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Union[CalculatorComplex, CalculatorFloat]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonLindbladNoiseSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="Link to this definition"></a></dt>
+<dd><p>These are representations of noisy systems of bosons.</p>
+<p>In a BosonLindbladNoiseSystem is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_bosons</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The number of bosons in the BosonLindbladNoiseSystem.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new BosonLindbladNoiseSystem with the input number of bosons.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span>
+<span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonLindbladNoiseSystem</span><span class="p">,</span> <span class="n">BosonProduct</span>
+
+<span class="n">slns</span> <span class="o">=</span> <span class="n">BosonLindbladNoiseSystem</span><span class="p">()</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">slns</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">)),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.add_operator_product">
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.add_operator_product" title="Link to this definition"></a></dt>
+<dd><p>Adds a new (key object, CalculatorComplex) pair to existing entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- The key of the value to add.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The value to add.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex or CalculatorFloat.</p></li>
+<li><p><strong>ValueError</strong> -- Left-hand product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Error in add_operator_product function of self.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return maximum index in object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.empty_clone">
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.empty_clone" title="Link to this definition"></a></dt>
+<dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>capacity</strong> -- The capacity of the object to create.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An empty clone with the same properties as self, with the given capacity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.get" title="Link to this definition"></a></dt>
+<dd><p>Get the coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- Product to get the value of.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left-hand product could not be constructed from key.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand product could not be constructed from key.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.is_empty" title="Link to this definition"></a></dt>
+<dd><p>Return true if object contains no values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is empty or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.keys" title="Link to this definition"></a></dt>
+<dd><p>Return unsorted keys in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of keys of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[(OperatorProduct, OperatorProduct)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.number_modes">
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the number_modes input of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of modes in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove the value of the input object key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- The key of the value to remove.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Key existed if this is not None, and this is the value it had before it was removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[CalculatorComplex]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left-hand Product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand Product could not be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators_right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.separate_into_n_terms" title="Link to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number_creators_annihilators_left</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of creators and number of annihilators to filter for in the left term of the keys.</p></li>
+<li><p><strong>number_creators_annihilators_right</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of creators and number of annihilators to filter for in the right term of the keys.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="struqture_py.bosons.BosonLindbladNoiseSystem">BosonLindbladNoiseSystem</a>, <a class="reference internal" href="#struqture_py.bosons.BosonLindbladNoiseSystem" title="struqture_py.bosons.BosonLindbladNoiseSystem">BosonLindbladNoiseSystem</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.set" title="Link to this definition"></a></dt>
+<dd><p>Overwrite an existing entry or set a new entry in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- The key of the value to set.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The value to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Key existed if this is not None, and this is the value it had before it was overwritten.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[CalculatorComplex]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left-hand Product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand Product could not be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.truncate">
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.truncate" title="Link to this definition"></a></dt>
+<dd><p>Truncate self by returning a copy without entries under a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> -- The threshold for inclusion.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The truncated version of self.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladNoiseSystem.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladNoiseSystem.values" title="Link to this definition"></a></dt>
+<dd><p>Return unsorted values in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of values of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[CalculatorComplex]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem" title="Link to this definition"></a></dt>
+<dd><p>These are representations of noisy systems of bosons.</p>
+<p>In a BosonLindbladOpenSystem is characterized by a BosonLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of bosons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_bosons</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The number of bosons in the BosonLindbladOpenSystem.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new BosonLindbladOpenSystem with the input number of bosons.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span><span class="p">,</span> <span class="n">CalculatorFloat</span>
+<span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonLindbladOpenSystem</span><span class="p">,</span> <span class="n">BosonProduct</span>
+
+<span class="n">slns</span> <span class="o">=</span> <span class="n">BosonLindbladOpenSystem</span><span class="p">()</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">slns</span><span class="o">.</span><span class="n">system_add_operator_product</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span> <span class="n">CalculatorFloat</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return maximum index in object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.empty_clone">
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.empty_clone" title="Link to this definition"></a></dt>
+<dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An empty clone with the same properties as self, with the given capacity.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.group">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.group" title="Link to this definition"></a></dt>
+<dd><p>Take a tuple of a system term and a noise term and combines them to be a OpenSystem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system</strong> -- The system to have in the new instance.</p></li>
+<li><p><strong>noise</strong> -- The noise to have in the new instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The OpenSystem with input system and noise terms.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- System could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Noise could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Grouping could not be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise">
+<span class="sig-name descname"><span class="pre">noise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise" title="Link to this definition"></a></dt>
+<dd><p>Return the noise part of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The noise of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Noise type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_add_operator_product">
+<span class="sig-name descname"><span class="pre">noise_add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_add_operator_product" title="Link to this definition"></a></dt>
+<dd><p>Add a new entry to the system of the open system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- Tuple of Products of set object.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- Value of set object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The OpenSystem with the new entry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenSystem</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left key element cannot be converted to product.</p></li>
+<li><p><strong>ValueError</strong> -- Right key element cannot be converted to product.</p></li>
+<li><p><strong>TypeError</strong> -- Value cannot be converted to CalculatorComplex.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_get">
+<span class="sig-name descname"><span class="pre">noise_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_get" title="Link to this definition"></a></dt>
+<dd><p>Get the CalculatorComplex coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- Tuple of Products of set object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left key element cannot be converted to product.</p></li>
+<li><p><strong>ValueError</strong> -- Right key element cannot be converted to product.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.noise_set">
+<span class="sig-name descname"><span class="pre">noise_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.noise_set" title="Link to this definition"></a></dt>
+<dd><p>Set a new entry in the noise of the open system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- Tuple of Products of set object.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- CalculatorComplex value of set object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The OpenSystem with the new entry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenSystem</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left key element cannot be converted to product.</p></li>
+<li><p><strong>ValueError</strong> -- Right key element cannot be converted to product.</p></li>
+<li><p><strong>TypeError</strong> -- Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.number_modes">
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the number_modes input of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of modes in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system">
+<span class="sig-name descname"><span class="pre">system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system" title="Link to this definition"></a></dt>
+<dd><p>Return the system part of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The system of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>System type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_add_operator_product">
+<span class="sig-name descname"><span class="pre">system_add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_add_operator_product" title="Link to this definition"></a></dt>
+<dd><p>Add a new entry to the system of the open system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Product type</em>) -- Product key of set object.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>CalculatorComplex</em><em>, </em><em>CalculatorFloat</em><em>]</em>) -- Value of set object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The OpenSystem with the new entry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenSystem</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- key element cannot be converted to product.</p></li>
+<li><p><strong>TypeError</strong> -- Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_get">
+<span class="sig-name descname"><span class="pre">system_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_get" title="Link to this definition"></a></dt>
+<dd><p>Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Product type</em>) -- Product key of set object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex or CalculatorFloat</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- key element cannot be converted to product.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.system_set">
+<span class="sig-name descname"><span class="pre">system_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.system_set" title="Link to this definition"></a></dt>
+<dd><p>Set a new entry in the system of the open system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Product type</em>) -- Product key of set object.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>CalculatorComplex</em><em>, </em><em>CalculatorFloat</em><em>]</em>) -- Value of set object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The OpenSystem with the new entry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenSystem</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- key element cannot be converted to product.</p></li>
+<li><p><strong>TypeError</strong> -- Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.truncate">
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.truncate" title="Link to this definition"></a></dt>
+<dd><p>Truncate self by returning a copy without entries under a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> -- The threshold for inclusion.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The truncated version of self.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonLindbladOpenSystem.ungroup">
+<span class="sig-name descname"><span class="pre">ungroup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonLindbladOpenSystem.ungroup" title="Link to this definition"></a></dt>
+<dd><p>Return a tuple of the system and the noise of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The system and noise of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(System, Noise)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct" title="Link to this definition"></a></dt>
+<dd><p>A product of bosonic creation and annihilation operators.</p>
+<p>The BosonProduct is used as an index for non-hermitian, normal ordered bosonic operators.
+A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+The BosonProduct is used as an index when setting or adding new summands to a bosonic operator and when querrying the
+weight of a product of operators in the sum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>creators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- List of creator sub-indices.</p></li>
+<li><p><strong>annihilators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- List of annihilator sub-indices.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new (empty) BosonProduct.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+<section id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonProduct</span>
+<span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="c1"># For instance, to represent $c_0a_0$</span>
+<span class="n">b_product</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">b_product</span><span class="o">.</span><span class="n">creators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">b_product</span><span class="o">.</span><span class="n">annihilators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.annihilators">
+<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.annihilators" title="Link to this definition"></a></dt>
+<dd><p>Return list of annihilator indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the corresponding annihilator indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.create_valid_pair">
+<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<dd><p>Create valid pair of index and value to be set in an operator.</p>
+<p>The first item is the valid instance of self created from the input creators and annihilators.
+The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>creators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- The creator indices to have in the instance of self.</p></li>
+<li><p><strong>annihilators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- The annihilators indices to have in the instance of self.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The CalculatorComplex to transform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The valid instance of self and the corresponding transformed CalculatorComplex.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(self, CalculatorComplex)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex.</p></li>
+<li><p><strong>ValueError</strong> -- Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.creators">
+<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.creators" title="Link to this definition"></a></dt>
+<dd><p>Return list of creator indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the corresponding creator indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Returns the maximal number of modes self acts on.</p>
+<p>Self acts on a state space of unknown dimension.
+There is only a lower bound of the dimension or number of modes based on the
+maximal mode the product of operators in the index acts on.
+For example an index consisting of one creator acting on mode 0 would have
+a current_number_modes of one. An index consisting of one annhihilator acting on 3
+would have current_number_modes of four.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximal number of modes self acts on.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized Spin System.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_string">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_string" title="Link to this definition"></a></dt>
+<dd><p>Convert a string representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized index in str representation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Input cannot be converted from str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.hermitian_conjugate">
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.hermitian_conjugate" title="Link to this definition"></a></dt>
+<dd><p>Return the hermitian conjugate of self and its prefactor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The hermitian conjugate of self and the potential sign it has picked up.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(self, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.is_natural_hermitian">
+<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.is_natural_hermitian" title="Link to this definition"></a></dt>
+<dd><p>Return whether self is naturally hermitian.</p>
+<p>For spin objects, this is true when applying the hermitian conjugation does not change the sign.
+For bosonic and fermionic objects, this is true when creators == annihilators.
+For mixed objects, this is true when all of the spin, bosonic and fermionic parts' <cite>is_naturally_hermitian</cite> functions evaluate to true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is naturally hermitian or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.number_annihilators">
+<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.number_annihilators" title="Link to this definition"></a></dt>
+<dd><p>Get the number of annihilator indices of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of annihilator indices in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.number_creators">
+<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.number_creators" title="Link to this definition"></a></dt>
+<dd><p>Get the number of creator indices of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of creator indices in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.remap_modes">
+<span class="sig-name descname"><span class="pre">remap_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reordering_dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.remap_modes" title="Link to this definition"></a></dt>
+<dd><p>Remap modes according to an input dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input reordering dictionary is not a permutation of the indices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem" title="Link to this definition"></a></dt>
+<dd><p>These are representations of systems of bosons.</p>
+<p>BosonSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
+and an optional number of bosons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_bosons</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The number of bosons in the BosonSystem.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new BosonSystem with the input number of bosons.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">qoqo_calculator_pyo3</span> <span class="kn">import</span> <span class="n">CalculatorComplex</span>
+<span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">BosonSystem</span><span class="p">,</span> <span class="n">BosonProduct</span>
+
+<span class="n">ssystem</span> <span class="o">=</span> <span class="n">BosonSystem</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pp</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.add_operator_product">
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.add_operator_product" title="Link to this definition"></a></dt>
+<dd><p>Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Product type</em>) -- The key object</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex or CalculatorFloat.</p></li>
+<li><p><strong>ValueError</strong> -- Product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Error in add_operator_product function of self.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return maximum index in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.empty_clone">
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.empty_clone" title="Link to this definition"></a></dt>
+<dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>capacity</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The capacity of the new instance to create.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An empty clone with the same properties as self, with the given capacity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of self to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.get" title="Link to this definition"></a></dt>
+<dd><p>Get the coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> -- Product to get the value of.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Product could not be constructed from key.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.hermitian_conjugate">
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.hermitian_conjugate" title="Link to this definition"></a></dt>
+<dd><p>Return the hermitian conjugate of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The hermitian conjugate of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.is_empty" title="Link to this definition"></a></dt>
+<dd><p>Return true if self contains no values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is empty or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.keys" title="Link to this definition"></a></dt>
+<dd><p>Return a list of the unsorted keys in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of keys of the self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[OperatorProduct]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.number_modes">
+<span class="sig-name descname"><span class="pre">number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the number_modes input of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of modes in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove the value of the input key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> -- The key of the value to remove.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.separate_into_n_terms">
+<span class="sig-name descname"><span class="pre">separate_into_n_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_creators_annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.separate_into_n_terms" title="Link to this definition"></a></dt>
+<dd><p>Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_creators_annihilators</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) -- Number of modes to filter for in the keys.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Self, Self]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Error in adding terms to return values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.set" title="Link to this definition"></a></dt>
+<dd><p>Overwrite an existing entry or set a new entry in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Product type</em>) -- The key to set.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>CalculatorComplex</em><em>, </em><em>CalculatorFloat</em><em>]</em>) -- The value to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Key existed if this is not None, and this is the value it had before it was overwritten.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Union[CalculatorComplex, CalculatorFloat]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Product could not be constructed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of self using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.truncate">
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.truncate" title="Link to this definition"></a></dt>
+<dd><p>Truncate self by returning a copy without entries under a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>float</em>) -- The threshold for inclusion.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The truncated version of self.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.BosonSystem.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonSystem.values" title="Link to this definition"></a></dt>
+<dd><p>Return unsorted values in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of values of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Union[CalculatorComplex, CalculatorFloat]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">HermitianBosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct" title="Link to this definition"></a></dt>
+<dd><p>A product of bosonic creation and annihilation operators.</p>
+<p>The HermitianBosonProduct is used as an index for non-hermitian, normal ordered bosonic operators.
+A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
+The HermitianBosonProduct is used as an index when setting or adding new summands to a bosonic operator and when querrying the
+weight of a product of operators in the sum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>creators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- List of creator sub-indices.</p></li>
+<li><p><strong>annihilators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- List of annihilator sub-indices.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new (empty) HermitianBosonProduct.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">struqture_py.bosons</span> <span class="kn">import</span> <span class="n">HermitianBosonProduct</span>
+<span class="kn">import</span> <span class="nn">numpy.testing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="c1"># For instance, to represent $c_0a_0$</span>
+<span class="n">b_product</span> <span class="o">=</span> <span class="n">HermitianBosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">b_product</span><span class="o">.</span><span class="n">creators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">b_product</span><span class="o">.</span><span class="n">annihilators</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.annihilators">
+<span class="sig-name descname"><span class="pre">annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.annihilators" title="Link to this definition"></a></dt>
+<dd><p>Return list of annihilator indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the corresponding annihilator indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.create_valid_pair">
+<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<dd><p>Create valid pair of index and value to be set in an operator.</p>
+<p>The first item is the valid instance of self created from the input creators and annihilators.
+The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>creators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- The creator indices to have in the instance of self.</p></li>
+<li><p><strong>annihilators</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- The annihilators indices to have in the instance of self.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The CalculatorComplex to transform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The valid instance of self and the corresponding transformed CalculatorComplex.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(self, CalculatorComplex)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex.</p></li>
+<li><p><strong>ValueError</strong> -- Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.creators">
+<span class="sig-name descname"><span class="pre">creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.creators" title="Link to this definition"></a></dt>
+<dd><p>Return list of creator indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the corresponding creator indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Returns the maximal number of modes self acts on.</p>
+<p>Self acts on a state space of unknown dimension.
+There is only a lower bound of the dimension or number of modes based on the
+maximal mode the product of operators in the index acts on.
+For example an index consisting of one creator acting on mode 0 would have
+a current_number_modes of one. An index consisting of one annhihilator acting on 3
+would have current_number_modes of four.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximal number of modes self acts on.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.current_version">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_bincode">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized Spin System.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.from_string">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.from_string" title="Link to this definition"></a></dt>
+<dd><p>Convert a string representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized index in str representation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Input cannot be converted from str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate">
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.hermitian_conjugate" title="Link to this definition"></a></dt>
+<dd><p>Return the hermitian conjugate of self and its prefactor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The hermitian conjugate of self and the potential sign it has picked up.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(self, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian">
+<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.is_natural_hermitian" title="Link to this definition"></a></dt>
+<dd><p>Return whether self is naturally hermitian.</p>
+<p>For spin objects, this is true when applying the hermitian conjugation does not change the sign.
+For bosonic and fermionic objects, this is true when creators == annihilators.
+For mixed objects, this is true when all of the spin, bosonic and fermionic parts' <cite>is_naturally_hermitian</cite> functions evaluate to true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is naturally hermitian or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.json_schema">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.number_annihilators">
+<span class="sig-name descname"><span class="pre">number_annihilators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_annihilators" title="Link to this definition"></a></dt>
+<dd><p>Get the number of annihilator indices of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of annihilator indices in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.number_creators">
+<span class="sig-name descname"><span class="pre">number_creators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.number_creators" title="Link to this definition"></a></dt>
+<dd><p>Get the number of creator indices of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of creator indices in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.remap_modes">
+<span class="sig-name descname"><span class="pre">remap_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reordering_dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.remap_modes" title="Link to this definition"></a></dt>
+<dd><p>Remap modes according to an input dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reordering_dictionary</strong> (<em>dict</em>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Self, CalculatorComplex) - The instance of Self with modes remapped, and the sign resulting from symmetry/antisymmetry.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input reordering dictionary is not a permutation of the indices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.bosons.HermitianBosonProduct.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.HermitianBosonProduct.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generated/struqture_py.spins.SpinLindbladOpenSystem.html" class="btn btn-neutral float-left" title="struqture_py.spins.SpinLindbladOpenSystem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generated/struqture_py.bosons.BosonProduct.html" class="btn btn-neutral float-right" title="struqture_py.bosons.BosonProduct" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, HQS Quantum Simulations GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

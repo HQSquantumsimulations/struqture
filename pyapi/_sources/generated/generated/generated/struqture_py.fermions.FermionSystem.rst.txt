@@ -1,0 +1,43 @@
+struqture\_py.fermions.FermionSystem
+====================================
+
+.. currentmodule:: struqture_py.fermions
+
+.. autoclass:: FermionSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FermionSystem.__init__
+      ~FermionSystem.add_operator_product
+      ~FermionSystem.current_number_modes
+      ~FermionSystem.current_version
+      ~FermionSystem.empty_clone
+      ~FermionSystem.from_bincode
+      ~FermionSystem.from_json
+      ~FermionSystem.get
+      ~FermionSystem.hermitian_conjugate
+      ~FermionSystem.is_empty
+      ~FermionSystem.jordan_wigner
+      ~FermionSystem.json_schema
+      ~FermionSystem.keys
+      ~FermionSystem.min_supported_version
+      ~FermionSystem.number_modes
+      ~FermionSystem.remove
+      ~FermionSystem.separate_into_n_terms
+      ~FermionSystem.set
+      ~FermionSystem.to_bincode
+      ~FermionSystem.to_json
+      ~FermionSystem.truncate
+      ~FermionSystem.values
+   
+   
+
+   
+   
+   
