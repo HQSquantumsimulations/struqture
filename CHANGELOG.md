@@ -5,7 +5,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## Unreleased
 
 
-## 2.0.0-alpha.6
+## 2.0.0-alpha.6 - 2.0.0-alpha.7
 
 * Updated to qoqo-calculator 1.4.
 
