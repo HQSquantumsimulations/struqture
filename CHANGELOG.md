@@ -5,6 +5,14 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## Unreleased
 
 
+## 2.0.0-alpha.6
+
+* Added links to examples in container types of the user documentation
+* Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14), qoqo-calculator (1.3 -> 1.4).
+* Updated minimum supported Rust version from 1.57 to 1.76.
+* Updated minimum supported Python version from 3.8 to 3.9.
+* Fixed a bug when creating a Product from a bad JSON.
+
 ## 2.0.0-alpha.5
 
 * Added links to examples in container types of the user documentation
@@ -12,7 +20,6 @@ This changelog track changes to the struqture project starting at version v1.0.0
 * Updated minimum supported Rust version from 1.57 to 1.76.
 * Updated minimum supported Python version from 3.8 to 3.9.
 * Fixed a bug when creating a Product from a bad JSON.
-
 
 ## 2.0.0-alpha.4
 
