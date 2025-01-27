@@ -5,9 +5,5 @@ multilingual = false
 src = "src"
 title = "HQS StruQture User Documentation"
 
-[preprocessor.katex]
-
-[output.katex]
-
 [output.html]
 mathjax-support = true
