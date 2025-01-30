@@ -4,6 +4,9 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.0.0-alpha.8
+
+* Added the `separate_into_n_terms` function into the FermionHamiltonian methods.
 
 ## 2.0.0-alpha.6 - 2.0.0-alpha.7
 
