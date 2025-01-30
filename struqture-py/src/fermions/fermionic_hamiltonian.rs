@@ -124,48 +124,32 @@ impl FermionHamiltonianWrapper {
         }
     }
 
-    /// Converts a json corresponding to struqture 2.x FermionHamiltonian to a struqture 1.x FermionHamiltonianSystem.
+    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
     ///
     /// Args:
-    ///     input (str): the json of the struqture 2.x FermionHamiltonian to convert to struqture 1.x.
+    ///     number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
     ///
     /// Returns:
-    ///     FermionHamiltonianSystem: The struqture 1.x FermionHamiltonianSystem created from the struqture 2.x FermionHamiltonian.
+    ///     Tuple[FermionHamiltonianWrapper, FermionHamiltonianWrapper]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
-    ///     ValueError: Input could not be deserialised from json to struqture 2.x.
-    ///     ValueError: Struqture 2.x object could not be converted to struqture 1.x.
-    #[staticmethod]
-    #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_json_struqture_2(input: String) -> PyResult<FermionHamiltonianSystemWrapper> {
-        let operator: struqture_2::fermions::FermionHamiltonian = serde_json::from_str(&input)
-            .map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Input cannot be deserialized from json to struqture 2.x: {}",
-                    err
-                ))
-            })?;
-        let mut new_operator = FermionHamiltonianSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
-            let self_key = HermitianFermionProduct::from_str(&format!("{}", key).to_string()).map_err(
-                |err| {
-                    PyValueError::new_err(format!(
-                        "Struqture 2.x HermitianFermionProduct cannot be converted to struqture 1.x: {}",
-                        err
-                    ))
-                },
-            )?;
-            let _ = new_operator.set(self_key, val.clone());
-        }
-        Ok(FermionHamiltonianSystemWrapper {
-            internal: new_operator,
-        })
-    }
-}
-
-impl Default for FermionHamiltonianWrapper {
-    fn default() -> Self {
-        Self::new()
+    ///     ValueError: Error in adding terms to return values.
+    pub fn separate_into_n_terms(
+        &self,
+        number_creators_annihilators: (usize, usize),
+    ) -> PyResult<(FermionHamiltonianWrapper, FermionHamiltonianWrapper)> {
+        let (separated, remainder) = self
+            .internal
+            .separate_into_n_terms(number_creators_annihilators)
+            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+        Ok((
+            FermionHamiltonianWrapper {
+                internal: separated,
+            },
+            FermionHamiltonianWrapper {
+                internal: remainder,
+            },
+        ))
     }
 }
 
