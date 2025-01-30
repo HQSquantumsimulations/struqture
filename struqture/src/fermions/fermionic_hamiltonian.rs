@@ -300,6 +300,31 @@ impl FermionHamiltonian {
         Ok(new_fermion_system)
     }
 
+    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
+    ///
+    /// # Arguments
+    ///
+    /// * `number_creators_annihilators` - Number of creation and annihilation terms to filter for in the keys.
+    ///
+    /// # Returns
+    ///
+    /// `Ok((separated, remainder))` - Operator with the noise terms where number_creators_annihilators matches the number of spins the operator product acts on and Operator with all other contributions.
+    pub fn separate_into_n_terms(
+        &self,
+        number_creators_annihilators: (usize, usize),
+    ) -> Result<(Self, Self), StruqtureError> {
+        let mut separated = Self::default();
+        let mut remainder = Self::default();
+        for (prod, val) in self.iter() {
+            if (prod.creators().len(), prod.annihilators().len()) == number_creators_annihilators {
+                separated.add_operator_product(prod.clone(), val.clone())?;
+            } else {
+                remainder.add_operator_product(prod.clone(), val.clone())?;
+            }
+        }
+        Ok((separated, remainder))
+    }
+
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_import")]
     pub fn from_struqture_1(
