@@ -127,7 +127,7 @@ impl MixedPlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create MixedOperator from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+    pub fn from_mixed_operator(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {
@@ -143,7 +143,7 @@ impl MixedPlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create MixedOperator from MixedPlusMinusOperator.
     ///     ValueError: Could not create MixedOperator from MixedOperator.
-    pub fn to_mixed_system(&self) -> PyResult<MixedOperatorWrapper> {
+    pub fn to_mixed_operator(&self) -> PyResult<MixedOperatorWrapper> {
         let result: MixedOperator = MixedOperator::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedOperatorWrapper { internal: result })
