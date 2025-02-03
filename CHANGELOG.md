@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Renamed `to_mixed_system` and `from_mixed_system` to `to_mixed_operator` and `from_mixed_operator`.
+
 ## 2.0.0-alpha.8
 
 * Added the `separate_into_n_terms` function into the FermionHamiltonian methods.
