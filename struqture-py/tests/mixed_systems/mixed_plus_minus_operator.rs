@@ -674,14 +674,14 @@ fn test_from_mixed_sys() {
 
         let result = py
             .get_type_bound::<MixedPlusMinusOperatorWrapper>()
-            .call_method1("from_mixed_system", (pp,))
+            .call_method1("from_mixed_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type_bound::<MixedPlusMinusOperatorWrapper>()
-            .call_method1("from_mixed_system", ("No",));
+            .call_method1("from_mixed_operator", ("No",));
         assert!(result.is_err())
     })
 }
@@ -716,7 +716,7 @@ fn test_to_mixed_sys() {
         )
         .unwrap();
 
-        let result = pmp.call_method0("to_mixed_system").unwrap();
+        let result = pmp.call_method0("to_mixed_operator").unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
