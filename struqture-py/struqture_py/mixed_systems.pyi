@@ -82,7 +82,6 @@ class MixedProduct(ProductType):
         mp = MixedProduct([mp_spins_system, mp_spins_bath], [mp_bosons], [])
         npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
         npt.assert_equal(mp.bosons(), [mp_bosons])
-
     """
 
     def __init__(
@@ -92,7 +91,6 @@ class MixedProduct(ProductType):
         fermions: List[FermionProduct],
     ):
         return
-
     def create_valid_pair(self, creators, annihilators, value):  # type: ignore
         """
         Create a pair (MixedProduct, CalculatorComplex).
@@ -113,9 +111,7 @@ class MixedProduct(ProductType):
             ValueError: Valid pair could not be constructed, bosons couldn't be converted from string.
             ValueError: Valid pair could not be constructed, fermions couldn't be converted from string.
             TypeError: Value cannot be converted to CalculatorComplex.
-            ValueError: Valid pair could not be constructed.
-        """
-
+            ValueError: Valid pair could not be constructed."""
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -123,7 +119,6 @@ class MixedProduct(ProductType):
         Returns:
             (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
-
     def is_natural_hermitian(self) -> bool:  # type: ignore
         """
         Return whether self is naturally hermitian.
@@ -133,57 +128,43 @@ class MixedProduct(ProductType):
         For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
         Returns:
-            bool: Whether self is naturally hermitian or not.
-        """
-
+            bool: Whether self is naturally hermitian or not."""
     def spins(self) -> List[str]:  # type: ignore
         """
         Get the spin products of self.
 
         Returns:
-            List[str]: The spin products of self.
-        """
-
+            List[str]: The spin products of self."""
     def bosons(self) -> List[str]:  # type: ignore
         """
         Get the boson products of self.
 
         Returns:
-            List[str]: The boson products of self.
-        """
-
+            List[str]: The boson products of self."""
     def fermions(self) -> List[str]:  # type: ignore
         """
         Get the fermion products of self.
 
         Returns:
-            List[str]: The fermion products of self.
-        """
-
+            List[str]: The fermion products of self."""
     def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current number of spins each subsystem acts upon.
 
         Returns:
-            List[int]: Number of spins in each spin sub-system.
-        """
-
+            List[int]: Number of spins in each spin sub-system."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of bosonic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of bosonic modes in each spin sub-system.
-        """
-
+            List[int]: Number of bosonic modes in each spin sub-system."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of fermionic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of fermionic modes in each spin sub-system.
-        """
-
+            List[int]: Number of fermionic modes in each spin sub-system."""
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -196,9 +177,7 @@ class MixedProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -211,9 +190,7 @@ class MixedProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -226,9 +203,7 @@ class MixedProduct(ProductType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -237,9 +212,7 @@ class MixedProduct(ProductType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -248,9 +221,7 @@ class MixedProduct(ProductType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -262,9 +233,7 @@ class MixedProduct(ProductType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def from_string(self, input: str) -> MixedProduct:  # type: ignore
         """
         Convert a string representation of the object to an instance.
@@ -276,17 +245,13 @@ class MixedProduct(ProductType):
             self: The converted object.
 
         Raises:
-            ValueError: Input cannot be converted from str.
-        """
-
+            ValueError: Input cannot be converted from str."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -294,19 +259,15 @@ class MixedProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class HermitianMixedProduct(ProductType):
     """
@@ -355,7 +316,6 @@ class HermitianMixedProduct(ProductType):
         mp = HermitianMixedProduct([mp_spins_system, mp_spins_bath], [mp_bosons], [])
         npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
         npt.assert_equal(mp.bosons(), [mp_bosons])
-
     """
 
     def __init__(
@@ -365,7 +325,6 @@ class HermitianMixedProduct(ProductType):
         fermions: List[FermionProduct],
     ):
         return
-
     def create_valid_pair(self, creators, annihilators, value):  # type: ignore
         """
         Create a pair (HermitianMixedProduct, CalculatorComplex).
@@ -386,9 +345,7 @@ class HermitianMixedProduct(ProductType):
             ValueError: Valid pair could not be constructed, bosons couldn't be converted from string.
             ValueError: Valid pair could not be constructed, fermions couldn't be converted from string.
             TypeError: Value cannot be converted to CalculatorComplex.
-            ValueError: Valid pair could not be constructed.
-        """
-
+            ValueError: Valid pair could not be constructed."""
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -396,7 +353,6 @@ class HermitianMixedProduct(ProductType):
         Returns:
             (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
-
     def is_natural_hermitian(self) -> bool:  # type: ignore
         """
         Return whether self is naturally hermitian.
@@ -406,57 +362,43 @@ class HermitianMixedProduct(ProductType):
         For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
         Returns:
-            bool: Whether self is naturally hermitian or not.
-        """
-
+            bool: Whether self is naturally hermitian or not."""
     def spins(self) -> List[str]:  # type: ignore
         """
         Get the spin products of self.
 
         Returns:
-            List[str]: The spin products of self.
-        """
-
+            List[str]: The spin products of self."""
     def bosons(self) -> List[str]:  # type: ignore
         """
         Get the boson products of self.
 
         Returns:
-            List[str]: The boson products of self.
-        """
-
+            List[str]: The boson products of self."""
     def fermions(self) -> List[str]:  # type: ignore
         """
         Get the fermion products of self.
 
         Returns:
-            List[str]: The fermion products of self.
-        """
-
+            List[str]: The fermion products of self."""
     def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current number of spins each subsystem acts upon.
 
         Returns:
-            List[int]: Number of spins in each spin sub-system.
-        """
-
+            List[int]: Number of spins in each spin sub-system."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of bosonic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of bosonic modes in each spin sub-system.
-        """
-
+            List[int]: Number of bosonic modes in each spin sub-system."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of fermionic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of fermionic modes in each spin sub-system.
-        """
-
+            List[int]: Number of fermionic modes in each spin sub-system."""
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -469,9 +411,7 @@ class HermitianMixedProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -484,9 +424,7 @@ class HermitianMixedProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -499,9 +437,7 @@ class HermitianMixedProduct(ProductType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -510,9 +446,7 @@ class HermitianMixedProduct(ProductType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -521,9 +455,7 @@ class HermitianMixedProduct(ProductType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -535,9 +467,7 @@ class HermitianMixedProduct(ProductType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def from_string(self, input: str) -> HermitianMixedProduct:  # type: ignore
         """
         Convert a string representation of the object to an instance.
@@ -549,17 +479,13 @@ class HermitianMixedProduct(ProductType):
             self: The converted object.
 
         Raises:
-            ValueError: Input cannot be converted from str.
-        """
-
+            ValueError: Input cannot be converted from str."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -567,19 +493,15 @@ class HermitianMixedProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedDecoherenceProduct(ProductType):
     """
@@ -628,7 +550,6 @@ class MixedDecoherenceProduct(ProductType):
         mp = MixedDecoherenceProduct([mp_spins_system, mp_spins_bath], [mp_bosons], [])
         npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
         npt.assert_equal(mp.bosons(), [mp_bosons])
-
     """
 
     def __init__(
@@ -638,7 +559,6 @@ class MixedDecoherenceProduct(ProductType):
         fermions: List[FermionProduct],
     ):
         return
-
     def create_valid_pair(self, creators, annihilators, value):  # type: ignore
         """
         Create a pair (MixedDecoherenceProduct, CalculatorComplex).
@@ -659,9 +579,7 @@ class MixedDecoherenceProduct(ProductType):
             ValueError: Valid pair could not be constructed, bosons couldn't be converted from string.
             ValueError: Valid pair could not be constructed, fermions couldn't be converted from string.
             TypeError: Value cannot be converted to CalculatorComplex.
-            ValueError: Valid pair could not be constructed.
-        """
-
+            ValueError: Valid pair could not be constructed."""
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -669,7 +587,6 @@ class MixedDecoherenceProduct(ProductType):
         Returns:
             (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
-
     def is_natural_hermitian(self) -> bool:  # type: ignore
         """
         Return whether self is naturally hermitian.
@@ -679,57 +596,43 @@ class MixedDecoherenceProduct(ProductType):
         For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
         Returns:
-            bool: Whether self is naturally hermitian or not.
-        """
-
+            bool: Whether self is naturally hermitian or not."""
     def spins(self) -> List[str]:  # type: ignore
         """
         Get the spin products of self.
 
         Returns:
-            List[str]: The spin products of self.
-        """
-
+            List[str]: The spin products of self."""
     def bosons(self) -> List[str]:  # type: ignore
         """
         Get the boson products of self.
 
         Returns:
-            List[str]: The boson products of self.
-        """
-
+            List[str]: The boson products of self."""
     def fermions(self) -> List[str]:  # type: ignore
         """
         Get the fermion products of self.
 
         Returns:
-            List[str]: The fermion products of self.
-        """
-
+            List[str]: The fermion products of self."""
     def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current number of spins each subsystem acts upon.
 
         Returns:
-            List[int]: Number of spins in each spin sub-system.
-        """
-
+            List[int]: Number of spins in each spin sub-system."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of bosonic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of bosonic modes in each spin sub-system.
-        """
-
+            List[int]: Number of bosonic modes in each spin sub-system."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of fermionic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of fermionic modes in each spin sub-system.
-        """
-
+            List[int]: Number of fermionic modes in each spin sub-system."""
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -742,9 +645,7 @@ class MixedDecoherenceProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -757,9 +658,7 @@ class MixedDecoherenceProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -772,9 +671,7 @@ class MixedDecoherenceProduct(ProductType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -783,9 +680,7 @@ class MixedDecoherenceProduct(ProductType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -794,9 +689,7 @@ class MixedDecoherenceProduct(ProductType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -808,9 +701,7 @@ class MixedDecoherenceProduct(ProductType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def from_string(self, input: str) -> MixedDecoherenceProduct:  # type: ignore
         """
         Convert a string representation of the object to an instance.
@@ -822,17 +713,13 @@ class MixedDecoherenceProduct(ProductType):
             self: The converted object.
 
         Raises:
-            ValueError: Input cannot be converted from str.
-        """
-
+            ValueError: Input cannot be converted from str."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -840,19 +727,15 @@ class MixedDecoherenceProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedOperator:
     """
@@ -887,20 +770,16 @@ class MixedOperator:
         ssystem.add_operator_product(pp, 5.0)
         npt.assert_equal(ssystem.current_number_spins(), [2])
         npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-
     """
 
     def __init__(self, number_spins: int, number_bosons: int, number_fermions: int):
         return
-
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
 
         Returns:
-            List[OperatorProduct]: The sequence of keys of the self.
-        """
-
+            List[OperatorProduct]: The sequence of keys of the self."""
     def empty_clone(self, capacity: Optional[int]) -> MixedOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
@@ -911,15 +790,12 @@ class MixedOperator:
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
-
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if self contains no values.
 
         Returns:
-            bool: Whether self is empty or not.
-        """
-
+            bool: Whether self is empty or not."""
     def truncate(self, threshold: float) -> MixedOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
@@ -928,9 +804,7 @@ class MixedOperator:
             threshold (float): The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self.
-        """
-
+            self: The truncated version of self."""
     def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -942,9 +816,7 @@ class MixedOperator:
             CalculatorComplex: Value at key (or 0.0).
 
         Raises:
-            ValueError: Product could not be constructed from key.
-        """
-
+            ValueError: Product could not be constructed from key."""
     def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Remove the value of the input key.
@@ -956,9 +828,7 @@ class MixedOperator:
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
         Raises:
-            ValueError: Product could not be constructed.
-        """
-
+            ValueError: Product could not be constructed."""
     def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -971,9 +841,7 @@ class MixedOperator:
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
 
         Raises:
-            ValueError: Product could not be constructed.
-        """
-
+            ValueError: Product could not be constructed."""
     def add_operator_product(self, key: ProductType):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
@@ -984,9 +852,7 @@ class MixedOperator:
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Product could not be constructed.
-            ValueError: Error in add_operator_product function of self.
-        """
-
+            ValueError: Error in add_operator_product function of self."""
     def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Return unsorted values in self.
@@ -994,31 +860,24 @@ class MixedOperator:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-
     def hermitian_conjugate(self) -> MixedOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
         Returns:
-            self: The hermitian conjugate of self.
-        """
-
+            self: The hermitian conjugate of self."""
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
-        """
-
+            int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-            list[int]: The number of bosonic modes in each bosonic subsystem of self.
-        """
-
+            list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
@@ -1026,7 +885,6 @@ class MixedOperator:
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1039,9 +897,7 @@ class MixedOperator:
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -1054,9 +910,7 @@ class MixedOperator:
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1069,9 +923,7 @@ class MixedOperator:
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of self using the [bincode] crate.
@@ -1080,9 +932,7 @@ class MixedOperator:
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of self.
@@ -1091,9 +941,7 @@ class MixedOperator:
             str: The serialized form of self.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of self to an instance.
@@ -1105,17 +953,13 @@ class MixedOperator:
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -1123,19 +967,15 @@ class MixedOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedHamiltonian:
     """
@@ -1170,20 +1010,16 @@ class MixedHamiltonian:
         ssystem.add_operator_product(pp, 5.0)
         npt.assert_equal(ssystem.current_number_spins(), [2])
         npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-
     """
 
     def __init__(self, number_spins: int, number_bosons: int, number_fermions: int):
         return
-
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
 
         Returns:
-            List[OperatorProduct]: The sequence of keys of the self.
-        """
-
+            List[OperatorProduct]: The sequence of keys of the self."""
     def empty_clone(self, capacity: Optional[int]) -> MixedHamiltonian:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
@@ -1194,15 +1030,12 @@ class MixedHamiltonian:
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
-
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if self contains no values.
 
         Returns:
-            bool: Whether self is empty or not.
-        """
-
+            bool: Whether self is empty or not."""
     def truncate(self, threshold: float) -> MixedHamiltonian:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
@@ -1211,9 +1044,7 @@ class MixedHamiltonian:
             threshold (float): The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self.
-        """
-
+            self: The truncated version of self."""
     def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -1225,9 +1056,7 @@ class MixedHamiltonian:
             CalculatorComplex: Value at key (or 0.0).
 
         Raises:
-            ValueError: Product could not be constructed from key.
-        """
-
+            ValueError: Product could not be constructed from key."""
     def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Remove the value of the input key.
@@ -1239,9 +1068,7 @@ class MixedHamiltonian:
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
         Raises:
-            ValueError: Product could not be constructed.
-        """
-
+            ValueError: Product could not be constructed."""
     def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -1254,9 +1081,7 @@ class MixedHamiltonian:
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
 
         Raises:
-            ValueError: Product could not be constructed.
-        """
-
+            ValueError: Product could not be constructed."""
     def add_operator_product(self, key: ProductType):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
@@ -1267,9 +1092,7 @@ class MixedHamiltonian:
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Product could not be constructed.
-            ValueError: Error in add_operator_product function of self.
-        """
-
+            ValueError: Error in add_operator_product function of self."""
     def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Return unsorted values in self.
@@ -1277,31 +1100,24 @@ class MixedHamiltonian:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-
     def hermitian_conjugate(self) -> MixedHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
         Returns:
-            self: The hermitian conjugate of self.
-        """
-
+            self: The hermitian conjugate of self."""
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
-        """
-
+            int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-            list[int]: The number of bosonic modes in each bosonic subsystem of self.
-        """
-
+            list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
@@ -1309,7 +1125,6 @@ class MixedHamiltonian:
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1322,9 +1137,7 @@ class MixedHamiltonian:
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -1337,9 +1150,7 @@ class MixedHamiltonian:
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1352,9 +1163,7 @@ class MixedHamiltonian:
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of self using the [bincode] crate.
@@ -1363,9 +1172,7 @@ class MixedHamiltonian:
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of self.
@@ -1374,9 +1181,7 @@ class MixedHamiltonian:
             str: The serialized form of self.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of self to an instance.
@@ -1388,17 +1193,13 @@ class MixedHamiltonian:
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -1406,19 +1207,15 @@ class MixedHamiltonian:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedLindbladNoiseOperator(NoiseType):
     """
@@ -1444,12 +1241,10 @@ class MixedLindbladNoiseOperator(NoiseType):
         slns.add_operator_product((dp, dp), 2.0)
         npt.assert_equal(slns.current_number_spins(), [1])
         npt.assert_equal(slns.get((dp, dp)), CalculatorFloat(2))
-
     """
 
     def __init__(self):
         return
-
     def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -1462,9 +1257,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Raises:
             ValueError: Left-hand product could not be constructed from key.
-            ValueError: Right-hand product could not be constructed from key.
-        """
-
+            ValueError: Right-hand product could not be constructed from key."""
     def remove(self, key: Tuple[ProductType, ProductType]) -> Optional[Union[float, int, str, complex]]:  # type: ignore
         """
         Remove the value of the input object key.
@@ -1477,9 +1270,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Raises:
             ValueError: Left-hand Product could not be constructed.
-            ValueError: Right-hand Product could not be constructed.
-        """
-
+            ValueError: Right-hand Product could not be constructed."""
     def set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> Optional[Union[float, int, str, complex]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -1493,9 +1284,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Raises:
             ValueError: Left-hand Product could not be constructed.
-            ValueError: Right-hand Product could not be constructed.
-        """
-
+            ValueError: Right-hand Product could not be constructed."""
     def add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]):  # type: ignore
         """
         Adds a new (key object, CalculatorComplex) pair to existing entries.
@@ -1508,25 +1297,19 @@ class MixedLindbladNoiseOperator(NoiseType):
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Left-hand product could not be constructed.
             ValueError: Right-hand product could not be constructed.
-            ValueError: Error in add_operator_product function of self.
-        """
-
+            ValueError: Error in add_operator_product function of self."""
     def keys(self) -> List[(OperatorProduct, OperatorProduct)]:  # type: ignore
         """
         Return unsorted keys in self.
 
         Returns:
-            List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
-        """
-
+            List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self."""
     def values(self) -> List[Union[float, int, str, complex]]:  # type: ignore
         """
         Return unsorted values in self.
 
         Returns:
-            List[CalculatorComplex]: The sequence of values of self.
-        """
-
+            List[CalculatorComplex]: The sequence of values of self."""
     def empty_clone(self, capacity) -> MixedLindbladNoiseOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
@@ -1537,15 +1320,12 @@ class MixedLindbladNoiseOperator(NoiseType):
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
-
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if object contains no values.
 
         Returns:
-            bool: Whether self is empty or not.
-        """
-
+            bool: Whether self is empty or not."""
     def truncate(self, threshold) -> MixedLindbladNoiseOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
@@ -1554,25 +1334,19 @@ class MixedLindbladNoiseOperator(NoiseType):
             threshold: The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self.
-        """
-
+            self: The truncated version of self."""
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
-        """
-
+            int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-            list[int]: The number of bosonic modes in each bosonic subsystem of self.
-        """
-
+            list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
@@ -1580,7 +1354,6 @@ class MixedLindbladNoiseOperator(NoiseType):
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1593,9 +1366,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -1608,9 +1379,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1623,9 +1392,7 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -1634,9 +1401,7 @@ class MixedLindbladNoiseOperator(NoiseType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -1645,9 +1410,7 @@ class MixedLindbladNoiseOperator(NoiseType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -1659,17 +1422,13 @@ class MixedLindbladNoiseOperator(NoiseType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -1677,19 +1436,15 @@ class MixedLindbladNoiseOperator(NoiseType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedLindbladOpenSystem(SystemType):
     """
@@ -1722,36 +1477,28 @@ class MixedLindbladOpenSystem(SystemType):
         slns.noise_add_operator_product((dp, dp), 2.0)
         npt.assert_equal(slns.current_number_spins(), [1])
         npt.assert_equal(slns.noise().get((dp, dp)), CalculatorFloat(2))
-
     """
 
     def __init__(self, number_spins: int, number_bosons: int, number_fermions: int):
         return
-
     def system(self) -> SystemType:  # type: ignore
         """
         Return the system part of self.
 
         Returns:
-            System type: The system of self.
-        """
-
+            System type: The system of self."""
     def noise(self) -> NoiseType:  # type: ignore
         """
         Return the noise part of self.
 
         Returns:
-            Noise type: The noise of self.
-        """
-
+            Noise type: The noise of self."""
     def ungroup(self):  # type: ignore
         """
         Return a tuple of the system and the noise of self.
 
         Returns:
-            (System, Noise): The system and noise of self.
-        """
-
+            (System, Noise): The system and noise of self."""
     def group(self, system, noise) -> MixedLindbladOpenSystem:  # type: ignore
         """
         Take a tuple of a system term and a noise term and combines them to be a OpenSystem.
@@ -1766,9 +1513,7 @@ class MixedLindbladOpenSystem(SystemType):
         Raises:
             ValueError: System could not be constructed.
             ValueError: Noise could not be constructed.
-            ValueError: Grouping could not be constructed.
-        """
-
+            ValueError: Grouping could not be constructed."""
     def empty_clone(self) -> MixedLindbladOpenSystem:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
@@ -1776,7 +1521,6 @@ class MixedLindbladOpenSystem(SystemType):
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
-
     def truncate(self, threshold) -> MixedLindbladOpenSystem:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
@@ -1785,9 +1529,7 @@ class MixedLindbladOpenSystem(SystemType):
             threshold: The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self.
-        """
-
+            self: The truncated version of self."""
     def system_set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem:  # type: ignore
         """
         Set a new entry in the system of the open system.
@@ -1803,7 +1545,6 @@ class MixedLindbladOpenSystem(SystemType):
             ValueError: key element cannot be converted to product.
             TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
-
     def noise_set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem:  # type: ignore
         """
         Set a new entry in the noise of the open system.
@@ -1820,7 +1561,6 @@ class MixedLindbladOpenSystem(SystemType):
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
-
     def system_get(self, key: ProductType) -> Union[float, int, str, complex] or Union[float, int, str]:  # type: ignore
         """
         Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.
@@ -1832,9 +1572,7 @@ class MixedLindbladOpenSystem(SystemType):
             CalculatorComplex or CalculatorFloat: Value at key (or 0.0).
 
         Raises:
-            ValueError: key element cannot be converted to product.
-        """
-
+            ValueError: key element cannot be converted to product."""
     def noise_get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the CalculatorComplex coefficient corresponding to the key.
@@ -1847,9 +1585,7 @@ class MixedLindbladOpenSystem(SystemType):
 
         Raises:
             ValueError: Left key element cannot be converted to product.
-            ValueError: Right key element cannot be converted to product.
-        """
-
+            ValueError: Right key element cannot be converted to product."""
     def system_add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem:  # type: ignore
         """
         Add a new entry to the system of the open system.
@@ -1865,7 +1601,6 @@ class MixedLindbladOpenSystem(SystemType):
             ValueError: key element cannot be converted to product.
             TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
-
     def noise_add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem:  # type: ignore
         """
         Add a new entry to the system of the open system.
@@ -1880,25 +1615,19 @@ class MixedLindbladOpenSystem(SystemType):
         Raises:
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
-            TypeError: Value cannot be converted to CalculatorComplex.
-        """
-
+            TypeError: Value cannot be converted to CalculatorComplex."""
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
-        """
-
+            int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-            list[int]: The number of bosonic modes in each bosonic subsystem of self.
-        """
-
+            list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
@@ -1906,7 +1635,6 @@ class MixedLindbladOpenSystem(SystemType):
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -1919,9 +1647,7 @@ class MixedLindbladOpenSystem(SystemType):
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -1934,9 +1660,7 @@ class MixedLindbladOpenSystem(SystemType):
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1949,9 +1673,7 @@ class MixedLindbladOpenSystem(SystemType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -1960,9 +1682,7 @@ class MixedLindbladOpenSystem(SystemType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -1971,9 +1691,7 @@ class MixedLindbladOpenSystem(SystemType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -1985,17 +1703,13 @@ class MixedLindbladOpenSystem(SystemType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -2003,19 +1717,15 @@ class MixedLindbladOpenSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedPlusMinusProduct(ProductType):
     """
@@ -2064,7 +1774,6 @@ class MixedPlusMinusProduct(ProductType):
         mp = MixedPlusMinusProduct([mp_spins_system, mp_spins_bath], [mp_bosons], [])
         npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
         npt.assert_equal(mp.bosons(), [mp_bosons])
-
     """
 
     def __init__(
@@ -2074,7 +1783,6 @@ class MixedPlusMinusProduct(ProductType):
         fermions: List[FermionProduct],
     ):
         return
-
     def from_mixed_product(self, value: MixedProduct) -> List[Tuple[(MixedPlusMinusProduct, Union[float, int, str, complex])]]:  # type: ignore
         """
         Creates a list of corresponding (MixedPlusMinusProduct, CalculatorComplex) tuples from the input MixedProduct.
@@ -2086,9 +1794,7 @@ class MixedPlusMinusProduct(ProductType):
             List[Tuple[(MixedPlusMinusProduct, CalculatorComplex)]]: The converted input.
 
         Raises:
-            ValueError: Input is not a MixedProduct.
-        """
-
+            ValueError: Input is not a MixedProduct."""
     def to_mixed_product_list(self) -> List[Tuple[(MixedProduct, Union[float, int, str, complex])]]:  # type: ignore
         """
         Convert the `self` instance to the corresponding list of (MixedProduct, CalculatorComplex) instances.
@@ -2097,9 +1803,7 @@ class MixedPlusMinusProduct(ProductType):
             List[Tuple[(MixedProduct, CalculatorComplex)]]: The converted MixedPlusMinusProduct.
 
         Raises:
-            ValueError: The conversion was not successful.
-        """
-
+            ValueError: The conversion was not successful."""
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -2107,7 +1811,6 @@ class MixedPlusMinusProduct(ProductType):
         Returns:
             (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
-
     def is_natural_hermitian(self) -> bool:  # type: ignore
         """
         Return whether self is naturally hermitian.
@@ -2117,57 +1820,43 @@ class MixedPlusMinusProduct(ProductType):
         For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
         Returns:
-            bool: Whether self is naturally hermitian or not.
-        """
-
+            bool: Whether self is naturally hermitian or not."""
     def spins(self) -> List[str]:  # type: ignore
         """
         Get the spin products of self.
 
         Returns:
-            List[str]: The spin products of self.
-        """
-
+            List[str]: The spin products of self."""
     def bosons(self) -> List[str]:  # type: ignore
         """
         Get the boson products of self.
 
         Returns:
-            List[str]: The boson products of self.
-        """
-
+            List[str]: The boson products of self."""
     def fermions(self) -> List[str]:  # type: ignore
         """
         Get the fermion products of self.
 
         Returns:
-            List[str]: The fermion products of self.
-        """
-
+            List[str]: The fermion products of self."""
     def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current number of spins each subsystem acts upon.
 
         Returns:
-            List[int]: Number of spins in each spin sub-system.
-        """
-
+            List[int]: Number of spins in each spin sub-system."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of bosonic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of bosonic modes in each spin sub-system.
-        """
-
+            List[int]: Number of bosonic modes in each spin sub-system."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the current number of fermionic modes each subsystem acts upon.
 
         Returns:
-            List[int]: Number of fermionic modes in each spin sub-system.
-        """
-
+            List[int]: Number of fermionic modes in each spin sub-system."""
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -2180,9 +1869,7 @@ class MixedPlusMinusProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -2195,9 +1882,7 @@ class MixedPlusMinusProduct(ProductType):
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -2210,9 +1895,7 @@ class MixedPlusMinusProduct(ProductType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -2221,9 +1904,7 @@ class MixedPlusMinusProduct(ProductType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -2232,9 +1913,7 @@ class MixedPlusMinusProduct(ProductType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -2246,9 +1925,7 @@ class MixedPlusMinusProduct(ProductType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def from_string(self, input: str) -> MixedPlusMinusProduct:  # type: ignore
         """
         Convert a string representation of the object to an instance.
@@ -2260,17 +1937,13 @@ class MixedPlusMinusProduct(ProductType):
             self: The converted object.
 
         Raises:
-            ValueError: Input cannot be converted from str.
-        """
-
+            ValueError: Input cannot be converted from str."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -2278,19 +1951,15 @@ class MixedPlusMinusProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
 
 class MixedPlusMinusOperator:
     """
@@ -2325,13 +1994,11 @@ class MixedPlusMinusOperator:
         ssystem.add_operator_product(pp, 5.0)
         npt.assert_equal(ssystem.current_number_spins(), [2])
         npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-
     """
 
     def __init__(self, number_spins: int, number_bosons: int, number_fermions: int):
         return
-
-    def from_mixed_system(self, value: MixedOperator) -> MixedPlusMinusOperator:  # type: ignore
+    def from_mixed_operator(self, value: MixedOperator) -> MixedPlusMinusOperator:  # type: ignore
         """
         Convert a MixedOperator into a MixedPlusMinusOperator.
 
@@ -2342,10 +2009,8 @@ class MixedPlusMinusOperator:
             MixedPlusMinusOperator: The operator created from the input MixedOperator.
 
         Raises:
-            ValueError: Could not create MixedOperator from input.
-        """
-
-    def to_mixed_system(self) -> MixedOperator:  # type: ignore
+            ValueError: Could not create MixedOperator from input."""
+    def to_mixed_operator(self) -> MixedOperator:  # type: ignore
         """
         Convert a MixedPlusMinusOperator into a MixedOperator.
 
@@ -2354,17 +2019,13 @@ class MixedPlusMinusOperator:
 
         Raises:
             ValueError: Could not create MixedOperator from MixedPlusMinusOperator.
-            ValueError: Could not create MixedOperator from MixedOperator.
-        """
-
+            ValueError: Could not create MixedOperator from MixedOperator."""
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
 
         Returns:
-            List[OperatorProduct]: The sequence of keys of the self.
-        """
-
+            List[OperatorProduct]: The sequence of keys of the self."""
     def empty_clone(self, capacity: Optional[int]) -> MixedPlusMinusOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
@@ -2375,15 +2036,12 @@ class MixedPlusMinusOperator:
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
-
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if self contains no values.
 
         Returns:
-            bool: Whether self is empty or not.
-        """
-
+            bool: Whether self is empty or not."""
     def truncate(self, threshold: float) -> MixedPlusMinusOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
@@ -2392,9 +2050,7 @@ class MixedPlusMinusOperator:
             threshold (float): The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self.
-        """
-
+            self: The truncated version of self."""
     def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -2406,9 +2062,7 @@ class MixedPlusMinusOperator:
             CalculatorComplex: Value at key (or 0.0).
 
         Raises:
-            ValueError: Product could not be constructed from key.
-        """
-
+            ValueError: Product could not be constructed from key."""
     def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Remove the value of the input key.
@@ -2420,9 +2074,7 @@ class MixedPlusMinusOperator:
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
         Raises:
-            ValueError: Product could not be constructed.
-        """
-
+            ValueError: Product could not be constructed."""
     def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -2435,9 +2087,7 @@ class MixedPlusMinusOperator:
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
 
         Raises:
-            ValueError: Product could not be constructed.
-        """
-
+            ValueError: Product could not be constructed."""
     def add_operator_product(self, key: ProductType):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
@@ -2448,9 +2098,7 @@ class MixedPlusMinusOperator:
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Product could not be constructed.
-            ValueError: Error in add_operator_product function of self.
-        """
-
+            ValueError: Error in add_operator_product function of self."""
     def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Return unsorted values in self.
@@ -2458,31 +2106,24 @@ class MixedPlusMinusOperator:
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-
     def hermitian_conjugate(self) -> MixedPlusMinusOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
         Returns:
-            self: The hermitian conjugate of self.
-        """
-
+            self: The hermitian conjugate of self."""
     def current_number_spins(self) -> int:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
-        """
-
+            int: The number of spins in each spin subsystem of self."""
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of bosonic modes in each bosonic subsystem of self.
 
         Returns:
-            list[int]: The number of bosonic modes in each bosonic subsystem of self.
-        """
-
+            list[int]: The number of bosonic modes in each bosonic subsystem of self."""
     def current_number_fermionic_modes(self) -> List[int]:  # type: ignore
         """
         Return the number of fermionic modes in each fermionic subsystem of self.
@@ -2490,7 +2131,6 @@ class MixedPlusMinusOperator:
         Returns:
             list[int]: The number of fermionic modes in each fermionic subsystem of self.
         """
-
     def from_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a struqture 1 object to the equivalent object in struqture 2.
@@ -2503,9 +2143,7 @@ class MixedPlusMinusOperator:
 
         Raises:
             ValueError: Input could not be deserialised.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
         Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
@@ -2518,9 +2156,7 @@ class MixedPlusMinusOperator:
 
         Raises:
             ValueError: Input could not be deserialised form json.
-            ValueError: Struqture 1 object could not be converted to struqture 2.
-        """
-
+            ValueError: Struqture 1 object could not be converted to struqture 2."""
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -2533,9 +2169,7 @@ class MixedPlusMinusOperator:
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of self using the [bincode] crate.
@@ -2544,9 +2178,7 @@ class MixedPlusMinusOperator:
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes.
-        """
-
+            ValueError: Cannot serialize object to bytes."""
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of self.
@@ -2555,9 +2187,7 @@ class MixedPlusMinusOperator:
             str: The serialized form of self.
 
         Raises:
-            ValueError: Cannot serialize object to json.
-        """
-
+            ValueError: Cannot serialize object to json."""
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of self to an instance.
@@ -2569,17 +2199,13 @@ class MixedPlusMinusOperator:
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized.
-        """
-
+            ValueError: Input cannot be deserialized."""
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library.
-        """
-
+            str: The current version of the library."""
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -2587,16 +2213,12 @@ class MixedPlusMinusOperator:
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
-
     def _get_serialisation_meta(self):  # type: ignore
         """
-        Returns the StruqtureSerialisationMeta of the object.
-        """
-
+        Returns the StruqtureSerialisationMeta of the object."""
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json
-        """
+            str: The json schema serialized to json"""
