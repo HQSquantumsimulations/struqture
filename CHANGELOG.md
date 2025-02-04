@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
+
 ## 1.11.0 - 1.11.1
 
 * Updated to struqture 2.0.0-alpha.7.
