@@ -1,0 +1,45 @@
+struqture\_py.spins.SpinLindbladNoiseSystem
+===========================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: SpinLindbladNoiseSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SpinLindbladNoiseSystem.__init__
+      ~SpinLindbladNoiseSystem.add_operator_product
+      ~SpinLindbladNoiseSystem.current_number_spins
+      ~SpinLindbladNoiseSystem.current_version
+      ~SpinLindbladNoiseSystem.empty_clone
+      ~SpinLindbladNoiseSystem.from_bincode
+      ~SpinLindbladNoiseSystem.from_json
+      ~SpinLindbladNoiseSystem.get
+      ~SpinLindbladNoiseSystem.is_empty
+      ~SpinLindbladNoiseSystem.jordan_wigner
+      ~SpinLindbladNoiseSystem.json_schema
+      ~SpinLindbladNoiseSystem.keys
+      ~SpinLindbladNoiseSystem.min_supported_version
+      ~SpinLindbladNoiseSystem.number_spins
+      ~SpinLindbladNoiseSystem.remove
+      ~SpinLindbladNoiseSystem.separate_into_n_terms
+      ~SpinLindbladNoiseSystem.set
+      ~SpinLindbladNoiseSystem.sparse_lindblad_entries
+      ~SpinLindbladNoiseSystem.sparse_matrix_superoperator_coo
+      ~SpinLindbladNoiseSystem.to_bincode
+      ~SpinLindbladNoiseSystem.to_json
+      ~SpinLindbladNoiseSystem.truncate
+      ~SpinLindbladNoiseSystem.unitary_sparse_matrix_coo
+      ~SpinLindbladNoiseSystem.values
+   
+   
+
+   
+   
+   
