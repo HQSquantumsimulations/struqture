@@ -17,3 +17,5 @@ bindings = "pyo3"
 compatibility = "manylinux2014"
 strip = true
 profile = "release"
+include = [{ path = "LICENSE", format = "sdist" }]
+
