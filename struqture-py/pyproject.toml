@@ -29,5 +29,4 @@ docs = [
   "sphinx_rtd_theme",
   "tomli",
 ]
-include = [{ path = "LICENSE", format = "sdist" }]
-
+# include = [{ path = "LICENSE", format = "sdist" }]
