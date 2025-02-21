@@ -18,8 +18,8 @@ use struqture::fermions::{
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, QubitHamiltonian, QubitLindbladNoiseOperator,
-    QubitLindbladOpenSystem, QubitOperator, SingleQubitOperator,
+    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
+    PauliLindbladOpenSystem, PauliOperator, SinglePauliOperator,
 };
 
 #[test]
@@ -29,7 +29,7 @@ fn test_jw_fermion_product() {
     let pp_2 = PauliProduct::new().x(1).y(2);
     let pp_3 = PauliProduct::new().y(1).y(2);
     let pp_4 = PauliProduct::new().x(1).x(2);
-    let mut so = QubitOperator::new();
+    let mut so = PauliOperator::new();
     so.add_operator_product(pp_1, CalculatorComplex::new(0.0, -0.25))
         .unwrap();
     so.add_operator_product(pp_2, CalculatorComplex::new(0.0, 0.25))
@@ -42,9 +42,9 @@ fn test_jw_fermion_product() {
     assert_eq!(fp.jordan_wigner(), so);
 
     let fp = FermionProduct::new([], []).unwrap();
-    let mut so = QubitOperator::new();
+    let mut so = PauliOperator::new();
     let mut id = PauliProduct::new();
-    id = id.set_pauli(0, SingleQubitOperator::Identity);
+    id = id.set_pauli(0, SinglePauliOperator::Identity);
     so.add_operator_product(id, CalculatorComplex::new(1.0, 0.0))
         .unwrap();
 
@@ -56,7 +56,7 @@ fn test_jw_hermitian_fermion_product() {
     let hfp = HermitianFermionProduct::new([1], [2]).unwrap();
     let pp_1 = PauliProduct::new().y(1).y(2);
     let pp_2 = PauliProduct::new().x(1).x(2);
-    let mut so = QubitHamiltonian::new();
+    let mut so = PauliHamiltonian::new();
     so.add_operator_product(pp_1, CalculatorFloat::from(0.5))
         .unwrap();
     so.add_operator_product(pp_2, CalculatorFloat::from(0.5))
@@ -65,9 +65,9 @@ fn test_jw_hermitian_fermion_product() {
     assert_eq!(hfp.jordan_wigner(), so);
 
     let hfp = HermitianFermionProduct::new([], []).unwrap();
-    let mut so = QubitHamiltonian::new();
+    let mut so = PauliHamiltonian::new();
     let mut id = PauliProduct::new();
-    id = id.set_pauli(0, SingleQubitOperator::Identity);
+    id = id.set_pauli(0, SinglePauliOperator::Identity);
     so.add_operator_product(id, 1.0.into()).unwrap();
 
     assert_eq!(hfp.jordan_wigner(), so);
@@ -76,7 +76,7 @@ fn test_jw_hermitian_fermion_product() {
 #[test]
 fn test_jw_fermion_operator() {
     let mut fo = FermionOperator::new();
-    let so = QubitOperator::new();
+    let so = PauliOperator::new();
 
     assert_eq!(fo.jordan_wigner(), so);
 
@@ -114,7 +114,7 @@ fn test_jw_fermion_hamiltonian() {
     let coeff = CalculatorComplex::new(1.0, 2.0);
     fh.add_operator_product(hfp.clone(), coeff.clone()).unwrap();
 
-    let mut so = QubitOperator::new();
+    let mut so = PauliOperator::new();
     let xx = PauliProduct::new().x(1).x(2);
     let xy = PauliProduct::new().x(1).y(2);
     let yx = PauliProduct::new().y(1).x(2);
@@ -126,7 +126,7 @@ fn test_jw_fermion_hamiltonian() {
     so.add_operator_product(yx, coeff.im.into()).unwrap();
     so.add_operator_product(yy, coeff.re.into()).unwrap();
 
-    let sh = QubitHamiltonian::try_from(so).unwrap() * CalculatorFloat::from(0.5);
+    let sh = PauliHamiltonian::try_from(so).unwrap() * CalculatorFloat::from(0.5);
 
     assert_eq!(sh, fh.jordan_wigner());
 
@@ -134,9 +134,9 @@ fn test_jw_fermion_hamiltonian() {
     let hfp = HermitianFermionProduct::new([2], [2]).unwrap();
     fh.add_operator_product(hfp.clone(), 3.0.into()).unwrap();
 
-    let mut sh = QubitHamiltonian::new();
+    let mut sh = PauliHamiltonian::new();
     let mut id = PauliProduct::new();
-    id = id.set_pauli(2, SingleQubitOperator::Identity);
+    id = id.set_pauli(2, SinglePauliOperator::Identity);
     sh.set(id, 1.5.into()).unwrap();
     sh.set(PauliProduct::new().z(2), (-1.5).into()).unwrap();
 
@@ -146,7 +146,7 @@ fn test_jw_fermion_hamiltonian() {
 #[test]
 fn test_jw_fermion_noise_operator() {
     let mut fno = FermionLindbladNoiseOperator::new();
-    let mut sno = QubitLindbladNoiseOperator::new();
+    let mut sno = PauliLindbladNoiseOperator::new();
 
     assert_eq!(fno.jordan_wigner(), sno);
 
@@ -178,7 +178,7 @@ fn test_jw_fermion_systems_to_spin() {
     let sno = fno.jordan_wigner();
 
     // Test FermionLindbladOpenSystem
-    let sos = QubitLindbladOpenSystem::group(sh, sno).unwrap();
+    let sos = PauliLindbladOpenSystem::group(sh, sno).unwrap();
     let fos = FermionLindbladOpenSystem::group(fh, fno).unwrap();
 
     assert_eq!(fos.jordan_wigner(), sos);

@@ -12,7 +12,7 @@
 
 use super::{FermionHamiltonian, FermionLindbladNoiseOperator};
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::QubitLindbladOpenSystem;
+use crate::spins::PauliLindbladOpenSystem;
 use crate::{OpenSystem, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
@@ -276,7 +276,7 @@ impl fmt::Display for FermionLindbladOpenSystem {
 }
 
 impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
-    type Output = QubitLindbladOpenSystem;
+    type Output = PauliLindbladOpenSystem;
 
     /// Implements JordanWignerFermionToSpin for a FermionLindbladOpenSystem.
     ///
@@ -285,11 +285,11 @@ impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// `QubitLindbladOpenSystem` - The spin open system that results from the transformation.
+    /// `PauliLindbladOpenSystem` - The spin open system that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
-        QubitLindbladOpenSystem::group(jw_system, jw_noise)
+        PauliLindbladOpenSystem::group(jw_system, jw_noise)
             .expect("Internal bug in jordan_wigner() for FermionHamiltonian or FermionLindbladNoiseOperator. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

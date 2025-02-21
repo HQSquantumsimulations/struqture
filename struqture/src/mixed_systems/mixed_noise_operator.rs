@@ -683,7 +683,7 @@ mod test {
     use serde_test::{assert_tokens, Configure, Token};
     use std::str::FromStr;
 
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of MixedLindbladNoiseOperator
     #[test]
     fn so_from_sos() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -714,7 +714,7 @@ mod test {
         );
         assert_eq!(MixedLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of MixedLindbladNoiseOperator
     #[test]
     fn clone_partial_eq() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -779,7 +779,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of QubitOperator
+    // Test the Debug trait of MixedLindbladNoiseOperator
     #[test]
     fn debug() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -806,7 +806,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (readable)
+    /// Test MixedLindbladNoiseOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();
@@ -870,7 +870,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (compact)
+    /// Test MixedLindbladNoiseOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let spins = DecoherenceProduct::from_str("0X").unwrap();

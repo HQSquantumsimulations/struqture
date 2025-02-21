@@ -5,6 +5,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## Unreleased
 
 * Renamed `to_mixed_system` and `from_mixed_system` to `to_mixed_operator` and `from_mixed_operator`.
+* Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
 
 ## 2.0.0-alpha.8
 
@@ -33,6 +34,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## 2.0.0-alpha.0
 
 * First draft of the changes for struqture 2.0.
+
+## 1.11.1
+
+* Updated to struqture 2.0.0-alpha.7.
 
 ## 1.11.0
 
@@ -101,7 +106,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 * Fixed bug in Jordan-Wigner transformation for FermionHamiltonian and FermionHamiltonian.
 * Added MixedPlusMinusProduct, MixedPlusMinusOperator to mod.rs in struqture-py/src/mixed_systems (fixed import error).
-* Added conversion from QubitHamiltonian(System) to PlusMinusOperator.
+* Added conversion from SpinHamiltonian(System) to PlusMinusOperator.
 * Added support for jsonschema in struqture and struqture-py.
 
 ## 1.3.1

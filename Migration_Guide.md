@@ -5,7 +5,7 @@ Struqture 2.0 changes:
 1) Changes to naming conventions:
 
 * We have renamed the `System` and `HamiltonianSystem` objects to `Operator` and `Hamiltonian` objects. In struqture 1.0, the `System` object was internally composed of an operator and an associated number of spins or modes. We removed the `System` layer, and now just use the underlying `Operator`/`Hamiltonian` objects. **NOTE**: This layering was not present for the `LindbladOpenSystem` objects, as they are coherent part with a decoherent part. They have therefore not been renamed, also as we commonly refer to "open systems", and not "open operators".
-* The spin objects have been renamed, to reflect that they are representations of **qubit** operators rather than **normalised spin** operators. In the names of the objects, the `Spin` part has been replaced with `Qubit`.
+* The spin objects have been renamed, to reflect that they are representations of **qubit** operators rather than **normalised spin** operators. In the names of the objects, the `Spin` part has been replaced with `Pauli`.
 
 These changes are summarised below:
 
@@ -20,10 +20,10 @@ These changes are summarised below:
 | MixedSystem | MixedOperator |
 | MixedHamiltonianSystem | MixedHamiltonian |
 | MixedLindbladNoiseSystem | MixedLindbladNoiseOperator |
-| SpinSystem | QubitOperator |
-| SpinHamiltonianSystem | QubitHamiltonian |
-| SpinLindbladNoiseSystem | QubitLindbladNoiseOperator |
-| SpinLindbladOpenSystem | QubitLindbladOpenSystem |
+| SpinSystem | PauliOperator |
+| SpinHamiltonianSystem | PauliHamiltonian |
+| SpinLindbladNoiseSystem | PauliLindbladNoiseOperator |
+| SpinLindbladOpenSystem | PauliLindbladOpenSystem |
 
 No other objects have been renamed.
 

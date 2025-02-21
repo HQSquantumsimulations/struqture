@@ -19,7 +19,7 @@ use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture_py::spins::{
-    PlusMinusOperatorWrapper, QubitHamiltonianWrapper, QubitOperatorWrapper,
+    PlusMinusOperatorWrapper, PauliHamiltonianWrapper, PauliOperatorWrapper,
 };
 use test_case::test_case;
 
@@ -548,9 +548,9 @@ fn test_from_qubit_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<QubitOperatorWrapper>();
+        let pp_type = py.get_type_bound::<PauliOperatorWrapper>();
         let pp = pp_type.call0().unwrap();
-        pp.downcast::<QubitOperatorWrapper>()
+        pp.downcast::<PauliOperatorWrapper>()
             .unwrap()
             .call_method1(
                 "add_operator_product",
@@ -592,9 +592,9 @@ fn test_to_qubit_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<QubitOperatorWrapper>();
+        let pp_type = py.get_type_bound::<PauliOperatorWrapper>();
         let sys = pp_type.call0().unwrap();
-        sys.downcast::<QubitOperatorWrapper>().unwrap();
+        sys.downcast::<PauliOperatorWrapper>().unwrap();
         sys.call_method1("add_operator_product", ("0Y", -0.5))
             .unwrap();
         sys.call_method1(
@@ -640,9 +640,9 @@ fn test_from_qubit_ham() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<QubitHamiltonianWrapper>();
+        let pp_type = py.get_type_bound::<PauliHamiltonianWrapper>();
         let pp = pp_type.call0().unwrap();
-        pp.downcast::<QubitHamiltonianWrapper>()
+        pp.downcast::<PauliHamiltonianWrapper>()
             .unwrap()
             .call_method1(
                 "add_operator_product",
@@ -677,9 +677,9 @@ fn test_to_qubit_ham() {
         pmp.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
 
-        let pp_type = py.get_type_bound::<QubitHamiltonianWrapper>();
+        let pp_type = py.get_type_bound::<PauliHamiltonianWrapper>();
         let sys = pp_type.call0().unwrap();
-        sys.downcast::<QubitHamiltonianWrapper>().unwrap();
+        sys.downcast::<PauliHamiltonianWrapper>().unwrap();
         sys.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
         let result = pmp.call_method0("to_qubit_hamiltonian").unwrap();

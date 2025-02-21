@@ -159,10 +159,10 @@ fn semver_to_tuple(version: &str) -> Result<(u32, u32, u32), StruqtureError> {
 #[non_exhaustive]
 pub enum StruqtureType {
     PauliProduct,
-    QubitOperator,
-    QubitHamiltonian,
-    QubitLindbladNoiseOperator,
-    QubitLindbladOpenSystem,
+    PauliOperator,
+    PauliHamiltonian,
+    PauliLindbladNoiseOperator,
+    PauliLindbladOpenSystem,
     PlusMinusOperator,
     PlusMinusLindbladNoiseOperator,
     PlusMinusProduct,
@@ -195,10 +195,10 @@ impl Display for StruqtureType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             StruqtureType::PauliProduct => write!(f, "PauliProduct"),
-            StruqtureType::QubitOperator => write!(f, "QubitOperator"),
-            StruqtureType::QubitHamiltonian => write!(f, "QubitHamiltonian"),
-            StruqtureType::QubitLindbladNoiseOperator => write!(f, "QubitLindbladNoiseOperator"),
-            StruqtureType::QubitLindbladOpenSystem => write!(f, "QubitLindbladOpenSystem"),
+            StruqtureType::PauliOperator => write!(f, "PauliOperator"),
+            StruqtureType::PauliHamiltonian => write!(f, "PauliHamiltonian"),
+            StruqtureType::PauliLindbladNoiseOperator => write!(f, "PauliLindbladNoiseOperator"),
+            StruqtureType::PauliLindbladOpenSystem => write!(f, "PauliLindbladOpenSystem"),
             StruqtureType::PlusMinusOperator => write!(f, "PlusMinusOperator"),
             StruqtureType::PlusMinusLindbladNoiseOperator => {
                 write!(f, "PlusMinusLindbladNoiseOperator")

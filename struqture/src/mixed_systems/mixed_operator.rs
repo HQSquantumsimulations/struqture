@@ -837,7 +837,7 @@ mod test {
                 Token::Tuple { len: 2 },
                 Token::U64(2),
                 Token::UnitVariant {
-                    name: "SingleQubitOperator",
+                    name: "SinglePauliOperator",
                     variant: "Z",
                 },
                 Token::TupleEnd,

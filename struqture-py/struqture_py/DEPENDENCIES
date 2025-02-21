@@ -3164,7 +3164,7 @@ You may use this code under the terms of either license.
 
 
 ====================================================
-bytes 1.9.0
+bytes 1.10.0
 https://github.com/tokio-rs/bytes
 by Carl Lerche <me@carllerche.com>, Sean McArthur <sean@seanmonstar.com>
 Types and traits for working with bytes
@@ -4321,7 +4321,7 @@ LICENSE:
 
 
 ====================================================
-clap 4.5.27
+clap 4.5.30
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -4557,7 +4557,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-clap_builder 4.5.27
+clap_builder 4.5.30
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -6514,10 +6514,10 @@ limitations under the License.
 
 
 ====================================================
-dyn-clone 1.0.17
+dyn-clone 1.0.18
 https://github.com/dtolnay/dyn-clone
 by David Tolnay <dtolnay@gmail.com>
-Clone trait that is object-safe
+Clone trait that is dyn-compatible
 License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
@@ -7002,8 +7002,8 @@ SOFTWARE.
 
 
 ====================================================
-equivalent 1.0.1
-https://github.com/cuviper/equivalent
+equivalent 1.0.2
+https://github.com/indexmap-rs/equivalent
 by 
 Traits for key comparison in maps.
 License: Apache-2.0 OR MIT
@@ -12824,7 +12824,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-inventory 0.3.18
+inventory 0.3.19
 https://github.com/dtolnay/inventory
 by David Tolnay <dtolnay@gmail.com>
 Typed distributed plugin registration
@@ -14783,7 +14783,7 @@ ICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation a
 
 
 ====================================================
-log 0.4.25
+log 0.4.26
 https://github.com/rust-lang/log
 by The Rust Project Developers
 A lightweight logging facade for Rust
@@ -15604,7 +15604,7 @@ limitations under the License.
 
 
 ====================================================
-miniz_oxide 0.8.3
+miniz_oxide 0.8.4
 https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide
 by Frommi <daniil.liferenko@gmail.com>, oyvindln <oyvindln@users.noreply.github.com>, Rich Geldreich richgel99@gmail.com
 DEFLATE compression and decompression library rewritten in Rust based on miniz
@@ -18730,7 +18730,7 @@ limitations under the License.
 
 
 ====================================================
-once_cell 1.20.2
+once_cell 1.20.3
 https://github.com/matklad/once_cell
 by Aleksey Kladov <aleksey.kladov@gmail.com>
 Single assignment cells and lazy values.
@@ -26601,7 +26601,7 @@ SOFTWARE.
 
 
 ====================================================
-serde 1.0.217
+serde 1.0.218
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -26815,7 +26815,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-serde_derive 1.0.217
+serde_derive 1.0.218
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -27243,7 +27243,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-serde_json 1.0.138
+serde_json 1.0.139
 https://github.com/serde-rs/json
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A JSON serialization file format
@@ -28135,7 +28135,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-smallvec 1.13.2
+smallvec 1.14.0
 https://github.com/servo/rust-smallvec
 by The Servo Project Developers
 'Small vector' optimization: store up to a small number of items on the stack
@@ -29704,7 +29704,7 @@ LICENSE:
 
 
 ====================================================
-syn 2.0.96
+syn 2.0.98
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -31928,7 +31928,7 @@ THE SOFTWARE.
 
 
 ====================================================
-typenum 1.17.0
+typenum 1.18.0
 https://github.com/paholg/typenum
 by Paho Lurie-Gregg <paho@paholg.com>, Andre Bogus <bogusandre@gmail.com>
 Typenum is a Rust library for type-level numbers evaluated at
@@ -32171,7 +32171,7 @@ LICENSE:
 MIT OR Apache-2.0
 
 ====================================================
-unicode-ident 1.0.16
+unicode-ident 1.0.17
 https://github.com/dtolnay/unicode-ident
 by David Tolnay <dtolnay@gmail.com>
 Determine whether characters have the XID_Start or XID_Continue properties according to Unicode Standard Annex #31
@@ -33367,7 +33367,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-uuid 1.12.1
+uuid 1.14.0
 https://github.com/uuid-rs/uuid
 by Ashley Mannix<ashleymannix@live.com.au>, Dylan DPC<dylan.dpc@gmail.com>, Hunar Roop Kahlon<hunar.roop@gmail.com>
 A library to generate and parse UUIDs.

@@ -12,36 +12,27 @@
 
 use num_complex::Complex64;
 use pyo3::prelude::*;
-use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
-use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
-use struqture::spins::{PauliProduct, QubitHamiltonian};
+use qoqo_calculator::CalculatorComplex;
+use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+use struqture::spins::{PauliProduct, PauliOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};
-use struqture_py::spins::{QubitHamiltonianWrapper, QubitOperatorWrapper};
+use struqture_py::spins::PauliOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> Bound<QubitHamiltonianWrapper> {
-    let system_type = py.get_type_bound::<QubitHamiltonianWrapper>();
+fn new_system(py: Python) -> Bound<PauliOperatorWrapper> {
+    let system_type = py.get_type_bound::<PauliOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<QubitHamiltonianWrapper>()
-        .unwrap()
-        .to_owned()
-}
-fn new_qubit_operator(py: Python) -> Bound<QubitOperatorWrapper> {
-    let system_type = py.get_type_bound::<QubitOperatorWrapper>();
-    system_type
-        .call0()
-        .unwrap()
-        .downcast::<QubitOperatorWrapper>()
+        .downcast::<PauliOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
 
-/// Test default function of QubitHamiltonianWrapper
+/// Test default function of PauliOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -50,12 +41,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<QubitHamiltonianWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<PauliOperatorWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = QubitHamiltonianWrapper::new() != system_wrapper;
+        let helper_ne: bool = PauliOperatorWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = QubitHamiltonianWrapper::new() == QubitHamiltonianWrapper::new();
+        let helper_eq: bool = PauliOperatorWrapper::new() == PauliOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -63,8 +54,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", QubitHamiltonianWrapper::new()),
-            "QubitHamiltonianWrapper { internal: QubitHamiltonian { internal_map: {} } }"
+            format!("{:?}", PauliOperatorWrapper::new()),
+            "PauliOperatorWrapper { internal: PauliOperator { internal_map: {} } }"
         );
 
         // Number of spins
@@ -75,7 +66,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test current_number_spins function of QubitHamiltonian
+/// Test current_number_spins function of PauliOperator
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -93,7 +84,7 @@ fn test_number_spins_current() {
     });
 }
 
-/// Test empty_clone function of QubitHamiltonian
+/// Test empty_clone function of PauliOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -112,7 +103,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of QubitHamiltonian
+/// Test hermitian_conjugate function of PauliOperator
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -129,14 +120,14 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of QubitHamiltonian
+/// Test set and get functions of PauliOperator
 #[test]
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitHamiltonianWrapper>();
+        let new_system = py.get_type_bound::<PauliOperatorWrapper>();
         let system = new_system.call0().unwrap();
-        system.downcast::<QubitHamiltonianWrapper>().unwrap();
+        system.downcast::<PauliOperatorWrapper>().unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
         system.call_method1("set", ("3Y", 0.05)).unwrap();
@@ -167,7 +158,7 @@ fn spin_system_test_set_get() {
         let error = system.call_method1("set", ("1J", 0.5));
         assert!(error.is_err());
 
-        // Try_set error 2: Value cannot be converted to CalculatorFloat
+        // Try_set error 2: Value cannot be converted to CalculatorComplex
         let error = system.call_method1("set", ("1Z", vec![0.0]));
         assert!(error.is_err());
 
@@ -177,14 +168,14 @@ fn spin_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of QubitHamiltonian
+/// Test add_operator_product and remove functions of PauliOperator
 #[test]
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitHamiltonianWrapper>();
+        let new_system = py.get_type_bound::<PauliOperatorWrapper>();
         let system = new_system.call0().unwrap();
-        system.downcast::<QubitHamiltonianWrapper>().unwrap();
+        system.downcast::<PauliOperatorWrapper>().unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
@@ -230,7 +221,7 @@ fn spin_system_test_add_operator_product_remove() {
         let error = system.call_method1("add_operator_product", ("1J", 0.5));
         assert!(error.is_err());
 
-        // Try_set error 2: Value cannot be converted to CalculatorFloat
+        // Try_set error 2: Value cannot be converted to CalculatorComplex
         let error = system.call_method1("add_operator_product", ("1Z", vec![0.0]));
         assert!(error.is_err());
 
@@ -240,7 +231,7 @@ fn spin_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of QubitHamiltonian
+/// Test keys function of PauliOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -279,8 +270,10 @@ fn test_keys_values() {
     });
 }
 
-#[test_case(1.0;"real")]
-fn test_truncate(re: f64) {
+#[test_case(1.0,0.0;"real")]
+#[test_case(0.0,1.0;"imag")]
+#[test_case(0.7,0.7;"mixed")]
+fn test_truncate(re: f64, im: f64) {
     pyo3::Python::with_gil(|py| {
         let system = new_system(py);
         system
@@ -288,8 +281,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "0X",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(100.0 * re),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(100.0 * re, 100.0 * im),
                     },
                 ),
             )
@@ -299,8 +292,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "1Y",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(10.0 * re),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(10.0 * re, 10.0 * im),
                     },
                 ),
             )
@@ -310,8 +303,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "2Z",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(re),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(re, im),
                     },
                 ),
             )
@@ -321,8 +314,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "0X1Z",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from("test"),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::from("test"),
                     },
                 ),
             )
@@ -334,8 +327,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "0X",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(100.0 * re),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(100.0 * re, 100.0 * im),
                     },
                 ),
             )
@@ -345,8 +338,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "1Y",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(10.0 * re),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(10.0 * re, 10.0 * im),
                     },
                 ),
             )
@@ -356,8 +349,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "0X1Z",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from("test"),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::from("test"),
                     },
                 ),
             )
@@ -369,8 +362,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "0X",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from(100.0 * re),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::new(100.0 * re, 100.0 * im),
                     },
                 ),
             )
@@ -380,8 +373,8 @@ fn test_truncate(re: f64) {
                 "add_operator_product",
                 (
                     "0X1Z",
-                    CalculatorFloatWrapper {
-                        internal: CalculatorFloat::from("test"),
+                    CalculatorComplexWrapper {
+                        internal: CalculatorComplex::from("test"),
                     },
                 ),
             )
@@ -407,7 +400,7 @@ fn test_truncate(re: f64) {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -428,7 +421,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -456,7 +449,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -484,7 +477,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -494,7 +487,7 @@ fn test_mul_cf() {
             .call_method1("add_operator_product", ("0X", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_qubit_operator(py);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("0X", 0.2))
             .unwrap();
@@ -506,7 +499,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -516,7 +509,7 @@ fn test_mul_cc() {
             .call_method1("add_operator_product", ("0X", 0.1_f64))
             .unwrap();
 
-        let system_0_1 = new_qubit_operator(py);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("0X", Complex64::new(0.0, 0.5)))
             .unwrap();
@@ -535,7 +528,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -548,7 +541,7 @@ fn test_mul_self() {
         system_1
             .call_method1("add_operator_product", ("1Z", 1.0))
             .unwrap();
-        let system_0_1 = new_qubit_operator(py);
+        let system_0_1 = new_system(py);
         system_0_1
             .call_method1("add_operator_product", ("0X1Z", 0.1))
             .unwrap();
@@ -560,7 +553,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of QubitHamiltonian
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -575,7 +568,7 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of QubitHamiltonian
+// /// Test test_sparse_lindblad_entries function of PauliOperator
 // #[test]
 // fn test_sparse_lindblad_entries() {
 //     pyo3::prepare_freethreaded_python();
@@ -590,14 +583,15 @@ fn test_mul_error() {
 //         .unwrap();
 
 //     let matrices = system.call_method0("sparse_lindblad_entries",).unwrap();
-//     type Internal = (Vec<Complex64>, (Vec<u64>, Vec<u64>));
-//     let res: Vec<(Internal, Internal, Complex64)> = vec![((vec![], (vec![], vec![])), (vec![], (vec![], vec![])), Complex64::from(0.0))];
+//     let res: Vec<(PyCooMatrix, PyCooMatrix, Complex64)> = vec![((array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), (array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), Complex64::from(0.0))];
+//     // let to_operators_op = matrices
+//     //     .downcast::<Vec<(PyCooMatrix, PyCooMatrix, Complex64)>>()
+//     //     .unwrap();
 //     let comparison =
 //         bool::extract_bound(&matrices.call_method1("__eq__", (res,)).unwrap()).unwrap();
 //     assert!(comparison);
 // }
 
-// /// Test add magic method function of QubitHamiltonian
 // #[test]
 // fn test_unitary_sparse_matrix_coo() {
 //     pyo3::prepare_freethreaded_python();
@@ -616,11 +610,11 @@ fn test_mul_error() {
 //         .downcast::<Internal>()
 //         .unwrap();
 
-//     let test_matrix: Internal = (vec![CalculatorFloatWrapper {internal: 1.0.into()}, CalculatorFloatWrapper {internal: (-1.0).into()}], (vec![0, 1], vec![0, 1]));
+//     let test_matrix: Internal = (vec![CalculatorComplexWrapper {internal: 1.0.into()}, CalculatorComplexWrapper {internal: (-1.0).into()}], (vec![0, 1], vec![0, 1]));
 //     // assert_eq!(result_matrix, test_matrix);
 // }
 
-/// Test copy and deepcopy functions of QubitHamiltonian
+/// Test copy and deepcopy functions of PauliOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -644,7 +638,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of QubitHamiltonian
+/// Test to_bincode and from_bincode functions of PauliOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -690,7 +684,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of QubitHamiltonian
+/// Test to_ and from_json functions of PauliOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -733,11 +727,11 @@ fn test_format_repr() {
     pyo3::Python::with_gil(|py| {
         let system = new_system(py);
         system
-            .call_method1("add_operator_product", ("0X", 0.1_f64))
+            .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let mut rust_system = QubitHamiltonian::new();
+        let mut rust_system = PauliOperator::new();
         rust_system
-            .add_operator_product(PauliProduct::new().x(0), CalculatorFloat::from(0.1))
+            .add_operator_product(PauliProduct::new().x(0), CalculatorComplex::new(0.1, 0.0))
             .unwrap();
         let to_format = system.call_method1("__format__", ("",)).unwrap();
         let format_op: String = String::extract_bound(&to_format).unwrap();
@@ -748,9 +742,18 @@ fn test_format_repr() {
         let to_str = system.call_method0("__str__").unwrap();
         let str_op: String = String::extract_bound(&to_str).unwrap();
 
-        assert_eq!(format_op, "QubitHamiltonian{\n0X: 1e-1,\n}".to_string());
-        assert_eq!(repr_op, "QubitHamiltonian{\n0X: 1e-1,\n}".to_string());
-        assert_eq!(str_op, "QubitHamiltonian{\n0X: 1e-1,\n}".to_string());
+        assert_eq!(
+            format_op,
+            "PauliOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+        );
+        assert_eq!(
+            repr_op,
+            "PauliOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+        );
+        assert_eq!(
+            str_op,
+            "PauliOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+        );
     });
 }
 
@@ -789,23 +792,23 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of QubitHamiltonian
+/// Test jordan_wigner() method of PauliOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let shs = new_system(py);
-        shs.call_method1("add_operator_product", ("0X", 0.1))
+        let ss = new_system(py);
+        ss.call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let fhs = shs.call_method0("jordan_wigner").unwrap();
+        let fs = ss.call_method0("jordan_wigner").unwrap();
 
-        let empty = bool::extract_bound(&fhs.call_method0("is_empty").unwrap()).unwrap();
+        let empty = bool::extract_bound(&fs.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
         let current_number_modes =
-            usize::extract_bound(&fhs.call_method0("current_number_modes").unwrap()).unwrap();
+            usize::extract_bound(&fs.call_method0("current_number_modes").unwrap()).unwrap();
         let current_number_spins =
-            usize::extract_bound(&shs.call_method0("current_number_spins").unwrap()).unwrap();
+            usize::extract_bound(&ss.call_method0("current_number_spins").unwrap()).unwrap();
         assert_eq!(current_number_modes, current_number_spins)
     });
 }
@@ -820,7 +823,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(QubitHamiltonian)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(PauliOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
@@ -847,7 +850,7 @@ fn test_from_pyany_to_struqture_1() {
         sys_2
             .call_method1("add_operator_product", ("0Z", 0.1))
             .unwrap();
-        let mut sys_1 = struqture_1::spins::SpinHamiltonianSystem::new(None);
+        let mut sys_1 = struqture_1::spins::SpinSystem::new(None);
         struqture_1::OperateOnDensityMatrix::set(
             &mut sys_1,
             struqture_1::spins::PauliProduct::from_str("0Z").unwrap(),
@@ -855,7 +858,7 @@ fn test_from_pyany_to_struqture_1() {
         )
         .unwrap();
 
-        let result = QubitHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
+        let result = PauliOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }
@@ -865,7 +868,7 @@ fn test_from_pyany_to_struqture_1() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":null,\"operator\":{\"items\":[[\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("add_operator_product", ("0Z", 1.0))
@@ -878,7 +881,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{{\"number_spins\":null,\"hamiltonian\":{{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{{\"number_spins\":null,\"operator\":{{\"items\":[[\"0Z\",1.0,0.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

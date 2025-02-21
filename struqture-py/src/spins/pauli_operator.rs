@@ -22,7 +22,7 @@ use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
-    OperateOnSpins, QubitOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
+    OperateOnSpins, PauliOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
 use struqture::StruqtureError;
 #[cfg(feature = "json_schema")]
@@ -32,11 +32,11 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of spins.
 ///
-/// QubitOperators are characterized by a QubitOperator to represent the hamiltonian of the spin system
+/// PauliOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
 /// Returns:
-///     self: The new QubitOperator.
+///     self: The new PauliOperator.
 ///
 /// Examples
 /// --------
@@ -46,9 +46,9 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import QubitOperator, PauliProduct
+///     from struqture_py.spins import PauliOperator, PauliProduct
 ///
-///     ssystem = QubitOperator(2)
+///     ssystem = PauliOperator(2)
 ///     pp = PauliProduct().z(0)
 ///     ssystem.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(ssystem.current_number_spins(), 2)
@@ -57,11 +57,11 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     dimension = 4**ssystem.current_number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "QubitOperator", module = "struqture_py.spins")]
+#[pyclass(name = "PauliOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
-pub struct QubitOperatorWrapper {
-    /// Internal storage of [struqture::spins::QubitOperator]
-    pub internal: QubitOperator,
+pub struct PauliOperatorWrapper {
+    /// Internal storage of [struqture::spins::PauliOperator]
+    pub internal: PauliOperator,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -73,28 +73,28 @@ pub struct QubitOperatorWrapper {
     OperateOnDensityMatrix,
     Calculus
 )]
-impl QubitOperatorWrapper {
-    /// Create an empty QubitOperator.
+impl PauliOperatorWrapper {
+    /// Create an empty PauliOperator.
     ///
     /// Returns:
-    ///     self: The new QubitOperator.
+    ///     self: The new PauliOperator.
     #[new]
     pub fn new() -> Self {
         Self {
-            internal: QubitOperator::new(),
+            internal: PauliOperator::new(),
         }
     }
 
-    /// Implement `*` for QubitOperator and QubitOperator/CalculatorComplex/CalculatorFloat.
+    /// Implement `*` for PauliOperator and PauliOperator/CalculatorComplex/CalculatorFloat.
     ///
     /// Args:
-    ///     value (Union[QubitOperator, CalculatorComplex, CalculatorFloat]): value by which to multiply the self QubitOperator
+    ///     value (Union[PauliOperator, CalculatorComplex, CalculatorFloat]): value by which to multiply the self PauliOperator
     ///
     /// Returns:
-    ///     QubitOperator: The QubitOperator multiplied by the value.
+    ///     PauliOperator: The PauliOperator multiplied by the value.
     ///
     /// Raises:
-    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor QubitOperator.
+    ///     ValueError: The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor PauliOperator.
     pub fn __mul__(&self, value: &Bound<PyAny>) -> PyResult<Self> {
         let cf_value = qoqo_calculator_pyo3::convert_into_calculator_float(value);
         match cf_value {
@@ -115,7 +115,7 @@ impl QubitOperatorWrapper {
                                 Ok(Self { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor QubitOperator: {:?}",
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor PauliOperator: {:?}",
                                 err)))
                         }
                     }
@@ -125,7 +125,7 @@ impl QubitOperatorWrapper {
     }
 }
 
-impl Default for QubitOperatorWrapper {
+impl Default for PauliOperatorWrapper {
     fn default() -> Self {
         Self::new()
     }

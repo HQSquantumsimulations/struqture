@@ -26,42 +26,42 @@ pub use plus_minus_operator::PlusMinusOperatorWrapper;
 mod plus_minus_noise_operator;
 pub use plus_minus_noise_operator::PlusMinusLindbladNoiseOperatorWrapper;
 
-mod qubit_operator;
-pub use qubit_operator::QubitOperatorWrapper;
+mod pauli_operator;
+pub use pauli_operator::PauliOperatorWrapper;
 
-mod qubit_hamiltonian;
-pub use qubit_hamiltonian::QubitHamiltonianWrapper;
+mod pauli_hamiltonian;
+pub use pauli_hamiltonian::PauliHamiltonianWrapper;
 
-mod qubit_noise_operator;
-pub use qubit_noise_operator::QubitLindbladNoiseOperatorWrapper;
+mod pauli_noise_operator;
+pub use pauli_noise_operator::PauliLindbladNoiseOperatorWrapper;
 
-mod qubit_open_system;
-pub use qubit_open_system::QubitLindbladOpenSystemWrapper;
+mod pauli_open_system;
+pub use pauli_open_system::PauliLindbladOpenSystemWrapper;
 
 /// Spin module of struqture Python interface
 ///
-/// Module for representing spin indices (PauliProduct and DecoherenceProduct), spin systems (QubitOperator and QubitHamiltonian)
-/// and Lindblad type spin open systems (QubitLindbladNoiseOperator and QubitLindbladOpenSystem).
+/// Module for representing spin indices (PauliProduct and DecoherenceProduct), spin systems (PauliOperator and PauliHamiltonian)
+/// and Lindblad type spin open systems (PauliLindbladNoiseOperator and PauliLindbladOpenSystem).
 ///
 /// .. autosummary::
 ///     :toctree: generated/
 ///
 ///     PauliProduct
 ///     DecoherenceProduct
-///     QubitOperator
-///     QubitHamiltonian
-///     QubitLindbladNoiseOperator
-///     QubitLindbladOpenSystem
+///     PauliOperator
+///     PauliHamiltonian
+///     PauliLindbladNoiseOperator
+///     PauliLindbladOpenSystem
 ///
 #[pymodule]
 pub fn spins(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<PauliProductWrapper>()?;
     m.add_class::<DecoherenceProductWrapper>()?;
-    m.add_class::<QubitOperatorWrapper>()?;
-    m.add_class::<QubitHamiltonianWrapper>()?;
-    m.add_class::<QubitLindbladNoiseOperatorWrapper>()?;
-    m.add_class::<QubitLindbladOpenSystemWrapper>()?;
+    m.add_class::<PauliOperatorWrapper>()?;
+    m.add_class::<PauliHamiltonianWrapper>()?;
+    m.add_class::<PauliLindbladNoiseOperatorWrapper>()?;
+    m.add_class::<PauliLindbladOpenSystemWrapper>()?;
     m.add_class::<PlusMinusProductWrapper>()?;
     m.add_class::<PlusMinusOperatorWrapper>()?;
     m.add_class::<PlusMinusLindbladNoiseOperatorWrapper>()?;

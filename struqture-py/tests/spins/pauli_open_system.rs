@@ -14,24 +14,24 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, QubitHamiltonian, QubitLindbladNoiseOperator,
-    QubitLindbladOpenSystem,
+    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
+    PauliLindbladOpenSystem,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, SpinIndex};
 use struqture_py::spins::{
-    QubitHamiltonianWrapper, QubitLindbladNoiseOperatorWrapper, QubitLindbladOpenSystemWrapper,
+    PauliHamiltonianWrapper, PauliLindbladNoiseOperatorWrapper, PauliLindbladOpenSystemWrapper,
 };
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> Bound<QubitLindbladOpenSystemWrapper> {
-    let system_type = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+fn new_system(py: Python) -> Bound<PauliLindbladOpenSystemWrapper> {
+    let system_type = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<QubitLindbladOpenSystemWrapper>()
+        .downcast::<PauliLindbladOpenSystemWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -97,9 +97,9 @@ fn test_empty_clone() {
 fn spin_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
-        system.downcast::<QubitLindbladOpenSystemWrapper>().unwrap();
+        system.downcast::<PauliLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1("system_add_operator_product", ("0X", 0.1))
             .unwrap();
@@ -155,9 +155,9 @@ fn spin_system_test_add_operator_product_remove_system() {
 fn spin_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
-        system.downcast::<QubitLindbladOpenSystemWrapper>().unwrap();
+        system.downcast::<PauliLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1("noise_add_operator_product", (("0X", "0X"), 0.1))
             .unwrap();
@@ -307,7 +307,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test default function of QubitLindbladOpenSystemWrapper
+/// Test default function of PauliLindbladOpenSystemWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -328,13 +328,13 @@ fn test_default_partialeq_debug_clone() {
                 ),
             )
             .unwrap();
-        let system_wrapper = new_sys.extract::<QubitLindbladOpenSystemWrapper>().unwrap();
+        let system_wrapper = new_sys.extract::<PauliLindbladOpenSystemWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = QubitLindbladOpenSystemWrapper::default() != system_wrapper;
+        let helper_ne: bool = PauliLindbladOpenSystemWrapper::default() != system_wrapper;
         assert!(helper_ne);
         let helper_eq: bool =
-            QubitLindbladOpenSystemWrapper::default() == QubitLindbladOpenSystemWrapper::new();
+            PauliLindbladOpenSystemWrapper::default() == PauliLindbladOpenSystemWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -342,8 +342,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", QubitLindbladOpenSystemWrapper::new()),
-            "QubitLindbladOpenSystemWrapper { internal: QubitLindbladOpenSystem { system: QubitHamiltonian { internal_map: {} }, noise: QubitLindbladNoiseOperator { internal_map: {} } } }"
+            format!("{:?}", PauliLindbladOpenSystemWrapper::new()),
+            "PauliLindbladOpenSystemWrapper { internal: PauliLindbladOpenSystem { system: PauliHamiltonian { internal_map: {} }, noise: PauliLindbladNoiseOperator { internal_map: {} } } }"
         );
 
         // Number of spins
@@ -354,9 +354,9 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type_bound::<QubitHamiltonianWrapper>();
+        let system_type = py.get_type_bound::<PauliHamiltonianWrapper>();
         let spin_system = system_type.call0().unwrap();
-        spin_system.downcast::<QubitHamiltonianWrapper>().unwrap();
+        spin_system.downcast::<PauliHamiltonianWrapper>().unwrap();
         spin_system
             .call_method1(
                 "add_operator_product",
@@ -369,10 +369,10 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let noise_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
         let noise = noise_type.call0().unwrap();
         noise
-            .downcast::<QubitLindbladNoiseOperatorWrapper>()
+            .downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
             .call_method1(
@@ -390,10 +390,10 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let noise_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
         let noise = noise_type.call0().unwrap();
         noise
-            .downcast::<QubitLindbladNoiseOperatorWrapper>()
+            .downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
             .call_method1(
@@ -405,9 +405,9 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type_bound::<QubitHamiltonianWrapper>();
+        let system_type = py.get_type_bound::<PauliHamiltonianWrapper>();
         let spin_system = system_type.call0().unwrap();
-        spin_system.downcast::<QubitHamiltonianWrapper>().unwrap();
+        spin_system.downcast::<PauliHamiltonianWrapper>().unwrap();
         spin_system
             .call_method1(
                 "add_operator_product",
@@ -432,15 +432,15 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test set_pauli_product and get_pauli_product functions of QubitLindbladOpenSystem
+/// Test set_pauli_product and get_pauli_product functions of PauliLindbladOpenSystem
 #[test]
 fn test_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
-            .downcast::<QubitLindbladOpenSystemWrapper>()
+            .downcast::<PauliLindbladOpenSystemWrapper>()
             .unwrap()
             .call_method1(
                 "system_set",
@@ -530,15 +530,15 @@ fn test_set_pauli_get_pauli() {
     });
 }
 
-/// Test set_noise and get_noise functions of QubitLindbladOpenSystem
+/// Test set_noise and get_noise functions of PauliLindbladOpenSystem
 #[test]
 fn test_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system
-            .downcast::<QubitLindbladOpenSystemWrapper>()
+            .downcast::<PauliLindbladOpenSystemWrapper>()
             .unwrap()
             .call_method1(
                 "noise_set",
@@ -655,15 +655,15 @@ fn test_set_noise_get_noise() {
     });
 }
 
-/// Test try_set_pauli_product and get_pauli_product functions of QubitLindbladOpenSystem
+/// Test try_set_pauli_product and get_pauli_product functions of PauliLindbladOpenSystem
 #[test]
 fn test_try_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
-            .downcast::<QubitLindbladOpenSystemWrapper>()
+            .downcast::<PauliLindbladOpenSystemWrapper>()
             .unwrap()
             .call_method1(
                 "system_set",
@@ -749,15 +749,15 @@ fn test_try_set_pauli_get_pauli() {
     });
 }
 
-/// Test try_set_noise and get_noise functions of QubitLindbladOpenSystem
+/// Test try_set_noise and get_noise functions of PauliLindbladOpenSystem
 #[test]
 fn test_try_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
-            .downcast::<QubitLindbladOpenSystemWrapper>()
+            .downcast::<PauliLindbladOpenSystemWrapper>()
             .unwrap()
             .call_method1(
                 "noise_set",
@@ -862,15 +862,15 @@ fn test_try_set_noise_get_noise() {
     });
 }
 
-/// Test add_pauli_product and get_pauli_product functions of QubitLindbladOpenSystem
+/// Test add_pauli_product and get_pauli_product functions of PauliLindbladOpenSystem
 #[test]
 fn test_add_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
-            .downcast::<QubitLindbladOpenSystemWrapper>()
+            .downcast::<PauliLindbladOpenSystemWrapper>()
             .unwrap()
             .call_method1(
                 "system_add_operator_product",
@@ -964,15 +964,15 @@ fn test_add_pauli_get_pauli() {
     });
 }
 
-/// Test add_noise and get_noise functions of QubitLindbladOpenSystem
+/// Test add_noise and get_noise functions of PauliLindbladOpenSystem
 #[test]
 fn test_add_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladOpenSystemWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
-            .downcast::<QubitLindbladOpenSystemWrapper>()
+            .downcast::<PauliLindbladOpenSystemWrapper>()
             .unwrap()
             .call_method1(
                 "noise_add_operator_product",
@@ -1211,7 +1211,7 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test copy and deepcopy functions of QubitLindbladOpenSystem
+/// Test copy and deepcopy functions of PauliLindbladOpenSystem
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -1247,7 +1247,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of QubitLindbladOpenSystem
+/// Test to_bincode and from_bincode functions of PauliLindbladOpenSystem
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -1303,7 +1303,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of QubitLindbladOpenSystem
+/// Test to_ and from_json functions of PauliLindbladOpenSystem
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -1370,9 +1370,9 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system = QubitLindbladOpenSystem::group(
-            QubitHamiltonian::new(),
-            QubitLindbladNoiseOperator::new(),
+        let mut rust_system = PauliLindbladOpenSystem::group(
+            PauliHamiltonian::new(),
+            PauliLindbladNoiseOperator::new(),
         )
         .unwrap();
         rust_system
@@ -1388,7 +1388,7 @@ fn test_format_repr() {
         );
 
         let test_string =
-        "QubitLindbladOpenSystem{\nSystem: {\n0X: 1e-1,\n}\nNoise: {\n(1X, 1iY): (1e-1 + i * 0e0),\n}\n}"
+        "PauliLindbladOpenSystem{\nSystem: {\n0X: 1e-1,\n}\nNoise: {\n(1X, 1iY): (1e-1 + i * 0e0),\n}\n}"
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
@@ -1464,7 +1464,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of QubitLindbladOpenSystem
+/// Test jordan_wigner() method of PauliLindbladOpenSystem
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -1494,7 +1494,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(QubitLindbladOpenSystem)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(PauliLindbladOpenSystem)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
@@ -1548,7 +1548,7 @@ fn test_from_pyany_to_struqture_1() {
         .unwrap();
 
         let result =
-            QubitLindbladOpenSystemWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
+            PauliLindbladOpenSystemWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }

@@ -15,17 +15,17 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 #[cfg(feature = "json_schema")]
-use struqture::{spins::QubitLindbladNoiseOperator, STRUQTURE_VERSION};
-use struqture_py::spins::{DecoherenceProductWrapper, QubitLindbladNoiseOperatorWrapper};
+use struqture::{spins::PauliLindbladNoiseOperator, STRUQTURE_VERSION};
+use struqture_py::spins::{DecoherenceProductWrapper, PauliLindbladNoiseOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
-fn new_noisesystem(py: Python) -> Bound<QubitLindbladNoiseOperatorWrapper> {
-    let system_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+fn new_noisesystem(py: Python) -> Bound<PauliLindbladNoiseOperatorWrapper> {
+    let system_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<QubitLindbladNoiseOperatorWrapper>()
+        .downcast::<PauliLindbladNoiseOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -49,7 +49,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
     }
 }
 
-/// Test default function of QubitLindbladNoiseOperatorWrapper
+/// Test default function of PauliLindbladNoiseOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -59,14 +59,14 @@ fn test_default_partialeq_debug_clone() {
             .call_method1("add_operator_product", (("0X", "0X"), 0.1))
             .unwrap();
         let system_wrapper = system
-            .extract::<QubitLindbladNoiseOperatorWrapper>()
+            .extract::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap();
 
         // PartialEq
-        let helper_ne: bool = QubitLindbladNoiseOperatorWrapper::default() != system_wrapper;
+        let helper_ne: bool = PauliLindbladNoiseOperatorWrapper::default() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = QubitLindbladNoiseOperatorWrapper::default()
-            == QubitLindbladNoiseOperatorWrapper::new();
+        let helper_eq: bool = PauliLindbladNoiseOperatorWrapper::default()
+            == PauliLindbladNoiseOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -74,8 +74,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", QubitLindbladNoiseOperatorWrapper::new()),
-            "QubitLindbladNoiseOperatorWrapper { internal: QubitLindbladNoiseOperator { internal_map: {} } }"
+            format!("{:?}", PauliLindbladNoiseOperatorWrapper::new()),
+            "PauliLindbladNoiseOperatorWrapper { internal: PauliLindbladNoiseOperator { internal_map: {} } }"
         );
 
         // Number of spins
@@ -86,7 +86,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test current_number_spins function of QubitLindbladNoiseOperator
+/// Test current_number_spins function of PauliLindbladNoiseOperator
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -104,7 +104,7 @@ fn test_number_spins_current() {
     });
 }
 
-/// Test empty_clone function of QubitLindbladNoiseOperator
+/// Test empty_clone function of PauliLindbladNoiseOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -123,15 +123,15 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of QubitLindbladNoiseOperator
+/// Test add_operator_product and remove functions of PauliLindbladNoiseOperator
 #[test]
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let new_system = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
         let system = new_system.call0().unwrap();
         system
-            .downcast::<QubitLindbladNoiseOperatorWrapper>()
+            .downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap();
         system
             .call_method1("add_operator_product", (("0X", "0X"), 0.1))
@@ -188,7 +188,7 @@ fn spin_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of QubitLindbladNoiseOperator
+/// Test keys function of PauliLindbladNoiseOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -401,7 +401,7 @@ fn test_separate() {
     })
 }
 
-/// Test add magic method function of QubitLindbladNoiseOperator
+/// Test add magic method function of PauliLindbladNoiseOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -422,7 +422,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of QubitLindbladNoiseOperator
+/// Test add magic method function of PauliLindbladNoiseOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -450,7 +450,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of QubitLindbladNoiseOperator
+/// Test add magic method function of PauliLindbladNoiseOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -478,7 +478,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of QubitLindbladNoiseOperator
+/// Test add magic method function of PauliLindbladNoiseOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -500,7 +500,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of QubitLindbladNoiseOperator
+/// Test add magic method function of PauliLindbladNoiseOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -532,7 +532,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test copy and deepcopy functions of QubitLindbladNoiseOperator
+/// Test copy and deepcopy functions of PauliLindbladNoiseOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -561,7 +561,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of QubitLindbladNoiseOperator
+/// Test to_bincode and from_bincode functions of PauliLindbladNoiseOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -611,7 +611,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of QubitLindbladNoiseOperator
+/// Test to_ and from_json functions of PauliLindbladNoiseOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -666,7 +666,7 @@ fn test_format_repr() {
                 ),
             )
             .unwrap();
-        let mut rust_system = QubitLindbladNoiseOperatorWrapper::new();
+        let mut rust_system = PauliLindbladNoiseOperatorWrapper::new();
         let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
@@ -693,15 +693,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "QubitLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
+            "PauliLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "QubitLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
+            "PauliLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "QubitLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
+            "PauliLindbladNoiseOperator{\n(0X, 0X): (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -753,7 +753,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of QubitLindbladNoiseOperator
+/// Test jordan_wigner() method of PauliLindbladNoiseOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -784,7 +784,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(QubitLindbladNoiseOperator))
+            serde_json::to_string_pretty(&schemars::schema_for!(PauliLindbladNoiseOperator))
                 .unwrap();
         assert_eq!(schema, rust_schema);
 
@@ -824,7 +824,7 @@ fn test_from_pyany_to_struqture_1() {
         .unwrap();
 
         let result =
-            QubitLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
+            PauliLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }

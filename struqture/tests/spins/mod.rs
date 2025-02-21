@@ -21,17 +21,17 @@ mod plus_minus_product;
 
 mod decoherence_operator;
 
-mod qubit_operator;
+mod pauli_operator;
 
 mod plus_minus_operator;
 
-mod qubit_hamiltonian;
+mod pauli_hamiltonian;
 
-mod qubit_noise_operator;
+mod pauli_noise_operator;
 
 mod plus_minus_noise_operator;
 
-mod qubit_open_system;
+mod pauli_open_system;
 
 fn create_na_matrix_from_operator_list(operators: &[&str]) -> na::DMatrix<Complex64> {
     let cc1 = Complex64::new(1.0, 0.0);

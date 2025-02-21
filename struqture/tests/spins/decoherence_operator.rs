@@ -19,7 +19,7 @@ use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, QubitOperator};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, PauliOperator};
 use struqture::SpinIndex;
 use struqture::{prelude::*, STRUQTURE_VERSION};
 use test_case::test_case;
@@ -401,10 +401,10 @@ fn mul_so_cf() {
     assert_eq!(so_0 * CalculatorFloat::from(3.0), so_0_1);
 }
 
-// Test the From<QubitOperator> trait
+// Test the From<PauliOperator> trait
 #[test]
 fn test_from_qubit_operator() {
-    let mut so = QubitOperator::new();
+    let mut so = PauliOperator::new();
     let pp_0 = PauliProduct::new().x(0).y(1).z(2);
     let c0 = CalculatorComplex::new(1.0, 2.0);
     let pp_1 = PauliProduct::new().x(0).y(1).y(2);

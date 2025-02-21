@@ -5,6 +5,5 @@ multilingual = false
 src = "src"
 title = "HQS Struqture User Documentation"
 
-
 [output.html]
 mathjax-support = true
