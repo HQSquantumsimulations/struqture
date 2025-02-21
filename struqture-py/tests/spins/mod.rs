@@ -20,10 +20,10 @@ mod plus_minus_operator;
 
 mod plus_minus_noise_operator;
 
-mod qubit_operator;
+mod pauli_operator;
 
-mod qubit_hamiltonian;
+mod pauli_hamiltonian;
 
-mod qubit_noise_operator;
+mod pauli_noise_operator;
 
-mod qubit_open_system;
+mod pauli_open_system;
