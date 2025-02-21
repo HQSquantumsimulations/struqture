@@ -786,6 +786,16 @@ fn test_to_qubit_noise_operator() {
         sys.call_method1(
             "add_operator_product",
             (
+                ("0X", "0X"),
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.25, 0.0),
+                },
+            ),
+        )
+        .unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (
                 ("0X", "0iY"),
                 CalculatorComplexWrapper {
                     internal: CalculatorComplex::new(0.25, 0.0),

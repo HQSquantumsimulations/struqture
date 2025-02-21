@@ -27,7 +27,7 @@ jobs:
       # Run tests also on windows runners
       windows: true
       # Don't run tests on macos runners
-      macos: false
+      macos: true
       # Run tests also on python 3.13
       python_3_13: true
       py_interface_folder: "struqture-py"
