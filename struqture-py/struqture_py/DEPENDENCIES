@@ -11257,7 +11257,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 hyper 1.6.0
+=======
+hyper 1.5.2
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://hyper.rs
 by Sean McArthur <sean@seanmonstar.com>
 A protective and efficient HTTP library for all.
@@ -12824,7 +12828,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 inventory 0.3.18
+=======
+inventory 0.3.17
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://github.com/dtolnay/inventory
 by David Tolnay <dtolnay@gmail.com>
 Typed distributed plugin registration
@@ -14261,7 +14269,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 jsonschema 0.28.3
+=======
+jsonschema 0.28.2
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://github.com/Stranger6667/jsonschema
 by Dmitry Dygalo <dmitry@dygalo.dev>
 JSON schema validaton library
@@ -24492,7 +24504,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 referencing 0.28.3
+=======
+referencing 0.28.2
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://github.com/Stranger6667/jsonschema
 by Dmitry Dygalo <dmitry@dygalo.dev>
 An implementation-agnostic JSON reference resolution library for Rust.
@@ -26155,7 +26171,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 ryu 1.0.19
+=======
+ryu 1.0.18
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://github.com/dtolnay/ryu
 by David Tolnay <dtolnay@gmail.com>
 Fast floating point to string conversion
@@ -27243,7 +27263,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 serde_json 1.0.138
+=======
+serde_json 1.0.137
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://github.com/serde-rs/json
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A JSON serialization file format
@@ -29071,6 +29095,7 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 struqture 2.0.0-alpha.8
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
@@ -29283,6 +29308,9 @@ LICENSE:
 
 ====================================================
 struqture-py 2.0.0-alpha.8
+=======
+struqture-py 1.11.1
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -29493,7 +29521,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 struqture-py-macros 2.0.0-alpha.8
+=======
+struqture-py-macros 1.11.1
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -32171,7 +32203,11 @@ LICENSE:
 MIT OR Apache-2.0
 
 ====================================================
+<<<<<<< HEAD
 unicode-ident 1.0.16
+=======
+unicode-ident 1.0.15
+>>>>>>> 8fa19a592ba61c14ec267e57da9ae179f8fd6e9a
 https://github.com/dtolnay/unicode-ident
 by David Tolnay <dtolnay@gmail.com>
 Determine whether characters have the XID_Start or XID_Continue properties according to Unicode Standard Annex #31
