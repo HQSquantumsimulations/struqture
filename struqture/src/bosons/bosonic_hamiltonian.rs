@@ -625,7 +625,7 @@ mod test {
     use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of BosonHamiltonian
     #[test]
     fn so_from_sos() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
@@ -643,7 +643,7 @@ mod test {
         assert_eq!(BosonHamiltonian::try_from(sos.clone()).unwrap(), so);
         assert_eq!(BosonHamiltonianSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of BosonHamiltonian
     #[test]
     fn clone_partial_eq() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
@@ -684,7 +684,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of QubitOperator
+    // Test the Debug trait of BosonHamiltonian
     #[test]
     fn debug() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
@@ -703,7 +703,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (readable)
+    /// Test BosonHamiltonian Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
@@ -752,7 +752,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (compact)
+    /// Test BosonHamiltonian Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();

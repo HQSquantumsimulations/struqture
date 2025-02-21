@@ -106,7 +106,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 * Fixed bug in Jordan-Wigner transformation for FermionHamiltonian and FermionHamiltonian.
 * Added MixedPlusMinusProduct, MixedPlusMinusOperator to mod.rs in struqture-py/src/mixed_systems (fixed import error).
-* Added conversion from QubitHamiltonian(System) to PlusMinusOperator.
+* Added conversion from SpinHamiltonian(System) to PlusMinusOperator.
 * Added support for jsonschema in struqture and struqture-py.
 
 ## 1.3.1

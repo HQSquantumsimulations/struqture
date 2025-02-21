@@ -388,7 +388,7 @@ fn serde_json() {
     assert_eq!(so, deserialized);
 }
 
-/// Test QubitOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let pp = HermitianBosonProduct::new([0], [2]).unwrap();

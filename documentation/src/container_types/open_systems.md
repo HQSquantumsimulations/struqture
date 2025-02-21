@@ -19,12 +19,12 @@ and a LindbladNoiseSystem:
 
 The open systems in struqture are
 
-* `QubitLindbladOpenSystem`
+* `PauliLindbladOpenSystem`
 * `BosonLindbladOpenSystem`
 * `FermionLindbladOpenSystem`
 * `MixedLindbladOpenSystem`
 
-For examples showing how to use `QubitLindbladOpenSystem`s, please see the [the spins section](../physical_types/spins.md#examples-3).
+For examples showing how to use `PauliLindbladOpenSystem`s, please see the [the spins section](../physical_types/spins.md#examples-3).
 For examples showing how to use `FermionLindbladOpenSystem`s, please see the [the fermions section](../physical_types/fermions.md#examples-3).
 For examples showing how to use `BosonLindbladOpenSystem`s, please see the [the bosons section](../physical_types/bosons.md#examples-3).
 For examples showing how to use `MixedLindbladOpenSystem`s, please see the [the mixed system section](../physical_types/mixed_systems.md#examples-3).

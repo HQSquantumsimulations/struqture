@@ -10,10 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::QubitHamiltonianWrapper;
+use super::PauliHamiltonianWrapper;
 use crate::{
     fermions::FermionOperatorWrapper,
-    spins::{PlusMinusProductWrapper, QubitOperatorWrapper},
+    spins::{PlusMinusProductWrapper, PauliOperatorWrapper},
 };
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -22,7 +22,7 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{PlusMinusOperator, QubitHamiltonian, QubitOperator};
+use struqture::spins::{PlusMinusOperator, PauliHamiltonian, PauliOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
@@ -30,7 +30,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
 /// These are representations of systems of spins.
 ///
-/// PlusMinusOperators are characterized by a QubitOperator to represent the hamiltonian of the spin system
+/// PlusMinusOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
 /// Returns:
@@ -100,67 +100,67 @@ impl PlusMinusOperatorWrapper {
         }
     }
 
-    /// Convert a QubitOperator into a PlusMinusOperator.
+    /// Convert a PauliOperator into a PlusMinusOperator.
     ///
     /// Args:
-    ///     value (QubitOperator): The QubitOperator to create the PlusMinusOperator from.
+    ///     value (PauliOperator): The PauliOperator to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     PlusMinusOperator: The operator created from the input QubitOperator.
+    ///     PlusMinusOperator: The operator created from the input PauliOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create QubitOperator from input.
+    ///     ValueError: Could not create PauliOperator from input.
     #[staticmethod]
     pub fn from_qubit_operator(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
-        let system = QubitOperatorWrapper::from_pyany(value)
+        let system = PauliOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
             internal: PlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a QubitHamiltonian into a PlusMinusOperator.
+    /// Convert a PauliHamiltonian into a PlusMinusOperator.
     ///
     /// Args:
-    ///     value (QubitHamiltonian): The QubitHamiltonian to create the PlusMinusOperator from.
+    ///     value (PauliHamiltonian): The PauliHamiltonian to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     PlusMinusOperator: The operator created from the input QubitOperator.
+    ///     PlusMinusOperator: The operator created from the input PauliOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create QubitHamiltonian from input.
+    ///     ValueError: Could not create PauliHamiltonian from input.
     #[staticmethod]
     pub fn from_qubit_hamiltonian(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
-        let system = QubitHamiltonianWrapper::from_pyany(value)
+        let system = PauliHamiltonianWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
             internal: PlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a PlusMinusOperator into a QubitOperator.
+    /// Convert a PlusMinusOperator into a PauliOperator.
     ///
     /// Returns:
-    ///     QubitOperator: The operator created from the input PlusMinusOperator and optional number of spins.
+    ///     PauliOperator: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create QubitOperator from PlusMinusOperator.
-    pub fn to_qubit_operator(&self) -> PyResult<QubitOperatorWrapper> {
-        let result: QubitOperator = QubitOperator::from(self.internal.clone());
-        Ok(QubitOperatorWrapper { internal: result })
+    ///     ValueError: Could not create PauliOperator from PlusMinusOperator.
+    pub fn to_qubit_operator(&self) -> PyResult<PauliOperatorWrapper> {
+        let result: PauliOperator = PauliOperator::from(self.internal.clone());
+        Ok(PauliOperatorWrapper { internal: result })
     }
 
-    /// Convert a PlusMinusOperator into a QubitHamiltonian.
+    /// Convert a PlusMinusOperator into a PauliHamiltonian.
     ///
     /// Returns:
-    ///     QubitHamiltonian: The operator created from the input PlusMinusOperator and optional number of spins.
+    ///     PauliHamiltonian: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create QubitHamiltonian from PlusMinusOperator.
-    pub fn to_qubit_hamiltonian(&self) -> PyResult<QubitHamiltonianWrapper> {
-        let result: QubitHamiltonian = QubitHamiltonian::try_from(self.internal.clone())
+    ///     ValueError: Could not create PauliHamiltonian from PlusMinusOperator.
+    pub fn to_qubit_hamiltonian(&self) -> PyResult<PauliHamiltonianWrapper> {
+        let result: PauliHamiltonian = PauliHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok(QubitHamiltonianWrapper { internal: result })
+        Ok(PauliHamiltonianWrapper { internal: result })
     }
 }
 

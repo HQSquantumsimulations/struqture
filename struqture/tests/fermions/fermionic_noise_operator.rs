@@ -408,7 +408,7 @@ fn clone_partial_eq() {
     assert!(so != so_2);
 }
 
-/// Test QubitOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_json() {
     let pp = FermionProduct::new([0], [1]).unwrap();
@@ -422,7 +422,7 @@ fn serde_json() {
     assert_eq!(so, deserialized);
 }
 
-/// Test QubitOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let pp = FermionProduct::new([0], [1]).unwrap();

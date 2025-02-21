@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{DecoherenceProduct, QubitLindbladNoiseOperator};
+use super::{DecoherenceProduct, PauliLindbladNoiseOperator};
 use crate::fermions::FermionLindbladNoiseOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
@@ -323,8 +323,8 @@ impl PlusMinusLindbladNoiseOperator {
     }
 }
 
-impl From<PlusMinusLindbladNoiseOperator> for QubitLindbladNoiseOperator {
-    /// Converts a PlusMinusLindbladNoiseOperator into a QubitLindbladNoiseOperator.
+impl From<PlusMinusLindbladNoiseOperator> for PauliLindbladNoiseOperator {
+    /// Converts a PlusMinusLindbladNoiseOperator into a PauliLindbladNoiseOperator.
     ///
     /// # Arguments
     ///
@@ -332,9 +332,9 @@ impl From<PlusMinusLindbladNoiseOperator> for QubitLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The PlusMinusLindbladNoiseOperator converted into a QubitLindbladNoiseOperator.
+    /// * `Self` - The PlusMinusLindbladNoiseOperator converted into a PauliLindbladNoiseOperator.
     fn from(value: PlusMinusLindbladNoiseOperator) -> Self {
-        let mut new_operator = QubitLindbladNoiseOperator::with_capacity(2 * value.len());
+        let mut new_operator = PauliLindbladNoiseOperator::with_capacity(2 * value.len());
         for ((product_left, product_right), val) in value.into_iter() {
             let transscribed_vector_left: Vec<(DecoherenceProduct, Complex64)> =
                 product_left.into();
@@ -358,17 +358,17 @@ impl From<PlusMinusLindbladNoiseOperator> for QubitLindbladNoiseOperator {
     }
 }
 
-impl From<QubitLindbladNoiseOperator> for PlusMinusLindbladNoiseOperator {
-    /// Converts a QubitLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
+impl From<PauliLindbladNoiseOperator> for PlusMinusLindbladNoiseOperator {
+    /// Converts a PauliLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
     ///
     /// # Arguments
     ///
-    /// * `value` - The QubitLindbladNoiseOperator to convert.
+    /// * `value` - The PauliLindbladNoiseOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The QubitLindbladNoiseOperator converted into a PlusMinusLindbladNoiseOperator.
-    fn from(value: QubitLindbladNoiseOperator) -> Self {
+    /// * `Self` - The PauliLindbladNoiseOperator converted into a PlusMinusLindbladNoiseOperator.
+    fn from(value: PauliLindbladNoiseOperator) -> Self {
         let mut new_operator = PlusMinusLindbladNoiseOperator::with_capacity(2 * value.len());
         for ((product_left, product_right), val) in value.into_iter() {
             let transscribed_vector_left: Vec<(PlusMinusProduct, Complex64)> = product_left.into();
@@ -650,7 +650,7 @@ mod test {
     use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn so_from_sos() {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
@@ -672,7 +672,7 @@ mod test {
         );
         assert_eq!(PlusMinusLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn clone_partial_eq() {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
@@ -713,7 +713,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of QubitOperator
+    // Test the Debug trait of PauliOperator
     #[test]
     fn debug() {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
@@ -732,7 +732,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (readable)
+    /// Test PauliOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = PlusMinusProduct::new().minus(0);
@@ -782,7 +782,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (compact)
+    /// Test PauliOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = PlusMinusProduct::new().plus(0);

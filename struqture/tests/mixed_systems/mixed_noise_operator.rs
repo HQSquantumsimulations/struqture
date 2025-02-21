@@ -96,7 +96,7 @@ fn empty_clone_options() {
     );
 }
 
-// Test the len function of the QubitOperator
+// Test the len function of the PauliOperator
 #[test]
 fn internal_map_len() {
     let pp_2: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
@@ -153,7 +153,7 @@ fn internal_map_keys() {
     }
 }
 
-// Test the set, get and remove functions of the QubitOperator
+// Test the set, get and remove functions of the PauliOperator
 #[test]
 fn internal_map_set_get_remove() {
     let pp_2: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
@@ -345,7 +345,7 @@ fn negative_mo() {
     assert_eq!(-mo_0, mo_0_minus);
 }
 
-// Test the addition: QubitOperator + QubitOperator
+// Test the addition: PauliOperator + PauliOperator
 #[test]
 fn add_so_so() {
     let pp_0: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
@@ -377,7 +377,7 @@ fn add_so_so() {
     assert_eq!(mo_0 + mo_1, mo_0_1);
 }
 
-// Test the addition: QubitOperator + QubitOperator
+// Test the addition: PauliOperator + PauliOperator
 #[test]
 fn sub_so_so() {
     let pp_0: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
@@ -409,7 +409,7 @@ fn sub_so_so() {
     assert_eq!(mo_0 - mo_1, mo_0_1);
 }
 
-// Test the multiplication: QubitOperator * Calculatorcomplex
+// Test the multiplication: PauliOperator * Calculatorcomplex
 #[test]
 fn mul_so_cf() {
     let pp_0: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
@@ -429,7 +429,7 @@ fn mul_so_cf() {
     assert_eq!(mo_0 * CalculatorFloat::from(3.0), mo_0_1);
 }
 
-// Test the multiplication: QubitOperator * Calculatorcomplex
+// Test the multiplication: PauliOperator * Calculatorcomplex
 #[test]
 fn mul_so_cc() {
     let pp_0: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
@@ -626,7 +626,7 @@ fn serde_json() {
     assert_eq!(mo, deserialized);
 }
 
-/// Test QubitOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
     let pp: MixedDecoherenceProduct = MixedDecoherenceProduct::new(

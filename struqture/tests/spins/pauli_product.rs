@@ -22,7 +22,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::hash::{Hash, Hasher};
 use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
-use struqture::spins::{PauliProduct, SingleQubitOperator};
+use struqture::spins::{PauliProduct, SinglePauliOperator};
 use struqture::{CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use test_case::test_case;
 
@@ -30,13 +30,13 @@ use test_case::test_case;
 #[test]
 fn new() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
 
     let mut pp_compare = PauliProduct::new();
     assert!(pp_compare.is_empty());
     assert!(pp_compare.is_natural_hermitian());
     assert_eq!(pp_compare.current_number_spins(), 0_usize);
-    pp_compare = pp_compare.set_pauli(0, SingleQubitOperator::X);
+    pp_compare = pp_compare.set_pauli(0, SinglePauliOperator::X);
 
     assert_eq!(pp, pp_compare);
     assert_eq!(pp_compare.corresponds_to(), pp_compare);
@@ -47,30 +47,30 @@ fn new() {
 #[test]
 fn internal_map_set_get() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(2, SingleQubitOperator::Y);
-    pp = pp.set_pauli(3, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(2, SinglePauliOperator::Y);
+    pp = pp.set_pauli(3, SinglePauliOperator::Z);
 
-    assert_eq!(pp.get(&0).unwrap(), &SingleQubitOperator::X);
-    assert_eq!(pp.get(&2).unwrap(), &SingleQubitOperator::Y);
-    assert_eq!(pp.get(&3).unwrap(), &SingleQubitOperator::Z);
+    assert_eq!(pp.get(&0).unwrap(), &SinglePauliOperator::X);
+    assert_eq!(pp.get(&2).unwrap(), &SinglePauliOperator::Y);
+    assert_eq!(pp.get(&3).unwrap(), &SinglePauliOperator::Z);
     assert_eq!(pp.get(&1), None);
 
-    let pp = pp.set_pauli(3, SingleQubitOperator::X);
-    let pp = pp.set_pauli(1, SingleQubitOperator::Identity);
+    let pp = pp.set_pauli(3, SinglePauliOperator::X);
+    let pp = pp.set_pauli(1, SinglePauliOperator::Identity);
     assert_eq!(pp.get(&1), None);
-    assert_eq!(pp.get(&3).unwrap(), &SingleQubitOperator::X);
-    let pp = pp.set_pauli(3, SingleQubitOperator::Identity);
+    assert_eq!(pp.get(&3).unwrap(), &SinglePauliOperator::X);
+    let pp = pp.set_pauli(3, SinglePauliOperator::Identity);
     assert_eq!(pp.get(&3), None);
-    let pp = pp.set_pauli(3, SingleQubitOperator::X);
+    let pp = pp.set_pauli(3, SinglePauliOperator::X);
 
     assert_eq!(pp.current_number_spins(), 4_usize);
     assert_eq!(pp.len(), 3_usize);
 
-    let mut internal: BTreeMap<usize, SingleQubitOperator> = BTreeMap::new();
-    internal.insert(0, SingleQubitOperator::X);
-    internal.insert(2, SingleQubitOperator::Y);
-    internal.insert(3, SingleQubitOperator::X);
+    let mut internal: BTreeMap<usize, SinglePauliOperator> = BTreeMap::new();
+    internal.insert(0, SinglePauliOperator::X);
+    internal.insert(2, SinglePauliOperator::Y);
+    internal.insert(3, SinglePauliOperator::X);
     assert!(pp.iter().map(|(k, _)| k).all(|k| internal.contains_key(k)));
 }
 
@@ -78,23 +78,23 @@ fn internal_map_set_get() {
 #[test]
 fn hermitian_conjugate() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(2, SingleQubitOperator::Y);
-    pp = pp.set_pauli(3, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(2, SinglePauliOperator::Y);
+    pp = pp.set_pauli(3, SinglePauliOperator::Z);
 
     assert_eq!(pp.hermitian_conjugate(), (pp, 1.0));
 
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(3, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(3, SinglePauliOperator::Z);
 
     assert_eq!(pp.hermitian_conjugate(), (pp, 1.0));
 
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(3, SingleQubitOperator::Z);
-    pp = pp.set_pauli(2, SingleQubitOperator::Y);
-    pp = pp.set_pauli(4, SingleQubitOperator::Y);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(3, SinglePauliOperator::Z);
+    pp = pp.set_pauli(2, SinglePauliOperator::Y);
+    pp = pp.set_pauli(4, SinglePauliOperator::Y);
 
     assert_eq!(pp.hermitian_conjugate(), (pp, 1.0));
 }
@@ -105,13 +105,13 @@ fn x_y_z() {
     let pp = PauliProduct::new();
     assert_eq!(
         pp.clone().x(0),
-        pp.clone().set_pauli(0, SingleQubitOperator::X)
+        pp.clone().set_pauli(0, SinglePauliOperator::X)
     );
     assert_eq!(
         pp.clone().y(2),
-        pp.clone().set_pauli(2, SingleQubitOperator::Y)
+        pp.clone().set_pauli(2, SinglePauliOperator::Y)
     );
-    assert_eq!(pp.clone().z(3), pp.set_pauli(3, SingleQubitOperator::Z));
+    assert_eq!(pp.clone().z(3), pp.set_pauli(3, SinglePauliOperator::Z));
 }
 
 // Test the concatenate function of the PauliProduct
@@ -119,21 +119,21 @@ fn x_y_z() {
 fn concatenate() {
     // Without error
     let mut pp_0 = PauliProduct::new();
-    pp_0 = pp_0.set_pauli(0, SingleQubitOperator::X);
+    pp_0 = pp_0.set_pauli(0, SinglePauliOperator::X);
     let mut pp_1 = PauliProduct::new();
-    pp_1 = pp_1.set_pauli(1, SingleQubitOperator::Z);
+    pp_1 = pp_1.set_pauli(1, SinglePauliOperator::Z);
 
     let mut pp_both = PauliProduct::new();
-    pp_both = pp_both.set_pauli(0, SingleQubitOperator::X);
-    pp_both = pp_both.set_pauli(1, SingleQubitOperator::Z);
+    pp_both = pp_both.set_pauli(0, SinglePauliOperator::X);
+    pp_both = pp_both.set_pauli(1, SinglePauliOperator::Z);
 
     assert_eq!(pp_0.concatenate(pp_1).unwrap(), pp_both);
 
     // With error
     let mut pp_0 = PauliProduct::new();
-    pp_0 = pp_0.set_pauli(0, SingleQubitOperator::X);
+    pp_0 = pp_0.set_pauli(0, SinglePauliOperator::X);
     let mut pp_1 = PauliProduct::new();
-    pp_1 = pp_1.set_pauli(0, SingleQubitOperator::Z);
+    pp_1 = pp_1.set_pauli(0, SinglePauliOperator::Z);
 
     let error = pp_0.concatenate(pp_1);
     assert!(error.is_err());
@@ -147,12 +147,12 @@ fn concatenate() {
 #[test]
 fn remap_qubits() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(1, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(1, SinglePauliOperator::Z);
 
     let mut pp_remapped = PauliProduct::new();
-    pp_remapped = pp_remapped.set_pauli(1, SingleQubitOperator::X);
-    pp_remapped = pp_remapped.set_pauli(0, SingleQubitOperator::Z);
+    pp_remapped = pp_remapped.set_pauli(1, SinglePauliOperator::X);
+    pp_remapped = pp_remapped.set_pauli(0, SinglePauliOperator::Z);
 
     let mut mapping: HashMap<usize, usize> = HashMap::new();
     mapping.insert(0, 1);
@@ -165,12 +165,12 @@ fn remap_qubits() {
 #[test]
 fn remap_qubits_without_full() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(2, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(2, SinglePauliOperator::Z);
 
     let mut pp_remapped = PauliProduct::new();
-    pp_remapped = pp_remapped.set_pauli(1, SingleQubitOperator::X);
-    pp_remapped = pp_remapped.set_pauli(2, SingleQubitOperator::Z);
+    pp_remapped = pp_remapped.set_pauli(1, SinglePauliOperator::X);
+    pp_remapped = pp_remapped.set_pauli(2, SinglePauliOperator::Z);
 
     let mut mapping: HashMap<usize, usize> = HashMap::new();
     mapping.insert(0, 1);
@@ -186,9 +186,9 @@ fn from_str() {
     // Empty should print as identity
     assert_eq!(PauliProduct::from_str("I").unwrap(), pp);
 
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(2, SingleQubitOperator::Y);
-    pp = pp.set_pauli(100, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(2, SinglePauliOperator::Y);
+    pp = pp.set_pauli(100, SinglePauliOperator::Z);
     let string = "0X2Y100Z";
 
     assert_eq!(PauliProduct::from_str(string).unwrap(), pp);
@@ -233,14 +233,14 @@ fn into_iter_from_iter_extend() {
     let pp_iter = pp_0.clone().into_iter();
     assert_eq!(PauliProduct::from_iter(pp_iter), pp_0);
 
-    let mut mapping: BTreeMap<usize, SingleQubitOperator> = BTreeMap::new();
-    mapping.insert(1, SingleQubitOperator::X);
+    let mut mapping: BTreeMap<usize, SinglePauliOperator> = BTreeMap::new();
+    mapping.insert(1, SinglePauliOperator::X);
     let mapping_iter = mapping.into_iter();
     pp_0.extend(mapping_iter);
     assert_eq!(pp_0, pp_01);
 }
 
-// Test the multiplication: SingleQubitOperator * SingleQubitOperator with all possible pauli matrices
+// Test the multiplication: SinglePauliOperator * SinglePauliOperator with all possible pauli matrices
 #[test_case("", "0X", ("0X", Complex64::new(1.0, 0.0)); "i_x")]
 #[test_case("0X", "", ("0X", Complex64::new(1.0, 0.0)); "x_i")]
 #[test_case("0X", "0X", ("", Complex64::new(1.0, 0.0)); "x_x")]
@@ -267,8 +267,8 @@ fn multiply(pp0: &str, pp1: &str, result: (&str, Complex64)) {
 #[test]
 fn get_value_get_transform() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(2, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(2, SinglePauliOperator::Z);
 
     assert_eq!(PauliProduct::get_key(&pp), pp);
     assert_eq!(
@@ -285,8 +285,8 @@ fn hash_debug() {
     // Empty should resolve as identity
     assert_eq!(format!("{}", pp), "I");
 
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
-    pp = pp.set_pauli(2, SingleQubitOperator::Z);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
+    pp = pp.set_pauli(2, SinglePauliOperator::Z);
 
     assert_eq!(
         format!("{:?}", pp),
@@ -295,11 +295,11 @@ fn hash_debug() {
     assert_eq!(format!("{}", pp), "0X2Z");
 
     let mut pp_1 = PauliProduct::new();
-    pp_1 = pp_1.set_pauli(0, SingleQubitOperator::X);
-    pp_1 = pp_1.set_pauli(2, SingleQubitOperator::Z);
+    pp_1 = pp_1.set_pauli(0, SinglePauliOperator::X);
+    pp_1 = pp_1.set_pauli(2, SinglePauliOperator::Z);
     let mut pp_2 = PauliProduct::new();
-    pp_2 = pp_2.set_pauli(2, SingleQubitOperator::Z);
-    pp_2 = pp_2.set_pauli(0, SingleQubitOperator::X);
+    pp_2 = pp_2.set_pauli(2, SinglePauliOperator::Z);
+    pp_2 = pp_2.set_pauli(0, SinglePauliOperator::X);
 
     let mut s_1 = DefaultHasher::new();
     pp_1.hash(&mut s_1);
@@ -312,16 +312,16 @@ fn hash_debug() {
 #[test]
 fn clone_partial_eq_partial_ord() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
 
     // Test Clone trait
     assert_eq!(pp.clone(), pp);
 
     // Test PartialEq trait
     let mut pp_0 = PauliProduct::new();
-    pp_0 = pp_0.set_pauli(0, SingleQubitOperator::X);
+    pp_0 = pp_0.set_pauli(0, SinglePauliOperator::X);
     let mut pp_1 = PauliProduct::new();
-    pp_1 = pp_1.set_pauli(0, SingleQubitOperator::Z);
+    pp_1 = pp_1.set_pauli(0, SinglePauliOperator::Z);
     assert!(pp_0 == pp);
     assert!(pp == pp_0);
     assert!(pp_1 != pp);
@@ -329,9 +329,9 @@ fn clone_partial_eq_partial_ord() {
 
     // Test PartialOrd trait
     let mut pp_0 = PauliProduct::new();
-    pp_0 = pp_0.set_pauli(0, SingleQubitOperator::X);
+    pp_0 = pp_0.set_pauli(0, SinglePauliOperator::X);
     let mut pp_1 = PauliProduct::new();
-    pp_1 = pp_1.set_pauli(0, SingleQubitOperator::Z);
+    pp_1 = pp_1.set_pauli(0, SinglePauliOperator::Z);
 
     assert_eq!(pp_0.partial_cmp(&pp), Some(Ordering::Equal));
     assert_eq!(pp.partial_cmp(&pp_0), Some(Ordering::Equal));
@@ -348,7 +348,7 @@ fn clone_partial_eq_partial_ord() {
 #[test]
 fn serde_json() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
 
     let serialized = serde_json::to_string(&pp).unwrap();
     let deserialized: PauliProduct = serde_json::from_str(&serialized).unwrap();
@@ -359,7 +359,7 @@ fn serde_json() {
 #[test]
 fn serde_readable() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
     assert_tokens(&pp.readable(), &[Token::Str("0X")]);
 }
 
@@ -372,7 +372,7 @@ fn serde_readable_empty() {
 #[test]
 fn bincode() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
 
     let encoded: Vec<u8> = bincode::serialize(&pp).unwrap();
     let decoded: PauliProduct = bincode::deserialize(&encoded[..]).unwrap();
@@ -387,7 +387,7 @@ fn bincode() {
 #[test]
 fn serde_compact() {
     let mut pp = PauliProduct::new();
-    pp = pp.set_pauli(0, SingleQubitOperator::X);
+    pp = pp.set_pauli(0, SinglePauliOperator::X);
 
     assert_tokens(
         &pp.compact(),
@@ -396,7 +396,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(0),
             Token::UnitVariant {
-                name: "SingleQubitOperator",
+                name: "SinglePauliOperator",
                 variant: "X",
             },
             Token::TupleEnd,
@@ -408,42 +408,42 @@ fn serde_compact() {
 /// Test PauliProduct Serialization and Deserialization traits (compact)
 #[test]
 fn bincode_single() {
-    let spinop = SingleQubitOperator::X;
+    let spinop = SinglePauliOperator::X;
 
     let encoded: Vec<u8> = bincode::serialize(&spinop).unwrap();
-    let decoded: SingleQubitOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: SinglePauliOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(spinop.clone(), decoded);
 
     let encoded: Vec<u8> = bincode::serialize(&spinop.compact()).unwrap();
-    let decoded: SingleQubitOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: SinglePauliOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(spinop.clone(), decoded);
 
     let encoded: Vec<u8> = bincode::serialize(&spinop.readable()).unwrap();
-    let decoded: SingleQubitOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let decoded: SinglePauliOperator = bincode::deserialize(&encoded[..]).unwrap();
     assert_eq!(spinop.clone(), decoded);
 }
 
-// Test the from_str function of the SingleQubitOperator
+// Test the from_str function of the SinglePauliOperator
 #[test]
 fn single_from_str() {
-    let id = SingleQubitOperator::Identity;
+    let id = SinglePauliOperator::Identity;
     let string_id = "I";
-    assert_eq!(SingleQubitOperator::from_str(string_id).unwrap(), id);
+    assert_eq!(SinglePauliOperator::from_str(string_id).unwrap(), id);
 
-    let x = SingleQubitOperator::X;
+    let x = SinglePauliOperator::X;
     let string_x = "X";
-    assert_eq!(SingleQubitOperator::from_str(string_x).unwrap(), x);
+    assert_eq!(SinglePauliOperator::from_str(string_x).unwrap(), x);
 
-    let y = SingleQubitOperator::Y;
+    let y = SinglePauliOperator::Y;
     let string_y = "Y";
-    assert_eq!(SingleQubitOperator::from_str(string_y).unwrap(), y);
+    assert_eq!(SinglePauliOperator::from_str(string_y).unwrap(), y);
 
-    let z = SingleQubitOperator::Z;
+    let z = SinglePauliOperator::Z;
     let string_z = "Z";
-    assert_eq!(SingleQubitOperator::from_str(string_z).unwrap(), z);
+    assert_eq!(SinglePauliOperator::from_str(string_z).unwrap(), z);
 
     let string_err = "J";
-    let error = SingleQubitOperator::from_str(string_err);
+    let error = SinglePauliOperator::from_str(string_err);
     assert!(error.is_err());
     assert_eq!(
         error,
@@ -453,37 +453,37 @@ fn single_from_str() {
     );
 }
 
-// Test the Debug and Display traits of SingleQubitOperator
+// Test the Debug and Display traits of SinglePauliOperator
 #[test]
 fn single_hash_debug() {
-    assert_eq!(format!("{:?}", SingleQubitOperator::Identity), "Identity");
-    assert_eq!(format!("{:?}", SingleQubitOperator::X), "X");
-    assert_eq!(format!("{:?}", SingleQubitOperator::Y), "Y");
-    assert_eq!(format!("{:?}", SingleQubitOperator::Z), "Z");
+    assert_eq!(format!("{:?}", SinglePauliOperator::Identity), "Identity");
+    assert_eq!(format!("{:?}", SinglePauliOperator::X), "X");
+    assert_eq!(format!("{:?}", SinglePauliOperator::Y), "Y");
+    assert_eq!(format!("{:?}", SinglePauliOperator::Z), "Z");
 
-    assert_eq!(format!("{}", SingleQubitOperator::Identity), "I");
-    assert_eq!(format!("{}", SingleQubitOperator::X), "X");
-    assert_eq!(format!("{}", SingleQubitOperator::Y), "Y");
-    assert_eq!(format!("{}", SingleQubitOperator::Z), "Z");
+    assert_eq!(format!("{}", SinglePauliOperator::Identity), "I");
+    assert_eq!(format!("{}", SinglePauliOperator::X), "X");
+    assert_eq!(format!("{}", SinglePauliOperator::Y), "Y");
+    assert_eq!(format!("{}", SinglePauliOperator::Z), "Z");
 
     let mut s_1 = DefaultHasher::new();
-    SingleQubitOperator::X.hash(&mut s_1);
+    SinglePauliOperator::X.hash(&mut s_1);
     let mut s_2 = DefaultHasher::new();
-    SingleQubitOperator::X.hash(&mut s_2);
+    SinglePauliOperator::X.hash(&mut s_2);
     assert_eq!(s_1.finish(), s_2.finish())
 }
 
-// Test the Clone, PartialEq, PartialOrd and Ord traits of SingleQubitOperator
+// Test the Clone, PartialEq, PartialOrd and Ord traits of SinglePauliOperator
 #[test]
 fn single_clone_partial_eq() {
-    let x = SingleQubitOperator::X;
+    let x = SinglePauliOperator::X;
 
     // Test Clone trait
     assert_eq!(x.clone(), x);
 
     // Test PartialEq trait
-    let x_0 = SingleQubitOperator::X;
-    let y = SingleQubitOperator::Y;
+    let x_0 = SinglePauliOperator::X;
+    let y = SinglePauliOperator::Y;
     assert!(x_0 == x);
     assert!(x == x_0);
     assert!(y != x);
@@ -508,28 +508,28 @@ fn test_singlequbitoperator_product() {
 
     let help_vec = vec![
         (
-            SingleQubitOperator::Identity,
+            SinglePauliOperator::Identity,
             array![
                 [Complex64::new(1.0, 0.0), Complex64::new(0.0, 0.0)],
                 [Complex64::new(0.0, 0.0), Complex64::new(1.0, 0.0)]
             ],
         ),
         (
-            SingleQubitOperator::X,
+            SinglePauliOperator::X,
             array![
                 [Complex64::new(0.0, 0.0), Complex64::new(1.0, 0.0)],
                 [Complex64::new(1.0, 0.0), Complex64::new(0.0, 0.0)]
             ],
         ),
         (
-            SingleQubitOperator::Y,
+            SinglePauliOperator::Y,
             array![
                 [Complex64::new(0.0, 0.0), Complex64::new(0.0, -1.0)],
                 [Complex64::new(0.0, 1.0), Complex64::new(0.0, 0.0)]
             ],
         ),
         (
-            SingleQubitOperator::Z,
+            SinglePauliOperator::Z,
             array![
                 [Complex64::new(1.0, 0.0), Complex64::new(0.0, 0.0)],
                 [Complex64::new(0.0, 0.0), Complex64::new(-1.0, 0.0)]
@@ -537,7 +537,7 @@ fn test_singlequbitoperator_product() {
         ),
     ];
 
-    let mut lookup: HashMap<SingleQubitOperator, Array2<Complex64>> = HashMap::new();
+    let mut lookup: HashMap<SinglePauliOperator, Array2<Complex64>> = HashMap::new();
     for (op, mat) in help_vec.clone().into_iter() {
         lookup.insert(op, mat);
     }
@@ -545,7 +545,7 @@ fn test_singlequbitoperator_product() {
     for ((inner, inner_mat), (outer, outer_mat)) in
         help_vec.iter().cartesian_product(help_vec.iter())
     {
-        let (op, prefactor) = SingleQubitOperator::multiply(*inner, *outer);
+        let (op, prefactor) = SinglePauliOperator::multiply(*inner, *outer);
         let test_mat = lookup.get(&op).unwrap() * prefactor;
         let direct_matrix_multiplication = inner_mat.dot(outer_mat);
         assert_eq!(test_mat, direct_matrix_multiplication)

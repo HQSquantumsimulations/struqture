@@ -12,7 +12,7 @@
 
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::SingleQubitOperator;
+use crate::spins::SinglePauliOperator;
 use crate::{CooSparseMatrix, CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
@@ -162,7 +162,7 @@ impl SingleDecoherenceOperator {
         result_vec
     }
 
-    /// Conversion function from SingleDecoherenceOperator to SingleQubitOperator.
+    /// Conversion function from SingleDecoherenceOperator to SinglePauliOperator.
     ///
     /// # Arguments
     ///
@@ -173,18 +173,18 @@ impl SingleDecoherenceOperator {
     /// * `Vec<(SingleDecoherenceOperator, Complex64)>` - Vector of tuples of SingleDecoherenceOperator with a corresponding Complex64 coefficient.
     pub fn decoherence_to_spin(
         decoherence: SingleDecoherenceOperator,
-    ) -> (SingleQubitOperator, Complex64) {
+    ) -> (SinglePauliOperator, Complex64) {
         match decoherence {
             SingleDecoherenceOperator::Identity => {
-                (SingleQubitOperator::Identity, Complex64::new(1.0, 0.0))
+                (SinglePauliOperator::Identity, Complex64::new(1.0, 0.0))
             }
-            SingleDecoherenceOperator::X => (SingleQubitOperator::X, Complex64::new(1.0, 0.0)),
-            SingleDecoherenceOperator::IY => (SingleQubitOperator::Y, Complex64::new(0.0, 1.0)),
-            SingleDecoherenceOperator::Z => (SingleQubitOperator::Z, Complex64::new(1.0, 0.0)),
+            SingleDecoherenceOperator::X => (SinglePauliOperator::X, Complex64::new(1.0, 0.0)),
+            SingleDecoherenceOperator::IY => (SinglePauliOperator::Y, Complex64::new(0.0, 1.0)),
+            SingleDecoherenceOperator::Z => (SinglePauliOperator::Z, Complex64::new(1.0, 0.0)),
         }
     }
 
-    /// Conversion function from SingleQubitOperator to SingleDecoherenceOperator.
+    /// Conversion function from SinglePauliOperator to SingleDecoherenceOperator.
     ///
     /// # Arguments
     ///
@@ -194,16 +194,16 @@ impl SingleDecoherenceOperator {
     ///
     /// * `Vec<(SingleDecoherenceOperator, Complex64)>` - Vector of tuples of SingleDecoherenceOperator with a corresponding Complex64 coefficient.
     pub fn spin_to_decoherence(
-        spin: SingleQubitOperator,
+        spin: SinglePauliOperator,
     ) -> (SingleDecoherenceOperator, Complex64) {
         match spin {
-            SingleQubitOperator::Identity => (
+            SinglePauliOperator::Identity => (
                 SingleDecoherenceOperator::Identity,
                 Complex64::new(1.0, 0.0),
             ),
-            SingleQubitOperator::X => (SingleDecoherenceOperator::X, Complex64::new(1.0, 0.0)),
-            SingleQubitOperator::Y => (SingleDecoherenceOperator::IY, Complex64::new(0.0, -1.0)),
-            SingleQubitOperator::Z => (SingleDecoherenceOperator::Z, Complex64::new(1.0, 0.0)),
+            SinglePauliOperator::X => (SingleDecoherenceOperator::X, Complex64::new(1.0, 0.0)),
+            SinglePauliOperator::Y => (SingleDecoherenceOperator::IY, Complex64::new(0.0, -1.0)),
+            SinglePauliOperator::Z => (SingleDecoherenceOperator::Z, Complex64::new(1.0, 0.0)),
         }
     }
 

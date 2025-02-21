@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::QubitLindbladNoiseOperatorWrapper;
+use super::PauliLindbladNoiseOperatorWrapper;
 use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::PlusMinusProductWrapper;
 use bincode::deserialize;
@@ -19,7 +19,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{PlusMinusLindbladNoiseOperator, QubitLindbladNoiseOperator};
+use struqture::spins::{PlusMinusLindbladNoiseOperator, PauliLindbladNoiseOperator};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
@@ -27,7 +27,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
-/// In a PlusMinusLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+/// In a PlusMinusLindbladNoiseOperator is characterized by a PauliLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
 /// Returns:
 ///     self: The new PlusMinusLindbladNoiseOperator.
@@ -68,37 +68,37 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         }
     }
 
-    /// Convert a QubitLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
+    /// Convert a PauliLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
     ///
     /// Args:
-    ///     value (QubitLindbladNoiseOperator): The QubitLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
+    ///     value (PauliLindbladNoiseOperator): The PauliLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
     ///
     /// Returns:
-    ///     PlusMinusLindbladNoiseOperator: The operator created from the input QubitLindbladNoiseOperator.
+    ///     PlusMinusLindbladNoiseOperator: The operator created from the input PauliLindbladNoiseOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create QubitLindbladNoiseOperator from input.
+    ///     ValueError: Could not create PauliLindbladNoiseOperator from input.
     #[staticmethod]
     pub fn from_qubit_noise_operator(
         value: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
-        let system = QubitLindbladNoiseOperatorWrapper::from_pyany(value)
+        let system = PauliLindbladNoiseOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusLindbladNoiseOperatorWrapper {
             internal: PlusMinusLindbladNoiseOperator::from(system.clone()),
         })
     }
 
-    /// Convert a PlusMinusLindbladNoiseOperator into a QubitLindbladNoiseOperator.
+    /// Convert a PlusMinusLindbladNoiseOperator into a PauliLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     QubitLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
+    ///     PauliLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create QubitLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
-    pub fn to_qubit_noise_operator(&self) -> PyResult<QubitLindbladNoiseOperatorWrapper> {
-        let result: QubitLindbladNoiseOperator =
-            QubitLindbladNoiseOperator::from(self.internal.clone());
-        Ok(QubitLindbladNoiseOperatorWrapper { internal: result })
+    ///     ValueError: Could not create PauliLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
+    pub fn to_qubit_noise_operator(&self) -> PyResult<PauliLindbladNoiseOperatorWrapper> {
+        let result: PauliLindbladNoiseOperator =
+            PauliLindbladNoiseOperator::from(self.internal.clone());
+        Ok(PauliLindbladNoiseOperatorWrapper { internal: result })
     }
 }

@@ -18,7 +18,7 @@ use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::{spins::PlusMinusLindbladNoiseOperator, STRUQTURE_VERSION};
 use struqture_py::spins::{
     PlusMinusLindbladNoiseOperatorWrapper, PlusMinusProductWrapper,
-    QubitLindbladNoiseOperatorWrapper,
+    PauliLindbladNoiseOperatorWrapper,
 };
 use test_case::test_case;
 
@@ -735,9 +735,9 @@ fn test_from_qubit_op() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let pp_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
         let pp = pp_type.call0().unwrap();
-        pp.downcast::<QubitLindbladNoiseOperatorWrapper>()
+        pp.downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap()
             .call_method1(
                 "add_operator_product",
@@ -780,9 +780,9 @@ fn test_to_qubit_noise_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<QubitLindbladNoiseOperatorWrapper>();
+        let pp_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
         let sys = pp_type.call0().unwrap();
-        sys.downcast::<QubitLindbladNoiseOperatorWrapper>().unwrap();
+        sys.downcast::<PauliLindbladNoiseOperatorWrapper>().unwrap();
         sys.call_method1(
             "add_operator_product",
             (

@@ -5,18 +5,18 @@
 """
 Spin module of struqture Python interface
 
-Module for representing spin indices (PauliProduct and DecoherenceProduct), spin systems (QubitOperator and QubitHamiltonian)
-and Lindblad type spin open systems (QubitLindbladNoiseOperator and QubitLindbladOpenSystem).
+Module for representing spin indices (PauliProduct and DecoherenceProduct), spin systems (PauliOperator and PauliHamiltonian)
+and Lindblad type spin open systems (PauliLindbladNoiseOperator and PauliLindbladOpenSystem).
 
 .. autosummary::
     :toctree: generated/
 
     PauliProduct
     DecoherenceProduct
-    QubitOperator
-    QubitHamiltonian
-    QubitLindbladNoiseOperator
-    QubitLindbladOpenSystem
+    PauliOperator
+    PauliHamiltonian
+    PauliLindbladNoiseOperator
+    PauliLindbladOpenSystem
 
 """
 
@@ -26,7 +26,7 @@ from typing import Optional, List, Tuple, Dict, Set, Union, Any
 
 class PauliProduct(ProductType):
     """
-    PauliProducts are combinations of SingleQubitOperators on specific qubits.
+    PauliProducts are combinations of SinglePauliOperators on specific qubits.
 
     PauliProducts can be used in either noise-free or a noisy system.
     They are representations of products of pauli matrices acting on qubits,
@@ -36,7 +36,7 @@ class PauliProduct(ProductType):
     `PauliProduct().x(0).x(2)`.
 
     PauliProduct is  supposed to be used as input for the function `set_pauli_product`,
-    for instance in the spin system classes QubitLindbladOpenSystem, QubitHamiltonian or QubitOperator,
+    for instance in the spin system classes PauliLindbladOpenSystem, PauliHamiltonian or PauliOperator,
     or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
     or as part of `HermitianMixedProduct <mixed_systems.HermitianMixedProduct>`.
 
@@ -65,7 +65,7 @@ class PauliProduct(ProductType):
         the Jordan Wigner mapping."""
     def x(self, index: int) -> PauliProduct:  # type: ignore
         """
-        Set a new entry for SingleQubitOperator X in the internal dictionary.
+        Set a new entry for SinglePauliOperator X in the internal dictionary.
 
         Args:
             index (int): Index of set object.
@@ -74,7 +74,7 @@ class PauliProduct(ProductType):
             PauliProduct: The PauliProduct with the new entry."""
     def y(self, index: int) -> PauliProduct:  # type: ignore
         """
-        Set a new entry for SingleQubitOperator Y in the internal dictionary.
+        Set a new entry for SinglePauliOperator Y in the internal dictionary.
 
         Args:
             index (int): Index of set object.
@@ -83,7 +83,7 @@ class PauliProduct(ProductType):
             PauliProduct: The PauliProduct with the new entry."""
     def z(self, index: int) -> PauliProduct:  # type: ignore
         """
-        Set a new entry for SingleQubitOperator Z in the internal dictionary.
+        Set a new entry for SinglePauliOperator Z in the internal dictionary.
 
         Args:
             index (int): Index of set object.
@@ -295,7 +295,7 @@ class DecoherenceProduct(ProductType):
     `DecoherenceProduct().x(0).z(2)`.
 
     DecoherenceProduct is  supposed to be used as input for the function `add_noise`,
-    for instance in the spin system classes QubitLindbladOpenSystem, SpinLindbladNoiseSystem or QubitLindbladNoiseOperator,
+    for instance in the spin system classes PauliLindbladOpenSystem, SpinLindbladNoiseSystem or PauliLindbladNoiseOperator,
     or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.
 
     Returns:
@@ -541,15 +541,15 @@ class DecoherenceProduct(ProductType):
         Returns:
             str: The json schema serialized to json"""
 
-class QubitOperator:
+class PauliOperator:
     """
     These are representations of systems of spins.
 
-    QubitOperators are characterized by a QubitOperator to represent the hamiltonian of the spin system
+    PauliOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
     and an optional number of spins.
 
     Returns:
-        self: The new QubitOperator.
+        self: The new PauliOperator.
 
     Examples
     --------
@@ -559,9 +559,9 @@ class QubitOperator:
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex
-        from struqture_py.spins import QubitOperator, PauliProduct
+        from struqture_py.spins import PauliOperator, PauliProduct
 
-        ssystem = QubitOperator(2)
+        ssystem = PauliOperator(2)
         pp = PauliProduct().z(0)
         ssystem.add_operator_product(pp, 5.0)
         npt.assert_equal(ssystem.current_number_spins(), 2)
@@ -584,7 +584,7 @@ class QubitOperator:
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
 
-    def empty_clone(self, capacity: Optional[int]) -> QubitOperator:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> PauliOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -601,7 +601,7 @@ class QubitOperator:
         Returns:
             bool: Whether self is empty or not."""
 
-    def truncate(self, threshold: float) -> QubitOperator:  # type: ignore
+    def truncate(self, threshold: float) -> PauliOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -666,7 +666,7 @@ class QubitOperator:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
-    def hermitian_conjugate(self) -> QubitOperator:  # type: ignore
+    def hermitian_conjugate(self) -> PauliOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -834,15 +834,15 @@ class QubitOperator:
         Returns:
             str: The json schema serialized to json"""
 
-class QubitHamiltonian:
+class PauliHamiltonian:
     """
     These are representations of systems of spins.
 
-    QubitHamiltonians are characterized by a QubitOperator to represent the hamiltonian of the spin system
+    PauliHamiltonians are characterized by a PauliOperator to represent the hamiltonian of the spin system
     and an optional number of spins.
 
     Returns:
-        self: The new QubitHamiltonian.
+        self: The new PauliHamiltonian.
 
     Examples
     --------
@@ -852,9 +852,9 @@ class QubitHamiltonian:
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex
-        from struqture_py.spins import QubitHamiltonian, PauliProduct
+        from struqture_py.spins import PauliHamiltonian, PauliProduct
 
-        ssystem = QubitHamiltonian(2)
+        ssystem = PauliHamiltonian(2)
         pp = PauliProduct().z(0)
         ssystem.add_operator_product(pp, 5.0)
         npt.assert_equal(ssystem.current_number_spins(), 2)
@@ -877,7 +877,7 @@ class QubitHamiltonian:
         Returns:
             List[OperatorProduct]: The sequence of keys of the self."""
 
-    def empty_clone(self, capacity: Optional[int]) -> QubitHamiltonian:  # type: ignore
+    def empty_clone(self, capacity: Optional[int]) -> PauliHamiltonian:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -894,7 +894,7 @@ class QubitHamiltonian:
         Returns:
             bool: Whether self is empty or not."""
 
-    def truncate(self, threshold: float) -> QubitHamiltonian:  # type: ignore
+    def truncate(self, threshold: float) -> PauliHamiltonian:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -959,7 +959,7 @@ class QubitHamiltonian:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
-    def hermitian_conjugate(self) -> QubitHamiltonian:  # type: ignore
+    def hermitian_conjugate(self) -> PauliHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
@@ -1131,14 +1131,14 @@ class QubitHamiltonian:
         Returns:
             str: The json schema serialized to json"""
 
-class QubitLindbladNoiseOperator(NoiseType):
+class PauliLindbladNoiseOperator(NoiseType):
     """
     These are representations of noisy systems of spins.
 
-    In a QubitLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+    In a PauliLindbladNoiseOperator is characterized by a PauliLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 
     Returns:
-        self: The new QubitLindbladNoiseOperator.
+        self: The new PauliLindbladNoiseOperator.
 
     Examples
     --------
@@ -1148,9 +1148,9 @@ class QubitLindbladNoiseOperator(NoiseType):
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex
-        from struqture_py.spins import QubitLindbladNoiseOperator, DecoherenceProduct
+        from struqture_py.spins import PauliLindbladNoiseOperator, DecoherenceProduct
 
-        slns = QubitLindbladNoiseOperator()
+        slns = PauliLindbladNoiseOperator()
         dp = DecoherenceProduct().z(0).x(1)
         slns.add_operator_product((dp, dp), 2.0)
         npt.assert_equal(slns.current_number_spins(), 2)
@@ -1167,7 +1167,7 @@ class QubitLindbladNoiseOperator(NoiseType):
         Transform the given spin object into a fermionic object using
         the Jordan Wigner mapping."""
 
-    def separate_into_n_terms(self, number_spins_left: int, number_spins_right: int) -> Tuple[QubitLindbladNoiseOperator, QubitLindbladNoiseOperator]:  # type: ignore
+    def separate_into_n_terms(self, number_spins_left: int, number_spins_right: int) -> Tuple[PauliLindbladNoiseOperator, PauliLindbladNoiseOperator]:  # type: ignore
         """
         Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
 
@@ -1176,7 +1176,7 @@ class QubitLindbladNoiseOperator(NoiseType):
             number_spins_right (int): Number of spins to filter for in the right term of the keys.
 
         Returns:
-            Tuple[QubitLindbladNoiseOperator, QubitLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+            Tuple[PauliLindbladNoiseOperator, PauliLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
 
         Raises:
             ValueError: Error in adding terms to return values."""
@@ -1246,7 +1246,7 @@ class QubitLindbladNoiseOperator(NoiseType):
         Returns:
             List[CalculatorComplex]: The sequence of values of self."""
 
-    def empty_clone(self, capacity) -> QubitLindbladNoiseOperator:  # type: ignore
+    def empty_clone(self, capacity) -> PauliLindbladNoiseOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -1263,7 +1263,7 @@ class QubitLindbladNoiseOperator(NoiseType):
         Returns:
             bool: Whether self is empty or not."""
 
-    def truncate(self, threshold) -> QubitLindbladNoiseOperator:  # type: ignore
+    def truncate(self, threshold) -> PauliLindbladNoiseOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -1425,11 +1425,11 @@ class QubitLindbladNoiseOperator(NoiseType):
         Returns:
             str: The json schema serialized to json"""
 
-class QubitLindbladOpenSystem(SystemType):
+class PauliLindbladOpenSystem(SystemType):
     """
     These are representations of noisy systems of spins.
 
-    In a QubitLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.
+    In a PauliLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.
 
     Returns:
         SpinLindbladOpenSystem: The new SpinLindbladOpenSystem.
@@ -1442,9 +1442,9 @@ class QubitLindbladOpenSystem(SystemType):
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
-        from struqture_py.spins import QubitLindbladOpenSystem, DecoherenceProduct
+        from struqture_py.spins import PauliLindbladOpenSystem, DecoherenceProduct
 
-        slns = QubitLindbladOpenSystem()
+        slns = PauliLindbladOpenSystem()
         dp = DecoherenceProduct().z(0).x(1)
         slns.system_add_operator_product(dp, 2.0)
         npt.assert_equal(slns.current_number_spins(), 2)
@@ -1492,7 +1492,7 @@ class QubitLindbladOpenSystem(SystemType):
         Returns:
             (System, Noise): The system and noise of self."""
 
-    def group(self, system, noise) -> QubitLindbladOpenSystem:  # type: ignore
+    def group(self, system, noise) -> PauliLindbladOpenSystem:  # type: ignore
         """
         Take a tuple of a system term and a noise term and combines them to be a OpenSystem.
 
@@ -1508,7 +1508,7 @@ class QubitLindbladOpenSystem(SystemType):
             ValueError: Noise could not be constructed.
             ValueError: Grouping could not be constructed."""
 
-    def empty_clone(self) -> QubitLindbladOpenSystem:  # type: ignore
+    def empty_clone(self) -> PauliLindbladOpenSystem:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -1516,7 +1516,7 @@ class QubitLindbladOpenSystem(SystemType):
             self: An empty clone with the same properties as self, with the given capacity.
         """
 
-    def truncate(self, threshold) -> QubitLindbladOpenSystem:  # type: ignore
+    def truncate(self, threshold) -> PauliLindbladOpenSystem:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -2028,7 +2028,7 @@ class PlusMinusOperator:
     """
     These are representations of systems of spins.
 
-    PlusMinusOperators are characterized by a QubitOperator to represent the hamiltonian of the spin system
+    PlusMinusOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
     and an optional number of spins.
 
     Returns:
@@ -2057,51 +2057,51 @@ class PlusMinusOperator:
         Transform the given spin object into a fermionic object using
         the Jordan Wigner mapping."""
 
-    def from_qubit_operator(self, value: QubitOperator) -> PlusMinusOperator:  # type: ignore
+    def from_qubit_operator(self, value: PauliOperator) -> PlusMinusOperator:  # type: ignore
         """
-        Convert a QubitOperator into a PlusMinusOperator.
+        Convert a PauliOperator into a PlusMinusOperator.
 
         Args:
-            value (QubitOperator): The QubitOperator to create the PlusMinusOperator from.
+            value (PauliOperator): The PauliOperator to create the PlusMinusOperator from.
 
         Returns:
-            PlusMinusOperator: The operator created from the input QubitOperator.
+            PlusMinusOperator: The operator created from the input PauliOperator.
 
         Raises:
-            ValueError: Could not create QubitOperator from input."""
+            ValueError: Could not create PauliOperator from input."""
 
-    def from_qubit_hamiltonian(self, value: QubitHamiltonian) -> PlusMinusOperator:  # type: ignore
+    def from_qubit_hamiltonian(self, value: PauliHamiltonian) -> PlusMinusOperator:  # type: ignore
         """
-        Convert a QubitHamiltonian into a PlusMinusOperator.
+        Convert a PauliHamiltonian into a PlusMinusOperator.
 
         Args:
-            value (QubitHamiltonian): The QubitHamiltonian to create the PlusMinusOperator from.
+            value (PauliHamiltonian): The PauliHamiltonian to create the PlusMinusOperator from.
 
         Returns:
-            PlusMinusOperator: The operator created from the input QubitOperator.
+            PlusMinusOperator: The operator created from the input PauliOperator.
 
         Raises:
-            ValueError: Could not create QubitHamiltonian from input."""
+            ValueError: Could not create PauliHamiltonian from input."""
 
-    def to_qubit_operator(self) -> QubitOperator:  # type: ignore
+    def to_qubit_operator(self) -> PauliOperator:  # type: ignore
         """
-        Convert a PlusMinusOperator into a QubitOperator.
+        Convert a PlusMinusOperator into a PauliOperator.
 
         Returns:
-            QubitOperator: The operator created from the input PlusMinusOperator and optional number of spins.
+            PauliOperator: The operator created from the input PlusMinusOperator and optional number of spins.
 
         Raises:
-            ValueError: Could not create QubitOperator from PlusMinusOperator."""
+            ValueError: Could not create PauliOperator from PlusMinusOperator."""
 
-    def to_qubit_hamiltonian(self) -> QubitHamiltonian:  # type: ignore
+    def to_qubit_hamiltonian(self) -> PauliHamiltonian:  # type: ignore
         """
-        Convert a PlusMinusOperator into a QubitHamiltonian.
+        Convert a PlusMinusOperator into a PauliHamiltonian.
 
         Returns:
-            QubitHamiltonian: The operator created from the input PlusMinusOperator and optional number of spins.
+            PauliHamiltonian: The operator created from the input PlusMinusOperator and optional number of spins.
 
         Raises:
-            ValueError: Could not create QubitHamiltonian from PlusMinusOperator."""
+            ValueError: Could not create PauliHamiltonian from PlusMinusOperator."""
 
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
@@ -2310,7 +2310,7 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
     """
     These are representations of noisy systems of spins.
 
-    In a PlusMinusLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+    In a PlusMinusLindbladNoiseOperator is characterized by a PauliLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 
     Returns:
         self: The new PlusMinusLindbladNoiseOperator.
@@ -2338,28 +2338,28 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
         Transform the given spin object into a fermionic object using
         the Jordan Wigner mapping."""
 
-    def from_qubit_noise_operator(self, value: QubitLindbladNoiseOperator) -> PlusMinusLindbladNoiseOperator:  # type: ignore
+    def from_qubit_noise_operator(self, value: PauliLindbladNoiseOperator) -> PlusMinusLindbladNoiseOperator:  # type: ignore
         """
-        Convert a QubitLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
+        Convert a PauliLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
 
         Args:
-            value (QubitLindbladNoiseOperator): The QubitLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
+            value (PauliLindbladNoiseOperator): The PauliLindbladNoiseOperator to create the PlusMinusLindbladNoiseOperator from.
 
         Returns:
-            PlusMinusLindbladNoiseOperator: The operator created from the input QubitLindbladNoiseOperator.
+            PlusMinusLindbladNoiseOperator: The operator created from the input PauliLindbladNoiseOperator.
 
         Raises:
-            ValueError: Could not create QubitLindbladNoiseOperator from input."""
+            ValueError: Could not create PauliLindbladNoiseOperator from input."""
 
-    def to_qubit_noise_operator(self) -> QubitLindbladNoiseOperator:  # type: ignore
+    def to_qubit_noise_operator(self) -> PauliLindbladNoiseOperator:  # type: ignore
         """
-        Convert a PlusMinusLindbladNoiseOperator into a QubitLindbladNoiseOperator.
+        Convert a PlusMinusLindbladNoiseOperator into a PauliLindbladNoiseOperator.
 
         Returns:
-            QubitLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
+            PauliLindbladNoiseOperator: The operator created from the input PlusMinusLindbladNoiseOperator and optional number of spins.
 
         Raises:
-            ValueError: Could not create QubitLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
+            ValueError: Could not create PauliLindbladNoiseOperator from PlusMinusLindbladNoiseOperator.
         """
     def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """

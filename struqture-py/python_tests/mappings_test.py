@@ -22,19 +22,19 @@ def test_jordan_wigner_spin_to_fermion():
     pmns.add_operator_product((pmp, pmp), 2.0)
     assert type(pmns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    ss = QubitOperator()
+    ss = PauliOperator()
     ss.add_operator_product(pp, 5.0)
     assert type(ss.jordan_wigner()) == FermionOperator
 
-    shs = QubitHamiltonian()
+    shs = PauliHamiltonian()
     shs.add_operator_product(pp, 5.0)
     assert type(shs.jordan_wigner()) == FermionHamiltonian
 
-    slns = QubitLindbladNoiseOperator()
+    slns = PauliLindbladNoiseOperator()
     slns.add_operator_product((dp, dp), 2.0)
     assert type(slns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    slos = QubitLindbladOpenSystem()
+    slos = PauliLindbladOpenSystem()
     slos.system_add_operator_product(pp, 2.0)
     slos.noise_add_operator_product((dp, dp), 2.0)
     assert type(slos.jordan_wigner()) == FermionLindbladOpenSystem
@@ -42,24 +42,24 @@ def test_jordan_wigner_spin_to_fermion():
 
 def test_jordan_wigner_fermion_to_spin():
     fp = FermionProduct([0], [2, 3])
-    assert type(fp.jordan_wigner()) == QubitOperator
+    assert type(fp.jordan_wigner()) == PauliOperator
 
     hfp = HermitianFermionProduct([0], [2, 3])
-    assert type(hfp.jordan_wigner()) == QubitHamiltonian
+    assert type(hfp.jordan_wigner()) == PauliHamiltonian
 
     fs = FermionOperator()
     fs.add_operator_product(fp, 1.0)
-    assert type(fs.jordan_wigner()) == QubitOperator
+    assert type(fs.jordan_wigner()) == PauliOperator
 
     fh = FermionHamiltonian()
     fh.add_operator_product(hfp, 1.0)
-    assert type(fh.jordan_wigner()) == QubitHamiltonian
+    assert type(fh.jordan_wigner()) == PauliHamiltonian
 
     flns = FermionLindbladNoiseOperator()
     flns.add_operator_product((fp, fp), 1.0)
-    assert type(flns.jordan_wigner()) == QubitLindbladNoiseOperator
+    assert type(flns.jordan_wigner()) == PauliLindbladNoiseOperator
 
     flos = FermionLindbladOpenSystem()
     flos.system_add_operator_product(fp, 2.0)
     flos.noise_add_operator_product((fp, fp), 2.0)
-    assert type(flos.jordan_wigner()) == QubitLindbladOpenSystem
+    assert type(flos.jordan_wigner()) == PauliLindbladOpenSystem

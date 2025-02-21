@@ -13,7 +13,7 @@
 use super::{FermionHamiltonian, OperateOnFermions};
 use crate::fermions::FermionProduct;
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::QubitOperator;
+use crate::spins::PauliOperator;
 use crate::{
     GetValue, ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
     SymmetricIndex,
@@ -537,7 +537,7 @@ impl fmt::Display for FermionOperator {
 }
 
 impl JordanWignerFermionToSpin for FermionOperator {
-    type Output = QubitOperator;
+    type Output = PauliOperator;
 
     /// Implements JordanWignerFermionToSpin for a FermionOperator.
     ///
@@ -546,9 +546,9 @@ impl JordanWignerFermionToSpin for FermionOperator {
     ///
     /// # Returns
     ///
-    /// `QubitOperator` - The spin operator that results from the transformation.
+    /// `PauliOperator` - The spin operator that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
-        let mut out = QubitOperator::new();
+        let mut out = PauliOperator::new();
         for fp in self.keys() {
             out = out + fp.jordan_wigner() * self.get(fp);
         }
@@ -562,7 +562,7 @@ mod test {
     use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of FermionOperator
     #[test]
     fn so_from_sos() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -580,7 +580,7 @@ mod test {
         assert_eq!(FermionOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(FermionOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of FermionOperator
     #[test]
     fn clone_partial_eq() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -621,7 +621,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of QubitOperator
+    // Test the Debug trait of FermionOperator
     #[test]
     fn debug() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -640,7 +640,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (readable)
+    /// Test FermionOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
@@ -689,7 +689,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (compact)
+    /// Test FermionOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();

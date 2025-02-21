@@ -14,7 +14,7 @@ use super::{
     FermionOperator, FermionProduct, HermitianFermionProduct, ModeIndex, OperateOnFermions,
 };
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::QubitHamiltonian;
+use crate::spins::PauliHamiltonian;
 use crate::{
     GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
     SymmetricIndex,
@@ -635,7 +635,7 @@ impl fmt::Display for FermionHamiltonian {
 }
 
 impl JordanWignerFermionToSpin for FermionHamiltonian {
-    type Output = QubitHamiltonian;
+    type Output = PauliHamiltonian;
 
     /// Implements JordanWignerFermionToSpin for a FermionHamiltonian.
     ///
@@ -644,9 +644,9 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
     ///
     /// # Returns
     ///
-    /// `QubitHamiltonian` - The spin Hamiltonian that results from the transformation.
+    /// `PauliHamiltonian` - The spin Hamiltonian that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
-        let mut out = QubitHamiltonian::new();
+        let mut out = PauliHamiltonian::new();
 
         for hfp in self.keys() {
             let coeff = self.get(hfp);
@@ -662,8 +662,8 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
 
                 let qubit_op = fp.jordan_wigner() * coeff.clone()
                     + fp_conj.jordan_wigner() * conjugate_sign * coeff.conj();
-                let qubit_hamiltonian = QubitHamiltonian::try_from(qubit_op).expect(
-                    "Something went wrong when attempting to cast QubitOperator into QubitHamiltonian.",
+                let qubit_hamiltonian = PauliHamiltonian::try_from(qubit_op).expect(
+                    "Something went wrong when attempting to cast PauliOperator into PauliHamiltonian.",
                 );
                 out = out + qubit_hamiltonian;
             }
@@ -678,7 +678,7 @@ mod test {
     use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of FermionHamiltonian
     #[test]
     fn so_from_sos() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -696,7 +696,7 @@ mod test {
         assert_eq!(FermionHamiltonian::try_from(sos.clone()).unwrap(), so);
         assert_eq!(FermionHamiltonianSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of FermionHamiltonian
     #[test]
     fn clone_partial_eq() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -737,7 +737,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of QubitOperator
+    // Test the Debug trait of FermionHamiltonian
     #[test]
     fn debug() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -756,7 +756,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (readable)
+    /// Test FermionHamiltonian Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
@@ -805,7 +805,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (compact)
+    /// Test FermionHamiltonian Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();

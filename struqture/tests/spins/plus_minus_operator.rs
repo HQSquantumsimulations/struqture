@@ -22,7 +22,7 @@ use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::spins::{
     DecoherenceOperator, DecoherenceProduct, PauliProduct, PlusMinusOperator, PlusMinusProduct,
-    QubitHamiltonian, QubitOperator,
+    PauliHamiltonian, PauliOperator,
 };
 use struqture::OperateOnDensityMatrix;
 use struqture::{prelude::*, STRUQTURE_VERSION};
@@ -630,7 +630,7 @@ fn sh_from_pmo() {
         (PauliProduct::new().z(0).z(1).z(2), 1.5.into()),
     ];
 
-    let mut qubit_ham = QubitHamiltonian::new();
+    let mut qubit_ham = PauliHamiltonian::new();
     for (key, val) in pp_vec.iter() {
         qubit_ham
             .add_operator_product(key.clone(), val.clone())
@@ -644,7 +644,7 @@ fn sh_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(QubitHamiltonian::try_from(pm_op).unwrap(), qubit_ham);
+    assert_eq!(PauliHamiltonian::try_from(pm_op).unwrap(), qubit_ham);
 }
 
 #[test]
@@ -687,7 +687,7 @@ fn so_from_pmo() {
         ),
     ];
 
-    let mut qubit_op = QubitOperator::new();
+    let mut qubit_op = PauliOperator::new();
     for (key, val) in pp_vec.iter() {
         qubit_op
             .add_operator_product(key.clone(), val.clone())
@@ -701,8 +701,8 @@ fn so_from_pmo() {
             .unwrap();
     }
 
-    assert_eq!(QubitOperator::from(pm_op.clone()), qubit_op);
-    assert!(QubitHamiltonian::try_from(pm_op).is_err());
+    assert_eq!(PauliOperator::from(pm_op.clone()), qubit_op);
+    assert!(PauliHamiltonian::try_from(pm_op).is_err());
 }
 
 #[test]
@@ -754,7 +754,7 @@ fn pmo_from_sh() {
         ),
     ];
 
-    let mut qubit_op = QubitHamiltonian::new();
+    let mut qubit_op = PauliHamiltonian::new();
     for (key, val) in pp_vec.iter() {
         qubit_op
             .add_operator_product(key.clone(), val.clone())
@@ -823,7 +823,7 @@ fn pmo_from_so() {
         ),
     ];
 
-    let mut qubit_op = QubitOperator::new();
+    let mut qubit_op = PauliOperator::new();
     for (key, val) in pp_vec.iter() {
         qubit_op
             .add_operator_product(key.clone(), val.clone())
