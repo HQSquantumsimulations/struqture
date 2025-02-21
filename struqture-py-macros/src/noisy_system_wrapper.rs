@@ -29,13 +29,13 @@ pub fn noisywrapper(
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
     let (index_type, struqture_1_module, struqture_1_ident) =
-        if struct_name.contains("QubitLindbladNoiseOperator") {
+        if struct_name.contains("PauliLindbladNoiseOperator") {
             (
                 quote::format_ident!("DecoherenceProductWrapper"),
                 quote::format_ident!("spins"),
                 quote::format_ident!("SpinLindbladNoiseSystem"),
             )
-        } else if struct_name.contains("QubitLindbladOpenSystem") {
+        } else if struct_name.contains("PauliLindbladOpenSystem") {
             (
                 quote::format_ident!("DecoherenceProductWrapper"),
                 quote::format_ident!("spins"),
@@ -524,12 +524,12 @@ pub fn noisywrapper(
     };
     let open_system_quote = if attribute_arguments.contains("OpenSystem") {
         let (system_type, system_index_type, value_type, noise_type) =
-            if struct_name.contains("Qubit") {
+            if struct_name.contains("Pauli") {
                 (
-                    quote::format_ident!("QubitHamiltonianWrapper"),
+                    quote::format_ident!("PauliHamiltonianWrapper"),
                     quote::format_ident!("PauliProductWrapper"),
                     quote::format_ident!("CalculatorFloatWrapper"),
-                    quote::format_ident!("QubitLindbladNoiseOperatorWrapper"),
+                    quote::format_ident!("PauliLindbladNoiseOperatorWrapper"),
                 )
             } else if struct_name.contains("Boson") {
                 (

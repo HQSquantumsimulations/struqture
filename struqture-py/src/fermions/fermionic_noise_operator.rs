@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use crate::fermions::FermionProductWrapper;
-use crate::spins::QubitLindbladNoiseOperatorWrapper;
+use crate::spins::PauliLindbladNoiseOperatorWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;

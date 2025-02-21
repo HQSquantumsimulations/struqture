@@ -10,10 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, QubitOperator};
+use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, PauliOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::{PlusMinusProduct, QubitHamiltonian};
+use crate::spins::{PlusMinusProduct, PauliHamiltonian};
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
@@ -274,8 +274,8 @@ impl PlusMinusOperator {
     }
 }
 
-impl From<PlusMinusOperator> for QubitOperator {
-    /// Converts a PlusMinusOperator into a QubitOperator.
+impl From<PlusMinusOperator> for PauliOperator {
+    /// Converts a PlusMinusOperator into a PauliOperator.
     ///
     /// # Arguments
     ///
@@ -283,9 +283,9 @@ impl From<PlusMinusOperator> for QubitOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The PlusMinusOperator converted into a QubitOperator.
+    /// * `Self` - The PlusMinusOperator converted into a PauliOperator.
     fn from(value: PlusMinusOperator) -> Self {
-        let mut new_operator = QubitOperator::with_capacity(2 * value.len());
+        let mut new_operator = PauliOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
             let transscribed_vector: Vec<(PauliProduct, Complex64)> = product.into();
             for (transscribed_product, prefactor) in transscribed_vector {
@@ -298,17 +298,17 @@ impl From<PlusMinusOperator> for QubitOperator {
     }
 }
 
-impl From<QubitOperator> for PlusMinusOperator {
-    /// Converts a QubitOperator into a PlusMinusOperator.
+impl From<PauliOperator> for PlusMinusOperator {
+    /// Converts a PauliOperator into a PlusMinusOperator.
     ///
     /// # Arguments
     ///
-    /// * `value` - The QubitOperator to convert.
+    /// * `value` - The PauliOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The QubitOperator converted into a PlusMinusOperator.
-    fn from(value: QubitOperator) -> Self {
+    /// * `Self` - The PauliOperator converted into a PlusMinusOperator.
+    fn from(value: PauliOperator) -> Self {
         let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
             let transscribed_vector: Vec<(PlusMinusProduct, Complex64)> = product.into();
@@ -370,10 +370,10 @@ impl From<DecoherenceOperator> for PlusMinusOperator {
     }
 }
 
-impl TryFrom<PlusMinusOperator> for QubitHamiltonian {
+impl TryFrom<PlusMinusOperator> for PauliHamiltonian {
     type Error = StruqtureError;
 
-    /// Tries to converts a PlusMinusOperator into a QubitHamiltonian.
+    /// Tries to converts a PlusMinusOperator into a PauliHamiltonian.
     ///
     /// # Arguments
     ///
@@ -381,25 +381,25 @@ impl TryFrom<PlusMinusOperator> for QubitHamiltonian {
     ///
     /// # Returns
     ///
-    /// * `Ok(Self)` - The PlusMinusOperator converted into a QubitHamiltonian.
+    /// * `Ok(Self)` - The PlusMinusOperator converted into a PauliHamiltonian.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn try_from(value: PlusMinusOperator) -> Result<Self, Self::Error> {
-        let tmp_operator = QubitOperator::from(value).truncate(1e-16);
-        QubitHamiltonian::try_from(tmp_operator)
+        let tmp_operator = PauliOperator::from(value).truncate(1e-16);
+        PauliHamiltonian::try_from(tmp_operator)
     }
 }
 
-impl From<QubitHamiltonian> for PlusMinusOperator {
-    /// Converts a QubitHamiltonian into a PlusMinusOperator.
+impl From<PauliHamiltonian> for PlusMinusOperator {
+    /// Converts a PauliHamiltonian into a PlusMinusOperator.
     ///
     /// # Arguments
     ///
-    /// * `value` - The QubitHamiltonian to convert.
+    /// * `value` - The PauliHamiltonian to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The QubitHamiltonian converted into a PlusMinusOperator.
-    fn from(value: QubitHamiltonian) -> Self {
+    /// * `Self` - The PauliHamiltonian converted into a PlusMinusOperator.
+    fn from(value: PauliHamiltonian) -> Self {
         let mut new_operator = PlusMinusOperator::with_capacity(2 * value.len());
         for (product, val) in value.into_iter() {
             let transscribed_vector: Vec<(PlusMinusProduct, Complex64)> = product.into();

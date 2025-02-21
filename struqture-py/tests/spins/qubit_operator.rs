@@ -14,25 +14,25 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::spins::{PauliProduct, QubitOperator};
+use struqture::spins::{PauliProduct, PauliOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};
-use struqture_py::spins::QubitOperatorWrapper;
+use struqture_py::spins::PauliOperatorWrapper;
 use test_case::test_case;
 
 // helper functions
-fn new_system(py: Python) -> Bound<QubitOperatorWrapper> {
-    let system_type = py.get_type_bound::<QubitOperatorWrapper>();
+fn new_system(py: Python) -> Bound<PauliOperatorWrapper> {
+    let system_type = py.get_type_bound::<PauliOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
-        .downcast::<QubitOperatorWrapper>()
+        .downcast::<PauliOperatorWrapper>()
         .unwrap()
         .to_owned()
 }
 
-/// Test default function of QubitOperatorWrapper
+/// Test default function of PauliOperatorWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
@@ -41,12 +41,12 @@ fn test_default_partialeq_debug_clone() {
         new_system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let system_wrapper = new_system.extract::<QubitOperatorWrapper>().unwrap();
+        let system_wrapper = new_system.extract::<PauliOperatorWrapper>().unwrap();
 
         // PartialEq
-        let helper_ne: bool = QubitOperatorWrapper::new() != system_wrapper;
+        let helper_ne: bool = PauliOperatorWrapper::new() != system_wrapper;
         assert!(helper_ne);
-        let helper_eq: bool = QubitOperatorWrapper::new() == QubitOperatorWrapper::new();
+        let helper_eq: bool = PauliOperatorWrapper::new() == PauliOperatorWrapper::new();
         assert!(helper_eq);
 
         // Clone
@@ -54,8 +54,8 @@ fn test_default_partialeq_debug_clone() {
 
         // Debug
         assert_eq!(
-            format!("{:?}", QubitOperatorWrapper::new()),
-            "QubitOperatorWrapper { internal: QubitOperator { internal_map: {} } }"
+            format!("{:?}", PauliOperatorWrapper::new()),
+            "PauliOperatorWrapper { internal: PauliOperator { internal_map: {} } }"
         );
 
         // Number of spins
@@ -66,7 +66,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test current_number_spins function of QubitOperator
+/// Test current_number_spins function of PauliOperator
 #[test]
 fn test_number_spins_current() {
     pyo3::prepare_freethreaded_python();
@@ -84,7 +84,7 @@ fn test_number_spins_current() {
     });
 }
 
-/// Test empty_clone function of QubitOperator
+/// Test empty_clone function of PauliOperator
 #[test]
 fn test_empty_clone() {
     pyo3::prepare_freethreaded_python();
@@ -103,7 +103,7 @@ fn test_empty_clone() {
     });
 }
 
-/// Test hermitian_conjugate function of QubitOperator
+/// Test hermitian_conjugate function of PauliOperator
 #[test]
 fn test_hermitian_conj() {
     pyo3::prepare_freethreaded_python();
@@ -120,14 +120,14 @@ fn test_hermitian_conj() {
     });
 }
 
-/// Test set and get functions of QubitOperator
+/// Test set and get functions of PauliOperator
 #[test]
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitOperatorWrapper>();
+        let new_system = py.get_type_bound::<PauliOperatorWrapper>();
         let system = new_system.call0().unwrap();
-        system.downcast::<QubitOperatorWrapper>().unwrap();
+        system.downcast::<PauliOperatorWrapper>().unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
         system.call_method1("set", ("1Z", 0.2)).unwrap();
         system.call_method1("set", ("3Y", 0.05)).unwrap();
@@ -168,14 +168,14 @@ fn spin_system_test_set_get() {
     });
 }
 
-/// Test add_operator_product and remove functions of QubitOperator
+/// Test add_operator_product and remove functions of PauliOperator
 #[test]
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<QubitOperatorWrapper>();
+        let new_system = py.get_type_bound::<PauliOperatorWrapper>();
         let system = new_system.call0().unwrap();
-        system.downcast::<QubitOperatorWrapper>().unwrap();
+        system.downcast::<PauliOperatorWrapper>().unwrap();
         system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
@@ -231,7 +231,7 @@ fn spin_system_test_add_operator_product_remove() {
     });
 }
 
-/// Test keys function of QubitOperator
+/// Test keys function of PauliOperator
 #[test]
 fn test_keys_values() {
     pyo3::prepare_freethreaded_python();
@@ -400,7 +400,7 @@ fn test_truncate(re: f64, im: f64) {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_neg() {
     pyo3::prepare_freethreaded_python();
@@ -421,7 +421,7 @@ fn test_neg() {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_add() {
     pyo3::prepare_freethreaded_python();
@@ -449,7 +449,7 @@ fn test_add() {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_sub() {
     pyo3::prepare_freethreaded_python();
@@ -477,7 +477,7 @@ fn test_sub() {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_cf() {
     pyo3::prepare_freethreaded_python();
@@ -499,7 +499,7 @@ fn test_mul_cf() {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_cc() {
     pyo3::prepare_freethreaded_python();
@@ -528,7 +528,7 @@ fn test_mul_cc() {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_self() {
     pyo3::prepare_freethreaded_python();
@@ -553,7 +553,7 @@ fn test_mul_self() {
     });
 }
 
-/// Test add magic method function of QubitOperator
+/// Test add magic method function of PauliOperator
 #[test]
 fn test_mul_error() {
     pyo3::prepare_freethreaded_python();
@@ -568,7 +568,7 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of QubitOperator
+// /// Test test_sparse_lindblad_entries function of PauliOperator
 // #[test]
 // fn test_sparse_lindblad_entries() {
 //     pyo3::prepare_freethreaded_python();
@@ -614,7 +614,7 @@ fn test_mul_error() {
 //     // assert_eq!(result_matrix, test_matrix);
 // }
 
-/// Test copy and deepcopy functions of QubitOperator
+/// Test copy and deepcopy functions of PauliOperator
 #[test]
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
@@ -638,7 +638,7 @@ fn test_copy_deepcopy() {
     });
 }
 
-/// Test to_bincode and from_bincode functions of QubitOperator
+/// Test to_bincode and from_bincode functions of PauliOperator
 #[test]
 fn test_to_from_bincode() {
     pyo3::prepare_freethreaded_python();
@@ -684,7 +684,7 @@ fn test_value_error_bincode() {
     });
 }
 
-/// Test to_ and from_json functions of QubitOperator
+/// Test to_ and from_json functions of PauliOperator
 #[test]
 fn test_to_from_json() {
     pyo3::prepare_freethreaded_python();
@@ -729,7 +729,7 @@ fn test_format_repr() {
         system
             .call_method1("add_operator_product", ("0X", 0.1))
             .unwrap();
-        let mut rust_system = QubitOperator::new();
+        let mut rust_system = PauliOperator::new();
         rust_system
             .add_operator_product(PauliProduct::new().x(0), CalculatorComplex::new(0.1, 0.0))
             .unwrap();
@@ -744,15 +744,15 @@ fn test_format_repr() {
 
         assert_eq!(
             format_op,
-            "QubitOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+            "PauliOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             repr_op,
-            "QubitOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+            "PauliOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
         );
         assert_eq!(
             str_op,
-            "QubitOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
+            "PauliOperator{\n0X: (1e-1 + i * 0e0),\n}".to_string()
         );
     });
 }
@@ -792,7 +792,7 @@ fn test_richcmp() {
     });
 }
 
-/// Test jordan_wigner() method of QubitOperator
+/// Test jordan_wigner() method of PauliOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -823,7 +823,7 @@ fn test_json_schema() {
         let schema: String =
             String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
-            serde_json::to_string_pretty(&schemars::schema_for!(QubitOperator)).unwrap();
+            serde_json::to_string_pretty(&schemars::schema_for!(PauliOperator)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
@@ -858,7 +858,7 @@ fn test_from_pyany_to_struqture_1() {
         )
         .unwrap();
 
-        let result = QubitOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
+        let result = PauliOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
         assert_eq!(result, sys_1);
     });
 }

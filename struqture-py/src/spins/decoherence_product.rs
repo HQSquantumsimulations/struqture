@@ -35,8 +35,8 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///
 /// `DecoherenceProduct().x(0).z(2)`.
 ///
-/// DecoherenceProduct is  supposed to be used as input for the function `add_noise`,
-/// for instance in the spin system classes QubitLindbladOpenSystem, SpinLindbladNoiseSystem or QubitLindbladNoiseOperator,
+/// DecoherenceProduct is supposed to be used as input for the function `add_noise`,
+/// for instance in the spin system classes PauliLindbladOpenSystem or PauliLindbladNoiseOperator,
 /// or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.
 ///
 /// Returns:

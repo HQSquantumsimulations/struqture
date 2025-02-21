@@ -20,7 +20,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{OperateOnSpins, QubitLindbladNoiseOperator, ToSparseMatrixSuperOperator};
+use struqture::spins::{OperateOnSpins, PauliLindbladNoiseOperator, ToSparseMatrixSuperOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, StruqtureError};
@@ -28,10 +28,10 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 
 /// These are representations of noisy systems of spins.
 ///
-/// In a QubitLindbladNoiseOperator is characterized by a QubitLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
+/// In a PauliLindbladNoiseOperator is characterized by a PauliLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.
 ///
 /// Returns:
-///     self: The new QubitLindbladNoiseOperator.
+///     self: The new PauliLindbladNoiseOperator.
 ///
 /// Examples
 /// --------
@@ -41,9 +41,9 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     import numpy.testing as npt
 ///     import scipy.sparse as sp
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
-///     from struqture_py.spins import QubitLindbladNoiseOperator, DecoherenceProduct
+///     from struqture_py.spins import PauliLindbladNoiseOperator, DecoherenceProduct
 ///
-///     slns = QubitLindbladNoiseOperator()
+///     slns = PauliLindbladNoiseOperator()
 ///     dp = DecoherenceProduct().z(0).x(1)
 ///     slns.add_operator_product((dp, dp), 2.0)
 ///     npt.assert_equal(slns.current_number_spins(), 2)
@@ -52,11 +52,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     dimension = 4**slns.current_number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "QubitLindbladNoiseOperator", module = "struqture_py.spins")]
+#[pyclass(name = "PauliLindbladNoiseOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct QubitLindbladNoiseOperatorWrapper {
-    /// Internal storage of [struqture::spins::QubitLindbladNoiseOperator]
-    pub internal: QubitLindbladNoiseOperator,
+pub struct PauliLindbladNoiseOperatorWrapper {
+    /// Internal storage of [struqture::spins::PauliLindbladNoiseOperator]
+    pub internal: PauliLindbladNoiseOperator,
 }
 
 #[mappings(JordanWignerSpinToFermion)]
@@ -66,15 +66,15 @@ pub struct QubitLindbladNoiseOperatorWrapper {
     ToSparseMatrixSuperOperator,
     Calculus
 )]
-impl QubitLindbladNoiseOperatorWrapper {
-    /// Create a new QubitLindbladNoiseOperator.
+impl PauliLindbladNoiseOperatorWrapper {
+    /// Create a new PauliLindbladNoiseOperator.
     ///
     /// Returns:
-    ///     self: The new QubitLindbladNoiseOperator.
+    ///     self: The new PauliLindbladNoiseOperator.
     #[new]
     pub fn new() -> Self {
         Self {
-            internal: QubitLindbladNoiseOperator::new(),
+            internal: PauliLindbladNoiseOperator::new(),
         }
     }
 
@@ -85,7 +85,7 @@ impl QubitLindbladNoiseOperatorWrapper {
     ///     number_spins_right (int): Number of spins to filter for in the right term of the keys.
     ///
     /// Returns:
-    ///     Tuple[QubitLindbladNoiseOperator, QubitLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
+    ///     Tuple[PauliLindbladNoiseOperator, PauliLindbladNoiseOperator]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
     ///
     /// Raises:
     ///     ValueError: Error in adding terms to return values.

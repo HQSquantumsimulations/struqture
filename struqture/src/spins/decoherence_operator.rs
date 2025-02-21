@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{OperateOnSpins, QubitOperator};
+use super::{OperateOnSpins, PauliOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::DecoherenceProduct;
@@ -506,21 +506,21 @@ impl fmt::Display for DecoherenceOperator {
     }
 }
 
-impl From<QubitOperator> for DecoherenceOperator {
-    /// Converts a QubitOperator into a DecoherenceProduct.
+impl From<PauliOperator> for DecoherenceOperator {
+    /// Converts a PauliOperator into a DecoherenceProduct.
     ///
     /// # Arguments
     ///
-    /// * `op` - The QubitOperator to convert.
+    /// * `op` - The PauliOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The QubitOperator converted into a DecoherenceProduct.
+    /// * `Self` - The PauliOperator converted into a DecoherenceProduct.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
-    fn from(op: QubitOperator) -> Self {
+    fn from(op: PauliOperator) -> Self {
         let mut out = DecoherenceOperator::new();
         for prod in op.keys() {
             let (new_prod, new_coeff) = DecoherenceProduct::spin_to_decoherence(prod.clone());
@@ -557,7 +557,7 @@ mod test {
     use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn so_from_sos() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
@@ -575,7 +575,7 @@ mod test {
         assert_eq!(DecoherenceOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(DecoherenceOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of QubitOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn clone_partial_eq() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
@@ -616,7 +616,7 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of QubitOperator
+    // Test the Debug trait of PauliOperator
     #[test]
     fn debug() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
@@ -635,7 +635,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (readable)
+    /// Test PauliOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = DecoherenceProduct::new().x(0);
@@ -684,7 +684,7 @@ mod test {
         );
     }
 
-    /// Test QubitOperator Serialization and Deserialization traits (compact)
+    /// Test PauliOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = DecoherenceProduct::new().x(0);
