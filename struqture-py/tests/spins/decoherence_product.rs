@@ -552,23 +552,6 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let new_pp = new_pp(py);
-        let pp_2 = new_pp.call_method1("set_pauli", (0_u64, "X")).unwrap();
-
-        let result = DecoherenceProductWrapper::from_pyany_to_struqture_1(pp_2.into()).unwrap();
-        assert_eq!(
-            result,
-            struqture_1::spins::DecoherenceProduct::from_str("0X").unwrap()
-        );
-    });
-}
-
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {

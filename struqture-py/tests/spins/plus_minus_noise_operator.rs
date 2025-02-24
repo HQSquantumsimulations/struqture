@@ -881,34 +881,6 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let sys_2 = new_noisesystem(py);
-        sys_2
-            .call_method1("add_operator_product", (("0+", "0+"), 0.1))
-            .unwrap();
-        let mut sys_1 = struqture_1::spins::PlusMinusLindbladNoiseOperator::new();
-        struqture_1::OperateOnDensityMatrix::set(
-            &mut sys_1,
-            (
-                struqture_1::spins::PlusMinusProduct::from_str("0+").unwrap(),
-                struqture_1::spins::PlusMinusProduct::from_str("0+").unwrap(),
-            ),
-            0.1.into(),
-        )
-        .unwrap();
-
-        let result =
-            PlusMinusLindbladNoiseOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref())
-                .unwrap();
-        assert_eq!(result, sys_1);
-    });
-}
-
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {

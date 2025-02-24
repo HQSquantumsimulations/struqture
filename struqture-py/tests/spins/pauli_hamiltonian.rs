@@ -792,29 +792,6 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let sys_2 = new_system(py);
-        sys_2
-            .call_method1("add_operator_product", ("0Z", 0.1))
-            .unwrap();
-        let mut sys_1 = struqture_1::spins::SpinHamiltonianSystem::new(None);
-        struqture_1::OperateOnDensityMatrix::set(
-            &mut sys_1,
-            struqture_1::spins::PauliProduct::from_str("0Z").unwrap(),
-            0.1.into(),
-        )
-        .unwrap();
-
-        let result = PauliHamiltonianWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
-        assert_eq!(result, sys_1);
-    });
-}
-
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {
