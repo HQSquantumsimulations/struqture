@@ -19,7 +19,7 @@ use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, PauliOperator};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliOperator, PauliProduct};
 use struqture::SpinIndex;
 use struqture::{prelude::*, STRUQTURE_VERSION};
 use test_case::test_case;

@@ -18,8 +18,8 @@ use struqture::fermions::{
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
-    PauliLindbladOpenSystem, PauliOperator, SinglePauliOperator,
+    DecoherenceProduct, PauliHamiltonian, PauliLindbladNoiseOperator, PauliLindbladOpenSystem,
+    PauliOperator, PauliProduct, SinglePauliOperator,
 };
 
 #[test]

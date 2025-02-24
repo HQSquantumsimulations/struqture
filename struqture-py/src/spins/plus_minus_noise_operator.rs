@@ -19,7 +19,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{PlusMinusLindbladNoiseOperator, PauliLindbladNoiseOperator};
+use struqture::spins::{PauliLindbladNoiseOperator, PlusMinusLindbladNoiseOperator};
 use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;

@@ -21,7 +21,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::spins::{
-    OperateOnSpins, PauliProduct, PauliHamiltonian, PauliOperator, SinglePauliOperator,
+    OperateOnSpins, PauliHamiltonian, PauliOperator, PauliProduct, SinglePauliOperator,
     ToSparseMatrixOperator,
 };
 use struqture::{prelude::*, STRUQTURE_VERSION};

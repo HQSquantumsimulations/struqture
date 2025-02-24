@@ -13,7 +13,7 @@
 use super::PauliHamiltonianWrapper;
 use crate::{
     fermions::FermionOperatorWrapper,
-    spins::{PlusMinusProductWrapper, PauliOperatorWrapper},
+    spins::{PauliOperatorWrapper, PlusMinusProductWrapper},
 };
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -22,7 +22,7 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{PlusMinusOperator, PauliHamiltonian, PauliOperator};
+use struqture::spins::{PauliHamiltonian, PauliOperator, PlusMinusOperator};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};

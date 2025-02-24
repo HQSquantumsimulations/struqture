@@ -13,7 +13,7 @@
 use super::{ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::{OperateOnSpins, PauliProduct, PauliHamiltonian, SpinIndex};
+use crate::spins::{OperateOnSpins, PauliHamiltonian, PauliProduct, SpinIndex};
 use crate::{
     CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
     SymmetricIndex,

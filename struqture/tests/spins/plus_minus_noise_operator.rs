@@ -21,8 +21,8 @@ use std::ops::{Add, Sub};
 #[cfg(feature = "struqture_1_export")]
 use std::str::FromStr;
 use struqture::spins::{
-    DecoherenceProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct,
-    PauliLindbladNoiseOperator,
+    DecoherenceProduct, PauliLindbladNoiseOperator, PlusMinusLindbladNoiseOperator,
+    PlusMinusOperator, PlusMinusProduct,
 };
 use struqture::{OperateOnDensityMatrix, SpinIndex, STRUQTURE_VERSION};
 

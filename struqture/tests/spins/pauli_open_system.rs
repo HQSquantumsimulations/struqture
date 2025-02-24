@@ -22,8 +22,8 @@ use std::collections::{BTreeMap, HashMap};
 use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
-    PauliLindbladOpenSystem,
+    DecoherenceProduct, PauliHamiltonian, PauliLindbladNoiseOperator, PauliLindbladOpenSystem,
+    PauliProduct,
 };
 use struqture::SpinIndex;
 use struqture::STRUQTURE_VERSION;

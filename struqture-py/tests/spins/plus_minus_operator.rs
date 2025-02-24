@@ -19,7 +19,7 @@ use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture_py::spins::{
-    PlusMinusOperatorWrapper, PauliHamiltonianWrapper, PauliOperatorWrapper,
+    PauliHamiltonianWrapper, PauliOperatorWrapper, PlusMinusOperatorWrapper,
 };
 use test_case::test_case;
 

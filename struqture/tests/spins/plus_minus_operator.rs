@@ -21,8 +21,8 @@ use std::ops::{Add, Sub};
 #[cfg(feature = "struqture_1_export")]
 use std::str::FromStr;
 use struqture::spins::{
-    DecoherenceOperator, DecoherenceProduct, PauliProduct, PlusMinusOperator, PlusMinusProduct,
-    PauliHamiltonian, PauliOperator,
+    DecoherenceOperator, DecoherenceProduct, PauliHamiltonian, PauliOperator, PauliProduct,
+    PlusMinusOperator, PlusMinusProduct,
 };
 use struqture::OperateOnDensityMatrix;
 use struqture::{prelude::*, STRUQTURE_VERSION};
