@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Removed `sparse_lindblad_entries` and `unitary_sparse_matrix_coo` functions.
+* Renamed all `Qubit` objects to `Pauli`.
 * Renamed `to_mixed_system` and `from_mixed_system` to `to_mixed_operator` and `from_mixed_operator`.
 * Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
 

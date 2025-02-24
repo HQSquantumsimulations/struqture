@@ -219,7 +219,7 @@ impl OperateOnSpins<'_> for PauliLindbladNoiseOperator {
     }
 }
 
-impl<'a> ToSparseMatrixSuperOperator<'a> for PauliLindbladNoiseOperator {
+impl ToSparseMatrixSuperOperator<'_> for PauliLindbladNoiseOperator {
     // From trait
     fn sparse_matrix_superoperator_entries_on_row(
         &self,
