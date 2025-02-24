@@ -444,15 +444,6 @@ pub fn productwrapper(
                     Ok(qubit_operator)
                 })
             }
-
-            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
-            #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_1(input: &Bound<PyAny>) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
-                let res = <#ident>::from_pyany(input)?;
-                <#struct_ident>::to_struqture_1(&res).map_err(
-                    |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? Error message: {:?}", err)
-                ))
-            }
         }
 
         #[pymethods]

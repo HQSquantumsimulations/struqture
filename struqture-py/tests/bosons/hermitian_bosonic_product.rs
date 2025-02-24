@@ -472,23 +472,6 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let pp_2 = new_pp(py, vec![0, 1], vec![1, 2]);
-
-        let result =
-            HermitianBosonProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref()).unwrap();
-        assert_eq!(
-            result,
-            struqture_1::bosons::HermitianBosonProduct::from_str("c0c1a1a2").unwrap()
-        );
-    });
-}
-
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {
