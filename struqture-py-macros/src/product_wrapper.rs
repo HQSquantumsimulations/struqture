@@ -469,26 +469,6 @@ pub fn productwrapper(
             // ----------------------------------
             // Default pyo3 implementations
 
-            /// Convert a struqture 1 object to the equivalent object in struqture 2.
-            ///
-            /// Args:
-            ///     input (Any): the struqture 1 object to convert.
-            ///
-            /// Returns:
-            ///     Any: the input object in struqture 2 form.
-            ///
-            /// Raises:
-            ///     ValueError: Input could not be deserialised.
-            ///     ValueError: Struqture 1 object could not be converted to struqture 2.
-            #[cfg(feature = "struqture_1_import")]
-            #[staticmethod]
-            pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
-                let qubit_operator: #struct_ident = #ident::from_pyany_struqture_1(input)?;
-                Ok(#ident {
-                    internal: qubit_operator,
-                })
-            }
-
             /// Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
             ///
             /// Args:
