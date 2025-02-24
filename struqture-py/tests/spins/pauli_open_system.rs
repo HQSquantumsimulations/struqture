@@ -14,8 +14,8 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
-    PauliLindbladOpenSystem,
+    DecoherenceProduct, PauliHamiltonian, PauliLindbladNoiseOperator, PauliLindbladOpenSystem,
+    PauliProduct,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;

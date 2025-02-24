@@ -13,7 +13,7 @@
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::prelude::*;
-use crate::spins::{PlusMinusOperator, PauliOperator};
+use crate::spins::{PauliOperator, PlusMinusOperator};
 use crate::{CorrespondsTo, GetValue, SpinIndex, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;

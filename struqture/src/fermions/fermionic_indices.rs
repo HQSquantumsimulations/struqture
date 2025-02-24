@@ -13,7 +13,7 @@
 use super::FermionIndex;
 use crate::mappings::JordanWignerFermionToSpin;
 use crate::prelude::*;
-use crate::spins::{PauliProduct, PauliHamiltonian, PauliOperator, SinglePauliOperator};
+use crate::spins::{PauliHamiltonian, PauliOperator, PauliProduct, SinglePauliOperator};
 use crate::{
     CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, StruqtureError, SymmetricIndex,
 };

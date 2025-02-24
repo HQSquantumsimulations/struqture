@@ -24,7 +24,7 @@ use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
-    OperateOnSpins, PauliProduct, PauliHamiltonian, PauliOperator, ToSparseMatrixOperator,
+    OperateOnSpins, PauliHamiltonian, PauliOperator, PauliProduct, ToSparseMatrixOperator,
 };
 use struqture::STRUQTURE_VERSION;
 use struqture::{CooSparseMatrix, OperateOnDensityMatrix, SpinIndex};

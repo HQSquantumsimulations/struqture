@@ -14,7 +14,7 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::spins::{PauliProduct, PauliOperator};
+use struqture::spins::{PauliOperator, PauliProduct};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};

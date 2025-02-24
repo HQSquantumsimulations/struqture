@@ -17,8 +17,8 @@ use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 #[cfg(feature = "json_schema")]
 use struqture::{spins::PlusMinusLindbladNoiseOperator, STRUQTURE_VERSION};
 use struqture_py::spins::{
-    PlusMinusLindbladNoiseOperatorWrapper, PlusMinusProductWrapper,
-    PauliLindbladNoiseOperatorWrapper,
+    PauliLindbladNoiseOperatorWrapper, PlusMinusLindbladNoiseOperatorWrapper,
+    PlusMinusProductWrapper,
 };
 use test_case::test_case;
 
