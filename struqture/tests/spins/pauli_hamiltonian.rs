@@ -399,21 +399,7 @@ fn matrices() {
         .add_operator_product(pp_1, CalculatorFloat::from(1.0))
         .unwrap();
 
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].0,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].1,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].2,
-        Complex64::default()
-    );
-
     // let unitary_matrix: CooSparseMatrix = (vec![minus_eye.clone(), eye.clone()], (vec![0, 1], vec![0, 1]));
-    // assert_eq!(system.unitary_sparse_matrix_coo().unwrap(), unitary_matrix);
 
     let eye = Complex64::new(0.0, 1.0);
     let minus_eye = Complex64::new(0.0, -1.0);
@@ -690,7 +676,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
     }
 
     let coo_test_matrix = system
-        .unitary_sparse_matrix_coo(Some(pauli_operators.len()))
+        .sparse_matrix_coo(Some(pauli_operators.len()))
         .unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
@@ -713,32 +699,6 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
             }
         }
     }
-}
-
-#[test]
-fn sparse_lindblad_entries() {
-    let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let pp_1: PauliProduct = PauliProduct::new().x(1);
-    let mut system = PauliHamiltonian::new();
-    system
-        .add_operator_product(pp_0, CalculatorFloat::from(1.0))
-        .unwrap();
-    system
-        .add_operator_product(pp_1, CalculatorFloat::from(1.0))
-        .unwrap();
-
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].0,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].1,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].2,
-        Complex64::default()
-    );
 }
 
 #[cfg(feature = "json_schema")]

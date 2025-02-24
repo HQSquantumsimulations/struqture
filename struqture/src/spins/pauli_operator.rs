@@ -14,10 +14,7 @@ use super::{ToSparseMatrixOperator, ToSparseMatrixSuperOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, PauliHamiltonian, PauliProduct, SpinIndex};
-use crate::{
-    CooSparseMatrix, GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError,
-    SymmetricIndex,
-};
+use crate::{GetValue, OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex};
 use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
 use num_complex::Complex64;
@@ -230,24 +227,6 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for PauliOperator {
             row,
             number_spins,
         )
-    }
-
-    // From trait
-    fn unitary_sparse_matrix_coo(
-        &'a self,
-        number_spins: Option<usize>,
-    ) -> Result<CooSparseMatrix, StruqtureError> {
-        self.sparse_matrix_coo(number_spins)
-    }
-
-    // From trait
-    fn sparse_lindblad_entries(
-        &'a self,
-    ) -> Result<Vec<(CooSparseMatrix, CooSparseMatrix, Complex64)>, StruqtureError> {
-        let rate = Complex64::default();
-        let left: CooSparseMatrix = (vec![], (vec![], vec![]));
-        let right: CooSparseMatrix = (vec![], (vec![], vec![]));
-        Ok(vec![(left, right, rate)])
     }
 }
 

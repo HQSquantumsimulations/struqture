@@ -568,52 +568,6 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of PauliOperator
-// #[test]
-// fn test_sparse_lindblad_entries() {
-//     pyo3::prepare_freethreaded_python();
-//     let gil = pyo3::Python::acquire_gil();
-//     let py = gil.python();
-//     let system = new_system(py);
-//     system
-//         .call_method1(
-//             "add_operator_product",
-//             ("0Z", 1.0_f64),
-//         )
-//         .unwrap();
-
-//     let matrices = system.call_method0("sparse_lindblad_entries",).unwrap();
-//     let res: Vec<(PyCooMatrix, PyCooMatrix, Complex64)> = vec![((array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), (array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), Complex64::from(0.0))];
-//     // let to_operators_op = matrices
-//     //     .downcast::<Vec<(PyCooMatrix, PyCooMatrix, Complex64)>>()
-//     //     .unwrap();
-//     let comparison =
-//         bool::extract_bound(&matrices.call_method1("__eq__", (res,)).unwrap()).unwrap();
-//     assert!(comparison);
-// }
-
-// #[test]
-// fn test_unitary_sparse_matrix_coo() {
-//     pyo3::prepare_freethreaded_python();
-//     let gil = pyo3::Python::acquire_gil();
-//     let py = gil.python();
-//     let system = new_system(py);
-//     system
-//         .call_method1(
-//             "add_operator_product",
-//             ("0Z", 1.0_f64),
-//         )
-//         .unwrap();
-
-//     let matrices = system.call_method0("unitary_sparse_matrix_coo").unwrap();
-//     let result_matrix = matrices
-//         .downcast::<Internal>()
-//         .unwrap();
-
-//     let test_matrix: Internal = (vec![CalculatorComplexWrapper {internal: 1.0.into()}, CalculatorComplexWrapper {internal: (-1.0).into()}], (vec![0, 1], vec![0, 1]));
-//     // assert_eq!(result_matrix, test_matrix);
-// }
-
 /// Test copy and deepcopy functions of PauliOperator
 #[test]
 fn test_copy_deepcopy() {
