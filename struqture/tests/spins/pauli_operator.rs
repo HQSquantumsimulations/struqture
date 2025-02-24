@@ -409,25 +409,9 @@ fn matrices() {
         .add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
 
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].0,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].1,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].2,
-        Complex64::default()
-    );
-
     let unitary_matrix: CooSparseMatrix =
         (vec![1.0.into(), (-1.0).into()], (vec![0, 1], vec![0, 1]));
-    assert_eq!(
-        system.unitary_sparse_matrix_coo(Some(1)).unwrap(),
-        unitary_matrix
-    );
+    assert_eq!(system.sparse_matrix_coo(Some(1)).unwrap(), unitary_matrix);
 
     let mut superoperator_matrix: HashMap<usize, HashMap<usize, Complex64>> = HashMap::new();
     let mut row_0: HashMap<usize, Complex64> = HashMap::new();
@@ -697,7 +681,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let coo_test_matrix = system.unitary_sparse_matrix_coo(None).unwrap();
+    let coo_test_matrix = system.sparse_matrix_coo(None).unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(
@@ -719,32 +703,6 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
             }
         }
     }
-}
-
-#[test]
-fn sparse_lindblad_entries() {
-    let pp_0: PauliProduct = PauliProduct::new().z(0);
-    let pp_1: PauliProduct = PauliProduct::new().x(1);
-    let mut system = PauliOperator::new();
-    system
-        .add_operator_product(pp_0, CalculatorComplex::from(1.0))
-        .unwrap();
-    system
-        .add_operator_product(pp_1, CalculatorComplex::from(1.0))
-        .unwrap();
-
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].0,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].1,
-        (vec![], (vec![], vec![]))
-    );
-    assert_eq!(
-        system.sparse_lindblad_entries().unwrap()[0].2,
-        Complex64::default()
-    );
 }
 
 #[test]

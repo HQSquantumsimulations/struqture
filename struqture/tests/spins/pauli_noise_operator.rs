@@ -24,7 +24,7 @@ use std::ops::{Add, Sub};
 use std::str::FromStr;
 use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliLindbladNoiseOperator};
 use struqture::{prelude::*, STRUQTURE_VERSION};
-use struqture::{CooSparseMatrix, OperateOnDensityMatrix, SpinIndex};
+use struqture::{OperateOnDensityMatrix, SpinIndex};
 use test_case::test_case;
 
 // Test the new function of the PauliLindbladNoiseOperator
@@ -763,44 +763,6 @@ fn test_superoperator(
             }
         }
     }
-
-    let full_result = system.sparse_lindblad_entries().unwrap();
-    let coo_test_matrix = full_result[0].clone().0;
-    let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
-    for i in 0..coo_test_matrix.0.len() {
-        coo_hashmap.insert(
-            (coo_test_matrix.1 .0[i], coo_test_matrix.1 .1[i]),
-            coo_test_matrix.0[i],
-        );
-    }
-    for row in 0..dimension {
-        for column in 0..dimension {
-            let key = (row, column);
-            let val = test_matrix[(row, column)];
-            let second_val = second_test_matrix.get(&key);
-
-            match second_val {
-                Some(x) => assert_eq!(&val, x),
-                None => {
-                    assert_eq!(val, 0.0.into())
-                }
-            }
-        }
-    }
-}
-
-#[test]
-fn unitary_matrix() {
-    let mut system = PauliLindbladNoiseOperator::new();
-    let pp0: DecoherenceProduct = DecoherenceProduct::new().z(0).x(1);
-    let pp1: DecoherenceProduct = DecoherenceProduct::new().x(0);
-    let _ = system.set((pp0, pp1), CalculatorComplex::from(1.0));
-
-    let unitary_matrix: CooSparseMatrix = (vec![], (vec![], vec![]));
-    assert_eq!(
-        system.unitary_sparse_matrix_coo(Some(2)).unwrap(),
-        unitary_matrix
-    );
 }
 
 #[test]
