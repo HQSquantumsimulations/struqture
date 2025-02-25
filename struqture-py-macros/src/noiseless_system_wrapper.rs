@@ -782,7 +782,7 @@ pub fn noiselesswrapper(
             }
 
             #[cfg(feature = "json_schema")]
-            /// Returns the current version of the struqture library .
+            /// Returns the current version of the struqture library.
             ///
             /// Returns:
             ///     str: The current version of the library.
