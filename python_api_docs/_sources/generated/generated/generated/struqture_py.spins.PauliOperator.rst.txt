@@ -1,0 +1,45 @@
+struqture\_py.spins.PauliOperator
+=================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: PauliOperator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PauliOperator.__init__
+      ~PauliOperator.add_operator_product
+      ~PauliOperator.current_number_spins
+      ~PauliOperator.current_version
+      ~PauliOperator.empty_clone
+      ~PauliOperator.from_bincode
+      ~PauliOperator.from_json
+      ~PauliOperator.from_json_struqture_1
+      ~PauliOperator.get
+      ~PauliOperator.hermitian_conjugate
+      ~PauliOperator.is_empty
+      ~PauliOperator.jordan_wigner
+      ~PauliOperator.json_schema
+      ~PauliOperator.keys
+      ~PauliOperator.min_supported_version
+      ~PauliOperator.number_spins
+      ~PauliOperator.remove
+      ~PauliOperator.set
+      ~PauliOperator.sparse_matrix_coo
+      ~PauliOperator.sparse_matrix_superoperator_coo
+      ~PauliOperator.to_bincode
+      ~PauliOperator.to_json
+      ~PauliOperator.truncate
+      ~PauliOperator.values
+   
+   
+
+   
+   
+   

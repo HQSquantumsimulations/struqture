@@ -1,0 +1,46 @@
+struqture\_py.spins.PauliLindbladOpenSystem
+===========================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: PauliLindbladOpenSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PauliLindbladOpenSystem.__init__
+      ~PauliLindbladOpenSystem.current_number_spins
+      ~PauliLindbladOpenSystem.current_version
+      ~PauliLindbladOpenSystem.empty_clone
+      ~PauliLindbladOpenSystem.from_bincode
+      ~PauliLindbladOpenSystem.from_json
+      ~PauliLindbladOpenSystem.from_json_struqture_1
+      ~PauliLindbladOpenSystem.group
+      ~PauliLindbladOpenSystem.jordan_wigner
+      ~PauliLindbladOpenSystem.json_schema
+      ~PauliLindbladOpenSystem.min_supported_version
+      ~PauliLindbladOpenSystem.noise
+      ~PauliLindbladOpenSystem.noise_add_operator_product
+      ~PauliLindbladOpenSystem.noise_get
+      ~PauliLindbladOpenSystem.noise_set
+      ~PauliLindbladOpenSystem.number_spins
+      ~PauliLindbladOpenSystem.sparse_matrix_superoperator_coo
+      ~PauliLindbladOpenSystem.system
+      ~PauliLindbladOpenSystem.system_add_operator_product
+      ~PauliLindbladOpenSystem.system_get
+      ~PauliLindbladOpenSystem.system_set
+      ~PauliLindbladOpenSystem.to_bincode
+      ~PauliLindbladOpenSystem.to_json
+      ~PauliLindbladOpenSystem.truncate
+      ~PauliLindbladOpenSystem.ungroup
+   
+   
+
+   
+   
+   

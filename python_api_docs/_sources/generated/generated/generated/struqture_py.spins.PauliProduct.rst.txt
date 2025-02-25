@@ -1,0 +1,45 @@
+struqture\_py.spins.PauliProduct
+================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: PauliProduct
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PauliProduct.__init__
+      ~PauliProduct.concatenate
+      ~PauliProduct.current_number_spins
+      ~PauliProduct.current_version
+      ~PauliProduct.from_bincode
+      ~PauliProduct.from_json
+      ~PauliProduct.from_json_struqture_1
+      ~PauliProduct.from_string
+      ~PauliProduct.get
+      ~PauliProduct.hermitian_conjugate
+      ~PauliProduct.is_empty
+      ~PauliProduct.is_natural_hermitian
+      ~PauliProduct.jordan_wigner
+      ~PauliProduct.json_schema
+      ~PauliProduct.keys
+      ~PauliProduct.min_supported_version
+      ~PauliProduct.multiply
+      ~PauliProduct.remap_qubits
+      ~PauliProduct.set_pauli
+      ~PauliProduct.to_bincode
+      ~PauliProduct.to_json
+      ~PauliProduct.x
+      ~PauliProduct.y
+      ~PauliProduct.z
+   
+   
+
+   
+   
+   
