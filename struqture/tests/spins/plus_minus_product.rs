@@ -23,7 +23,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SingleDecoherenceOperator,
-    SinglePlusMinusOperator, SinglePauliOperator,
+    SinglePauliOperator, SinglePlusMinusOperator,
 };
 use struqture::{SpinIndex, StruqtureError, SymmetricIndex};
 

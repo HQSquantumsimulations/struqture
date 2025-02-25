@@ -45,7 +45,6 @@ pub enum StruqturePyError {
 ///
 #[pymodule]
 fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
-    // pyo3_log::init();
     let wrapper1 = wrap_pymodule!(spins::spins);
     module.add_wrapped(wrapper1)?;
 

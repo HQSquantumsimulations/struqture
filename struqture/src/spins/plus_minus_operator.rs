@@ -10,10 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{DecoherenceOperator, DecoherenceProduct, PauliProduct, PauliOperator};
+use super::{DecoherenceOperator, DecoherenceProduct, PauliOperator, PauliProduct};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
-use crate::spins::{PlusMinusProduct, PauliHamiltonian};
+use crate::spins::{PauliHamiltonian, PlusMinusProduct};
 use crate::{OperateOnDensityMatrix, OperateOnState, StruqtureError, SymmetricIndex};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};

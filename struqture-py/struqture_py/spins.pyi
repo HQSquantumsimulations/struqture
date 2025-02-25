@@ -721,33 +721,6 @@ Raises:
     RuntimeError: Could not convert to complex superoperator matrix.
 """
 
-    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]: # type: ignore
-        """
-Return the unitary part of the superoperator in the sparse COO format.
-
-Args:
-    number_spins: The number of spins to construct the matrix for.
-
-Returns:
-    Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]: # type: ignore
-        """
-Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-
-Returns:
-    list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]]: The little endian matrix representation of the noise part of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
     def from_bincode(self, input: bytearray): # type: ignore
         """
 Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1004,33 +977,6 @@ Raises:
     RuntimeError: Could not convert to complex superoperator matrix.
 """
 
-    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]: # type: ignore
-        """
-Return the unitary part of the superoperator in the sparse COO format.
-
-Args:
-    number_spins: The number of spins to construct the matrix for.
-
-Returns:
-    Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]: # type: ignore
-        """
-Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-
-Returns:
-    list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]]: The little endian matrix representation of the noise part of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
     def from_bincode(self, input: bytearray): # type: ignore
         """
 Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -1277,33 +1223,6 @@ Args:
 
 Returns:
     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
-    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]: # type: ignore
-        """
-Return the unitary part of the superoperator in the sparse COO format.
-
-Args:
-    number_spins: The number of spins in self.
-
-Returns:
-    Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]: # type: ignore
-        """
-Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-
-Returns:
-    list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]]: The little endian matrix representation of the noise part of self.
 
 Raises:
     ValueError: CalculatorError.
@@ -1588,33 +1507,6 @@ Args:
 
 Returns:
     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
-    def unitary_sparse_matrix_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]: # type: ignore
-        """
-Return the unitary part of the superoperator in the sparse COO format.
-
-Args:
-    number_spins: The number of spins in self.
-
-Returns:
-    Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of the unitary part of self.
-
-Raises:
-    ValueError: CalculatorError.
-    RuntimeError: Could not convert to complex superoperator matrix.
-"""
-
-    def sparse_lindblad_entries(self) -> List[Tuple[Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]], Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray], complex]]]: # type: ignore
-        """
-Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-
-Returns:
-    list[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray], complex]]]: The little endian matrix representation of the noise part of self.
 
 Raises:
     ValueError: CalculatorError.

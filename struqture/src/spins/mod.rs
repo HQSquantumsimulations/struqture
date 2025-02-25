@@ -425,31 +425,6 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
         row: usize,
         number_spins: usize,
     ) -> Result<HashMap<usize, Complex<f64>>, StruqtureError>;
-
-    /// Return the unitary part of the superoperator in the sparse COO format.
-    ///
-    /// # Arguments
-    ///
-    /// * `number_spins` - The number of spins for which to construct the unitary sparse matrix.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>))` - The little endian matrix representation of Self.
-    /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn unitary_sparse_matrix_coo(
-        &'a self,
-        number_spins: Option<usize>,
-    ) -> Result<CooSparseMatrix, StruqtureError>;
-
-    /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok(Vec<((Vec<Complex64>, (Vec<usize>, Vec<usize>), (Vec<Complex64>, (Vec<usize>, Vec<usize>), Complex64)>)` - The little endian matrix representation of Self.
-    /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn sparse_lindblad_entries(
-        &'a self,
-    ) -> Result<Vec<(CooSparseMatrix, CooSparseMatrix, Complex64)>, StruqtureError>;
 }
 
 /// Trait for Hermitian operations on spins.

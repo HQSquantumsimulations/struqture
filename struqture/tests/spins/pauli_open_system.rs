@@ -22,8 +22,8 @@ use std::collections::{BTreeMap, HashMap};
 use std::str::FromStr;
 use struqture::prelude::*;
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
-    PauliLindbladOpenSystem,
+    DecoherenceProduct, PauliHamiltonian, PauliLindbladNoiseOperator, PauliLindbladOpenSystem,
+    PauliProduct,
 };
 use struqture::SpinIndex;
 use struqture::STRUQTURE_VERSION;
@@ -746,30 +746,6 @@ fn test_superoperator_noisy(
             }
         }
     }
-
-    let full_result = system.sparse_lindblad_entries().unwrap();
-    let coo_test_matrix = full_result[0].clone().0;
-    let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
-    for i in 0..coo_test_matrix.0.len() {
-        coo_hashmap.insert(
-            (coo_test_matrix.1 .0[i], coo_test_matrix.1 .1[i]),
-            coo_test_matrix.0[i],
-        );
-    }
-    for row in 0..dimension {
-        for column in 0..dimension {
-            let key = (row, column);
-            let val = test_matrix[(row, column)];
-            let second_val = second_test_matrix.get(&key);
-
-            match second_val {
-                Some(x) => assert_eq!(&val, x),
-                None => {
-                    assert_eq!(val, 0.0.into())
-                }
-            }
-        }
-    }
 }
 
 #[test_case("0Z", &["Z"]; "0Z")]
@@ -911,7 +887,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 
     let test_matrix = h;
 
-    let coo_test_matrix = system.unitary_sparse_matrix_coo(Some(3)).unwrap();
+    let coo_test_matrix = system.sparse_matrix_superoperator_coo(Some(3)).unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(

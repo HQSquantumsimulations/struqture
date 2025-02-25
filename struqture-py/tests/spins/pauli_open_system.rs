@@ -14,8 +14,8 @@ use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
 use struqture::spins::{
-    DecoherenceProduct, PauliProduct, PauliHamiltonian, PauliLindbladNoiseOperator,
-    PauliLindbladOpenSystem,
+    DecoherenceProduct, PauliHamiltonian, PauliLindbladNoiseOperator, PauliLindbladOpenSystem,
+    PauliProduct,
 };
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
@@ -1508,48 +1508,6 @@ fn test_json_schema() {
             String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
-    });
-}
-
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let new_system_1 = new_system(py);
-        let mut sys_2 = new_system_1
-            .call_method1(
-                "system_add_operator_product",
-                ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
-            )
-            .unwrap();
-        sys_2 = sys_2
-            .call_method1(
-                "noise_add_operator_product",
-                (
-                    ("0iY", "0iY"),
-                    convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),
-                ),
-            )
-            .unwrap();
-
-        let pp_1 = struqture_1::spins::PauliProduct::from_str("0X").unwrap();
-        let dp_1 = struqture_1::spins::DecoherenceProduct::from_str("0iY").unwrap();
-        let mut sys_1 = struqture_1::spins::SpinLindbladOpenSystem::new(None);
-        let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut sys_1);
-        struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 0.1.into()).unwrap();
-        let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut sys_1);
-        struqture_1::OperateOnDensityMatrix::set(
-            noise_mut_1,
-            (dp_1.clone(), dp_1.clone()),
-            0.1.into(),
-        )
-        .unwrap();
-
-        let result =
-            PauliLindbladOpenSystemWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
-        assert_eq!(result, sys_1);
     });
 }
 

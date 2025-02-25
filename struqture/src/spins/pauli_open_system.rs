@@ -14,7 +14,7 @@ use super::PauliLindbladNoiseOperator;
 use crate::fermions::FermionLindbladOpenSystem;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{OperateOnSpins, PauliHamiltonian, ToSparseMatrixSuperOperator};
-use crate::{CooSparseMatrix, OpenSystem, OperateOnDensityMatrix, StruqtureError};
+use crate::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
@@ -148,33 +148,6 @@ impl<'a> ToSparseMatrixSuperOperator<'a> for PauliLindbladOpenSystem {
             }
         }
         Ok(system_row)
-    }
-
-    // From trait
-    fn unitary_sparse_matrix_coo(
-        &'a self,
-        number_spins: Option<usize>,
-    ) -> Result<CooSparseMatrix, StruqtureError> {
-        self.system.unitary_sparse_matrix_coo(number_spins)
-    }
-
-    // From trait
-    fn sparse_lindblad_entries(
-        &'a self,
-    ) -> Result<Vec<(CooSparseMatrix, CooSparseMatrix, Complex64)>, StruqtureError> {
-        let mut coo_matrices =
-            Vec::<(CooSparseMatrix, CooSparseMatrix, Complex64)>::with_capacity(self.noise.len());
-        for ((left, right), val) in self.noise.iter() {
-            coo_matrices.push((
-                left.to_coo(self.current_number_spins()).unwrap(),
-                right.to_coo(self.current_number_spins()).unwrap(),
-                Complex64 {
-                    re: *val.re.float()?,
-                    im: *val.im.float()?,
-                },
-            ))
-        }
-        Ok(coo_matrices)
     }
 }
 

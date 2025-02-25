@@ -444,15 +444,6 @@ pub fn productwrapper(
                     Ok(qubit_operator)
                 })
             }
-
-            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
-            #[cfg(feature = "struqture_1_export")]
-            pub fn from_pyany_to_struqture_1(input: &Bound<PyAny>) -> PyResult<struqture_1::#struqture_1_module::#struqture_1_ident> {
-                let res = <#ident>::from_pyany(input)?;
-                <#struct_ident>::to_struqture_1(&res).map_err(
-                    |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? Error message: {:?}", err)
-                ))
-            }
         }
 
         #[pymethods]
@@ -468,26 +459,6 @@ pub fn productwrapper(
 
             // ----------------------------------
             // Default pyo3 implementations
-
-            /// Convert a struqture 1 object to the equivalent object in struqture 2.
-            ///
-            /// Args:
-            ///     input (Any): the struqture 1 object to convert.
-            ///
-            /// Returns:
-            ///     Any: the input object in struqture 2 form.
-            ///
-            /// Raises:
-            ///     ValueError: Input could not be deserialised.
-            ///     ValueError: Struqture 1 object could not be converted to struqture 2.
-            #[cfg(feature = "struqture_1_import")]
-            #[staticmethod]
-            pub fn from_struqture_1(input: &Bound<PyAny>) -> PyResult<#ident> {
-                let qubit_operator: #struct_ident = #ident::from_pyany_struqture_1(input)?;
-                Ok(#ident {
-                    internal: qubit_operator,
-                })
-            }
 
             /// Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
             ///

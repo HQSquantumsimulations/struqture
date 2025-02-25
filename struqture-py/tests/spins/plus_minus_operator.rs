@@ -19,7 +19,7 @@ use struqture::OperateOnDensityMatrix;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture_py::spins::{
-    PlusMinusOperatorWrapper, PauliHamiltonianWrapper, PauliOperatorWrapper,
+    PauliHamiltonianWrapper, PauliOperatorWrapper, PlusMinusOperatorWrapper,
 };
 use test_case::test_case;
 
@@ -917,29 +917,6 @@ fn test_json_schema() {
             String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
-    });
-}
-
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let sys_2 = new_system(py);
-        sys_2
-            .call_method1("add_operator_product", ("0Z", 0.1))
-            .unwrap();
-        let mut sys_1 = struqture_1::spins::PlusMinusOperator::new();
-        struqture_1::OperateOnDensityMatrix::set(
-            &mut sys_1,
-            struqture_1::spins::PlusMinusProduct::from_str("0Z").unwrap(),
-            0.1.into(),
-        )
-        .unwrap();
-
-        let result = PlusMinusOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
-        assert_eq!(result, sys_1);
     });
 }
 

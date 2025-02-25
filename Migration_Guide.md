@@ -64,11 +64,9 @@ hamiltonian = MixedHamiltonian(2, 0, 0)
 
 * The conversion error message should now be much clearer, and there should no longer be any mistaken conversions from python to rust, as we have re-designed parts of the (de)serialisation.
 
-* We have added conversion functions, to convert a struqture 1.0 object to a struqture 2.0 object. This includes a `from_json_struqture_1` function, so that users need not re-generate their json files. See the code snippet below.
+* We have added a conversion function, to convert a struqture 1.0 object to a struqture 2.0 object: `from_json_struqture_1`. This function ensures users need not re-generate their json files. See the code snippet below.
 
 ```python
-# given a struqture 1.0 FermionicHamiltonianSystem object "ham_struq_1", the following code will return a struqture 2.0 object
-hamiltonian = FermionHamiltonian().from_struqture_1(ham_struq_1)
 # given a struqture 1.0 FermionicHamiltonianSystem **json** object "ham_json_struq_1", the following code will return a struqture 2.0 object
 hamiltonian = FermionHamiltonian().from_json_struqture_1(ham_json_struq_1)
 ```

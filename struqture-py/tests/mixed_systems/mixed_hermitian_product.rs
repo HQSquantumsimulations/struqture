@@ -720,32 +720,6 @@ fn test_json_schema() {
     });
 }
 
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let pp_2 = new_pp(
-            py,
-            vec!["0Z".to_string()],
-            vec!["c0a0".to_string()],
-            vec!["c1a1".to_string()],
-        );
-        let pp_1: struqture_1::mixed_systems::HermitianMixedProduct =
-            struqture_1::mixed_systems::MixedIndex::new(
-                [struqture_1::spins::PauliProduct::from_str("0Z").unwrap()],
-                [struqture_1::bosons::BosonProduct::from_str("c0a0").unwrap()],
-                [struqture_1::fermions::FermionProduct::from_str("c1a1").unwrap()],
-            )
-            .unwrap();
-
-        let result =
-            HermitianMixedProductWrapper::from_pyany_to_struqture_1(pp_2.as_ref()).unwrap();
-        assert_eq!(result, pp_1);
-    });
-}
-
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {

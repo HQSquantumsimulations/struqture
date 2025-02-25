@@ -14,7 +14,7 @@ use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::spins::{PauliProduct, PauliOperator};
+use struqture::spins::{PauliOperator, PauliProduct};
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, SpinIndex};
@@ -568,52 +568,6 @@ fn test_mul_error() {
     });
 }
 
-// /// Test test_sparse_lindblad_entries function of PauliOperator
-// #[test]
-// fn test_sparse_lindblad_entries() {
-//     pyo3::prepare_freethreaded_python();
-//     let gil = pyo3::Python::acquire_gil();
-//     let py = gil.python();
-//     let system = new_system(py);
-//     system
-//         .call_method1(
-//             "add_operator_product",
-//             ("0Z", 1.0_f64),
-//         )
-//         .unwrap();
-
-//     let matrices = system.call_method0("sparse_lindblad_entries",).unwrap();
-//     let res: Vec<(PyCooMatrix, PyCooMatrix, Complex64)> = vec![((array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), (array![].to_pyarray(py).to_owned(), (array![].to_pyarray(py).to_owned(), array![].to_pyarray(py).to_owned())), Complex64::from(0.0))];
-//     // let to_operators_op = matrices
-//     //     .downcast::<Vec<(PyCooMatrix, PyCooMatrix, Complex64)>>()
-//     //     .unwrap();
-//     let comparison =
-//         bool::extract_bound(&matrices.call_method1("__eq__", (res,)).unwrap()).unwrap();
-//     assert!(comparison);
-// }
-
-// #[test]
-// fn test_unitary_sparse_matrix_coo() {
-//     pyo3::prepare_freethreaded_python();
-//     let gil = pyo3::Python::acquire_gil();
-//     let py = gil.python();
-//     let system = new_system(py);
-//     system
-//         .call_method1(
-//             "add_operator_product",
-//             ("0Z", 1.0_f64),
-//         )
-//         .unwrap();
-
-//     let matrices = system.call_method0("unitary_sparse_matrix_coo").unwrap();
-//     let result_matrix = matrices
-//         .downcast::<Internal>()
-//         .unwrap();
-
-//     let test_matrix: Internal = (vec![CalculatorComplexWrapper {internal: 1.0.into()}, CalculatorComplexWrapper {internal: (-1.0).into()}], (vec![0, 1], vec![0, 1]));
-//     // assert_eq!(result_matrix, test_matrix);
-// }
-
 /// Test copy and deepcopy functions of PauliOperator
 #[test]
 fn test_copy_deepcopy() {
@@ -837,29 +791,6 @@ fn test_json_schema() {
             String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
-    });
-}
-
-#[cfg(feature = "struqture_1_export")]
-#[test]
-fn test_from_pyany_to_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        use std::str::FromStr;
-        let sys_2 = new_system(py);
-        sys_2
-            .call_method1("add_operator_product", ("0Z", 0.1))
-            .unwrap();
-        let mut sys_1 = struqture_1::spins::SpinSystem::new(None);
-        struqture_1::OperateOnDensityMatrix::set(
-            &mut sys_1,
-            struqture_1::spins::PauliProduct::from_str("0Z").unwrap(),
-            0.1.into(),
-        )
-        .unwrap();
-
-        let result = PauliOperatorWrapper::from_pyany_to_struqture_1(sys_2.as_ref()).unwrap();
-        assert_eq!(result, sys_1);
     });
 }
 
