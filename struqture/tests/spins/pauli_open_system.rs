@@ -865,6 +865,52 @@ fn test_superoperator_hamiltonian_and_noise() {
     }
 }
 
+#[test_case("0Z", &["Z"]; "0Z")]
+#[test_case("1X", &["X", "I"]; "1X")]
+#[test_case("1Y", &["Y", "I"]; "1Y")]
+#[test_case("0Z1X", &["X", "Z"]; "0Z1X")]
+#[test_case("0X1X", &["X", "X"]; "0X1X")]
+#[test_case("0X1Y", &["Y", "X"]; "0X1Y")]
+#[test_case("0X2Y", &["Y", "I","X"]; "0X2Y")]
+fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
+    let mut system = PauliLindbladOpenSystem::new();
+    let pp: PauliProduct = PauliProduct::from_str(pauli_representation).unwrap();
+
+    system.system_mut().set(pp, 1.0.into()).unwrap();
+
+    let dimension = 2_usize.pow(pauli_operators.len() as u32);
+
+    // Constructing matrix by hand:
+    let cc0 = Complex64::new(0.0, 0.0);
+
+    let h = create_na_matrix_from_operator_list(pauli_operators);
+
+    let test_matrix = h;
+
+    let coo_test_matrix = system.sparse_matrix_superoperator_coo(Some(3)).unwrap();
+    let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
+    for i in 0..coo_test_matrix.0.len() {
+        coo_hashmap.insert(
+            (coo_test_matrix.1 .0[i], coo_test_matrix.1 .1[i]),
+            coo_test_matrix.0[i],
+        );
+    }
+    for row in 0..dimension {
+        for column in 0..dimension {
+            let key = (row, column);
+            let val = test_matrix[(row, column)];
+            let second_val = coo_hashmap.get(&key);
+
+            match second_val {
+                Some(x) => assert_eq!(&val, x),
+                None => {
+                    assert_eq!(val, cc0)
+                }
+            }
+        }
+    }
+}
+
 #[test]
 fn test_truncate() {
     let mut system = PauliLindbladOpenSystem::new();
