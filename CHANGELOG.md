@@ -4,6 +4,9 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.0.0-alpha.9
+
+* Updated dependencies.
 * Removed `sparse_lindblad_entries` and `unitary_sparse_matrix_coo` functions.
 * Removed `from_struqture_1` and `from_pyany_to_struqture_1` functions from the python interface.
 * Renamed all `Qubit` objects to `Pauli`.
