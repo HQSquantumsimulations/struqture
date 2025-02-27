@@ -193,7 +193,7 @@ fn test_remap_modes() {
         let expected_coeff = CalculatorComplexWrapper {
             internal: (-1.0).into(),
         };
-        let remap_dict = [(0, 3), (1, 2), (2, 0), (3, 1)].into_py_dict_bound(py);
+        let remap_dict = [(0, 3), (1, 2), (2, 0), (3, 1)].into_py_dict(py).unwrap();
         let results = fp.call_method1("remap_modes", (remap_dict,)).unwrap();
         let comparison = bool::extract_bound(
             &results
