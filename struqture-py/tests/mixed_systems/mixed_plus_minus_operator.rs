@@ -31,7 +31,7 @@ fn new_system(
     number_bosons: usize,
     number_fermions: usize,
 ) -> Bound<MixedPlusMinusOperatorWrapper> {
-    let system_type = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
+    let system_type = py.get_type::<MixedPlusMinusOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -189,7 +189,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
+        let new_system = py.get_type::<MixedPlusMinusOperatorWrapper>();
 
         let binding = new_system.call1((1, 1, 1)).unwrap();
         let system = binding.downcast::<MixedPlusMinusOperatorWrapper>().unwrap();
@@ -250,7 +250,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
+        let new_system = py.get_type::<MixedPlusMinusOperatorWrapper>();
         let binding = new_system.call1((1, 1, 1)).unwrap();
         let system = binding.downcast::<MixedPlusMinusOperatorWrapper>().unwrap();
         system
@@ -685,7 +685,7 @@ fn test_from_mixed_sys() {
         let number_spins: Vec<Option<usize>> = vec![None];
         let number_bosons: Vec<Option<usize>> = vec![None];
         let number_fermions: Vec<Option<usize>> = vec![None];
-        let pp_type = py.get_type_bound::<MixedSystemWrapper>();
+        let pp_type = py.get_type::<MixedSystemWrapper>();
         let pp = pp_type
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap();
@@ -703,14 +703,14 @@ fn test_from_mixed_sys() {
             .unwrap();
 
         let result = py
-            .get_type_bound::<MixedPlusMinusOperatorWrapper>()
+            .get_type::<MixedPlusMinusOperatorWrapper>()
             .call_method1("from_mixed_system", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type_bound::<MixedPlusMinusOperatorWrapper>()
+            .get_type::<MixedPlusMinusOperatorWrapper>()
             .call_method1("from_mixed_system", ("No",));
         assert!(result.is_err())
     })
@@ -735,7 +735,7 @@ fn test_to_mixed_sys() {
         let number_spins: Vec<Option<usize>> = vec![None];
         let number_bosons: Vec<Option<usize>> = vec![None];
         let number_fermions: Vec<Option<usize>> = vec![None];
-        let pp_type = py.get_type_bound::<MixedSystemWrapper>();
+        let pp_type = py.get_type::<MixedSystemWrapper>();
         let sys = pp_type
             .call1((
                 number_spins.clone(),

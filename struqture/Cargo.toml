@@ -16,8 +16,8 @@ path = "src/lib.rs"
 doctest = false
 
 [dependencies]
-qoqo_calculator = { version = ">=1.4", default-features = false }
-struqture_2 = { package = "struqture", version = "2.0.0-alpha.9", default-features = false, features = [
+qoqo_calculator = { version = ">=1.5", default-features = false }
+struqture_2 = { package = "struqture", version = "2.0.0-alpha.10", default-features = false, features = [
     "struqture_1_import",
     "struqture_1_export",
 ], optional = true }

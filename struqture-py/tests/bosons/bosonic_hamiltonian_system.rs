@@ -23,7 +23,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python, number_bosons: Option<usize>) -> Bound<BosonHamiltonianSystemWrapper> {
-    let system_type = py.get_type_bound::<BosonHamiltonianSystemWrapper>();
+    let system_type = py.get_type::<BosonHamiltonianSystemWrapper>();
     system_type
         .call1((number_bosons,))
         .unwrap()
@@ -33,7 +33,7 @@ fn new_system(py: Python, number_bosons: Option<usize>) -> Bound<BosonHamiltonia
 }
 // helper functions
 fn new_bosonic_system(py: Python, number_bosons: Option<usize>) -> Bound<BosonSystemWrapper> {
-    let system_type = py.get_type_bound::<BosonSystemWrapper>();
+    let system_type = py.get_type::<BosonSystemWrapper>();
     system_type
         .call1((number_bosons,))
         .unwrap()
@@ -156,7 +156,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<BosonHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<BosonHamiltonianSystemWrapper>();
         let number_bosons: Option<usize> = Some(4);
         let binding = new_system.call1((number_bosons,)).unwrap();
         let system = binding.downcast::<BosonHamiltonianSystemWrapper>().unwrap();
@@ -209,7 +209,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<BosonHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<BosonHamiltonianSystemWrapper>();
         let number_bosons: Option<usize> = Some(4);
         let binding = new_system.call1((number_bosons,)).unwrap();
         let system = binding.downcast::<BosonHamiltonianSystemWrapper>().unwrap();

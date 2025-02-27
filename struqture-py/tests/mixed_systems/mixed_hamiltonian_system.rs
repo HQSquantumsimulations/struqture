@@ -32,7 +32,7 @@ fn new_system(
     number_bosons: Vec<Option<usize>>,
     number_fermions: Vec<Option<usize>>,
 ) -> Bound<MixedHamiltonianSystemWrapper> {
-    let system_type = py.get_type_bound::<MixedHamiltonianSystemWrapper>();
+    let system_type = py.get_type::<MixedHamiltonianSystemWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -48,7 +48,7 @@ fn new_operator(
     number_bosons: Vec<Option<usize>>,
     number_fermions: Vec<Option<usize>>,
 ) -> Bound<MixedSystemWrapper> {
-    let system_type = py.get_type_bound::<MixedSystemWrapper>();
+    let system_type = py.get_type::<MixedSystemWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -212,7 +212,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<MixedHamiltonianSystemWrapper>();
         let number_spins: Vec<Option<usize>> = vec![Some(4)];
         let number_bosons: Vec<Option<usize>> = vec![Some(4)];
         let number_fermions: Vec<Option<usize>> = vec![Some(4)];
@@ -282,7 +282,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedHamiltonianSystemWrapper>();
+        let new_system = py.get_type::<MixedHamiltonianSystemWrapper>();
         let number_spins: Vec<Option<usize>> = vec![Some(4)];
         let number_bosons: Vec<Option<usize>> = vec![Some(4)];
         let number_fermions: Vec<Option<usize>> = vec![Some(4)];
@@ -675,7 +675,7 @@ fn test_mul_cf() {
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type_bound::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap();
@@ -710,7 +710,7 @@ fn test_mul_cf_with_conj() {
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type_bound::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap();
@@ -748,7 +748,7 @@ fn test_mul_cc() {
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type_bound::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap();
@@ -793,7 +793,7 @@ fn test_mul_cc_with_conj() {
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1_f64))
             .unwrap();
 
-        let new_mixed_system = py.get_type_bound::<MixedSystemWrapper>();
+        let new_mixed_system = py.get_type::<MixedSystemWrapper>();
         let system_0_1 = new_mixed_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap();
@@ -1153,7 +1153,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
         let sys_2 = new_system(py, vec![None], vec![None], vec![None]);
         sys_2
             .call_method1("add_operator_product", ("S0Z:Bc1a1:Fc0a0", 1.0))
@@ -1166,7 +1166,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
