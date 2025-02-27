@@ -27,7 +27,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python) -> Bound<PauliLindbladOpenSystemWrapper> {
-    let system_type = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+    let system_type = py.get_type::<PauliLindbladOpenSystemWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -38,7 +38,7 @@ fn new_system(py: Python) -> Bound<PauliLindbladOpenSystemWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -97,7 +97,7 @@ fn test_empty_clone() {
 fn spin_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system.downcast::<PauliLindbladOpenSystemWrapper>().unwrap();
         system
@@ -155,7 +155,7 @@ fn spin_system_test_add_operator_product_remove_system() {
 fn spin_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system.downcast::<PauliLindbladOpenSystemWrapper>().unwrap();
         system
@@ -354,7 +354,7 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type_bound::<PauliHamiltonianWrapper>();
+        let system_type = py.get_type::<PauliHamiltonianWrapper>();
         let spin_system = system_type.call0().unwrap();
         spin_system.downcast::<PauliHamiltonianWrapper>().unwrap();
         spin_system
@@ -371,7 +371,7 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
+        let noise_type = py.get_type::<PauliLindbladNoiseOperatorWrapper>();
         let noise = noise_type.call0().unwrap();
         noise
             .downcast::<PauliLindbladNoiseOperatorWrapper>()
@@ -394,7 +394,7 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
+        let noise_type = py.get_type::<PauliLindbladNoiseOperatorWrapper>();
         let noise = noise_type.call0().unwrap();
         noise
             .downcast::<PauliLindbladNoiseOperatorWrapper>()
@@ -411,7 +411,7 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type_bound::<PauliHamiltonianWrapper>();
+        let system_type = py.get_type::<PauliHamiltonianWrapper>();
         let spin_system = system_type.call0().unwrap();
         spin_system.downcast::<PauliHamiltonianWrapper>().unwrap();
         spin_system
@@ -445,7 +445,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<PauliLindbladOpenSystemWrapper>()
@@ -543,7 +543,7 @@ fn test_set_pauli_get_pauli() {
 fn test_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system
             .downcast::<PauliLindbladOpenSystemWrapper>()
@@ -668,7 +668,7 @@ fn test_set_noise_get_noise() {
 fn test_try_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<PauliLindbladOpenSystemWrapper>()
@@ -762,7 +762,7 @@ fn test_try_set_pauli_get_pauli() {
 fn test_try_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<PauliLindbladOpenSystemWrapper>()
@@ -875,7 +875,7 @@ fn test_try_set_noise_get_noise() {
 fn test_add_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<PauliLindbladOpenSystemWrapper>()
@@ -977,7 +977,7 @@ fn test_add_pauli_get_pauli() {
 fn test_add_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<PauliLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<PauliLindbladOpenSystemWrapper>()
@@ -1524,7 +1524,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"system\":{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":null,\"operator\":{\"items\":[[\"0X\",\"0X\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":null,\"operator\":{\"items\":[[\"0X\",\"0X\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("system_add_operator_product", ("0Z", 1.0))
@@ -1540,7 +1540,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"system\":{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":null,\"operator\":{\"items\":[[\"0X\",\"0X\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_spins\":null,\"operator\":{\"items\":[[\"0X\",\"0X\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

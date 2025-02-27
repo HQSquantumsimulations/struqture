@@ -32,7 +32,7 @@ fn new_system(
     number_bosons: usize,
     number_fermions: usize,
 ) -> Bound<MixedOperatorWrapper> {
-    let system_type = py.get_type_bound::<MixedOperatorWrapper>();
+    let system_type = py.get_type::<MixedOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -167,7 +167,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedOperatorWrapper>();
+        let new_system = py.get_type::<MixedOperatorWrapper>();
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
@@ -233,7 +233,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedOperatorWrapper>();
+        let new_system = py.get_type::<MixedOperatorWrapper>();
         let number_spins: usize = 1;
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
@@ -919,7 +919,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py, 1, 1, 1);
         sys_2
             .call_method1("add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
@@ -932,7 +932,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"number_spins\":[null],\"number_bosons\":[null],\"number_fermions\":[null],\"operator\":{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

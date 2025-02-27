@@ -23,7 +23,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python) -> Bound<PauliHamiltonianWrapper> {
-    let system_type = py.get_type_bound::<PauliHamiltonianWrapper>();
+    let system_type = py.get_type::<PauliHamiltonianWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -32,7 +32,7 @@ fn new_system(py: Python) -> Bound<PauliHamiltonianWrapper> {
         .to_owned()
 }
 fn new_qubit_operator(py: Python) -> Bound<PauliOperatorWrapper> {
-    let system_type = py.get_type_bound::<PauliOperatorWrapper>();
+    let system_type = py.get_type::<PauliOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -134,7 +134,7 @@ fn test_hermitian_conj() {
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliHamiltonianWrapper>();
+        let new_system = py.get_type::<PauliHamiltonianWrapper>();
         let system = new_system.call0().unwrap();
         system.downcast::<PauliHamiltonianWrapper>().unwrap();
         system.call_method1("set", ("0X", 0.1)).unwrap();
@@ -182,7 +182,7 @@ fn spin_system_test_set_get() {
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PauliHamiltonianWrapper>();
+        let new_system = py.get_type::<PauliHamiltonianWrapper>();
         let system = new_system.call0().unwrap();
         system.downcast::<PauliHamiltonianWrapper>().unwrap();
         system
@@ -797,7 +797,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"number_spins\":null,\"hamiltonian\":{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("add_operator_product", ("0Z", 1.0))
@@ -810,7 +810,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{{\"number_spins\":null,\"hamiltonian\":{{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{{\"number_spins\":null,\"hamiltonian\":{{\"items\":[[\"0Z\",1.0]],\"_struqture_version\":{{\"major_version\":30,\"minor_version\":0}}}}}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

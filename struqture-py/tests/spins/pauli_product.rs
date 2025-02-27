@@ -19,7 +19,7 @@ use struqture_py::spins::PauliProductWrapper;
 
 // helper functions
 fn new_pp(py: Python) -> Bound<PauliProductWrapper> {
-    let pp_type = py.get_type_bound::<PauliProductWrapper>();
+    let pp_type = py.get_type::<PauliProductWrapper>();
     pp_type
         .call0()
         .unwrap()
@@ -555,8 +555,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"0Z\"");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "\"0Z\"");
         let pp_2 = new_pp(py);
         let pp_2 = pp_2.call_method1("set_pauli", (0_u64, "Z")).unwrap();
 
@@ -567,7 +566,8 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: &PyAny = pyo3::types::PyString::new(py, "\"0A\"").into();
+        let error_json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new(py, "\"0A\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });

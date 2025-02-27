@@ -25,7 +25,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python) -> Bound<PlusMinusOperatorWrapper> {
-    let system_type = py.get_type_bound::<PlusMinusOperatorWrapper>();
+    let system_type = py.get_type::<PlusMinusOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -104,7 +104,7 @@ fn test_hermitian_conj() {
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PlusMinusOperatorWrapper>();
+        let new_system = py.get_type::<PlusMinusOperatorWrapper>();
         let binding = new_system.call0().unwrap();
         let system = binding.downcast::<PlusMinusOperatorWrapper>().unwrap();
         system.call_method1("set", ("0+", 0.1)).unwrap();
@@ -152,7 +152,7 @@ fn spin_system_test_set_get() {
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<PlusMinusOperatorWrapper>();
+        let new_system = py.get_type::<PlusMinusOperatorWrapper>();
         let binding = new_system.call0().unwrap();
         let system = binding.downcast::<PlusMinusOperatorWrapper>().unwrap();
         system
@@ -548,7 +548,7 @@ fn test_from_qubit_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<PauliOperatorWrapper>();
+        let pp_type = py.get_type::<PauliOperatorWrapper>();
         let pp = pp_type.call0().unwrap();
         pp.downcast::<PauliOperatorWrapper>()
             .unwrap()
@@ -563,14 +563,14 @@ fn test_from_qubit_operator() {
             )
             .unwrap();
         let result = py
-            .get_type_bound::<PlusMinusOperatorWrapper>()
+            .get_type::<PlusMinusOperatorWrapper>()
             .call_method1("from_qubit_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type_bound::<PlusMinusOperatorWrapper>()
+            .get_type::<PlusMinusOperatorWrapper>()
             .call_method1("from_qubit_operator", ("No",));
         assert!(result.is_err())
     })
@@ -592,7 +592,7 @@ fn test_to_qubit_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<PauliOperatorWrapper>();
+        let pp_type = py.get_type::<PauliOperatorWrapper>();
         let sys = pp_type.call0().unwrap();
         sys.downcast::<PauliOperatorWrapper>().unwrap();
         sys.call_method1("add_operator_product", ("0Y", -0.5))
@@ -640,7 +640,7 @@ fn test_from_qubit_ham() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<PauliHamiltonianWrapper>();
+        let pp_type = py.get_type::<PauliHamiltonianWrapper>();
         let pp = pp_type.call0().unwrap();
         pp.downcast::<PauliHamiltonianWrapper>()
             .unwrap()
@@ -656,14 +656,14 @@ fn test_from_qubit_ham() {
             .unwrap();
 
         let result = py
-            .get_type_bound::<PlusMinusOperatorWrapper>()
+            .get_type::<PlusMinusOperatorWrapper>()
             .call_method1("from_qubit_hamiltonian", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type_bound::<PlusMinusOperatorWrapper>()
+            .get_type::<PlusMinusOperatorWrapper>()
             .call_method1("from_qubit_operator", ("No",));
         assert!(result.is_err())
     })
@@ -677,7 +677,7 @@ fn test_to_qubit_ham() {
         pmp.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
 
-        let pp_type = py.get_type_bound::<PauliHamiltonianWrapper>();
+        let pp_type = py.get_type::<PauliHamiltonianWrapper>();
         let sys = pp_type.call0().unwrap();
         sys.downcast::<PauliHamiltonianWrapper>().unwrap();
         sys.call_method1("add_operator_product", ("0Z", 1.0))
@@ -925,7 +925,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
         let sys_2 = new_system(py);
         sys_2
             .call_method1("add_operator_product", ("0Z", 1.0))
@@ -938,7 +938,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",1.0,0.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",1.0,0.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

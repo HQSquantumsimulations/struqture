@@ -34,7 +34,7 @@ fn new_pp(
     boson_sub: Vec<String>,
     fermion_sub: Vec<String>,
 ) -> Bound<MixedPlusMinusProductWrapper> {
-    let pp_type = py.get_type_bound::<MixedPlusMinusProductWrapper>();
+    let pp_type = py.get_type::<MixedPlusMinusProductWrapper>();
     pp_type
         .call1((spin_sub, boson_sub, fermion_sub))
         .unwrap()
@@ -109,7 +109,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_new_no_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp_type = py.get_type_bound::<MixedPlusMinusProductWrapper>();
+        let pp_type = py.get_type::<MixedPlusMinusProductWrapper>();
 
         let pp = pp_type.call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]));
         assert!(pp.is_ok());
@@ -121,7 +121,7 @@ fn test_new_no_error() {
 fn test_new_errors() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp = py.get_type_bound::<MixedPlusMinusProductWrapper>();
+        let pp = py.get_type::<MixedPlusMinusProductWrapper>();
 
         let valid = pp.call1((
             vec!["0J"],
@@ -178,7 +178,7 @@ fn test_from_string() {
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("spins").unwrap();
-        let noise_type = py.get_type_bound::<PlusMinusProductWrapper>();
+        let noise_type = py.get_type::<PlusMinusProductWrapper>();
         let spins = noise_type
             .call0()
             .unwrap()
@@ -191,7 +191,7 @@ fn test_from_string() {
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("bosons").unwrap();
-        let noise_type = py.get_type_bound::<BosonProductWrapper>();
+        let noise_type = py.get_type::<BosonProductWrapper>();
         let bosons = noise_type.call1(([0], [1])).unwrap();
         let comparison = bool::extract_bound(
             &comp_op
@@ -205,7 +205,7 @@ fn test_from_string() {
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("fermions").unwrap();
-        let noise_type = py.get_type_bound::<FermionProductWrapper>();
+        let noise_type = py.get_type::<FermionProductWrapper>();
         let fermions = noise_type.call1(([0], [0])).unwrap();
         let comparison = bool::extract_bound(
             &comp_op
@@ -242,7 +242,7 @@ fn test_to_pp() {
             vec!["c0a0".into()],
         );
 
-        let pp_type = py.get_type_bound::<MixedProductWrapper>();
+        let pp_type = py.get_type::<MixedProductWrapper>();
         let new_pp = pp_type
             .call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]))
             .unwrap();
@@ -271,13 +271,13 @@ fn test_from_pp() {
             vec!["c0a0".into()],
         );
 
-        let pp_type = py.get_type_bound::<MixedProductWrapper>();
+        let pp_type = py.get_type::<MixedProductWrapper>();
         let new_pp = pp_type
             .call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]))
             .unwrap();
 
         let result = py
-            .get_type_bound::<MixedPlusMinusProductWrapper>()
+            .get_type::<MixedPlusMinusProductWrapper>()
             .call_method1(
                 "from_mixed_product",
                 (new_pp.downcast::<MixedProductWrapper>().unwrap(),),
@@ -587,7 +587,7 @@ fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"S0Z:Bc1a1:Fc0a0\"");
+            pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"");
         let pp_2 = new_pp(
             py,
             vec!["0Z".to_string()],
@@ -603,7 +603,7 @@ fn test_from_json_struqture_1() {
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"S0Z:Bc1a1:Fc0b0\"");
+            pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0b0\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });

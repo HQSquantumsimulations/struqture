@@ -323,7 +323,7 @@ pub fn noiselesswrapper(
             ///     int: Maximum index.
             pub fn number_spins(&self) -> usize {
                 Python::with_gil(|py| {
-                    py.run_bound("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)", None, None).unwrap();
+                    py.run(c_str!("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)"), None, None).unwrap();
                 });
                 self.internal.current_number_spins()
             }
@@ -696,7 +696,7 @@ pub fn noiselesswrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new_bound(py, &serialized[..]).into()
+                    PyByteArray::new(py, &serialized[..]).into()
                 });
                 Ok(b)
             }
