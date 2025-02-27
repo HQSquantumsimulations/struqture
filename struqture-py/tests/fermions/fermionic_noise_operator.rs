@@ -32,7 +32,7 @@ fn new_noisesystem(py: Python) -> Bound<FermionLindbladNoiseOperatorWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
