@@ -31,7 +31,7 @@ fn new_system(
     number_bosons: usize,
     number_fermions: usize,
 ) -> Bound<MixedPlusMinusOperatorWrapper> {
-    let system_type = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
+    let system_type = py.get_type::<MixedPlusMinusOperatorWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -165,7 +165,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
+        let new_system = py.get_type::<MixedPlusMinusOperatorWrapper>();
 
         let binding = new_system.call1((1, 1, 1)).unwrap();
         let system = binding.downcast::<MixedPlusMinusOperatorWrapper>().unwrap();
@@ -226,7 +226,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<MixedPlusMinusOperatorWrapper>();
+        let new_system = py.get_type::<MixedPlusMinusOperatorWrapper>();
         let binding = new_system.call1((1, 1, 1)).unwrap();
         let system = binding.downcast::<MixedPlusMinusOperatorWrapper>().unwrap();
         system
@@ -658,7 +658,7 @@ fn test_from_mixed_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<MixedOperatorWrapper>();
+        let pp_type = py.get_type::<MixedOperatorWrapper>();
         let pp = pp_type.call1((1, 1, 1)).unwrap();
         pp.downcast::<MixedOperatorWrapper>().unwrap();
         pp.call_method1(
@@ -673,14 +673,14 @@ fn test_from_mixed_sys() {
         .unwrap();
 
         let result = py
-            .get_type_bound::<MixedPlusMinusOperatorWrapper>()
+            .get_type::<MixedPlusMinusOperatorWrapper>()
             .call_method1("from_mixed_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type_bound::<MixedPlusMinusOperatorWrapper>()
+            .get_type::<MixedPlusMinusOperatorWrapper>()
             .call_method1("from_mixed_operator", ("No",));
         assert!(result.is_err())
     })
@@ -702,7 +702,7 @@ fn test_to_mixed_sys() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<MixedOperatorWrapper>();
+        let pp_type = py.get_type::<MixedOperatorWrapper>();
         let sys = pp_type.call1((1, 1, 1)).unwrap();
         sys.downcast::<MixedOperatorWrapper>().unwrap();
         sys.call_method1(
@@ -934,7 +934,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}");
         let sys_2 = new_system(py, 1, 1, 1);
         sys_2
             .call_method1("add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
@@ -947,7 +947,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
