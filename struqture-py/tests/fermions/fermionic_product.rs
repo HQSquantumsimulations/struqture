@@ -25,7 +25,7 @@ fn new_pp(
     creators: Vec<usize>,
     annihilators: Vec<usize>,
 ) -> Bound<FermionProductWrapper> {
-    let pp_type = py.get_type_bound::<FermionProductWrapper>();
+    let pp_type = py.get_type::<FermionProductWrapper>();
     pp_type
         .call1((creators, annihilators))
         .unwrap()
@@ -85,7 +85,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_new_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp_type = py.get_type_bound::<FermionProductWrapper>();
+        let pp_type = py.get_type::<FermionProductWrapper>();
         let pp = pp_type.call1(([0_u64, 1_u64], [1_u64, 1_u64]));
         assert!(pp.is_err());
     });
@@ -459,8 +459,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"c0a1\"");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "\"c0a1\"");
         let pp_2 = new_pp(py, vec![0], vec![1]);
 
         let pp_from_1 = pp_2
@@ -471,7 +470,7 @@ fn test_from_json_struqture_1() {
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"c0b1\"");
+            pyo3::types::PyString::new(py, "\"c0b1\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });

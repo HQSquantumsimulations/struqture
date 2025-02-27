@@ -24,7 +24,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
-    let system_type = py.get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>();
+    let system_type = py.get_type::<PlusMinusLindbladNoiseOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -35,7 +35,7 @@ fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -603,7 +603,7 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = PlusMinusLindbladNoiseOperatorWrapper::new();
-        let pp_type = py.get_type_bound::<PlusMinusProductWrapper>();
+        let pp_type = py.get_type::<PlusMinusProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
             .downcast::<PlusMinusProductWrapper>()
@@ -735,7 +735,7 @@ fn test_from_qubit_op() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
+        let pp_type = py.get_type::<PauliLindbladNoiseOperatorWrapper>();
         let pp = pp_type.call0().unwrap();
         pp.downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap()
@@ -751,14 +751,14 @@ fn test_from_qubit_op() {
             .unwrap();
 
         let result = py
-            .get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>()
+            .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
             .call_method1("from_qubit_noise_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>()
+            .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
             .call_method1("from_qubit_noise_operator", ("No",));
         assert!(result.is_err())
     })
@@ -780,7 +780,7 @@ fn test_to_qubit_noise_operator() {
         )
         .unwrap();
 
-        let pp_type = py.get_type_bound::<PauliLindbladNoiseOperatorWrapper>();
+        let pp_type = py.get_type::<PauliLindbladNoiseOperatorWrapper>();
         let sys = pp_type.call0().unwrap();
         sys.downcast::<PauliLindbladNoiseOperatorWrapper>().unwrap();
         sys.call_method1(
@@ -886,7 +886,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
         let sys_2 = new_noisesystem(py);
         sys_2
             .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
@@ -899,7 +899,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":1}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":1}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

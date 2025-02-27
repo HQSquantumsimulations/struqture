@@ -15,6 +15,7 @@ use crate::spins::DecoherenceProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
 use bincode::deserialize;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
+use pyo3::ffi::c_str;
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;

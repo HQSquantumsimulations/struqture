@@ -19,7 +19,7 @@ use struqture_py::spins::DecoherenceProductWrapper;
 
 // helper functions
 fn new_pp(py: Python) -> Bound<DecoherenceProductWrapper> {
-    let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
+    let pp_type = py.get_type::<DecoherenceProductWrapper>();
     pp_type
         .call0()
         .unwrap()
@@ -412,7 +412,7 @@ fn test_to_from_json() {
         let new = new_pp(py);
         let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
 
-        let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
+        let pp_type = py.get_type::<DecoherenceProductWrapper>();
         let deserialised_error = pp_type.call_method1("from_json", ("fails".to_string(),));
         assert!(deserialised_error.is_err());
 
@@ -557,8 +557,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"0Z\"");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "\"0Z\"");
         let pp_2 = new_pp(py);
         let pp_2 = pp_2.call_method1("set_pauli", (0_u64, "Z")).unwrap();
 
@@ -570,7 +569,7 @@ fn test_from_json_struqture_1() {
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> =
-            pyo3::types::PyString::new_bound(py, "\"0A\"");
+            pyo3::types::PyString::new(py, "\"0A\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
     });
