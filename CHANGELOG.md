@@ -4,6 +4,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Switched from `from_struqture_2` to `from_json_struqture_2` in the `unstable_struqture_2_import` feature.
 * Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
 
 ## 1.11.0 - 1.11.1

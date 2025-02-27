@@ -343,7 +343,16 @@ impl SpinHamiltonianSystem {
     }
 
     #[cfg(feature = "unstable_struqture_2_import")]
-    /// Export to struqture_2 format.
+    /// Import from struqture_2 format.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - struqture 2.x object to convert to 1.x Self object.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Self)` - struqture 1.x object converted from input.
+    /// * `Err(StruqtureError)` - Product conversion from string failed.
     pub fn from_struqture_2(
         value: &struqture_2::spins::PauliHamiltonian,
     ) -> Result<Self, StruqtureError> {
