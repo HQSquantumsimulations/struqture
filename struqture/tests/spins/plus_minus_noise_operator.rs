@@ -17,6 +17,8 @@ use serde_test::{assert_tokens, Configure, Token};
 use std::collections::{BTreeMap, HashMap};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 use struqture::spins::{
     DecoherenceProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct,
     SpinLindbladNoiseOperator,
@@ -859,4 +861,18 @@ fn test_plus_minus_noise_operator_schema() {
     let value: serde_json::Value = serde_json::to_value(val).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "unstable_struqture_2_import")]
+#[test]
+fn test_from_struqture_2() {
+    let pp_1 = PlusMinusProduct::new().plus(0).minus(1).z(25);
+    let mut ss_1 = PlusMinusLindbladNoiseOperator::new();
+    ss_1.set((pp_1.clone(), pp_1), 1.0.into()).unwrap();
+
+    let pp_2 = struqture_2::spins::PlusMinusProduct::from_str("0+1-25Z").unwrap();
+    let mut ss_2 = struqture_2::spins::PlusMinusLindbladNoiseOperator::new();
+    struqture_2::OperateOnDensityMatrix::set(&mut ss_2, (pp_2.clone(), pp_2), 1.0.into()).unwrap();
+
+    assert!(PlusMinusLindbladNoiseOperator::from_struqture_2(&ss_2).unwrap() == ss_1);
 }

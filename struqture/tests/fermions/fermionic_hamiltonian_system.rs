@@ -17,6 +17,8 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 use struqture::fermions::{
     FermionHamiltonian, FermionHamiltonianSystem, FermionProduct, FermionSystem,
     HermitianFermionProduct,
@@ -698,4 +700,18 @@ fn test_fermion_hamiltonian_system_schema(number_fermions: Option<usize>) {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "unstable_struqture_2_import")]
+#[test]
+fn test_from_struqture_2() {
+    let pp_1 = HermitianFermionProduct::new([0], [0]).unwrap();
+    let mut ss_1 = FermionHamiltonianSystem::new(None);
+    ss_1.set(pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = struqture_2::fermions::HermitianFermionProduct::from_str("c0a0").unwrap();
+    let mut ss_2 = struqture_2::fermions::FermionHamiltonian::new();
+    struqture_2::OperateOnDensityMatrix::set(&mut ss_2, pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(FermionHamiltonianSystem::from_struqture_2(&ss_2).unwrap() == ss_1);
 }

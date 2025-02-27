@@ -15,21 +15,22 @@ use crate::fermions::FermionLindbladNoiseOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
 use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
-use itertools::Itertools;
-use num_complex::Complex64;
-use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
-use serde::{Deserialize, Serialize};
-use std::fmt::{self, Write};
-use std::iter::{FromIterator, IntoIterator};
-use std::ops;
-
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::map::{Entry, Iter, Keys, Values};
 #[cfg(feature = "indexed_map_iterators")]
 use indexmap::IndexMap;
+use itertools::Itertools;
+use num_complex::Complex64;
+use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
+use serde::{Deserialize, Serialize};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Entry, Iter, Keys, Values};
 use std::collections::HashMap;
+use std::fmt::{self, Write};
+use std::iter::{FromIterator, IntoIterator};
+use std::ops;
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 
 /// PlusMinusLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -346,6 +347,20 @@ impl PlusMinusLindbladNoiseOperator {
             }
         }
         Ok((separated, remainder))
+    }
+
+    #[cfg(feature = "unstable_struqture_2_import")]
+    /// Export to struqture_2 format.
+    pub fn from_struqture_2(
+        value: &struqture_2::spins::PlusMinusLindbladNoiseOperator,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(value) {
+            let self_key_left = PlusMinusProduct::from_str(&format!("{}", key.0).to_string())?;
+            let self_key_right = PlusMinusProduct::from_str(&format!("{}", key.1).to_string())?;
+            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(new_operator)
     }
 }
 

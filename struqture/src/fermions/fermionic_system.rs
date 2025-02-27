@@ -15,16 +15,17 @@ use crate::fermions::FermionProduct;
 use crate::mappings::JordanWignerFermionToSpin;
 use crate::spins::SpinSystem;
 use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
 use qoqo_calculator::CalculatorComplex;
 use serde::{Deserialize, Serialize};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Iter, Keys, Values};
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 
 /// FermionSystems are FermionOperators with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore
 /// when the user adds a set of FermionProducts with specific CalculatorComplex coefficients, their indices must not exceed the number of modes in the FermionSystem.
@@ -291,6 +292,19 @@ impl FermionSystem {
             }
         }
         Ok((separated, remainder))
+    }
+
+    #[cfg(feature = "unstable_struqture_2_import")]
+    /// Export to struqture_2 format.
+    pub fn from_struqture_2(
+        value: &struqture_2::fermions::FermionOperator,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new(None);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(value) {
+            let self_key = FermionProduct::from_str(&format!("{}", key).to_string())?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
+        Ok(new_operator)
     }
 }
 

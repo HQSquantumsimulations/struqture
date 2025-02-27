@@ -1906,3 +1906,33 @@ fn test_json_schema() {
         assert_eq!(min_version, rust_min_version);
     });
 }
+
+#[cfg(feature = "unstable_struqture_2_import")]
+#[test]
+fn test_from_json_struqture_1() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"system\":{\"items\":[[\"S0X:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}},\"noise\":{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}}");
+        let sys_2 = new_system(py, vec![None], vec![None], vec![None]);
+        sys_2
+            .call_method1("system_add_operator_product", ("S0X:Bc1a1:Fc0a0", 1.0))
+            .unwrap();
+        sys_2
+            .call_method1(
+                "noise_add_operator_product",
+                (("S0Z:Bc1a1:Fc0a0", "S0Z:Bc1a1:Fc0a0"), 1.0),
+            )
+            .unwrap();
+
+        let sys_from_1 = sys_2
+            .call_method1("from_json_struqture_2", (json_string,))
+            .unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"system\":{\"items\":[[\"S0X:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}},\"noise\":{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}}");
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
+        assert!(sys_from_1.is_err());
+    });
+}

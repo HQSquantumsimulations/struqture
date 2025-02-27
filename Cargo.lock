@@ -1564,6 +1564,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
+ "struqture 2.0.0-alpha.9",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1571,9 +1572,9 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.0.0-alpha.7"
+version = "2.0.0-alpha.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34357ac79ee2c94a25c49904a261686c20410624e5cb1c47d3ab0100084ce435"
+checksum = "b7523e5d513860704efd9d3a37aaeb791d3753158c5850359654671e32fd6921"
 dependencies = [
  "indexmap",
  "itertools 0.14.0",
@@ -1606,7 +1607,7 @@ dependencies = [
  "schemars",
  "serde_json",
  "struqture 1.11.1",
- "struqture 2.0.0-alpha.7",
+ "struqture 2.0.0-alpha.9",
  "struqture-py-macros",
  "syn",
  "test-case",
