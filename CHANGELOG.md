@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.12.1
+
+* Attempt to fix publish dependencies.
+
 ## 1.12.0
 
 * Updated to pyo3 0.23 (includes updating to qoqo-calculator 1.5.0 and struqture 2.0.0-alpha.10).
