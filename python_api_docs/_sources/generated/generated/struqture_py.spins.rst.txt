@@ -1,0 +1,20 @@
+struqture\_py.spins
+===================
+
+.. automodule:: struqture_py.spins
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DecoherenceProduct
+      PauliHamiltonian
+      PauliLindbladNoiseOperator
+      PauliLindbladOpenSystem
+      PauliOperator
+      PauliProduct
+      PlusMinusLindbladNoiseOperator
+      PlusMinusOperator
+      PlusMinusProduct
+   

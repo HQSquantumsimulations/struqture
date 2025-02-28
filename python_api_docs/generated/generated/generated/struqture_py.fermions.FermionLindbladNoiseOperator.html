@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>struqture_py.fermions.FermionLindbladNoiseOperator &mdash; struqture_py 2.0.0-alpha.11 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=48fb8b14"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="struqture_py.fermions.FermionLindbladOpenSystem" href="struqture_py.fermions.FermionLindbladOpenSystem.html" />
+    <link rel="prev" title="struqture_py.fermions.FermionHamiltonian" href="struqture_py.fermions.FermionHamiltonian.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            struqture_py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../modules.html">struqture_py documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../struqture_py.html">struqture_py</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.spins.html">struqture_py.spins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.bosons.html">struqture_py.bosons</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.fermions.html">struqture_py.fermions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionProduct.html">struqture_py.fermions.FermionProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.HermitianFermionProduct.html">struqture_py.fermions.HermitianFermionProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionOperator.html">struqture_py.fermions.FermionOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionHamiltonian.html">struqture_py.fermions.FermionHamiltonian</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.fermions.FermionLindbladNoiseOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.fermions.FermionLindbladOpenSystem.html">struqture_py.fermions.FermionLindbladOpenSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionHamiltonian"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionOperator"><code class="docutils literal notranslate"><span class="pre">FermionOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionProduct"><code class="docutils literal notranslate"><span class="pre">FermionProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.HermitianFermionProduct"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonOperator"><code class="docutils literal notranslate"><span class="pre">BosonOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonProduct"><code class="docutils literal notranslate"><span class="pre">BosonProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.DecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionHamiltonian"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionOperator"><code class="docutils literal notranslate"><span class="pre">FermionOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionProduct"><code class="docutils literal notranslate"><span class="pre">FermionProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.HermitianBosonProduct"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.HermitianFermionProduct"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.HermitianMixedProduct"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedDecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedHamiltonian"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">MixedLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedOperator"><code class="docutils literal notranslate"><span class="pre">MixedOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedPlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedPlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedProduct"><code class="docutils literal notranslate"><span class="pre">MixedProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliHamiltonian"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PauliLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">PauliLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliOperator"><code class="docutils literal notranslate"><span class="pre">PauliOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliProduct"><code class="docutils literal notranslate"><span class="pre">PauliProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">struqture_py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../modules.html">struqture_py documentation</a></li>
+          <li class="breadcrumb-item"><a href="../../struqture_py.html">struqture_py</a></li>
+          <li class="breadcrumb-item"><a href="../struqture_py.fermions.html">struqture_py.fermions</a></li>
+      <li class="breadcrumb-item active">struqture_py.fermions.FermionLindbladNoiseOperator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/generated/generated/generated/struqture_py.fermions.FermionLindbladNoiseOperator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="struqture-py-fermions-fermionlindbladnoiseoperator">
+<h1>struqture_py.fermions.FermionLindbladNoiseOperator<a class="headerlink" href="#struqture-py-fermions-fermionlindbladnoiseoperator" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.fermions.</span></span><span class="sig-name descname"><span class="pre">FermionLindbladNoiseOperator</span></span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator" title="Link to this definition"></a></dt>
+<dd><p>These are representations of noisy systems of fermions.</p>
+<p>In a FermionLindbladNoiseOperator is characterized by a FermionLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of fermions.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy.testing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoqo_calculator_pyo3</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalculatorComplex</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.fermions</span><span class="w"> </span><span class="kn">import</span> <span class="n">FermionLindbladNoiseOperator</span><span class="p">,</span> <span class="n">FermionProduct</span>
+
+<span class="n">slns</span> <span class="o">=</span> <span class="n">FermionLindbladNoiseOperator</span><span class="p">()</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">slns</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">)),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.fermions.FermionLindbladNoiseOperator.__init__" title="struqture_py.fermions.FermionLindbladNoiseOperator.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.add_operator_product" title="struqture_py.fermions.FermionLindbladNoiseOperator.add_operator_product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_operator_product</span></code></a>(key, value)</p></td>
+<td><p>Adds a new (key object, CalculatorComplex) pair to existing entries.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.current_number_modes" title="struqture_py.fermions.FermionLindbladNoiseOperator.current_number_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_modes</span></code></a>()</p></td>
+<td><p>Return the current_number_modes input of self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.current_version" title="struqture_py.fermions.FermionLindbladNoiseOperator.current_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_version</span></code></a>()</p></td>
+<td><p>Returns the current version of the struqture library .</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.empty_clone" title="struqture_py.fermions.FermionLindbladNoiseOperator.empty_clone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">empty_clone</span></code></a>([capacity])</p></td>
+<td><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.from_bincode" title="struqture_py.fermions.FermionLindbladNoiseOperator.from_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_bincode</span></code></a>(input)</p></td>
+<td><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.from_json" title="struqture_py.fermions.FermionLindbladNoiseOperator.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(input)</p></td>
+<td><p>Convert the json representation of the object to an instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.from_json_struqture_1" title="struqture_py.fermions.FermionLindbladNoiseOperator.from_json_struqture_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json_struqture_1</span></code></a>(input)</p></td>
+<td><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.get" title="struqture_py.fermions.FermionLindbladNoiseOperator.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(key)</p></td>
+<td><p>Get the coefficient corresponding to the key.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.is_empty" title="struqture_py.fermions.FermionLindbladNoiseOperator.is_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_empty</span></code></a>()</p></td>
+<td><p>Return true if object contains no values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.jordan_wigner" title="struqture_py.fermions.FermionLindbladNoiseOperator.jordan_wigner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jordan_wigner</span></code></a>()</p></td>
+<td><p>Transform the given fermionic object into a spin object using the Jordan Wigner mapping.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.json_schema" title="struqture_py.fermions.FermionLindbladNoiseOperator.json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">json_schema</span></code></a>()</p></td>
+<td><p>Return the JsonSchema for the json serialisation of the class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.keys" title="struqture_py.fermions.FermionLindbladNoiseOperator.keys"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code></a>()</p></td>
+<td><p>Return unsorted keys in self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.min_supported_version" title="struqture_py.fermions.FermionLindbladNoiseOperator.min_supported_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_supported_version</span></code></a>()</p></td>
+<td><p>Return the minimum version of struqture that supports this object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.remove" title="struqture_py.fermions.FermionLindbladNoiseOperator.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(key)</p></td>
+<td><p>Remove the value of the input object key.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.set" title="struqture_py.fermions.FermionLindbladNoiseOperator.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, value)</p></td>
+<td><p>Overwrite an existing entry or set a new entry in self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.to_bincode" title="struqture_py.fermions.FermionLindbladNoiseOperator.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.to_json" title="struqture_py.fermions.FermionLindbladNoiseOperator.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<td><p>Return the json representation of the object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.truncate" title="struqture_py.fermions.FermionLindbladNoiseOperator.truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate</span></code></a>(threshold)</p></td>
+<td><p>Truncate self by returning a copy without entries under a threshold.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionLindbladNoiseOperator.values" title="struqture_py.fermions.FermionLindbladNoiseOperator.values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></a>()</p></td>
+<td><p>Return unsorted values in self.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.add_operator_product">
+<span class="sig-name descname"><span class="pre">add_operator_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.add_operator_product" title="Link to this definition"></a></dt>
+<dd><p>Adds a new (key object, CalculatorComplex) pair to existing entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- The key of the value to add.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The value to add.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Value is not CalculatorComplex or CalculatorFloat.</p></li>
+<li><p><strong>ValueError</strong> -- Left-hand product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Error in add_operator_product function of self.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.current_number_modes">
+<span class="sig-name descname"><span class="pre">current_number_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.current_number_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the current_number_modes input of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of modes in self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.current_version">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.empty_clone">
+<span class="sig-name descname"><span class="pre">empty_clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.empty_clone" title="Link to this definition"></a></dt>
+<dd><p>Return an instance of self that has no entries but clones all other properties, with the given capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>capacity</strong> -- The capacity of the object to create.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An empty clone with the same properties as self, with the given capacity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.from_bincode">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.from_json">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.from_json_struqture_1">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>Any</em>) -- the json of the struqture 1 object to convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the input object in struqture 2 form.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Input could not be deserialised form json.</p></li>
+<li><p><strong>ValueError</strong> -- Struqture 1 object could not be converted to struqture 2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.get" title="Link to this definition"></a></dt>
+<dd><p>Get the coefficient corresponding to the key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- Product to get the value of.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value at key (or 0.0).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CalculatorComplex</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left-hand product could not be constructed from key.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand product could not be constructed from key.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.is_empty" title="Link to this definition"></a></dt>
+<dd><p>Return true if object contains no values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is empty or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.jordan_wigner">
+<span class="sig-name descname"><span class="pre">jordan_wigner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.jordan_wigner" title="Link to this definition"></a></dt>
+<dd><p>Transform the given fermionic object into a spin object using
+the Jordan Wigner mapping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.json_schema">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.keys" title="Link to this definition"></a></dt>
+<dd><p>Return unsorted keys in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of keys of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[(OperatorProduct, OperatorProduct)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove the value of the input object key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- The key of the value to remove.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Key existed if this is not None, and this is the value it had before it was removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[CalculatorComplex]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left-hand Product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand Product could not be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.set" title="Link to this definition"></a></dt>
+<dd><p>Overwrite an existing entry or set a new entry in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Tuple</em><em>[</em><em>Product type</em><em>, </em><em>Product type</em><em>]</em>) -- The key of the value to set.</p></li>
+<li><p><strong>value</strong> (<em>CalculatorComplex</em>) -- The value to set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Key existed if this is not None, and this is the value it had before it was overwritten.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[CalculatorComplex]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Left-hand Product could not be constructed.</p></li>
+<li><p><strong>ValueError</strong> -- Right-hand Product could not be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.truncate">
+<span class="sig-name descname"><span class="pre">truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.truncate" title="Link to this definition"></a></dt>
+<dd><p>Truncate self by returning a copy without entries under a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> -- The threshold for inclusion.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The truncated version of self.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.fermions.FermionLindbladNoiseOperator.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.fermions.FermionLindbladNoiseOperator.values" title="Link to this definition"></a></dt>
+<dd><p>Return unsorted values in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sequence of values of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[CalculatorComplex]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="struqture_py.fermions.FermionHamiltonian.html" class="btn btn-neutral float-left" title="struqture_py.fermions.FermionHamiltonian" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="struqture_py.fermions.FermionLindbladOpenSystem.html" class="btn btn-neutral float-right" title="struqture_py.fermions.FermionLindbladOpenSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, HQS Quantum Simulations GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

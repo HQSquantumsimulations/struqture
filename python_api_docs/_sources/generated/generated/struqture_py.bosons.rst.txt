@@ -1,0 +1,17 @@
+struqture\_py.bosons
+====================
+
+.. automodule:: struqture_py.bosons
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BosonHamiltonian
+      BosonLindbladNoiseOperator
+      BosonLindbladOpenSystem
+      BosonOperator
+      BosonProduct
+      HermitianBosonProduct
+   

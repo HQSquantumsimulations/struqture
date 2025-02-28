@@ -1,0 +1,41 @@
+struqture\_py.bosons.BosonHamiltonian
+=====================================
+
+.. currentmodule:: struqture_py.bosons
+
+.. autoclass:: BosonHamiltonian
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BosonHamiltonian.__init__
+      ~BosonHamiltonian.add_operator_product
+      ~BosonHamiltonian.current_number_modes
+      ~BosonHamiltonian.current_version
+      ~BosonHamiltonian.empty_clone
+      ~BosonHamiltonian.from_bincode
+      ~BosonHamiltonian.from_json
+      ~BosonHamiltonian.from_json_struqture_1
+      ~BosonHamiltonian.get
+      ~BosonHamiltonian.hermitian_conjugate
+      ~BosonHamiltonian.is_empty
+      ~BosonHamiltonian.json_schema
+      ~BosonHamiltonian.keys
+      ~BosonHamiltonian.min_supported_version
+      ~BosonHamiltonian.remove
+      ~BosonHamiltonian.set
+      ~BosonHamiltonian.to_bincode
+      ~BosonHamiltonian.to_json
+      ~BosonHamiltonian.truncate
+      ~BosonHamiltonian.values
+   
+   
+
+   
+   
+   

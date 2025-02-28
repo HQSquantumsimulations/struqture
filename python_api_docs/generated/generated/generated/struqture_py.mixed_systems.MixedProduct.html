@@ -1,0 +1,589 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>struqture_py.mixed_systems.MixedProduct &mdash; struqture_py 2.0.0-alpha.11 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=48fb8b14"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="struqture_py.mixed_systems.HermitianMixedProduct" href="struqture_py.mixed_systems.HermitianMixedProduct.html" />
+    <link rel="prev" title="struqture_py.mixed_systems" href="../struqture_py.mixed_systems.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            struqture_py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../modules.html">struqture_py documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../struqture_py.html">struqture_py</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.spins.html">struqture_py.spins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.bosons.html">struqture_py.bosons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.fermions.html">struqture_py.fermions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../struqture_py.mixed_systems.html">struqture_py.mixed_systems</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">struqture_py.mixed_systems.MixedProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.HermitianMixedProduct.html">struqture_py.mixed_systems.HermitianMixedProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedDecoherenceProduct.html">struqture_py.mixed_systems.MixedDecoherenceProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedOperator.html">struqture_py.mixed_systems.MixedOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedHamiltonian.html">struqture_py.mixed_systems.MixedHamiltonian</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedLindbladNoiseOperator.html">struqture_py.mixed_systems.MixedLindbladNoiseOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedLindbladOpenSystem.html">struqture_py.mixed_systems.MixedLindbladOpenSystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedPlusMinusProduct.html">struqture_py.mixed_systems.MixedPlusMinusProduct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="struqture_py.mixed_systems.MixedPlusMinusOperator.html">struqture_py.mixed_systems.MixedPlusMinusOperator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.HermitianMixedProduct"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedDecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedHamiltonian"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">MixedLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedOperator"><code class="docutils literal notranslate"><span class="pre">MixedOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedPlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct"><code class="docutils literal notranslate"><span class="pre">MixedProduct</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonOperator"><code class="docutils literal notranslate"><span class="pre">BosonOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonProduct"><code class="docutils literal notranslate"><span class="pre">BosonProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.DecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionHamiltonian"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">FermionLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">FermionLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionOperator"><code class="docutils literal notranslate"><span class="pre">FermionOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.FermionProduct"><code class="docutils literal notranslate"><span class="pre">FermionProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.HermitianBosonProduct"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.HermitianFermionProduct"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.HermitianMixedProduct"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedDecoherenceProduct"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedHamiltonian"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">MixedLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">MixedLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedOperator"><code class="docutils literal notranslate"><span class="pre">MixedOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedPlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedPlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.MixedProduct"><code class="docutils literal notranslate"><span class="pre">MixedProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliHamiltonian"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PauliLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">PauliLindbladOpenSystem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliOperator"><code class="docutils literal notranslate"><span class="pre">PauliOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PauliProduct"><code class="docutils literal notranslate"><span class="pre">PauliProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">struqture_py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../modules.html">struqture_py documentation</a></li>
+          <li class="breadcrumb-item"><a href="../../struqture_py.html">struqture_py</a></li>
+          <li class="breadcrumb-item"><a href="../struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
+      <li class="breadcrumb-item active">struqture_py.mixed_systems.MixedProduct</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/generated/generated/generated/struqture_py.mixed_systems.MixedProduct.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="struqture-py-mixed-systems-mixedproduct">
+<h1>struqture_py.mixed_systems.MixedProduct<a class="headerlink" href="#struqture-py-mixed-systems-mixedproduct" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct" title="Link to this definition"></a></dt>
+<dd><p>A mixed product of pauli products and boson products.</p>
+<p>A <cite>PauliProduct &lt;struqture_py.spins.PauliProduct&gt;</cite> is a representation of products of pauli matrices acting on qubits. It is used in order to build the corresponding spin terms of a hamiltonian.</p>
+<p>A <cite>BosonProduct &lt;struqture_py.bosons.BosonProduct&gt;</cite> is a product of bosonic creation and annihilation operators.
+It is used as an index for non-hermitian, normal ordered bosonic operators.</p>
+<p>A <cite>FermionProduct &lt;struqture_py.fermions.FermionProduct&gt;</cite> is a product of bosonic creation and annihilation operators.
+It is used as an index for non-hermitian, normal ordered bosonic operators.</p>
+<p>Note: For a physical system, the <cite>bosons</cite> (BosonProduct) are usually considered
+in presence of a <cite>system-spin</cite> part (PauliProduct) and a <cite>bath-spin</cite> part (PauliProduct),
+as shown in the example below.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spins</strong> (<em>List</em><em>[</em><a class="reference internal" href="../struqture_py.spins.html#struqture_py.spins.PauliProduct" title="struqture_py.spins.PauliProduct"><em>PauliProduct</em></a><em>]</em>) -- Products of pauli operators acting on qubits.</p></li>
+<li><p><strong>bosons</strong> (<em>List</em><em>[</em><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct" title="struqture_py.bosons.BosonProduct"><em>BosonProduct</em></a><em>]</em>) -- Products of bosonic creation and annihilation operators.</p></li>
+<li><p><strong>fermions</strong> (<em>List</em><em>[</em><a class="reference internal" href="../struqture_py.fermions.html#struqture_py.fermions.FermionProduct" title="struqture_py.fermions.FermionProduct"><em>FermionProduct</em></a><em>]</em>) -- Products of fermionic creation and annihilation operators.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new MixedProduct with the input of spins, bosons and fermions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct" title="struqture_py.mixed_systems.MixedProduct">MixedProduct</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- MixedProduct can not be constructed from the input.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.mixed_systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">MixedProduct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.spins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauliProduct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.bosons</span><span class="w"> </span><span class="kn">import</span> <span class="n">BosonProduct</span>
+
+<span class="c1"># For instance, to represent the terms $\sigma_0^{x} \sigma_2^{x}$</span>
+<span class="c1"># and $\sigma_1^{x} \sigma_2^{x}$</span>
+<span class="n">mp_spins_system</span> <span class="o">=</span> <span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mp_spins_bath</span> <span class="o">=</span> <span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># For instance, to represent $a_1*a_1$</span>
+<span class="n">mp_bosons</span> <span class="o">=</span> <span class="n">BosonProduct</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">mp</span> <span class="o">=</span> <span class="n">MixedProduct</span><span class="p">([</span><span class="n">mp_spins_system</span><span class="p">,</span> <span class="n">mp_spins_bath</span><span class="p">],</span> <span class="p">[</span><span class="n">mp_bosons</span><span class="p">],</span> <span class="p">[])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">spins</span><span class="p">(),</span> <span class="p">[</span><span class="n">mp_spins_system</span><span class="p">,</span> <span class="n">mp_spins_bath</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">bosons</span><span class="p">(),</span> <span class="p">[</span><span class="n">mp_bosons</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.mixed_systems.MixedProduct.__init__" title="struqture_py.mixed_systems.MixedProduct.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.bosons" title="struqture_py.mixed_systems.MixedProduct.bosons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bosons</span></code></a>()</p></td>
+<td><p>Get the boson products of self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.create_valid_pair" title="struqture_py.mixed_systems.MixedProduct.create_valid_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_valid_pair</span></code></a>(spins, bosons, fermions, value)</p></td>
+<td><p>Create a pair (MixedProduct, CalculatorComplex).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.current_number_bosonic_modes" title="struqture_py.mixed_systems.MixedProduct.current_number_bosonic_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_bosonic_modes</span></code></a>()</p></td>
+<td><p>Return the current number of bosonic modes each subsystem acts upon.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.current_number_fermionic_modes" title="struqture_py.mixed_systems.MixedProduct.current_number_fermionic_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_fermionic_modes</span></code></a>()</p></td>
+<td><p>Return the current number of fermionic modes each subsystem acts upon.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.current_number_spins" title="struqture_py.mixed_systems.MixedProduct.current_number_spins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_number_spins</span></code></a>()</p></td>
+<td><p>Return the current number of spins each subsystem acts upon.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.current_version" title="struqture_py.mixed_systems.MixedProduct.current_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">current_version</span></code></a>()</p></td>
+<td><p>Returns the current version of the struqture library .</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.fermions" title="struqture_py.mixed_systems.MixedProduct.fermions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fermions</span></code></a>()</p></td>
+<td><p>Get the fermion products of self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.from_bincode" title="struqture_py.mixed_systems.MixedProduct.from_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_bincode</span></code></a>(input)</p></td>
+<td><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.from_json" title="struqture_py.mixed_systems.MixedProduct.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(input)</p></td>
+<td><p>Convert the json representation of the object to an instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.from_json_struqture_1" title="struqture_py.mixed_systems.MixedProduct.from_json_struqture_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json_struqture_1</span></code></a>(input)</p></td>
+<td><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.from_string" title="struqture_py.mixed_systems.MixedProduct.from_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_string</span></code></a>(input)</p></td>
+<td><p>Convert a string representation of the object to an instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.hermitian_conjugate" title="struqture_py.mixed_systems.MixedProduct.hermitian_conjugate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hermitian_conjugate</span></code></a>()</p></td>
+<td><p>Return the hermitian conjugate of self and its prefactor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.is_natural_hermitian" title="struqture_py.mixed_systems.MixedProduct.is_natural_hermitian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_natural_hermitian</span></code></a>()</p></td>
+<td><p>Return whether self is naturally hermitian.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.json_schema" title="struqture_py.mixed_systems.MixedProduct.json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">json_schema</span></code></a>()</p></td>
+<td><p>Return the JsonSchema for the json serialisation of the class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.min_supported_version" title="struqture_py.mixed_systems.MixedProduct.min_supported_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_supported_version</span></code></a>()</p></td>
+<td><p>Return the minimum version of struqture that supports this object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.spins" title="struqture_py.mixed_systems.MixedProduct.spins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spins</span></code></a>()</p></td>
+<td><p>Get the spin products of self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.to_bincode" title="struqture_py.mixed_systems.MixedProduct.to_bincode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bincode</span></code></a>()</p></td>
+<td><p>Return the bincode representation of the object using the [bincode] crate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.mixed_systems.html#struqture_py.mixed_systems.MixedProduct.to_json" title="struqture_py.mixed_systems.MixedProduct.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>()</p></td>
+<td><p>Return the json representation of the object.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.bosons">
+<span class="sig-name descname"><span class="pre">bosons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.bosons" title="Link to this definition"></a></dt>
+<dd><p>Get the boson products of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The boson products of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.create_valid_pair">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<dd><p>Create a pair (MixedProduct, CalculatorComplex).</p>
+<p>The first item is the valid MixedProduct created from the input creators and annihilators.
+The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>creators</strong> -- The creator indices to have in the MixedProduct.</p></li>
+<li><p><strong>annihilators</strong> -- The annihilators indices to have in the MixedProduct.</p></li>
+<li><p><strong>value</strong> -- The CalculatorComplex to transform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple[MixedProduct, CalculatorComplex] - The valid MixedProduct and the corresponding transformed CalculatorComplex.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Valid pair could not be constructed, pauli spins couldn't be converted from string.</p></li>
+<li><p><strong>ValueError</strong> -- Valid pair could not be constructed, bosons couldn't be converted from string.</p></li>
+<li><p><strong>ValueError</strong> -- Valid pair could not be constructed, fermions couldn't be converted from string.</p></li>
+<li><p><strong>TypeError</strong> -- Value cannot be converted to CalculatorComplex.</p></li>
+<li><p><strong>ValueError</strong> -- Valid pair could not be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.current_number_bosonic_modes">
+<span class="sig-name descname"><span class="pre">current_number_bosonic_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.current_number_bosonic_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the current number of bosonic modes each subsystem acts upon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of bosonic modes in each spin sub-system.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.current_number_fermionic_modes">
+<span class="sig-name descname"><span class="pre">current_number_fermionic_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.current_number_fermionic_modes" title="Link to this definition"></a></dt>
+<dd><p>Return the current number of fermionic modes each subsystem acts upon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of fermionic modes in each spin sub-system.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.current_number_spins">
+<span class="sig-name descname"><span class="pre">current_number_spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.current_number_spins" title="Link to this definition"></a></dt>
+<dd><p>Return the current number of spins each subsystem acts upon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of spins in each spin sub-system.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.current_version">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.current_version" title="Link to this definition"></a></dt>
+<dd><p>Returns the current version of the struqture library .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current version of the library.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.fermions">
+<span class="sig-name descname"><span class="pre">fermions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.fermions" title="Link to this definition"></a></dt>
+<dd><p>Get the fermion products of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The fermion products of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_bincode">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_bincode" title="Link to this definition"></a></dt>
+<dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>bytearray</em>) -- The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized Spin System.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Input cannot be converted to byte array.</p></li>
+<li><p><strong>ValueError</strong> -- Input cannot be deserialized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_json">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert the json representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized object in json form.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The deserialized object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Input cannot be deserialized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_json_struqture_1">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>Any</em>) -- the json of the struqture 1 object to convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the input object in struqture 2 form.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> -- Input could not be deserialised form json.</p></li>
+<li><p><strong>ValueError</strong> -- Struqture 1 object could not be converted to struqture 2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_string">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_string" title="Link to this definition"></a></dt>
+<dd><p>Convert a string representation of the object to an instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>str</em>) -- The serialized index in str representation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- Input cannot be converted from str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.hermitian_conjugate">
+<span class="sig-name descname"><span class="pre">hermitian_conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.hermitian_conjugate" title="Link to this definition"></a></dt>
+<dd><p>Return the hermitian conjugate of self and its prefactor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The hermitian conjugate of self and the potential sign it has picked up.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(self, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.is_natural_hermitian">
+<span class="sig-name descname"><span class="pre">is_natural_hermitian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.is_natural_hermitian" title="Link to this definition"></a></dt>
+<dd><p>Return whether self is naturally hermitian.</p>
+<p>For spin objects, this is true when applying the hermitian conjugation does not change the sign.
+For bosonic and fermionic objects, this is true when creators == annihilators.
+For mixed objects, this is true when all of the spin, bosonic and fermionic parts' <cite>is_naturally_hermitian</cite> functions evaluate to true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether self is naturally hermitian or not.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.json_schema">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JsonSchema for the json serialisation of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The json schema serialized to json</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.min_supported_version">
+<span class="sig-name descname"><span class="pre">min_supported_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.min_supported_version" title="Link to this definition"></a></dt>
+<dd><p>Return the minimum version of struqture that supports this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum version of the struqture library to deserialize this object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.spins">
+<span class="sig-name descname"><span class="pre">spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.spins" title="Link to this definition"></a></dt>
+<dd><p>Get the spin products of self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The spin products of self.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.to_bincode">
+<span class="sig-name descname"><span class="pre">to_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.to_bincode" title="Link to this definition"></a></dt>
+<dd><p>Return the bincode representation of the object using the [bincode] crate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized object (in [bincode] form).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to bytes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.to_json" title="Link to this definition"></a></dt>
+<dd><p>Return the json representation of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The serialized form of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- Cannot serialize object to json.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../struqture_py.mixed_systems.html" class="btn btn-neutral float-left" title="struqture_py.mixed_systems" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="struqture_py.mixed_systems.HermitianMixedProduct.html" class="btn btn-neutral float-right" title="struqture_py.mixed_systems.HermitianMixedProduct" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, HQS Quantum Simulations GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+struqture\_py.bosons.BosonLindbladOpenSystem
+============================================
+
+.. currentmodule:: struqture_py.bosons
+
+.. autoclass:: BosonLindbladOpenSystem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BosonLindbladOpenSystem.__init__
+      ~BosonLindbladOpenSystem.current_number_modes
+      ~BosonLindbladOpenSystem.current_version
+      ~BosonLindbladOpenSystem.empty_clone
+      ~BosonLindbladOpenSystem.from_bincode
+      ~BosonLindbladOpenSystem.from_json
+      ~BosonLindbladOpenSystem.from_json_struqture_1
+      ~BosonLindbladOpenSystem.group
+      ~BosonLindbladOpenSystem.json_schema
+      ~BosonLindbladOpenSystem.min_supported_version
+      ~BosonLindbladOpenSystem.noise
+      ~BosonLindbladOpenSystem.noise_add_operator_product
+      ~BosonLindbladOpenSystem.noise_get
+      ~BosonLindbladOpenSystem.noise_set
+      ~BosonLindbladOpenSystem.system
+      ~BosonLindbladOpenSystem.system_add_operator_product
+      ~BosonLindbladOpenSystem.system_get
+      ~BosonLindbladOpenSystem.system_set
+      ~BosonLindbladOpenSystem.to_bincode
+      ~BosonLindbladOpenSystem.to_json
+      ~BosonLindbladOpenSystem.truncate
+      ~BosonLindbladOpenSystem.ungroup
+   
+   
+
+   
+   
+   
