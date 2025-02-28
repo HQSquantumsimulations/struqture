@@ -135,16 +135,16 @@ impl SpinSystemWrapper {
         }
     }
 
-    /// Converts a struqture 2.x QubitOperator to a struqture 1.x SpinSystem.
+    /// Converts a struqture 2.x PauliOperator to a struqture 1.x SpinSystem.
     ///
     /// Args:
-    ///     input (QubitOperator): The struqture 2.x QubitOperator to convert to struqture 1.x.
+    ///     input (PauliOperator): The struqture 2.x PauliOperator to convert to struqture 1.x.
     ///
     /// Returns:
-    ///     SpinSystem: The struqture 1.x SpinSystem created from the struqture 2.x QubitOperator.
+    ///     SpinSystem: The struqture 1.x SpinSystem created from the struqture 2.x PauliOperator.
     ///
     /// Raises:
-    ///     TypeError: If the input is not a struqture 2.x QubitOperator.
+    ///     TypeError: If the input is not a struqture 2.x PauliOperator.
     ///     ValueError: Conversion failed.
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
@@ -162,7 +162,7 @@ impl SpinSystemWrapper {
                 serde_json::from_str(&source_serialisation_meta)
                     .map_err(|_| PyTypeError::new_err(error_message))?;
 
-            let target_serialisation_meta = <struqture_2::spins::QubitOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
+            let target_serialisation_meta = <struqture_2::spins::PauliOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
 
             struqture_2::check_can_be_deserialised(
                 &target_serialisation_meta,
@@ -176,7 +176,7 @@ impl SpinSystemWrapper {
             let bytes = get_bytes
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_2::spins::QubitOperator = deserialize(&bytes[..])
+            let two_import: struqture_2::spins::PauliOperator = deserialize(&bytes[..])
                 .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
             let mut spin_system = SpinSystem::new(None);
             for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {

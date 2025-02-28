@@ -29,7 +29,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python) -> Bound<FermionLindbladOpenSystemWrapper> {
-    let system_type = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+    let system_type = py.get_type::<FermionLindbladOpenSystemWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -40,7 +40,7 @@ fn new_system(py: Python) -> Bound<FermionLindbladOpenSystemWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -103,7 +103,7 @@ fn test_empty_clone() {
 fn fermion_system_test_add_operator_product_remove_system() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let number_modes: Option<usize> = Some(4);
         let binding = new_system.call1((number_modes,)).unwrap();
         let system = binding
@@ -168,7 +168,7 @@ fn fermion_system_test_add_operator_product_remove_system() {
 fn fermion_system_test_add_operator_product_remove_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let number_modes: Option<usize> = Some(4);
         let binding = new_system.call1((number_modes,)).unwrap();
         let system = binding
@@ -390,7 +390,7 @@ fn test_default_partialeq_debug_clone() {
 
         // System
         let comp_op = new_sys.call_method0("system").unwrap();
-        let system_type = py.get_type_bound::<FermionHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
         let number_modes: Option<usize> = None;
         let fermion_system = system_type.call1((number_modes,)).unwrap();
         fermion_system
@@ -411,7 +411,7 @@ fn test_default_partialeq_debug_clone() {
 
         // Noise
         let comp_op = new_sys.call_method0("noise").unwrap();
-        let noise_type = py.get_type_bound::<FermionLindbladNoiseSystemWrapper>();
+        let noise_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
         let noise = noise_type.call0().unwrap();
         noise
             .downcast::<FermionLindbladNoiseSystemWrapper>()
@@ -431,7 +431,7 @@ fn test_default_partialeq_debug_clone() {
         // Ungroup + group
         let comp_op_ungroup = new_sys.call_method0("ungroup").unwrap();
 
-        let noise_type = py.get_type_bound::<FermionLindbladNoiseSystemWrapper>();
+        let noise_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
         let noise = noise_type.call0().unwrap();
         noise
             .downcast::<FermionLindbladNoiseSystemWrapper>()
@@ -445,7 +445,7 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
 
-        let system_type = py.get_type_bound::<FermionHamiltonianSystemWrapper>();
+        let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
         let number_modes: Option<usize> = None;
         let fermion_system = system_type.call1((number_modes,)).unwrap();
         fermion_system
@@ -482,7 +482,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<FermionLindbladOpenSystemWrapper>()
@@ -586,7 +586,7 @@ fn test_set_pauli_get_pauli() {
 fn test_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system
             .downcast::<FermionLindbladOpenSystemWrapper>()
@@ -717,7 +717,7 @@ fn test_set_noise_get_noise() {
 fn test_try_set_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<FermionLindbladOpenSystemWrapper>()
@@ -817,7 +817,7 @@ fn test_try_set_pauli_get_pauli() {
 fn test_try_set_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<FermionLindbladOpenSystemWrapper>()
@@ -936,7 +936,7 @@ fn test_try_set_noise_get_noise() {
 fn test_add_pauli_get_pauli() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<FermionLindbladOpenSystemWrapper>()
@@ -1044,7 +1044,7 @@ fn test_add_pauli_get_pauli() {
 fn test_add_noise_get_noise() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<FermionLindbladOpenSystemWrapper>();
+        let new_system = py.get_type::<FermionLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
             .downcast::<FermionLindbladOpenSystemWrapper>()

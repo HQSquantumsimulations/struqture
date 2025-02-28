@@ -23,7 +23,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python, number_spins: Option<usize>) -> Bound<SpinSystemWrapper> {
-    let system_type = py.get_type_bound::<SpinSystemWrapper>();
+    let system_type = py.get_type::<SpinSystemWrapper>();
     system_type
         .call1((number_spins,))
         .unwrap()
@@ -134,7 +134,7 @@ fn test_hermitian_conj() {
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<SpinSystemWrapper>();
+        let new_system = py.get_type::<SpinSystemWrapper>();
         let number_spins: Option<usize> = Some(4);
         let binding = new_system.call1((number_spins,)).unwrap();
         let system = binding.downcast::<SpinSystemWrapper>().unwrap();
@@ -187,7 +187,7 @@ fn spin_system_test_set_get() {
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type_bound::<SpinSystemWrapper>();
+        let new_system = py.get_type::<SpinSystemWrapper>();
         let number_spins: Option<usize> = Some(4);
         let binding = new_system.call1((number_spins,)).unwrap();
         let system = binding.downcast::<SpinSystemWrapper>().unwrap();

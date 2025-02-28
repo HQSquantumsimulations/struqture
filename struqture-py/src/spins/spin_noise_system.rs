@@ -118,16 +118,16 @@ impl SpinLindbladNoiseSystemWrapper {
         ))
     }
 
-    /// Converts a struqture 2.x QubitLindbladNoiseOperator to a struqture 1.x SpinLindbladNoiseSystem.
+    /// Converts a struqture 2.x PauliLindbladNoiseOperator to a struqture 1.x SpinLindbladNoiseSystem.
     ///
     /// Args:
-    ///     input (QubitLindbladNoiseOperator): The struqture 2.x QubitLindbladNoiseOperator to convert to struqture 1.x.
+    ///     input (PauliLindbladNoiseOperator): The struqture 2.x PauliLindbladNoiseOperator to convert to struqture 1.x.
     ///
     /// Returns:
-    ///     SpinLindbladNoiseSystem: The struqture 1.x SpinLindbladNoiseSystem created from the struqture 2.x QubitLindbladNoiseOperator.
+    ///     SpinLindbladNoiseSystem: The struqture 1.x SpinLindbladNoiseSystem created from the struqture 2.x PauliLindbladNoiseOperator.
     ///
     /// Raises:
-    ///     TypeError: If the input is not a struqture 2.x QubitLindbladNoiseOperator.
+    ///     TypeError: If the input is not a struqture 2.x PauliLindbladNoiseOperator.
     ///     ValueError: Conversion failed.
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
@@ -145,7 +145,7 @@ impl SpinLindbladNoiseSystemWrapper {
                 serde_json::from_str(&source_serialisation_meta)
                     .map_err(|_| PyTypeError::new_err(error_message))?;
 
-            let target_serialisation_meta = <struqture_2::spins::QubitLindbladNoiseOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
+            let target_serialisation_meta = <struqture_2::spins::PauliLindbladNoiseOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
 
             struqture_2::check_can_be_deserialised(
                 &target_serialisation_meta,
@@ -159,7 +159,7 @@ impl SpinLindbladNoiseSystemWrapper {
             let bytes = get_bytes
                 .extract::<Vec<u8>>()
                 .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_2::spins::QubitLindbladNoiseOperator =
+            let two_import: struqture_2::spins::PauliLindbladNoiseOperator =
                 deserialize(&bytes[..]).map_err(|err| {
                     PyTypeError::new_err(format!("Type conversion failed: {}", err))
                 })?;

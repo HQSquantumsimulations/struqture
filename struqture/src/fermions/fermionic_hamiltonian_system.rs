@@ -16,16 +16,17 @@ use super::{
 use crate::mappings::JordanWignerFermionToSpin;
 use crate::spins::SpinHamiltonianSystem;
 use crate::{OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError};
+#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Iter, Keys, Values};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
+#[cfg(not(feature = "indexed_map_iterators"))]
+use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Iter, Keys, Values};
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 
 /// FermionHamiltonianSystems are combinations of FermionProducts with specific CalculatorFloat coefficients.
 ///
@@ -297,6 +298,28 @@ impl FermionHamiltonianSystem {
             }
         }
         Ok((separated, remainder))
+    }
+
+    #[cfg(feature = "unstable_struqture_2_import")]
+    /// Import from struqture_2 format.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - struqture 2.x object to convert to 1.x Self object.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Self)` - struqture 1.x object converted from input.
+    /// * `Err(StruqtureError)` - Product conversion from string failed.
+    pub fn from_struqture_2(
+        value: &struqture_2::fermions::FermionHamiltonian,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new(None);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(value) {
+            let self_key = HermitianFermionProduct::from_str(&format!("{}", key).to_string())?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
