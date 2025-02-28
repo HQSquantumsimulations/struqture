@@ -32,7 +32,7 @@ fn new_system(
     number_bosons: Vec<Option<usize>>,
     number_fermions: Vec<Option<usize>>,
 ) -> Bound<MixedSystemWrapper> {
-    let system_type = py.get_type::<MixedSystemWrapper>();
+    let system_type = py.get_type_bound::<MixedSystemWrapper>();
     system_type
         .call1((number_spins, number_bosons, number_fermions))
         .unwrap()
@@ -192,7 +192,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedSystemWrapper>();
+        let new_system = py.get_type_bound::<MixedSystemWrapper>();
         let number_spins: Vec<Option<usize>> = vec![Some(4)];
         let number_bosons: Vec<Option<usize>> = vec![Some(4)];
         let number_fermions: Vec<Option<usize>> = vec![Some(4)];
@@ -258,7 +258,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<MixedSystemWrapper>();
+        let new_system = py.get_type_bound::<MixedSystemWrapper>();
         let number_spins: Vec<Option<usize>> = vec![Some(4)];
         let number_bosons: Vec<Option<usize>> = vec![Some(4)];
         let number_fermions: Vec<Option<usize>> = vec![Some(4)];

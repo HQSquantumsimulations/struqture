@@ -25,7 +25,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python) -> Bound<PlusMinusOperatorWrapper> {
-    let system_type = py.get_type::<PlusMinusOperatorWrapper>();
+    let system_type = py.get_type_bound::<PlusMinusOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -104,7 +104,7 @@ fn test_hermitian_conj() {
 fn spin_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<PlusMinusOperatorWrapper>();
+        let new_system = py.get_type_bound::<PlusMinusOperatorWrapper>();
         let binding = new_system.call0().unwrap();
         let system = binding.downcast::<PlusMinusOperatorWrapper>().unwrap();
         system.call_method1("set", ("0+", 0.1)).unwrap();
@@ -152,7 +152,7 @@ fn spin_system_test_set_get() {
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<PlusMinusOperatorWrapper>();
+        let new_system = py.get_type_bound::<PlusMinusOperatorWrapper>();
         let binding = new_system.call0().unwrap();
         let system = binding.downcast::<PlusMinusOperatorWrapper>().unwrap();
         system
@@ -549,7 +549,7 @@ fn test_from_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinSystemWrapper>();
+        let pp_type = py.get_type_bound::<SpinSystemWrapper>();
         let pp = pp_type.call1((number_spins,)).unwrap();
         pp.downcast::<SpinSystemWrapper>()
             .unwrap()
@@ -565,14 +565,14 @@ fn test_from_spin_sys() {
             .unwrap();
 
         let result = py
-            .get_type::<PlusMinusOperatorWrapper>()
+            .get_type_bound::<PlusMinusOperatorWrapper>()
             .call_method1("from_spin_system", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type::<PlusMinusOperatorWrapper>()
+            .get_type_bound::<PlusMinusOperatorWrapper>()
             .call_method1("from_spin_system", ("No",));
         assert!(result.is_err())
     })
@@ -595,7 +595,7 @@ fn test_to_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinSystemWrapper>();
+        let pp_type = py.get_type_bound::<SpinSystemWrapper>();
         let sys = pp_type.call1((number_spins,)).unwrap();
         sys.downcast::<SpinSystemWrapper>()
             .unwrap()
@@ -645,7 +645,7 @@ fn test_from_spin_ham_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let pp_type = py.get_type_bound::<SpinHamiltonianSystemWrapper>();
         let pp = pp_type.call1((number_spins,)).unwrap();
         pp.downcast::<SpinHamiltonianSystemWrapper>()
             .unwrap()
@@ -661,14 +661,14 @@ fn test_from_spin_ham_sys() {
             .unwrap();
 
         let result = py
-            .get_type::<PlusMinusOperatorWrapper>()
+            .get_type_bound::<PlusMinusOperatorWrapper>()
             .call_method1("from_spin_hamiltonian_system", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type::<PlusMinusOperatorWrapper>()
+            .get_type_bound::<PlusMinusOperatorWrapper>()
             .call_method1("from_spin_system", ("No",));
         assert!(result.is_err())
     })
@@ -683,7 +683,7 @@ fn test_to_spin_ham_sys() {
             .unwrap();
 
         let number_spins: Option<usize> = None;
-        let pp_type = py.get_type::<SpinHamiltonianSystemWrapper>();
+        let pp_type = py.get_type_bound::<SpinHamiltonianSystemWrapper>();
         let sys = pp_type.call1((number_spins,)).unwrap();
         sys.downcast::<SpinHamiltonianSystemWrapper>()
             .unwrap()

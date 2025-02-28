@@ -23,7 +23,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
-    let system_type = py.get_type::<PlusMinusLindbladNoiseOperatorWrapper>();
+    let system_type = py.get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>();
     system_type
         .call0()
         .unwrap()
@@ -34,7 +34,7 @@ fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -602,7 +602,7 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = PlusMinusLindbladNoiseOperatorWrapper::new();
-        let pp_type = py.get_type::<PlusMinusProductWrapper>();
+        let pp_type = py.get_type_bound::<PlusMinusProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
             .downcast::<PlusMinusProductWrapper>()
@@ -776,7 +776,7 @@ fn test_from_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
+        let pp_type = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
         let pp = pp_type.call1((number_spins,)).unwrap();
         pp.downcast::<SpinLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -792,14 +792,14 @@ fn test_from_spin_sys() {
             .unwrap();
 
         let result = py
-            .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
+            .get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>()
             .call_method1("from_spin_noise_system", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
-            .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
+            .get_type_bound::<PlusMinusLindbladNoiseOperatorWrapper>()
             .call_method1("from_spin_noise_system", ("No",));
         assert!(result.is_err())
     })
@@ -822,7 +822,7 @@ fn test_to_spin_sys() {
         .unwrap();
 
         let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
+        let pp_type = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
         let sys = pp_type.call1((number_spins,)).unwrap();
         sys.downcast::<SpinLindbladNoiseSystemWrapper>()
             .unwrap()
@@ -931,7 +931,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
         let sys_2 = new_noisesystem(py);
         sys_2
             .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
@@ -944,7 +944,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
         assert!(sys_from_1.is_err());
     });

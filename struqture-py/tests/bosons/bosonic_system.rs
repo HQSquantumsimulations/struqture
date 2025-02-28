@@ -23,7 +23,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_system(py: Python, number_bosons: Option<usize>) -> Bound<BosonSystemWrapper> {
-    let system_type = py.get_type::<BosonSystemWrapper>();
+    let system_type = py.get_type_bound::<BosonSystemWrapper>();
     system_type
         .call1((number_bosons,))
         .unwrap()
@@ -143,7 +143,7 @@ fn test_hermitian_conj() {
 fn boson_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<BosonSystemWrapper>();
+        let new_system = py.get_type_bound::<BosonSystemWrapper>();
         let number_bosons: Option<usize> = Some(4);
         let binding = new_system.call1((number_bosons,)).unwrap();
         let system = binding.downcast::<BosonSystemWrapper>().unwrap();
@@ -196,7 +196,7 @@ fn boson_system_test_set_get() {
 fn boson_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<BosonSystemWrapper>();
+        let new_system = py.get_type_bound::<BosonSystemWrapper>();
         let number_bosons: Option<usize> = Some(4);
         let binding = new_system.call1((number_bosons,)).unwrap();
         let system = binding.downcast::<BosonSystemWrapper>().unwrap();

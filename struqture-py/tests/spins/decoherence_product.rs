@@ -19,7 +19,7 @@ use struqture_py::spins::DecoherenceProductWrapper;
 
 // helper functions
 fn new_pp(py: Python) -> Bound<DecoherenceProductWrapper> {
-    let pp_type = py.get_type::<DecoherenceProductWrapper>();
+    let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
     pp_type
         .call0()
         .unwrap()
@@ -412,7 +412,7 @@ fn test_to_from_json() {
         let new = new_pp(py);
         let deserialised = new.call_method1("from_json", (&serialised,)).unwrap();
 
-        let pp_type = py.get_type::<DecoherenceProductWrapper>();
+        let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let deserialised_error = pp_type.call_method1("from_json", ("fails".to_string(),));
         assert!(deserialised_error.is_err());
 
