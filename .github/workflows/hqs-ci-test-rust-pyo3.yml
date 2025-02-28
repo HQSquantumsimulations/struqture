@@ -18,7 +18,7 @@ jobs:
       macos: true
       # Run tests also on python 3.13
       python_3_13: true
-      rust_package_name: "struqture@1.12.0"
+      rust_package_name: "struqture"
       features: "json_schema indexed_map_iterators unstable_struqture_2_import"
 
   build_tests:
