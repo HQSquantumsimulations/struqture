@@ -167,7 +167,7 @@ fn create_doc(module: &str) -> PyResult<String> {
         }
         let typing_imports: Vec<&str> = TYPING_POTENTIAL_IMPORTS
             .iter()
-            .filter(|&type_str| main_doc.contains(&format!("{type_str}")))
+            .filter(|&type_str| main_doc.contains(&type_str.to_string()))
             .copied()
             .collect();
         Ok(
