@@ -21,7 +21,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_noisesystem(py: Python) -> Bound<SpinLindbladNoiseSystemWrapper> {
-    let system_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
+    let system_type = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
     let number_spins: Option<usize> = None;
     system_type
         .call1((number_spins,))
@@ -33,7 +33,7 @@ fn new_noisesystem(py: Python) -> Bound<SpinLindbladNoiseSystemWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -55,7 +55,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let system_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
+        let system_type = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
         let new_system = system_type.call1((4_usize,)).unwrap();
         let system_wrapper = new_system
             .downcast::<SpinLindbladNoiseSystemWrapper>()
@@ -140,7 +140,7 @@ fn test_empty_clone() {
 fn spin_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<SpinLindbladNoiseSystemWrapper>();
+        let new_system = py.get_type_bound::<SpinLindbladNoiseSystemWrapper>();
         let number_spins: Option<usize> = Some(4);
         let binding = new_system.call1((number_spins,)).unwrap();
         let system = binding
@@ -684,7 +684,7 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = SpinLindbladNoiseSystemWrapper::new(None);
-        let pp_type = py.get_type::<DecoherenceProductWrapper>();
+        let pp_type = py.get_type_bound::<DecoherenceProductWrapper>();
         let new_pp = pp_type.call0().unwrap();
         let pp = new_pp
             .downcast::<DecoherenceProductWrapper>()

@@ -21,7 +21,7 @@ use test_case::test_case;
 
 // helper functions
 fn new_noisesystem(py: Python) -> Bound<FermionLindbladNoiseSystemWrapper> {
-    let system_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
+    let system_type = py.get_type_bound::<FermionLindbladNoiseSystemWrapper>();
     let number_modes: Option<usize> = None;
     system_type
         .call1((number_modes,))
@@ -33,7 +33,7 @@ fn new_noisesystem(py: Python) -> Bound<FermionLindbladNoiseSystemWrapper> {
 
 // helper function to convert CalculatorFloat into a python object
 fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+    let parameter_type = py.get_type_bound::<CalculatorFloatWrapper>();
     match parameter {
         CalculatorFloat::Float(x) => parameter_type
             .call1((x,))
@@ -55,7 +55,7 @@ fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<Calcu
 fn test_default_partialeq_debug_clone() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let system_type = py.get_type::<FermionLindbladNoiseSystemWrapper>();
+        let system_type = py.get_type_bound::<FermionLindbladNoiseSystemWrapper>();
         let binding = system_type.call1((4_usize,)).unwrap();
         let new_system = binding
             .downcast::<FermionLindbladNoiseSystemWrapper>()
@@ -141,7 +141,7 @@ fn test_empty_clone() {
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionLindbladNoiseSystemWrapper>();
+        let new_system = py.get_type_bound::<FermionLindbladNoiseSystemWrapper>();
         let number_modes: Option<usize> = Some(4);
         let binding = new_system.call1((number_modes,)).unwrap();
         let system = binding
@@ -687,7 +687,7 @@ fn test_format_repr() {
             )
             .unwrap();
         let mut rust_system = FermionLindbladNoiseSystemWrapper::new(None);
-        let pp_type = py.get_type::<FermionProductWrapper>();
+        let pp_type = py.get_type_bound::<FermionProductWrapper>();
         let new_pp = pp_type.call1(([0], [0])).unwrap();
 
         rust_system

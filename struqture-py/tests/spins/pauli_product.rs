@@ -19,7 +19,7 @@ use struqture_py::spins::PauliProductWrapper;
 
 // helper functions
 fn new_pp(py: Python) -> Bound<PauliProductWrapper> {
-    let pp_type = py.get_type::<PauliProductWrapper>();
+    let pp_type = py.get_type_bound::<PauliProductWrapper>();
     pp_type
         .call0()
         .unwrap()

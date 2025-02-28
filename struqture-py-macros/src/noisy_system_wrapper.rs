@@ -954,7 +954,7 @@ pub fn noisywrapper(
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-                    PyByteArray::new(py, &serialized[..]).into()
+                    PyByteArray::new_bound(py, &serialized[..]).into()
                 });
                 Ok(b)
             }

@@ -25,7 +25,7 @@ fn new_pp(
     creators: Vec<usize>,
     annihilators: Vec<usize>,
 ) -> Bound<HermitianBosonProductWrapper> {
-    let pp_type = py.get_type::<HermitianBosonProductWrapper>();
+    let pp_type = py.get_type_bound::<HermitianBosonProductWrapper>();
     pp_type
         .call1((creators, annihilators))
         .unwrap()
@@ -39,7 +39,7 @@ fn new_pp_bosonic(
     creators: Vec<usize>,
     annihilators: Vec<usize>,
 ) -> Bound<BosonProductWrapper> {
-    let pp_type = py.get_type::<BosonProductWrapper>();
+    let pp_type = py.get_type_bound::<BosonProductWrapper>();
     pp_type
         .call1((creators, annihilators))
         .unwrap()
@@ -99,7 +99,7 @@ fn test_default_partialeq_debug_clone() {
 fn test_new_error() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let pp_type = py.get_type::<HermitianBosonProductWrapper>();
+        let pp_type = py.get_type_bound::<HermitianBosonProductWrapper>();
         let pp = pp_type.call1(([2_u64, 3_u64], [1_u64, 1_u64]));
         assert!(pp.is_err());
     });
@@ -226,7 +226,7 @@ fn test_remap_modes() {
         let expected_coeff = CalculatorComplexWrapper {
             internal: 1.0.into(),
         };
-        let remap_dict = [(0, 3), (1, 2), (2, 0), (3, 1)].into_py_dict(py).unwrap();
+        let remap_dict = [(0, 3), (1, 2), (2, 0), (3, 1)].into_py_dict_bound(py);
         let results = hbp.call_method1("remap_modes", (remap_dict,)).unwrap();
         let comparison = bool::extract_bound(
             &results

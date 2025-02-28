@@ -26,7 +26,7 @@ fn new_system(
     py: Python,
     number_fermions: Option<usize>,
 ) -> Bound<FermionHamiltonianSystemWrapper> {
-    let system_type = py.get_type::<FermionHamiltonianSystemWrapper>();
+    let system_type = py.get_type_bound::<FermionHamiltonianSystemWrapper>();
     system_type
         .call1((number_fermions,))
         .unwrap()
@@ -36,7 +36,7 @@ fn new_system(
 }
 // helper functions
 fn new_fermionic_system(py: Python, number_fermions: Option<usize>) -> Bound<FermionSystemWrapper> {
-    let system_type = py.get_type::<FermionSystemWrapper>();
+    let system_type = py.get_type_bound::<FermionSystemWrapper>();
     system_type
         .call1((number_fermions,))
         .unwrap()
@@ -159,7 +159,7 @@ fn test_hermitian_conj() {
 fn fermion_system_test_set_get() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let new_system = py.get_type_bound::<FermionHamiltonianSystemWrapper>();
         let number_fermions: Option<usize> = Some(4);
         let binding = new_system.call1((number_fermions,)).unwrap();
         let system = binding
@@ -214,7 +214,7 @@ fn fermion_system_test_set_get() {
 fn fermion_system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let new_system = py.get_type::<FermionHamiltonianSystemWrapper>();
+        let new_system = py.get_type_bound::<FermionHamiltonianSystemWrapper>();
         let number_fermions: Option<usize> = Some(4);
         let binding = new_system.call1((number_fermions,)).unwrap();
         let system = binding
@@ -918,7 +918,7 @@ fn test_json_schema() {
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"c0a0\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"FermionHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"c0a0\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"FermionHamiltonian\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
         let sys_2 = new_system(py, None);
         sys_2
             .call_method1("add_operator_product", ("c0a0", 1.0))
@@ -931,7 +931,7 @@ fn test_from_json_struqture_1() {
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"c0a0\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"FermionHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new_bound(py, "{\"items\":[[\"c0a0\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"FermionHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
         let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
