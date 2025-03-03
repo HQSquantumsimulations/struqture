@@ -25,8 +25,6 @@ use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 
 /// FermionHamiltonianSystems are combinations of FermionProducts with specific CalculatorFloat coefficients.
 ///

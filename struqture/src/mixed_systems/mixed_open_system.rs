@@ -10,16 +10,12 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[cfg(feature = "unstable_struqture_2_import")]
-use super::{HermitianMixedProduct, MixedDecoherenceProduct};
 use super::{MixedHamiltonianSystem, MixedLindbladNoiseSystem, OperateOnMixedSystems};
 use crate::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use tinyvec::TinyVec;
 
 /// MixedLindbladOpenSystems are representations of open systems of spins, where a system (MixedHamiltonianSystem) interacts with the environment via noise (MixedLindbladNoiseSystem).

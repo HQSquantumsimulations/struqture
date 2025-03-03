@@ -29,8 +29,6 @@ use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 
 /// PlusMinusLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///

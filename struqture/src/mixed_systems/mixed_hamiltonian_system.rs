@@ -27,8 +27,6 @@ use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use tinyvec::TinyVec;
 
 /// MixedHamiltonianSystems are representations of physical systems of spins, with a MixedHamiltonian to represent the hermitian hamiltonian of the system, and an optional number of spins.

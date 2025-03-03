@@ -24,8 +24,6 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 #[cfg(not(feature = "indexed_map_iterators"))]
 use std::collections::hash_map::{Iter, Keys, Values};
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};

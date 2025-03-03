@@ -24,8 +24,6 @@ use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 
 /// FermionSystems are FermionOperators with a certain number of modes. When constructing it, the `new` function takes a `number_modes` input, and therefore
 /// when the user adds a set of FermionProducts with specific CalculatorComplex coefficients, their indices must not exceed the number of modes in the FermionSystem.
