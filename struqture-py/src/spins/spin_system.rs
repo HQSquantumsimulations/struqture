@@ -148,56 +148,27 @@ impl SpinSystemWrapper {
     ///     ValueError: Conversion failed.
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<SpinSystemWrapper> {
-        Python::with_gil(|_| -> PyResult<SpinSystemWrapper> {
-            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
-            let source_serialisation_meta = input
-                .call_method0("_get_serialisation_meta")
-                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
-            let source_serialisation_meta: String = source_serialisation_meta
-                .extract()
-                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
-
-            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
-                serde_json::from_str(&source_serialisation_meta)
-                    .map_err(|_| PyTypeError::new_err(error_message))?;
-
-            let target_serialisation_meta = <struqture_2::spins::PauliOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
-
-            struqture_2::check_can_be_deserialised(
-                &target_serialisation_meta,
-                &source_serialisation_meta,
-            )
-            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
-
-            let get_bytes = input
-                .call_method0("to_bincode")
-                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
-            let bytes = get_bytes
-                .extract::<Vec<u8>>()
-                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_2::spins::PauliOperator = deserialize(&bytes[..])
-                .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
-            let mut spin_system = SpinSystem::new(None);
-            for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {
-                let value_string = key.to_string();
-                let self_key = PauliProduct::from_str(&value_string).map_err(
-                    |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x PauliProduct from struqture 2.x PauliProduct. Conversion failed. Was the right type passed to all functions?".to_string()
-                ))?;
-
-                spin_system
-                    .set(self_key, val.clone())
-                    .map_err(|_err: StruqtureError| {
-                        PyValueError::new_err(
-                            "Could not set key in resulting 1.x SpinSystem".to_string(),
-                        )
-                    })?;
-            }
-
-            Ok(SpinSystemWrapper {
-                internal: spin_system,
-            })
+    pub fn from_json_struqture_2(input: String) -> PyResult<SpinSystemWrapper> {
+        let operator: struqture_2::spins::PauliOperator =
+            serde_json::from_str(&input).map_err(|err| {
+                PyValueError::new_err(format!(
+                    "Input cannot be deserialized from json to struqture 2.x: {}",
+                    err
+                ))
+            })?;
+        let mut new_operator = SpinSystem::new(None);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
+            let self_key =
+                PauliProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
+                    PyValueError::new_err(format!(
+                        "Struqture 2.x PauliProduct cannot be converted to struqture 1.x: {}",
+                        err
+                    ))
+                })?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
+        Ok(SpinSystemWrapper {
+            internal: new_operator,
         })
     }
 }

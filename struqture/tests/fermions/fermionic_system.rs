@@ -17,8 +17,6 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::fermions::{FermionOperator, FermionProduct, FermionSystem};
 use struqture::{
     ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
@@ -689,18 +687,4 @@ fn test_fermion_system_schema(number_fermions: Option<usize>) {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
-}
-
-#[cfg(feature = "unstable_struqture_2_import")]
-#[test]
-fn test_from_struqture_2() {
-    let pp_1 = FermionProduct::new([0], []).unwrap();
-    let mut ss_1 = FermionSystem::new(None);
-    ss_1.set(pp_1.clone(), 1.0.into()).unwrap();
-
-    let pp_2 = struqture_2::fermions::FermionProduct::from_str("c0").unwrap();
-    let mut ss_2 = struqture_2::fermions::FermionOperator::new();
-    struqture_2::OperateOnDensityMatrix::set(&mut ss_2, pp_2.clone(), 1.0.into()).unwrap();
-
-    assert!(FermionSystem::from_struqture_2(&ss_2).unwrap() == ss_1);
 }

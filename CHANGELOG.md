@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.11.3
+
+* Moved the struqture 2.0 conversion code from struqture to struqture-py, thereby removing the struqture 2.0 dependency of struqture.
+
 ## 1.11.2
 
 * Updated to new struqture 2.0 naming (Qubit -> Pauli).

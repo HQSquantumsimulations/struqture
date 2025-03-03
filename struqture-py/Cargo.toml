@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py"
-version = "1.11.2"
+version = "1.11.3"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.76"
@@ -61,4 +61,4 @@ default = ["extension-module", "json_schema", "indexed_map_iterators"]
 json_schema = ["struqture/json_schema"]
 doc_generator = []
 indexed_map_iterators = ["struqture/indexed_map_iterators"]
-unstable_struqture_2_import = ["struqture_2", "struqture/unstable_struqture_2_import"]
+unstable_struqture_2_import = ["struqture_2"]

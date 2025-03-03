@@ -131,64 +131,34 @@ impl SpinLindbladNoiseSystemWrapper {
     ///     ValueError: Conversion failed.
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_struqture_2(input: &Bound<PyAny>) -> PyResult<Self> {
-        Python::with_gil(|_| -> PyResult<Self> {
-            let error_message = "Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type?".to_string();
-            let source_serialisation_meta = input
-                .call_method0("_get_serialisation_meta")
-                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
-            let source_serialisation_meta: String = source_serialisation_meta
-                .extract()
-                .map_err(|_| PyTypeError::new_err(error_message.clone()))?;
-
-            let source_serialisation_meta: struqture_2::StruqtureSerialisationMeta =
-                serde_json::from_str(&source_serialisation_meta)
-                    .map_err(|_| PyTypeError::new_err(error_message))?;
-
-            let target_serialisation_meta = <struqture_2::spins::PauliLindbladNoiseOperator as struqture_2::SerializationSupport>::target_serialisation_meta();
-
-            struqture_2::check_can_be_deserialised(
-                &target_serialisation_meta,
-                &source_serialisation_meta,
-            )
-            .map_err(|err| PyTypeError::new_err(err.to_string()))?;
-
-            let get_bytes = input
-                .call_method0("to_bincode")
-                .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
-            let bytes = get_bytes
-                .extract::<Vec<u8>>()
-                .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-            let two_import: struqture_2::spins::PauliLindbladNoiseOperator =
-                deserialize(&bytes[..]).map_err(|err| {
-                    PyTypeError::new_err(format!("Type conversion failed: {}", err))
+    pub fn from_json_struqture_2(input: String) -> PyResult<SpinLindbladNoiseSystemWrapper> {
+        let operator: struqture_2::spins::PauliLindbladNoiseOperator = serde_json::from_str(&input)
+            .map_err(|err| {
+                PyValueError::new_err(format!(
+                    "Input cannot be deserialized from json to struqture 2.x: {}",
+                    err
+                ))
+            })?;
+        let mut new_operator = SpinLindbladNoiseSystem::new(None);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
+            let self_key_left = DecoherenceProduct::from_str(&format!("{}", key.0).to_string())
+                .map_err(|err| {
+                    PyValueError::new_err(format!(
+                        "Struqture 2.x DecoherenceProduct cannot be converted to struqture 1.x: {}",
+                        err
+                    ))
                 })?;
-            let mut spin_system = SpinLindbladNoiseSystem::new(None);
-            for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&two_import) {
-                let left = key.0.to_string();
-                let right = key.1.to_string();
-                let self_left = DecoherenceProduct::from_str(&left).map_err(
-                    |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x DecoherenceProduct from struqture 2.x DecoherenceProduct. Conversion failed. Was the right type passed to all functions?".to_string()
-                ))?;
-                let self_right = DecoherenceProduct::from_str(&right).map_err(
-                    |_err: StruqtureError| PyValueError::new_err(
-                        "Trying to obtain struqture 1.x DecoherenceProduct from struqture 2.x DecoherenceProduct. Conversion failed. Was the right type passed to all functions?".to_string()
-                ))?;
-
-                spin_system
-                    .set((self_left, self_right), val.clone())
-                    .map_err(|_err: StruqtureError| {
-                        PyValueError::new_err(
-                            "Could not set key in resulting 1.x SpinLindbladNoiseSystem"
-                                .to_string(),
-                        )
-                    })?;
-            }
-
-            Ok(Self {
-                internal: spin_system,
-            })
+            let self_key_right = DecoherenceProduct::from_str(&format!("{}", key.1).to_string())
+                .map_err(|err| {
+                    PyValueError::new_err(format!(
+                        "Struqture 2.x DecoherenceProduct cannot be converted to struqture 1.x: {}",
+                        err
+                    ))
+                })?;
+            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(SpinLindbladNoiseSystemWrapper {
+            internal: new_operator,
         })
     }
 }

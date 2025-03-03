@@ -10,16 +10,12 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[cfg(feature = "unstable_struqture_2_import")]
-use super::{HermitianMixedProduct, MixedDecoherenceProduct};
 use super::{MixedHamiltonianSystem, MixedLindbladNoiseSystem, OperateOnMixedSystems};
 use crate::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use tinyvec::TinyVec;
 
 /// MixedLindbladOpenSystems are representations of open systems of spins, where a system (MixedHamiltonianSystem) interacts with the environment via noise (MixedLindbladNoiseSystem).
@@ -333,57 +329,6 @@ impl MixedLindbladOpenSystem {
             ),
             noise: MixedLindbladNoiseSystem::new(number_spins, number_bosons, number_fermions),
         }
-    }
-
-    #[cfg(feature = "unstable_struqture_2_import")]
-    /// Import from struqture_2 format.
-    ///
-    /// # Arguments
-    ///
-    /// * `value` - struqture 2.x object to convert to 1.x Self object.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok(Self)` - struqture 1.x object converted from input.
-    /// * `Err(StruqtureError)` - Product conversion from string failed.
-    pub fn from_struqture_2(
-        value: &struqture_2::mixed_systems::MixedLindbladOpenSystem,
-    ) -> Result<Self, StruqtureError> {
-        let number_spin_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_spins(value)
-                .into_iter()
-                .map(|_| None);
-        let number_boson_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(value)
-                .into_iter()
-                .map(|_| None);
-        let number_fermion_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
-                value,
-            )
-            .into_iter()
-            .map(|_| None);
-        let mut new_operator = Self::new(
-            number_spin_systems,
-            number_boson_systems,
-            number_fermion_systems,
-        );
-        let system = struqture_2::OpenSystem::system(value);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(system) {
-            let self_key = HermitianMixedProduct::from_str(&format!("{}", key).to_string())?;
-            let _ = new_operator.system_mut().set(self_key, val.clone());
-        }
-        let noise = struqture_2::OpenSystem::noise(value);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(noise) {
-            let self_key_left =
-                MixedDecoherenceProduct::from_str(&format!("{}", key.0).to_string())?;
-            let self_key_right =
-                MixedDecoherenceProduct::from_str(&format!("{}", key.1).to_string())?;
-            let _ = new_operator
-                .noise_mut()
-                .set((self_key_left, self_key_right), val.clone());
-        }
-        Ok(new_operator)
     }
 }
 
