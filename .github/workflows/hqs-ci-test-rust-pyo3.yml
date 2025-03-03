@@ -18,10 +18,9 @@ jobs:
       macos: true
       # Run tests also on python 3.13
       python_3_13: true
-      # Change this for each release!
-      rust_package_name: "struqture@1.12.0"
+      rust_package_name: "struqture"
       features: "json_schema indexed_map_iterators unstable_struqture_2_import"
-      test_code_coverage: false
+      test_code_coverage: true
 
   build_tests:
     uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_tests_rust_pyo3.yml@main

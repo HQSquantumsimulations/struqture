@@ -1075,17 +1075,3 @@ fn test_spin_hamiltonian_system_schema(number_spins: Option<usize>) {
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
 }
-
-#[cfg(feature = "unstable_struqture_2_import")]
-#[test]
-fn test_from_struqture_2() {
-    let pp_1 = PauliProduct::new().x(0).y(1).z(25);
-    let mut ss_1 = SpinHamiltonianSystem::new(None);
-    ss_1.set(pp_1.clone(), 1.0.into()).unwrap();
-
-    let pp_2 = struqture_2::spins::PauliProduct::from_str("0X1Y25Z").unwrap();
-    let mut ss_2 = struqture_2::spins::PauliHamiltonian::new();
-    struqture_2::OperateOnDensityMatrix::set(&mut ss_2, pp_2.clone(), 1.0.into()).unwrap();
-
-    assert!(SpinHamiltonianSystem::from_struqture_2(&ss_2).unwrap() == ss_1);
-}

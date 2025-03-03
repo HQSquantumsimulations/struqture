@@ -27,8 +27,6 @@ use std::collections::hash_map::{Iter, Keys, Values};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use tinyvec::TinyVec;
 
 /// MixedHamiltonianSystems are representations of physical systems of spins, with a MixedHamiltonian to represent the hermitian hamiltonian of the system, and an optional number of spins.
@@ -491,76 +489,6 @@ impl MixedHamiltonianSystem {
         } else {
             Err(StruqtureError::NumberSpinsExceeded)
         }
-    }
-
-    // /// Separate self into an operator with the terms of given number of spins, bosons and fermions and an operator with the remaining operations
-    // ///
-    // /// # Arguments
-    // ///
-    // /// * `number_particles` - Number of spins, bosons and fermions to filter for in the keys.
-    // ///
-    // /// # Returns
-    // ///
-    // /// `Ok((separated, remainder))` - Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-    // pub fn separate_into_n_terms(
-    //     &self,
-    //     number_particles: (usize, usize, usize),
-    // ) -> Result<(Self, Self), StruqtureError> {
-    //     let mut separated = Self::default();
-    //     let mut remainder = Self::default();
-    //     for (prod, val) in self.iter() {
-    //         if (
-    //             prod.spins().len(),
-    //             prod.bosons().len(),
-    //             prod.fermions().len(),
-    //         ) == number_particles
-    //         {
-    //             separated.add_operator_product(prod.clone(), val.clone())?;
-    //         } else {
-    //             remainder.add_operator_product(prod.clone(), val.clone())?;
-    //         }
-    //     }
-    //     Ok((separated, remainder))
-    // }
-
-    #[cfg(feature = "unstable_struqture_2_import")]
-    /// Import from struqture_2 format.
-    ///
-    /// # Arguments
-    ///
-    /// * `value` - struqture 2.x object to convert to 1.x Self object.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok(Self)` - struqture 1.x object converted from input.
-    /// * `Err(StruqtureError)` - Product conversion from string failed.
-    pub fn from_struqture_2(
-        value: &struqture_2::mixed_systems::MixedHamiltonian,
-    ) -> Result<Self, StruqtureError> {
-        let number_spin_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_spins(value)
-                .into_iter()
-                .map(|_| None);
-        let number_boson_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(value)
-                .into_iter()
-                .map(|_| None);
-        let number_fermion_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
-                value,
-            )
-            .into_iter()
-            .map(|_| None);
-        let mut new_operator = Self::new(
-            number_spin_systems,
-            number_boson_systems,
-            number_fermion_systems,
-        );
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(value) {
-            let self_key = HermitianMixedProduct::from_str(&format!("{}", key).to_string())?;
-            let _ = new_operator.set(self_key, val.clone());
-        }
-        Ok(new_operator)
     }
 }
 

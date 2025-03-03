@@ -4,6 +4,11 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.12.1
+
+* Updated to struqture 2.0 v2.0.0-alpha.11.
+* Moved the struqture 2.0 conversion code from struqture to struqture-py, thereby removing the struqture 2.0 dependency of struqture.
+
 ## 1.12.0
 
 * Updated to pyo3 0.23 (includes updating to qoqo-calculator 1.5.0 and struqture 2.0.0-alpha.10).

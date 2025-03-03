@@ -21,7 +21,11 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorFloatWrapper;
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
+#[cfg(feature = "unstable_struqture_2_import")]
+use struqture::spins::PauliProduct;
 use struqture::spins::{
     OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
@@ -30,6 +34,7 @@ use struqture::StruqtureError;
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
+
 /// These are representations of systems of spins.
 ///
 /// SpinHamiltonianSystems are characterized by a SpinOperator to represent the hamiltonian of the spin system
@@ -150,20 +155,26 @@ impl SpinHamiltonianSystemWrapper {
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
     pub fn from_json_struqture_2(input: String) -> PyResult<SpinHamiltonianSystemWrapper> {
-        let pauli_operator: struqture_2::spins::PauliHamiltonian = serde_json::from_str(&input)
-            .map_err(|err| {
+        let operator: struqture_2::spins::PauliHamiltonian =
+            serde_json::from_str(&input).map_err(|err| {
                 PyValueError::new_err(format!(
                     "Input cannot be deserialized from json to struqture 2.x: {}",
                     err
                 ))
             })?;
+        let mut new_operator = SpinHamiltonianSystem::new(None);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
+            let self_key =
+                PauliProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
+                    PyValueError::new_err(format!(
+                        "Struqture 2.x PauliProduct cannot be converted to struqture 1.x: {}",
+                        err
+                    ))
+                })?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
         Ok(SpinHamiltonianSystemWrapper {
-            internal: SpinHamiltonianSystem::from_struqture_2(&pauli_operator).map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Struqture 2.x cannot be converted to struqture 1.x: {}",
-                    err
-                ))
-            })?,
+            internal: new_operator,
         })
     }
 }
