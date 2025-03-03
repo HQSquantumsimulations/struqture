@@ -148,7 +148,7 @@ impl SpinSystemWrapper {
     ///     ValueError: Conversion failed.
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_json_struqture_2(input: &Bound<PyAny>) -> PyResult<SpinSystemWrapper> {
+    pub fn from_json_struqture_2(input: String) -> PyResult<SpinSystemWrapper> {
         let operator: struqture_2::spins::PauliOperator =
             serde_json::from_str(&input).map_err(|err| {
                 PyValueError::new_err(format!(
@@ -157,7 +157,7 @@ impl SpinSystemWrapper {
                 ))
             })?;
         let mut new_operator = SpinSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(operator) {
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
             let self_key =
                 PauliProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
                     PyValueError::new_err(format!(

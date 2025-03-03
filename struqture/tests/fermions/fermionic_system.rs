@@ -17,8 +17,6 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::fermions::{FermionOperator, FermionProduct, FermionSystem};
 use struqture::{
     ModeIndex, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,

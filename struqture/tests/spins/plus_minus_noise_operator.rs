@@ -17,8 +17,6 @@ use serde_test::{assert_tokens, Configure, Token};
 use std::collections::{BTreeMap, HashMap};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::spins::{
     DecoherenceProduct, PlusMinusLindbladNoiseOperator, PlusMinusOperator, PlusMinusProduct,
     SpinLindbladNoiseOperator,

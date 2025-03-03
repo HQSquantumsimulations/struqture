@@ -21,7 +21,11 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorFloatWrapper;
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
+#[cfg(feature = "unstable_struqture_2_import")]
+use struqture::spins::PauliProduct;
 use struqture::spins::{
     OperateOnSpins, SpinHamiltonianSystem, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };
@@ -30,6 +34,7 @@ use struqture::StruqtureError;
 use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
+
 /// These are representations of systems of spins.
 ///
 /// SpinHamiltonianSystems are characterized by a SpinOperator to represent the hamiltonian of the spin system
@@ -158,7 +163,7 @@ impl SpinHamiltonianSystemWrapper {
                 ))
             })?;
         let mut new_operator = SpinHamiltonianSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(operator) {
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
             let self_key =
                 PauliProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
                     PyValueError::new_err(format!(

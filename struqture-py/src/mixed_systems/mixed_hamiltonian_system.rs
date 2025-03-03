@@ -17,6 +17,10 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
+#[cfg(feature = "unstable_struqture_2_import")]
+use struqture::mixed_systems::HermitianMixedProduct;
 use struqture::mixed_systems::{
     GetValueMixed, MixedHamiltonianSystem, MixedProduct, MixedSystem, OperateOnMixedSystems,
 };
@@ -180,18 +184,18 @@ impl MixedHamiltonianSystemWrapper {
             ))
         })?;
         let number_spin_systems =
-            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_spins(operator)
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_spins(&operator)
                 .into_iter()
                 .map(|_| None);
         let number_boson_systems =
             struqture_2::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
-                operator,
+                &operator,
             )
             .into_iter()
             .map(|_| None);
         let number_fermion_systems =
             struqture_2::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
-                operator,
+                &operator,
             )
             .into_iter()
             .map(|_| None);
@@ -200,7 +204,7 @@ impl MixedHamiltonianSystemWrapper {
             number_boson_systems,
             number_fermion_systems,
         );
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(operator) {
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
             let self_key = HermitianMixedProduct::from_str(&format!("{}", key).to_string())
                 .map_err(|err| {
                     PyValueError::new_err(format!(

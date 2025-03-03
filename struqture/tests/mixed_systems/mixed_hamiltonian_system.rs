@@ -18,8 +18,6 @@ use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::collections::HashMap;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::{

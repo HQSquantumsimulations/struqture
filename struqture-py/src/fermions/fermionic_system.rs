@@ -18,6 +18,10 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
+#[cfg(feature = "unstable_struqture_2_import")]
+use std::str::FromStr;
+#[cfg(feature = "unstable_struqture_2_import")]
+use struqture::fermions::FermionProduct;
 use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerFermionToSpin;
 #[cfg(feature = "json_schema")]
@@ -145,7 +149,7 @@ impl FermionSystemWrapper {
                 ))
             })?;
         let mut new_operator = FermionSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(operator) {
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
             let self_key =
                 FermionProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
                     PyValueError::new_err(format!(
