@@ -1149,23 +1149,3 @@ fn test_mixed_hamiltonian_system_schema(number_particles: Option<usize>) {
 
     assert!(validation.is_ok());
 }
-
-#[cfg(feature = "unstable_struqture_2_import")]
-#[test]
-fn test_from_struqture_2() {
-    let pp_1 = HermitianMixedProduct::new(
-        [PauliProduct::new().z(0)],
-        [BosonProduct::new([1], [1]).unwrap()],
-        [FermionProduct::new([0], [0]).unwrap()],
-    )
-    .unwrap();
-    let mut ss_1 = MixedHamiltonianSystem::new([None], [None], [None]);
-    ss_1.set(pp_1.clone(), 1.0.into()).unwrap();
-
-    let pp_2 =
-        struqture_2::mixed_systems::HermitianMixedProduct::from_str("S0Z:Bc1a1:Fc0a0").unwrap();
-    let mut ss_2 = struqture_2::mixed_systems::MixedHamiltonian::new(1, 1, 1);
-    struqture_2::OperateOnDensityMatrix::set(&mut ss_2, pp_2.clone(), 1.0.into()).unwrap();
-
-    assert!(MixedHamiltonianSystem::from_struqture_2(&ss_2).unwrap() == ss_1);
-}

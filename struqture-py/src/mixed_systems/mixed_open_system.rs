@@ -106,22 +106,72 @@ impl MixedLindbladOpenSystemWrapper {
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
     pub fn from_json_struqture_2(input: String) -> PyResult<MixedLindbladOpenSystemWrapper> {
-        let pauli_operator: struqture_2::mixed_systems::MixedLindbladOpenSystem =
+        let operator: struqture_2::mixed_systems::MixedLindbladOpenSystem =
             serde_json::from_str(&input).map_err(|err| {
                 PyValueError::new_err(format!(
                     "Input cannot be deserialized from json to struqture 2.x: {}",
                     err
                 ))
             })?;
-        Ok(MixedLindbladOpenSystemWrapper {
-            internal: MixedLindbladOpenSystem::from_struqture_2(&pauli_operator).map_err(
+        let number_spin_systems =
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_spins(operator)
+                .into_iter()
+                .map(|_| None);
+        let number_boson_systems =
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
+                operator,
+            )
+            .into_iter()
+            .map(|_| None);
+        let number_fermion_systems =
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
+                operator,
+            )
+            .into_iter()
+            .map(|_| None);
+        let mut new_operator = MixedLindbladOpenSystem::new(
+            number_spin_systems,
+            number_boson_systems,
+            number_fermion_systems,
+        );
+        let system = struqture_2::OpenSystem::system(operator);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(system) {
+            let self_key = HermitianMixedProduct::from_str(&format!("{}", key).to_string()).map_err(
                 |err| {
                     PyValueError::new_err(format!(
-                        "Struqture 2.x cannot be converted to struqture 1.x: {}",
+                        "Struqture 2.x HermitianMixedProduct cannot be converted to struqture 1.x: {}",
                         err
                     ))
                 },
-            )?,
+            )?;
+            let _ = new_operator.system_mut().set(self_key, val.clone());
+        }
+        let noise = struqture_2::OpenSystem::noise(operator);
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(noise) {
+            let self_key_left =
+                MixedDecoherenceProduct::from_str(&format!("{}", key.0).to_string()).map_err(
+                    |err| {
+                        PyValueError::new_err(format!(
+                            "Struqture 2.x MixedDecoherenceProduct cannot be converted to struqture 1.x: {}",
+                            err
+                        ))
+                    },
+                )?;
+            let self_key_right =
+                MixedDecoherenceProduct::from_str(&format!("{}", key.1).to_string()).map_err(
+                    |err| {
+                        PyValueError::new_err(format!(
+                            "Struqture 2.x MixedDecoherenceProduct cannot be converted to struqture 1.x: {}",
+                            err
+                        ))
+                    },
+                )?;
+            let _ = new_operator
+                .noise_mut()
+                .set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(MixedLindbladOpenSystemWrapper {
+            internal: new_operator,
         })
     }
 }

@@ -172,20 +172,46 @@ impl MixedHamiltonianSystemWrapper {
     #[staticmethod]
     #[cfg(feature = "unstable_struqture_2_import")]
     pub fn from_json_struqture_2(input: String) -> PyResult<MixedHamiltonianSystemWrapper> {
-        let pauli_operator: struqture_2::mixed_systems::MixedHamiltonian =
-            serde_json::from_str(&input).map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Input cannot be deserialized from json to struqture 2.x: {}",
+        let operator: struqture_2::mixed_systems::MixedHamiltonian = serde_json::from_str(&input)
+            .map_err(|err| {
+            PyValueError::new_err(format!(
+                "Input cannot be deserialized from json to struqture 2.x: {}",
+                err
+            ))
+        })?;
+        let number_spin_systems =
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_spins(operator)
+                .into_iter()
+                .map(|_| None);
+        let number_boson_systems =
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_bosonic_modes(
+                operator,
+            )
+            .into_iter()
+            .map(|_| None);
+        let number_fermion_systems =
+            struqture_2::mixed_systems::OperateOnMixedSystems::current_number_fermionic_modes(
+                operator,
+            )
+            .into_iter()
+            .map(|_| None);
+        let mut new_operator = MixedHamiltonianSystem::new(
+            number_spin_systems,
+            number_boson_systems,
+            number_fermion_systems,
+        );
+        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(operator) {
+            let self_key = HermitianMixedProduct::from_str(&format!("{}", key).to_string())
+                .map_err(|err| {
+                    PyValueError::new_err(format!(
+                    "Struqture 2.x HermitianMixedProduct cannot be converted to struqture 1.x: {}",
                     err
                 ))
-            })?;
+                })?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
         Ok(MixedHamiltonianSystemWrapper {
-            internal: MixedHamiltonianSystem::from_struqture_2(&pauli_operator).map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Struqture 2.x cannot be converted to struqture 1.x: {}",
-                    err
-                ))
-            })?,
+            internal: new_operator,
         })
     }
 }

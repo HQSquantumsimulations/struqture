@@ -348,29 +348,6 @@ impl PlusMinusLindbladNoiseOperator {
         }
         Ok((separated, remainder))
     }
-
-    #[cfg(feature = "unstable_struqture_2_import")]
-    /// Import from struqture_2 format.
-    ///
-    /// # Arguments
-    ///
-    /// * `value` - struqture 2.x object to convert to 1.x Self object.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok(Self)` - struqture 1.x object converted from input.
-    /// * `Err(StruqtureError)` - Product conversion from string failed.
-    pub fn from_struqture_2(
-        value: &struqture_2::spins::PlusMinusLindbladNoiseOperator,
-    ) -> Result<Self, StruqtureError> {
-        let mut new_operator = Self::new();
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(value) {
-            let self_key_left = PlusMinusProduct::from_str(&format!("{}", key.0).to_string())?;
-            let self_key_right = PlusMinusProduct::from_str(&format!("{}", key.1).to_string())?;
-            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
-        }
-        Ok(new_operator)
-    }
 }
 
 impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {

@@ -1439,37 +1439,3 @@ fn test_mixed_open_system_schema(number_particles: Option<usize>) {
 
     assert!(validation.is_ok());
 }
-
-#[cfg(feature = "unstable_struqture_2_import")]
-#[test]
-fn test_from_struqture_2() {
-    let hmp_1 = HermitianMixedProduct::new(
-        [PauliProduct::new().x(0)],
-        [BosonProduct::new([1], [1]).unwrap()],
-        [FermionProduct::new([0], [0]).unwrap()],
-    )
-    .unwrap();
-    let mp_1 = MixedDecoherenceProduct::new(
-        [DecoherenceProduct::new().z(0)],
-        [BosonProduct::new([1], [1]).unwrap()],
-        [FermionProduct::new([0], [0]).unwrap()],
-    )
-    .unwrap();
-    let mut ss_1 = MixedLindbladOpenSystem::new([None], [None], [None]);
-    ss_1.system_mut().set(hmp_1.clone(), 1.0.into()).unwrap();
-    ss_1.noise_mut()
-        .set((mp_1.clone(), mp_1), 1.0.into())
-        .unwrap();
-
-    let hmp_2 =
-        struqture_2::mixed_systems::HermitianMixedProduct::from_str("S0X:Bc1a1:Fc0a0").unwrap();
-    let mp_2 =
-        struqture_2::mixed_systems::MixedDecoherenceProduct::from_str("S0Z:Bc1a1:Fc0a0").unwrap();
-    let mut ss_2 = struqture_2::mixed_systems::MixedLindbladOpenSystem::new(1, 1, 1);
-    let system = struqture_2::OpenSystem::system_mut(&mut ss_2);
-    struqture_2::OperateOnDensityMatrix::set(system, hmp_2.clone(), 1.0.into()).unwrap();
-    let noise = struqture_2::OpenSystem::noise_mut(&mut ss_2);
-    struqture_2::OperateOnDensityMatrix::set(noise, (mp_2.clone(), mp_2), 1.0.into()).unwrap();
-
-    assert!(MixedLindbladOpenSystem::from_struqture_2(&ss_2).unwrap() == ss_1);
-}

@@ -1630,7 +1630,6 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
- "struqture 2.0.0-alpha.10",
  "test-case",
  "thiserror",
  "tinyvec",
