@@ -4,6 +4,11 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.12.2
+
+* Added a readùe in struqture-py.
+* Updated the `deny.toml` to the carg-deny 1.18 standard.
+
 ## 1.12.1
 
 * Updated to struqture 2.0 v2.0.0-alpha.11.
