@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py"
-version = "1.12.1"
+version = "1.12.2"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.76"
