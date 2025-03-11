@@ -1,0 +1,40 @@
+struqture\_py.mixed\_systems.MixedDecoherenceProduct
+====================================================
+
+.. currentmodule:: struqture_py.mixed_systems
+
+.. autoclass:: MixedDecoherenceProduct
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MixedDecoherenceProduct.__init__
+      ~MixedDecoherenceProduct.bosons
+      ~MixedDecoherenceProduct.create_valid_pair
+      ~MixedDecoherenceProduct.current_number_bosonic_modes
+      ~MixedDecoherenceProduct.current_number_fermionic_modes
+      ~MixedDecoherenceProduct.current_number_spins
+      ~MixedDecoherenceProduct.current_version
+      ~MixedDecoherenceProduct.fermions
+      ~MixedDecoherenceProduct.from_bincode
+      ~MixedDecoherenceProduct.from_json
+      ~MixedDecoherenceProduct.from_json_struqture_1
+      ~MixedDecoherenceProduct.from_string
+      ~MixedDecoherenceProduct.hermitian_conjugate
+      ~MixedDecoherenceProduct.is_natural_hermitian
+      ~MixedDecoherenceProduct.json_schema
+      ~MixedDecoherenceProduct.min_supported_version
+      ~MixedDecoherenceProduct.spins
+      ~MixedDecoherenceProduct.to_bincode
+      ~MixedDecoherenceProduct.to_json
+   
+   
+
+   
+   
+   

@@ -1,0 +1,41 @@
+struqture\_py.bosons.BosonOperator
+==================================
+
+.. currentmodule:: struqture_py.bosons
+
+.. autoclass:: BosonOperator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BosonOperator.__init__
+      ~BosonOperator.add_operator_product
+      ~BosonOperator.current_number_modes
+      ~BosonOperator.current_version
+      ~BosonOperator.empty_clone
+      ~BosonOperator.from_bincode
+      ~BosonOperator.from_json
+      ~BosonOperator.from_json_struqture_1
+      ~BosonOperator.get
+      ~BosonOperator.hermitian_conjugate
+      ~BosonOperator.is_empty
+      ~BosonOperator.json_schema
+      ~BosonOperator.keys
+      ~BosonOperator.min_supported_version
+      ~BosonOperator.remove
+      ~BosonOperator.set
+      ~BosonOperator.to_bincode
+      ~BosonOperator.to_json
+      ~BosonOperator.truncate
+      ~BosonOperator.values
+   
+   
+
+   
+   
+   

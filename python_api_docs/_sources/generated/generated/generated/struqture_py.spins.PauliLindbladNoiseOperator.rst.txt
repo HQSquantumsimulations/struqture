@@ -1,0 +1,44 @@
+struqture\_py.spins.PauliLindbladNoiseOperator
+==============================================
+
+.. currentmodule:: struqture_py.spins
+
+.. autoclass:: PauliLindbladNoiseOperator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PauliLindbladNoiseOperator.__init__
+      ~PauliLindbladNoiseOperator.add_operator_product
+      ~PauliLindbladNoiseOperator.current_number_spins
+      ~PauliLindbladNoiseOperator.current_version
+      ~PauliLindbladNoiseOperator.empty_clone
+      ~PauliLindbladNoiseOperator.from_bincode
+      ~PauliLindbladNoiseOperator.from_json
+      ~PauliLindbladNoiseOperator.from_json_struqture_1
+      ~PauliLindbladNoiseOperator.get
+      ~PauliLindbladNoiseOperator.is_empty
+      ~PauliLindbladNoiseOperator.jordan_wigner
+      ~PauliLindbladNoiseOperator.json_schema
+      ~PauliLindbladNoiseOperator.keys
+      ~PauliLindbladNoiseOperator.min_supported_version
+      ~PauliLindbladNoiseOperator.number_spins
+      ~PauliLindbladNoiseOperator.remove
+      ~PauliLindbladNoiseOperator.separate_into_n_terms
+      ~PauliLindbladNoiseOperator.set
+      ~PauliLindbladNoiseOperator.sparse_matrix_superoperator_coo
+      ~PauliLindbladNoiseOperator.to_bincode
+      ~PauliLindbladNoiseOperator.to_json
+      ~PauliLindbladNoiseOperator.truncate
+      ~PauliLindbladNoiseOperator.values
+   
+   
+
+   
+   
+   
