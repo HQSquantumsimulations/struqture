@@ -403,7 +403,7 @@ fn mul_so_cf() {
 
 // Test the From<PauliOperator> trait
 #[test]
-fn test_from_qubit_operator() {
+fn test_from_pauli_operator() {
     let mut so = PauliOperator::new();
     let pp_0 = PauliProduct::new().x(0).y(1).z(2);
     let c0 = CalculatorComplex::new(1.0, 2.0);
