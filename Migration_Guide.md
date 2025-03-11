@@ -60,6 +60,8 @@ hamiltonian = MixedHamiltonian(2, 0, 0)
 
 * The `number_spins` function has been deprecated, in favour of the `current_number_spins` function. These functions now return the same result, as there is no maximum index set. The `number_spins` function will be removed in a future version of struqture 2.0, but has been left in as deprecated for now, in order to minimise code breakage.
 
+* The `sparse_lindblad_entries` and `unitary_sparse_matrix_coo` functions for `Pauli` objects have been removed, as they did not seem to be used. If these are important to your code base, please contact us and we will add them back in, in a future release!
+
 3) Added functionality
 
 * The conversion error message should now be much clearer, and there should no longer be any mistaken conversions from python to rust, as we have re-designed parts of the (de)serialisation.
