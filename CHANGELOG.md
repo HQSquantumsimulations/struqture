@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Added matrix information to Migration Guide.
+
 ## 2.0.0-alpha.12
 
 * Renamed `to_qubit`/`from_qubit` functions to `to_pauli`/`from_pauli`.

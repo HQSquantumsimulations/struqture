@@ -981,7 +981,7 @@ fn test_truncate() {
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_qubit_noise_system_schema() {
+fn test_noise_system_schema() {
     let mut op = PauliLindbladOpenSystem::new();
     let pp: PauliProduct = PauliProduct::new().x(1);
     let dp: DecoherenceProduct = DecoherenceProduct::new().z(0);

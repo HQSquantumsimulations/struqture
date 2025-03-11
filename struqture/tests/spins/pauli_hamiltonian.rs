@@ -703,7 +703,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_qubit_hamiltonian_schema() {
+fn test_hamiltonian_schema() {
     let mut op = PauliHamiltonian::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();
