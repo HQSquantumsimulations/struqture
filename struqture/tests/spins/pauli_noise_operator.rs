@@ -890,7 +890,7 @@ fn illegal_identity_operators() {
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_qubit_noise_operator_schema() {
+fn test_noise_operator_schema() {
     let mut op = PauliLindbladNoiseOperator::new();
     op.set(
         (

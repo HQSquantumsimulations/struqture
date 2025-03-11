@@ -255,16 +255,16 @@ impl PauliOperator {
     /// Export to struqture_1 format.
     #[cfg(feature = "struqture_1_export")]
     pub fn to_struqture_1(&self) -> Result<struqture_1::spins::SpinSystem, StruqtureError> {
-        let mut new_qubit_system = struqture_1::spins::SpinSystem::new(None);
+        let mut new_system = struqture_1::spins::SpinSystem::new(None);
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_1::OperateOnDensityMatrix::set(
-                &mut new_qubit_system,
+                &mut new_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_qubit_system)
+        Ok(new_system)
     }
 
     /// Export to struqture_1 format.
@@ -272,12 +272,12 @@ impl PauliOperator {
     pub fn from_struqture_1(
         value: &struqture_1::spins::SpinSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_qubit_operator = Self::new();
+        let mut new_operator = Self::new();
         for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = PauliProduct::from_struqture_1(key)?;
-            let _ = new_qubit_operator.set(self_key, val.clone());
+            let _ = new_operator.set(self_key, val.clone());
         }
-        Ok(new_qubit_operator)
+        Ok(new_operator)
     }
 
     /// Creates a new PauliOperator with pre-allocated capacity.

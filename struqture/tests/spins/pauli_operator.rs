@@ -706,7 +706,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 }
 
 #[test]
-fn test_qubit_operator_pauli_multiplication() {
+fn test_operator_pauli_multiplication() {
     // We use this a bunch
     let one = CalculatorComplex::from(1.0);
     // This is to test the algebra of
@@ -756,7 +756,7 @@ fn test_qubit_operator_pauli_multiplication() {
 
 #[cfg(feature = "json_schema")]
 #[test]
-fn test_qubit_operator_schema() {
+fn test_operator_schema() {
     let mut op = PauliOperator::new();
     op.set(PauliProduct::new().x(0), 1.0.into()).unwrap();
     op.set(PauliProduct::new().y(1).z(2), "val".into()).unwrap();

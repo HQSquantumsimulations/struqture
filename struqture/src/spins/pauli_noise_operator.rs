@@ -388,17 +388,17 @@ impl PauliLindbladNoiseOperator {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_1::spins::SpinLindbladNoiseSystem, StruqtureError> {
-        let mut new_qubit_system = struqture_1::spins::SpinLindbladNoiseSystem::new(None);
+        let mut new_system = struqture_1::spins::SpinLindbladNoiseSystem::new(None);
         for (key, val) in self.iter() {
             let one_key_left = key.0.to_struqture_1()?;
             let one_key_right = key.1.to_struqture_1()?;
             let _ = struqture_1::OperateOnDensityMatrix::set(
-                &mut new_qubit_system,
+                &mut new_system,
                 (one_key_left, one_key_right),
                 val.clone(),
             );
         }
-        Ok(new_qubit_system)
+        Ok(new_system)
     }
 
     /// Import from struqture_1 format.
@@ -406,13 +406,13 @@ impl PauliLindbladNoiseOperator {
     pub fn from_struqture_1(
         value: &struqture_1::spins::SpinLindbladNoiseSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_qubit_operator = Self::new();
+        let mut new_operator = Self::new();
         for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key_left = DecoherenceProduct::from_struqture_1(&key.0)?;
             let self_key_right = DecoherenceProduct::from_struqture_1(&key.1)?;
-            let _ = new_qubit_operator.set((self_key_left, self_key_right), val.clone());
+            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
         }
-        Ok(new_qubit_operator)
+        Ok(new_operator)
     }
 }
 
