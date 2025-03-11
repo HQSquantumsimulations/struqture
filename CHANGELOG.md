@@ -4,6 +4,14 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.0.0-alpha.12
+
+* Renamed `to_qubit`/`from_qubit` functions to `to_pauli`/`from_pauli`.
+
+## 2.0.0-alpha.11
+
+* Updated the struqture_1 dependency.
+
 ## 2.0.0-alpha.10
 
 * Updated to qoqo-calculator 1.5.0.
