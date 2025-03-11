@@ -259,16 +259,16 @@ impl DecoherenceOperator {
     pub fn to_struqture_1(
         &self,
     ) -> Result<struqture_1::spins::DecoherenceOperator, StruqtureError> {
-        let mut new_qubit_system = struqture_1::spins::DecoherenceOperator::new();
+        let mut new_system = struqture_1::spins::DecoherenceOperator::new();
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
             let _ = struqture_1::OperateOnDensityMatrix::set(
-                &mut new_qubit_system,
+                &mut new_system,
                 one_key,
                 val.clone(),
             );
         }
-        Ok(new_qubit_system)
+        Ok(new_system)
     }
 
     /// Export to struqture_1 format.
@@ -276,12 +276,12 @@ impl DecoherenceOperator {
     pub fn from_struqture_1(
         value: &struqture_1::spins::DecoherenceOperator,
     ) -> Result<Self, StruqtureError> {
-        let mut new_qubit_operator = Self::new();
+        let mut new_operator = Self::new();
         for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = DecoherenceProduct::from_struqture_1(key)?;
-            let _ = new_qubit_operator.set(self_key, val.clone());
+            let _ = new_operator.set(self_key, val.clone());
         }
-        Ok(new_qubit_operator)
+        Ok(new_operator)
     }
 }
 

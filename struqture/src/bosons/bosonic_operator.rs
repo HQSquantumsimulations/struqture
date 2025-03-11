@@ -258,12 +258,12 @@ impl BosonOperator {
     pub fn from_struqture_1(
         value: &struqture_1::bosons::BosonSystem,
     ) -> Result<Self, StruqtureError> {
-        let mut new_qubit_operator = Self::new();
+        let mut new_operator = Self::new();
         for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
             let self_key = BosonProduct::from_struqture_1(key)?;
-            let _ = new_qubit_operator.set(self_key, val.clone());
+            let _ = new_operator.set(self_key, val.clone());
         }
-        Ok(new_qubit_operator)
+        Ok(new_operator)
     }
 }
 
