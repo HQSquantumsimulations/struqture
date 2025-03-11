@@ -112,7 +112,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create PauliOperator from input.
     #[staticmethod]
-    pub fn from_qubit_operator(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_pauli_operator(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = PauliOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -131,7 +131,7 @@ impl PlusMinusOperatorWrapper {
     /// Raises:
     ///     ValueError: Could not create PauliHamiltonian from input.
     #[staticmethod]
-    pub fn from_qubit_hamiltonian(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+    pub fn from_pauli_hamiltonian(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = PauliHamiltonianWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
@@ -146,7 +146,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create PauliOperator from PlusMinusOperator.
-    pub fn to_qubit_operator(&self) -> PyResult<PauliOperatorWrapper> {
+    pub fn to_pauli_operator(&self) -> PyResult<PauliOperatorWrapper> {
         let result: PauliOperator = PauliOperator::from(self.internal.clone());
         Ok(PauliOperatorWrapper { internal: result })
     }
@@ -158,7 +158,7 @@ impl PlusMinusOperatorWrapper {
     ///
     /// Raises:
     ///     ValueError: Could not create PauliHamiltonian from PlusMinusOperator.
-    pub fn to_qubit_hamiltonian(&self) -> PyResult<PauliHamiltonianWrapper> {
+    pub fn to_pauli_hamiltonian(&self) -> PyResult<PauliHamiltonianWrapper> {
         let result: PauliHamiltonian = PauliHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PauliHamiltonianWrapper { internal: result })

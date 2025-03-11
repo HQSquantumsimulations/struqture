@@ -523,7 +523,7 @@ fn test_mul_error() {
 }
 
 #[test]
-fn test_from_qubit_operator() {
+fn test_from_pauli_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -564,20 +564,20 @@ fn test_from_qubit_operator() {
             .unwrap();
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_qubit_operator", (pp,))
+            .call_method1("from_pauli_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_qubit_operator", ("No",));
+            .call_method1("from_pauli_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_qubit_operator() {
+fn test_to_pauli_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -608,14 +608,14 @@ fn test_to_qubit_operator() {
         )
         .unwrap();
 
-        let result = pmp.call_method0("to_qubit_operator").unwrap();
+        let result = pmp.call_method0("to_pauli_operator").unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
 
 #[test]
-fn test_from_qubit_ham() {
+fn test_from_pauli_ham() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -657,20 +657,20 @@ fn test_from_qubit_ham() {
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_qubit_hamiltonian", (pp,))
+            .call_method1("from_pauli_hamiltonian", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusOperatorWrapper>()
-            .call_method1("from_qubit_operator", ("No",));
+            .call_method1("from_pauli_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_qubit_ham() {
+fn test_to_pauli_ham() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_system(py);
@@ -682,13 +682,13 @@ fn test_to_qubit_ham() {
         sys.downcast::<PauliHamiltonianWrapper>().unwrap();
         sys.call_method1("add_operator_product", ("0Z", 1.0))
             .unwrap();
-        let result = pmp.call_method0("to_qubit_hamiltonian").unwrap();
+        let result = pmp.call_method0("to_pauli_hamiltonian").unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
 
         pmp.call_method1("add_operator_product", ("0+", 1.0))
             .unwrap();
-        let result = pmp.call_method0("to_qubit_hamiltonian");
+        let result = pmp.call_method0("to_pauli_hamiltonian");
         assert!(result.is_err())
     })
 }
@@ -883,7 +883,7 @@ fn test_jordan_wigner() {
         let empty = bool::extract_bound(&fo.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let ss = pmo.call_method0("to_qubit_operator").unwrap();
+        let ss = pmo.call_method0("to_pauli_operator").unwrap();
 
         let current_number_modes =
             usize::extract_bound(&fo.call_method0("current_number_modes").unwrap()).unwrap();
