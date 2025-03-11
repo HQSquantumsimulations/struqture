@@ -262,11 +262,7 @@ impl DecoherenceOperator {
         let mut new_system = struqture_1::spins::DecoherenceOperator::new();
         for (key, val) in self.iter() {
             let one_key = key.to_struqture_1()?;
-            let _ = struqture_1::OperateOnDensityMatrix::set(
-                &mut new_system,
-                one_key,
-                val.clone(),
-            );
+            let _ = struqture_1::OperateOnDensityMatrix::set(&mut new_system, one_key, val.clone());
         }
         Ok(new_system)
     }
