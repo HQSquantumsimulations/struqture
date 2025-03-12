@@ -337,7 +337,7 @@ pub fn noiselesswrapper(
                 /// Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
                 ///
                 /// Args:
-                ///     number_spins (Optional[int]): The number of spins in self.
+                ///     number_spins (int): The number of spins in self.
                 ///
                 /// Returns:
                 ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
@@ -345,8 +345,7 @@ pub fn noiselesswrapper(
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                #[pyo3(signature = (number_spins = None))]
-                pub fn sparse_matrix_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
+                pub fn sparse_matrix_coo(&self, number_spins: usize) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
                         .sparse_matrix_coo(number_spins)
@@ -375,7 +374,7 @@ pub fn noiselesswrapper(
                 /// and `flatten` flattens a matrix into a vector in row-major form.
                 ///
                 /// Args:
-                ///     number_spins: The number of spins to construct the matrix for.
+                ///     number_spins (int): The number of spins to construct the matrix for.
                 ///
                 /// Returns:
                 ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
@@ -383,8 +382,7 @@ pub fn noiselesswrapper(
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                #[pyo3(signature = (number_spins = None))]
-                pub fn sparse_matrix_superoperator_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
+                pub fn sparse_matrix_superoperator_coo(&self, number_spins: usize) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
                         .sparse_matrix_superoperator_coo(number_spins)

@@ -626,7 +626,7 @@ class PauliOperator:
         npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
         npt.assert_equal(ssystem.keys(), [pp])
         dimension = 4**ssystem.current_number_spins()
-        matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
+        matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(ssystem.current_number_spins()), shape=(dimension, dimension))
 
     """
 
@@ -765,12 +765,12 @@ class PauliOperator:
             int: Maximum index.
         """
 
-    def sparse_matrix_coo(self, number_spins: Optional[int]) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def sparse_matrix_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
 
         Args:
-            number_spins (Optional[int]): The number of spins in self.
+            number_spins (int): The number of spins in self.
 
         Returns:
             Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
@@ -780,7 +780,7 @@ class PauliOperator:
             RuntimeError: Could not convert to complex superoperator matrix.
         """
 
-    def sparse_matrix_superoperator_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def sparse_matrix_superoperator_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Construct the sparse matrix representation of the superoperator in COO representation.
 
@@ -789,7 +789,7 @@ class PauliOperator:
         and `flatten` flattens a matrix into a vector in row-major form.
 
         Args:
-            number_spins: The number of spins to construct the matrix for.
+            number_spins (int): The number of spins to construct the matrix for.
 
         Returns:
             Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
@@ -921,7 +921,7 @@ class PauliHamiltonian:
         npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
         npt.assert_equal(ssystem.keys(), [pp])
         dimension = 4**ssystem.current_number_spins()
-        matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
+        matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(ssystem.current_number_spins()), shape=(dimension, dimension))
 
     """
 
@@ -1060,12 +1060,12 @@ class PauliHamiltonian:
             int: Maximum index.
         """
 
-    def sparse_matrix_coo(self, number_spins: Optional[int]) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def sparse_matrix_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
 
         Args:
-            number_spins (Optional[int]): The number of spins in self.
+            number_spins (int): The number of spins in self.
 
         Returns:
             Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
@@ -1075,7 +1075,7 @@ class PauliHamiltonian:
             RuntimeError: Could not convert to complex superoperator matrix.
         """
 
-    def sparse_matrix_superoperator_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def sparse_matrix_superoperator_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Construct the sparse matrix representation of the superoperator in COO representation.
 
@@ -1084,7 +1084,7 @@ class PauliHamiltonian:
         and `flatten` flattens a matrix into a vector in row-major form.
 
         Args:
-            number_spins: The number of spins to construct the matrix for.
+            number_spins (int): The number of spins to construct the matrix for.
 
         Returns:
             Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
@@ -1215,7 +1215,7 @@ class PauliLindbladNoiseOperator(NoiseType):
         npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
         npt.assert_equal(slns.keys(), [(dp, dp)])
         dimension = 4**slns.current_number_spins()
-        matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
+        matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(slns.current_number_spins()), shape=(dimension, dimension))
 
     """
 
@@ -1366,7 +1366,7 @@ class PauliLindbladNoiseOperator(NoiseType):
             int: Maximum index.
         """
 
-    def sparse_matrix_superoperator_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def sparse_matrix_superoperator_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Construct the sparse matrix representation of the superoperator in COO representation.
 
@@ -1375,7 +1375,7 @@ class PauliLindbladNoiseOperator(NoiseType):
         and `flatten` flattens a matrix into a vector in row-major form.
 
         Args:
-            number_spins: The number of spins in self.
+            number_spins (int): The number of spins in self.
 
         Returns:
             Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
@@ -1505,7 +1505,7 @@ class PauliLindbladOpenSystem(SystemType):
         npt.assert_equal(slns.current_number_spins(), 2)
         npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
         dimension = 4**slns.current_number_spins()
-        matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
+        matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(slns.current_number_spins()), shape=(dimension, dimension))
 
     """
 
@@ -1689,7 +1689,7 @@ class PauliLindbladOpenSystem(SystemType):
             TypeError: Value cannot be converted to CalculatorComplex.
         """
 
-    def sparse_matrix_superoperator_coo(self, number_spins) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
+    def sparse_matrix_superoperator_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Construct the sparse matrix representation of the superoperator in COO representation.
 
@@ -1698,7 +1698,7 @@ class PauliLindbladOpenSystem(SystemType):
         and `flatten` flattens a matrix into a vector in row-major form.
 
         Args:
-            number_spins: The number of spins in self.
+            number_spins (int): The number of spins in self.
 
         Returns:
             Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.

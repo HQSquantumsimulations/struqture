@@ -55,7 +55,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///     dimension = 4**ssystem.current_number_spins()
-///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
+///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(ssystem.current_number_spins()), shape=(dimension, dimension))
 ///
 #[pyclass(name = "PauliOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
