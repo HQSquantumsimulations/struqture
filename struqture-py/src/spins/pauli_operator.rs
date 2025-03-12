@@ -48,7 +48,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.spins import PauliOperator, PauliProduct
 ///
-///     system = PauliOperator(2)
+///     system = PauliOperator()
 ///     pp = PauliProduct().z(0)
 ///     system.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(system.current_number_spins(), 2)

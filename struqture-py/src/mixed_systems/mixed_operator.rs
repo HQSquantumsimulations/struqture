@@ -49,7 +49,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     from struqture_py.bosons import BosonProduct
 ///     from struqture_py.fermions import FermionProduct
 ///
-///     system = MixedOperator([2], [2], [2])
+///     system = MixedOperator(1, 1, 1)
 ///     pp = MixedProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
 ///     system.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(system.current_number_spins(), [2])

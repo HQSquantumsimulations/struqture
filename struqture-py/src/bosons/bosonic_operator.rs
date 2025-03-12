@@ -41,7 +41,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.bosons import BosonOperator, BosonProduct
 ///
-///     system = BosonOperator(2)
+///     system = BosonOperator()
 ///     pp = BosonProduct([0], [1])
 ///     system.add_operator_product(pp, 5.0)
 ///     npt.assert_equal(system.current_number_modes(), 2)
