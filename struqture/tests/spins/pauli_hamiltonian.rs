@@ -620,7 +620,9 @@ fn test_superoperator(pauli_representation: &str, pauli_operators: &[&str]) {
 
     let test_matrix = (h.kronecker(&i) - i.kronecker(&h.transpose())) * (-cci);
 
-    let second_test_matrix = system.sparse_matrix_superoperator(None).unwrap();
+    let second_test_matrix = system
+        .sparse_matrix_superoperator(system.current_number_spins())
+        .unwrap();
     for row in 0..dimension {
         for column in 0..dimension {
             let key = (row, column);
@@ -659,7 +661,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 
     let test_matrix = h;
 
-    let second_test_matrix = system.sparse_matrix(None).unwrap();
+    let second_test_matrix = system.sparse_matrix(system.current_number_spins()).unwrap();
     for row in 0..dimension {
         for column in 0..dimension {
             let key = (row, column);
@@ -675,9 +677,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let coo_test_matrix = system
-        .sparse_matrix_coo(Some(pauli_operators.len()))
-        .unwrap();
+    let coo_test_matrix = system.sparse_matrix_coo(pauli_operators.len()).unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(
