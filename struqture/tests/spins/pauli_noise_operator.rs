@@ -727,10 +727,10 @@ fn test_superoperator(
         - (product.kronecker(&i) + i.kronecker(&product.transpose())) * Complex64::from(0.5);
 
     let second_test_matrix = system
-        .sparse_matrix_superoperator(Some(left_operators.len()))
+        .sparse_matrix_superoperator(left_operators.len())
         .unwrap();
     let (test_vals, (test_rows, test_columns)) = system
-        .sparse_matrix_superoperator_coo(Some(left_operators.len()))
+        .sparse_matrix_superoperator_coo(left_operators.len())
         .unwrap();
     for (second_val, (row, column)) in test_vals
         .iter()
@@ -829,7 +829,7 @@ fn test_superoperator_multiple_entries() {
             - (product.kronecker(&i) + i.kronecker(&product.transpose())) * Complex64::from(0.5))
             * Complex64::from(prefactor);
     }
-    let second_test_matrix = system.sparse_matrix_superoperator(Some(2)).unwrap();
+    let second_test_matrix = system.sparse_matrix_superoperator(2).unwrap();
 
     #[allow(unused)]
     fn fast_convert(map: HashMap<(usize, usize), f64>, dimension: usize) -> na::DMatrix<f64> {
@@ -854,8 +854,7 @@ fn test_superoperator_multiple_entries() {
         }
     }
 
-    let (test_vals, (test_rows, test_columns)) =
-        system.sparse_matrix_superoperator_coo(Some(2)).unwrap();
+    let (test_vals, (test_rows, test_columns)) = system.sparse_matrix_superoperator_coo(2).unwrap();
     for (second_val, (row, column)) in test_vals
         .iter()
         .zip(test_rows.iter().zip(test_columns.iter()))
