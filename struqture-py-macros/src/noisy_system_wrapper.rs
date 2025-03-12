@@ -402,7 +402,7 @@ pub fn noisywrapper(
                 /// and `flatten` flattens a matrix into a vector in row-major form.
                 ///
                 /// Args:
-                ///     number_spins: The number of spins in self.
+                ///     number_spins (int): The number of spins in self.
                 ///
                 /// Returns:
                 ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix little endian representation of self.
@@ -410,8 +410,7 @@ pub fn noisywrapper(
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                #[pyo3(signature = (number_spins = None))]
-                pub fn sparse_matrix_superoperator_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
+                pub fn sparse_matrix_superoperator_coo(&self, number_spins: usize) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
                         .sparse_matrix_superoperator_coo(number_spins)

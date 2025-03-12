@@ -115,12 +115,9 @@ where
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix(
         &'a self,
-        number_spins: Option<usize>,
+        number_spins: usize,
     ) -> Result<HashMap<(usize, usize), Complex64>, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.current_number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
+        let dimension = 2usize.pow(number_spins as u32);
         let mut matrix: HashMap<(usize, usize), Complex64> = HashMap::new();
         for row in 0..dimension {
             for (column, val) in self.sparse_matrix_entries_on_row(row)?.into_iter() {
@@ -140,14 +137,8 @@ where
     ///
     /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>)))` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn sparse_matrix_coo(
-        &'a self,
-        number_spins: Option<usize>,
-    ) -> Result<CooSparseMatrix, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.current_number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
+    fn sparse_matrix_coo(&'a self, number_spins: usize) -> Result<CooSparseMatrix, StruqtureError> {
+        let dimension = 2usize.pow(number_spins as u32);
 
         let capacity = dimension;
         let mut values: Vec<Complex64> = Vec::with_capacity(capacity);
@@ -343,16 +334,9 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator(
         &'a self,
-        number_spins: Option<usize>,
+        number_spins: usize,
     ) -> Result<HashMap<(usize, usize), Complex64>, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.current_number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
-        let number_spins = match number_spins {
-            None => self.current_number_spins(),
-            Some(num_spins) => num_spins,
-        };
+        let dimension = 2usize.pow(number_spins as u32);
         let mut matrix: HashMap<(usize, usize), Complex64> = HashMap::new();
         for row in 0..dimension.pow(2) {
             for (column, val) in self
@@ -381,16 +365,9 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_coo(
         &'a self,
-        number_spins: Option<usize>,
+        number_spins: usize,
     ) -> Result<CooSparseMatrix, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.current_number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
-        let number_spins = match number_spins {
-            None => self.current_number_spins(),
-            Some(num_spins) => num_spins,
-        };
+        let dimension = 2usize.pow(number_spins as u32);
         let capacity = dimension;
         let mut values: Vec<Complex64> = Vec::with_capacity(capacity);
         let mut rows: Vec<usize> = Vec::with_capacity(capacity);

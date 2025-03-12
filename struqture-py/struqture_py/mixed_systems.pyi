@@ -842,11 +842,11 @@ class MixedOperator:
         from struqture_py.bosons import BosonProduct
         from struqture_py.fermions import FermionProduct
 
-        ssystem = MixedOperator([2], [2], [2])
+        system = MixedOperator(1, 1, 1)
         pp = MixedProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.current_number_spins(), [2])
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_spins(), [2])
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
 
     """
 
@@ -1110,11 +1110,11 @@ class MixedHamiltonian:
         from struqture_py.bosons import BosonProduct
         from struqture_py.fermions import FermionProduct
 
-        ssystem = MixedHamiltonian(1, 1, 1)
+        system = MixedHamiltonian(1, 1, 1)
         pp = HermitianMixedProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.current_number_spins(), [2])
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_spins(), [2])
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
 
     """
 
@@ -2205,11 +2205,11 @@ class MixedPlusMinusOperator:
         from struqture_py.bosons import BosonProduct
         from struqture_py.fermions import FermionProduct
 
-        ssystem = MixedPlusMinusOperator(1, 1, 1)
+        system = MixedPlusMinusOperator(1, 1, 1)
         pp = MixedPlusMinusProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.current_number_spins(), [2])
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_spins(), [2])
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
 
     """
 
