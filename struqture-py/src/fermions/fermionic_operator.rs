@@ -43,12 +43,12 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.fermions import FermionOperator, FermionProduct
 ///
-///     ssystem = FermionOperator(2)
+///     system = FermionOperator(2)
 ///     pp = FermionProduct([0], [0])
-///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.current_number_modes(), 2)
-///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-///     npt.assert_equal(ssystem.keys(), [pp])
+///     system.add_operator_product(pp, 5.0)
+///     npt.assert_equal(system.current_number_modes(), 2)
+///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
+///     npt.assert_equal(system.keys(), [pp])
 ///
 #[pyclass(name = "FermionOperator", module = "struqture_py.fermions")]
 #[derive(Clone, Debug, PartialEq)]

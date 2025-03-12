@@ -619,14 +619,14 @@ class PauliOperator:
         from qoqo_calculator_pyo3 import CalculatorComplex
         from struqture_py.spins import PauliOperator, PauliProduct
 
-        ssystem = PauliOperator(2)
+        system = PauliOperator(2)
         pp = PauliProduct().z(0)
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.current_number_spins(), 2)
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-        npt.assert_equal(ssystem.keys(), [pp])
-        dimension = 4**ssystem.current_number_spins()
-        matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(ssystem.current_number_spins()), shape=(dimension, dimension))
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_spins(), 2)
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
+        npt.assert_equal(system.keys(), [pp])
+        dimension = 4**system.current_number_spins()
+        matrix = sp.coo_matrix(system.sparse_matrix_superoperator_coo(system.current_number_spins()), shape=(dimension, dimension))
 
     """
 
@@ -914,14 +914,14 @@ class PauliHamiltonian:
         from qoqo_calculator_pyo3 import CalculatorComplex
         from struqture_py.spins import PauliHamiltonian, PauliProduct
 
-        ssystem = PauliHamiltonian(2)
+        system = PauliHamiltonian(2)
         pp = PauliProduct().z(0)
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.current_number_spins(), 2)
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-        npt.assert_equal(ssystem.keys(), [pp])
-        dimension = 4**ssystem.current_number_spins()
-        matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(ssystem.current_number_spins()), shape=(dimension, dimension))
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_spins(), 2)
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
+        npt.assert_equal(system.keys(), [pp])
+        dimension = 4**system.current_number_spins()
+        matrix = sp.coo_matrix(system.sparse_matrix_superoperator_coo(system.current_number_spins()), shape=(dimension, dimension))
 
     """
 
@@ -2124,11 +2124,11 @@ class PlusMinusOperator:
         from qoqo_calculator_pyo3 import CalculatorComplex
         from struqture_py.spins import PlusMinusOperator, PlusMinusProduct
 
-        ssystem = PlusMinusOperator()
+        system = PlusMinusOperator()
         pp = PlusMinusProduct().z(0)
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-        npt.assert_equal(ssystem.keys(), [pp])
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
+        npt.assert_equal(system.keys(), [pp])
 
     """
 
