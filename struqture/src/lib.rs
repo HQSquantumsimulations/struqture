@@ -165,21 +165,6 @@ pub enum StruqtureError {
         /// Index that is occupied.
         index: usize,
     },
-    /// Error when adding a key to an object as the SpinIndex object key already exists.
-    #[error("Cannot assign pauli matrix to index {index:?} as it is already occupied")]
-    OperatorIndexAlreadyOccupied {
-        /// Index that is occupied.
-        index: String,
-    },
-    /// Error when index of SpinIndex object exceeds that of the PauliHamiltonian/PauliOperator.
-    #[error("Index of SpinIndex object exceeds that of the PauliHamiltonian/PauliOperator")]
-    NumberSpinsExceeded,
-    /// Error when number of spins between system and noise missmatched.
-    #[error("Number of spins between system and noise missmatched")]
-    MissmatchedNumberSpins,
-    /// Error when number of modes between system and noise missmatched.
-    #[error("Number of modes between system and noise missmatched")]
-    MissmatchedNumberModes,
     /// Error when the number of subsystems in a mixed system does not match.
     #[error("Number of subsystems does not match. target: {target_number_spin_subsystems} spin {target_number_boson_subsystems} boson {target_number_fermion_subsystems} fermion; actual: {actual_number_spin_subsystems} spin {actual_number_boson_subsystems} boson {actual_number_fermion_subsystems} fermion ")]
     MissmatchedNumberSubsystems {
@@ -208,9 +193,6 @@ pub enum StruqtureError {
         "Indices given in creators/annihilators are either not normal ordered, or contain a double index specification"
     )]
     IncorrectlyOrderedIndices,
-    /// Error when index of (Hermitian)BosonProduct exceeds that of the Boson(Hamiltonian)System.
-    #[error("Index of (Hermitian)BosonProduct exceeds that of the Boson(Hamiltonian)System")]
-    NumberModesExceeded,
     /// Error when the minimum index of the creators of the object is larger than the minimum index of the annihilators object.
     #[error("The minimum index of the creators {creators_min:?} is larger than the minimum index of the annihilators {annihilators_min:?}")]
     CreatorsAnnihilatorsMinimumIndex {
@@ -758,7 +740,7 @@ where
     /// # Returns
     ///
     /// * `Keys<'_, Self::Index, Self::Value>` - The sequence of keys of Self.
-    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index>; // use this here instead impl ExactSizeIterator + Iterator<Item = &'a <Self as OperateOnDensityMatrix<'a>>::Index>
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index>;
 
     /// Returns the unsorted values in Self.
     ///
