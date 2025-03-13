@@ -12,3 +12,5 @@
 
 mod jordan_wigner_fermion_to_spin;
 mod jordan_wigner_spin_to_fermion;
+
+mod boson_to_spin;

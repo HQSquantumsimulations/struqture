@@ -12,8 +12,8 @@
 
 use super::{BosonOperator, BosonProduct, HermitianBosonProduct, ModeIndex, OperateOnBosons};
 use crate::{
-    GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
-    SymmetricIndex,
+    mappings::BosonToSpin, spins::PauliOperator, GetValue, OperateOnDensityMatrix, OperateOnModes,
+    OperateOnState, StruqtureError, SymmetricIndex,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -303,6 +303,23 @@ impl BosonHamiltonian {
             let _ = new_operator.set(self_key, val.clone());
         }
         Ok(new_operator)
+    }
+}
+
+impl BosonToSpin for BosonHamiltonian {
+    type Output = PauliOperator;
+
+    fn boson_spin_mapping(
+        &self,
+        number_spins_per_bosonic_mode: usize,
+    ) -> Result<Self::Output, StruqtureError> {
+        let mut pauli_operator = PauliOperator::new();
+        for (key, value) in self.iter() {
+            pauli_operator =
+                pauli_operator + key.boson_spin_mapping(number_spins_per_bosonic_mode)? * value;
+        }
+
+        Ok(pauli_operator)
     }
 }
 
