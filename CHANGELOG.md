@@ -5,6 +5,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## Unreleased
 
 * Added `boson_spin_mapping` functions for `BosonHamiltonian` (struqture & struqture-py) and `HermitianBosonProduct` (struqture only).
+* Removed unused errors from lib.rs and fixed typo in error name in lib.rs.
 
 ## 2.0.0-alpha.13
 
