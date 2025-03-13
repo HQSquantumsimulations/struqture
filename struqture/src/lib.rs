@@ -150,17 +150,11 @@ impl From<StruqtureVersion> for StruqtureVersionSerializable {
 /// Errors that can occur in struqture.
 #[derive(Debug, Error, PartialEq)]
 pub enum StruqtureError {
-    /// Error when remapping qubits fails because qubit in operation is not in keys of BTreeMap.
-    #[error("The qubit remapping failed for this qubit: {key:?}.")]
-    RemappingFailed {
-        /// Key that has caused the remapping to fail.
-        key: usize,
-    },
     /// Error when using from_str.
     #[error("The from_str function failed {msg} string")]
     FromStringFailed { msg: String },
     /// Error the Pauli matrix set is not in the allowed matrices.
-    #[error("The pauli matrix being set is not in [\"I\", \"X\", \"Y\", \"Z\"] (PauliProduct object) or [\"I\", \"X\", \"iY\", \"Z\"] (DecoherenceProduct object): {pauli:?}")]
+    #[error("The pauli matrix being set is not in [\"I\", \"X\", \"Y\", \"Z\"] (PauliProduct object), [\"I\", \"X\", \"iY\", \"Z\"] (DecoherenceProduct object) or [\"I\", \"+\", \"-\", \"Z\"] (PlusMinusProduct object): {pauli:?}")]
     IncorrectPauliEntry {
         /// Incorrect Pauli matrix trying to be added.
         pauli: String,
