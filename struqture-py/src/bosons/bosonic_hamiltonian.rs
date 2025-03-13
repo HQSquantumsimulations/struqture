@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use crate::bosons::{BosonOperatorWrapper, HermitianBosonProductWrapper};
+use crate::spins::PauliOperatorWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -20,7 +21,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonHamiltonian;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
-use struqture::{OperateOnDensityMatrix, OperateOnModes, OperateOnState};
+use struqture::{mappings::BosonToSpin, OperateOnDensityMatrix, OperateOnModes, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
 
 /// These are representations of systems of bosons.
@@ -111,6 +112,29 @@ impl BosonHamiltonianWrapper {
                 }
             }
         }
+    }
+
+    /// Transforms the given bosonic object into a spin object using the mapping.
+    ///
+    /// Args:
+    ///     number_spins_per_bosonic_mode (int): The number of spins to represent each bosonic mode.
+    ///
+    /// Returns:
+    ///     PauliOperator: The result of the mapping to a spin object.
+    ///
+    /// Raises:
+    ///     ValueError: The boson -> spin transformation is only available for
+    ///                 terms such as b†b or (b† + b).
+    pub fn boson_spin_mapping(
+        &self,
+        number_spins_per_bosonic_mode: usize,
+    ) -> PyResult<PauliOperatorWrapper> {
+        Ok(PauliOperatorWrapper {
+            internal: self
+                .internal
+                .boson_spin_mapping(number_spins_per_bosonic_mode)
+                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+        })
     }
 }
 
