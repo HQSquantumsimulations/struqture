@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py.spins &mdash; struqture_py 2.0.0-alpha.12 documentation</title>
+  <title>struqture_py.spins &mdash; struqture_py 2.0.0-alpha.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=324d30fb"></script>
+      <script src="../../_static/documentation_options.js?v=ad0fa461"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -622,14 +622,14 @@ and an optional number of spins.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoqo_calculator_pyo3</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalculatorComplex</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.spins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauliHamiltonian</span><span class="p">,</span> <span class="n">PauliProduct</span>
 
-<span class="n">ssystem</span> <span class="o">=</span> <span class="n">PauliHamiltonian</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">PauliHamiltonian</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
-<span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">ssystem</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
+<span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
+<span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -905,11 +905,11 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.sparse_matrix_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.sparse_matrix_coo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.sparse_matrix_coo" title="Link to this definition"></a></dt>
 <dd><p>Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number_spins</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The number of spins in self.</p>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- The number of spins in self.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The little endian matrix representation of self.</p>
@@ -928,14 +928,14 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.sparse_matrix_superoperator_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
 <dd><p>Construct the sparse matrix representation of the superoperator in COO representation.</p>
 <p>The superoperator for the operator O is defined as the Matrix S so that
 <cite>flatten(-i [O, p]) = S flatten(p)</cite> wher <cite>[,]</cite> is the commutator, <cite>p</cite> is a matrix
 and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number_spins</strong> -- The number of spins to construct the matrix for.</p>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- The number of spins to construct the matrix for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The little endian matrix representation of self.</p>
@@ -1045,7 +1045,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">)),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[(</span><span class="n">dp</span><span class="p">,</span> <span class="n">dp</span><span class="p">)])</span>
 <span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -1349,14 +1349,14 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator.sparse_matrix_superoperator_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
 <dd><p>Construct the sparse matrix representation of the superoperator in COO representation.</p>
 <p>The superoperator for the operator O is defined as the Matrix S so that
 <cite>flatten(-i [O, p]) = S flatten(p)</cite> wher <cite>[,]</cite> is the commutator, <cite>p</cite> is a matrix
 and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number_spins</strong> -- The number of spins in self.</p>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- The number of spins in self.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The matrix little endian representation of self.</p>
@@ -1465,7 +1465,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span> <span class="n">CalculatorFloat</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(</span><span class="n">slns</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -1739,14 +1739,14 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.sparse_matrix_superoperator_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
 <dd><p>Construct the sparse matrix representation of the superoperator in COO representation.</p>
 <p>The superoperator for the operator O is defined as the Matrix S so that
 <cite>flatten(-i [O, p]) = S flatten(p)</cite> wher <cite>[,]</cite> is the commutator, <cite>p</cite> is a matrix
 and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number_spins</strong> -- The number of spins in self.</p>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- The number of spins in self.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The matrix little endian representation of self.</p>
@@ -1936,14 +1936,14 @@ and an optional number of spins.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoqo_calculator_pyo3</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalculatorComplex</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.spins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauliOperator</span><span class="p">,</span> <span class="n">PauliProduct</span>
 
-<span class="n">ssystem</span> <span class="o">=</span> <span class="n">PauliOperator</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">PauliOperator</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
-<span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">ssystem</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
+<span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
+<span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">sparse_matrix_superoperator_coo</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">))</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -2219,11 +2219,11 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.sparse_matrix_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.sparse_matrix_coo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.sparse_matrix_coo" title="Link to this definition"></a></dt>
 <dd><p>Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number_spins</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) -- The number of spins in self.</p>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- The number of spins in self.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The little endian matrix representation of self.</p>
@@ -2242,14 +2242,14 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.sparse_matrix_superoperator_coo">
-<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sparse_matrix_superoperator_coo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.sparse_matrix_superoperator_coo" title="Link to this definition"></a></dt>
 <dd><p>Construct the sparse matrix representation of the superoperator in COO representation.</p>
 <p>The superoperator for the operator O is defined as the Matrix S so that
 <cite>flatten(-i [O, p]) = S flatten(p)</cite> wher <cite>[,]</cite> is the commutator, <cite>p</cite> is a matrix
 and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>number_spins</strong> -- The number of spins to construct the matrix for.</p>
+<dd class="field-odd"><p><strong>number_spins</strong> (<em>int</em>) -- The number of spins to construct the matrix for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The little endian matrix representation of self.</p>
@@ -3142,11 +3142,11 @@ and an optional number of spins.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoqo_calculator_pyo3</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalculatorComplex</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py.spins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlusMinusOperator</span><span class="p">,</span> <span class="n">PlusMinusProduct</span>
 
-<span class="n">ssystem</span> <span class="o">=</span> <span class="n">PlusMinusOperator</span><span class="p">()</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">PlusMinusOperator</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">PlusMinusProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ssystem</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">ssystem</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
+<span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 </pre></div>
 </div>
 <dl class="py method">

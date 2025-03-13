@@ -286,30 +286,6 @@ dp = DecoherenceProduct().x(0).iy(3).z(20)
 # Often equivalent the string representation
 dp_string = str(dp)
 </code></pre>
-<p>In Rust the user can also import enums for the operators acting on single spins. In Rust the equivalent string representation cannot be used in function and method arguments.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use struqture::prelude::*;
-use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SinglePauliOperator,
-};
-
-// A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
-let pp = PauliProduct::new().x(0).y(3).z(20);
-// Constructing with SinglePauliOperator
-let pp_equivalent = PauliProduct::new()
-    .set_pauli(0, SinglePauliOperator::X)
-    .set_pauli(3, SinglePauliOperator::Y)
-    .set_pauli(20, SinglePauliOperator::Z);
-
-// A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
-let dp = DecoherenceProduct::new().x(0).iy(3).z(20);
-// Constructing with SinglePauliOperator
-let dp_equivalent = DecoherenceProduct::new()
-    .set_pauli(0, SingleDecoherenceOperator::X)
-    .set_pauli(3, SingleDecoherenceOperator::IY)
-    .set_pauli(20, SingleDecoherenceOperator::Z);
-<span class="boring">}</span></code></pre></pre>
 <h2 id="operators-and-hamiltonians"><a class="header" href="#operators-and-hamiltonians">Operators and Hamiltonians</a></h2>
 <p>A good example how complex objects are constructed from operator products are <code>PauliOperators</code> and <code>PauliHamiltonians</code>
 (for more information, <a href="physical_types/../container_types/operators_hamiltonians.html">see also</a>).</p>
@@ -323,37 +299,7 @@ where the \(\sigma_{j, k}\) are <code>SinglePauliOperators</code>.</p>
 <p>In struqture we distinguish between operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian, this means that the prefactor of each <code>PauliProduct</code> has to be real.</p>
 <h3 id="examples-1"><a class="header" href="#examples-1">Examples</a></h3>
-<p>Here is an example of how to build a <code>PauliOperator</code> and a <code>PauliHamiltonian</code>, in Rust:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::spins::{PauliProduct, PauliOperator, PauliHamiltonian};
-
-// Building the term sigma^x_0 * sigma^z_2: sigma_x acting on qubit 0
-// and sigma_z acting on qubit 2
-let pp = PauliProduct::new().x(0).z(2);
-
-// O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
-let mut operator = PauliOperator::new();
-operator.add_operator_product(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-assert_eq!(operator.get(&amp;pp), &amp;CalculatorComplex::new(1.0, 1.5));
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = PauliOperator::new();
-operator.set(pp.clone(), 1.0.into()).unwrap();
-println!("{}", operator);
-
-// A complex entry is not valid for a PauliHamiltonian
-let mut hamiltonian = PauliHamiltonian::new();
-// This would fail
-hamiltonian.add_operator_product(pp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-// This is possible
-hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
-println!("{}", hamiltonian);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+<p>Here is an example of how to build a <code>PauliOperator</code> and a <code>PauliHamiltonian</code>:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import spins
 
@@ -395,23 +341,6 @@ In programming terms the object <code>PauliLindbladNoiseOperator</code> is given
 <h3 id="examples-2"><a class="header" href="#examples-2">Examples</a></h3>
 <p>Here, we add the terms \( L_0 = \sigma_0^{x} \sigma_2^{z} \) and \( L_1 = \sigma_0^{x} \sigma_2^{z} \) with coefficient 1.0:
 \( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliLindbladNoiseOperator};
-
-// Constructing the operator and product to be added to it
-let mut operator = PauliLindbladNoiseOperator::new();
-let dp = DecoherenceProduct::new().x(0).z(2);
-
-// Adding in the 0X2Z term
-operator.add_operator_product((dp.clone(), dp.clone()), 1.0.into()).unwrap();
-
-// Checking our operator
-assert_eq!(operator.get(&amp;(dp.clone(), dp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!("{}", operator);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
 <pre><code class="language-python">from struqture_py import spins
 
 # Constructing the operator and product to be added to it
@@ -433,32 +362,8 @@ The Lindblad master equation is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
-In struqture they are composed of a hamiltonian (<code>PauliHamiltonian</code>) and noise (<code>PauliLindbladNoiseOperator</code>). They have different ways to set terms in Rust and Python:</p>
+In struqture they are composed of a hamiltonian (<code>PauliHamiltonian</code>) and noise (<code>PauliLindbladNoiseOperator</code>).</p>
 <h3 id="examples-3"><a class="header" href="#examples-3">Examples</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct, PauliLindbladOpenSystem};
-
-let mut open_system = PauliLindbladOpenSystem::new();
-
-let pp = PauliProduct::new().z(1);
-let dp = DecoherenceProduct::new().x(0).z(2);
-
-// Add the Z_1 term into the operator part of the open system
-let operator = open_system.system_mut();
-operator.add_operator_product(pp, CalculatorFloat::from(2.0)).unwrap();
-
-// Add the X_0 Z_2 term into the noise part of the open system
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-println!("{}", open_system);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
 from struqture_py import spins
 
@@ -489,25 +394,6 @@ struqture uses the convention that density matrices are flattened in row-major o
 \]
 For noiseless objects (<code>PauliOperator</code>, <code>PauliHamiltonian</code>), sparse operators and sparse superoperators can be constructed, as we can represent the operator as a wavefunction. For operators with noise (<code>PauliLindbladNoiseOperator</code>, <code>PauliLindbladOpenSystem</code>), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.</p>
 <p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliLindbladNoiseOperator};
-
-let mut operator = PauliLindbladNoiseOperator::new();
-
-let dp = DecoherenceProduct::new().x(0).z(2);
-
-operator
-    .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-// Here we have a noise operator, so we can only construct a superoperator
-let matrix = operator.sparse_matrix_superoperator(3).unwrap();
-println!("{:?}", matrix);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import spins
 from scipy.sparse import coo_matrix
@@ -518,7 +404,7 @@ dp = spins.DecoherenceProduct().x(0).z(2)
 operator.add_operator_product((dp, dp), CalculatorComplex.from_pair(1.0, 1.5))
 # Using the `sparse_matrix_superoperator_coo` function, you can also
 # return the information in scipy coo_matrix form, which can be directly fed in:
-python_coo = coo_matrix(operator.sparse_matrix_superoperator_coo())
+python_coo = coo_matrix(operator.sparse_matrix_superoperator_coo(dp.current_number_spins()))
 print(python_coo.todense())
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fermions"><a class="header" href="#fermions">Fermions</a></h1>
@@ -531,8 +417,8 @@ print(python_coo.todense())
 <p>FermionProducts are simple combinations of fermionic creation and annihilation operators.</p>
 <h3 id="hermitianfermionproducts"><a class="header" href="#hermitianfermionproducts">HermitianFermionProducts</a></h3>
 <p>HermitianFermionProducts are the hermitian equivalent of FermionProducts. This means that even though they are constructed the same (see the next section, <code>Examples</code>), they internally store both that term and its hermitian conjugate. For instance, given the term \(c^{\dagger}_0 c_1 c_2\), a FermionProduct would represent \(c^{\dagger}_0 c_1 c_2\) while a HermitianFermionProduct would represent \(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\).</p>
-<h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
-<p>In both Python and Rust, the operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
 <p>Note: (Hermitian)FermionProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the <code>create_valid_pair</code> function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the anti-commutation and hermitian conjugation rules.</p>
 <pre><code class="language-python">from struqture_py.fermions import FermionProduct, HermitianFermionProduct
 from qoqo_calculator_pyo3 import CalculatorComplex
@@ -553,28 +439,6 @@ hfp = HermitianFermionProduct([0], [20])
 hfp = HermitianFermionProduct.create_valid_pair(
     [3, 0], [0], CalculatorComplex.from_pair(1.0, 0.0))
 </code></pre>
-<p>In Rust the equivalent string representation cannot be used in function and method arguments.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::fermions::{FermionProduct, HermitianFermionProduct};
-use struqture::prelude::*;
-
-// Building the term c^{\dagger}_0 c_20
-let fp_0 = FermionProduct::new([0], [20]).unwrap();
-// Building the term c^{\dagger}_1 * c^{\dagger}_3 * c_0
-let (fp_1, coeff) = FermionProduct::create_valid_pair(
-    [3, 1], [0], CalculatorComplex::from(1.0)).unwrap();
-
-
-// A product of a creation operator acting on fermionic mode 0 and an annihilation
-// operator acting on fermionic mode 20, as well as a creation operator acting on
-// fermionic mode 20 and an annihilation operator acting on fermionic mode 0
-let fp_0 = HermitianFermionProduct::new([0], [20]).unwrap();
-// Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
-let (fp_1, coeff) = HermitianFermionProduct::create_valid_pair(
-    [3, 0], [0], CalculatorComplex::from(1.0)).unwrap();
-<span class="boring">}</span></code></pre></pre>
 <h2 id="operators-and-hamiltonians-1"><a class="header" href="#operators-and-hamiltonians-1">Operators and Hamiltonians</a></h2>
 <p>Complex objects are constructed from operator products are <code>FermionOperators</code> and <code>FermionHamiltonians</code>
 (for more information, <a href="physical_types/../container_types/operators_hamiltonians_and_systems.html">see also</a>).</p>
@@ -593,39 +457,7 @@ and
 <p>In struqture we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors.
 In the <code>HermitianFermionProducts</code>, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.</p>
-<h3 id="examples-5"><a class="header" href="#examples-5">Examples</a></h3>
-<p>Here is an example of how to build a product and using it to build an operator, in Rust:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{
-    FermionProduct, FermionOperator, HermitianFermionProduct, FermionHamiltonian
-};
-
-// Building the term c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
-let fp = FermionProduct::new([1, 2], [0, 1]).unwrap();
-
-// O = (1 + 1.5 * i) * c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
-let mut operator = FermionOperator::new();
-operator.add_operator_product(fp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = FermionOperator::new();
-operator.set(fp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", operator);
-
-// A FermionProduct entry is not valid for a FermionHamiltonian
-let mut hamiltonian = FermionHamiltonian::new();
-// This would fail, as it uses HermitianFermionProducts, not FermionProducts
-hamiltonian.add_operator_product(fp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-// This is possible
-let hfp = HermitianFermionProduct::new([0, 2], [0, 1]).unwrap();
-hamiltonian.add_operator_product(hfp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!("{}", hamiltonian);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
@@ -651,29 +483,9 @@ Therefore, to describe the pure noise part of the Lindblad equation one needs th
 We use <code>FermionProducts</code> as the operator basis.</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>FermionProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>FermionLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>FermionProduct</code>, <code>FermionProduct</code>) as keys and the entries in the rate matrix as values.</p>
-<h3 id="examples-6"><a class="header" href="#examples-6">Examples</a></h3>
+<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
 <p>Here, we add the terms \(L_0 = c^{\dagger}_0 c_0\) and \(L_1 = c^{\dagger}_0 c_0\) with coefficient 1.0:
 \( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{FermionProduct, FermionLindbladNoiseOperator};
-
-// Setting up the operator and the product we want to add to it
-let mut operator = FermionLindbladNoiseOperator::new();
-let fp = FermionProduct::new([0], [0]).unwrap();
-
-// Adding the product to the operator
-operator
-    .add_operator_product(
-        (fp.clone(), fp.clone()),
-        CalculatorComplex::new(1.0, 0.0)
-    ).unwrap();
-assert_eq!(operator.get(&amp;(fp.clone(), fp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!("{}", operator);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
@@ -686,8 +498,8 @@ operator.add_operator_product((fp, fp), CalculatorComplex.from_pair(1.0, 1.5))
 print(operator)
 
 # In python we can also use the string representation
-operator = fermions.FermionLindbladNoiseSystem()
-operator.add_operator_product((str(fp), str(fp)), 1.0+1.5*1j)
+operator = fermions.FermionLindbladOpenSystem()
+operator.noise_add_operator_product((str(fp), str(fp)), 1.0 + 1.5 * 1j)
 print(operator)
 </code></pre>
 <h2 id="open-systems-1"><a class="header" href="#open-systems-1">Open systems</a></h2>
@@ -696,35 +508,8 @@ The Lindblad master equation is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
-In struqture they are composed of a Hamiltonian (<code>FermionHamiltonian</code>) and noise (<code>FermionLindbladNoiseOperator</code>). They have different ways to set terms in Rust and Python:</p>
-<h3 id="examples-7"><a class="header" href="#examples-7">Examples</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{
-    FermionProduct, HermitianFermionProduct, FermionLindbladOpenSystem
-};
-
-let mut open_system = FermionLindbladOpenSystem::new();
-
-let hfp = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
-let fp = FermionProduct::new([0], [0]).unwrap();
-
-// Adding the c^{\dagger}_0 c^{\dagger}_1 c_0 c_2 term to the system part of the open system
-let operator = open_system.system_mut();
-operator.add_operator_product(hfp, CalculatorComplex::new(2.0, 0.0)).unwrap();
-
-// Adding the c^{\dagger}_0 c_0 part to the noise part of the open system
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product(
-        (fp.clone(), fp), CalculatorComplex::new(1.0, 0.0)
-    ).unwrap();
-
-println!("{}", open_system);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+In struqture they are composed of a Hamiltonian (<code>FermionHamiltonian</code>) and noise (<code>FermionLindbladNoiseOperator</code>).</p>
+<h3 id="example-3"><a class="header" href="#example-3">Example</a></h3>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
 
@@ -751,8 +536,8 @@ print(open_system)
 <p>BosonProducts are simple combinations of bosonic creation and annihilation operators.</p>
 <h3 id="hermitianbosonproducts"><a class="header" href="#hermitianbosonproducts">HermitianBosonProducts</a></h3>
 <p>HermitianBosonProducts are the hermitian equivalent of BosonProducts. This means that even though they are constructed the same (see the next section, <code>Examples</code>), they internally store both that term and its hermitian conjugate. For instance, given the term \(c^{\dagger}_0 c_1 c_2\), a BosonProduct would represent \(c^{\dagger}_0 c_1 c_2\) while a HermitianBosonProduct would represent \(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\).</p>
-<h3 id="examples-8"><a class="header" href="#examples-8">Examples</a></h3>
-<p>In both Python and Rust, the operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
+<h3 id="example-4"><a class="header" href="#example-4">Example</a></h3>
+<p>The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
 <p>Note: (Hermitian)BosonProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the <code>create_valid_pair</code> function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the commutation and hermitian conjugation rules.</p>
 <pre><code class="language-python">from struqture_py.bosons import BosonProduct, HermitianBosonProduct
 from qoqo_calculator_pyo3 import CalculatorComplex
@@ -772,30 +557,6 @@ hbp = HermitianBosonProduct([0], [20])
 hbp = HermitianBosonProduct.create_valid_pair(
     [3, 0], [0], CalculatorComplex.from_pair(1.0, 0.0))
 </code></pre>
-<p>In Rust the equivalent string representation cannot be used in function and method arguments.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use struqture::bosons::{BosonProduct, HermitianBosonProduct};
-use struqture::ModeIndex;
-use qoqo_calculator::CalculatorComplex;
-
-// Building the term c^{\dagger}_0 c_20
-let bp_0 = BosonProduct::new([0], [20]).unwrap();
-// Building the term c^{\dagger}_1 * c^{\dagger}_3 * c_0
-let (bp_1, coeff) = BosonProduct::create_valid_pair(
-    [3, 1], [0], CalculatorComplex::from(1.0)
-).unwrap();
-
-
-// A product of a creation operator acting on bosonic mode 0 and an annihilation operator
-// acting on bosonic mode 20, as well as a creation operator acting on bosonic mode 20
-// and an annihilation operator acting on bosonic mode 0
-let bp_0 = HermitianBosonProduct::new([0], [20]).unwrap();
-// Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
-let (bp_1, coeff) = HermitianBosonProduct::create_valid_pair(
-    [3, 0], [0], CalculatorComplex::from(1.0)
-).unwrap();
-<span class="boring">}</span></code></pre></pre>
 <h2 id="operators-and-hamiltonians-2"><a class="header" href="#operators-and-hamiltonians-2">Operators and Hamiltonians</a></h2>
 <p>Complex objects are constructed from operator products are <code>BosonOperators</code> and <code>BosonHamiltonians</code>
 (for more information, <a href="physical_types/../container_types/operators_hamiltonians_and_systems.html">see also</a>).</p>
@@ -813,39 +574,8 @@ and
 <p>In struqture we distinguish between bosonic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors.
 In the <code>HermitianBosonProducts</code>, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.</p>
-<h3 id="examples-9"><a class="header" href="#examples-9">Examples</a></h3>
-<p>Here is an example of how to build a <code>BosonOperator</code> and a <code>BosonHamiltonian</code>, in Rust:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::bosons::{
-    BosonProduct, BosonOperator, HermitianBosonProduct, BosonHamiltonian
-};
-
-// Building the term c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
-let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
-
-// O = (1 + 1.5 * i) * c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
-let mut operator = BosonOperator::new();
-operator.add_operator_product(bp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = BosonOperator::new();
-operator.set(bp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", operator);
-
-// A BosonProduct entry is not valid for a BosonHamiltonian
-let mut hamiltonian = BosonHamiltonian::new();
-// This would fail, as it uses HermitianBosonProducts, not BosonProducts
-hamiltonian.add_operator_product(bp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-// This is possible
-let hbp = HermitianBosonProduct::new([0, 2], [0, 1]).unwrap();
-hamiltonian.add_operator_product(hbp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!("{}", hamiltonian);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+<h3 id="example-5"><a class="header" href="#example-5">Example</a></h3>
+<p>Here is an example of how to build a <code>BosonOperator</code> and a <code>BosonHamiltonian</code>:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
@@ -871,28 +601,9 @@ Therefore, to describe the pure noise part of the Lindblad equation one needs th
 We use <code>BosonProducts</code> as the operator basis.</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>BosonProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>BosonLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>BosonProduct</code>, <code>BosonProduct</code>) as keys and the entries in the rate matrix as values.</p>
-<h3 id="examples-10"><a class="header" href="#examples-10">Examples</a></h3>
+<h3 id="example-6"><a class="header" href="#example-6">Example</a></h3>
 <p>Here, we add the terms \(L_0 = c^{\dagger}_0 c_0\) and \(L_1 = c^{\dagger}_0 c_0\) with coefficient 1.0:
 \( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::bosons::{BosonProduct, BosonLindbladNoiseOperator};
-
-// Setting up the operator and the product we want to add to it
-let mut operator = BosonLindbladNoiseOperator::new();
-let bp = BosonProduct::new([0], [0]).unwrap();
-
-// Adding the product to the operator
-operator
-    .add_operator_product(
-        (bp.clone(), bp.clone()), CalculatorComplex::new(1.0, 0.0)
-    ).unwrap();
-assert_eq!(operator.get(&amp;(bp.clone(), bp)), &amp;CalculatorComplex::new(1.0, 0.0));
-println!("{}", operator);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
@@ -916,31 +627,7 @@ The Lindblad master equation is given by
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
 In struqture they are composed of a Hamiltonian (<code>BosonHamiltonian</code>) and noise (<code>BosonLindbladNoiseOperator</code>). They have different ways to set terms in Rust and Python:</p>
-<h3 id="examples-11"><a class="header" href="#examples-11">Examples</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::bosons::{BosonProduct, HermitianBosonProduct, BosonLindbladOpenSystem};
-
-let mut open_system = BosonLindbladOpenSystem::new();
-
-let hbp = HermitianBosonProduct::new([0, 1], [0, 2]).unwrap();
-let bp = BosonProduct::new([0], [0]).unwrap();
-
-// Adding the c_0^dag c_1^dag c_0 c_2 term to the system part of the open system
-let operator = open_system.system_mut();
-operator.add_operator_product(hbp, CalculatorComplex::new(2.0, 0.0)).unwrap();
-
-// Adding the c_0^dag c_0 part to the noise part of the open system
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product((bp.clone(), bp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-println!("{}", open_system);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+<h3 id="example-7"><a class="header" href="#example-7">Example</a></h3>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
@@ -978,29 +665,29 @@ print(open_system)
 <p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate.</p>
 <h3 id="mixeddecoherenceproducts"><a class="header" href="#mixeddecoherenceproducts">MixedDecoherenceProducts</a></h3>
 <p>MixedDecoherenceProducts are combinations of <code>DecoherenceProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
-<h3 id="examples-12"><a class="header" href="#examples-12">Examples</a></h3>
-<p>In both Python and Rust, the operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.</p>
+<h3 id="examples-4"><a class="header" href="#examples-4">Examples</a></h3>
+<p>The operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.</p>
 <pre><code class="language-python">from struqture_py import mixed_systems, bosons, spins, fermions
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp = spins.PauliProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-bp = bosons.BosonProduct([1, 2], [1])
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+bp = bosons.BosonProduct([1, 2], [2])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-# * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# * c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 hmp = mixed_systems.MixedProduct([pp], [bp], [fp])
 
 # Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 *
-# c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
+# c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
 hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
 
 
 # Building the spin term sigma^x_0 sigma^z_1
 dp = spins.DecoherenceProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
 bp = bosons.BosonProduct([1, 2], [0, 1])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
@@ -1008,45 +695,6 @@ fp = fermions.FermionProduct([0, 1], [0, 1])
 # This will work
 mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
 </code></pre>
-<p>In Rust the equivalent string representation cannot be used in function and method arguments.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct};
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{
-    MixedProduct, HermitianMixedProduct, MixedDecoherenceProduct
-};
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = PauliProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-// * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mp = MixedProduct::new([pp.clone()], [bp.clone()], [fp.clone()]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
-let hmp = HermitianMixedProduct::new([pp], [bp], [fp]).unwrap();
-
-
-// Building the spin term sigma^x_0 sigma^z_1
-let dp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mdp = MixedDecoherenceProduct::new([dp], [bp], [fp]).unwrap();
-
-<span class="boring">}</span></code></pre></pre>
 <h2 id="operators-and-hamiltonians-3"><a class="header" href="#operators-and-hamiltonians-3">Operators and Hamiltonians</a></h2>
 <p>Complex objects are constructed from operator products are <code>MixedOperators</code> and <code>MixedHamiltonians</code>
 (for more information, <a href="physical_types/../container_types/operators_hamiltonians_and_systems.html">see also</a>).</p>
@@ -1057,68 +705,8 @@ with commutation relations and cyclicity respected.</p>
 <p>In struqture we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed Hamiltonian , this means that the sums of products are sums of hermitian mixed products (we have not only the \(c^{\dagger}c\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.</p>
 <p>For <code>MixedOperators</code> and <code>MixedHamiltonians</code>, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.</p>
-<h3 id="examples-13"><a class="header" href="#examples-13">Examples</a></h3>
-<p>Here is an example of how to build a <code>MixedOperator</code> and a <code>MixedHamiltonian</code>, in Rust:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::spins::PauliProduct;
-use struqture::mixed_systems::{
-    MixedOperator, MixedProduct, HermitianMixedProduct, MixedHamiltonian
-};
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp_0 = PauliProduct::new().x(0).z(1);
-// Building the spin term sigma^y_0
-let pp_1 = PauliProduct::new().y(0);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-let bp = BosonProduct::new([1, 2], [1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-// * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mp_0 = MixedProduct::new([pp_0.clone()], [bp.clone()], [fp.clone()]).unwrap();
-// Building the term sigma^y_0
-let mp_1 = MixedProduct::new(
-    [pp_1.clone()],
-    [BosonProduct::new([], []).unwrap()],
-    [FermionProduct::new([], []).unwrap()]
-).unwrap();
-
-// Building the operator
-let mut operator = MixedOperator::new(1, 1, 1);
-operator.add_operator_product(mp_0.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-operator.add_operator_product(mp_1.clone(), CalculatorComplex::from(2.0)).unwrap();
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = MixedOperator::new(1, 1, 1);
-operator.set(mp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
-operator.set(mp_1, CalculatorComplex::from(2.0)).unwrap();
-println!("{}", operator);
-
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-// * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let hmp_0 = HermitianMixedProduct::new([pp_0], [bp], [fp]).unwrap();
-// Building the term sigma^y_0
-let hmp_1 = HermitianMixedProduct::new(
-    [pp_1],
-    [BosonProduct::new([], []).unwrap()],
-    [FermionProduct::new([], []).unwrap()]
-).unwrap();
-
-// Building the operator
-let mut hamiltonian = MixedHamiltonian::new(1, 1, 1);
-hamiltonian.add_operator_product(hmp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
-hamiltonian.add_operator_product(hmp_1, CalculatorComplex::from(2.0)).unwrap();
-println!("{}", hamiltonian);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+<h3 id="example-8"><a class="header" href="#example-8">Example</a></h3>
+<p>Here is an example of how to build a <code>MixedOperator</code> and a <code>MixedHamiltonian</code>:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
@@ -1128,8 +716,8 @@ operator = mixed_systems.MixedHamiltonian(2, 1, 1)
 pp_0 = spins.PauliProduct().x(0).z(1)
 # Building the spin term sigma^y_0
 pp_1 = spins.PauliProduct().y(0)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-bp = bosons.BosonProduct([1, 2], [1])
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+bp = bosons.BosonProduct([1, 2], [2])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
@@ -1156,51 +744,9 @@ To describe the pure noise part of the Lindblad equation one needs the rate matr
 We use <code>MixedDecoherenceProducts</code> as the operator basis. To describe mixed noise we use the Lindblad equation with \(\hat{H}=0\).</p>
 <p>The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of <code>MixedDecoherenceProducts</code>, giving the operators acting from the left and right on the density matrix.
 In programming terms the object <code>MixedLindbladNoiseOperators</code> is given by a HashMap or Dictionary with the tuple (<code>MixedDecoherenceProduct</code>, <code>MixedDecoherenceProduct</code>) as keys and the entries in the rate matrix as values.</p>
-<h3 id="examples-14"><a class="header" href="#examples-14">Examples</a></h3>
+<h3 id="example-9"><a class="header" href="#example-9">Example</a></h3>
 <p>Here, we add the terms \(L_0 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\) and \(L_1 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\) with coefficient 1.0:
 \( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \)</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{MixedDecoherenceProduct, MixedLindbladNoiseOperator};
-use struqture::prelude::*;
-use struqture::spins::DecoherenceProduct;
-
-let mut operator = MixedLindbladNoiseOperator::new(1, 1, 1);
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b_1
-let bp = BosonProduct::new([1], [1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mdp = MixedDecoherenceProduct::new(
-    [pp],
-    [bp],
-    [fp]
-).unwrap();
-
-// Adding in the mixed decoherence product
-operator
-    .add_operator_product(
-        (mdp.clone(), mdp.clone()),
-        CalculatorComplex::new(1.0, 1.5),
-    )
-    .unwrap();
-
-// Checking the operator
-assert_eq!(
-    operator.get(&amp;(mdp.clone(), mdp)),
-    &amp;CalculatorComplex::new(1.0, 1.5)
-);
-println!("{}", operator);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
@@ -1233,73 +779,22 @@ The Lindblad master equation is given by
 \[
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]</p>
-<p>In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator). They have different ways to set terms in Rust and Python:</p>
-<h3 id="examples-15"><a class="header" href="#examples-15">Examples</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedDecoherenceProduct, MixedLindbladOpenSystem,
-};
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct};
-
-let mut open_system = MixedLindbladOpenSystem::new([Some(3)], [Some(3)], [Some(3)]);
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = PauliProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_0 * c_b_0
-let bp = BosonProduct::new([0], [0]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term (sigma^x_0 sigma^z_1 * c_b^{\dagger}_0
-// * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1)
-// + h.c.
-let hmp = HermitianMixedProduct::new([pp], [bp], [fp]).unwrap();
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b_1
-let bp = BosonProduct::new([1], [1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mdp = MixedDecoherenceProduct::new([pp], [bp], [fp]).unwrap();
-
-// Adding in the system term
-let operator = open_system.system_mut();
-operator
-    .add_operator_product(hmp, CalculatorComplex::new(2.0, 0.0))
-    .unwrap();
-
-// Adding in the noise term
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product((mdp.clone(), mdp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-println!("{}", open_system);
-<span class="boring">}</span></code></pre></pre>
-<p>The equivalent code in python:</p>
+<p>In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator).</p>
+<h3 id="example-10"><a class="header" href="#example-10">Example</a></h3>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
-open_system = mixed_systems.MixedLindbladOpenSystem([3], [3], [3])
+open_system = mixed_systems.MixedLindbladOpenSystem(1, 1, 1)
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp = spins.PauliProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_1
-bp = bosons.BosonProduct([1, 2], [1])
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+bp = bosons.BosonProduct([1, 2], [2])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
-# * c_b^{\dagger}_2 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# * c_b^{\dagger}_2 * c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 # + h.c.
 hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
 
@@ -1317,8 +812,7 @@ mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
 # Adding in the system term
 open_system.system_add_operator_product(hmp, CalculatorComplex.from_pair(2.0, 0.0))
 # Adding in the noise term
-open_system.noise_add_operator_product(
-    (mdp, mdp), CalculatorComplex.from_pair(0.0, 1.0))
+open_system.noise_add_operator_product((mdp, mdp), CalculatorComplex.from_pair(0.0, 1.0))
 
 print(open_system)
 </code></pre>
@@ -1511,61 +1005,7 @@ For examples showing how to use <code>MixedLindbladOpenSystem</code>s, please se
 \hat{H} = \sigma_0^x \sum_{k=0}^2 \frac {v_k} {2} \left( c_k + c_k^{\dagger} \right)
 \]</p>
 <p>For simplicity, we will set \(\hbar\) to 1.0 for this example.</p>
-<p>Rust implementation:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedHamiltonian,
-};
-use struqture::prelude::*;
-use struqture::spins::PauliProduct;
-
-let mut operator = MixedHamiltonian::new(1, 1, 0);
-
-// Setting up constants:
-let delta = 1.0;
-let omega_k = [2.0, 3.0, 4.0];
-let v_k = [5.0, 6.0, 7.0];
-
-// First, H_S:
-let pp = PauliProduct::new().z(1);
-let hmp = HermitianMixedProduct::new(
-    [pp], [BosonProduct::new([], []).unwrap()], []
-).unwrap();
-operator
-    .add_operator_product(hmp, CalculatorComplex::new(delta / 2.0, 0.0))
-    .unwrap();
-
-// Second, H_B:
-for k in 0..3 {
-    let bp = BosonProduct::new([k], [k]).unwrap();
-    let hmp = HermitianMixedProduct::new(
-        [PauliProduct::new()], [bp], []
-    ).unwrap();
-    operator
-        .add_operator_product(
-            hmp, CalculatorComplex::new(v_k[k] / 2.0, 0.0)
-        ).unwrap();
-}
-
-// Third, H_C: the hermitian conjugate is implicitly stored,
-// we don't need to add it manually
-let pp = PauliProduct::new().x(0);
-for k in 0..3 {
-    let bp = BosonProduct::new([], [k]).unwrap();
-    let hmp = HermitianMixedProduct::new([pp.clone()], [bp], []).unwrap();
-    operator
-        .add_operator_product(
-            hmp, CalculatorComplex::new(omega_k[k], 0.0)
-        ).unwrap();
-}
-
-// Our resulting H:
-println!("{}", operator);
-<span class="boring">}</span></code></pre></pre>
-<p>Python implementation:</p>
+<p>Implementation:</p>
 <pre><code class="language-python">from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py.bosons import BosonProduct
 from struqture_py.mixed_systems import (
