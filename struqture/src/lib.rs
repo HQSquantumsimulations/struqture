@@ -167,7 +167,7 @@ pub enum StruqtureError {
     },
     /// Error when the number of subsystems in a mixed system does not match.
     #[error("Number of subsystems does not match. target: {target_number_spin_subsystems} spin {target_number_boson_subsystems} boson {target_number_fermion_subsystems} fermion; actual: {actual_number_spin_subsystems} spin {actual_number_boson_subsystems} boson {actual_number_fermion_subsystems} fermion ")]
-    MissmatchedNumberSubsystems {
+    MismatchedNumberSubsystems {
         target_number_spin_subsystems: usize,
         target_number_boson_subsystems: usize,
         target_number_fermion_subsystems: usize,

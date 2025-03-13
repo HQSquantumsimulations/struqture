@@ -190,7 +190,7 @@ fn set_fail() {
     let err = mo.set(pp_0, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 0,
             target_number_boson_subsystems: 1,
             target_number_fermion_subsystems: 1,
@@ -208,7 +208,7 @@ fn set_fail() {
     let err = mo.set(pp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 1,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 1,
@@ -226,7 +226,7 @@ fn set_fail() {
     let err = mo.set(pp_2, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 1,
             target_number_boson_subsystems: 1,
             target_number_fermion_subsystems: 0,
@@ -269,7 +269,7 @@ fn fail_add_operator_product() {
     let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 0,
             target_number_boson_subsystems: 1,
             target_number_fermion_subsystems: 1,
@@ -283,7 +283,7 @@ fn fail_add_operator_product() {
     let err = mo.add_operator_product(pp_2.clone(), CalculatorComplex::from(0.5));
     assert_eq!(
         err,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 1,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 1,
@@ -297,7 +297,7 @@ fn fail_add_operator_product() {
     let err = mo.add_operator_product(pp_2, CalculatorComplex::from(0.5));
     assert_eq!(
         err,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 1,
             target_number_boson_subsystems: 1,
             target_number_fermion_subsystems: 0,

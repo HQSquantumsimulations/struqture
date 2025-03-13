@@ -170,7 +170,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     fn set(
         &mut self,
         key: Self::Index,
@@ -180,7 +180,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedOperator {
             || key.bosons().len() != self.n_bosons
             || key.fermions().len() != self.n_fermions
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: self.n_spins,
                 target_number_boson_subsystems: self.n_bosons,
                 target_number_fermion_subsystems: self.n_fermions,
@@ -395,7 +395,7 @@ where
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedOperators added together.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     fn add(mut self, other: T) -> Self::Output {
         for (key, value) in other.into_iter() {
             self.add_operator_product(key.clone(), Into::<CalculatorComplex>::into(value))?;
@@ -421,7 +421,7 @@ where
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedOperators subtracted.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     fn sub(mut self, other: T) -> Self::Output {
         for (key, value) in other.into_iter() {
             self.add_operator_product(key.clone(), Into::<CalculatorComplex>::into(value) * -1.0)?;
@@ -477,7 +477,7 @@ impl ops::Mul<MixedOperator> for MixedOperator {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedOperators multiplied.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     fn mul(self, other: MixedOperator) -> Self::Output {
         let mut op = MixedOperator::with_capacity(
             self.n_spins,
