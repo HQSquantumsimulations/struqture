@@ -411,7 +411,7 @@ fn matrices() {
 
     let unitary_matrix: CooSparseMatrix =
         (vec![1.0.into(), (-1.0).into()], (vec![0, 1], vec![0, 1]));
-    assert_eq!(system.sparse_matrix_coo(Some(1)).unwrap(), unitary_matrix);
+    assert_eq!(system.sparse_matrix_coo(1).unwrap(), unitary_matrix);
 
     let mut superoperator_matrix: HashMap<usize, HashMap<usize, Complex64>> = HashMap::new();
     let mut row_0: HashMap<usize, Complex64> = HashMap::new();
@@ -604,7 +604,9 @@ fn test_superoperator(pauli_representation: &str, pauli_operators: &[&str]) {
 
     let test_matrix = (h.kronecker(&i) - i.kronecker(&h.transpose())) * (-cci);
 
-    let second_test_matrix = system.sparse_matrix_superoperator(None).unwrap();
+    let second_test_matrix = system
+        .sparse_matrix_superoperator(system.current_number_spins())
+        .unwrap();
     for row in 0..dimension {
         for column in 0..dimension {
             let key = (row, column);
@@ -620,8 +622,9 @@ fn test_superoperator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let (test_vals, (test_rows, test_columns)) =
-        system.sparse_matrix_superoperator_coo(None).unwrap();
+    let (test_vals, (test_rows, test_columns)) = system
+        .sparse_matrix_superoperator_coo(system.current_number_spins())
+        .unwrap();
     for (second_val, (row, column)) in test_vals
         .iter()
         .zip(test_rows.iter().zip(test_columns.iter()))
@@ -652,7 +655,7 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
 
     let test_matrix = h;
 
-    let second_test_matrix = system.sparse_matrix(None).unwrap();
+    let second_test_matrix = system.sparse_matrix(system.current_number_spins()).unwrap();
 
     #[allow(unused)]
     fn fast_convert(
@@ -681,7 +684,9 @@ fn test_operator(pauli_representation: &str, pauli_operators: &[&str]) {
         }
     }
 
-    let coo_test_matrix = system.sparse_matrix_coo(None).unwrap();
+    let coo_test_matrix = system
+        .sparse_matrix_coo(system.current_number_spins())
+        .unwrap();
     let mut coo_hashmap: HashMap<(usize, usize), Complex64> = HashMap::new();
     for i in 0..coo_test_matrix.0.len() {
         coo_hashmap.insert(

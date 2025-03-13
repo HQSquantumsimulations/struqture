@@ -15,9 +15,9 @@ FermionProducts are simple combinations of fermionic creation and annihilation o
 
 HermitianFermionProducts are the hermitian equivalent of FermionProducts. This means that even though they are constructed the same (see the next section, `Examples`), they internally store both that term and its hermitian conjugate. For instance, given the term \\(c^{\dagger}_0 c_1 c_2\\), a FermionProduct would represent \\(c^{\dagger}_0 c_1 c_2\\) while a HermitianFermionProduct would represent \\(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\\).
 
-### Examples
+### Example
 
-In both Python and Rust, the operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.
+The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.
 
 Note: (Hermitian)FermionProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the `create_valid_pair` function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the anti-commutation and hermitian conjugation rules.
 
@@ -40,29 +40,6 @@ hfp = HermitianFermionProduct([0], [20])
 # Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
 hfp = HermitianFermionProduct.create_valid_pair(
     [3, 0], [0], CalculatorComplex.from_pair(1.0, 0.0))
-```
-
-In Rust the equivalent string representation cannot be used in function and method arguments.
-
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::fermions::{FermionProduct, HermitianFermionProduct};
-use struqture::prelude::*;
-
-// Building the term c^{\dagger}_0 c_20
-let fp_0 = FermionProduct::new([0], [20]).unwrap();
-// Building the term c^{\dagger}_1 * c^{\dagger}_3 * c_0
-let (fp_1, coeff) = FermionProduct::create_valid_pair(
-    [3, 1], [0], CalculatorComplex::from(1.0)).unwrap();
-
-
-// A product of a creation operator acting on fermionic mode 0 and an annihilation
-// operator acting on fermionic mode 20, as well as a creation operator acting on
-// fermionic mode 20 and an annihilation operator acting on fermionic mode 0
-let fp_0 = HermitianFermionProduct::new([0], [20]).unwrap();
-// Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
-let (fp_1, coeff) = HermitianFermionProduct::create_valid_pair(
-    [3, 0], [0], CalculatorComplex::from(1.0)).unwrap();
 ```
 
 ## Operators and Hamiltonians
@@ -89,40 +66,8 @@ In struqture we distinguish between fermionic operators and Hamiltonians to avoi
 While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
 In the `HermitianFermionProducts`, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.
 
-### Examples
+### Example
 
-Here is an example of how to build a product and using it to build an operator, in Rust:
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{
-    FermionProduct, FermionOperator, HermitianFermionProduct, FermionHamiltonian
-};
-
-// Building the term c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
-let fp = FermionProduct::new([1, 2], [0, 1]).unwrap();
-
-// O = (1 + 1.5 * i) * c^{\dagger}_1 * c^{\dagger}_2 * c_0 * c_1
-let mut operator = FermionOperator::new();
-operator.add_operator_product(fp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = FermionOperator::new();
-operator.set(fp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-println!("{}", operator);
-
-// A FermionProduct entry is not valid for a FermionHamiltonian
-let mut hamiltonian = FermionHamiltonian::new();
-// This would fail, as it uses HermitianFermionProducts, not FermionProducts
-hamiltonian.add_operator_product(fp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-// This is possible
-let hfp = HermitianFermionProduct::new([0, 2], [0, 1]).unwrap();
-hamiltonian.add_operator_product(hfp, CalculatorComplex::new(1.5, 0.0)).unwrap();
-println!("{}", hamiltonian);
-```
-
-The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
@@ -154,30 +99,10 @@ We use `FermionProducts` as the operator basis.
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `FermionProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `FermionLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`FermionProduct`, `FermionProduct`) as keys and the entries in the rate matrix as values.
 
-### Examples
+### Example
 Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{FermionProduct, FermionLindbladNoiseOperator};
-
-// Setting up the operator and the product we want to add to it
-let mut operator = FermionLindbladNoiseOperator::new();
-let fp = FermionProduct::new([0], [0]).unwrap();
-
-// Adding the product to the operator
-operator
-    .add_operator_product(
-        (fp.clone(), fp.clone()),
-        CalculatorComplex::new(1.0, 0.0)
-    ).unwrap();
-assert_eq!(operator.get(&(fp.clone(), fp)), &CalculatorComplex::new(1.0, 0.0));
-println!("{}", operator);
-```
-
-The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions
@@ -191,8 +116,8 @@ operator.add_operator_product((fp, fp), CalculatorComplex.from_pair(1.0, 1.5))
 print(operator)
 
 # In python we can also use the string representation
-operator = fermions.FermionLindbladNoiseSystem()
-operator.add_operator_product((str(fp), str(fp)), 1.0+1.5*1j)
+operator = fermions.FermionLindbladOpenSystem()
+operator.noise_add_operator_product((str(fp), str(fp)), 1.0 + 1.5 * 1j)
 print(operator)
 ```
 
@@ -203,37 +128,10 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseOperator`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseOperator`).
 
-### Examples
+### Example
 
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::fermions::{
-    FermionProduct, HermitianFermionProduct, FermionLindbladOpenSystem
-};
-
-let mut open_system = FermionLindbladOpenSystem::new();
-
-let hfp = HermitianFermionProduct::new([0, 1], [0, 2]).unwrap();
-let fp = FermionProduct::new([0], [0]).unwrap();
-
-// Adding the c^{\dagger}_0 c^{\dagger}_1 c_0 c_2 term to the system part of the open system
-let operator = open_system.system_mut();
-operator.add_operator_product(hfp, CalculatorComplex::new(2.0, 0.0)).unwrap();
-
-// Adding the c^{\dagger}_0 c_0 part to the noise part of the open system
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product(
-        (fp.clone(), fp), CalculatorComplex::new(1.0, 0.0)
-    ).unwrap();
-
-println!("{}", open_system);
-```
-
-The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import fermions

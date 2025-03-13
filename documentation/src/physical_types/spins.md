@@ -93,31 +93,6 @@ dp = DecoherenceProduct().x(0).iy(3).z(20)
 dp_string = str(dp)
 ```
 
-In Rust the user can also import enums for the operators acting on single spins. In Rust the equivalent string representation cannot be used in function and method arguments.
-
-```rust
-use struqture::prelude::*;
-use struqture::spins::{
-    DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SinglePauliOperator,
-};
-
-// A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
-let pp = PauliProduct::new().x(0).y(3).z(20);
-// Constructing with SinglePauliOperator
-let pp_equivalent = PauliProduct::new()
-    .set_pauli(0, SinglePauliOperator::X)
-    .set_pauli(3, SinglePauliOperator::Y)
-    .set_pauli(20, SinglePauliOperator::Z);
-
-// A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
-let dp = DecoherenceProduct::new().x(0).iy(3).z(20);
-// Constructing with SinglePauliOperator
-let dp_equivalent = DecoherenceProduct::new()
-    .set_pauli(0, SingleDecoherenceOperator::X)
-    .set_pauli(3, SingleDecoherenceOperator::IY)
-    .set_pauli(20, SingleDecoherenceOperator::Z);
-```
-
 ## Operators and Hamiltonians
 
 A good example how complex objects are constructed from operator products are `PauliOperators` and `PauliHamiltonians`
@@ -137,38 +112,7 @@ While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermit
 
 ### Examples
 
-Here is an example of how to build a `PauliOperator` and a `PauliHamiltonian`, in Rust:
-
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::spins::{PauliProduct, PauliOperator, PauliHamiltonian};
-
-// Building the term sigma^x_0 * sigma^z_2: sigma_x acting on qubit 0
-// and sigma_z acting on qubit 2
-let pp = PauliProduct::new().x(0).z(2);
-
-// O = (1 + 1.5 * i) * sigma^x_0 * sigma^z_2
-let mut operator = PauliOperator::new();
-operator.add_operator_product(pp.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-assert_eq!(operator.get(&pp), &CalculatorComplex::new(1.0, 1.5));
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = PauliOperator::new();
-operator.set(pp.clone(), 1.0.into()).unwrap();
-println!("{}", operator);
-
-// A complex entry is not valid for a PauliHamiltonian
-let mut hamiltonian = PauliHamiltonian::new();
-// This would fail
-hamiltonian.add_operator_product(pp, CalculatorComplex::new(1.0, 1.5)).unwrap();
-// This is possible
-hamiltonian.add_operator_product(pp, 1.0.into()).unwrap();
-println!("{}", hamiltonian);
-```
-
-The equivalent code in python:
+Here is an example of how to build a `PauliOperator` and a `PauliHamiltonian`:
 
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
@@ -220,24 +164,6 @@ In programming terms the object `PauliLindbladNoiseOperator` is given by a HashM
 Here, we add the terms \\( L_0 = \sigma_0^{x} \sigma_2^{z} \\) and \\( L_1 = \sigma_0^{x} \sigma_2^{z} \\) with coefficient 1.0: 
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
-```rust
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliLindbladNoiseOperator};
-
-// Constructing the operator and product to be added to it
-let mut operator = PauliLindbladNoiseOperator::new();
-let dp = DecoherenceProduct::new().x(0).z(2);
-
-// Adding in the 0X2Z term
-operator.add_operator_product((dp.clone(), dp.clone()), 1.0.into()).unwrap();
-
-// Checking our operator
-assert_eq!(operator.get(&(dp.clone(), dp)), &CalculatorComplex::new(1.0, 0.0));
-println!("{}", operator);
-```
-
-The equivalent code in python:
-
 ```python
 from struqture_py import spins
 
@@ -262,34 +188,9 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a hamiltonian (`PauliHamiltonian`) and noise (`PauliLindbladNoiseOperator`). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a hamiltonian (`PauliHamiltonian`) and noise (`PauliLindbladNoiseOperator`).
 
 ### Examples
-
-```rust
-use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct, PauliLindbladOpenSystem};
-
-let mut open_system = PauliLindbladOpenSystem::new();
-
-let pp = PauliProduct::new().z(1);
-let dp = DecoherenceProduct::new().x(0).z(2);
-
-// Add the Z_1 term into the operator part of the open system
-let operator = open_system.system_mut();
-operator.add_operator_product(pp, CalculatorFloat::from(2.0)).unwrap();
-
-// Add the X_0 Z_2 term into the noise part of the open system
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-println!("{}", open_system);
-```
-
-The equivalent code in python:
 
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
@@ -326,26 +227,6 @@ For noiseless objects (`PauliOperator`, `PauliHamiltonian`), sparse operators an
 
 Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.
 
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliLindbladNoiseOperator};
-
-let mut operator = PauliLindbladNoiseOperator::new();
-
-let dp = DecoherenceProduct::new().x(0).z(2);
-
-operator
-    .add_operator_product((dp.clone(), dp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-// Here we have a noise operator, so we can only construct a superoperator
-let matrix = operator.sparse_matrix_superoperator(3).unwrap();
-println!("{:?}", matrix);
-```
-
-The equivalent code in python:
-
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import spins
@@ -357,6 +238,6 @@ dp = spins.DecoherenceProduct().x(0).z(2)
 operator.add_operator_product((dp, dp), CalculatorComplex.from_pair(1.0, 1.5))
 # Using the `sparse_matrix_superoperator_coo` function, you can also
 # return the information in scipy coo_matrix form, which can be directly fed in:
-python_coo = coo_matrix(operator.sparse_matrix_superoperator_coo())
+python_coo = coo_matrix(operator.sparse_matrix_superoperator_coo(dp.current_number_spins()))
 print(python_coo.todense())
 ```

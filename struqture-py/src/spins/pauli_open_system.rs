@@ -50,7 +50,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     npt.assert_equal(slns.current_number_spins(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
 ///     dimension = 4**slns.current_number_spins()
-///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
+///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(slns.current_number_spins()), shape=(dimension, dimension))
 ///
 #[pyclass(name = "PauliLindbladOpenSystem", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
