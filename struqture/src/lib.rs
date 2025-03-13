@@ -96,7 +96,7 @@ impl TryFrom<StruqtureVersionSerializable> for StruqtureVersion {
         )
         .expect("Internal error: Minor version is not unsigned integer.");
         if major_version != value.major_version {
-            return Err(StruqtureError::VersionMissmatch {
+            return Err(StruqtureError::VersionMismatch {
                 library_major_version: major_version,
                 library_minor_version: minor_version,
                 data_major_version: value.major_version,
@@ -105,7 +105,7 @@ impl TryFrom<StruqtureVersionSerializable> for StruqtureVersion {
         }
         if major_version == 0 {
             if minor_version != value.minor_version {
-                return Err(StruqtureError::VersionMissmatch {
+                return Err(StruqtureError::VersionMismatch {
                     library_major_version: major_version,
                     library_minor_version: minor_version,
                     data_major_version: value.major_version,
@@ -113,7 +113,7 @@ impl TryFrom<StruqtureVersionSerializable> for StruqtureVersion {
                 });
             }
         } else if minor_version < value.minor_version {
-            return Err(StruqtureError::VersionMissmatch {
+            return Err(StruqtureError::VersionMismatch {
                 library_major_version: major_version,
                 library_minor_version: minor_version,
                 data_major_version: value.major_version,
@@ -211,7 +211,7 @@ pub enum StruqtureError {
     ParsingError { target_type: String, msg: String },
     /// Error when trying to deserialize struqture data created with an incompatible version of struqture
     #[error("Version conflict. Data created with struqture version: {data_major_version}.{data_minor_version} could not be deserialized to Library version: {library_major_version}.{library_minor_version}. Please update your libraries to compatible versions or use the data conversion tool.")]
-    VersionMissmatch {
+    VersionMismatch {
         /// Major version of the library
         library_major_version: u32,
         /// Minor version of the library
@@ -222,7 +222,7 @@ pub enum StruqtureError {
         data_minor_version: u32,
     },
     #[error("Trying to deserialize a {name_type} with incompatible version of struqture. Library version: {library_major_version}.{library_minor_version} Data version: {data_major_version}.{data_minor_version}.")]
-    NewVersionMissmatch {
+    NewVersionMismatch {
         /// Major version of the library
         library_major_version: u32,
         /// Minor version of the library
@@ -235,7 +235,7 @@ pub enum StruqtureError {
         name_type: String,
     },
     #[error("Trying to use a struqture {source_type} object as a struqture {target_type} object. Did you maybe pass the wrong object into a function?")]
-    TypeMissmatch {
+    TypeMismatch {
         /// The type of the data that is deserialized.
         source_type: String,
         /// The type of the target that the data is supposed to be deserialized to.
