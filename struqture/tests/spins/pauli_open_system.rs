@@ -710,9 +710,12 @@ fn test_superoperator_noisy(
     let test_matrix = l_left.kronecker(&l_right.transpose())
         - (product.kronecker(&i) + i.kronecker(&product.transpose())) * Complex64::new(0.5, 0.0);
 
-    let second_test_matrix = system.sparse_matrix_superoperator(None).unwrap();
-    let (test_vals, (test_rows, test_columns)) =
-        system.sparse_matrix_superoperator_coo(None).unwrap();
+    let second_test_matrix = system
+        .sparse_matrix_superoperator(system.current_number_spins())
+        .unwrap();
+    let (test_vals, (test_rows, test_columns)) = system
+        .sparse_matrix_superoperator_coo(system.current_number_spins())
+        .unwrap();
     for (second_val, (row, column)) in test_vals
         .iter()
         .zip(test_rows.iter().zip(test_columns.iter()))
@@ -775,9 +778,12 @@ fn test_superoperator_hamiltonian(pauli_representation: &str, pauli_operators: &
 
     let test_matrix = (h.kronecker(&i) - i.kronecker(&h.transpose())) * (-cci);
 
-    let second_test_matrix = system.sparse_matrix_superoperator(None).unwrap();
-    let (test_vals, (test_rows, test_columns)) =
-        system.sparse_matrix_superoperator_coo(None).unwrap();
+    let second_test_matrix = system
+        .sparse_matrix_superoperator(system.current_number_spins())
+        .unwrap();
+    let (test_vals, (test_rows, test_columns)) = system
+        .sparse_matrix_superoperator_coo(system.current_number_spins())
+        .unwrap();
     for (second_val, (row, column)) in test_vals
         .iter()
         .zip(test_rows.iter().zip(test_columns.iter()))
@@ -839,9 +845,12 @@ fn test_superoperator_hamiltonian_and_noise() {
 
     let test_matrix = test_matrix + test_matrix2;
 
-    let second_test_matrix = system.sparse_matrix_superoperator(None).unwrap();
-    let (test_vals, (test_rows, test_columns)) =
-        system.sparse_matrix_superoperator_coo(None).unwrap();
+    let second_test_matrix = system
+        .sparse_matrix_superoperator(system.current_number_spins())
+        .unwrap();
+    let (test_vals, (test_rows, test_columns)) = system
+        .sparse_matrix_superoperator_coo(system.current_number_spins())
+        .unwrap();
     for (second_val, (row, column)) in test_vals
         .iter()
         .zip(test_rows.iter().zip(test_columns.iter()))

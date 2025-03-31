@@ -4,7 +4,12 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Removed the `empty_clone` functionality.
+
+## 2.0.0-alpha.13
+
 * Added matrix information to Migration Guide.
+* Made the `number_spins` field in the `sparse_matrix` methods not optional.
 
 ## 2.0.0-alpha.12
 

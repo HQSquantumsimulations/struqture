@@ -27,61 +27,7 @@ and the coupling between system and bath \\(\hat{H}_C\\) :
 
 For simplicity, we will set \\(\hbar\\) to 1.0 for this example.
 
-Rust implementation:
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedHamiltonian,
-};
-use struqture::prelude::*;
-use struqture::spins::PauliProduct;
-
-let mut operator = MixedHamiltonian::new(1, 1, 0);
-
-// Setting up constants:
-let delta = 1.0;
-let omega_k = [2.0, 3.0, 4.0];
-let v_k = [5.0, 6.0, 7.0];
-
-// First, H_S:
-let pp = PauliProduct::new().z(1);
-let hmp = HermitianMixedProduct::new(
-    [pp], [BosonProduct::new([], []).unwrap()], []
-).unwrap();
-operator
-    .add_operator_product(hmp, CalculatorComplex::new(delta / 2.0, 0.0))
-    .unwrap();
-
-// Second, H_B:
-for k in 0..3 {
-    let bp = BosonProduct::new([k], [k]).unwrap();
-    let hmp = HermitianMixedProduct::new(
-        [PauliProduct::new()], [bp], []
-    ).unwrap();
-    operator
-        .add_operator_product(
-            hmp, CalculatorComplex::new(v_k[k] / 2.0, 0.0)
-        ).unwrap();
-}
-
-// Third, H_C: the hermitian conjugate is implicitly stored,
-// we don't need to add it manually
-let pp = PauliProduct::new().x(0);
-for k in 0..3 {
-    let bp = BosonProduct::new([], [k]).unwrap();
-    let hmp = HermitianMixedProduct::new([pp.clone()], [bp], []).unwrap();
-    operator
-        .add_operator_product(
-            hmp, CalculatorComplex::new(omega_k[k], 0.0)
-        ).unwrap();
-}
-
-// Our resulting H:
-println!("{}", operator);
-```
-
-Python implementation:
+Implementation:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py.bosons import BosonProduct

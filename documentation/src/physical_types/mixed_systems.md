@@ -32,76 +32,36 @@ MixedDecoherenceProducts are combinations of `DecoherenceProducts`, `BosonProduc
 
 ### Examples
 
-In both Python and Rust, the operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.
+The operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.
 
 ```python
 from struqture_py import mixed_systems, bosons, spins, fermions
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp = spins.PauliProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-bp = bosons.BosonProduct([1, 2], [1])
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+bp = bosons.BosonProduct([1, 2], [2])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-# * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# * c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 hmp = mixed_systems.MixedProduct([pp], [bp], [fp])
 
 # Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 *
-# c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
+# c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
 hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
 
 
 # Building the spin term sigma^x_0 sigma^z_1
 dp = spins.DecoherenceProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
 bp = bosons.BosonProduct([1, 2], [0, 1])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # This will work
 mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
-```
-
-In Rust the equivalent string representation cannot be used in function and method arguments.
-
-```rust
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct};
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{
-    MixedProduct, HermitianMixedProduct, MixedDecoherenceProduct
-};
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = PauliProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-// * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mp = MixedProduct::new([pp.clone()], [bp.clone()], [fp.clone()]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
-let hmp = HermitianMixedProduct::new([pp], [bp], [fp]).unwrap();
-
-
-// Building the spin term sigma^x_0 sigma^z_1
-let dp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-let bp = BosonProduct::new([1, 2], [0, 1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mdp = MixedDecoherenceProduct::new([dp], [bp], [fp]).unwrap();
-
 ```
 
 ## Operators and Hamiltonians
@@ -120,69 +80,10 @@ While both are sums over normal ordered mixed products (stored as HashMaps of pr
 
 For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.
 
-### Examples
+### Example
 
-Here is an example of how to build a `MixedOperator` and a `MixedHamiltonian`, in Rust:
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::prelude::*;
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::spins::PauliProduct;
-use struqture::mixed_systems::{
-    MixedOperator, MixedProduct, HermitianMixedProduct, MixedHamiltonian
-};
+Here is an example of how to build a `MixedOperator` and a `MixedHamiltonian`:
 
-// Building the spin term sigma^x_0 sigma^z_1
-let pp_0 = PauliProduct::new().x(0).z(1);
-// Building the spin term sigma^y_0
-let pp_1 = PauliProduct::new().y(0);
-// Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-let bp = BosonProduct::new([1, 2], [1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-// * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mp_0 = MixedProduct::new([pp_0.clone()], [bp.clone()], [fp.clone()]).unwrap();
-// Building the term sigma^y_0
-let mp_1 = MixedProduct::new(
-    [pp_1.clone()],
-    [BosonProduct::new([], []).unwrap()],
-    [FermionProduct::new([], []).unwrap()]
-).unwrap();
-
-// Building the operator
-let mut operator = MixedOperator::new(1, 1, 1);
-operator.add_operator_product(mp_0.clone(), CalculatorComplex::new(1.0, 1.5)).unwrap();
-operator.add_operator_product(mp_1.clone(), CalculatorComplex::from(2.0)).unwrap();
-println!("{}", operator);
-
-// Or when overwriting the previous value
-let mut operator = MixedOperator::new(1, 1, 1);
-operator.set(mp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
-operator.set(mp_1, CalculatorComplex::from(2.0)).unwrap();
-println!("{}", operator);
-
-
-// Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-// * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let hmp_0 = HermitianMixedProduct::new([pp_0], [bp], [fp]).unwrap();
-// Building the term sigma^y_0
-let hmp_1 = HermitianMixedProduct::new(
-    [pp_1],
-    [BosonProduct::new([], []).unwrap()],
-    [FermionProduct::new([], []).unwrap()]
-).unwrap();
-
-// Building the operator
-let mut hamiltonian = MixedHamiltonian::new(1, 1, 1);
-hamiltonian.add_operator_product(hmp_0, CalculatorComplex::new(1.0, 1.5)).unwrap();
-hamiltonian.add_operator_product(hmp_1, CalculatorComplex::from(2.0)).unwrap();
-println!("{}", hamiltonian);
-```
-
-The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
@@ -193,8 +94,8 @@ operator = mixed_systems.MixedHamiltonian(2, 1, 1)
 pp_0 = spins.PauliProduct().x(0).z(1)
 # Building the spin term sigma^y_0
 pp_1 = spins.PauliProduct().y(0)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_0 * c_b_1
-bp = bosons.BosonProduct([1, 2], [1])
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+bp = bosons.BosonProduct([1, 2], [2])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
@@ -225,52 +126,10 @@ We use `MixedDecoherenceProducts` as the operator basis. To describe mixed noise
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `MixedDecoherenceProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `MixedLindbladNoiseOperators` is given by a HashMap or Dictionary with the tuple (`MixedDecoherenceProduct`, `MixedDecoherenceProduct`) as keys and the entries in the rate matrix as values.
 
-### Examples
+### Example
 Here, we add the terms \\(L_0 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\\) and \\(L_1 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\\) with coefficient 1.0:
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{MixedDecoherenceProduct, MixedLindbladNoiseOperator};
-use struqture::prelude::*;
-use struqture::spins::DecoherenceProduct;
-
-let mut operator = MixedLindbladNoiseOperator::new(1, 1, 1);
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b_1
-let bp = BosonProduct::new([1], [1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mdp = MixedDecoherenceProduct::new(
-    [pp],
-    [bp],
-    [fp]
-).unwrap();
-
-// Adding in the mixed decoherence product
-operator
-    .add_operator_product(
-        (mdp.clone(), mdp.clone()),
-        CalculatorComplex::new(1.0, 1.5),
-    )
-    .unwrap();
-
-// Checking the operator
-assert_eq!(
-    operator.get(&(mdp.clone(), mdp)),
-    &CalculatorComplex::new(1.0, 1.5)
-);
-println!("{}", operator);
-```
-
-The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
@@ -307,76 +166,25 @@ The Lindblad master equation is given by
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 
-In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator). They have different ways to set terms in Rust and Python:
+In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator).
 
-### Examples
+### Example
 
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::fermions::FermionProduct;
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedDecoherenceProduct, MixedLindbladOpenSystem,
-};
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceProduct, PauliProduct};
-
-let mut open_system = MixedLindbladOpenSystem::new([Some(3)], [Some(3)], [Some(3)]);
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = PauliProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_0 * c_b_0
-let bp = BosonProduct::new([0], [0]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term (sigma^x_0 sigma^z_1 * c_b^{\dagger}_0
-// * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1)
-// + h.c.
-let hmp = HermitianMixedProduct::new([pp], [bp], [fp]).unwrap();
-
-// Building the spin term sigma^x_0 sigma^z_1
-let pp = DecoherenceProduct::new().x(0).z(1);
-// Building the bosonic term c_b^{\dagger}_1 * c_b_1
-let bp = BosonProduct::new([1], [1]).unwrap();
-// Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let fp = FermionProduct::new([0, 1], [0, 1]).unwrap();
-
-// Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
-// * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
-let mdp = MixedDecoherenceProduct::new([pp], [bp], [fp]).unwrap();
-
-// Adding in the system term
-let operator = open_system.system_mut();
-operator
-    .add_operator_product(hmp, CalculatorComplex::new(2.0, 0.0))
-    .unwrap();
-
-// Adding in the noise term
-let noise = open_system.noise_mut();
-noise
-    .add_operator_product((mdp.clone(), mdp), CalculatorComplex::new(1.0, 0.0))
-    .unwrap();
-
-println!("{}", open_system);
-```
-
-The equivalent code in python:
 ```python
 from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons, fermions, spins, mixed_systems
 
-open_system = mixed_systems.MixedLindbladOpenSystem([3], [3], [3])
+open_system = mixed_systems.MixedLindbladOpenSystem(1, 1, 1)
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp = spins.PauliProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_1
-bp = bosons.BosonProduct([1, 2], [1])
+# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+bp = bosons.BosonProduct([1, 2], [2])
 # Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # Building the term sigma^x_0 sigma^z_1 * c_b^{\dagger}_1
-# * c_b^{\dagger}_2 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# * c_b^{\dagger}_2 * c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
 # + h.c.
 hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
 
@@ -394,8 +202,7 @@ mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
 # Adding in the system term
 open_system.system_add_operator_product(hmp, CalculatorComplex.from_pair(2.0, 0.0))
 # Adding in the noise term
-open_system.noise_add_operator_product(
-    (mdp, mdp), CalculatorComplex.from_pair(0.0, 1.0))
+open_system.noise_add_operator_product((mdp, mdp), CalculatorComplex.from_pair(0.0, 1.0))
 
 print(open_system)
 ```
