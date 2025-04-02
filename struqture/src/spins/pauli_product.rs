@@ -454,12 +454,12 @@ impl Ord for PauliProduct {
             Ordering::Less => Ordering::Less,
             Ordering::Equal => me
                 .into_iter()
-                .map(|&(index, op)| (index, op))
+                .cloned()
                 .unzip::<usize, SinglePauliOperator, Vec<usize>, Vec<SinglePauliOperator>>()
                 .cmp(
                     &them
                         .into_iter()
-                        .map(|&(index, op)| (index, op))
+                        .cloned()
                         .unzip::<usize, SinglePauliOperator, Vec<usize>, Vec<SinglePauliOperator>>(
                         ),
                 ), // If lengths are equal use lexicographic

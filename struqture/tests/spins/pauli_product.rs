@@ -377,6 +377,13 @@ fn compare() {
     let pp_3x = PauliProduct::new().x(3);
     assert_eq!(pp_0x1x.cmp(&pp_3x), Ordering::Greater);
     assert_eq!(pp_3x.cmp(&pp_0x1x), Ordering::Less);
+    assert_eq!(
+        PauliProduct::new()
+            .x(5)
+            .x(0)
+            .cmp(&PauliProduct::new().x(1).x(2)),
+        Ordering::Less
+    );
 }
 
 #[test]
