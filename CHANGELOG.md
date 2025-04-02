@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.0.0-alpha.14
+
+* Change the `compare` function of PauliProduct`
+
 ## 2.0.0-alpha.13
 
 * Added matrix information to Migration Guide.

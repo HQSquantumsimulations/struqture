@@ -15,6 +15,7 @@
 use ndarray::{array, Array2};
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
+use rand::seq::SliceRandom;
 use serde_test::{assert_tokens, Configure, Token};
 use std::cmp::Ordering;
 use std::collections::hash_map::DefaultHasher;
@@ -343,6 +344,39 @@ fn clone_partial_eq_partial_ord() {
     assert_eq!(pp.cmp(&pp_0), Ordering::Equal);
     assert_eq!(pp_1.cmp(&pp), Ordering::Greater);
     assert_eq!(pp.cmp(&pp_1), Ordering::Less);
+}
+
+#[test]
+fn sort() {
+    let mut product_list = [
+        PauliProduct::new().x(0).x(1),
+        PauliProduct::new().x(0).x(2),
+        PauliProduct::new().y(0).y(1),
+        PauliProduct::new().y(0).y(2),
+        PauliProduct::new().z(0).z(1),
+        PauliProduct::new().z(0).z(2),
+    ];
+    product_list.shuffle(&mut rand::rng());
+    product_list.sort();
+    assert_eq!(
+        product_list,
+        [
+            PauliProduct::new().x(0).x(1),
+            PauliProduct::new().y(0).y(1),
+            PauliProduct::new().z(0).z(1),
+            PauliProduct::new().x(0).x(2),
+            PauliProduct::new().y(0).y(2),
+            PauliProduct::new().z(0).z(2),
+        ]
+    );
+}
+
+#[test]
+fn compare() {
+    let pp_0x1x = PauliProduct::new().x(0).x(1);
+    let pp_3x = PauliProduct::new().x(3);
+    assert_eq!(pp_0x1x.cmp(&pp_3x), Ordering::Greater);
+    assert_eq!(pp_3x.cmp(&pp_0x1x), Ordering::Less);
 }
 
 #[test]

@@ -430,7 +430,7 @@ impl SpinIndex for PauliProduct {
     }
 }
 
-/// Implements Ord for PauliProducts; length then lexicographic sorting
+/// Implements Ord for PauliProducts; length then index of the pauliproducts then operator of the products.
 ///
 /// Using Rust's "Derived" ordering provides only lexicographical ordering.
 /// Here we explicitly augment this to include the length of the PauliProduct
@@ -452,7 +452,17 @@ impl Ord for PauliProduct {
 
         match me.len().cmp(&them.len()) {
             Ordering::Less => Ordering::Less,
-            Ordering::Equal => me.cmp(them), // If lengths are equal use lexicographic
+            Ordering::Equal => me
+                .into_iter()
+                .map(|&(index, op)| (index, op))
+                .unzip::<usize, SinglePauliOperator, Vec<usize>, Vec<SinglePauliOperator>>()
+                .cmp(
+                    &them
+                        .into_iter()
+                        .map(|&(index, op)| (index, op))
+                        .unzip::<usize, SinglePauliOperator, Vec<usize>, Vec<SinglePauliOperator>>(
+                        ),
+                ), // If lengths are equal use lexicographic
             Ordering::Greater => Ordering::Greater,
         }
     }
