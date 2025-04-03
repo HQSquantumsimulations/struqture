@@ -462,7 +462,7 @@ impl Ord for PauliProduct {
                         .cloned()
                         .unzip::<usize, SinglePauliOperator, Vec<usize>, Vec<SinglePauliOperator>>(
                         ),
-                ), // If lengths are equal use lexicographic
+                ), // If lengths are equal use the qubit index for comparison, then the pauli terms.
             Ordering::Greater => Ordering::Greater,
         }
     }
