@@ -934,12 +934,13 @@ class MixedOperator:
             ValueError: Product could not be constructed.
         """
 
-    def add_operator_product(self, key: ProductType):  # type: ignore
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -963,12 +964,12 @@ class MixedOperator:
             self: The hermitian conjugate of self.
         """
 
-    def current_number_spins(self) -> int:  # type: ignore
+    def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
+            List[int]: Number of spins in each spin sub-system.
         """
 
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
@@ -1202,12 +1203,13 @@ class MixedHamiltonian:
             ValueError: Product could not be constructed.
         """
 
-    def add_operator_product(self, key: ProductType):  # type: ignore
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -1231,12 +1233,12 @@ class MixedHamiltonian:
             self: The hermitian conjugate of self.
         """
 
-    def current_number_spins(self) -> int:  # type: ignore
+    def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
+            List[int]: Number of spins in each spin sub-system.
         """
 
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
@@ -1487,12 +1489,12 @@ class MixedLindbladNoiseOperator(NoiseType):
             self: The truncated version of self.
         """
 
-    def current_number_spins(self) -> int:  # type: ignore
+    def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
+            List[int]: Number of spins in each spin sub-system.
         """
 
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
@@ -1798,12 +1800,12 @@ class MixedLindbladOpenSystem(SystemType):
             TypeError: Value cannot be converted to CalculatorComplex.
         """
 
-    def current_number_spins(self) -> int:  # type: ignore
+    def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
+            List[int]: Number of spins in each spin sub-system.
         """
 
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore
@@ -2323,12 +2325,13 @@ class MixedPlusMinusOperator:
             ValueError: Product could not be constructed.
         """
 
-    def add_operator_product(self, key: ProductType):  # type: ignore
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -2352,12 +2355,12 @@ class MixedPlusMinusOperator:
             self: The hermitian conjugate of self.
         """
 
-    def current_number_spins(self) -> int:  # type: ignore
+    def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
 
         Returns:
-            int: The number of spins in each spin subsystem of self.
+            List[int]: Number of spins in each spin sub-system.
         """
 
     def current_number_bosonic_modes(self) -> List[int]:  # type: ignore

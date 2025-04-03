@@ -433,7 +433,7 @@ pub fn noisywrapper(
                 /// Return the current_number_spins input of each spin subsystem of self.
                 ///
                 /// Returns:
-                ///     int: The number of spins in each spin subsystem of self.
+                ///     List[int]: Number of spins in each spin sub-system.
                 pub fn current_number_spins(&self) -> Vec<usize> {
                     self.internal.current_number_spins()
                 }

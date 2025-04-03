@@ -645,12 +645,13 @@ class FermionOperator:
             ValueError: Product could not be constructed.
         """
 
-    def add_operator_product(self, key: ProductType):  # type: ignore
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -910,12 +911,13 @@ class FermionHamiltonian:
             ValueError: Product could not be constructed.
         """
 
-    def add_operator_product(self, key: ProductType):  # type: ignore
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
