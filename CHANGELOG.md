@@ -7,6 +7,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 * Added `boson_spin_mapping` functions for `BosonHamiltonian` (struqture & struqture-py) and `HermitianBosonProduct` (struqture only).
 * Removed unused errors from lib.rs and fixed typo in error name in lib.rs.
 
+## 2.0.0-alpha.14
+
+* Changed the `cmp` method of `PauliProduct` to use the size of the product, then the qubit index and then the Pauli terms.
+
 ## 2.0.0-alpha.13
 
 * Added matrix information to Migration Guide.
