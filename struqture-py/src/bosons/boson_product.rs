@@ -14,6 +14,7 @@ use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use pyo3::types::PyType;
+use struqture::mappings::BosonToSpin;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
@@ -24,6 +25,8 @@ use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture_py_macros::product_wrapper;
+
+use crate::spins::PauliOperatorWrapper;
 
 /// A product of bosonic creation and annihilation operators.
 ///
@@ -91,5 +94,9 @@ impl BosonProductWrapper {
             return_vector.push(Self { internal: obj });
         }
         return_vector
+    }
+
+    pub fn boson_spin_mapping(&self, number_spins_per_bosonic_mode: usize) -> PyResult<PauliOperatorWrapper> {
+        Ok(PauliOperatorWrapper{ internal: self.internal.boson_spin_mapping(number_spins_per_bosonic_mode).map_err(|err| PyValueError::new_err(format!("Error: {:?}", err)))? })
     }
 }
