@@ -30,7 +30,7 @@ HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means
 
 MixedDecoherenceProducts are combinations of `DecoherenceProducts`, `BosonProducts` and `FermionProducts`.
 
-### Examples
+### Example
 
 The operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.
 
@@ -75,7 +75,7 @@ with commutation relations and cyclicity respected.
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `MixedProducts` or `HermitianMixedProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
-In struqture we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+In `struqture` we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed Hamiltonian , this means that the sums of products are sums of hermitian mixed products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
 
 For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.
@@ -166,7 +166,7 @@ The Lindblad master equation is given by
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
 
-In struqture they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator).
+In `struqture` they are composed of a Hamiltonian (MixedHamiltonian) and noise (MixedLindbladNoiseOperator).
 
 ### Example
 

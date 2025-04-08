@@ -2,7 +2,7 @@
 
 ## Building blocks
 
-All fermionic objects in struqture are expressed based on products of fermionic creation and annihilation operators, which respect fermionic anti-commutation relations
+All fermionic objects in `struqture` are expressed based on products of fermionic creation and annihilation operators, which respect fermionic anti-commutation relations
 \\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\\\
     \lbrace c_k, c_j \rbrace = 0, \\\\
     \lbrace c_k, c_j^{\dagger} \rbrace = \delta_{k, j}. \\]
@@ -62,7 +62,7 @@ For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagg
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `FermionProducts` or `HermitianFermionProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
-In struqture we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+In `struqture` we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
 In the `HermitianFermionProducts`, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.
 
@@ -128,7 +128,7 @@ The Lindblad master equation is given by
 \\[
     \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
 \\]
-In struqture they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseOperator`).
+In `struqture` they are composed of a Hamiltonian (`FermionHamiltonian`) and noise (`FermionLindbladNoiseOperator`).
 
 ### Example
 
