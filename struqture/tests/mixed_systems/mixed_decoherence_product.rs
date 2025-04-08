@@ -217,7 +217,7 @@ fn multiply_error() {
     let result = left * right;
     assert_eq!(
         result,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 2,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 0,

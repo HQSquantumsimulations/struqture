@@ -247,7 +247,6 @@ impl PlusMinusLindbladNoiseOperator {
     /// # Returns
     ///
     /// * `Ok(())` - The noise was correctly added.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Number of spins in entry exceeds number of spins in system.
     pub fn add_noise_from_full_operators(
         &mut self,
         left: &PlusMinusOperator,

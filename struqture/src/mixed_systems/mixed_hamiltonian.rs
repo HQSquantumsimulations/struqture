@@ -179,7 +179,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonian {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn set(
         &mut self,
@@ -190,7 +190,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedHamiltonian {
             || key.bosons().len() != self.n_bosons
             || key.fermions().len() != self.n_fermions
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: self.n_spins,
                 target_number_boson_subsystems: self.n_bosons,
                 target_number_fermion_subsystems: self.n_fermions,
@@ -411,7 +411,7 @@ where
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedHamiltonians added together.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn add(mut self, other: T) -> Self::Output {
         for (key, value) in other.into_iter() {
@@ -438,7 +438,7 @@ where
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedHamiltonians subtracted.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn sub(mut self, other: T) -> Self::Output {
         for (key, value) in other.into_iter() {
@@ -495,7 +495,7 @@ impl ops::Mul<MixedHamiltonian> for MixedHamiltonian {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedHamiltonians multiplied.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     /// * `Err(StruqtureError::NonHermitianOperator)` - Key is naturally hermitian (on-diagonal term), but its corresponding value is not real.
     fn mul(self, other: MixedHamiltonian) -> Self::Output {
         let mut op = MixedOperator::with_capacity(

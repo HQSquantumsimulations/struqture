@@ -70,7 +70,7 @@ pub fn check_can_be_deserialised(
     source: &StruqtureSerialisationMeta,
 ) -> Result<(), StruqtureError> {
     if target.type_name != source.type_name {
-        return Err(StruqtureError::TypeMissmatch {
+        return Err(StruqtureError::TypeMismatch {
             source_type: source.type_name.clone(),
             target_type: target.type_name.clone(),
         });
@@ -78,7 +78,7 @@ pub fn check_can_be_deserialised(
     let (target_supported_major, target_supported_minor, _) =
         semver_to_tuple(target.version.as_str())?;
     if target_supported_major as usize != source.min_version.0 {
-        return Err(StruqtureError::NewVersionMissmatch {
+        return Err(StruqtureError::NewVersionMismatch {
             library_major_version: target_supported_major,
             library_minor_version: target_supported_minor,
             data_major_version: source.min_version.0 as u32,
@@ -87,7 +87,7 @@ pub fn check_can_be_deserialised(
         });
     }
     if (target_supported_minor as usize) < source.min_version.1 {
-        return Err(StruqtureError::NewVersionMissmatch {
+        return Err(StruqtureError::NewVersionMismatch {
             library_major_version: target_supported_major,
             library_minor_version: target_supported_minor,
             data_major_version: source.min_version.0 as u32,

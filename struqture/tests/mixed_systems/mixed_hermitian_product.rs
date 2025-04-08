@@ -352,7 +352,7 @@ fn multiply_error() {
     let result = left * right;
     assert_eq!(
         result,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 2,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 0,
@@ -626,7 +626,7 @@ fn multiply_error_fp_right() {
     let result = left * right;
     assert_eq!(
         result,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 2,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 0,
@@ -844,7 +844,7 @@ fn multiply_error_fp_left() {
     let result = left * right;
     assert_eq!(
         result,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 2,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 0,
@@ -866,7 +866,7 @@ fn multiply_error_2_fp_left() {
     let result = left * right;
     assert_eq!(
         result,
-        Err(StruqtureError::MissmatchedNumberSubsystems {
+        Err(StruqtureError::MismatchedNumberSubsystems {
             target_number_spin_subsystems: 1,
             target_number_boson_subsystems: 0,
             target_number_fermion_subsystems: 0,

@@ -191,7 +191,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and key do not match.
     fn set(
         &mut self,
         key: Self::Index,
@@ -201,7 +201,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
             || key.0.bosons().len() != self.n_bosons
             || key.0.fermions().len() != self.n_fermions
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: self.n_spins,
                 target_number_boson_subsystems: self.n_bosons,
                 target_number_fermion_subsystems: self.n_fermions,
@@ -214,7 +214,7 @@ impl<'a> OperateOnDensityMatrix<'a> for MixedLindbladNoiseOperator {
             || key.1.bosons().len() != self.n_bosons
             || key.1.fermions().len() != self.n_fermions
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: self.n_spins,
                 target_number_boson_subsystems: self.n_bosons,
                 target_number_fermion_subsystems: self.n_fermions,

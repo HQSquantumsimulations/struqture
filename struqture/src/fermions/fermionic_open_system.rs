@@ -94,16 +94,14 @@ impl OpenSystem<'_> for FermionLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The FermionLindbladOpenSystem with input system and noise terms.
-    /// * `Err(StruqtureError::MissmatchedNumberModes)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
         Ok(Self { system, noise })
     }
 
     // From trait
     fn empty_clone(&self) -> Self {
-        Self::group(self.system.empty_clone(None), self.noise.empty_clone(None)).expect(
-            "Internal error: Number of modes in system and noise unexpectedly does not match.",
-        )
+        Self::group(self.system.empty_clone(None), self.noise.empty_clone(None))
+            .expect("Internal error.")
     }
 }
 
@@ -193,8 +191,6 @@ impl ops::Add<FermionLindbladOpenSystem> for FermionLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two FermionLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianFermionProduct exceeds that of the FermionHamiltonian.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (FermionProduct, FermionProduct) exceeds that of the FermionLindbladNoiseOperator.
     fn add(self, other: FermionLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
@@ -215,8 +211,6 @@ impl ops::Sub<FermionLindbladOpenSystem> for FermionLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two FermionLindbladOpenSystems subtracted.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianFermionProduct exceeds that of the FermionHamiltonian.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (FermionProduct, FermionProduct) exceeds that of the FermionLindbladNoiseOperator.
     fn sub(self, other: FermionLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
@@ -290,6 +284,6 @@ impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
         PauliLindbladOpenSystem::group(jw_system, jw_noise)
-            .expect("Internal bug in jordan_wigner() for FermionHamiltonian or FermionLindbladNoiseOperator. The number of modes in the fermionic system should equal the number of spins in the spin system.")
+            .expect("Internal bug in jordan_wigner() for FermionHamiltonian or FermionLindbladNoiseOperator.")
     }
 }
