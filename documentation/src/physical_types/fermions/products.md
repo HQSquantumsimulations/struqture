@@ -1,19 +1,21 @@
-## Overview
+# Overview
 
 All fermionic objects in `struqture` are expressed based on products of fermionic creation and annihilation operators, which respect fermionic anti-commutation relations
 \\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\\\
     \lbrace c_k, c_j \rbrace = 0, \\\\
     \lbrace c_k, c_j^{\dagger} \rbrace = \delta_{k, j}. \\]
 
-### FermionProducts
+**NOTE**: all of our higher-level objects accept both FermionProducts/HermitianFermionProducts (depending on the object) as well as **symbolic notation**. If the user is just getting started using `struqture`, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the [coherent dynamics section](./noisefree.md).
+
+## FermionProducts
 
 FermionProducts are simple combinations of fermionic creation and annihilation operators.
 
-### HermitianFermionProducts
+## HermitianFermionProducts
 
 HermitianFermionProducts are the hermitian equivalent of FermionProducts. This means that even though they are constructed the same (see the next section, `Examples`), they internally store both that term and its hermitian conjugate. For instance, given the term \\(c^{\dagger}_0 c_1 c_2\\), a FermionProduct would represent \\(c^{\dagger}_0 c_1 c_2\\) while a HermitianFermionProduct would represent \\(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\\).
 
-### Example
+## Example
 
 The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.
 

@@ -1,4 +1,4 @@
-## Noise operators
+# Noise operators
 
 We describe decoherence by representing it with the Lindblad equation.
 The Lindblad equation is a master equation determining the time evolution of the density matrix.
@@ -15,7 +15,7 @@ We use `BosonProducts` as the operator basis.
 The rate matrix and with it the Lindblad noise model is saved as a sum over pairs of `BosonProducts`, giving the operators acting from the left and right on the density matrix.
 In programming terms the object `BosonLindbladNoiseOperator` is given by a HashMap or Dictionary with the tuple (`BosonProduct`, `BosonProduct`) as keys and the entries in the rate matrix as values.
 
-### Example
+## Example
 
 Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
@@ -23,21 +23,20 @@ Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 
 ```python
 from struqture_py import bosons
 
-# Setting up the operator and the product we want to add to it
+# We start by initializing the BosonLindbladNoiseOperator
 operator = bosons.BosonLindbladNoiseOperator()
-bp = bosons.BosonProduct([0], [0])
 
-# Adding the product to the operator
-operator.add_operator_product((bp, bp), 1.0 + 1.5j)
+# Adding in the (c_b^{\dagger}_0 * c_b_0, c_b^{\dagger}_0 * c_b_1) term
+operator.set(("c0a0", "c0a1"), 1.0 + 1.5 * 1j)
 print(operator)
 
-# In python we can also use the string representation
-operator = bosons.BosonLindbladNoiseOperator()
-operator.add_operator_product((str(bp), str(bp)), 1.0 + 1.5 * 1j)
-print(operator)
+# As with the coherent operators, the `set` function overwrites any existing value for the given key (here, a tuple of strings or DecoherenceProducts).
+# Should you prefer to use and additive method, please use `add_operator_product`:
+operator.add_operator_product(("c0a0", "c0a1"), 1.0)
+# NOTE: this is equivalent to: operator.add_operator_product((bosonProduct([0], [0]), bosonProduct([0], [1])), 1.0)
 ```
 
-## Open systems
+# Open systems
 
 Physically open systems are quantum systems coupled to an environment that can often be described using Lindblad type of noise.
 The Lindblad master equation is given by
@@ -49,18 +48,20 @@ In `struqture` they are composed of a Hamiltonian (`BosonHamiltonian`) and noise
 ### Example
 
 ```python
-from qoqo_calculator_pyo3 import CalculatorComplex
 from struqture_py import bosons
 
+# We start by initializing our BosonLindbladOpenSystem
 open_system = bosons.BosonLindbladOpenSystem()
 
-hbp = bosons.HermitianBosonProduct([0, 1], [0, 2])
-bp = bosons.BosonProduct([0], [0])
+# Set the c_b^{\dagger}_0 * c_b_0 term into the system part of the open system
+open_system.system_set("c0a0", 2.0)
+# Set the c_b^{\dagger}_0 * c_b^{\dagger}_1 * c_b_0 * c_b_1 c_b^{\dagger}_0 * c_b^{\dagger}_1 * c_b_0 * c_b_2 term into the noise part of the open system
+open_system.noise_set(("c0c1a0a1", "c0c1a0a2"), 1.5)
 
-# Adding the c_0^dag c_1^dag c_0 c_2 term to the system part of the open system
-open_system.system_add_operator_product(hbp, 2.0)
-# Adding the c_0^dag c_0 part to the noise part of the open system
-open_system.noise_add_operator_product((bp, bp), 1.0j)
+# Please note that the `system_set` and `noise_set` functions will set the values given, overwriting any previous value.
+# Should you prefer to use and additive method, please use `system_add_operator_product` and `noise_add_operator_product`:
+open_system.system_add_operator_product("c0a0", 2.0)
+open_system.noise_add_operator_product(("c0c1a0a1", "c0c1a0a2"), 1.5)
 
 print(open_system)
 ```
