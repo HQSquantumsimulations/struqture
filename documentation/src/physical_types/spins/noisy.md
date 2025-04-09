@@ -9,7 +9,6 @@ It is given by
 with the rate matrix \\(\Gamma_{j,k}\\) and the Lindblad operator \\(L_{j}\\).
 
 To describe spin noise we use the Lindblad equation with \\(\hat{H}=0\\).
-
 Therefore, to describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
 We use the modified Pauli matrices {X, iY, Z} (`DecoherenceProducts`) as the operator basis.
 
@@ -50,7 +49,6 @@ In `struqture` they are composed of a hamiltonian (`PauliHamiltonian`) and noise
 ### Example
 
 ```python
-from qoqo_calculator_pyo3 import CalculatorComplex, CalculatorFloat
 from struqture_py import spins
 
 # We start by initializing our PauliLindbladOpenSystem

@@ -5,15 +5,15 @@ All bosonic objects in `struqture` are expressed based on products of bosonic cr
     \lbrack c_k, c_j \rbrack = 0, \\\\
     \lbrack c_k, c_j^{\dagger} \rbrack = \delta_{k, j}. \\]
 
-### BosonProducts
+## BosonProducts
 
 BosonProducts are simple combinations of bosonic creation and annihilation operators.
 
-### HermitianBosonProducts
+## HermitianBosonProducts
 
 HermitianBosonProducts are the hermitian equivalent of BosonProducts. This means that even though they are constructed the same (see the next section, `Examples`), they internally store both that term and its hermitian conjugate. For instance, given the term \\(c^{\dagger}_0 c_1 c_2\\), a BosonProduct would represent \\(c^{\dagger}_0 c_1 c_2\\) while a HermitianBosonProduct would represent \\(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\\).
 
-### Example
+## Example
 
 The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.
 

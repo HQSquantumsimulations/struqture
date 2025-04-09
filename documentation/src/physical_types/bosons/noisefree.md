@@ -1,4 +1,4 @@
-## Operators and Hamiltonians
+# Operators and Hamiltonians
 
 Complex objects are constructed from operator products are `BosonOperators` and `BosonHamiltonians`
 (for more information, [see also](../../container_types/operators_hamiltonians_and_systems.md)).
@@ -21,35 +21,63 @@ In `struqture` we distinguish between bosonic operators and Hamiltonians to avoi
 While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
 In the `HermitianBosonProducts`, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.
 
-### Example
+## Example
 
-Here is an example of how to build a `BosonOperator` and a `BosonHamiltonian`:
+Here is an example of how to build a `BosonOperator`:
+
+```python
+from struqture_py import bosons
+
+# We start by initializing our BosonOperator
+operator = bosons.BosonOperator()
+
+# We create a BosonProduct or HermitianBosonProduct
+bp = bosons.BosonProduct.from_string("c0c1a0a2")
+hbp = bosons.HermitianBosonProduct.from_string("c0c1a0a2")
+
+# We set the term and some value of our choosing
+operator.set(bp, 1.0 + 1.5j)
+# We can use the `get` function to check what value/prefactor is stored for the BosonProduct
+assert operator.get(bp) == complex(1.0, 1.5)
+print(operator)
+
+# Please note that the `set` function will set the value given, overwriting any previous value.
+# Should you prefer to use and additive method, please use `add_operator_product`:
+operator.add_operator_product(bp, 1.0)
+print(operator)
+
+# NOTE: the above values used can also be symbolic.
+# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
+# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
+from qoqo_calculator_pyo3 import CalculatorComplex
+
+operator.add_operator_product(hbp, "parameter")
+operator.add_operator_product(hbp, CalculatorComplex.from_pair("parameter", 0.0))
+```
+
+
+Here is an example of how to build a `BosonHamiltonian`:
 
 ```python
 from struqture_py import bosons
 
 # We start by initializing our BosonHamiltonian
 hamiltonian = bosons.BosonHamiltonian()
-
-# We create a BosonProduct or HermitianBosonProduct
-bp = bosons.BosonProduct([0, 1], [0, 2])
-hbp = bosons.HermitianBosonProduct([0, 1], [0, 2])
-
-# We set the term and some value of our choosing
-hamiltonian.set(bp, 1.0 + 1.5j)
-# We can use the `get` function to check what value/prefactor is stored for the BosonProduct
-assert hamiltonian.get(bp) == complex(1.0, 1.5)
-print(hamiltonian)
+# We set both of the terms and values specified above
+hamiltonian.set("c0a0", 0.5)
+hamiltonian.set("c1a1", 0.5)
 
 # Please note that the `set` function will set the value given, overwriting any previous value.
 # Should you prefer to use and additive method, please use `add_operator_product`:
-hamiltonian.add_operator_product(bp, 1.0)
+hamiltonian.add_operator_product("c0a0", 1.0)
+
 print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
-# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
+# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
 # In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
-hamiltonian.add_operator_product(hbp, "parameter")
-hamiltonian.add_operator_product(hbp, CalculatorComplex.from_pair("parameter", 0.0))
+from qoqo_calculator_pyo3 import CalculatorFloat
+
+hamiltonian.add_operator_product("c0a0", "parameter")
+hamiltonian.add_operator_product("c1a1", CalculatorFloat("parameter"))
 ```

@@ -13,4 +13,4 @@ and
 
 The simplest way that the user can interact with these matrices is by using symbolic representation: `"c0a0"` represents a \\( f^{\dagger}\_0\ f\_0 \\) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: `"c7a25"` represents a \\( f^{\dagger}\_7 f\_{25} \\) term, where all other terms (0 to 6 and 8 to 24) are acted on by \\(I\\).
 
-However, for more fine-grain control over the operators, we invite the user to look into the `FermionProduct` and `HermitianFermionProduct` classes, in the [Building blocks](./products.md) section. Then, please proceed to the [coherent](./noisefree.md) or [decoherent](./noisy.md) dynamics section.
+However, for more fine-grain control over the operators, we invite the user to look into the `FermionProduct` and `HermitianFermionProduct` classes, in the [Building blocks](./products.md) section. If not, please proceed to the [coherent](./noisefree.md) or [decoherent](./noisy.md) dynamics section.

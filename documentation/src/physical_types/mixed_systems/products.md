@@ -1,4 +1,4 @@
-## Overview
+# Overview
 
 All the mixed operators are expressed based on products of mixed indices which contain spin terms, bosonic terms and fermionic terms. The spin terms respect Pauli operator cyclicity, the bosonic terms respect bosonic commutation relations, and the fermionic terms respect fermionic anti-commutation relations.
 
@@ -16,19 +16,21 @@ These products respect the following relations:
 with 
 \\(c_b^{\dagger}\\) the bosonic creation operator, \\(c_b\\) the bosonic annihilation operator, \\(\lbrack ., . \rbrack\\) the bosonic commutation relations, \\(c_f^{\dagger}\\) the fermionic creation operator, \\(c_f\\) the fermionic annihilation operator, and \\(\lbrace ., . \rbrace\\) the fermionic anti-commutation relations.
 
-### MixedProducts
+**NOTE**: all of our higher-level objects accept both MixedProducts/HermitianMixedProducts/MixedDecoherenceProducts (depending on the object) as well as **symbolic notation**. If the user is just getting started using `struqture`, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the [coherent dynamics section](./noisefree.md).
+
+## MixedProducts
 
 MixedProducts are combinations of `PauliProducts`, `BosonProducts` and `FermionProducts`.
 
-### HermitianMixedProducts
+## HermitianMixedProducts
 
 HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the `Examples` section), they internally store both that term and its hermitian conjugate. 
 
-### MixedDecoherenceProducts
+## MixedDecoherenceProducts
 
 MixedDecoherenceProducts are combinations of `DecoherenceProducts`, `BosonProducts` and `FermionProducts`.
 
-### Example
+## Example
 
 The operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.
 
