@@ -16,7 +16,7 @@ and
 
 For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagger}\\) term acting on 0, and both a \\(c^{\dagger}\\) term and a \\(c\\) term acting on 1.
 
-From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `FermionProducts` or `HermitianFermionProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
+From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `FermionProducts` or `HermitianFermionProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values.
 
 In `struqture` we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 

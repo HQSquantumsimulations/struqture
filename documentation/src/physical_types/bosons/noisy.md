@@ -17,7 +17,7 @@ In programming terms the object `BosonLindbladNoiseOperator` is given by a HashM
 
 ## Example
 
-Here, we add the terms \\(L_0 = c^{\dagger}_0 c_0\\) and \\(L_1 = c^{\dagger}_0 c_0\\) with coefficient 1.0:
+Here, we add the terms \\(L_0 = b^{\dagger}_0 b_0\\) and \\(L_1 = b^{\dagger}_0 b_1\\) with coefficient 1.0:
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```python

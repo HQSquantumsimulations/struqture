@@ -14,7 +14,7 @@ The rate matrix and with it the Lindblad noise model is saved as a sum over pair
 In programming terms the object `MixedLindbladNoiseOperators` is given by a HashMap or Dictionary with the tuple (`MixedDecoherenceProduct`, `MixedDecoherenceProduct`) as keys and the entries in the rate matrix as values.
 
 ## Example
-Here, we add the terms \\(L_0 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\\) and \\(L_1 = \left( \sigma_0^x \sigma_1^z \right) \left( c_{b, 1}^{\dagger} c_{b, 1} \right) \left( c_{f, 0}^{\dagger} c_{f, 1}^{\dagger} c_{f, 0} c_{f, 1} \right)\\) with coefficient 1.0:
+Here, we add the terms \\(L_0 = \left( \sigma_0^x \sigma_1^z \right) \left( b_{1}^{\dagger} b_{1} \right) \left( c_{0}^{\dagger} c_{1}^{\dagger} c_{0} c_{1} \right)\\) and \\(L_1 = \left( \sigma_0^x \sigma_1^z \right) \left( b_{1}^{\dagger} b_{1} \right) \left( c_{0}^{\dagger} c_{1}^{\dagger} c_{0} c_{1} \right)\\) with coefficient 1.0:
 \\( 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \\{ L_1^{\dagger} L_0, \rho \\} \right) \\)
 
 ```python
@@ -23,14 +23,14 @@ from struqture_py import mixed_systems
 # We start by initializing the MixedLindbladNoiseOperator
 operator = mixed_systems.MixedLindbladNoiseOperator(1, 1, 1)
 
-# Adding in the (sigma^x_0 sigma^z_1 * c_b^{\dagger}_0 * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1,
-# sigma^x_0 sigma^z_1 * c_b^{\dagger}_0 * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_2) term
-operator.set(("S0X1Z:Bc0a0:Fc0c1a0a1", "S0X1Z:Bc0a0:Fc0c1a0a2"), 1.0 + 1.5 * 1j)
+# Adding in the (sigma^x_0 sigma^z_1 * c_b^{\dagger}_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1,
+# sigma^x_0 sigma^z_1 * c_b^{\dagger}_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1) term
+operator.set(("S0X1Z:Bc1a1:Fc0c1a0a1", "S0X1Z:Bc1a1:Fc0c1a0a1"), 1.0 + 1.5 * 1j)
 print(operator)
 
 # As with the coherent operators, the `set` function overwrites any existing value for the given key (here, a tuple of strings or DecoherenceProducts).
 # Should you prefer to use and additive method, please use `add_operator_product`:
-operator.add_operator_product(("S0X1Z:Bc0a0:Fc0c1a0a1", "S0X1Z:Bc0a0:Fc0c1a0a2"), 1.0)
+operator.add_operator_product(("S0X1Z:Bc1a1:Fc0c1a0a1", "S0X1Z:Bc1a1:Fc0c1a0a1"), 1.0)
 # NOTE: this is equivalent to: operator.add_operator_product((FermionProduct([0], [0]), FermionProduct([0], [1])), 1.0)
 ```
 

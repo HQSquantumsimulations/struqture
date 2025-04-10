@@ -6,19 +6,19 @@ Complex objects are constructed from operator products are `BosonOperators` and 
 These `BosonOperators` and `BosonHamiltonians` represent operators or Hamiltonians such as:
 \\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
 with
-\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
-\\[ g(j, l) = \begin{cases} c_l \\\\ \mathbb{1} \end{cases} , \\]
+\\[ f(j, k) = \begin{cases} b_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
+\\[ g(j, l) = \begin{cases} b_l \\\\ \mathbb{1} \end{cases} , \\]
 and 
-\\(c^{\dagger}\\) the bosonic creation operator, \\(c\\) the bosonic annihilation operator 
-\\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\\\
-    \lbrack c_k, c_j \rbrack = 0, \\\\
-    \lbrack c_k^{\dagger}, c_j \rbrack = \delta_{k, j}. \\]
+\\(b^{\dagger}\\) the bosonic creation operator, \\(c\\) the bosonic annihilation operator 
+\\[ \lbrack b_k^{\dagger}, b_j^{\dagger} \rbrack = 0, \\\\
+    \lbrack b_k, b_j \rbrack = 0, \\\\
+    \lbrack b_k^{\dagger}, b_j \rbrack = \delta_{k, j}. \\]
 
 
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `BosonProducts` or `HermitianBosonProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In `struqture` we distinguish between bosonic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(b^{\dagger}b\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
 In the `HermitianBosonProducts`, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.
 
 ## Example
