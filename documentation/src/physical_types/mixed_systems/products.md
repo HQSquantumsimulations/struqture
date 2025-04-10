@@ -6,15 +6,15 @@ These products respect the following relations:
 \\[
     -i \sigma^x \sigma^y \sigma^z = I
 \\]
-\\[ \lbrack c_{b, k}^{\dagger}, c_{b, j}^{\dagger} \rbrack = 0, \\\\
-    \lbrack c_{b, k}, c_{b, j} \rbrack = 0, \\\\
-    \lbrack c_{b, k}, c_{b, j}^{\dagger} \rbrack = \delta_{k, j}. \\]
-\\[ \lbrace c_{f, k}^{\dagger}, c_{f, j}^{\dagger} \rbrace = 0, \\\\
-    \lbrace c_{f, k}, c_{f, j} \rbrace = 0, \\\\
-    \lbrace c_{f, k}, c_{f, j}^{\dagger} \rbrace = \delta_{k, j}. \\]
+\\[ \lbrack b_{k}^{\dagger}, b_{j}^{\dagger} \rbrack = 0, \\\\
+    \lbrack b_{k}, b_{j} \rbrack = 0, \\\\
+    \lbrack b_{k}, b_{j}^{\dagger} \rbrack = \delta_{k, j}. \\]
+\\[ \lbrace c_{k}^{\dagger}, c_{j}^{\dagger} \rbrace = 0, \\\\
+    \lbrace c_{k}, c_{j} \rbrace = 0, \\\\
+    \lbrace c_{k}, c_{j}^{\dagger} \rbrace = \delta_{k, j}. \\]
 
 with 
-\\(c_b^{\dagger}\\) the bosonic creation operator, \\(c_b\\) the bosonic annihilation operator, \\(\lbrack ., . \rbrack\\) the bosonic commutation relations, \\(c_f^{\dagger}\\) the fermionic creation operator, \\(c_f\\) the fermionic annihilation operator, and \\(\lbrace ., . \rbrace\\) the fermionic anti-commutation relations.
+\\(b^{\dagger}\\) the bosonic creation operator, \\(b\\) the bosonic annihilation operator, \\(\lbrack ., . \rbrack\\) the bosonic commutation relations, \\(c^{\dagger}\\) the fermionic creation operator, \\(c\\) the fermionic annihilation operator, and \\(\lbrace ., . \rbrace\\) the fermionic anti-commutation relations.
 
 **NOTE**: all of our higher-level objects accept both MixedProducts/HermitianMixedProducts/MixedDecoherenceProducts (depending on the object) as well as **symbolic notation**. If the user is just getting started using `struqture`, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the [coherent dynamics section](./noisefree.md).
 

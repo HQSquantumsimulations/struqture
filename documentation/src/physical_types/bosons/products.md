@@ -1,9 +1,9 @@
 # Overview
 
 All bosonic objects in `struqture` are expressed based on products of bosonic creation and annihilation operators, which respect bosonic commutation relations
-\\[ \lbrack c_k^{\dagger}, c_j^{\dagger} \rbrack = 0, \\\\
-    \lbrack c_k, c_j \rbrack = 0, \\\\
-    \lbrack c_k, c_j^{\dagger} \rbrack = \delta_{k, j}. \\]
+\\[ \lbrack b_k^{\dagger}, b_j^{\dagger} \rbrack = 0, \\\\
+    \lbrack b_k, b_j \rbrack = 0, \\\\
+    \lbrack b_k, b_j^{\dagger} \rbrack = \delta_{k, j}. \\]
 
 ## BosonProducts
 
@@ -11,7 +11,7 @@ BosonProducts are simple combinations of bosonic creation and annihilation opera
 
 ## HermitianBosonProducts
 
-HermitianBosonProducts are the hermitian equivalent of BosonProducts. This means that even though they are constructed the same (see the next section, `Examples`), they internally store both that term and its hermitian conjugate. For instance, given the term \\(c^{\dagger}_0 c_1 c_2\\), a BosonProduct would represent \\(c^{\dagger}_0 c_1 c_2\\) while a HermitianBosonProduct would represent \\(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\\).
+HermitianBosonProducts are the hermitian equivalent of BosonProducts. This means that even though they are constructed the same (see the next section, `Examples`), they internally store both that term and its hermitian conjugate. For instance, given the term \\(b^{\dagger}_0 b_1 b_2\\), a BosonProduct would represent \\(b^{\dagger}_0 b_1 b_2\\) while a HermitianBosonProduct would represent \\(c^{\dagger}_0 b_1 b_2 + b^{\dagger}_2 b^{\dagger}_1 b_0\\).
 
 ## Example
 
@@ -25,7 +25,7 @@ from struqture_py.bosons import BosonProduct, HermitianBosonProduct
 # A product of a creation operator acting on bosonic mode 0 and an annihilation operator
 # acting on bosonic mode 20
 bp = BosonProduct([0], [20])
-# Building the term c^{\dagger}_1 * c^{\dagger}_3 * c_0
+# Building the term c^{\dagger}_1 * c^{\dagger}_3 * b_0
 bp = BosonProduct.create_valid_pair([3, 1], [0], 1.0)
 
 
@@ -33,6 +33,6 @@ bp = BosonProduct.create_valid_pair([3, 1], [0], 1.0)
 # operator acting on bosonic mode 20, as well as a creation operator acting on
 # bosonic mode 20 and an annihilation operator acting on bosonic mode 0
 hbp = HermitianBosonProduct([0], [20])
-# Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
+# Building the term c^{\dagger}_0 * c^{\dagger}_3 * b_0 + c^{\dagger}_0 * b_3 * b_0
 hbp = HermitianBosonProduct.create_valid_pair([3, 0], [0], 1.0)
 ```
