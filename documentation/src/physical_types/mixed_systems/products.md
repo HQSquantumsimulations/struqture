@@ -39,25 +39,25 @@ from struqture_py import mixed_systems, bosons, spins, fermions
 
 # Building the spin term sigma^x_0 sigma^z_1
 pp = spins.PauliProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+# Building the bosonic term b^{\dagger}_1 * b^{\dagger}_2 * b_2
 bp = bosons.BosonProduct([1, 2], [2])
-# Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# Building the fermionic term c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
-# Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2
-# * c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# Building the term sigma^x_0 sigma^z_1 b^{\dagger}_1 * b^{\dagger}_2
+# * b_2 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
 hmp = mixed_systems.MixedProduct([pp], [bp], [fp])
 
-# Building the term sigma^x_0 sigma^z_1 c_b^{\dagger}_1 * c_b^{\dagger}_2 *
-# c_b_2 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1  +  h.c.
+# Building the term sigma^x_0 sigma^z_1 c^{\dagger}_1 * c^{\dagger}_2 *
+# c_2 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1  +  h.c.
 hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
 
 
 # Building the spin term sigma^x_0 sigma^z_1
 dp = spins.DecoherenceProduct().x(0).z(1)
-# Building the bosonic term c_b^{\dagger}_1 * c_b^{\dagger}_2 * c_b_2
+# Building the bosonic term b^{\dagger}_1 * b^{\dagger}_2 * b_2
 bp = bosons.BosonProduct([1, 2], [0, 1])
-# Building the fermionic term c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# Building the fermionic term c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
 fp = fermions.FermionProduct([0, 1], [0, 1])
 
 # This will work

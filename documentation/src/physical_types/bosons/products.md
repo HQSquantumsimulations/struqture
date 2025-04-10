@@ -25,7 +25,7 @@ from struqture_py.bosons import BosonProduct, HermitianBosonProduct
 # A product of a creation operator acting on bosonic mode 0 and an annihilation operator
 # acting on bosonic mode 20
 bp = BosonProduct([0], [20])
-# Building the term c^{\dagger}_1 * c^{\dagger}_3 * b_0
+# Building the term b^{\dagger}_1 * b^{\dagger}_3 * b_0
 bp = BosonProduct.create_valid_pair([3, 1], [0], 1.0)
 
 
@@ -33,6 +33,6 @@ bp = BosonProduct.create_valid_pair([3, 1], [0], 1.0)
 # operator acting on bosonic mode 20, as well as a creation operator acting on
 # bosonic mode 20 and an annihilation operator acting on bosonic mode 0
 hbp = HermitianBosonProduct([0], [20])
-# Building the term c^{\dagger}_0 * c^{\dagger}_3 * b_0 + c^{\dagger}_0 * b_3 * b_0
+# Building the term b^{\dagger}_0 * b^{\dagger}_3 * b_0 + b^{\dagger}_0 * b_3 * b_0
 hbp = HermitianBosonProduct.create_valid_pair([3, 0], [0], 1.0)
 ```

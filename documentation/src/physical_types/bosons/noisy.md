@@ -26,7 +26,7 @@ from struqture_py import bosons
 # We start by initializing the BosonLindbladNoiseOperator
 operator = bosons.BosonLindbladNoiseOperator()
 
-# Adding in the (c_b^{\dagger}_0 * c_b_0, c_b^{\dagger}_0 * c_b_1) term
+# Adding in the (b^{\dagger}_0 * b_0, b^{\dagger}_0 * b_1) term
 operator.set(("c0a0", "c0a1"), 1.0 + 1.5 * 1j)
 print(operator)
 
@@ -55,7 +55,7 @@ open_system = bosons.BosonLindbladOpenSystem()
 
 # Set the c_b^{\dagger}_0 * c_b_0 term into the system part of the open system
 open_system.system_set("c0a0", 2.0)
-# Set the c_b^{\dagger}_0 * c_b^{\dagger}_1 * c_b_0 * c_b_1 c_b^{\dagger}_0 * c_b^{\dagger}_1 * c_b_0 * c_b_2 term into the noise part of the open system
+# Set the b^{\dagger}_0 * b^{\dagger}_1 * b_0 * b_1 b^{\dagger}_0 * b^{\dagger}_1 * b_0 * b_2 term into the noise part of the open system
 open_system.noise_set(("c0c1a0a1", "c0c1a0a2"), 1.5)
 
 # Please note that the `system_set` and `noise_set` functions will set the values given, overwriting any previous value.

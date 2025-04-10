@@ -1,9 +1,6 @@
 # Operators and Hamiltonians
 
-Complex objects are constructed from operator products are `BosonOperators` and `BosonHamiltonians`
-(for more information, [see also](../../container_types/operators_hamiltonians_and_systems.md)).
-
-These `BosonOperators` and `BosonHamiltonians` represent operators or Hamiltonians such as:
+`BosonOperators` and `BosonHamiltonians` represent operators or Hamiltonians such as:
 \\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
 with
 \\[ f(j, k) = \begin{cases} b_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
@@ -31,19 +28,15 @@ from struqture_py import bosons
 # We start by initializing our BosonOperator
 operator = bosons.BosonOperator()
 
-# We create a BosonProduct or HermitianBosonProduct
-bp = bosons.BosonProduct.from_string("c0c1a0a2")
-hbp = bosons.HermitianBosonProduct.from_string("c0c1a0a2")
-
 # We set the term and some value of our choosing
-operator.set(bp, 1.0 + 1.5j)
+operator.set("c0c1a0a2", 1.0 + 1.5j)
 # We can use the `get` function to check what value/prefactor is stored for the BosonProduct
-assert operator.get(bp) == complex(1.0, 1.5)
+assert operator.get("c0c1a0a2") == complex(1.0, 1.5)
 print(operator)
 
 # Please note that the `set` function will set the value given, overwriting any previous value.
 # Should you prefer to use and additive method, please use `add_operator_product`:
-operator.add_operator_product(bp, 1.0)
+operator.add_operator_product("c0c1a0a2", 1.0)
 print(operator)
 
 # NOTE: the above values used can also be symbolic.
