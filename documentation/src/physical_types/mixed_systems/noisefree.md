@@ -1,9 +1,6 @@
 # Operators and Hamiltonians
 
-Complex objects are constructed from operator products are `MixedOperators` and `MixedHamiltonians`
-(for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
-
-These `MixedOperators` and `MixedHamiltonians` represent operators or Hamiltonians such as:
+`MixedOperators` and `MixedHamiltonians` represent operators or Hamiltonians such as:
 \\[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} b_{l, j}^{\dagger} b_{m, j} \prod_{r, s} c_{r, j}^{\dagger} c_{s, j} \\]
 with commutation relations and cyclicity respected.
 
@@ -12,7 +9,7 @@ From a programming perspective the operators and Hamiltonians are HashMaps or Di
 In `struqture` we distinguish between mixed operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered mixed products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian to avoid introducing unphysical behaviour by accident. In a mixed Hamiltonian , this means that the sums of products are sums of hermitian mixed products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. We also require the smallest index of the creators to be smaller than the smallest index of the annihilators.
 
-For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian . See the example for more information.
+For `MixedOperators` and `MixedHamiltonians`, we need to specify the number of spin subsystems, bosonic subsystems and fermionic subsystems exist in the operator/Hamiltonian.  See the example for more information.
 
 ## Example
 
@@ -24,19 +21,15 @@ from struqture_py import bosons, fermions, spins, mixed_systems
 # We start by initializing our MixedOperator
 operator = mixed_systems.MixedOperator(2, 1, 1)
 
-# We use the different products to create a MixedProduct or HermitianMixedProduct
-mp = mixed_systems.MixedProduct.from_string("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1")
-hmp = mixed_systems.HermitianMixedProduct.from_string("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1")
-
 # We set the term and some value of our choosing
-operator.set(mp, 1.0 + 1.5j)
+operator.set("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1", 1.0 + 1.5j)
 # We can use the `get` function to check what value/prefactor is stored for the FermionProduct
-assert operator.get(mp) == complex(1.0, 1.5)
+assert operator.get("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1") == complex(1.0, 1.5)
 print(operator)
 
 # Please note that the `set` function will set the value given, overwriting any previous value.
 # Should you prefer to use and additive method, please use `add_operator_product`:
-operator.add_operator_product(mp, 1.0)
+operator.add_operator_product("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1", 1.0)
 print(operator)
 
 # NOTE: the above values used can also be symbolic.
@@ -44,8 +37,8 @@ print(operator)
 # In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
 from qoqo_calculator_pyo3 import CalculatorComplex
 
-operator.add_operator_product(hmp, "parameter")
-operator.add_operator_product(hmp, CalculatorComplex.from_pair("parameter", 0.0))
+operator.add_operator_product("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1", "parameter")
+operator.add_operator_product("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1", CalculatorComplex.from_pair("parameter", 0.0))
 
 # This will not work, as the number of subsystems of the
 # hamiltonian and product do not match.

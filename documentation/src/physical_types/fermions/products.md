@@ -5,7 +5,7 @@ All fermionic objects in `struqture` are expressed based on products of fermioni
     \lbrace c_k, c_j \rbrace = 0, \\\\
     \lbrace c_k, c_j^{\dagger} \rbrace = \delta_{k, j}. \\]
 
-**NOTE**: all of our higher-level objects accept both FermionProducts/HermitianFermionProducts (depending on the object) as well as **symbolic notation**. If the user is just getting started using `struqture`, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the [coherent dynamics section](./noisefree.md).
+**NOTE**: all of our higher-level objects accept FermionProducts/HermitianFermionProducts (depending on the object) as well as **symbolic notation**. If the user is just getting started using `struqture`, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the [coherent dynamics section](./noisefree.md).
 
 ## FermionProducts
 

@@ -1,9 +1,6 @@
 # Operators and Hamiltonians
 
-Complex objects are constructed from operator products are `FermionOperators` and `FermionHamiltonians`
-(for more information, [see also](../container_types/operators_hamiltonians_and_systems.md)).
-
-These `FermionOperators` and `FermionHamiltonians` represent operators or Hamiltonians such as:
+`FermionOperators` and `FermionHamiltonians` represent operators or Hamiltonians such as:
 \\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
 with
 \\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
@@ -32,19 +29,15 @@ from struqture_py import fermions
 # We start by initializing our FermionOperator
 operator = fermions.FermionOperator()
 
-# We create a FermionProduct or HermitianFermionProduct
-fp = fermions.FermionProduct.from_string("c0c1a0a2")
-hfp = fermions.HermitianFermionProduct.from_string("c0c1a0a2")
-
 # We set the term and some value of our choosing
-operator.set(fp, 1.0 + 1.5j)
+operator.set("c0c1a0a2", 1.0 + 1.5j)
 # We can use the `get` function to check what value/prefactor is stored for the FermionProduct
-assert operator.get(fp) == complex(1.0, 1.5)
+assert operator.get("c0c1a0a2") == complex(1.0, 1.5)
 print(operator)
 
 # Please note that the `set` function will set the value given, overwriting any previous value.
 # Should you prefer to use and additive method, please use `add_operator_product`:
-operator.add_operator_product(fp, 1.0)
+operator.add_operator_product("c0c1a0a2", 1.0)
 print(operator)
 
 # NOTE: the above values used can also be symbolic.
@@ -52,8 +45,8 @@ print(operator)
 # In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
 from qoqo_calculator_pyo3 import CalculatorComplex
 
-operator.add_operator_product(hfp, "parameter")
-operator.add_operator_product(hfp, CalculatorComplex.from_pair("parameter", 0.0))
+operator.add_operator_product("c0c1a0a2", "parameter")
+operator.add_operator_product("c0c1a0a2", CalculatorComplex.from_pair("parameter", 0.0))
 ```
 
 Here is an example of how to build a `FermionHamiltonian`:

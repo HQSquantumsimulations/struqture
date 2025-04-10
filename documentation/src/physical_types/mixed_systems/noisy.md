@@ -23,8 +23,8 @@ from struqture_py import mixed_systems
 # We start by initializing the MixedLindbladNoiseOperator
 operator = mixed_systems.MixedLindbladNoiseOperator(1, 1, 1)
 
-# Adding in the (sigma^x_0 sigma^z_1 * c_b^{\dagger}_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1,
-# sigma^x_0 sigma^z_1 * c_b^{\dagger}_0 * c_b_1 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1) term
+# Adding in the (sigma^x_0 sigma^z_1 * b^{\dagger}_0 * b_1 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1,
+# sigma^x_0 sigma^z_1 * b^{\dagger}_0 * b_1 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1) term
 operator.set(("S0X1Z:Bc1a1:Fc0c1a0a1", "S0X1Z:Bc1a1:Fc0c1a0a1"), 1.0 + 1.5 * 1j)
 print(operator)
 
@@ -52,9 +52,9 @@ from struqture_py import mixed_systems
 # We start by initializing our MixedLindbladOpenSystem
 open_system = mixed_systems.MixedLindbladOpenSystem(1, 1, 1)
 
-# Set the sigma^x_0 * c_b^{\dagger}_0 * c_b_0 * c_f^{\dagger}_0 * c_f_0 term into the system part of the open system
+# Set the sigma^x_0 * b^{\dagger}_0 * b_0 * c^{\dagger}_0 * c_0 term into the system part of the open system
 open_system.system_set("S0X:Bc0a0:Fc0a0", 2.0)
-# Set the sigma^x_0 * i*sigma^y_1 * c_b^{\dagger}_0 * c_b_0 * c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1
+# Set the sigma^x_0 * i*sigma^y_1 * c^{\dagger}_0 * c_0 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
 # sigma^x_0 * sigma^z_1 * c_b^{\dagger}_0 * c_b^{\dagger}_1 * c_b_0 * c_b_1 * c_f^{\dagger}_0 * c_f_0 term into the noise part of the open system
 open_system.noise_set(("S0X1iY:Bc0a0:Fc0c1a0a1", "S0X1Z:Bc0c1a0a1:Fc0a0"), 1.5)
 

@@ -25,7 +25,7 @@ from struqture_py import fermions
 # We start by initializing the FermionLindbladNoiseOperator
 operator = fermions.FermionLindbladNoiseOperator()
 
-# Adding in the (c_f^{\dagger}_0 * c_f_0, c_f^{\dagger}_0 * c_f_1) term
+# Adding in the (c^{\dagger}_0 * c_0, c^{\dagger}_0 * c_1) term
 operator.set(("c0a0", "c0a1"), 1.0 + 1.5 * 1j)
 print(operator)
 
@@ -52,9 +52,9 @@ from struqture_py import fermions
 # We start by initializing our FermionLindbladOpenSystem
 open_system = fermions.FermionLindbladOpenSystem()
 
-# Set the c_f^{\dagger}_0 * c_f_0 term into the system part of the open system
+# Set the c^{\dagger}_0 * c_0 term into the system part of the open system
 open_system.system_set("c0a0", 2.0)
-# Set the c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_1 c_f^{\dagger}_0 * c_f^{\dagger}_1 * c_f_0 * c_f_2 term into the noise part of the open system
+# Set the c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1 c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_2 term into the noise part of the open system
 open_system.noise_set(("c0c1a0a1", "c0c1a0a2"), 1.5)
 
 # Please note that the `system_set` and `noise_set` functions will set the values given, overwriting any previous value.
