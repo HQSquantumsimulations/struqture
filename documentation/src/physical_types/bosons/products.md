@@ -5,6 +5,8 @@ All bosonic objects in `struqture` are expressed based on products of bosonic cr
     \lbrack b_k, b_j \rbrack = 0, \\\\
     \lbrack b_k, b_j^{\dagger} \rbrack = \delta_{k, j}. \\]
 
+**NOTE**: all of our higher-level objects accept BosonProducts/HermitianBosonProducts (depending on the object) as well as **symbolic notation**. If the user is just getting started using `struqture`, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the [coherent dynamics section](./noisefree.md).
+
 ## BosonProducts
 
 BosonProducts are simple combinations of bosonic creation and annihilation operators.

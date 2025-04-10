@@ -16,8 +16,8 @@ For instance, \\(c^{\dagger}_0 c^{\dagger}_1 c_1\\) is a term with a \\(c^{\dagg
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `FermionProducts` or `HermitianFermionProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values.
 
 In `struqture` we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered fermionic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
-In the `HermitianFermionProducts`, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.
+While both are sums over normal ordered fermionic products (stored as dictionaries of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian , this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+In the `HermitianFermionProducts`, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators. If the user choses \\(c_0^{\dagger}c_0\\) `HermitianFermionProduct([], [0])` will be created while the second part will be stored explicitly.
 
 ## Example
 
@@ -39,6 +39,7 @@ print(operator)
 # Should you prefer to use and additive method, please use `add_operator_product`:
 operator.add_operator_product("c0c1a0a2", 1.0)
 print(operator)
+# NOTE: this is equivalent to: operator.add_operator_product(FermionProduct([0, 1], [0, 2]))
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.

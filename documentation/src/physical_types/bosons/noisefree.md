@@ -15,7 +15,7 @@ and
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `BosonProducts` or `HermitianBosonProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In `struqture` we distinguish between bosonic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as HashMaps of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(b^{\dagger}b\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
+While both are sums over normal ordered bosonic products (stored as dictionaries of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian , this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(b^{\dagger}b\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
 In the `HermitianBosonProducts`, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators.
 
 ## Example
@@ -38,6 +38,7 @@ print(operator)
 # Should you prefer to use and additive method, please use `add_operator_product`:
 operator.add_operator_product("c0c1a0a2", 1.0)
 print(operator)
+# NOTE: this is equivalent to: operator.add_operator_product(BosonProduct([0, 1], [0, 2]))
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
