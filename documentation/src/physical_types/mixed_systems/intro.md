@@ -1,15 +1,8 @@
 # Mixed Systems
 
 Struqture can be used to represent mixed operators, hamiltonians and open systems, such as:
-
-\\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
-with
-\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
-\\[ g(j, l) = \begin{cases} c_l \\\\ \mathbb{1} \end{cases} , \\]
-and 
-\\[
-    \dot{\rho} = \mathcal{L}(\rho) = -i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
-\\]
+\\[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} b_{l, j}^{\dagger} b_{m, j} \prod_{r, s} c_{r, j}^{\dagger} c_{s, j} \\]
+with commutation relations and cyclicity respected.
 
 The simplest way that the user can interact with these matrices is by using symbolic representation: `"S0Z:Bc0a1:Fc0a0"` represents a \\( \sigma^z\ b^{\dagger}\_0 b\_1\ c^{\dagger}\_0\ c\_0 \\) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: `"S7Z:Bc7a25:Fc25a7"` represents a \\( \sigma^{z}\_7\ b^{\dagger}\_7 b\_{25}\ c^{\dagger}\_{25}\ c\_7 \\) term, where all other terms (0 to 6 and 8 to 24) are acted on by \\(I\\).
 
