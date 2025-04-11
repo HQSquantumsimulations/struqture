@@ -4,8 +4,8 @@ Struqture can be used to represent bosonic operators, hamiltonians and open syst
 
 \\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \\]
 with
-\\[ f(j, k) = \begin{cases} c_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
-\\[ g(j, l) = \begin{cases} c_l \\\\ \mathbb{1} \end{cases} , \\]
+\\[ f(j, k) = \begin{cases} b_k^{\dagger} \\\\ \mathbb{1} \end{cases} , \\]
+\\[ g(j, l) = \begin{cases} b_l \\\\ \mathbb{1} \end{cases} , \\]
 and 
 \\[
     \dot{\rho} = \mathcal{L}(\rho) = -i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right)
