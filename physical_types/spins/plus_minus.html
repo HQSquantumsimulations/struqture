@@ -1,0 +1,372 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Alternative basis: {+, -, z} - HQS Struqture User Documentation</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">HQS Struqture User Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the----z-basis"><a class="header" href="#the----z-basis">The {+, -, z} basis</a></h1>
+<h2 id="the-basis-itself"><a class="header" href="#the-basis-itself">The basis itself</a></h2>
+<p>The {+, -, z} basis is defined as follows:</p>
+<ul>
+<li>
+<p>I: identity matrix
+\[
+\begin{pmatrix}
+1 &amp; 0\\
+0 &amp; 1
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>+: \( \sigma^+ = \frac{1}{2} ( \sigma^x + \mathrm{i} \sigma^y ) \)
+\[
+\begin{pmatrix}
+0 &amp; 1\\
+0 &amp; 0
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>-: \( \sigma^- = \frac{1}{2} ( \sigma^x - \mathrm{i} \sigma^y ) \)
+\[
+\begin{pmatrix}
+0 &amp; 0\\
+1 &amp; 0
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>Z: \( \sigma^z \) matrix
+\[
+\begin{pmatrix}
+1 &amp; 0\\
+0 &amp; -1
+\end{pmatrix}
+\]</p>
+</li>
+</ul>
+<h2 id="symbolic-values-and-plusminusproduct"><a class="header" href="#symbolic-values-and-plusminusproduct">Symbolic values and PlusMinusProduct</a></h2>
+<p>The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:</p>
+<pre><code class="language-python">from struqture_py.spins import PlusMinusProduct
+
+product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PlusMinusProducts
+product = "0+1-2Z"
+</code></pre>
+<h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
+<p><code>PlusMinusOperators</code> represent operators such as:
+\[
+\hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
+\sigma_{j, k} \in \{ +_k, -_k, Z_k, I_k \} .
+\]</p>
+<p>From a programming perspective the operators are HashMaps or Dictionaries with the <code>PlusMinusProducts</code> as keys and the coefficients \(\alpha_j\) as values.</p>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>Here is an example of how to build a <code>PlusMinusOperator</code>:</p>
+<pre><code class="language-python">from struqture_py import spins
+
+# We would like to build the following operator:
+# O = (1 + 1.5 * i) * sigma^+_0 * sigma^z_2
+
+# We start by initializing our PlusMinusOperator
+operator = spins.PlusMinusOperator()
+# We set the term and value specified above
+operator.set("0+2Z", 1.0 + 1.5j)
+# We can use the `get` function to check what value/prefactor is stored for 0+2Z
+assert operator.get("0+2Z") == complex(1.0, 1.5)
+print(operator)
+
+# Please note that the `set` function will set the value given, overwriting any previous value.
+# Should you prefer to use and additive method, please use `add_operator_product`:
+operator.add_operator_product("0+2Z", 1.0)
+# NOTE: this is equivalent to: operator.add_operator_product(PlusMinusProduct().plus(0).z(2), 1.0)
+print(operator)
+
+# NOTE: the above values used can also be symbolic.
+# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
+# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
+from qoqo_calculator_pyo3 import CalculatorComplex
+operator.add_operator_product("0Z1Z", "parameter")
+operator.add_operator_product("0Z1Z", CalculatorComplex.from_pair("parameter", 0.0))
+
+</code></pre>
+<h3 id="mathematical-operations"><a class="header" href="#mathematical-operations">Mathematical operations</a></h3>
+<p>The available mathematical operations for <code>PlusMinusOperator</code> are demonstrated below:</p>
+<pre><code class="language-python">from struqture_py.spins import PlusMinusOperator
+
+# Setting up two test PlusMinusOperators
+operator_1 = PlusMinusOperator()
+operator_1.add_operator_product("0+", 1.5j)
+
+operator_2 = PlusMinusOperator()
+operator_2.add_operator_product("2Z3Z", 0.5)
+
+# Addition &amp; subtraction:
+operator_3 = operator_1 - operator_2
+operator_3 = operator_3 + operator_1
+
+# Multiplication:
+operator_1 = operator_1 * 2.0
+operator_4 = operator_1 * operator_2
+
+</code></pre>
+<h3 id="matrix-representation-spin-objects-only"><a class="header" href="#matrix-representation-spin-objects-only">Matrix representation: spin objects only</a></h3>
+<p>All spin-objects can be converted into sparse matrices with the following convention.
+If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
+\[
+M = M_2 \otimes M_1 \otimes \mathbb{1}
+\]
+For an \(N\)-spin operator a term acts on the \(2^N\) dimensional space of state vectors.
+A superoperator operates on the \(4^N\) dimensional space of flattened density-matrices.
+struqture uses the convention that density matrices are flattened in row-major order
+\[
+\rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
+\]
+For noiseless objects (<code>PlusMinusOperator</code>), sparse operators and sparse superoperators can be constructed, as we can represent the operator as a wavefunction.</p>
+<p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
+<pre><code class="language-python">from struqture_py import spins
+from scipy.sparse import coo_matrix
+
+# We start by building the operator we want to represent
+operator = spins.PlusMinusOperator()
+operator.add_operator_product("0Z1Z", 0.5)
+
+# Using the `sparse_matrix_coo` function, we can
+# return the information in scipy coo_matrix form, which can be directly fed in:
+python_coo = coo_matrix(operator.sparse_matrix_coo(number_spins=2))
+print(python_coo.todense())
+</code></pre>
+<h2 id="noise-operators"><a class="header" href="#noise-operators">Noise Operators</a></h2>
+<p>We describe decoherence by representing it with the Lindblad equation.
+The Lindblad equation is a master equation determining the time evolution of the density matrix.
+It is given by
+\[
+\dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
+\]
+with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
+<p>To describe spin noise we use the Lindblad equation with \(\hat{H}=0\).</p>
+<p>Therefore, to describe the pure noise part of the Lindblad equation one needs the rate matrix in a well defined basis of Lindblad operators.
+We use the {+, -, Z} matrices (<code>PlusMinusProducts</code>) as the operator basis.</p>
+<p>The rate matrix and Lindblad noise model are saved as a sum over pairs of spin terms, giving the operators acting from the left and right on the density matrix.
+In programming terms, the object <code>PlusMinusLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>PlusMinusProduct</code>, <code>PlusMinusProduct</code>) as keys and the entries in the rate matrix as values.</p>
+<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
+<p>Here, we add the terms \( L_0 = \sigma_0^{+} \sigma_1^{z} \) and \( L_1 = \sigma_0^{+} \sigma_2^{z} \) with coefficient 1.0:
+\[ \hat{O}_{noise}(\rho) = 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \]</p>
+<pre><code class="language-python">from struqture_py import spins
+
+# We start by initializing the PlusMinusLindbladNoiseOperator
+operator = spins.PlusMinusLindbladNoiseOperator()
+
+# Adding in the (0+1Z, 0+2Z) term
+operator.set(("0+2Z", "0+2Z"), 1.0+1.5*1j)
+print(operator)
+
+# As with the coherent operators, the `set` function overwrites any existing value for the given key (here, a tuple of strings or PlusMinusProducts).
+# Should you prefer to use and additive method, please use `add_operator_product`:
+operator.add_operator_product(("0+1Z", "0+2Z"), 1.0)
+# NOTE: this is equivalent to: operator.add_operator_product((PlusMinusProduct().plus(0).z(1), PlusMinusProduct().plus(0).z(2)), 1.0)
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../physical_types/spins/noisy.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../physical_types/bosons/intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../physical_types/spins/noisy.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../physical_types/bosons/intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

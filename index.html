@@ -33,10 +33,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -46,8 +47,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -61,7 +62,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -74,8 +76,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -111,6 +113,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -158,7 +161,7 @@
 <p>Struqture is a Rust (struqture) and Python (struqture-py) library by <a href="https://quantumsimulations.de/">HQS Quantum Simulations</a> to represent quantum mechanical operators, Hamiltonians and open quantum systems.
 The library supports building <a href="physical_types/spins.html">spin</a> objects, <a href="physical_types/fermions.html">fermionic</a> objects, <a href="physical_types/bosons.html">bosonic</a> objects and <a href="physical_types/mixed_systems.html">mixed system</a> objects that contain arbitrary many spin, fermionic and bosonic subsystems.</p>
 <p>Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.</p>
-<p>To best support this use case, struqture has a number of design goals:</p>
+<p>To best support this use case, <code>struqture</code> has a number of design goals:</p>
 <ul>
 <li>Support for arbitrary spin, bosonic, fermionic and mixed systems</li>
 <li>Full serialisation support to json and other formats</li>
@@ -179,7 +182,7 @@ On other platforms a local Rust toolchain is required to compile the Python sour
 <pre><code class="language-bash">pip install struqture-py
 </code></pre>
 <h3 id="rust"><a class="header" href="#rust">Rust</a></h3>
-<p>You can use struqture in your Rust project by adding</p>
+<p>You can use <code>struqture</code> in your Rust project by adding</p>
 <pre><code class="language-TOML">struqture = { version = "1.0.1" }
 </code></pre>
 <p>to your Cargo.toml file.</p>

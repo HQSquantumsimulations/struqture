@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Lindblad Noise Operators and Lindblad Noise Systems - HQS Struqture User Documentation</title>
+        <title>Building blocks: PauliProduct &amp; DecoherenceProduct - HQS Struqture User Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -12,42 +12,43 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon.svg">
-        <link rel="shortcut icon" href="../favicon.png">
-        <link rel="stylesheet" href="../css/variables.css">
-        <link rel="stylesheet" href="../css/general.css">
-        <link rel="stylesheet" href="../css/chrome.css">
-        <link rel="stylesheet" href="../css/print.css" media="print">
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc.js"></script>
+        <script src="../../toc.js"></script>
     </head>
     <body>
     <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -61,7 +62,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -74,8 +76,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -91,7 +93,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -111,6 +113,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -125,7 +128,7 @@
                     <h1 class="menu-title">HQS Struqture User Documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
 
@@ -154,39 +157,54 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="noise-operators"><a class="header" href="#noise-operators">Noise Operators</a></h1>
-<p>We describe decoherence by representing it with the Lindblad equation.
-The Lindblad equation is a master equation determining the time evolution of the density matrix.
-For pure noise terms it is given by
-\[
-\dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
-\]
-with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
-<p>Each Lindblad operator is an operator product (in the qubit case, a decoherence operator product - for more information see <a href="../physical_types/spins">spins container</a> chapter). LindbladNoiseOperators are built as HashMaps (Dictionaries) of Lindblad operators and values, in order to build the non-coherent part of the Lindblad master equation:
-\[
-\sum_{j,k} \Gamma_{j,k} \left( L_{j} \rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho\} \right)
-\].</p>
-<p>The noise operators in struqture are</p>
-<ul>
-<li><code>PauliLindbladNoiseOperator</code></li>
-<li><code>BosonLindbladNoiseOperator</code></li>
-<li><code>FermionLindbladNoiseOperator</code></li>
-<li><code>MixedLindbladNoiseOperator</code></li>
-</ul>
-<p>For examples showing how to use <code>PauliLindbladNoiseOperator</code>s, please see the <a href="../physical_types/spins.html#examples-2">the spins section</a>.
-For examples showing how to use <code>FermionLindbladNoiseOperator</code>s, please see the <a href="../physical_types/fermions.html#examples-2">the fermions section</a>.
-For examples showing how to use <code>BosonLindbladNoiseOperator</code>s, please see the <a href="../physical_types/bosons.html#examples-2">the bosons section</a>.
-For examples showing how to use <code>MixedLindbladNoiseOperator</code>s, please see the <a href="../physical_types/mixed_systems.html#examples-2">the mixed system section</a>.</p>
+                        <h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
+<p>PauliProducts and DecoherenceProducts are the components that users use to create spin terms, e.g. \( \sigma_0^x \sigma_1^x \).
+<code>PauliProducts</code> can later be combined to create operators or Hamiltonians (see the <a href="./noisefree.html">coherent dynamics section</a>), while <code>DecoherenceProducts</code> can be combined to create noise operators or open systems (see the <a href="./noisy.html">decoherent dynamics section</a>).</p>
+<p><strong>NOTE</strong>: all of our higher-level objects accept both PauliProducts/DecoherenceProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="./noisefree.html">coherent dynamics section</a>.</p>
+<h2 id="pauliproducts"><a class="header" href="#pauliproducts">PauliProducts</a></h2>
+<p>The products are built by setting the operators acting on separate spins.
+PauliProducts are combinations of SinglePauliOperators on specific spin indices. These are the <code>SinglePauliOperators</code>, or Pauli matrices, that are available for PauliProducts:</p>
+<h2 id="decoherenceproducts"><a class="header" href="#decoherenceproducts">DecoherenceProducts</a></h2>
+<p>DecoherenceProducts are products of a decoherence operators acting on single spins. These <code>SingleDecoherenceOperators</code>
+are almost identical to the <code>SinglePauliOperators</code> with the exception of an additional \(i\) factor and are well suited to represent decoherence properties</p>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.</p>
+<pre><code class="language-python">from struqture_py.spins import PauliProduct, DecoherenceProduct
+
+# We can build single-spin terms:
+sigma_x_0 = PauliProduct().x(0)  # sigma_x acting on spin 0
+sigma_y_1 = PauliProduct().y(1)  # sigma_y acting on spin 1
+sigma_z_2 = PauliProduct().z(2)  # sigma_z acting on spin 2
+
+# As well as two-spin terms:
+sigma_x_0_x_1 = PauliProduct().x(0).x(1)  # sigma_x acting on spin 0 and spin 1
+sigma_y_1_z_20 = PauliProduct().y(1).z(20)  # sigma_y acting on spin 1 and sigma_z spin 20
+# We can also initialize the PauliProducts from string:
+sigma_y_1_z_20 = PauliProduct.from_string("1Y20Z")
+
+# We can chain as many of these as we'd like!
+# A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
+pp = PauliProduct().x(0).y(3).z(20)
+# This is equivalent to the string representation
+pp_string = str(pp)
+
+# The same functionality is available for DecoherenceProducts.
+# **NOTE**: The name of the y() becomes .iy() for DecoherenceProducts to match the change in matrix representation
+# A product of a X acting on spin 0, a iY acting on spin 3 and a Z acting on spin 20
+dp = DecoherenceProduct().x(0).iy(3).z(20)
+# Often equivalent to the string representation
+dp_string = str(dp)
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../container_types/operators_hamiltonians_and_systems.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../physical_types/spins/intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../container_types/open_systems.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../physical_types/spins/noisefree.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -196,11 +214,11 @@ For examples showing how to use <code>MixedLindbladNoiseOperator</code>s, please
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../container_types/operators_hamiltonians_and_systems.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../physical_types/spins/intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../container_types/open_systems.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../physical_types/spins/noisefree.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -215,13 +233,13 @@ For examples showing how to use <code>MixedLindbladNoiseOperator</code>s, please
         </script>
 
 
-        <script src="../elasticlunr.min.js"></script>
-        <script src="../mark.min.js"></script>
-        <script src="../searcher.js"></script>
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
 
-        <script src="../clipboard.min.js"></script>
-        <script src="../highlight.js"></script>
-        <script src="../book.js"></script>
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
 

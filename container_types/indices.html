@@ -33,10 +33,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc.js"></script>
@@ -46,8 +47,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -61,7 +62,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -74,8 +76,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -111,6 +113,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -155,13 +158,14 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="products-and-indices"><a class="header" href="#products-and-indices">Products and Indices</a></h1>
-<p>The fundamental design of struqture uses products of quantum operators acting on single spins or modes to build up all represented objects. For spins those are <code>SinglePauliOperator</code> and <code>SingleDecoherenceOperator</code> and for Fermions and Bosons those are simply fermionic creation and annihilation operators.</p>
-<p>Since these operators on single modes or spins form a complete basis of the operator space, each physical object that is represented in struqture can be built up from sum over products of these operators, be it an operator, a Hamiltonian or a noise description.</p>
+<p>The fundamental design of <code>struqture</code> uses products of quantum operators acting on single spins or modes to build up all represented objects. For spins those are <code>SinglePauliOperator</code> and <code>SingleDecoherenceOperator</code> and for Fermions and Bosons those are simply fermionic creation and annihilation operators.</p>
+<p><strong>NOTE</strong>: This section discusses technical aspects of the implementation and design choices of <code>struqture</code> products. For details of how to use these products, please use the <a href="../physical_types/intro.html">How to use struqture</a> section.</p>
+<p>Since these operators on single modes or spins form a complete basis of the operator space, each physical object that is represented in <code>struqture</code> can be built up from sum over products of these operators, be it an operator, a Hamiltonian or a noise description.</p>
 <p>These sum objects can then be represented in a sparse fashion by saving the sum as a HashMap or Dictionary where the values are the prefactors of the operator products in the sum.
 The keys of the HashMap are the operator products or for noise objects tuples of operator products.</p>
-<p>One of the goals of struqture is to avoid introducing unphysical behaviour by encoding guarantees into the types of operators. For operator products that are not always Hermitian, struqture provides a Hermitian variant of the operator product. This variant picks by design one of the two hermitian conjugated versions of the operator product.
+<p>One of the goals of <code>struqture</code> is to avoid introducing unphysical behaviour by encoding guarantees into the types of operators. For operator products that are not always Hermitian, <code>struqture</code> provides a Hermitian variant of the operator product. This variant picks by design one of the two hermitian conjugated versions of the operator product.
 It can be used to uniquely represent the coefficient in sum objects that are themselves Hermitian (Hamiltonians) where the coefficients of Hermitian conjugated operator products in the sum also need to be Hermitian conjugated.</p>
-<p>The operator products in struqture are</p>
+<p>The operator products in <code>struqture</code> are</p>
 <ul>
 <li><code>PauliProduct</code></li>
 <li><code>DecoherenceProduct</code></li>
@@ -173,10 +177,10 @@ It can be used to uniquely represent the coefficient in sum objects that are the
 <li><code>HermitianMixedProduct</code></li>
 <li><code>MixedDecoherenceProduct</code></li>
 </ul>
-<p>For examples showing how to use <code>PauliProduct</code>s and <code>DecoherenceProduct</code>s, please see the <a href="../physical_types/spins.html#examples">the spins section</a>.
-For examples showing how to use <code>FermionProduct</code>s and <code>HermitianFermionProduct</code>s, please see the <a href="../physical_types/fermions.html#examples">the fermions section</a>.
-For examples showing how to use <code>BosonProduct</code>s and <code>HermitianBosonProdcut</code>s, please see the <a href="../physical_types/bosons.html#examples">the bosons section</a>.
-For examples showing how to use <code>MixedProduct</code>s, <code>HermitianMixedProduct</code>s and <code>MixedDecoherenceProduct</code>s, please see the <a href="../physical_types/mixed_systems.html#examples">the mixed system section</a>.</p>
+<p>For examples showing how to use <code>PauliProducts</code> and <code>DecoherenceProducts</code>, please see the <a href="../physical_types/spins/products.html#examples">the spins section</a>.
+For examples showing how to use <code>FermionProducts</code> and <code>HermitianFermionProducts</code>, please see the <a href="../physical_types/fermions.html#examples">the fermions section</a>.
+For examples showing how to use <code>BosonProducts</code> and <code>HermitianBosonProducts</code>, please see the <a href="../physical_types/bosons.html#examples">the bosons section</a>.
+For examples showing how to use <code>MixedProducts</code>, <code>HermitianMixedProducts</code> and <code>MixedDecoherenceProducts</code>, please see the <a href="../physical_types/mixed_systems.html#examples">the mixed system section</a>.</p>
 
                     </main>
 
@@ -186,7 +190,7 @@ For examples showing how to use <code>MixedProduct</code>s, <code>HermitianMixed
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../container_types/operators_hamiltonians_and_systems.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../container_types/operators_hamiltonians.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -200,7 +204,7 @@ For examples showing how to use <code>MixedProduct</code>s, <code>HermitianMixed
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../container_types/operators_hamiltonians_and_systems.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../container_types/operators_hamiltonians.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
