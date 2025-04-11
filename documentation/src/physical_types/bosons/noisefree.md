@@ -15,8 +15,8 @@ and
 From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with `BosonProducts` or `HermitianBosonProducts` (respectively) as keys and the coefficients \\(\alpha_j\\) as values. 
 
 In `struqture` we distinguish between bosonic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over normal ordered bosonic products (stored as dictionaries of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(b^{\dagger}b\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
-In the `HermitianBosonProducts`, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators. If the user choses \\(b_0^{\dagger}b_0\\) `HermitianBosonProduct([], [0])` will be created while the second part will be stored explicitly.
+While both are sums over normal ordered bosonic products (stored as dictionaries of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a bosonic Hamiltonian, this means that the sums of products are sums of hermitian bosonic products (we have not only the \\(b^{\dagger}b\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors.
+In the `HermitianBosonProducts`, we only explicitly store one part of the hermitian bosonic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators. For instance, if the user would like to define a  \\(b_0^{\dagger} + b_0\\) term, they would create this object: `HermitianBosonProduct([], [0])`. The second part of the term is stored implicitly by the code.
 
 ## Example
 
