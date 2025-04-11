@@ -2,7 +2,7 @@
 
 Operators act on a state space using HashMaps (Dictionaries) of operator products and values.
 
-For qubits, the operators represent
+For spins, the operators represent
 \\[ 
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\\\
     \sigma_{j, k} \in \\{ X_k, Y_k, Z_k, I_k \\}
@@ -26,7 +26,7 @@ with
     \lbrace c_k^{\dagger}, c_j \rbrace = \delta_{k, j}. \\]
 
 
-The operators in struqture are
+The operators in `struqture` are
 
 * `PauliOperator`
 * `DecoherenceOperator`
@@ -40,14 +40,14 @@ The operators in struqture are
 Hamiltonians are hermitian equivalents to Operators. The operator products for Hamiltonian are hermitian, meaning that the term is stored, as well as its hermitian conjugate. Also, in order for the Hamiltonian to be hermitian, any operator product on the diagonal of the matrix of interactions must be real.
 
 
-The Hamiltonians in struqture are
+The Hamiltonians in `struqture` are
 
 * `PauliHamiltonian`
 * `FermionHamiltonian`
 * `BosonHamiltonian`
 * `MixedHamiltonian`
 
-For examples showing how to use `PauliOperator`s, `DecoherenceOperator`s, `PlusMinusOperator`s and `PauliHamiltonian`s, please see the [the spins section](../physical_types/spins.md#examples-1).
-For examples showing how to use `FermionOperator`s and `FermionHamiltonian`s, please see the [the fermions section](../physical_types/fermions.md#examples-1).
-For examples showing how to use `BosonOperator`s and `BosonHamiltonian`s, please see the [the bosons section](../physical_types/bosons.md#examples-1).
-For examples showing how to use `MixedOperator`s and `MixedHamiltonian`s, please see the [the mixed system section](../physical_types/mixed_systems.md#examples-1).
+For examples showing how to use `PauliOperators`, `DecoherenceOperators`, `PlusMinusOperators` and `PauliHamiltonians`, please see the [the spins section](../physical_types/spins.md#examples-1).
+For examples showing how to use `FermionOperators` and `FermionHamiltonians`, please see the [the fermions section](../physical_types/fermions.md#examples-1).
+For examples showing how to use `BosonOperators` and `BosonHamiltonians`, please see the [the bosons section](../physical_types/bosons.md#examples-1).
+For examples showing how to use `MixedOperators` and `MixedHamiltonians`, please see the [the mixed system section](../physical_types/mixed_systems.md#examples-1).
