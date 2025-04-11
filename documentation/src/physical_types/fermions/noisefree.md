@@ -17,7 +17,7 @@ From a programming perspective the operators and Hamiltonians are HashMaps or Di
 
 In `struqture` we distinguish between fermionic operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
 While both are sums over normal ordered fermionic products (stored as dictionaries of products with a complex prefactor), Hamiltonians are guaranteed to be hermitian. In a fermionic Hamiltonian, this means that the sums of products are sums of hermitian fermionic products (we have not only the \\(c^{\dagger}c\\) terms but also their hermitian conjugate) and the on-diagonal terms are required to have real prefactors. 
-In the `HermitianFermionProducts`, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators. If the user choses \\(c_0^{\dagger}c_0\\) `HermitianFermionProduct([], [0])` will be created while the second part will be stored explicitly.
+In the `HermitianFermionProducts`, we only explicitly store one part of the hermitian fermionic product, and we have chosen to store the one which has the smallest index of the creators that is smaller than the smallest index of the annihilators. For instance, if the user would like to define a  \\(c_0^{\dagger} + c_0\\) term, they would create this object: `HermitianFermionProduct([], [0])`. The second part of the term is stored implicitly by the code.
 
 ## Example
 
