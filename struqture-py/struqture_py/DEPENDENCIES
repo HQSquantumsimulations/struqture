@@ -10393,8 +10393,8 @@ limitations under the License.
 
 
 ====================================================
-half 2.5.0
-https://github.com/starkat99/half-rs
+half 2.6.0
+https://github.com/VoidStarKat/half-rs
 by Kathryn Long <squeeself@gmail.com>
 Half-precision floating point f16 and bf16 types for Rust implementing the IEEE 754-2008 standard binary16 and bfloat16 types.
 License: MIT OR Apache-2.0
@@ -12988,7 +12988,7 @@ limitations under the License.
 
 
 ====================================================
-indexmap 2.8.0
+indexmap 2.9.0
 https://github.com/indexmap-rs/indexmap
 by 
 A hash table with consistent order and fast iteration.
@@ -16489,7 +16489,7 @@ limitations under the License.
 
 
 ====================================================
-miniz_oxide 0.8.5
+miniz_oxide 0.8.8
 https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide
 by Frommi <daniil.liferenko@gmail.com>, oyvindln <oyvindln@users.noreply.github.com>, Rich Geldreich richgel99@gmail.com
 DEFLATE compression and decompression library rewritten in Rust based on miniz
@@ -25358,7 +25358,7 @@ limitations under the License.
 
 
 ====================================================
-redox_syscall 0.5.10
+redox_syscall 0.5.11
 https://gitlab.redox-os.org/redox-os/syscall
 by Jeremy Soller <jackpot51@gmail.com>
 A Rust library to access raw Redox system calls
@@ -29706,7 +29706,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-smallvec 1.14.0
+smallvec 1.15.0
 https://github.com/servo/rust-smallvec
 by The Servo Project Developers
 'Small vector' optimization: store up to a small number of items on the stack
@@ -30642,7 +30642,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.0.0-alpha.14
+struqture 2.0.0-alpha.15
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30853,7 +30853,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.0.0-alpha.14
+struqture-py 2.0.0-alpha.15
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -31064,7 +31064,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.0.0-alpha.14
+struqture-py-macros 2.0.0-alpha.15
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -33247,7 +33247,7 @@ SOFTWARE.
 
 
 ====================================================
-tokio 1.44.1
+tokio 1.44.2
 https://tokio.rs
 by Tokio Contributors <team@tokio.rs>
 An event-driven, non-blocking I/O platform for writing asynchronous I/O
