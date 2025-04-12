@@ -22,7 +22,6 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-
 use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
 use std::collections::HashMap;
