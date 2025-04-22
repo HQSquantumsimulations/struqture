@@ -13,8 +13,6 @@ This module, here the python inferface for struqture, can be used to represent
 mixed quantum indices (MixedProduct, HermitianMixedProduct and MixedDecoherenceProduct),
 mixed systems (MixedOperator and MixedHamiltonian) and Lindblad type mixed open systems
 (MixedLindbladNoiseOperator and MixedLindbladOpenSystem).
-mixed systems (MixedOperator and MixedHamiltonian) and Lindblad type mixed open systems
-(MixedLindbladNoiseOperator and MixedLindbladOpenSystem).
 
 .. autosummary::
     :toctree: generated/
@@ -22,9 +20,6 @@ mixed systems (MixedOperator and MixedHamiltonian) and Lindblad type mixed open 
     MixedProduct
     HermitianMixedProduct
     MixedDecoherenceProduct
-    MixedOperator
-    MixedHamiltonian
-    MixedLindbladNoiseOperator
     MixedOperator
     MixedHamiltonian
     MixedLindbladNoiseOperator

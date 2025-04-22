@@ -51,10 +51,13 @@ regex = "1.10"
 no-default-features = true
 
 [features]
-extension-module = [
-    "pyo3/extension-module",
+extension-module = ["pyo3/extension-module"]
+default = [
+    "extension-module",
+    "json_schema",
+    "struqture_1_export",
+    "struqture_1_import",
 ]
-default = ["extension-module", "json_schema"]
 json_schema = ["struqture/json_schema"]
 struqture_1_export = [
     "struqture_1",

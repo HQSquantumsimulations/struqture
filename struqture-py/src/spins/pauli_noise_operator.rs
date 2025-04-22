@@ -107,7 +107,6 @@ impl PauliLindbladNoiseOperatorWrapper {
             },
         ))
     }
-<<<<<<< HEAD
 
     /// Converts a json struqture 2.x PauliLindbladNoiseOperator to a struqture 1.x SpinLindbladNoiseSystem.
     ///
@@ -152,6 +151,4 @@ impl PauliLindbladNoiseOperatorWrapper {
             internal: new_operator,
         })
     }
-=======
->>>>>>> 5d90196 (Lib.rs work, index_feature work and simplifying macros (#109))
 }

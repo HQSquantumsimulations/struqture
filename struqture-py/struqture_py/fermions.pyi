@@ -7,17 +7,12 @@ Fermions module of struqture Python interface
 
 Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionOperator and FermionHamiltonian),
 and Lindblad type fermionic open systems (FermionLindbladNoiseOperator, FermionLindbladOpenSystem).
-Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionOperator and FermionHamiltonian),
-and Lindblad type fermionic open systems (FermionLindbladNoiseOperator, FermionLindbladOpenSystem).
 
 .. autosummary::
     :toctree: generated/
 
     FermionProduct
     HermitianFermionProduct
-    FermionOperator
-    FermionHamiltonian
-    FermionLindbladNoiseOperator
     FermionOperator
     FermionHamiltonian
     FermionLindbladNoiseOperator

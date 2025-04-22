@@ -115,49 +115,6 @@ impl FermionOperatorWrapper {
             }
         }
     }
-
-    /// Converts a json corresponding to struqture 2.x FermionOperator to a struqture 1.x FermionSystem.
-    ///
-    /// Args:
-    ///     input (str): the json of the struqture 2.x FermionOperator to convert to struqture 1.x.
-    ///
-    /// Returns:
-    ///     FermionSystem: The struqture 1.x FermionSystem created from the struqture 2.x FermionOperator.
-    ///
-    /// Raises:
-    ///     ValueError: Input could not be deserialised from json to struqture 2.x.
-    ///     ValueError: Struqture 2.x object could not be converted to struqture 1.x.
-    #[staticmethod]
-    #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_json_struqture_2(input: String) -> PyResult<FermionSystemWrapper> {
-        let operator: struqture_2::fermions::FermionOperator = serde_json::from_str(&input)
-            .map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Input cannot be deserialized from json to struqture 2.x: {}",
-                    err
-                ))
-            })?;
-        let mut new_operator = FermionSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
-            let self_key =
-                FermionProduct::from_str(&format!("{}", key).to_string()).map_err(|err| {
-                    PyValueError::new_err(format!(
-                        "Struqture 2.x FermionProduct cannot be converted to struqture 1.x: {}",
-                        err
-                    ))
-                })?;
-            let _ = new_operator.set(self_key, val.clone());
-        }
-        Ok(FermionSystemWrapper {
-            internal: new_operator,
-        })
-    }
-}
-
-impl Default for FermionOperatorWrapper {
-    fn default() -> Self {
-        Self::new()
-    }
 }
 
 impl Default for FermionOperatorWrapper {

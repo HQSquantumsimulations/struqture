@@ -7,17 +7,12 @@ Bosons module of struqture Python interface
 
 Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonOperator and BosonHamiltonian),
 and Lindblad type bosonic open systems (BosonLindbladNoiseOperator, BosonLindbladOpenSystem).
-Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonOperator and BosonHamiltonian),
-and Lindblad type bosonic open systems (BosonLindbladNoiseOperator, BosonLindbladOpenSystem).
 
 .. autosummary::
     :toctree: generated/
 
     BosonProduct
     HermitianBosonProduct
-    BosonOperator
-    BosonHamiltonian
-    BosonLindbladNoiseOperator
     BosonOperator
     BosonHamiltonian
     BosonLindbladNoiseOperator
@@ -109,6 +104,7 @@ class BosonProduct(ProductType):
         would have current_number_modes of four.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Args:
    creators (List[int]): The creator indices to have in the instance of self.
    annihilators (List[int]): The annihilators indices to have in the instance of self.
@@ -125,6 +121,8 @@ Raises:
 
     def from_bincode(self, input: bytearray): # type: ignore
 =======
+=======
+>>>>>>> 1d16a2d77b430f86f109cde48fc7c4585c74d86e
         Returns:
             int: The maximal number of modes self acts on.
         """
@@ -1547,4 +1545,7 @@ class BosonLindbladOpenSystem(SystemType):
         Returns:
             str: The json schema serialized to json
         """
+<<<<<<< HEAD
 >>>>>>> 82989c9 (Rename functions (#160))
+=======
+>>>>>>> 1d16a2d77b430f86f109cde48fc7c4585c74d86e
