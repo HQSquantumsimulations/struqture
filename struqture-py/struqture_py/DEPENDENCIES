@@ -4496,7 +4496,7 @@ LICENSE:
 
 
 ====================================================
-clap 4.5.36
+clap 4.5.37
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -4732,7 +4732,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-clap_builder 4.5.36
+clap_builder 4.5.37
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -15153,7 +15153,7 @@ limitations under the License.
 
 
 ====================================================
-libc 0.2.171
+libc 0.2.172
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -22017,7 +22017,7 @@ limitations under the License.
 
 
 ====================================================
-proc-macro2 1.0.94
+proc-macro2 1.0.95
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
@@ -23966,7 +23966,7 @@ UEFI Reference Specification Protocol Constants and Definitions
 License: MIT OR Apache-2.0 OR LGPL-2.1-or-later
 
 ====================================================
-rand 0.9.0
+rand 0.9.1
 https://rust-random.github.io/book
 by The Rand Project Developers, The Rust Project Developers
 Random number generators and other randomness functionality.
