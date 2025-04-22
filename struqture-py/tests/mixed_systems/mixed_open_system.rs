@@ -605,8 +605,6 @@ fn test_set_pauli_get_pauli() {
             .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
-            .downcast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "system_set",
                 (
@@ -718,8 +716,6 @@ fn test_set_noise_get_noise() {
         let system = new_system.call1((1, 1, 1)).unwrap();
         system.downcast::<MixedLindbladOpenSystemWrapper>().unwrap();
         system
-            .downcast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "noise_set",
                 (
@@ -855,8 +851,6 @@ fn test_try_set_pauli_get_pauli() {
             .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
-            .downcast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "system_set",
                 (
@@ -966,8 +960,6 @@ fn test_try_set_noise_get_noise() {
             .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
-            .downcast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "noise_set",
                 (
@@ -1093,8 +1085,6 @@ fn test_add_pauli_get_pauli() {
             .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
-            .downcast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "system_add_operator_product",
                 (
@@ -1215,8 +1205,6 @@ fn test_add_noise_get_noise() {
             .downcast::<MixedLindbladOpenSystemWrapper>()
             .unwrap();
         let mut system = new_system_1
-            .downcast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "noise_add_operator_product",
                 (
