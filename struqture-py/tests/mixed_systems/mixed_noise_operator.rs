@@ -160,7 +160,7 @@ fn boson_system_test_set_get() {
         let number_bosons: usize = 1;
         let number_fermions: usize = 1;
 
-        let binding = new_system
+        let system = new_system
             .call1((number_spins, number_bosons, number_fermions))
             .unwrap();
         system

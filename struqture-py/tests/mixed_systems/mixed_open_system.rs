@@ -511,8 +511,6 @@ fn test_default_partialeq_debug_clone() {
         let mixed_system = system_type.call1((1, 1, 1)).unwrap();
         mixed_system.downcast::<MixedHamiltonianWrapper>().unwrap();
         mixed_system
-            .downcast::<MixedHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -533,8 +531,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<MixedLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -556,8 +552,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<MixedLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<MixedLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -571,8 +565,6 @@ fn test_default_partialeq_debug_clone() {
         let mixed_system = system_type.call1((1, 1, 1)).unwrap();
         mixed_system.downcast::<MixedHamiltonianWrapper>().unwrap();
         mixed_system
-            .downcast::<MixedHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (

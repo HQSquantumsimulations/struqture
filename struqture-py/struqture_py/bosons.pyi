@@ -103,26 +103,6 @@ class BosonProduct(ProductType):
         a current_number_modes of one. An index consisting of one annhihilator acting on 3
         would have current_number_modes of four.
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Args:
-   creators (List[int]): The creator indices to have in the instance of self.
-   annihilators (List[int]): The annihilators indices to have in the instance of self.
-   value (CalculatorComplex): The CalculatorComplex to transform.
->>>>>>> c5cc867 (Struqture 2.0 (#147))
-
-Returns:
-   (self, CalculatorComplex): The valid instance of self and the corresponding transformed CalculatorComplex.
-
-Raises:
-    TypeError: Value is not CalculatorComplex.
-    ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
-"""
-
-    def from_bincode(self, input: bytearray): # type: ignore
-=======
-=======
->>>>>>> 1d16a2d77b430f86f109cde48fc7c4585c74d86e
         Returns:
             int: The maximal number of modes self acts on.
         """
@@ -1545,7 +1525,3 @@ class BosonLindbladOpenSystem(SystemType):
         Returns:
             str: The json schema serialized to json
         """
-<<<<<<< HEAD
->>>>>>> 82989c9 (Rename functions (#160))
-=======
->>>>>>> 1d16a2d77b430f86f109cde48fc7c4585c74d86e

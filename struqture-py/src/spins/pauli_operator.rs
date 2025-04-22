@@ -20,11 +20,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-#[cfg(feature = "unstable_struqture_2_import")]
-use std::str::FromStr;
 use struqture::mappings::JordanWignerSpinToFermion;
-#[cfg(feature = "unstable_struqture_2_import")]
-use struqture::spins::PauliProduct;
 use struqture::spins::{
     OperateOnSpins, PauliOperator, ToSparseMatrixOperator, ToSparseMatrixSuperOperator,
 };

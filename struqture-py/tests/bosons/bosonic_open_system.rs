@@ -350,8 +350,6 @@ fn test_default_partialeq_debug_clone() {
         let boson_system = system_type.call0().unwrap();
         boson_system.downcast::<BosonHamiltonianWrapper>().unwrap();
         boson_system
-            .downcast::<BosonHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -372,8 +370,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<BosonLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<BosonLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -395,8 +391,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<BosonLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<BosonLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -410,8 +404,6 @@ fn test_default_partialeq_debug_clone() {
         let boson_system = system_type.call0().unwrap();
         boson_system.downcast::<BosonHamiltonianWrapper>().unwrap();
         boson_system
-            .downcast::<BosonHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (

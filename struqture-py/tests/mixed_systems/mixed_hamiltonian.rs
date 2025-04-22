@@ -600,8 +600,6 @@ fn test_mul_cf() {
             .unwrap();
         system_0_1.downcast::<MixedOperatorWrapper>().unwrap();
         system_0_1
-            .downcast::<MixedSystemWrapper>()
-            .unwrap()
             .call_method1("add_operator_product", ("S0Z:Bc0c1a0a1:Fc0a0:", 0.2))
             .unwrap();
 
@@ -631,8 +629,6 @@ fn test_mul_cf_with_conj() {
             .unwrap();
         system_0_1.downcast::<MixedOperatorWrapper>().unwrap();
         system_0_1
-            .downcast::<MixedSystemWrapper>()
-            .unwrap()
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.2))
             .unwrap();
         system_0_1
@@ -665,8 +661,6 @@ fn test_mul_cc() {
             .unwrap();
         system_0_1.downcast::<MixedOperatorWrapper>().unwrap();
         system_0_1
-            .downcast::<MixedSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 ("S0Z:Bc0c1a0a1:Fc0a0:", Complex64::new(0.0, 0.5)),
@@ -706,8 +700,6 @@ fn test_mul_cc_with_conj() {
             .unwrap();
         system_0_1.downcast::<MixedOperatorWrapper>().unwrap();
         system_0_1
-            .downcast::<MixedSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 ("S0Z:Bc0a1:Fc0a0:", Complex64::new(0.0, 0.5)),

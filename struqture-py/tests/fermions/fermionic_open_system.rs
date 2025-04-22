@@ -357,8 +357,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<FermionHamiltonianWrapper>()
             .unwrap();
         fermion_system
-            .downcast::<FermionHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -380,8 +378,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<FermionLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<FermionLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -403,8 +399,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<FermionLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<FermionLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -420,8 +414,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<FermionHamiltonianWrapper>()
             .unwrap();
         fermion_system
-            .downcast::<FermionHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (

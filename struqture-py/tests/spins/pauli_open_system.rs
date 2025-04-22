@@ -340,8 +340,6 @@ fn test_default_partialeq_debug_clone() {
         let spin_system = system_type.call0().unwrap();
         spin_system.downcast::<PauliHamiltonianWrapper>().unwrap();
         spin_system
-            .downcast::<SpinHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),
@@ -359,8 +357,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<SpinLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -382,8 +378,6 @@ fn test_default_partialeq_debug_clone() {
             .downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap();
         noise
-            .downcast::<SpinLindbladNoiseSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 (
@@ -397,8 +391,6 @@ fn test_default_partialeq_debug_clone() {
         let spin_system = system_type.call0().unwrap();
         spin_system.downcast::<PauliHamiltonianWrapper>().unwrap();
         spin_system
-            .downcast::<SpinHamiltonianSystemWrapper>()
-            .unwrap()
             .call_method1(
                 "add_operator_product",
                 ("0X", convert_cf_to_pyobject(py, CalculatorFloat::from(0.1))),

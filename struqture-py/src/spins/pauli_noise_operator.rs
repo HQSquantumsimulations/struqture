@@ -107,48 +107,4 @@ impl PauliLindbladNoiseOperatorWrapper {
             },
         ))
     }
-
-    /// Converts a json struqture 2.x PauliLindbladNoiseOperator to a struqture 1.x SpinLindbladNoiseSystem.
-    ///
-    /// Args:
-    ///     input (PauliLindbladNoiseOperator): The struqture 2.x PauliLindbladNoiseOperator to convert to struqture 1.x.
-    ///
-    /// Returns:
-    ///     SpinLindbladNoiseSystem: The struqture 1.x SpinLindbladNoiseSystem created from the struqture 2.x PauliLindbladNoiseOperator.
-    ///
-    /// Raises:
-    ///     TypeError: If the input is not a struqture 2.x PauliLindbladNoiseOperator.
-    ///     ValueError: Conversion failed.
-    #[staticmethod]
-    #[cfg(feature = "unstable_struqture_2_import")]
-    pub fn from_json_struqture_2(input: String) -> PyResult<SpinLindbladNoiseSystemWrapper> {
-        let operator: struqture_2::spins::PauliLindbladNoiseOperator = serde_json::from_str(&input)
-            .map_err(|err| {
-                PyValueError::new_err(format!(
-                    "Input cannot be deserialized from json to struqture 2.x: {}",
-                    err
-                ))
-            })?;
-        let mut new_operator = SpinLindbladNoiseSystem::new(None);
-        for (key, val) in struqture_2::OperateOnDensityMatrix::iter(&operator) {
-            let self_key_left = DecoherenceProduct::from_str(&format!("{}", key.0).to_string())
-                .map_err(|err| {
-                    PyValueError::new_err(format!(
-                        "Struqture 2.x DecoherenceProduct cannot be converted to struqture 1.x: {}",
-                        err
-                    ))
-                })?;
-            let self_key_right = DecoherenceProduct::from_str(&format!("{}", key.1).to_string())
-                .map_err(|err| {
-                    PyValueError::new_err(format!(
-                        "Struqture 2.x DecoherenceProduct cannot be converted to struqture 1.x: {}",
-                        err
-                    ))
-                })?;
-            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
-        }
-        Ok(SpinLindbladNoiseSystemWrapper {
-            internal: new_operator,
-        })
-    }
 }
