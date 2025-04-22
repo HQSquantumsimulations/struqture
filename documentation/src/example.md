@@ -50,7 +50,7 @@ v_k = [5.0, 6.0, 7.0]
 # First, we build H_S.
 # We add the spin-only term into the hamiltonian, with the correct prefactor
 hamiltonian.add_operator_product(
-    "S1Z:B:, delta / 2.0
+    "S1Z:B:", delta / 2.0
 )
 
 # Second, H_B:
