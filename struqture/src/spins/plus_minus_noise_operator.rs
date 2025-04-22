@@ -15,17 +15,16 @@ use crate::fermions::FermionLindbladNoiseOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
 use crate::{OperateOnDensityMatrix, StruqtureError};
+use indexmap::map::{Entry, Iter};
+use indexmap::IndexMap;
 use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-
-use indexmap::map::{Entry, Iter};
-use indexmap::IndexMap;
-use std::collections::HashMap;
 
 /// PlusMinusLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
