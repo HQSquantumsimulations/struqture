@@ -27,6 +27,10 @@ The user documentation is intended to give a high level overview of the design a
 
 The Migration [Guide](Migration_Guide.md) should be used as a refence for anyone wanting to migrate existing code which uses struqture 1.0 or above to struqture 2.0.
 
+## Migration guide: from struqture 1.x to struqture 2.x
+
+The Migration [Guide](Migration_Guide.md) should be used as a refence for anyone wanting to migrate existing code which uses struqture 1.0 or above to struqture 2.0.
+
 ## Installation
 
 ### Python

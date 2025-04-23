@@ -24,7 +24,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e89da841a80418a9b391ebaea17f5c112ffaaa96f621d2c285b5174da76b9011"
 dependencies = [
  "cfg-if",
- "getrandom 0.2.15",
+ "getrandom 0.2.16",
  "once_cell",
  "serde",
  "version_check",
@@ -416,9 +416,9 @@ dependencies = [
 
 [[package]]
 name = "getrandom"
-version = "0.2.15"
+version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7"
+checksum = "335ff9f135e4384c8150d6f27c6daed433577f86b4750418338c01a1a2528592"
 dependencies = [
  "cfg-if",
  "libc",
@@ -1613,7 +1613,7 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.0.0-alpha.15"
+version = "2.0.0-alpha.16"
 dependencies = [
  "bincode",
  "criterion",
@@ -1637,7 +1637,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "2.0.0-alpha.15"
+version = "2.0.0-alpha.16"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1654,7 +1654,7 @@ dependencies = [
  "schemars",
  "serde_json",
  "struqture 1.12.2",
- "struqture 2.0.0-alpha.15",
+ "struqture 2.0.0-alpha.16",
  "struqture-py-macros",
  "syn",
  "test-case",
@@ -1663,7 +1663,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "2.0.0-alpha.15"
+version = "2.0.0-alpha.16"
 dependencies = [
  "proc-macro2",
  "quote",

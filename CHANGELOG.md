@@ -4,16 +4,14 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
-<<<<<<< Updated upstream
-=======
 * Fixed documentation folder structure.
 
 ## 2.0.0-alpha.16
 
 * First `main` branch release for struqture 2.0
->>>>>>> Stashed changes
 * Updated to `main` branch commits.
 * Reduced code duplication in tests.
+* Switched to new doctest set-up.
 
 ## 2.0.0-alpha.15
 
