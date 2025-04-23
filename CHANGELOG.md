@@ -4,53 +4,42 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+
+## 2.0.0
+
+* Please see the [Migration Guide](./Migration_Guide.md) for an overview of the changes for the end-user (Python).
+
+### Renamed in 2.0.0
+
+* Renamed all `Spin` objects to `Pauli`.
+* Renamed all `System` objects to `Operator`.
+* Renamed `to_mixed_system` and `from_mixed_system` to `to_mixed_operator` and `from_mixed_operator`.
+* Renamed `to_spin`/`from_spin` functions to `to_pauli`/`from_pauli`.
+
+### Changed in 2.0.0
+
+* Made the `number_spins` field in the `sparse_matrix` methods not optional.
+* Removed the `System` layer: we now only use the `Operator` objects. **NOTE**: This means we now longer have a maximum number of particles required when instantiating a struct.
+* Fixed a bug when creating a Product from a bad JSON.
+* Changed the `cmp` method of `PauliProduct` to use the size of the product, then the qubit index and then the Pauli terms.
+* Added links to examples in container types of the user documentation
+* Removed `sparse_lindblad_entries` and `unitary_sparse_matrix_coo` functions.
+* Removed the `separate_into_n_terms` function from all objects except the `FermionHamiltonian` and `PauliNoiseOperator` structs.
 * Fixed documentation folder structure.
 
-## 2.0.0-alpha.16
-
-* First `main` branch release for struqture 2.0
-* Updated to `main` branch commits.
-* Reduced code duplication in tests.
-* Switched to new doctest set-up.
-
-## 2.0.0-alpha.15
+### Updated in 2.0.0
 
 * Major user documentation update.
+* Updated to pyo3 0.23 (and qoqo_calculator 1.5.0). Now with support for python 3.13 (pyo3 0.22 update).
+* Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14), qoqo-calculator (1.2 -> 1.3).
+* Updated minimum supported Rust version from 1.57 to 1.76.
+* Updated minimum supported Python version from 3.8 to 3.9.
 
-## 2.0.0-alpha.14
-
-* Changed the `cmp` method of `PauliProduct` to use the size of the product, then the qubit index and then the Pauli terms.
-
-## 2.0.0-alpha.13
-
-* Added matrix information to Migration Guide.
-* Made the `number_spins` field in the `sparse_matrix` methods not optional.
-
-## 2.0.0-alpha.12
-
-* Renamed `to_qubit`/`from_qubit` functions to `to_pauli`/`from_pauli`.
-
-## 2.0.0-alpha.11
-
-* Updated the struqture_1 dependency.
-
-## 2.0.0-alpha.10
-
-* Updated to qoqo-calculator 1.5.0.
-* Updated to pyo3 0.23.
-
-## 2.0.0-alpha.9
-
-* Updated dependencies.
-* Removed `sparse_lindblad_entries` and `unitary_sparse_matrix_coo` functions.
-* Removed `from_struqture_1` and `from_pyany_to_struqture_1` functions from the python interface.
-* Renamed all `Qubit` objects to `Pauli`.
-* Renamed `to_mixed_system` and `from_mixed_system` to `to_mixed_operator` and `from_mixed_operator`.
 
 ## 1.12.2
 
 * Added a readme in struqture-py.
-* Updated the `deny.toml` to the carg-deny 1.18 standard.
+* Updated the `deny.toml` to the cargo-deny 1.18 standard.
 
 ## 1.12.1
 
@@ -63,34 +52,6 @@ This changelog track changes to the struqture project starting at version v1.0.0
 * Updated to new struqture 2.0 naming (Qubit -> Pauli).
 * Switched from `from_struqture_2` to `from_json_struqture_2` in the `unstable_struqture_2_import` feature.
 * Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
-
-## 2.0.0-alpha.8
-
-* Added the `separate_into_n_terms` function into the FermionHamiltonian methods.
-
-## 2.0.0-alpha.6 - 2.0.0-alpha.7
-
-* Updated to qoqo-calculator 1.4.
-
-## 2.0.0-alpha.5
-
-* Added links to examples in container types of the user documentation
-* Updated dependencies: jsonschema (0.18 -> 0.28), ndarray (0.15 -> 0.16), thiserror (1.0 -> 2.0), itertools (0.13 -> 0.14), qoqo-calculator (1.2 -> 1.3).
-* Updated minimum supported Rust version from 1.57 to 1.76.
-* Updated minimum supported Python version from 3.8 to 3.9.
-* Fixed a bug when creating a Product from a bad JSON.
-
-## 2.0.0-alpha.4
-
-* Updated to pyo3 0.22 and python 3.13.
-
-## 2.0.0-alpha.1 - 2.0.0-alpha.3
-
-* Additional changes from feedback regarding struqture 2.0.
-
-## 2.0.0-alpha.0
-
-* First draft of the changes for struqture 2.0.
 
 ## 1.11.1
 
