@@ -12,11 +12,8 @@
 
 use super::{FermionOperator, FermionProduct, OperateOnFermions};
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::{DecoherenceOperator, SpinLindbladNoiseOperator};
-use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
-    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::spins::{DecoherenceOperator, PauliLindbladNoiseOperator};
+use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use itertools::Itertools;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -24,14 +21,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// FermionLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -60,17 +51,18 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "FermionLindbladNoiseOperatorSerialize")]
+#[serde(try_from = "FermionLindbladNoiseOperatorSerialize")]
 #[serde(into = "FermionLindbladNoiseOperatorSerialize")]
 pub struct FermionLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(FermionProduct, FermionProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(FermionProduct, FermionProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for FermionLindbladNoiseOperator {}
+impl crate::SerializationSupport for FermionLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionLindbladNoiseOperator
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionLindbladNoiseOperator {
@@ -94,12 +86,15 @@ struct FermionLindbladNoiseOperatorSerialize {
         CalculatorFloat,
         CalculatorFloat,
     )>,
-    /// The struqture version
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<FermionLindbladNoiseOperatorSerialize> for FermionLindbladNoiseOperator {
-    fn from(value: FermionLindbladNoiseOperatorSerialize) -> Self {
+impl TryFrom<FermionLindbladNoiseOperatorSerialize> for FermionLindbladNoiseOperator {
+    type Error = StruqtureError;
+    fn try_from(value: FermionLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: FermionLindbladNoiseOperator = value
             .items
             .into_iter()
@@ -107,12 +102,13 @@ impl From<FermionLindbladNoiseOperatorSerialize> for FermionLindbladNoiseOperato
                 ((left, right), CalculatorComplex { re: real, im: imag })
             })
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerialize {
     fn from(value: FermionLindbladNoiseOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(
             FermionProduct,
             FermionProduct,
@@ -122,13 +118,9 @@ impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerializ
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -136,9 +128,6 @@ impl From<FermionLindbladNoiseOperator> for FermionLindbladNoiseOperatorSerializ
 impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
     type Index = (FermionProduct, FermionProduct);
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, (FermionProduct, FermionProduct), CalculatorComplex>;
-    type KeyIteratorType = Keys<'a, (FermionProduct, FermionProduct), CalculatorComplex>;
-    type ValueIteratorType = Values<'a, (FermionProduct, FermionProduct), CalculatorComplex>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -149,30 +138,23 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -212,10 +194,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -223,7 +202,11 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionLindbladNoiseOperator {
 }
 
 impl<'a> OperateOnModes<'a> for FermionLindbladNoiseOperator {
-    // From trait
+    /// Gets the maximum index of the FermionLindbladNoiseOperator.
+    ///
+    /// # Returns
+    ///
+    /// * `usize` - The number of fermionic modes in the FermionLindbladNoiseOperator.
     fn current_number_modes(&'a self) -> usize {
         let mut max_mode: usize = 0;
         if !self.is_empty() {
@@ -238,15 +221,6 @@ impl<'a> OperateOnModes<'a> for FermionLindbladNoiseOperator {
             }
         }
         max_mode
-    }
-
-    /// Gets the maximum index of the FermionLindbladNoiseOperator.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - The number of fermionic modes in the FermionLindbladNoiseOperator.
-    fn number_modes(&'a self) -> usize {
-        self.current_number_modes()
     }
 }
 
@@ -270,9 +244,6 @@ impl FermionLindbladNoiseOperator {
     /// * `Self` - The new (empty) FermionLindbladNoiseOperator.
     pub fn new() -> Self {
         FermionLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -288,18 +259,15 @@ impl FermionLindbladNoiseOperator {
     /// * `Self` - The new (empty) FermionLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         FermionLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
     /// Adds all noise entries corresponding to a ((FermionOperator, FermionOperator), CalculatorFloat).
     ///
-    /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::spins::FermionProduct] style operators.
+    /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::fermions::FermionProduct] style operators.
     /// We use ([crate::spins::FermionProduct], [crate::spins::FermionProduct]) as a unique basis.
-    /// This function adds a Linblad-Term defined by a combination of Lindblad operators given as general [crate::spins::FermionOperator]
+    /// This function adds a Linblad-Term defined by a combination of Lindblad operators given as general [crate::fermions::FermionOperator]
     ///
     /// # Arguments
     ///
@@ -322,7 +290,7 @@ impl FermionLindbladNoiseOperator {
         }
 
         for ((fermion_product_left, value_left), (fermion_product_right, value_right)) in
-            left.iter().cartesian_product(right.iter())
+            left.iter().cartesian_product(right.into_iter())
         {
             if !(*fermion_product_left == FermionProduct::new([], [])?
                 || *fermion_product_right == FermionProduct::new([], [])?)
@@ -337,35 +305,36 @@ impl FermionLindbladNoiseOperator {
         Ok(())
     }
 
-    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_creators_annihilators_left` - Number of creators and number of annihilators to filter for in the left term of the keys.
-    /// * `number_creators_annihilators_right` - Number of creators and number of annihilators to filter for in the right term of the keys.
-    ///
-    /// # Returns
-    ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_creators_annihilators matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
         &self,
-        number_creators_annihilators_left: (usize, usize),
-        number_creators_annihilators_right: (usize, usize),
-    ) -> Result<(Self, Self), StruqtureError> {
-        let mut separated = Self::default();
-        let mut remainder = Self::default();
-        for ((prod_l, prod_r), val) in self.iter() {
-            if (prod_l.creators().len(), prod_l.annihilators().len())
-                == number_creators_annihilators_left
-                && (prod_r.creators().len(), prod_r.annihilators().len())
-                    == number_creators_annihilators_right
-            {
-                separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            } else {
-                remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            }
+    ) -> Result<struqture_1::fermions::FermionLindbladNoiseSystem, StruqtureError> {
+        let mut new_fermion_system = struqture_1::fermions::FermionLindbladNoiseSystem::new(None);
+        for (key, val) in self.iter() {
+            let one_key_left = key.0.to_struqture_1()?;
+            let one_key_right = key.1.to_struqture_1()?;
+            let _ = struqture_1::OperateOnDensityMatrix::set(
+                &mut new_fermion_system,
+                (one_key_left, one_key_right),
+                val.clone(),
+            );
         }
-        Ok((separated, remainder))
+        Ok(new_fermion_system)
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::fermions::FermionLindbladNoiseSystem,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
+            let self_key_left = FermionProduct::from_struqture_1(&key.0)?;
+            let self_key_right = FermionProduct::from_struqture_1(&key.1)?;
+            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
@@ -379,9 +348,6 @@ impl ops::Neg for FermionLindbladNoiseOperator {
     ///
     /// * `Self` - The FermionOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
@@ -470,9 +436,6 @@ where
     /// * `Self` - The FermionLindbladNoiseOperator multiplied by the CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
@@ -487,10 +450,6 @@ where
 ///
 impl IntoIterator for FermionLindbladNoiseOperator {
     type Item = ((FermionProduct, FermionProduct), CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter =
-        std::collections::hash_map::IntoIter<(FermionProduct, FermionProduct), CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<(FermionProduct, FermionProduct), CalculatorComplex>;
     /// Returns the FermionLindbladNoiseOperator in Iterator form.
     ///
@@ -597,7 +556,7 @@ impl fmt::Display for FermionLindbladNoiseOperator {
 }
 
 impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
-    type Output = SpinLindbladNoiseOperator;
+    type Output = PauliLindbladNoiseOperator;
 
     /// Implements JordanWignerFermionToSpin for a FermionLindbladNoiseOperator.
     ///
@@ -606,13 +565,13 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `SpinLindbladNoiseOperator` - The spin noise operator that results from the transformation.
+    /// * `PauliLindbladNoiseOperator` - The spin noise operator that results from the transformation.
     ///
     /// # Panics
     ///
     /// * Internal bug in add_noise_from_full_operators.
     fn jordan_wigner(&self) -> Self::Output {
-        let mut out = SpinLindbladNoiseOperator::new();
+        let mut out = PauliLindbladNoiseOperator::new();
 
         for key in self.keys() {
             let decoherence_operator_left = DecoherenceOperator::from(key.0.jordan_wigner());
@@ -632,35 +591,41 @@ impl JordanWignerFermionToSpin for FermionLindbladNoiseOperator {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of FermionLindbladNoiseOperator
     #[test]
     fn so_from_sos() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = FermionLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
-        assert_eq!(FermionLindbladNoiseOperator::from(sos.clone()), so);
+        assert_eq!(
+            FermionLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            so
+        );
         assert_eq!(FermionLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of FermionLindbladNoiseOperator
     #[test]
     fn clone_partial_eq() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -671,17 +636,19 @@ mod test {
         let pp_1: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos_1 = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: FermionProduct = FermionProduct::new([0], [1]).unwrap();
         let sos_2 = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -690,33 +657,35 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of FermionLindbladNoiseOperator
     #[test]
     fn debug() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "FermionLindbladNoiseOperatorSerialize { items: [(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "FermionLindbladNoiseOperatorSerialize { items: [(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"FermionLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test FermionLindbladNoiseOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -736,30 +705,37 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("FermionLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test FermionLindbladNoiseOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
         let sos = FermionLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -801,15 +777,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("FermionLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

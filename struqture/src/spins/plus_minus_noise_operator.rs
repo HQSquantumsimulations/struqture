@@ -10,21 +10,17 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{DecoherenceProduct, SpinLindbladNoiseOperator};
+use super::{DecoherenceProduct, PauliLindbladNoiseOperator};
 use crate::fermions::FermionLindbladNoiseOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::{PlusMinusOperator, PlusMinusProduct};
-use crate::{OperateOnDensityMatrix, StruqtureError, StruqtureVersionSerializable};
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use crate::{OperateOnDensityMatrix, StruqtureError};
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
 use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
 use std::collections::HashMap;
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
@@ -56,19 +52,16 @@ use std::ops;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "PlusMinusLindbladNoiseOperatorSerialize")]
+#[serde(try_from = "PlusMinusLindbladNoiseOperatorSerialize")]
 #[serde(into = "PlusMinusLindbladNoiseOperatorSerialize")]
 pub struct PlusMinusLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for PlusMinusLindbladNoiseOperator {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 1, 0)
+impl crate::SerializationSupport for PlusMinusLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::PlusMinusLindbladNoiseOperator
     }
 }
 
@@ -94,12 +87,16 @@ struct PlusMinusLindbladNoiseOperatorSerialize {
         CalculatorFloat,
         CalculatorFloat,
     )>,
-    /// The struqture version
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<PlusMinusLindbladNoiseOperatorSerialize> for PlusMinusLindbladNoiseOperator {
-    fn from(value: PlusMinusLindbladNoiseOperatorSerialize) -> Self {
+impl TryFrom<PlusMinusLindbladNoiseOperatorSerialize> for PlusMinusLindbladNoiseOperator {
+    type Error = StruqtureError;
+    fn try_from(value: PlusMinusLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+
         let new_noise_op: PlusMinusLindbladNoiseOperator = value
             .items
             .into_iter()
@@ -107,12 +104,14 @@ impl From<PlusMinusLindbladNoiseOperatorSerialize> for PlusMinusLindbladNoiseOpe
                 ((left, right), CalculatorComplex { re: real, im: imag })
             })
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSerialize {
     fn from(value: PlusMinusLindbladNoiseOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(
             PlusMinusProduct,
             PlusMinusProduct,
@@ -122,13 +121,9 @@ impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSeri
             .into_iter()
             .map(|((left, right), val)| (left, right, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: 1,
-            minor_version: 1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -136,9 +131,6 @@ impl From<PlusMinusLindbladNoiseOperator> for PlusMinusLindbladNoiseOperatorSeri
 impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
     type Index = (PlusMinusProduct, PlusMinusProduct);
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, (PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
-    type KeyIteratorType = Keys<'a, (PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
-    type ValueIteratorType = Values<'a, (PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -149,30 +141,23 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -203,10 +188,7 @@ impl<'a> OperateOnDensityMatrix<'a> for PlusMinusLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -231,9 +213,6 @@ impl PlusMinusLindbladNoiseOperator {
     /// * `Self` - The new (empty) PlusMinusLindbladNoiseOperator.
     pub fn new() -> Self {
         PlusMinusLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -249,9 +228,6 @@ impl PlusMinusLindbladNoiseOperator {
     /// * `Self` - The new (empty) PlusMinusLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         PlusMinusLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
@@ -278,7 +254,7 @@ impl PlusMinusLindbladNoiseOperator {
         value: CalculatorComplex,
     ) -> Result<(), StruqtureError> {
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
-            left.iter().cartesian_product(right.iter())
+            left.iter().cartesian_product(right.into_iter())
         {
             let value_complex = value_right.conj() * value_left;
             self.add_operator_product(
@@ -313,43 +289,41 @@ impl PlusMinusLindbladNoiseOperator {
         new_noise
     }
 
-    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_spins_left` - Number of spins to filter for in the left term of the keys.
-    /// * `number_spins_right` - Number of spins to filter for in the right term of the keys.
-    ///
-    /// # Returns
-    ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_spins_left and number_spins_right match the number of spins the left and right noise operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
         &self,
-        number_spins_left: usize,
-        number_spins_right: usize,
-    ) -> Result<
-        (
-            PlusMinusLindbladNoiseOperator,
-            PlusMinusLindbladNoiseOperator,
-        ),
-        StruqtureError,
-    > {
-        let mut separated = PlusMinusLindbladNoiseOperator::new();
-        let mut remainder = PlusMinusLindbladNoiseOperator::new();
-        for ((prod_l, prod_r), val) in self.iter() {
-            if prod_l.iter().len() == number_spins_left && prod_r.iter().len() == number_spins_right
-            {
-                separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            } else {
-                remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            }
+    ) -> Result<struqture_1::spins::PlusMinusLindbladNoiseOperator, StruqtureError> {
+        let mut new_pm_system = struqture_1::spins::PlusMinusLindbladNoiseOperator::new();
+        for (key, val) in self.iter() {
+            let one_key_left = key.0.to_struqture_1()?;
+            let one_key_right = key.1.to_struqture_1()?;
+            let _ = struqture_1::OperateOnDensityMatrix::set(
+                &mut new_pm_system,
+                (one_key_left, one_key_right),
+                val.clone(),
+            );
         }
-        Ok((separated, remainder))
+        Ok(new_pm_system)
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::spins::PlusMinusLindbladNoiseOperator,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
+            let self_key_left = PlusMinusProduct::from_struqture_1(&key.0)?;
+            let self_key_right = PlusMinusProduct::from_struqture_1(&key.1)?;
+            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
-impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {
-    /// Converts a PlusMinusLindbladNoiseOperator into a SpinLindbladNoiseOperator.
+impl From<PlusMinusLindbladNoiseOperator> for PauliLindbladNoiseOperator {
+    /// Converts a PlusMinusLindbladNoiseOperator into a PauliLindbladNoiseOperator.
     ///
     /// # Arguments
     ///
@@ -357,9 +331,9 @@ impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {
     ///
     /// # Returns
     ///
-    /// * `Self` - The PlusMinusLindbladNoiseOperator converted into a SpinLindbladNoiseOperator.
+    /// * `Self` - The PlusMinusLindbladNoiseOperator converted into a PauliLindbladNoiseOperator.
     fn from(value: PlusMinusLindbladNoiseOperator) -> Self {
-        let mut new_operator = SpinLindbladNoiseOperator::with_capacity(2 * value.len());
+        let mut new_operator = PauliLindbladNoiseOperator::with_capacity(2 * value.len());
         for ((product_left, product_right), val) in value.into_iter() {
             let transscribed_vector_left: Vec<(DecoherenceProduct, Complex64)> =
                 product_left.into();
@@ -383,17 +357,17 @@ impl From<PlusMinusLindbladNoiseOperator> for SpinLindbladNoiseOperator {
     }
 }
 
-impl From<SpinLindbladNoiseOperator> for PlusMinusLindbladNoiseOperator {
-    /// Converts a SpinLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
+impl From<PauliLindbladNoiseOperator> for PlusMinusLindbladNoiseOperator {
+    /// Converts a PauliLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.
     ///
     /// # Arguments
     ///
-    /// * `value` - The SpinLindbladNoiseOperator to convert.
+    /// * `value` - The PauliLindbladNoiseOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinLindbladNoiseOperator converted into a PlusMinusLindbladNoiseOperator.
-    fn from(value: SpinLindbladNoiseOperator) -> Self {
+    /// * `Self` - The PauliLindbladNoiseOperator converted into a PlusMinusLindbladNoiseOperator.
+    fn from(value: PauliLindbladNoiseOperator) -> Self {
         let mut new_operator = PlusMinusLindbladNoiseOperator::with_capacity(2 * value.len());
         for ((product_left, product_right), val) in value.into_iter() {
             let transscribed_vector_left: Vec<(PlusMinusProduct, Complex64)> = product_left.into();
@@ -529,12 +503,6 @@ where
 ///
 impl IntoIterator for PlusMinusLindbladNoiseOperator {
     type Item = ((PlusMinusProduct, PlusMinusProduct), CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<
-        (PlusMinusProduct, PlusMinusProduct),
-        CalculatorComplex,
-    >;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter =
         indexmap::map::IntoIter<(PlusMinusProduct, PlusMinusProduct), CalculatorComplex>;
     /// Returns the PlusMinusLindbladNoiseOperator in Iterator form.
@@ -678,35 +646,41 @@ impl JordanWignerSpinToFermion for PlusMinusLindbladNoiseOperator {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn so_from_sos() {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = PlusMinusLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
-        assert_eq!(PlusMinusLindbladNoiseOperator::from(sos.clone()), so);
+        assert_eq!(
+            PlusMinusLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            so
+        );
         assert_eq!(PlusMinusLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn clone_partial_eq() {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -717,17 +691,19 @@ mod test {
         let pp_1: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos_1 = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: PlusMinusProduct = PlusMinusProduct::new().z(2);
         let sos_2 = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -736,33 +712,35 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of PauliOperator
     #[test]
     fn debug() {
         let pp: PlusMinusProduct = PlusMinusProduct::new().z(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
+            "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"PlusMinusLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test PauliOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = PlusMinusProduct::new().minus(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -782,30 +760,37 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test PauliOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = PlusMinusProduct::new().plus(0);
         let sos = PlusMinusLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 1,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "PlusMinusLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -849,15 +834,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(1),
+                Token::Str("type_name"),
+                Token::Str("PlusMinusLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

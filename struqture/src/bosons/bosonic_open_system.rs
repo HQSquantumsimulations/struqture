@@ -10,14 +10,14 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{BosonHamiltonianSystem, BosonLindbladNoiseSystem};
+use super::{BosonHamiltonian, BosonLindbladNoiseOperator};
 use crate::{OpenSystem, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::ops;
 
-/// BosonLindbladOpenSystems are representations of open systems of bosons, where a system (BosonHamiltonianSystem) interacts with the environment via noise (BosonLindbladNoiseSystem).
+/// BosonLindbladOpenSystems are representations of open systems of bosons, where a system (BosonHamiltonian) interacts with the environment via noise (BosonLindbladNoiseOperator).
 ///
 /// # Example
 ///
@@ -26,7 +26,7 @@ use std::ops;
 /// use qoqo_calculator::CalculatorComplex;
 /// use struqture::bosons::{BosonProduct, HermitianBosonProduct, BosonLindbladOpenSystem};
 ///
-/// let mut system = BosonLindbladOpenSystem::new(None);
+/// let mut system = BosonLindbladOpenSystem::new();
 ///
 /// let bp_0_1 = BosonProduct::new([0], [1]).unwrap();
 /// let bp_0 = HermitianBosonProduct::new([], [0]).unwrap();
@@ -42,17 +42,21 @@ use std::ops;
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct BosonLindbladOpenSystem {
-    /// The BosonHamiltonianSystem representing the system terms of the open system
-    system: BosonHamiltonianSystem,
-    /// The BosonLindbladNoiseSystem representing the noise terms of the open system
-    noise: BosonLindbladNoiseSystem,
+    /// The BosonHamiltonian representing the system terms of the open system
+    system: BosonHamiltonian,
+    /// The BosonLindbladNoiseOperator representing the noise terms of the open system
+    noise: BosonLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for BosonLindbladOpenSystem {}
+impl crate::SerializationSupport for BosonLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonLindbladOpenSystem
+    }
+}
 
 impl OpenSystem<'_> for BosonLindbladOpenSystem {
-    type System = BosonHamiltonianSystem;
-    type Noise = BosonLindbladNoiseSystem;
+    type System = BosonHamiltonian;
+    type Noise = BosonLindbladNoiseOperator;
 
     // From trait
     fn noise(&self) -> &Self::Noise {
@@ -79,46 +83,18 @@ impl OpenSystem<'_> for BosonLindbladOpenSystem {
         (self.system, self.noise)
     }
 
-    /// Takes a tuple of a system (BosonHamiltonianSystem) and a noise term (BosonLindbladNoiseSystem) and combines them to be a BosonLindbladOpenSystem.
+    /// Takes a tuple of a system (BosonHamiltonian) and a noise term (BosonLindbladNoiseOperator) and combines them to be a BosonLindbladOpenSystem.
     ///
     /// # Arguments
     ///
-    /// * `system` - The BosonHamiltonianSystem to have in the BosonLindbladOpenSystem.
-    /// * `noise` - The BosonLindbladNoiseSystem to have in the BosonLindbladOpenSystem.
+    /// * `system` - The BosonHamiltonian to have in the BosonLindbladOpenSystem.
+    /// * `noise` - The BosonLindbladNoiseOperator to have in the BosonLindbladOpenSystem.
     ///
     /// # Returns
     ///
     /// * `Ok(Self)` - The BosonLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberModes)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        let (system, noise) = if system.number_modes != noise.number_modes {
-            match (system.number_modes, noise.number_modes) {
-                (Some(n), None) => {
-                    if n >= noise.number_modes() {
-                        let mut noise = noise;
-                        noise.number_modes = Some(n);
-                        (system, noise)
-                    } else {
-                        return Err(StruqtureError::MissmatchedNumberModes);
-                    }
-                }
-                (None, Some(n)) => {
-                    if n >= system.number_modes() {
-                        let mut system = system;
-                        system.number_modes = Some(n);
-                        (system, noise)
-                    } else {
-                        return Err(StruqtureError::MissmatchedNumberModes);
-                    }
-                }
-                (Some(_), Some(_)) => {
-                    return Err(StruqtureError::MissmatchedNumberModes);
-                }
-                _ => panic!("Unexpected missmatch of number modes"),
-            }
-        } else {
-            (system, noise)
-        };
         Ok(Self { system, noise })
     }
 
@@ -131,20 +107,11 @@ impl OpenSystem<'_> for BosonLindbladOpenSystem {
 }
 
 impl OperateOnModes<'_> for BosonLindbladOpenSystem {
-    /// Gets the maximum number_modes of the BosonHamiltonianSystem/BosonLindbladNoiseSystem.
+    /// Gets the maximum current_number_modes of the BosonHamiltonian/BosonLindbladNoiseOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of bosons in the BosonLindbladOpenSystem.
-    fn number_modes(&self) -> usize {
-        self.system.number_modes().max(self.noise.number_modes())
-    }
-
-    /// Return maximum index in BosonLindbladOpenSystem.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
     fn current_number_modes(&self) -> usize {
         self.system
             .current_number_modes()
@@ -157,18 +124,40 @@ impl OperateOnModes<'_> for BosonLindbladOpenSystem {
 impl BosonLindbladOpenSystem {
     /// Creates a new BosonLindbladOpenSystem.
     ///
-    /// # Arguments
-    ///
-    /// * `number_modes` - The number of modes in the open system.
-    ///
     /// # Returns
     ///
     /// * `Self` - The new (empty) BosonLindbladOpenSystem.
-    pub fn new(number_modes: Option<usize>) -> Self {
+    pub fn new() -> Self {
         BosonLindbladOpenSystem {
-            system: BosonHamiltonianSystem::new(number_modes),
-            noise: BosonLindbladNoiseSystem::new(number_modes),
+            system: BosonHamiltonian::new(),
+            noise: BosonLindbladNoiseOperator::new(),
         }
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_1::bosons::BosonLindbladOpenSystem, StruqtureError> {
+        let new_system = self.system().to_struqture_1()?;
+        let new_noise = self.noise().to_struqture_1()?;
+
+        struqture_1::OpenSystem::group(new_system, new_noise).map_err(
+            |err| StruqtureError::GenericError { msg:
+                format!("Could not convert struqture 2.x BosonLindbladOpenSystem to 1.x BosonLindbladOpenSystem, group function failed: {:?}.", err)
+            }
+        )
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::bosons::BosonLindbladOpenSystem,
+    ) -> Result<Self, StruqtureError> {
+        let (system_one, noise_one) = struqture_1::OpenSystem::ungroup(value.clone());
+        let new_system = BosonHamiltonian::from_struqture_1(&system_one)?;
+        let new_noise = BosonLindbladNoiseOperator::from_struqture_1(&noise_one)?;
+        Self::group(new_system, new_noise)
     }
 }
 
@@ -203,12 +192,12 @@ impl ops::Add<BosonLindbladOpenSystem> for BosonLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two BosonLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianBosonProduct exceeds that of the BosonHamiltonianSystem.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (BosonProduct, BosonProduct) exceeds that of the BosonLindbladNoiseSystem.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianBosonProduct exceeds that of the BosonHamiltonian.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (BosonProduct, BosonProduct) exceeds that of the BosonLindbladNoiseOperator.
     fn add(self, other: BosonLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys + other_sys)?, (self_noise + other_noise)?)
+        Self::group((self_sys + other_sys)?, self_noise + other_noise)
     }
 }
 
@@ -225,12 +214,12 @@ impl ops::Sub<BosonLindbladOpenSystem> for BosonLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two BosonLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianBosonProduct exceeds that of the BosonHamiltonianSystem.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (BosonProduct, BosonProduct) exceeds that of the BosonLindbladNoiseSystem.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianBosonProduct exceeds that of the BosonHamiltonian.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (BosonProduct, BosonProduct) exceeds that of the BosonLindbladNoiseOperator.
     fn sub(self, other: BosonLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys - other_sys)?, (self_noise - other_noise)?)
+        Self::group((self_sys - other_sys)?, self_noise - other_noise)
     }
 }
 
@@ -246,7 +235,7 @@ impl ops::Mul<CalculatorFloat> for BosonLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// * `Self` - The BosonLindbladNoiseSystem multiplied by the CalculatorFloat.
+    /// * `Self` - The BosonLindbladNoiseOperator multiplied by the CalculatorFloat.
     fn mul(self, rhs: CalculatorFloat) -> Self::Output {
         Self {
             system: self.system * rhs.clone(),
@@ -268,7 +257,7 @@ impl fmt::Display for BosonLindbladOpenSystem {
     ///
     /// * `std::fmt::Result` - The formatted BosonLindbladOpenSystem.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = format!("BosonLindbladOpenSystem({}){{\n", self.number_modes());
+        let mut output = "BosonLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
             writeln!(output, "{}: {},", key, val)?;

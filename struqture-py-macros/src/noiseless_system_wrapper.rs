@@ -27,26 +27,69 @@ pub fn noiselesswrapper(
     let items = parsed_input.items;
     let attribute_arguments = parse_macro_input!(metadata as AttributeMacroArguments);
     let (struct_name, struct_ident) = strip_python_wrapper_name(&ident);
-    let index_type = if struct_name.contains("Spin") {
-        quote::format_ident!("PauliProductWrapper")
-    } else if struct_name.contains("MixedPlusMinusOperator") {
-        quote::format_ident!("MixedPlusMinusProductWrapper")
-    } else if struct_name.contains("PlusMinusOperator") {
-        quote::format_ident!("PlusMinusProductWrapper")
-    } else if struct_name.contains("BosonHamiltonian") {
-        quote::format_ident!("HermitianBosonProductWrapper")
-    } else if struct_name.contains("Boson") {
-        quote::format_ident!("BosonProductWrapper")
-    } else if struct_name.contains("FermionHamiltonian") {
-        quote::format_ident!("HermitianFermionProductWrapper")
-    } else if struct_name.contains("Fermion") {
-        quote::format_ident!("FermionProductWrapper")
-    } else if struct_name.contains("MixedHamiltonian") {
-        quote::format_ident!("HermitianMixedProductWrapper")
-    } else {
-        quote::format_ident!("MixedProductWrapper")
-    };
-    let value_type = if struct_name.contains("SpinHamiltonian") {
+    let (index_type, struqture_1_module, struqture_1_ident) =
+        if struct_name.contains("PauliOperator") {
+            (
+                quote::format_ident!("PauliProductWrapper"),
+                quote::format_ident!("spins"),
+                quote::format_ident!("SpinSystem"),
+            )
+        } else if struct_name.contains("PauliHamiltonian") {
+            (
+                quote::format_ident!("PauliProductWrapper"),
+                quote::format_ident!("spins"),
+                quote::format_ident!("SpinHamiltonianSystem"),
+            )
+        } else if struct_name.contains("MixedPlusMinusOperator") {
+            (
+                quote::format_ident!("MixedPlusMinusProductWrapper"),
+                quote::format_ident!("mixed_systems"),
+                quote::format_ident!("MixedPlusMinusOperator"),
+            )
+        } else if struct_name.contains("PlusMinusOperator") {
+            (
+                quote::format_ident!("PlusMinusProductWrapper"),
+                quote::format_ident!("spins"),
+                quote::format_ident!("PlusMinusOperator"),
+            )
+        } else if struct_name.contains("BosonHamiltonian") {
+            (
+                quote::format_ident!("HermitianBosonProductWrapper"),
+                quote::format_ident!("bosons"),
+                quote::format_ident!("BosonHamiltonianSystem"),
+            )
+        } else if struct_name.contains("BosonOperator") {
+            (
+                quote::format_ident!("BosonProductWrapper"),
+                quote::format_ident!("bosons"),
+                quote::format_ident!("BosonSystem"),
+            )
+        } else if struct_name.contains("FermionHamiltonian") {
+            (
+                quote::format_ident!("HermitianFermionProductWrapper"),
+                quote::format_ident!("fermions"),
+                quote::format_ident!("FermionHamiltonianSystem"),
+            )
+        } else if struct_name.contains("FermionOperator") {
+            (
+                quote::format_ident!("FermionProductWrapper"),
+                quote::format_ident!("fermions"),
+                quote::format_ident!("FermionSystem"),
+            )
+        } else if struct_name.contains("MixedHamiltonian") {
+            (
+                quote::format_ident!("HermitianMixedProductWrapper"),
+                quote::format_ident!("mixed_systems"),
+                quote::format_ident!("MixedHamiltonianSystem"),
+            )
+        } else {
+            (
+                quote::format_ident!("MixedProductWrapper"),
+                quote::format_ident!("mixed_systems"),
+                quote::format_ident!("MixedSystem"),
+            )
+        };
+    let value_type = if struct_name.contains("PauliHamiltonian") {
         quote::format_ident!("CalculatorFloatWrapper")
     } else {
         quote::format_ident!("CalculatorComplexWrapper")
@@ -182,7 +225,7 @@ pub fn noiselesswrapper(
                     })?;
                     match self.internal.set(converted_key, value).map_err(|err| {
                         PyValueError::new_err(format!(
-                            "Error in set function of System: {:?}",
+                            "Error in set function of Operator: {:?}",
                             err
                         ))
                     })? {
@@ -195,6 +238,7 @@ pub fn noiselesswrapper(
                 ///
                 /// Args:
                 ///     key (Product type): The key object
+                ///     value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
                 ///
                 /// Raises:
                 ///     TypeError: Value is not CalculatorComplex or CalculatorFloat.
@@ -213,7 +257,7 @@ pub fn noiselesswrapper(
                         .add_operator_product(converted_key, value)
                         .map_err(|err| {
                             PyValueError::new_err(format!(
-                                "Error in add_operator_product function of System: {:?}",
+                                "Error in add_operator_product function of Operator: {:?}",
                                 err
                             ))
                         })
@@ -253,38 +297,12 @@ pub fn noiselesswrapper(
     };
     let operate_on_modes_quote = if attribute_arguments.contains("OperateOnModes") {
         quote! {
-            /// Return maximum index in self.
-            ///
-            /// Returns:
-            ///     int: Maximum index.
-            pub fn current_number_modes(&self) -> usize {
-                self.internal.current_number_modes()
-            }
-
-            /// Return the number_modes input of self.
+            /// Return the current_number_modes input of self.
             ///
             /// Returns:
             ///     int: The number of modes in self.
-            pub fn number_modes(&self) -> usize {
-                self.internal.number_modes()
-            }
-
-            /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
-            ///
-            /// Args:
-            ///     number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
-            ///
-            /// Returns:
-            ///     Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-            ///
-            /// Raises:
-            ///     ValueError: Error in adding terms to return values.
-            pub fn separate_into_n_terms(&self, number_creators_annihilators: (usize, usize)) -> PyResult<(#ident, #ident)> {
-                let (separated, remainder) = self.internal.separate_into_n_terms(number_creators_annihilators).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                Ok((
-                    #ident { internal: separated },
-                    #ident { internal: remainder }
-                ))
+            pub fn current_number_modes(&self) -> usize {
+                self.internal.current_number_modes()
             }
         }
     } else {
@@ -292,40 +310,25 @@ pub fn noiselesswrapper(
     };
     let operate_on_spins_quote = if attribute_arguments.contains("OperateOnSpins") {
         quote! {
-                /// Return maximum spin index in self.
-                ///
-                /// Returns:
-                ///     int: Maximum index.
-                pub fn current_number_spins(&self) -> usize {
-                    self.internal.current_number_spins()
-                }
-
-                /// Return the number_spins input of self.
-                ///
-                /// Returns:
-                ///     int: The number of spins in self.
-                pub fn number_spins(&self) -> usize {
-                    self.internal.number_spins()
-                }
-
-                /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations.
-                ///
-                /// Args:
-                ///     number_spins (int): Number of spins to filter for in the keys.
-                ///
-                /// Returns:
-                ///     Tuple[Self, Self]: Operator with the noise terms where the number of spins matches the number of spins the operator product acts on and Operator with all other contributions.
-                ///
-                /// Raises:
-                ///     ValueError: Error in adding terms to return values.
-        pub fn separate_into_n_terms(&self, number_spins: usize) -> PyResult<(#ident, #ident)> {
-                    let (separated, remainder) = self.internal.separate_into_n_terms(number_spins).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                    Ok((
-                        #ident { internal: separated },
-                        #ident { internal: remainder }
-                    ))
-                }
+            /// Return the current_number_spins input of self.
+            ///
+            /// Returns:
+            ///     int: The number of spins in self.
+            pub fn current_number_spins(&self) -> usize {
+                self.internal.current_number_spins()
             }
+
+            /// Return maximum index in self.
+            ///
+            /// Returns:
+            ///     int: Maximum index.
+            pub fn number_spins(&self) -> usize {
+                Python::with_gil(|py| {
+                    py.run(c_str!("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)"), None, None).unwrap();
+                });
+                self.internal.current_number_spins()
+            }
+        }
     } else {
         TokenStream::new()
     };
@@ -335,16 +338,15 @@ pub fn noiselesswrapper(
                 /// Constructs the sparse matrix representation of self as a scipy COO matrix with a given number of spins.
                 ///
                 /// Args:
-                ///     number_spins (Optional[int]): The number of spins in self.
+                ///     number_spins (int): The number of spins in self.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                #[pyo3(signature = (number_spins = None))]
-                pub fn sparse_matrix_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
+                pub fn sparse_matrix_coo(&self, number_spins: usize) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
                         .sparse_matrix_coo(number_spins)
@@ -373,16 +375,15 @@ pub fn noiselesswrapper(
                 /// and `flatten` flattens a matrix into a vector in row-major form.
                 ///
                 /// Args:
-                ///     number_spins: The number of spins to construct the matrix for.
+                ///     number_spins (int): The number of spins to construct the matrix for.
                 ///
                 /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of self.
+                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The little endian matrix representation of self.
                 ///
                 /// Raises:
                 ///     ValueError: CalculatorError.
                 ///     RuntimeError: Could not convert to complex superoperator matrix.
-                #[pyo3(signature = (number_spins = None))]
-                pub fn sparse_matrix_superoperator_coo(&self, number_spins: Option<usize>) -> PyResult<PyCooMatrix> {
+                pub fn sparse_matrix_superoperator_coo(&self, number_spins: usize) -> PyResult<PyCooMatrix> {
                     let coo = self
                         .internal
                         .sparse_matrix_superoperator_coo(number_spins)
@@ -396,99 +397,24 @@ pub fn noiselesswrapper(
                         })?;
                     to_py_coo(coo)
                 }
-
-                /// Return the unitary part of the superoperator in the sparse COO format.
-                ///
-                /// Returns:
-                ///     Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]: The matrix representation of the unitary part of self.
-                ///
-                /// Raises:
-                ///     ValueError: CalculatorError.
-                ///     RuntimeError: Could not convert to complex superoperator matrix.
-                pub fn unitary_sparse_matrix_coo(&self) -> PyResult<PyCooMatrix> {
-                    let coo = self
-                        .internal
-                        .unitary_sparse_matrix_coo()
-                        .map_err(|err| match err {
-                            StruqtureError::CalculatorError(c_err) => {
-                                PyValueError::new_err(format!("{}", c_err))
-                            }
-                            _ => PyRuntimeError::new_err(
-                                "Could not convert to complex superoperator matrix".to_string(),
-                            ),
-                        })?;
-                    to_py_coo(coo)
-                }
-
-                /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-                ///
-                /// Returns:
-                ///     List[Tuple[Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]], complex]]: The matrix representation of the noise part of self.
-                ///
-                /// Raises:
-                ///     ValueError: CalculatorError.
-                ///     RuntimeError: Could not convert to complex superoperator matrix.
-                pub fn sparse_lindblad_entries(&self) -> PyResult<Vec<(PyCooMatrix, PyCooMatrix, Complex64)>> {
-                    let coo = self
-                        .internal
-                        .sparse_lindblad_entries()
-                        .map_err(|err| match err {
-                            StruqtureError::CalculatorError(c_err) => {
-                                PyValueError::new_err(format!("{}", c_err))
-                            }
-                            _ => PyRuntimeError::new_err(
-                                "Could not convert to complex superoperator matrix".to_string(),
-                            ),
-                        })?;
-                    let mut res_vec: Vec<(PyCooMatrix, PyCooMatrix, Complex64)> = Vec::new();
-                    for mat in coo {
-                        let left = to_py_coo(mat.0).map_err(|err| match err {
-                            _ => PyRuntimeError::new_err(
-                                "Could not convert to complex superoperator matrix".to_string(),
-                            ),
-                        })?;
-                        let right = to_py_coo(mat.1).map_err(|err| match err {
-                            _ => PyRuntimeError::new_err(
-                                "Could not convert to complex superoperator matrix".to_string(),
-                            ),
-                        })?;
-                        res_vec.push((left, right, mat.2));
-                    }
-                    Ok(res_vec)
-                }
         }
     } else {
         TokenStream::new()
     };
     let operate_on_mixedsystems_quote = if attribute_arguments.contains("OperateOnMixedSystems") {
         quote! {
-                /// Return the number_spins input of each spin subsystem of self.
+                /// Return the current_number_spins input of each spin subsystem of self.
                 ///
                 /// Returns:
-                ///     int: The number of spins in each spin subsystem of self.
-                pub fn number_spins(&self) -> Vec<usize> {
-                    self.internal.number_spins()
-                }
-
-                /// Return maximum spin index in each spin subsystem of self.
-                ///
-                /// Returns:
-                ///     int: Maximum index in each spin subsystem of self.
+                ///     List[int]: Number of spins in each spin sub-system.
                 pub fn current_number_spins(&self) -> Vec<usize> {
                     self.internal.current_number_spins()
                 }
+
                 /// Return the number of bosonic modes in each bosonic subsystem of self.
                 ///
                 /// Returns:
-                ///     List[int]: The number of bosonic modes in each bosonic subsystem of self.
-                pub fn number_bosonic_modes(&self) -> Vec<usize> {
-                    self.internal.number_bosonic_modes()
-                }
-
-                /// Return the number of bosonic modes each bosonic subsystem of self acts on.
-                ///
-                /// Returns:
-                ///     List[int]: Maximum bosonic mode index currently used in each bosonic subsystem of self.
+                ///     list[int]: The number of bosonic modes in each bosonic subsystem of self.
                 pub fn current_number_bosonic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_bosonic_modes()
                 }
@@ -496,41 +422,64 @@ pub fn noiselesswrapper(
                 /// Return the number of fermionic modes in each fermionic subsystem of self.
                 ///
                 /// Returns:
-                ///     List[int]: The number of fermionic modes in each fermionic subsystem of self.
-                pub fn number_fermionic_modes(&self) -> Vec<usize> {
-                    self.internal.number_fermionic_modes()
-                }
-
-                /// Return the number of fermionic modes each fermionic subsystem of self acts on.
-                ///
-                /// Returns:
-                ///     List[int]: Maximum fermionic mode index currently used in each fermionic subsystem of self.
+                ///     list[int]: The number of fermionic modes in each fermionic subsystem of self.
                 pub fn current_number_fermionic_modes(&self) -> Vec<usize> {
                     self.internal.current_number_fermionic_modes()
                 }
-
-                // /// Separate self into an operator with the terms of given number of qubits and an operator with the remaining operations.
-                // ///
-                // /// Args:
-                // ///     number_particles (Tuple[int, int, int]): Number of particles to filter for in the keys.
-                // ///
-                // /// Returns:
-                // ///     int: The number of modes in self.
-                // ///
-                // /// Raises:
-                // ///     ValueError: Operator with the noise terms where number_particles matches the number of spins the operator product acts on and Operator with all other contributions.
-                // pub fn separate_into_n_terms(&self, number_particles: (usize, usize, usize)) -> PyResult<(#ident, #ident)> {
-                //     let (separated, remainder) = self.internal.separate_into_n_terms(number_particles).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-                //     Ok((
-                //         #ident { internal: separated },
-                //         #ident { internal: remainder }
-                //     ))
-                // }
         }
     } else {
         TokenStream::new()
     };
     let calculus_quote = if attribute_arguments.contains("Calculus") {
+        quote! {
+            /// Implement `-1` for self.
+            ///
+            /// Returns:
+            ///     self: The object * -1.
+            pub fn __neg__(&self) -> #ident {
+                #ident {
+                    internal: -self.clone().internal
+                }
+            }
+
+            /// Implement `+` for self with self-type.
+            ///
+            /// Args:
+            ///     other (self): value by which to add to self.
+            ///
+            /// Returns:
+            ///     self: The two objects added.
+            ///
+            /// Raises:
+            ///     ValueError: Objects could not be added.
+            pub fn __add__(&self, other: #ident) -> PyResult<#ident> {
+                let new_self = (self.clone().internal + other.internal);
+                Ok(#ident {
+                    internal: new_self
+                })
+            }
+
+            /// Implement `-` for self with self-type.
+            ///
+            /// Args:
+            ///     other (self): value by which to subtract from self.
+            ///
+            /// Returns:
+            ///     self: The two objects subtracted.
+            ///
+            /// Raises:
+            ///     ValueError: Objects could not be subtracted.
+            pub fn __sub__(&self, other: #ident) -> PyResult<#ident> {
+                let new_self = (self.clone().internal - other.internal);
+                Ok(#ident {
+                    internal: new_self
+                })
+            }
+        }
+    } else {
+        TokenStream::new()
+    };
+    let hermitian_calculus_quote = if attribute_arguments.contains("HermitianCalculus") {
         quote! {
             /// Implement `-1` for self.
             ///
@@ -583,31 +532,65 @@ pub fn noiselesswrapper(
 
         impl #ident {
             /// Fallible conversion of generic python object.
-            pub fn from_pyany(input: &Bound<PyAny>
-            ) -> PyResult<#struct_ident> {
+            pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
+                        PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+                    })?;
+                    let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
+                        PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+                    })?;
+
+                    let source_serialisation_meta: struqture::StruqtureSerialisationMeta = serde_json::from_str(&source_serialisation_meta).map_err(|_| {
+                        PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
+                    })?;
+
+                    let target_serialisation_meta = <#struct_ident as struqture::SerializationSupport>::target_serialisation_meta();
+
+                    struqture::check_can_be_deserialised(&target_serialisation_meta, &source_serialisation_meta).map_err(|err| {
+                        PyTypeError::new_err(err.to_string())
+                    })?;
+
+                    let input = input.as_ref();
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
-                    let get_bytes = input.call_method0("to_bincode").map_err(|_| {
-                        PyTypeError::new_err("Serialisation failed".to_string())
-                    })?;
-                    let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
-                        PyTypeError::new_err("Deserialisation failed".to_string())
-                    })?;
-                    deserialize(&bytes[..]).map_err(|err| {
-                        PyTypeError::new_err(format!(
-                            "Type conversion failed: {}",
-                            err
-                        ))}
-                    )
-
+                        let get_bytes = input.call_method0("to_bincode").map_err(|_| {
+                            PyTypeError::new_err("Serialisation failed".to_string())
+                        })?;
+                        let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
+                            PyTypeError::new_err("Deserialisation failed".to_string())
+                        })?;
+                        deserialize(&bytes[..]).map_err(|err| {
+                            PyTypeError::new_err(format!(
+                                "Type conversion failed: {}",
+                                err
+                            ))}
+                        )
                     }
-                }
+                })
+            }
 
-                )
+            /// Fallible conversion of generic python object that is implemented in struqture 1.x.
+            #[cfg(feature = "struqture_1_import")]
+            pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
+                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let input = input.as_ref();
+                    let get_bytes = input
+                        .call_method0("to_bincode")
+                        .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
+                    let bytes = get_bytes
+                        .extract::<Vec<u8>>()
+                        .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
+                    let one_import = deserialize(&bytes[..])
+                        .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+                    let qubit_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
+                        |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
+                    ))?;
+                    Ok(qubit_operator)
+                })
+            }
         }
-    }
         #[pymethods]
         impl #ident {
 
@@ -621,9 +604,40 @@ pub fn noiselesswrapper(
             #to_sparse_matrix_superoperator_quote
             #operate_on_mixedsystems_quote
             #calculus_quote
+            #hermitian_calculus_quote
 
             // ----------------------------------
             // Default pyo3 implementations
+
+            /// Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+            ///
+            /// Args:
+            ///     input (Any): the json of the struqture 1 object to convert.
+            ///
+            /// Returns:
+            ///     Any: the input object in struqture 2 form.
+            ///
+            /// Raises:
+            ///     ValueError: Input could not be deserialised form json.
+            ///     ValueError: Struqture 1 object could not be converted to struqture 2.
+            #[cfg(feature = "struqture_1_import")]
+            #[staticmethod]
+            pub fn from_json_struqture_1(input: String) -> PyResult<#ident> {
+                let qubit_operator: struqture_1::#struqture_1_module::#struqture_1_ident =
+                    serde_json::from_str(&input).map_err(|err| {
+                        PyValueError::new_err(format!(
+                            "Input cannot be deserialized from json to struqture 1.x: {}",
+                            err
+                        ))
+                    })?;
+                Ok(#ident {
+                    internal: #struct_ident::from_struqture_1(&qubit_operator).map_err(|err| {
+                        PyValueError::new_err(format!(
+                            "Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err
+                        ))
+                    })?,
+                })
+            }
 
             /// Return a copy of self (copy here produces a deepcopy).
             ///
@@ -767,7 +781,7 @@ pub fn noiselesswrapper(
             }
 
             #[cfg(feature = "json_schema")]
-            /// Returns the current version of the struqture library .
+            /// Returns the current version of the struqture library.
             ///
             /// Returns:
             ///     str: The current version of the library.
@@ -782,8 +796,15 @@ pub fn noiselesswrapper(
             /// Returns:
             ///     str: The minimum version of the struqture library to deserialize this object.
             pub fn min_supported_version(&self) -> String {
-                let min_version: (usize, usize, usize) = #struct_ident::min_supported_version();
+                let min_version: (usize, usize, usize) = struqture::SerializationSupport::min_supported_version(&self.internal);
                 return format!("{}.{}.{}", min_version.0, min_version.1, min_version.2);
+            }
+
+            /// Returns the StruqtureSerialisationMeta of the object.
+            fn _get_serialisation_meta(&self) -> PyResult<String>{
+                let meta = struqture::SerializationSupport::struqture_serialisation_meta(&self.internal);
+                let string = serde_json::to_string(&meta).map_err(|err| PyValueError::new_err(err.to_string()))?;
+                Ok(string)
             }
 
             #[cfg(feature = "json_schema")]

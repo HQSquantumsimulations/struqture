@@ -571,7 +571,7 @@ fn from_mixed_product_longer() {
 
 // Test the hermitian_conjugate and is_natural_hermitian functions of the MixedPlusMinusProduct
 #[test]
-fn current_number_particles() {
+fn number_particles() {
     let spins = PlusMinusProduct::from_str("0+").unwrap();
     let creators = &[0];
     let annihilators = &[3];
@@ -762,4 +762,22 @@ fn test_mixed_plus_minus_product_schema() {
     let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_1::mixed_systems::MixedPlusMinusProduct::new(
+        [struqture_1::spins::PlusMinusProduct::from_str("0+").unwrap()],
+        [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
+        [struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap()],
+    );
+    let pp_2 = MixedPlusMinusProduct::new(
+        [PlusMinusProduct::new().plus(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [FermionProduct::new([0], [0]).unwrap()],
+    );
+    assert!(MixedPlusMinusProduct::from_struqture_1(&pp_1).unwrap() == pp_2);
+    assert!(pp_1 == pp_2.to_struqture_1().unwrap());
 }

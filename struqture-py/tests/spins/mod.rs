@@ -20,10 +20,32 @@ mod plus_minus_operator;
 
 mod plus_minus_noise_operator;
 
-mod spin_system;
+mod pauli_operator;
 
-mod spin_hamiltonian_system;
+mod pauli_hamiltonian;
 
-mod noise_system;
+mod pauli_noise_operator;
 
-mod open_system;
+mod pauli_open_system;
+
+use pyo3::prelude::*;
+use qoqo_calculator::CalculatorFloat;
+use qoqo_calculator_pyo3::CalculatorFloatWrapper;
+// helper function to convert CalculatorFloat into a python object
+fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
+    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
+    match parameter {
+        CalculatorFloat::Float(x) => parameter_type
+            .call1((x,))
+            .unwrap()
+            .downcast::<CalculatorFloatWrapper>()
+            .unwrap()
+            .to_owned(),
+        CalculatorFloat::Str(x) => parameter_type
+            .call1((x,))
+            .unwrap()
+            .downcast::<CalculatorFloatWrapper>()
+            .unwrap()
+            .to_owned(),
+    }
+}

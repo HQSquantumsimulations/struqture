@@ -17,7 +17,7 @@
 //!
 //! This module can be used to represent mixed quantum operators, mixed quantum Hamiltonians and mixed open quantum systems.
 //!
-//! In general the enduser should use the high-level modules [struqture::mixed_systems::MixedSystem] and [struqture::mixed_systems::MixedHamiltonianSystem]
+//! In general the enduser should use the high-level modules [struqture::mixed_systems::MixedOperator] and [struqture::mixed_systems::MixedHamiltonian]
 //! to represent mixed quantum Operators and mixed Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [struqture::mixed_systems::MixedLindbladOpenSystem].
@@ -32,31 +32,31 @@ pub use boson_product::BosonProductWrapper;
 mod hermitian_boson_product;
 pub use hermitian_boson_product::HermitianBosonProductWrapper;
 
-mod bosonic_system;
-pub use bosonic_system::BosonSystemWrapper;
+mod bosonic_operator;
+pub use bosonic_operator::BosonOperatorWrapper;
 
-mod bosonic_hamiltonian_system;
-pub use bosonic_hamiltonian_system::BosonHamiltonianSystemWrapper;
+mod bosonic_hamiltonian;
+pub use bosonic_hamiltonian::BosonHamiltonianWrapper;
 
-mod bosonic_noise_system;
-pub use bosonic_noise_system::BosonLindbladNoiseSystemWrapper;
+mod bosonic_noise_operator;
+pub use bosonic_noise_operator::BosonLindbladNoiseOperatorWrapper;
 
 mod bosonic_open_system;
 pub use bosonic_open_system::BosonLindbladOpenSystemWrapper;
 
 /// Bosons module of struqture Python interface
 ///
-/// Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonSystem and BosonHamiltonianSystem),
-/// and Lindblad type bosonic open systems (BosonLindbladNoiseSystem, BosonLindbladOpenSystem).
+/// Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonOperator and BosonHamiltonian),
+/// and Lindblad type bosonic open systems (BosonLindbladNoiseOperator, BosonLindbladOpenSystem).
 ///
 /// .. autosummary::
 ///     :toctree: generated/
 ///
 ///     BosonProduct
 ///     HermitianBosonProduct
-///     BosonSystem
-///     BosonHamiltonianSystem
-///     BosonLindbladNoiseSystem
+///     BosonOperator
+///     BosonHamiltonian
+///     BosonLindbladNoiseOperator
 ///     BosonLindbladOpenSystem
 ///
 #[pymodule]
@@ -64,9 +64,9 @@ pub fn bosons(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<BosonProductWrapper>()?;
     m.add_class::<HermitianBosonProductWrapper>()?;
-    m.add_class::<BosonSystemWrapper>()?;
-    m.add_class::<BosonHamiltonianSystemWrapper>()?;
-    m.add_class::<BosonLindbladNoiseSystemWrapper>()?;
+    m.add_class::<BosonOperatorWrapper>()?;
+    m.add_class::<BosonHamiltonianWrapper>()?;
+    m.add_class::<BosonLindbladNoiseOperatorWrapper>()?;
     m.add_class::<BosonLindbladOpenSystemWrapper>()?;
 
     Ok(())

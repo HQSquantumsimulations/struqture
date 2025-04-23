@@ -10,33 +10,32 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionSystemWrapper;
-use crate::spins::{PlusMinusProductWrapper, SpinSystemWrapper};
+use super::PauliHamiltonianWrapper;
+use crate::{
+    fermions::FermionOperatorWrapper,
+    spins::{PauliOperatorWrapper, PlusMinusProductWrapper},
+};
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
+use pyo3::ffi::c_str;
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
-use struqture::spins::{
-    PlusMinusOperator, SpinHamiltonian, SpinHamiltonianSystem, SpinOperator, SpinSystem,
-};
+use struqture::spins::{PauliHamiltonian, PauliOperator, PlusMinusOperator};
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::{mappings, noiseless_system_wrapper};
 
-use super::SpinHamiltonianSystemWrapper;
-
 /// These are representations of systems of spins.
 ///
-/// PlusMinusOperators are characterized by a SpinOperator to represent the hamiltonian of the spin system
+/// PlusMinusOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
 /// and an optional number of spins.
 ///
 /// Returns:
-///     self: The new PlusMinusOperator with the input number of spins.
+///     self: The new PlusMinusOperator.
 ///
 /// Examples
 /// --------
@@ -47,11 +46,11 @@ use super::SpinHamiltonianSystemWrapper;
 ///     from qoqo_calculator_pyo3 import CalculatorComplex
 ///     from struqture_py.spins import PlusMinusOperator, PlusMinusProduct
 ///
-///     ssystem = PlusMinusOperator()
+///     system = PlusMinusOperator()
 ///     pp = PlusMinusProduct().z(0)
-///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-///     npt.assert_equal(ssystem.keys(), [pp])
+///     system.add_operator_product(pp, 5.0)
+///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
+///     npt.assert_equal(system.keys(), [pp])
 ///
 #[pyclass(name = "PlusMinusOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
@@ -61,12 +60,12 @@ pub struct PlusMinusOperatorWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix)]
+#[noiseless_system_wrapper(OperateOnState, OperateOnDensityMatrix, OperateOnSpins, Calculus)]
 impl PlusMinusOperatorWrapper {
     /// Create an empty PlusMinusOperator.
     ///
     /// Returns:
-    ///     self: The new PlusMinusOperator with the input number of spins.
+    ///     self: The new PlusMinusOperator.
     #[new]
     pub fn new() -> Self {
         Self {
@@ -102,152 +101,67 @@ impl PlusMinusOperatorWrapper {
         }
     }
 
-    /// Implement `-1` for self.
-    ///
-    /// Returns:
-    ///     self: The object * -1.
-    pub fn __neg__(&self) -> PlusMinusOperatorWrapper {
-        PlusMinusOperatorWrapper {
-            internal: -self.clone().internal,
-        }
-    }
-
-    /// Implement `+` for self with self-type.
+    /// Convert a PauliOperator into a PlusMinusOperator.
     ///
     /// Args:
-    ///     other (self): value by which to add to self.
+    ///     value (PauliOperator): The PauliOperator to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     self: The two objects added.
+    ///     PlusMinusOperator: The operator created from the input PauliOperator.
     ///
     /// Raises:
-    ///     ValueError: Objects could not be added.
-    pub fn __add__(&self, other: PlusMinusOperatorWrapper) -> PlusMinusOperatorWrapper {
-        PlusMinusOperatorWrapper {
-            internal: self.clone().internal + other.internal,
-        }
-    }
-
-    /// Implement `-` for self with self-type.
-    ///
-    /// Args:
-    ///     other (self): value by which to subtract from self.
-    ///
-    /// Returns:
-    ///     self: The two objects subtracted.
-    ///
-    /// Raises:
-    ///     ValueError: Objects could not be subtracted.
-    pub fn __sub__(&self, other: PlusMinusOperatorWrapper) -> PlusMinusOperatorWrapper {
-        PlusMinusOperatorWrapper {
-            internal: self.clone().internal - other.internal,
-        }
-    }
-
-    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
-    ///
-    /// Args
-    ///     number_spins (int): Number of spins to filter for in the keys.
-    ///
-    /// Returns
-    ///     (PlusMinusOperator, PlusMinusOperator): Operator with the terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
-    ///
-    /// Raises:
-    ///     ValueError: Error in adding terms to return values.
-    pub fn separate_into_n_terms(
-        &self,
-        number_spins: usize,
-    ) -> PyResult<(PlusMinusOperatorWrapper, PlusMinusOperatorWrapper)> {
-        let result = self
-            .internal
-            .separate_into_n_terms(number_spins)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok((
-            PlusMinusOperatorWrapper { internal: result.0 },
-            PlusMinusOperatorWrapper { internal: result.1 },
-        ))
-    }
-
-    /// Convert a SpinSystem into a PlusMinusOperator.
-    ///
-    /// Args:
-    ///     value (SpinSystem): The SpinSystem to create the PlusMinusOperator from.
-    ///
-    /// Returns:
-    ///     PlusMinusOperator: The operator created from the input SpinSystem.
-    ///
-    /// Raises:
-    ///     ValueError: Could not create SpinSystem from input.
+    ///     ValueError: Could not create PauliOperator from input.
     #[staticmethod]
-    pub fn from_spin_system(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
-        let system = SpinSystemWrapper::from_pyany(value)
+    pub fn from_pauli_operator(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+        let system = PauliOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
-            internal: PlusMinusOperator::from(system.operator().clone()),
+            internal: PlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a SpinHamiltonianSystem into a PlusMinusOperator.
+    /// Convert a PauliHamiltonian into a PlusMinusOperator.
     ///
     /// Args:
-    ///     value (SpinHamiltonianSystem): The SpinHamiltonianSystem to create the PlusMinusOperator from.
+    ///     value (PauliHamiltonian): The PauliHamiltonian to create the PlusMinusOperator from.
     ///
     /// Returns:
-    ///     PlusMinusOperator: The operator created from the input SpinSystem.
+    ///     PlusMinusOperator: The operator created from the input PauliOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinHamiltonianSystem from input.
+    ///     ValueError: Could not create PauliHamiltonian from input.
     #[staticmethod]
-    pub fn from_spin_hamiltonian_system(
-        value: &Bound<PyAny>,
-    ) -> PyResult<PlusMinusOperatorWrapper> {
-        let system = SpinHamiltonianSystemWrapper::from_pyany(value)
+    pub fn from_pauli_hamiltonian(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
+        let system = PauliHamiltonianWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(PlusMinusOperatorWrapper {
-            internal: PlusMinusOperator::from(system.hamiltonian().clone()),
+            internal: PlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a PlusMinusOperator into a SpinSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins to initialize the SpinSystem with.
+    /// Convert a PlusMinusOperator into a PauliOperator.
     ///
     /// Returns:
-    ///     SpinSystem: The operator created from the input PlusMinusOperator and optional number of spins.
+    ///     PauliOperator: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinSystem from PlusMinusOperator.
-    #[pyo3(signature = (number_spins=None))]
-    pub fn to_spin_system(&self, number_spins: Option<usize>) -> PyResult<SpinSystemWrapper> {
-        let result: SpinOperator = SpinOperator::from(self.internal.clone());
-        Ok(SpinSystemWrapper {
-            internal: SpinSystem::from_operator(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+    ///     ValueError: Could not create PauliOperator from PlusMinusOperator.
+    pub fn to_pauli_operator(&self) -> PyResult<PauliOperatorWrapper> {
+        let result: PauliOperator = PauliOperator::from(self.internal.clone());
+        Ok(PauliOperatorWrapper { internal: result })
     }
 
-    /// Convert a PlusMinusOperator into a SpinHamiltonianSystem.
-    ///
-    /// Args:
-    ///     number_spins (Optional[int]): The number of spins to initialize the SpinHamiltonianSystem with.
+    /// Convert a PlusMinusOperator into a PauliHamiltonian.
     ///
     /// Returns:
-    ///     SpinHamiltonianSystem: The operator created from the input PlusMinusOperator and optional number of spins.
+    ///     PauliHamiltonian: The operator created from the input PlusMinusOperator and optional number of spins.
     ///
     /// Raises:
-    ///     ValueError: Could not create SpinHamiltonianSystem from PlusMinusOperator.
-    #[pyo3(signature = (number_spins=None))]
-    pub fn to_spin_hamiltonian_system(
-        &self,
-        number_spins: Option<usize>,
-    ) -> PyResult<SpinHamiltonianSystemWrapper> {
-        let result: SpinHamiltonian = SpinHamiltonian::try_from(self.internal.clone())
+    ///     ValueError: Could not create PauliHamiltonian from PlusMinusOperator.
+    pub fn to_pauli_hamiltonian(&self) -> PyResult<PauliHamiltonianWrapper> {
+        let result: PauliHamiltonian = PauliHamiltonian::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok(SpinHamiltonianSystemWrapper {
-            internal: SpinHamiltonianSystem::from_hamiltonian(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+        Ok(PauliHamiltonianWrapper { internal: result })
     }
 }
 

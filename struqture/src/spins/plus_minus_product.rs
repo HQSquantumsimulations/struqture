@@ -27,7 +27,7 @@ use std::iter::{FromIterator, IntoIterator};
 use std::str::FromStr;
 use tinyvec::{TinyVec, TinyVecIterator};
 
-use super::{DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SingleSpinOperator};
+use super::{DecoherenceProduct, PauliProduct, SingleDecoherenceOperator, SinglePauliOperator};
 
 const INTERNAL_BUG_ADD_OPERATOR_PRODUCT: &str =
     "Internal bug in add_operator_product for FermionOperator.";
@@ -175,8 +175,8 @@ impl SinglePlusMinusOperator {
     }
 }
 
-impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
-    /// Converts a SinglePlusMinusOperator into a vector of tuples of (SingleSpinOperator, Complex64).
+impl From<SinglePlusMinusOperator> for Vec<(SinglePauliOperator, Complex64)> {
+    /// Converts a SinglePlusMinusOperator into a vector of tuples of (SinglePauliOperator, Complex64).
     ///
     /// # Arguments
     ///
@@ -184,49 +184,49 @@ impl From<SinglePlusMinusOperator> for Vec<(SingleSpinOperator, Complex64)> {
     ///
     /// # Returns
     ///
-    /// * `Self` - The SinglePlusMinusOperator converted into a vector of tuples of (SingleSpinOperator, Complex64).
+    /// * `Self` - The SinglePlusMinusOperator converted into a vector of tuples of (SinglePauliOperator, Complex64).
     fn from(val: SinglePlusMinusOperator) -> Self {
         match val {
             SinglePlusMinusOperator::Identity => {
-                vec![(SingleSpinOperator::Identity, Complex64::new(1.0, 0.0))]
+                vec![(SinglePauliOperator::Identity, Complex64::new(1.0, 0.0))]
             }
             SinglePlusMinusOperator::Plus => vec![
-                (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
-                (SingleSpinOperator::Y, Complex64::new(0.0, 0.5)),
+                (SinglePauliOperator::X, Complex64::new(0.5, 0.0)),
+                (SinglePauliOperator::Y, Complex64::new(0.0, 0.5)),
             ],
             SinglePlusMinusOperator::Minus => vec![
-                (SingleSpinOperator::X, Complex64::new(0.5, 0.0)),
-                (SingleSpinOperator::Y, Complex64::new(0.0, -0.5)),
+                (SinglePauliOperator::X, Complex64::new(0.5, 0.0)),
+                (SinglePauliOperator::Y, Complex64::new(0.0, -0.5)),
             ],
-            SinglePlusMinusOperator::Z => vec![(SingleSpinOperator::Z, Complex64::new(1.0, 0.0))],
+            SinglePlusMinusOperator::Z => vec![(SinglePauliOperator::Z, Complex64::new(1.0, 0.0))],
         }
     }
 }
 
-impl From<SingleSpinOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
-    /// Converts a SingleSpinOperator into a vector of tuples of (SinglePlusMinusOperator, Complex64).
+impl From<SinglePauliOperator> for Vec<(SinglePlusMinusOperator, Complex64)> {
+    /// Converts a SinglePauliOperator into a vector of tuples of (SinglePlusMinusOperator, Complex64).
     ///
     /// # Arguments
     ///
-    /// * `val` - The SingleSpinOperator to convert.
+    /// * `val` - The SinglePauliOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SingleSpinOperator converted into a vector of tuples of (SinglePlusMinusOperator, Complex64).
-    fn from(val: SingleSpinOperator) -> Self {
+    /// * `Self` - The SinglePauliOperator converted into a vector of tuples of (SinglePlusMinusOperator, Complex64).
+    fn from(val: SinglePauliOperator) -> Self {
         match val {
-            SingleSpinOperator::Identity => {
+            SinglePauliOperator::Identity => {
                 vec![(SinglePlusMinusOperator::Identity, Complex64::new(1.0, 0.0))]
             }
-            SingleSpinOperator::X => vec![
+            SinglePauliOperator::X => vec![
                 (SinglePlusMinusOperator::Plus, Complex64::new(1.0, 0.0)),
                 (SinglePlusMinusOperator::Minus, Complex64::new(1.0, 0.0)),
             ],
-            SingleSpinOperator::Y => vec![
+            SinglePauliOperator::Y => vec![
                 (SinglePlusMinusOperator::Plus, Complex64::new(0.0, -1.0)),
                 (SinglePlusMinusOperator::Minus, Complex64::new(0.0, 1.0)),
             ],
-            SingleSpinOperator::Z => vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))],
+            SinglePauliOperator::Z => vec![(SinglePlusMinusOperator::Z, Complex64::new(1.0, 0.0))],
         }
     }
 }
@@ -362,7 +362,7 @@ impl From<PlusMinusProduct> for Vec<(PauliProduct, Complex64)> {
         let mut new_vec: Vec<(PauliProduct, Complex64)> =
             vec![(PauliProduct::new(), Complex64::new(1.0, 0.0))];
         for (index, single) in value.iter() {
-            let temp_vec: Vec<(SingleSpinOperator, Complex64)> = (*single).into();
+            let temp_vec: Vec<(SinglePauliOperator, Complex64)> = (*single).into();
             let mut temp_new_vec: Vec<(PauliProduct, Complex64)> = Vec::new();
             for (new_op, new_prefactor) in temp_vec {
                 for (product, prefactor) in new_vec.iter() {
@@ -451,9 +451,9 @@ impl schemars::JsonSchema for PlusMinusProduct {
     }
 }
 
-impl crate::MinSupportedVersion for PlusMinusProduct {
-    fn min_supported_version() -> (usize, usize, usize) {
-        (1, 1, 0)
+impl crate::SerializationSupport for PlusMinusProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::PlusMinusProduct
     }
 }
 
@@ -830,6 +830,26 @@ impl PlusMinusProduct {
         PlusMinusProduct {
             items: TinyVec::<[(usize, SinglePlusMinusOperator); 5]>::with_capacity(cap),
         }
+    }
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(&self) -> Result<struqture_1::spins::PlusMinusProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_1_product = struqture_1::spins::PlusMinusProduct::from_str(&self_string)
+            .map_err(|err| StruqtureError::GenericError {
+                msg: format!("{}", err),
+            })?;
+        Ok(struqture_1_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::spins::PlusMinusProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
     }
 }
 

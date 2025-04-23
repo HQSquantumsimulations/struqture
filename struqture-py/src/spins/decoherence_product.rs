@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionSystemWrapper;
+use crate::fermions::FermionOperatorWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -19,11 +19,11 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
-use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{DecoherenceProduct, SingleDecoherenceOperator};
+use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{SpinIndex, SymmetricIndex};
 use struqture_py_macros::{mappings, product_wrapper};
 
@@ -35,8 +35,8 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///
 /// `DecoherenceProduct().x(0).z(2)`.
 ///
-/// DecoherenceProduct is  supposed to be used as input for the function `add_noise`,
-/// for instance in the spin system classes SpinLindbladOpenSystem, SpinLindbladNoiseSystem or SpinLindbladNoiseOperator,
+/// DecoherenceProduct is supposed to be used as input for the function `add_noise`,
+/// for instance in the spin system classes PauliLindbladOpenSystem or PauliLindbladNoiseOperator,
 /// or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.
 ///
 /// Returns:
@@ -62,7 +62,7 @@ pub struct DecoherenceProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SpinIndex, SymmetricIndex)]
+#[product_wrapper(SpinIndex, SymmetricIndex, Calculus)]
 impl DecoherenceProductWrapper {
     /// Create an empty DecoherenceProduct.
     ///

@@ -45,7 +45,6 @@ pub enum StruqturePyError {
 ///
 #[pymodule]
 fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
-    // pyo3_log::init();
     let wrapper1 = wrap_pymodule!(spins::spins);
     module.add_wrapped(wrapper1)?;
 
@@ -74,7 +73,6 @@ fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
 use num_complex::Complex64;
 use numpy::{IntoPyArray, PyArray1};
 use struqture::CooSparseMatrix;
-// use pyo3::prelude::*;
 
 pub type PyCooMatrix = (
     Py<PyArray1<Complex64>>,

@@ -10,14 +10,16 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::convert_cf_to_pyobject;
 use num_complex::Complex64;
 use pyo3::prelude::*;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
-use qoqo_calculator_pyo3::{CalculatorComplexWrapper, CalculatorFloatWrapper};
+use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 #[cfg(feature = "json_schema")]
 use struqture::{spins::PlusMinusLindbladNoiseOperator, STRUQTURE_VERSION};
 use struqture_py::spins::{
-    PlusMinusLindbladNoiseOperatorWrapper, PlusMinusProductWrapper, SpinLindbladNoiseSystemWrapper,
+    PauliLindbladNoiseOperatorWrapper, PlusMinusLindbladNoiseOperatorWrapper,
+    PlusMinusProductWrapper,
 };
 use test_case::test_case;
 
@@ -30,25 +32,6 @@ fn new_noisesystem(py: Python) -> Bound<PlusMinusLindbladNoiseOperatorWrapper> {
         .downcast::<PlusMinusLindbladNoiseOperatorWrapper>()
         .unwrap()
         .to_owned()
-}
-
-// helper function to convert CalculatorFloat into a python object
-fn convert_cf_to_pyobject(py: Python, parameter: CalculatorFloat) -> Bound<CalculatorFloatWrapper> {
-    let parameter_type = py.get_type::<CalculatorFloatWrapper>();
-    match parameter {
-        CalculatorFloat::Float(x) => parameter_type
-            .call1((x,))
-            .unwrap()
-            .downcast::<CalculatorFloatWrapper>()
-            .unwrap()
-            .to_owned(),
-        CalculatorFloat::Str(x) => parameter_type
-            .call1((x,))
-            .unwrap()
-            .downcast::<CalculatorFloatWrapper>()
-            .unwrap()
-            .to_owned(),
-    }
 }
 
 /// Test default function of PlusMinusLindbladNoiseOperatorWrapper
@@ -103,9 +86,9 @@ fn test_empty_clone() {
     });
 }
 
-/// Test add_operator_product and remove functions of SpinSystem
+/// Test add_operator_product and remove functions of PMLNO
 #[test]
-fn spin_system_test_add_operator_product_remove() {
+fn _system_test_add_operator_product_remove() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let system = new_noisesystem(py);
@@ -689,48 +672,7 @@ fn test_richcmp() {
 }
 
 #[test]
-fn test_separate() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
-        let pmp = new_noisesystem(py);
-        pmp.call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("0Z1Z", "0Z"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("0Z1Z", "0Z1Z"), 1.0))
-            .unwrap();
-        pmp.call_method1("add_operator_product", (("0Z1+", "0Z1Z"), 1.0))
-            .unwrap();
-
-        let pmp_rem = new_noisesystem(py);
-        pmp_rem
-            .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
-            .unwrap();
-        pmp_rem
-            .call_method1("add_operator_product", (("0Z1Z", "0Z"), 1.0))
-            .unwrap();
-
-        let pmp_sys = new_noisesystem(py);
-        pmp_sys
-            .call_method1("add_operator_product", (("0Z1Z", "0Z1Z"), 1.0))
-            .unwrap();
-        pmp_sys
-            .call_method1("add_operator_product", (("0Z1+", "0Z1Z"), 1.0))
-            .unwrap();
-
-        let result = pmp.call_method1("separate_into_n_terms", (2, 2)).unwrap();
-        let equal = bool::extract_bound(
-            &result
-                .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(equal);
-    })
-}
-
-#[test]
-fn test_from_spin_sys() {
+fn test_from_pauli_op() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_noisesystem(py);
@@ -775,10 +717,9 @@ fn test_from_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let pp = pp_type.call1((number_spins,)).unwrap();
-        pp.downcast::<SpinLindbladNoiseSystemWrapper>()
+        let pp_type = py.get_type::<PauliLindbladNoiseOperatorWrapper>();
+        let pp = pp_type.call0().unwrap();
+        pp.downcast::<PauliLindbladNoiseOperatorWrapper>()
             .unwrap()
             .call_method1(
                 "add_operator_product",
@@ -793,20 +734,20 @@ fn test_from_spin_sys() {
 
         let result = py
             .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
-            .call_method1("from_spin_noise_system", (pp,))
+            .call_method1("from_pauli_noise_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<PlusMinusLindbladNoiseOperatorWrapper>()
-            .call_method1("from_spin_noise_system", ("No",));
+            .call_method1("from_pauli_noise_operator", ("No",));
         assert!(result.is_err())
     })
 }
 
 #[test]
-fn test_to_spin_sys() {
+fn test_to_pauli_noise_operator() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
         let pmp = new_noisesystem(py);
@@ -821,21 +762,19 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let number_spins: Option<usize> = Some(1);
-        let pp_type = py.get_type::<SpinLindbladNoiseSystemWrapper>();
-        let sys = pp_type.call1((number_spins,)).unwrap();
-        sys.downcast::<SpinLindbladNoiseSystemWrapper>()
-            .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    ("0X", "0X"),
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(0.25, 0.0),
-                    },
-                ),
-            )
-            .unwrap();
+        let pp_type = py.get_type::<PauliLindbladNoiseOperatorWrapper>();
+        let sys = pp_type.call0().unwrap();
+        sys.downcast::<PauliLindbladNoiseOperatorWrapper>().unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (
+                ("0X", "0X"),
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.25, 0.0),
+                },
+            ),
+        )
+        .unwrap();
         sys.call_method1(
             "add_operator_product",
             (
@@ -867,15 +806,13 @@ fn test_to_spin_sys() {
         )
         .unwrap();
 
-        let result = pmp
-            .call_method1("to_spin_noise_system", (number_spins,))
-            .unwrap();
+        let result = pmp.call_method0("to_pauli_noise_operator").unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
 }
 
-/// Test jordan_wigner() method of PlusMinusNoiseOperator
+/// Test jordan_wigner() method of PlusMinusLindbladNoiseOperator
 #[test]
 fn test_jordan_wigner() {
     pyo3::prepare_freethreaded_python();
@@ -888,13 +825,13 @@ fn test_jordan_wigner() {
         let empty = bool::extract_bound(&flno.call_method0("is_empty").unwrap()).unwrap();
         assert!(!empty);
 
-        let slno = pmno.call_method0("to_spin_noise_system").unwrap();
+        let slno = pmno.call_method0("to_pauli_noise_operator").unwrap();
 
-        let number_modes =
-            usize::extract_bound(&flno.call_method0("number_modes").unwrap()).unwrap();
-        let number_spins =
+        let current_number_modes =
+            usize::extract_bound(&flno.call_method0("current_number_modes").unwrap()).unwrap();
+        let current_number_spins =
             usize::extract_bound(&slno.call_method0("current_number_spins").unwrap()).unwrap();
-        assert_eq!(number_modes, number_spins)
+        assert_eq!(current_number_modes, current_number_spins)
     });
 }
 
@@ -921,31 +858,31 @@ fn test_json_schema() {
             .unwrap();
         let min_version: String =
             String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.1.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
 }
 
-#[cfg(feature = "unstable_struqture_2_import")]
+#[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {
     pyo3::prepare_freethreaded_python();
     pyo3::Python::with_gil(|py| {
-        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}");
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":1}}");
         let sys_2 = new_noisesystem(py);
         sys_2
             .call_method1("add_operator_product", (("0Z", "0Z"), 1.0))
             .unwrap();
 
         let sys_from_1 = sys_2
-            .call_method1("from_json_struqture_2", (json_string,))
+            .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal =
             bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
-        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"serialisation_meta\":{\"type_name\":\"PlusMinusLindbladNoiseOperator\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}}");
-        let sys_from_1 = sys_2.call_method1("from_json_struqture_2", (error_json_string,));
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"0Z\",\"0Z\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":1}}");
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(sys_from_1.is_err());
     });
 }

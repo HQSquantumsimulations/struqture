@@ -10,7 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionSystemWrapper;
+use super::{DecoherenceProductWrapper, PauliProductWrapper};
+use crate::fermions::FermionOperatorWrapper;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -21,17 +22,15 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
-use struqture::fermions::FermionSystem;
 use struqture::mappings::JordanWignerSpinToFermion;
 use struqture::spins::{
     DecoherenceProduct, PauliProduct, PlusMinusProduct, SinglePlusMinusOperator,
 };
+use struqture::SerializationSupport;
 use struqture::SymmetricIndex;
-use struqture_py_macros::{mappings, product_wrapper};
-
-use super::{DecoherenceProductWrapper, PauliProductWrapper};
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
+use struqture_py_macros::{mappings, product_wrapper};
 
 /// PlusMinusProducts are combinations of SinglePlusMinusOperators on specific qubits.
 ///
@@ -66,7 +65,7 @@ pub struct PlusMinusProductWrapper {
 }
 
 #[mappings(JordanWignerSpinToFermion)]
-#[product_wrapper(SymmetricIndex)]
+#[product_wrapper(SymmetricIndex, SpinIndex)]
 impl PlusMinusProductWrapper {
     /// Create an empty PlusMinusProduct.
     ///
@@ -138,77 +137,6 @@ impl PlusMinusProductWrapper {
         })
     }
 
-    /// Get the pauli matrix corresponding to the index.
-    ///
-    /// Args:
-    ///     index (int): Index of get object.
-    ///
-    /// Returns:
-    ///     Optional[str]: The key's corresponding value (if it exists).
-    pub fn get(&self, index: usize) -> Option<String> {
-        self.internal.get(&index).map(|x| format!("{}", x))
-    }
-
-    /// Return a list of the unsorted keys in self.
-    ///
-    /// Returns:
-    ///     List[int]: The sequence of qubit index keys of self.
-    pub fn keys(&self) -> Vec<usize> {
-        let keys: Vec<usize> = self.internal.iter().map(|(k, _)| k).copied().collect();
-        keys
-    }
-
-    /// Return maximum index in self.
-    ///
-    /// Returns:
-    ///     int: Maximum index.
-    pub fn current_number_spins(&self) -> usize {
-        self.internal.current_number_spins()
-    }
-
-    /// Return number of entries in object.
-    ///
-    /// Returns:
-    ///     int: The length of the content of the object.
-    pub fn __len__(&self) -> usize {
-        self.internal.iter().len()
-    }
-
-    /// Remap the qubits in a new instance of self (returned).
-    ///
-    /// Args:
-    ///     mapping (Dict[int, int]): The map containing the {qubit: qubit} mapping to use.
-    ///
-    /// Returns:
-    ///     self: The new instance of self with the qubits remapped.
-    pub fn remap_qubits(&self, mapping: HashMap<usize, usize>) -> PlusMinusProductWrapper {
-        PlusMinusProductWrapper {
-            internal: self.internal.remap_qubits(&mapping),
-        }
-    }
-
-    /// Return the concatenation of two objects of type `self` with no overlapping qubits.
-    ///
-    /// Args:
-    ///     other (self): The object to concatenate self with.
-    ///
-    /// Returns:
-    ///     List[int]: A list of the corresponding creator indices.
-    ///
-    /// Raises:
-    ///     ValueError: The two objects could not be concatenated.
-    pub fn concatenate(&self, other: PlusMinusProductWrapper) -> PyResult<PlusMinusProductWrapper> {
-        let concatenated = self.internal.concatenate(other.internal).map_err(|err| {
-            PyValueError::new_err(format!(
-                "The two objects could not be concatenated: {:?}",
-                err
-            ))
-        })?;
-        Ok(PlusMinusProductWrapper {
-            internal: concatenated,
-        })
-    }
-
     /// Creates a list of corresponding (PlusMinusProduct, CalculatorComplex) tuples from the input PauliProduct or DecoherenceProduct.
     ///
     /// Args:
@@ -269,16 +197,6 @@ impl PlusMinusProductWrapper {
         }
     }
 
-    /// DEPRECATED: Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
-    ///
-    /// This function is deprecated, please use `to_pauli_product_list`
-    ///
-    /// Returns:
-    ///     List[Tuple[(PauliProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
-    pub fn to_pauli_product(&self) -> Vec<(PauliProductWrapper, CalculatorComplexWrapper)> {
-        self.to_pauli_product_list()
-    }
-
     /// Convert `self` into a list of (PauliProduct, CalculatorComplex) tuples.
     ///
     /// Returns:
@@ -300,18 +218,6 @@ impl PlusMinusProductWrapper {
             })
             .collect();
         result_pyo3
-    }
-
-    /// DEPRECATED: Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.
-    ///
-    /// This function is deprecated, please use `to_decoherence_product_list`
-    ///
-    /// Returns:
-    ///     List[Tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
-    pub fn to_decoherence_product(
-        &self,
-    ) -> Vec<(DecoherenceProductWrapper, CalculatorComplexWrapper)> {
-        self.to_decoherence_product_list()
     }
 
     /// Convert `self` into a list of (DecoherenceProduct, CalculatorComplex) tuples.

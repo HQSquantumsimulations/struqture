@@ -23,7 +23,11 @@ use struqture::fermions::FermionProduct;
 use struqture::prelude::*;
 use struqture::spins::PauliProduct;
 use struqture::StruqtureError;
+use struqture::STRUQTURE_VERSION;
 
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::mixed_systems::{MixedOperator, MixedProduct};
 use struqture::OperateOnDensityMatrix;
 use struqture::SpinIndex;
@@ -38,17 +42,14 @@ fn new(
     n_pauli: usize,
     n_bosons: usize,
     n_fermions: usize,
-    number_spins: Vec<usize>,
+    current_number_spins: Vec<usize>,
     number_bosonic_modes: Vec<usize>,
     number_fermionic_modes: Vec<usize>,
 ) {
     let mo = MixedOperator::new(n_pauli, n_bosons, n_fermions);
     assert!(mo.is_empty());
-    assert_eq!(number_spins, mo.number_spins());
-    assert_eq!(number_spins, mo.current_number_spins());
-    assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
+    assert_eq!(current_number_spins, mo.current_number_spins());
     assert_eq!(number_bosonic_modes, mo.current_number_bosonic_modes());
-    assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
     assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
@@ -61,17 +62,14 @@ fn new_with_capacity(
     n_pauli: usize,
     n_bosons: usize,
     n_fermions: usize,
-    number_spins: Vec<usize>,
+    current_number_spins: Vec<usize>,
     number_bosonic_modes: Vec<usize>,
     number_fermionic_modes: Vec<usize>,
 ) {
     let mo = MixedOperator::new(n_pauli, n_bosons, n_fermions);
     assert!(mo.is_empty());
-    assert_eq!(number_spins, mo.number_spins());
-    assert_eq!(number_spins, mo.current_number_spins());
-    assert_eq!(number_bosonic_modes, mo.number_bosonic_modes());
+    assert_eq!(current_number_spins, mo.current_number_spins());
     assert_eq!(number_bosonic_modes, mo.current_number_bosonic_modes());
-    assert_eq!(number_fermionic_modes, mo.number_fermionic_modes());
     assert_eq!(number_fermionic_modes, mo.current_number_fermionic_modes());
 }
 
@@ -94,38 +92,8 @@ fn empty_clone_options() {
         MixedOperator::with_capacity(1, 1, 1, 2)
     );
 }
-// Test the current_number_spins function of the MixedOperator
-#[test]
-fn internal_map_current_number_spins_and_modes() {
-    let pp_0: MixedProduct = MixedProduct::new(
-        [PauliProduct::new().x(0)],
-        [BosonProduct::new([0], [1]).unwrap()],
-        [FermionProduct::new([0], [2]).unwrap()],
-    )
-    .unwrap();
-    let pp_2: MixedProduct = MixedProduct::new(
-        [PauliProduct::new().z(2)],
-        [BosonProduct::new([0], [3]).unwrap()],
-        [FermionProduct::new([0], [3]).unwrap()],
-    )
-    .unwrap();
-    let mut mo = MixedOperator::new(1, 1, 1);
-    assert_eq!(mo.current_number_spins(), vec![0_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![0_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![0_usize]);
 
-    mo.set(pp_0, CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(mo.current_number_spins(), vec![1_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![2_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![3_usize]);
-
-    mo.set(pp_2, CalculatorComplex::from(0.5)).unwrap();
-    assert_eq!(mo.current_number_spins(), vec![3_usize]);
-    assert_eq!(mo.current_number_bosonic_modes(), vec![4_usize]);
-    assert_eq!(mo.current_number_fermionic_modes(), vec![4_usize]);
-}
-
-// Test the len function of the SpinOperator
+// Test the len function of the PauliOperator
 #[test]
 fn internal_map_len() {
     let pp_2: MixedProduct = MixedProduct::new(
@@ -177,7 +145,7 @@ fn internal_map_keys() {
     }
 }
 
-// Test the set, get and remove functions of the SpinOperator
+// Test the set, get and remove functions of the PauliOperator
 #[test]
 fn internal_map_set_get_remove() {
     let pp_2: MixedProduct = MixedProduct::new(
@@ -377,7 +345,7 @@ fn negative_mo() {
     assert_eq!(-mo_0, mo_0_minus);
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the addition: PauliOperator + PauliOperator
 #[test]
 fn add_so_so() {
     let pp_0: MixedProduct = MixedProduct::new(
@@ -409,7 +377,7 @@ fn add_so_so() {
     assert_eq!(mo_0 + mo_1, Ok(mo_0_1));
 }
 
-// Test the addition: SpinOperator + SpinOperator
+// Test the addition: PauliOperator + PauliOperator
 #[test]
 fn sub_so_so() {
     let pp_0: MixedProduct = MixedProduct::new(
@@ -441,7 +409,7 @@ fn sub_so_so() {
     assert_eq!(mo_0 - mo_1, Ok(mo_0_1));
 }
 
-// Test the multiplication: SpinOperator * Calculatorcomplex
+// Test the multiplication: PauliOperator * Calculatorcomplex
 #[test]
 fn mul_so_cf() {
     let pp_0: MixedProduct = MixedProduct::new(
@@ -461,7 +429,7 @@ fn mul_so_cf() {
     assert_eq!(mo_0 * CalculatorFloat::from(3.0), mo_0_1);
 }
 
-// Test the multiplication: SpinOperator * Calculatorcomplex
+// Test the multiplication: PauliOperator * Calculatorcomplex
 #[test]
 fn mul_so_cc() {
     let pp_0: MixedProduct = MixedProduct::new(
@@ -679,13 +647,9 @@ fn serde_json() {
     assert_eq!(mo, deserialized);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: MixedProduct = MixedProduct::new(
         [PauliProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
@@ -715,15 +679,21 @@ fn serde_readable() {
             Token::U64(1),
             Token::Str("n_fermions"),
             Token::U64(1),
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("MixedOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -752,10 +722,6 @@ fn bincode() {
 
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: MixedProduct = MixedProduct::new(
         [PauliProduct::new().z(2)],
         [BosonProduct::new([0], [3]).unwrap()],
@@ -780,7 +746,7 @@ fn serde_compact() {
             Token::Tuple { len: 2 },
             Token::U64(2),
             Token::UnitVariant {
-                name: "SingleSpinOperator",
+                name: "SinglePauliOperator",
                 variant: "Z",
             },
             Token::TupleEnd,
@@ -825,15 +791,21 @@ fn serde_compact() {
             Token::U64(1),
             Token::Str("n_fermions"),
             Token::U64(1),
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("MixedOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -865,4 +837,37 @@ fn test_mixed_operator_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1: struqture_1::mixed_systems::MixedProduct =
+        struqture_1::mixed_systems::MixedIndex::new(
+            [struqture_1::spins::PauliProduct::from_str("0X").unwrap()],
+            [struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap()],
+            [
+                struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap(),
+                struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap(),
+            ],
+        )
+        .unwrap();
+    let mut ss_1 = struqture_1::mixed_systems::MixedSystem::new([None], [None], [None, None]);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = MixedProduct::new(
+        [PauliProduct::new().x(0)],
+        [BosonProduct::new([0], [1]).unwrap()],
+        [
+            FermionProduct::new([0], [0]).unwrap(),
+            FermionProduct::new([0], [1]).unwrap(),
+        ],
+    )
+    .unwrap();
+    let mut ss_2 = MixedOperator::new(1, 1, 2);
+    ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(MixedOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

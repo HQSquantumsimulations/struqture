@@ -150,8 +150,8 @@ fn test_jw_pauli_decoherence_product() {
 }
 
 #[test]
-fn test_jw_spin_operator() {
-    let mut so = SpinOperator::new();
+fn test_jw_operator() {
+    let mut so = PauliOperator::new();
     let pp1 = PauliProduct::new().z(0).y(1).x(2);
     let pp2 = PauliProduct::new().y(1).x(2).z(3);
     let cc1 = CalculatorComplex::new(1.0, 2.0);
@@ -165,8 +165,8 @@ fn test_jw_spin_operator() {
 }
 
 #[test]
-fn test_jw_spin_hamiltonian() {
-    let mut sh = SpinHamiltonian::new();
+fn test_jw_hamiltonian() {
+    let mut sh = PauliHamiltonian::new();
 
     let pp1 = PauliProduct::new().z(0).y(1).x(2);
     let pp2 = PauliProduct::new().y(1).x(2).z(3);
@@ -196,7 +196,7 @@ fn test_jw_spin_hamiltonian() {
 #[test]
 fn test_jw_spin_noise_operator() {
     let mut fno = FermionLindbladNoiseOperator::new();
-    let mut sno = SpinLindbladNoiseOperator::new();
+    let mut sno = PauliLindbladNoiseOperator::new();
 
     assert_eq!(sno.jordan_wigner(), fno);
 
@@ -212,42 +212,20 @@ fn test_jw_spin_noise_operator() {
 
 #[test]
 fn test_jw_spin_systems() {
-    // Test SpinSystem
-    let mut so = SpinOperator::new();
-    so.add_operator_product(PauliProduct::new().x(1), CalculatorComplex::new(1.0, 1.0))
-        .unwrap();
-    let ss = SpinSystem::from_operator(so.clone(), Some(5)).unwrap();
-    let fo = so.jordan_wigner();
-    let fs = FermionSystem::from_operator(fo, Some(5)).unwrap();
-
-    assert_eq!(ss.jordan_wigner(), fs);
-
-    // Test SpinHamiltonianSystem
-    let mut sh = SpinHamiltonian::new();
+    let mut sh = PauliHamiltonian::new();
     sh.add_operator_product(PauliProduct::new().x(1), 1.0.into())
         .unwrap();
-    let shs = SpinHamiltonianSystem::from_hamiltonian(sh.clone(), Some(5)).unwrap();
     let fh = sh.jordan_wigner();
-    let fhs = FermionHamiltonianSystem::from_hamiltonian(fh, Some(5)).unwrap();
 
-    assert_eq!(shs.jordan_wigner(), fhs);
-
-    // Test SpinLindbladNoiseSystem
-    let mut sno = SpinLindbladNoiseOperator::new();
+    let mut sno = PauliLindbladNoiseOperator::new();
     let pp1 = DecoherenceProduct::new().x(1);
     let pp2 = DecoherenceProduct::new().iy(2);
     sno.add_operator_product((pp1, pp2), CalculatorComplex::new(1.0, 2.0))
         .unwrap();
-    let sns = SpinLindbladNoiseSystem::from_operator(sno.clone(), Some(5)).unwrap();
     let fno = sno.jordan_wigner();
-    let fns = FermionLindbladNoiseSystem::from_operator(fno, Some(5)).unwrap();
 
-    assert_eq!(sns.jordan_wigner(), fns);
-
-    // Test SpinLindbladOpenSystem
-
-    let sos = SpinLindbladOpenSystem::group(shs, sns).unwrap();
-    let fos = FermionLindbladOpenSystem::group(fhs, fns).unwrap();
+    let sos = PauliLindbladOpenSystem::group(sh, sno).unwrap();
+    let fos = FermionLindbladOpenSystem::group(fh, fno).unwrap();
 
     assert_eq!(sos.jordan_wigner(), fos);
 }

@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use super::FermionProductWrapper;
-use crate::spins::SpinHamiltonianSystemWrapper;
+use crate::spins::PauliHamiltonianWrapper;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -23,9 +23,9 @@ use std::str::FromStr;
 use struqture::fermions::*;
 use struqture::mappings::JordanWignerFermionToSpin;
 use struqture::prelude::*;
-use struqture::spins::*;
+use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture_py_macros::{mappings, product_wrapper};
 
 /// A product of fermionic creation and annihilation operators.

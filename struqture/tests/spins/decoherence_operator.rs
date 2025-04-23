@@ -19,9 +19,9 @@ use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
-use struqture::prelude::*;
-use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliProduct, SpinOperator};
+use struqture::spins::{DecoherenceOperator, DecoherenceProduct, PauliOperator, PauliProduct};
 use struqture::SpinIndex;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 use test_case::test_case;
 
 // Test the new function of the DecoherenceOperator
@@ -49,7 +49,7 @@ fn empty_clone_options() {
 
 // Test the current_number_spins function of the DecoherenceOperator
 #[test]
-fn internal_map_current_number_spins() {
+fn internal_map_number_spins() {
     let pp_0: DecoherenceProduct = DecoherenceProduct::new().x(0);
     let pp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
     let mut so = DecoherenceOperator::new();
@@ -73,7 +73,7 @@ fn internal_map_len() {
 #[test]
 fn internal_map_set_get_dict() {
     let mut system = DecoherenceOperator::new();
-    assert_eq!(system.number_spins(), 0_usize);
+    assert_eq!(system.current_number_spins(), 0_usize);
     let pp_0: DecoherenceProduct = DecoherenceProduct::new().z(0);
 
     // 1) Test set and get functions
@@ -84,7 +84,7 @@ fn internal_map_set_get_dict() {
     system
         .set(pp_0.clone(), CalculatorComplex::from(0.5))
         .unwrap();
-    assert_eq!(system.number_spins(), 1_usize);
+    assert_eq!(system.current_number_spins(), 1_usize);
     assert_eq!(system.get(&pp_0), &CalculatorComplex::from(0.5));
 
     // 2) Test iter, keys, values functions
@@ -208,82 +208,6 @@ fn into_iter_from_iter_extend() {
         .unwrap();
 
     assert_eq!(system, system_1);
-}
-
-// Test the separation of terms
-#[test_case(1)]
-#[test_case(2)]
-#[test_case(3)]
-fn separate_out_terms(number_spins: usize) {
-    let pp_1_a: DecoherenceProduct = DecoherenceProduct::new().z(0);
-    let pp_1_b: DecoherenceProduct = DecoherenceProduct::new().x(1);
-    let pp_2_a: DecoherenceProduct = DecoherenceProduct::new().z(0).x(2);
-    let pp_2_b: DecoherenceProduct = DecoherenceProduct::new().x(1).iy(2);
-    let pp_3_a: DecoherenceProduct = DecoherenceProduct::new().z(0).z(1).z(2);
-    let pp_3_b: DecoherenceProduct = DecoherenceProduct::new().x(1).x(2).z(0);
-
-    let mut allowed: Vec<(DecoherenceProduct, f64)> = Vec::new();
-    let mut not_allowed: Vec<(DecoherenceProduct, f64)> = vec![
-        (pp_1_a.clone(), 1.0),
-        (pp_1_b.clone(), 1.1),
-        (pp_2_a.clone(), 1.2),
-        (pp_2_b.clone(), 1.3),
-        (pp_3_a.clone(), 1.4),
-        (pp_3_b.clone(), 1.5),
-    ];
-
-    match number_spins {
-        1 => {
-            allowed.push((pp_1_a.clone(), 1.0));
-            allowed.push((pp_1_b.clone(), 1.1));
-            not_allowed.remove(0);
-            not_allowed.remove(0);
-        }
-        2 => {
-            allowed.push((pp_2_a.clone(), 1.2));
-            allowed.push((pp_2_b.clone(), 1.3));
-            not_allowed.remove(2);
-            not_allowed.remove(2);
-        }
-        3 => {
-            allowed.push((pp_3_a.clone(), 1.4));
-            allowed.push((pp_3_b.clone(), 1.5));
-            not_allowed.remove(4);
-            not_allowed.remove(4);
-        }
-        _ => panic!(),
-    }
-
-    let mut separated = DecoherenceOperator::new();
-    for (key, value) in allowed.iter() {
-        separated
-            .add_operator_product(key.clone(), value.into())
-            .unwrap();
-    }
-    let mut remainder = DecoherenceOperator::new();
-    for (key, value) in not_allowed.iter() {
-        remainder
-            .add_operator_product(key.clone(), value.into())
-            .unwrap();
-    }
-
-    let mut so = DecoherenceOperator::new();
-    so.add_operator_product(pp_1_a, CalculatorComplex::from(1.0))
-        .unwrap();
-    so.add_operator_product(pp_1_b, CalculatorComplex::from(1.1))
-        .unwrap();
-    so.add_operator_product(pp_2_a, CalculatorComplex::from(1.2))
-        .unwrap();
-    so.add_operator_product(pp_2_b, CalculatorComplex::from(1.3))
-        .unwrap();
-    so.add_operator_product(pp_3_a, CalculatorComplex::from(1.4))
-        .unwrap();
-    so.add_operator_product(pp_3_b, CalculatorComplex::from(1.5))
-        .unwrap();
-
-    let result = so.separate_into_n_terms(number_spins).unwrap();
-    assert_eq!(result.0, separated);
-    assert_eq!(result.1, remainder);
 }
 
 // Test the negative operation: -DecoherenceOperator
@@ -477,10 +401,10 @@ fn mul_so_cf() {
     assert_eq!(so_0 * CalculatorFloat::from(3.0), so_0_1);
 }
 
-// Test the From<SpinOperator> trait
+// Test the From<PauliOperator> trait
 #[test]
-fn test_from_spin_operator() {
-    let mut so = SpinOperator::new();
+fn test_from_pauli_operator() {
+    let mut so = PauliOperator::new();
     let pp_0 = PauliProduct::new().x(0).y(1).z(2);
     let c0 = CalculatorComplex::new(1.0, 2.0);
     let pp_1 = PauliProduct::new().x(0).y(1).y(2);
@@ -580,10 +504,6 @@ fn serde_json() {
 /// Test DecoherenceOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp = DecoherenceProduct::new().x(0);
     let mut so = DecoherenceOperator::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
@@ -603,15 +523,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("DecoherenceOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -636,10 +562,6 @@ fn bincode() {
 /// Test DecoherenceOperator Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp = DecoherenceProduct::new().x(0);
     let mut so = DecoherenceOperator::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
@@ -675,15 +597,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("DecoherenceOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -704,4 +632,20 @@ fn test_decoherence_operator_schema() {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_1::spins::DecoherenceProduct::from_str("0X1iY25Z").unwrap();
+    let mut ss_1 = struqture_1::spins::DecoherenceOperator::new();
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, pp_1.clone(), 1.0.into()).unwrap();
+
+    let pp_2 = DecoherenceProduct::new().x(0).iy(1).z(25);
+    let mut ss_2 = DecoherenceOperator::new();
+    ss_2.set(pp_2.clone(), 1.0.into()).unwrap();
+
+    assert!(DecoherenceOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

@@ -18,6 +18,9 @@ use std::cmp::Ordering;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::fermions::*;
 use struqture::prelude::*;
 use struqture::{CorrespondsTo, GetValue, StruqtureError};
@@ -584,4 +587,14 @@ fn test_fermion_product_schema() {
     let value = serde_json::to_value(pp).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp = struqture_1::fermions::FermionProduct::from_str("c0a1").unwrap();
+    let pp_2 = FermionProduct::new([0], [1]).unwrap();
+    assert!(FermionProduct::from_struqture_1(&pp).unwrap() == pp_2);
+    assert!(pp == pp_2.to_struqture_1().unwrap());
 }

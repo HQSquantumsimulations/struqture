@@ -22,13 +22,7 @@ mod mixed_operator;
 
 mod mixed_plus_minus_operator;
 
-mod mixed_system;
-
 mod mixed_hamiltonian;
-
-mod mixed_hamiltonian_system;
-
-mod mixed_noise_system;
 
 mod mixed_noise_operator;
 

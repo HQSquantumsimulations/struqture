@@ -21,10 +21,10 @@
 pub trait JordanWignerFermionToSpin {
     /// The Output type for the JordanWigner transformation
     ///
-    /// For a FermionProduct, HermitianFermionProduct or FermionOperator it will be a SpinOperator
-    /// For a FermionHamiltonian it will be a SpinHamiltonian
-    /// For a FermionLindbladNoiseOperator it will be a SpinLindbladNoiseOperator
-    /// For a FermionLindbladOpenSystem it will be a SpinLindbladOpenSystem etc.
+    /// For a FermionProduct, HermitianFermionProduct or FermionOperator it will be a PauliOperator
+    /// For a FermionHamiltonian it will be a PauliHamiltonian
+    /// For a FermionLindbladNoiseOperator it will be a PauliLindbladNoiseOperator
+    /// For a FermionLindbladOpenSystem it will be a PauliLindbladOpenSystem etc.
     type Output;
 
     /// Transform the given fermionic object into a spin object using
@@ -35,10 +35,10 @@ pub trait JordanWignerFermionToSpin {
 pub trait JordanWignerSpinToFermion {
     /// The Output type for the JordanWigner transformation
     ///
-    /// For a PauliProduct, SpinOperator or PlusMinusOperator it will be a FermionOperator
-    /// For a SpinHamiltonian it will be a FermionHamiltonian
-    /// For a SpinLindbladNoiseOperator it will be a FermionLindbladNoiseOperator
-    /// For a SpinLindbladOpenSystem it will be a FermionLindbladOpenSystem
+    /// For a PauliProduct, PauliOperator or PlusMinusOperator it will be a FermionOperator
+    /// For a PauliHamiltonian it will be a FermionHamiltonian
+    /// For a PauliLindbladNoiseOperator it will be a FermionLindbladNoiseOperator
+    /// For a PauliLindbladOpenSystem it will be a FermionLindbladOpenSystem
     type Output;
 
     /// Transform the given spin object into a fermionic object using

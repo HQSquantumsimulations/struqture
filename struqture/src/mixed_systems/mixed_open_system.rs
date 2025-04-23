@@ -10,15 +10,14 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{MixedHamiltonianSystem, MixedLindbladNoiseSystem, OperateOnMixedSystems};
+use super::{MixedHamiltonian, MixedLindbladNoiseOperator, OperateOnMixedSystems};
 use crate::{OpenSystem, OperateOnDensityMatrix, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::ops;
-use tinyvec::TinyVec;
 
-/// MixedLindbladOpenSystems are representations of open systems of spins, where a system (MixedHamiltonianSystem) interacts with the environment via noise (MixedLindbladNoiseSystem).
+/// MixedLindbladOpenSystems are representations of open systems of spins, where a system (MixedHamiltonian) interacts with the environment via noise (MixedLindbladNoiseOperator).
 ///
 /// # Example
 ///
@@ -30,7 +29,7 @@ use tinyvec::TinyVec;
 /// use struqture::fermions::FermionProduct;
 /// use struqture::mixed_systems::{MixedLindbladOpenSystem, MixedDecoherenceProduct, HermitianMixedProduct};
 ///
-/// let mut system = MixedLindbladOpenSystem::new([Some(2_usize)], [Some(2_usize)], [Some(2_usize)]);
+/// let mut system = MixedLindbladOpenSystem::new(1, 1, 1);
 ///
 /// let pp_0x1x_a1_c0a1: MixedDecoherenceProduct = MixedDecoherenceProduct::new(
 ///     [DecoherenceProduct::new().x(0).x(1)],
@@ -56,17 +55,20 @@ use tinyvec::TinyVec;
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct MixedLindbladOpenSystem {
-    /// The MixedHamiltonianSystem representing the system terms of the open system
-    system: MixedHamiltonianSystem,
-    /// The MixedLindbladNoiseSystem representing the noise terms of the open system
-    noise: MixedLindbladNoiseSystem,
+    /// The MixedHamiltonian representing the system terms of the open system
+    system: MixedHamiltonian,
+    /// The MixedLindbladNoiseOperator representing the noise terms of the open system
+    noise: MixedLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for MixedLindbladOpenSystem {}
-
+impl crate::SerializationSupport for MixedLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedLindbladOpenSystem
+    }
+}
 impl OpenSystem<'_> for MixedLindbladOpenSystem {
-    type System = MixedHamiltonianSystem;
-    type Noise = MixedLindbladNoiseSystem;
+    type System = MixedHamiltonian;
+    type Noise = MixedLindbladNoiseOperator;
 
     // From trait
     fn noise(&self) -> &Self::Noise {
@@ -93,138 +95,31 @@ impl OpenSystem<'_> for MixedLindbladOpenSystem {
         (self.system, self.noise)
     }
 
-    /// Takes a tuple of a system (MixedHamiltonianSystem) and a noise term (MixedLindbladNoiseSystem) and combines them to be a MixedLindbladOpenSystem.
+    /// Takes a tuple of a system (MixedHamiltonian) and a noise term (MixedLindbladNoiseOperator) and combines them to be a MixedLindbladOpenSystem.
     ///
     /// # Arguments
     ///
-    /// * `system` - The MixedHamiltonianSystem to have in the MixedLindbladOpenSystem.
-    /// * `noise` - The MixedLindbladNoiseSystem to have in the MixedLindbladOpenSystem.
+    /// * `system` - The MixedHamiltonian to have in the MixedLindbladOpenSystem.
+    /// * `noise` - The MixedLindbladNoiseOperator to have in the MixedLindbladOpenSystem.
     ///
     /// # Returns
     ///
     /// * `Ok(Self)` - The MixedLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and noise do not match.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        if system.number_spins.len() != noise.number_spins.len()
-            || system.number_bosons.len() != noise.number_bosons.len()
-            || system.number_fermions.len() != noise.number_fermions.len()
+        if system.n_spins != noise.n_spins
+            || system.n_bosons != noise.n_bosons
+            || system.n_fermions != noise.n_fermions
         {
             return Err(StruqtureError::MissmatchedNumberSubsystems {
-                target_number_spin_subsystems: system.number_spins.len(),
-                target_number_boson_subsystems: system.number_bosons.len(),
-                target_number_fermion_subsystems: system.number_fermions.len(),
-                actual_number_spin_subsystems: noise.number_spins.len(),
-                actual_number_boson_subsystems: noise.number_bosons.len(),
-                actual_number_fermion_subsystems: noise.number_fermions.len(),
+                target_number_spin_subsystems: system.n_spins,
+                target_number_boson_subsystems: system.n_bosons,
+                target_number_fermion_subsystems: system.n_fermions,
+                actual_number_spin_subsystems: noise.n_spins,
+                actual_number_boson_subsystems: noise.n_bosons,
+                actual_number_fermion_subsystems: noise.n_fermions,
             });
         }
-
-        let mut variable_number_spins = system.number_spins.clone();
-        let noise_number_spins = noise.number_spins.clone();
-        let noise_number_current_spins = noise.number_spins();
-        let system_number_current_spins = system.number_spins();
-        for (index, (system_spins, noise_spins)) in variable_number_spins
-            .iter_mut()
-            .zip(noise_number_spins.iter())
-            .enumerate()
-        {
-            if system_spins != noise_spins {
-                match (*system_spins, noise_spins) {
-                    (Some(n), None) => {
-                        if n < noise_number_current_spins[index] {
-                            return Err(StruqtureError::MissmatchedNumberSpins);
-                        }
-                    }
-                    (None, Some(n)) => {
-                        if *n >= system_number_current_spins[index] {
-                            *system_spins = Some(*n);
-                        } else {
-                            return Err(StruqtureError::MissmatchedNumberSpins);
-                        }
-                    }
-                    (Some(_), Some(_)) => {
-                        return Err(StruqtureError::MissmatchedNumberSpins);
-                    }
-                    _ => panic!("Unexpected missmatch of number modes"),
-                }
-            }
-        }
-        let mut system = system;
-        let mut noise = noise;
-        system.number_spins.clone_from(&variable_number_spins);
-        noise.number_spins = variable_number_spins;
-
-        // Checking boson compatibility
-
-        let mut variable_number_bosons = system.number_bosons.clone();
-        let noise_number_bosons = noise.number_bosons.clone();
-        let noise_number_current_bosons = noise.number_bosonic_modes();
-        let system_number_current_bosons = system.number_bosonic_modes();
-        for (index, (system_bosons, noise_bosons)) in variable_number_bosons
-            .iter_mut()
-            .zip(noise_number_bosons.iter())
-            .enumerate()
-        {
-            if system_bosons != noise_bosons {
-                match (*system_bosons, noise_bosons) {
-                    (Some(n), None) => {
-                        if n < noise_number_current_bosons[index] {
-                            return Err(StruqtureError::MissmatchedNumberModes);
-                        }
-                    }
-                    (None, Some(n)) => {
-                        if *n >= system_number_current_bosons[index] {
-                            *system_bosons = Some(*n);
-                        } else {
-                            return Err(StruqtureError::MissmatchedNumberModes);
-                        }
-                    }
-                    (Some(_), Some(_)) => {
-                        return Err(StruqtureError::MissmatchedNumberModes);
-                    }
-                    _ => panic!("Unexpected missmatch of number modes"),
-                }
-            }
-        }
-
-        system.number_bosons.clone_from(&variable_number_bosons);
-        noise.number_bosons = variable_number_bosons;
-
-        // Checking Fermion compatibility
-
-        let mut variable_number_fermions = system.number_fermions.clone();
-        let noise_number_fermions = noise.number_fermions.clone();
-        let noise_number_current_fermions = noise.number_bosonic_modes();
-        let system_number_current_fermions = system.number_bosonic_modes();
-        for (index, (system_fermions, noise_fermions)) in variable_number_fermions
-            .iter_mut()
-            .zip(noise_number_fermions.iter())
-            .enumerate()
-        {
-            if system_fermions != noise_fermions {
-                match (*system_fermions, noise_fermions) {
-                    (Some(n), None) => {
-                        if n < noise_number_current_fermions[index] {
-                            return Err(StruqtureError::MissmatchedNumberModes);
-                        }
-                    }
-                    (None, Some(n)) => {
-                        if *n >= system_number_current_fermions[index] {
-                            *system_fermions = Some(*n);
-                        } else {
-                            return Err(StruqtureError::MissmatchedNumberModes);
-                        }
-                    }
-                    (Some(_), Some(_)) => {
-                        return Err(StruqtureError::MissmatchedNumberModes);
-                    }
-                    _ => panic!("Unexpected missmatch of number modes"),
-                }
-            }
-        }
-
-        system.number_fermions.clone_from(&variable_number_fermions);
-        noise.number_fermions = variable_number_fermions;
 
         Ok(Self { system, noise })
     }
@@ -239,16 +134,6 @@ impl OpenSystem<'_> for MixedLindbladOpenSystem {
 
 impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     // From trait
-    fn number_spins(&self) -> Vec<usize> {
-        self.system
-            .number_spins()
-            .iter()
-            .zip(self.noise.number_spins().iter())
-            .map(|(s, n)| *(s.max(n)))
-            .collect()
-    }
-
-    // From trait
     fn current_number_spins(&self) -> Vec<usize> {
         self.system
             .current_number_spins()
@@ -259,31 +144,11 @@ impl OperateOnMixedSystems<'_> for MixedLindbladOpenSystem {
     }
 
     // From trait
-    fn number_bosonic_modes(&self) -> Vec<usize> {
-        self.system
-            .number_bosonic_modes()
-            .iter()
-            .zip(self.noise.number_bosonic_modes().iter())
-            .map(|(s, n)| *(s.max(n)))
-            .collect()
-    }
-
-    // From trait
     fn current_number_bosonic_modes(&self) -> Vec<usize> {
         self.system
             .current_number_bosonic_modes()
             .iter()
             .zip(self.noise.current_number_bosonic_modes().iter())
-            .map(|(s, n)| *(s.max(n)))
-            .collect()
-    }
-
-    // From trait
-    fn number_fermionic_modes(&self) -> Vec<usize> {
-        self.system
-            .number_fermionic_modes()
-            .iter()
-            .zip(self.noise.number_fermionic_modes().iter())
             .map(|(s, n)| *(s.max(n)))
             .collect()
     }
@@ -306,29 +171,44 @@ impl MixedLindbladOpenSystem {
     ///
     /// # Arguments
     ///
-    /// * `number_spins` - The number of spins in each spin subsystem.
-    /// * `number_bosons` - The number of bosons in each bosonic subsystem.
-    /// * `number_fermions` - The number of fermions in each fermionic subsystem.
+    /// * `number_spins` - The number of spin subsystems.
+    /// * `number_bosons` - The number of bosonic subsystems.
+    /// * `number_fermions` - The number of fermionic subsystems.
     ///
     /// # Returns
     ///
     /// * `Self` - The new (empty) MixedLindbladOpenSystem.
-    pub fn new(
-        number_spins: impl IntoIterator<Item = Option<usize>>,
-        number_bosons: impl IntoIterator<Item = Option<usize>>,
-        number_fermions: impl IntoIterator<Item = Option<usize>>,
-    ) -> Self {
-        let number_spins: TinyVec<[Option<usize>; 2]> = number_spins.into_iter().collect();
-        let number_bosons: TinyVec<[Option<usize>; 2]> = number_bosons.into_iter().collect();
-        let number_fermions: TinyVec<[Option<usize>; 2]> = number_fermions.into_iter().collect();
+    pub fn new(number_spins: usize, number_bosons: usize, number_fermions: usize) -> Self {
         MixedLindbladOpenSystem {
-            system: MixedHamiltonianSystem::new(
-                number_spins.clone(),
-                number_bosons.clone(),
-                number_fermions.clone(),
-            ),
-            noise: MixedLindbladNoiseSystem::new(number_spins, number_bosons, number_fermions),
+            system: MixedHamiltonian::new(number_spins, number_bosons, number_fermions),
+            noise: MixedLindbladNoiseOperator::new(number_spins, number_bosons, number_fermions),
         }
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_1::mixed_systems::MixedLindbladOpenSystem, StruqtureError> {
+        let new_system = self.system().to_struqture_1()?;
+        let new_noise = self.noise().to_struqture_1()?;
+
+        struqture_1::OpenSystem::group(new_system, new_noise).map_err(
+            |err| StruqtureError::GenericError { msg:
+                format!("Could not convert struqture 2.x MixedLindbladOpenSystem to 1.x MixedLindbladOpenSystem, group function failed: {:?}.", err)
+            }
+        )
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::mixed_systems::MixedLindbladOpenSystem,
+    ) -> Result<Self, StruqtureError> {
+        let (system_one, noise_one) = struqture_1::OpenSystem::ungroup(value.clone());
+        let new_system = MixedHamiltonian::from_struqture_1(&system_one)?;
+        let new_noise = MixedLindbladNoiseOperator::from_struqture_1(&noise_one)?;
+        Self::group(new_system, new_noise)
     }
 }
 
@@ -363,12 +243,12 @@ impl ops::Add<MixedLindbladOpenSystem> for MixedLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonianSystem and key do not match.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseSystem and key do not match.
+    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonian and key do not match.
+    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseOperator and key do not match.
     fn add(self, other: MixedLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys + other_sys)?, (self_noise + other_noise)?)
+        Self::group((self_sys + other_sys)?, self_noise + other_noise)
     }
 }
 
@@ -385,12 +265,12 @@ impl ops::Sub<MixedLindbladOpenSystem> for MixedLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedLindbladOpenSystems subtracted.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonianSystem and key do not match.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseSystem and key do not match.
+    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonian and key do not match.
+    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseOperator and key do not match.
     fn sub(self, other: MixedLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys - other_sys)?, (self_noise - other_noise)?)
+        Self::group((self_sys - other_sys)?, self_noise - other_noise)
     }
 }
 
@@ -407,7 +287,7 @@ impl ops::Mul<CalculatorFloat> for MixedLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// * `Self` - The MixedLindbladNoiseSystem multiplied by the CalculatorFloat.
+    /// * `Self` - The MixedLindbladNoiseOperator multiplied by the CalculatorFloat.
     fn mul(self, rhs: CalculatorFloat) -> Self::Output {
         Self {
             system: self.system * rhs.clone(),

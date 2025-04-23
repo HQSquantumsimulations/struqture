@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::MixedOperatorWrapper;
 use crate::mixed_systems::MixedPlusMinusProductWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -17,15 +18,11 @@ use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
 use qoqo_calculator::CalculatorComplex;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
-use struqture::mixed_systems::{
-    MixedOperator, MixedPlusMinusOperator, MixedSystem, OperateOnMixedSystems,
-};
+use struqture::mixed_systems::{MixedOperator, MixedPlusMinusOperator, OperateOnMixedSystems};
+#[cfg(feature = "json_schema")]
+use struqture::STRUQTURE_VERSION;
 use struqture::{OperateOnDensityMatrix, OperateOnState};
 use struqture_py_macros::noiseless_system_wrapper;
-
-use super::MixedSystemWrapper;
-#[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 
 /// These are representations of systems of mixed_systems.
 ///
@@ -33,9 +30,9 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 /// and an optional number of mixed_systems.
 ///
 /// Args:
-///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedPlusMinusOperator.
-///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedPlusMinusOperator.
-///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedPlusMinusOperator.
+///     number_spins (int): The number of spin subsystems in the MixedPlusMinusOperator.
+///     number_bosons (int): The number of boson subsystems in the MixedPlusMinusOperator.
+///     number_fermions (int): The number of fermion subsystems in the MixedPlusMinusOperator.
 ///
 /// Returns:
 ///     self: The new (empty) MixedPlusMinusOperator.
@@ -53,11 +50,11 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///     from struqture_py.bosons import BosonProduct
 ///     from struqture_py.fermions import FermionProduct
 ///
-///     ssystem = MixedPlusMinusOperator(1, 1, 1)
+///     system = MixedPlusMinusOperator(1, 1, 1)
 ///     pp = MixedPlusMinusProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
-///     ssystem.add_operator_product(pp, 5.0)
-///     npt.assert_equal(ssystem.number_spins(), [2])
-///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
+///     system.add_operator_product(pp, 5.0)
+///     npt.assert_equal(system.current_number_spins(), [2])
+///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///
 #[pyclass(name = "MixedPlusMinusOperator", module = "struqture_py.mixed_systems")]
 #[derive(Clone, Debug, PartialEq)]
@@ -70,15 +67,15 @@ pub struct MixedPlusMinusOperatorWrapper {
     OperateOnMixedSystems,
     OperateOnState,
     OperateOnDensityMatrix,
-    Calculus
+    HermitianCalculus
 )]
 impl MixedPlusMinusOperatorWrapper {
     /// Create an empty MixedPlusMinusOperator.
     ///
     /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spin subsystems in the MixedPlusMinusOperator.
-    ///     number_bosons (List[Optional[int]]): The number of boson subsystems in the MixedPlusMinusOperator.
-    ///     number_fermions (List[Optional[int]]): The number of fermion subsystems in the MixedPlusMinusOperator.
+    ///     number_spins (int): The number of spin subsystems in the MixedPlusMinusOperator.
+    ///     number_bosons (int): The number of boson subsystems in the MixedPlusMinusOperator.
+    ///     number_fermions (int): The number of fermion subsystems in the MixedPlusMinusOperator.
     ///
     /// Returns:
     ///     self: The new (empty) MixedPlusMinusOperator.
@@ -119,54 +116,36 @@ impl MixedPlusMinusOperatorWrapper {
         }
     }
 
-    /// Convert a MixedSystem into a MixedPlusMinusOperator.
+    /// Convert a MixedOperator into a MixedPlusMinusOperator.
     ///
     /// Args:
-    ///     value (MixedSystem): The MixedSystem to create the MixedPlusMinusOperator from.
+    ///     value (MixedOperator): The MixedOperator to create the MixedPlusMinusOperator from.
     ///
     /// Returns:
-    ///     MixedPlusMinusOperator: The operator created from the input MixedSystem.
+    ///     MixedPlusMinusOperator: The operator created from the input MixedOperator.
     ///
     /// Raises:
-    ///     ValueError: Could not create MixedSystem from input.
+    ///     ValueError: Could not create MixedOperator from input.
     #[staticmethod]
-    pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
-        let system = MixedSystemWrapper::from_pyany(value)
+    pub fn from_mixed_operator(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
+        let system = MixedOperatorWrapper::from_pyany(value)
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
         Ok(MixedPlusMinusOperatorWrapper {
-            internal: MixedPlusMinusOperator::from(system.operator().clone()),
+            internal: MixedPlusMinusOperator::from(system.clone()),
         })
     }
 
-    /// Convert a MixedPlusMinusOperator into a MixedSystem.
-    ///
-    /// Args:
-    ///     number_spins (List[Optional[int]]): The number of spins to initialize the MixedSystem with.
-    ///     number_bosons (List[Optional[int]]): The number of bosons to initialize the MixedSystem with.
-    ///     number_fermions (List[Optional[int]]): The number of fermions to initialize the MixedSystem with.
+    /// Convert a MixedPlusMinusOperator into a MixedOperator.
     ///
     /// Returns:
-    ///     MixedSystem: The operator created from the input MixedPlusMinusOperator and optional number of spins.
+    ///     MixedOperator: The operator created from the input MixedPlusMinusOperator and optional number of spins.
     ///
     /// Raises:
     ///     ValueError: Could not create MixedOperator from MixedPlusMinusOperator.
-    ///     ValueError: Could not create MixedSystem from MixedOperator.
-    pub fn to_mixed_system(
-        &self,
-        number_spins: Vec<Option<usize>>,
-        number_bosons: Vec<Option<usize>>,
-        number_fermions: Vec<Option<usize>>,
-    ) -> PyResult<MixedSystemWrapper> {
+    ///     ValueError: Could not create MixedOperator from MixedOperator.
+    pub fn to_mixed_operator(&self) -> PyResult<MixedOperatorWrapper> {
         let result: MixedOperator = MixedOperator::try_from(self.internal.clone())
             .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
-        Ok(MixedSystemWrapper {
-            internal: MixedSystem::from_operator(
-                result,
-                number_spins,
-                number_bosons,
-                number_fermions,
-            )
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
-        })
+        Ok(MixedOperatorWrapper { internal: result })
     }
 }

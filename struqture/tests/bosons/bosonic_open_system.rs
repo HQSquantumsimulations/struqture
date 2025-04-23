@@ -15,44 +15,42 @@
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::bosons::{
-    BosonHamiltonianSystem, BosonLindbladNoiseSystem, BosonLindbladOpenSystem, BosonProduct,
+    BosonHamiltonian, BosonLindbladNoiseOperator, BosonLindbladOpenSystem, BosonProduct,
     HermitianBosonProduct,
 };
-use struqture::prelude::*;
 use struqture::ModeIndex;
-#[cfg(feature = "json_schema")]
-use test_case::test_case;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 
+#[cfg(feature = "json_schema")]
 // Test the new function of the BosonLindbladOpenSystem
 #[test]
 fn new_system() {
-    let system = BosonLindbladOpenSystem::new(Some(1));
-    assert_eq!(system.system(), &BosonHamiltonianSystem::new(Some(1)));
-    assert_eq!(system.noise(), &BosonLindbladNoiseSystem::new(Some(1)));
-    assert_eq!(system.number_modes(), 1_usize);
-    assert_eq!(system.current_number_modes(), 1_usize);
+    let system = BosonLindbladOpenSystem::new();
+    assert_eq!(system.system(), &BosonHamiltonian::new());
+    assert_eq!(system.noise(), &BosonLindbladNoiseOperator::new());
+    assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the new function of the BosonLindbladOpenSystem with no modes specified
 #[test]
 fn new_system_none() {
-    let system = BosonLindbladOpenSystem::new(None);
+    let system = BosonLindbladOpenSystem::new();
     assert!(system.system().is_empty());
-    assert_eq!(system.system(), &BosonHamiltonianSystem::default());
+    assert_eq!(system.system(), &BosonHamiltonian::default());
     assert!(system.noise().is_empty());
-    assert_eq!(system.noise(), &BosonLindbladNoiseSystem::default());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.noise(), &BosonLindbladNoiseOperator::default());
     assert_eq!(system.current_number_modes(), 0_usize);
 }
 
 // Test the group function of the BosonLindbladOpenSystem
 #[test]
 fn group() {
-    let slos = BosonLindbladOpenSystem::group(
-        BosonHamiltonianSystem::new(None),
-        BosonLindbladNoiseSystem::new(None),
-    );
+    let slos =
+        BosonLindbladOpenSystem::group(BosonHamiltonian::new(), BosonLindbladNoiseOperator::new());
     assert!(slos.is_ok());
     let slos = slos.unwrap();
     assert!(slos.system().is_empty() && slos.noise().is_empty());
@@ -60,52 +58,12 @@ fn group() {
 }
 
 #[test]
-fn group_with_none() {
-    let blos = BosonLindbladOpenSystem::group(
-        BosonHamiltonianSystem::new(None),
-        BosonLindbladNoiseSystem::new(Some(2)),
-    );
-
-    assert!(blos.is_ok());
-    let os = blos.unwrap();
-    let (system, noise) = os.ungroup();
-
-    assert_eq!(noise.number_modes(), 2);
-    assert_eq!(system.number_modes(), 2);
-
-    let blos = BosonLindbladOpenSystem::group(
-        BosonHamiltonianSystem::new(Some(2)),
-        BosonLindbladNoiseSystem::new(None),
-    );
-
-    assert!(blos.is_ok());
-    let os = blos.unwrap();
-    let (system, noise) = os.ungroup();
-
-    assert_eq!(noise.number_modes(), 2);
-    assert_eq!(system.number_modes(), 2);
-}
-
-// Test the group function of the BosonLindbladOpenSystem
-#[test]
-fn group_failing() {
-    let slos = BosonLindbladOpenSystem::group(
-        BosonHamiltonianSystem::new(Some(3)),
-        BosonLindbladNoiseSystem::new(Some(2)),
-    );
-    assert!(slos.is_err());
-}
-
-#[test]
 fn empty_clone_options() {
     let dp_0: BosonProduct = BosonProduct::new([0], [0]).unwrap();
-    let mut slos = BosonLindbladOpenSystem::new(Some(3));
+    let mut slos = BosonLindbladOpenSystem::new();
     slos.noise_mut()
         .set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
         .unwrap();
-
-    let full: Option<usize> = Some(3);
-    assert_eq!(slos.empty_clone(), BosonLindbladOpenSystem::new(full));
 }
 
 // Test the try_set_noise and get functions of the BosonLindbladOpenSystem
@@ -229,9 +187,9 @@ fn noise_system() {
         .set((dp_2.clone(), dp_2.clone()), CalculatorComplex::from(0.5))
         .unwrap();
 
-    let mut system = BosonHamiltonianSystem::new(None);
+    let mut system = BosonHamiltonian::new();
     system.set(pp_0, CalculatorComplex::from(0.4)).unwrap();
-    let mut noise = BosonLindbladNoiseSystem::new(None);
+    let mut noise = BosonLindbladNoiseOperator::new();
     noise
         .set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
         .unwrap();
@@ -245,7 +203,7 @@ fn noise_system() {
 fn negative_slos() {
     let dp_0: BosonProduct = BosonProduct::new([0], [0]).unwrap();
     let pp_0: HermitianBosonProduct = HermitianBosonProduct::new([], [0]).unwrap();
-    let mut slos_0 = BosonLindbladOpenSystem::new(Some(1));
+    let mut slos_0 = BosonLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -254,7 +212,7 @@ fn negative_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_minus = BosonLindbladOpenSystem::new(Some(1));
+    let mut slos_0_minus = BosonLindbladOpenSystem::new();
     slos_0_minus
         .system_mut()
         .set(pp_0, CalculatorComplex::from(-0.4))
@@ -274,7 +232,7 @@ fn add_slos_slos() {
     let pp_0: HermitianBosonProduct = HermitianBosonProduct::new([], [0]).unwrap();
     let dp_1: BosonProduct = BosonProduct::new([0], [1]).unwrap();
     let pp_1: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
-    let mut slos_0 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = BosonLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -283,7 +241,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_1 = BosonLindbladOpenSystem::new();
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorComplex::from(0.4))
@@ -292,7 +250,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = BosonLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(0.4))
@@ -320,7 +278,7 @@ fn sub_slos_slos() {
     let pp_0: HermitianBosonProduct = HermitianBosonProduct::new([], [0]).unwrap();
     let dp_1: BosonProduct = BosonProduct::new([0], [1]).unwrap();
     let pp_1: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
-    let mut slos_0 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = BosonLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -329,7 +287,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_1 = BosonLindbladOpenSystem::new();
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorComplex::from(0.4))
@@ -338,7 +296,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = BosonLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(0.4))
@@ -364,7 +322,7 @@ fn sub_slos_slos() {
 fn mul_so_cf() {
     let dp_0: BosonProduct = BosonProduct::new([0], [0]).unwrap();
     let pp_0: HermitianBosonProduct = HermitianBosonProduct::new([], [0]).unwrap();
-    let mut slos_0 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = BosonLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(1.0))
@@ -373,7 +331,7 @@ fn mul_so_cf() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = BosonLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(3.0))
@@ -391,7 +349,7 @@ fn mul_so_cf() {
 fn debug() {
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
-    let mut slos = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos = BosonLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -400,7 +358,7 @@ fn debug() {
         .unwrap();
     assert_eq!(
         format!("{:?}", slos),
-        "BosonLindbladOpenSystem { system: BosonHamiltonianSystem { number_modes: Some(2), hamiltonian: BosonHamiltonian { internal_map: {HermitianBosonProduct { creators: [0], annihilators: [1] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }} } }, noise: BosonLindbladNoiseSystem { number_modes: Some(2), operator: BosonLindbladNoiseOperator { internal_map: {(BosonProduct { creators: [0], annihilators: [0] }, BosonProduct { creators: [0], annihilators: [0] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } } }"
+        "BosonLindbladOpenSystem { system: BosonHamiltonian { internal_map: {HermitianBosonProduct { creators: [0], annihilators: [1] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }} }, noise: BosonLindbladNoiseOperator { internal_map: {(BosonProduct { creators: [0], annihilators: [0] }, BosonProduct { creators: [0], annihilators: [0] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } }"
     );
 }
 
@@ -409,7 +367,7 @@ fn debug() {
 fn display() {
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
-    let mut slos = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos = BosonLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -419,7 +377,7 @@ fn display() {
 
     assert_eq!(
         format!("{}", slos),
-        "BosonLindbladOpenSystem(2){\nSystem: {\nc0a1: (4e-1 + i * 0e0),\n}\nNoise: {\n(c0a0, c0a0): (5e-1 + i * 0e0),\n}\n}"
+        "BosonLindbladOpenSystem{\nSystem: {\nc0a1: (4e-1 + i * 0e0),\n}\nNoise: {\n(c0a0, c0a0): (5e-1 + i * 0e0),\n}\n}"
     );
 }
 
@@ -492,13 +450,9 @@ fn serde_json() {
 
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
-    let mut slos = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos = BosonLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(1.0))
         .unwrap();
@@ -515,14 +469,6 @@ fn serde_readable() {
             },
             Token::Str("system"),
             Token::Struct {
-                name: "BosonHamiltonianSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("hamiltonian"),
-            Token::Struct {
                 name: "BosonHamiltonianSerialize",
                 len: 2,
             },
@@ -534,27 +480,24 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("BosonHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
-            Token::Struct {
-                name: "BosonLindbladNoiseSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("operator"),
             Token::Struct {
                 name: "BosonLindbladNoiseOperatorSerialize",
                 len: 2,
@@ -568,16 +511,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("BosonLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -609,13 +557,9 @@ fn bincode() {
 /// Test BosonLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
-    let mut slos = BosonLindbladOpenSystem::new(Some(2));
+    let mut slos = BosonLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(1.0))
         .unwrap();
@@ -631,14 +575,6 @@ fn serde_compact() {
                 len: 2,
             },
             Token::Str("system"),
-            Token::Struct {
-                name: "BosonHamiltonianSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("hamiltonian"),
             Token::Struct {
                 name: "BosonHamiltonianSerialize",
                 len: 2,
@@ -666,27 +602,24 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("BosonHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
-            Token::Struct {
-                name: "BosonLindbladNoiseSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("operator"),
             Token::Struct {
                 name: "BosonLindbladNoiseOperatorSerialize",
                 len: 2,
@@ -722,16 +655,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("BosonLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -740,7 +678,7 @@ fn serde_compact() {
 }
 #[test]
 fn test_truncate() {
-    let mut system = BosonLindbladOpenSystem::new(None);
+    let mut system = BosonLindbladOpenSystem::new();
     system
         .system_mut()
         .set(HermitianBosonProduct::new([0], [1]).unwrap(), 1.0.into())
@@ -790,7 +728,7 @@ fn test_truncate() {
         0.01.into(),
     );
 
-    let mut test_system1 = BosonLindbladOpenSystem::new(None);
+    let mut test_system1 = BosonLindbladOpenSystem::new();
     test_system1
         .system_mut()
         .set(HermitianBosonProduct::new([0], [1]).unwrap(), 1.0.into())
@@ -828,7 +766,7 @@ fn test_truncate() {
         0.1.into(),
     );
 
-    let mut test_system2 = BosonLindbladOpenSystem::new(None);
+    let mut test_system2 = BosonLindbladOpenSystem::new();
     test_system2
         .system_mut()
         .set(HermitianBosonProduct::new([0], [1]).unwrap(), 1.0.into())
@@ -862,10 +800,9 @@ fn test_truncate() {
 }
 
 #[cfg(feature = "json_schema")]
-#[test_case(None)]
-#[test_case(Some(3))]
-fn test_boson_open_system_schema(number_bosons: Option<usize>) {
-    let mut op = BosonLindbladOpenSystem::new(number_bosons);
+#[test]
+fn test_boson_open_system_schema() {
+    let mut op = BosonLindbladOpenSystem::new();
     let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
     let dp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
     op.system_mut()
@@ -881,4 +818,29 @@ fn test_boson_open_system_schema(number_bosons: Option<usize>) {
     let validation = schema_checker.validate(&value);
 
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_1::bosons::HermitianBosonProduct::from_str("c0a1").unwrap();
+    let dp_1 = struqture_1::bosons::BosonProduct::from_str("c0a0").unwrap();
+    let mut ss_1 = struqture_1::bosons::BosonLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(noise_mut_1, (dp_1.clone(), dp_1.clone()), 1.0.into())
+        .unwrap();
+
+    let pp_2 = HermitianBosonProduct::new([0], [1]).unwrap();
+    let dp_2 = BosonProduct::new([0], [0]).unwrap();
+    let mut ss_2 = BosonLindbladOpenSystem::new();
+    ss_2.system_mut().set(pp_2.clone(), 2.0.into()).unwrap();
+    ss_2.noise_mut()
+        .set((dp_2.clone(), dp_2.clone()), 1.0.into())
+        .unwrap();
+
+    assert!(BosonLindbladOpenSystem::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

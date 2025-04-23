@@ -10,28 +10,19 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{OperateOnSpins, SpinOperator};
+use super::{OperateOnSpins, PauliOperator};
 use crate::fermions::FermionOperator;
 use crate::mappings::JordanWignerSpinToFermion;
 use crate::spins::DecoherenceProduct;
-use crate::{
-    OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{OperateOnDensityMatrix, OperateOnState, SpinIndex, StruqtureError, SymmetricIndex};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// DecoherenceOperators are combinations of DecoherenceProducts with specific CalculatorComplex coefficients.
 ///
@@ -58,18 +49,18 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "DecoherenceOperatorSerialize")]
+#[serde(try_from = "DecoherenceOperatorSerialize")]
 #[serde(into = "DecoherenceOperatorSerialize")]
 pub struct DecoherenceOperator {
     /// The internal HashMap of DecoherenceProducts and coefficients (CalculatorComplex)
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<DecoherenceProduct, CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<DecoherenceProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for DecoherenceOperator {}
-
+impl crate::SerializationSupport for DecoherenceOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::DecoherenceOperator
+    }
+}
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceOperator {
     fn schema_name() -> String {
@@ -87,41 +78,41 @@ impl schemars::JsonSchema for DecoherenceOperator {
 struct DecoherenceOperatorSerialize {
     /// The internal map representing the noise terms
     items: Vec<(DecoherenceProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<DecoherenceOperatorSerialize> for DecoherenceOperator {
-    fn from(value: DecoherenceOperatorSerialize) -> Self {
+impl TryFrom<DecoherenceOperatorSerialize> for DecoherenceOperator {
+    type Error = StruqtureError;
+    fn try_from(value: DecoherenceOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
+
         let new_noise_op: DecoherenceOperator = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<DecoherenceOperator> for DecoherenceOperatorSerialize {
     fn from(value: DecoherenceOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
+
         let new_noise_op: Vec<(DecoherenceProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
 
 impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
-    type IteratorType = Iter<'a, Self::Index, Self::Value>;
-    type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
-    type ValueIteratorType = Values<'a, Self::Index, Self::Value>;
     type Value = CalculatorComplex;
     type Index = DecoherenceProduct;
 
@@ -134,30 +125,23 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -189,10 +173,7 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -214,11 +195,11 @@ impl OperateOnState<'_> for DecoherenceOperator {
 }
 
 impl OperateOnSpins<'_> for DecoherenceOperator {
-    /// Returns maximum index in DecoherenceOperator internal_map.
+    /// Gets the maximum index of the DecoherenceOperator.
     ///
     /// # Returns
     ///
-    /// * `usize` - Maximum index.
+    /// * `usize` - The number of spins in the DecoherenceOperator.
     fn current_number_spins(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -229,15 +210,6 @@ impl OperateOnSpins<'_> for DecoherenceOperator {
             }
         }
         max_mode
-    }
-
-    /// Gets the maximum index of the DecoherenceOperator.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - The number of spins in the DecoherenceOperator.
-    fn number_spins(&self) -> usize {
-        self.current_number_spins()
     }
 }
 
@@ -263,9 +235,6 @@ impl DecoherenceOperator {
     /// * `Self` - The new (empty) DecoherenceOperator.
     pub fn new() -> Self {
         DecoherenceOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -281,36 +250,34 @@ impl DecoherenceOperator {
     /// * `Self` - The new (empty) DecoherenceOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         DecoherenceOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
-    /// Separate self into an operator with the terms of given number of spins and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_spins` - Number of spins to filter for in the keys.
-    ///
-    /// # Returns
-    ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_spins matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
         &self,
-        number_spins: usize,
-    ) -> Result<(Self, Self), StruqtureError> {
-        let mut separated = Self::default();
-        let mut remainder = Self::default();
-        for (prod, val) in self.iter() {
-            if prod.len() == number_spins {
-                separated.add_operator_product(prod.clone(), val.clone())?;
-            } else {
-                remainder.add_operator_product(prod.clone(), val.clone())?;
-            }
+    ) -> Result<struqture_1::spins::DecoherenceOperator, StruqtureError> {
+        let mut new_system = struqture_1::spins::DecoherenceOperator::new();
+        for (key, val) in self.iter() {
+            let one_key = key.to_struqture_1()?;
+            let _ = struqture_1::OperateOnDensityMatrix::set(&mut new_system, one_key, val.clone());
         }
-        Ok((separated, remainder))
+        Ok(new_system)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::spins::DecoherenceOperator,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
+            let self_key = DecoherenceProduct::from_struqture_1(key)?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
@@ -324,9 +291,6 @@ impl ops::Neg for DecoherenceOperator {
     ///
     /// * `Self` - The DecoherenceOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
@@ -407,9 +371,6 @@ where
     /// * `Self` - The DecoherenceOperator multiplied by the CalculatorComplex/CalculatorFloat.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
@@ -434,18 +395,18 @@ impl ops::Mul<DecoherenceOperator> for DecoherenceOperator {
     ///
     /// * `Self` - The two DecoherenceOperators multiplied.
     fn mul(self, other: DecoherenceOperator) -> Self {
-        let mut spin_op = DecoherenceOperator::with_capacity(self.len() * other.len());
+        let mut qubit_op = DecoherenceOperator::with_capacity(self.len() * other.len());
         for (pps, vals) in self {
             for (ppo, valo) in other.iter() {
                 let (ppp, coefficient) = pps.clone() * ppo.clone();
                 let coefficient =
                     Into::<CalculatorComplex>::into(valo) * coefficient * vals.clone();
-                spin_op
+                qubit_op
                     .add_operator_product(ppp, coefficient)
                     .expect("Internal bug in add_operator_product");
             }
         }
-        spin_op
+        qubit_op
     }
 }
 
@@ -453,9 +414,6 @@ impl ops::Mul<DecoherenceOperator> for DecoherenceOperator {
 ///
 impl IntoIterator for DecoherenceOperator {
     type Item = (DecoherenceProduct, CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<DecoherenceProduct, CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<DecoherenceProduct, CalculatorComplex>;
     /// Returns the DecoherenceOperator in Iterator form.
     ///
@@ -544,21 +502,21 @@ impl fmt::Display for DecoherenceOperator {
     }
 }
 
-impl From<SpinOperator> for DecoherenceOperator {
-    /// Converts a SpinOperator into a DecoherenceProduct.
+impl From<PauliOperator> for DecoherenceOperator {
+    /// Converts a PauliOperator into a DecoherenceProduct.
     ///
     /// # Arguments
     ///
-    /// * `op` - The SpinOperator to convert.
+    /// * `op` - The PauliOperator to convert.
     ///
     /// # Returns
     ///
-    /// * `Self` - The SpinOperator converted into a DecoherenceProduct.
+    /// * `Self` - The PauliOperator converted into a DecoherenceProduct.
     ///
     /// # Panics
     ///
     /// * Internal error in add_operator_product.
-    fn from(op: SpinOperator) -> Self {
+    fn from(op: PauliOperator) -> Self {
         let mut out = DecoherenceOperator::new();
         for prod in op.keys() {
             let (new_prod, new_coeff) = DecoherenceProduct::spin_to_decoherence(prod.clone());
@@ -592,34 +550,37 @@ impl JordanWignerSpinToFermion for DecoherenceOperator {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn so_from_sos() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = DecoherenceOperator::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(DecoherenceOperator::from(sos.clone()), so);
+        assert_eq!(DecoherenceOperator::try_from(sos.clone()).unwrap(), so);
         assert_eq!(DecoherenceOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of PauliOperator
     #[test]
     fn clone_partial_eq() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -630,17 +591,19 @@ mod test {
         let pp_1: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos_1 = DecoherenceOperatorSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: DecoherenceProduct = DecoherenceProduct::new().z(2);
         let sos_2 = DecoherenceOperatorSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -649,33 +612,35 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of PauliOperator
     #[test]
     fn debug() {
         let pp: DecoherenceProduct = DecoherenceProduct::new().z(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "DecoherenceOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "DecoherenceOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"DecoherenceOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test PauliOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp = DecoherenceProduct::new().x(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -694,30 +659,37 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("DecoherenceOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test PauliOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp = DecoherenceProduct::new().x(0);
         let sos = DecoherenceOperatorSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "DecoherenceOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -752,15 +724,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("DecoherenceOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

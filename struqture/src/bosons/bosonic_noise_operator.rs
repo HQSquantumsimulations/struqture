@@ -11,24 +11,15 @@
 // limitations under the License.
 
 use super::{BosonProduct, OperateOnBosons};
-use crate::{
-    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
-    StruqtureVersionSerializable, MINIMUM_STRUQTURE_VERSION,
-};
+use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// BosonLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -57,17 +48,18 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(from = "BosonLindbladNoiseOperatorSerialize")]
+#[serde(try_from = "BosonLindbladNoiseOperatorSerialize")]
 #[serde(into = "BosonLindbladNoiseOperatorSerialize")]
 pub struct BosonLindbladNoiseOperator {
     /// The internal map representing the noise terms
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<(BosonProduct, BosonProduct), CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<(BosonProduct, BosonProduct), CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for BosonLindbladNoiseOperator {}
+impl crate::SerializationSupport for BosonLindbladNoiseOperator {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonLindbladNoiseOperator
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonLindbladNoiseOperator {
@@ -86,12 +78,15 @@ impl schemars::JsonSchema for BosonLindbladNoiseOperator {
 struct BosonLindbladNoiseOperatorSerialize {
     /// The vector representing the internal map of the BosonLindbladNoiseOperator
     items: Vec<(BosonProduct, BosonProduct, CalculatorFloat, CalculatorFloat)>,
-    /// The struqture version
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<BosonLindbladNoiseOperatorSerialize> for BosonLindbladNoiseOperator {
-    fn from(value: BosonLindbladNoiseOperatorSerialize) -> Self {
+impl TryFrom<BosonLindbladNoiseOperatorSerialize> for BosonLindbladNoiseOperator {
+    type Error = StruqtureError;
+    fn try_from(value: BosonLindbladNoiseOperatorSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: BosonLindbladNoiseOperator = value
             .items
             .into_iter()
@@ -99,24 +94,21 @@ impl From<BosonLindbladNoiseOperatorSerialize> for BosonLindbladNoiseOperator {
                 ((left, right), CalculatorComplex { re: real, im: imag })
             })
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<BosonLindbladNoiseOperator> for BosonLindbladNoiseOperatorSerialize {
     fn from(value: BosonLindbladNoiseOperator) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(BosonProduct, BosonProduct, CalculatorFloat, CalculatorFloat)> =
             value
                 .into_iter()
                 .map(|((left, right), val)| (left, right, val.re, val.im))
                 .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -124,9 +116,6 @@ impl From<BosonLindbladNoiseOperator> for BosonLindbladNoiseOperatorSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
     type Index = (BosonProduct, BosonProduct);
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, (BosonProduct, BosonProduct), CalculatorComplex>;
-    type KeyIteratorType = Keys<'a, (BosonProduct, BosonProduct), CalculatorComplex>;
-    type ValueIteratorType = Values<'a, (BosonProduct, BosonProduct), CalculatorComplex>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -137,30 +126,23 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -200,10 +182,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
             Ok(self.internal_map.insert(key, value))
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -211,7 +190,11 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonLindbladNoiseOperator {
 }
 
 impl<'a> OperateOnModes<'a> for BosonLindbladNoiseOperator {
-    // From trait
+    /// Gets the maximum index of the BosonLindbladNoiseOperator.
+    ///
+    /// # Returns
+    ///
+    /// * `usize` - The number of bosons in the BosonLindbladNoiseOperator.
     fn current_number_modes(&'a self) -> usize {
         let mut max_mode: usize = 0;
         if !self.is_empty() {
@@ -226,15 +209,6 @@ impl<'a> OperateOnModes<'a> for BosonLindbladNoiseOperator {
             }
         }
         max_mode
-    }
-
-    /// Gets the maximum index of the BosonLindbladNoiseOperator.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - The number of bosons in the BosonLindbladNoiseOperator.
-    fn number_modes(&'a self) -> usize {
-        self.current_number_modes()
     }
 }
 
@@ -258,9 +232,6 @@ impl BosonLindbladNoiseOperator {
     /// * `Self` - The new (empty) BosonLindbladNoiseOperator.
     pub fn new() -> Self {
         BosonLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -276,42 +247,40 @@ impl BosonLindbladNoiseOperator {
     /// * `Self` - The new (empty) BosonLindbladNoiseOperator.
     pub fn with_capacity(capacity: usize) -> Self {
         BosonLindbladNoiseOperator {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
-    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_creators_annihilators_left` - Number of creators and number of annihilators to filter for in the left term of the keys.
-    /// * `number_creators_annihilators_right` - Number of creators and number of annihilators to filter for in the right term of the keys.
-    ///
-    /// # Returns
-    ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
         &self,
-        number_creators_annihilators_left: (usize, usize),
-        number_creators_annihilators_right: (usize, usize),
-    ) -> Result<(Self, Self), StruqtureError> {
-        let mut separated = Self::default();
-        let mut remainder = Self::default();
-        for ((prod_l, prod_r), val) in self.iter() {
-            if (prod_l.creators().len(), prod_l.annihilators().len())
-                == number_creators_annihilators_left
-                && (prod_r.creators().len(), prod_r.annihilators().len())
-                    == number_creators_annihilators_right
-            {
-                separated.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            } else {
-                remainder.add_operator_product((prod_l.clone(), prod_r.clone()), val.clone())?;
-            }
+    ) -> Result<struqture_1::bosons::BosonLindbladNoiseSystem, StruqtureError> {
+        let mut new_boson_system = struqture_1::bosons::BosonLindbladNoiseSystem::new(None);
+        for (key, val) in self.iter() {
+            let one_key_left = key.0.to_struqture_1()?;
+            let one_key_right = key.1.to_struqture_1()?;
+            let _ = struqture_1::OperateOnDensityMatrix::set(
+                &mut new_boson_system,
+                (one_key_left, one_key_right),
+                val.clone(),
+            );
         }
-        Ok((separated, remainder))
+        Ok(new_boson_system)
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::bosons::BosonLindbladNoiseSystem,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
+            let self_key_left = BosonProduct::from_struqture_1(&key.0)?;
+            let self_key_right = BosonProduct::from_struqture_1(&key.1)?;
+            let _ = new_operator.set((self_key_left, self_key_right), val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
@@ -325,9 +294,6 @@ impl ops::Neg for BosonLindbladNoiseOperator {
     ///
     /// * `Self` - The BosonLindbladNoiseOperator * -1.
     fn neg(self) -> Self {
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key.clone(), val.neg());
@@ -416,9 +382,6 @@ where
     /// * `Self` - The BosonLindbladNoiseOperator multiplied by the CalculatorComplex.
     fn mul(self, other: T) -> Self {
         let other_cc = Into::<CalculatorComplex>::into(other);
-        #[cfg(not(feature = "indexed_map_iterators"))]
-        let mut internal = HashMap::with_capacity(self.len());
-        #[cfg(feature = "indexed_map_iterators")]
         let mut internal = IndexMap::with_capacity(self.len());
         for (key, val) in self {
             internal.insert(key, val * other_cc.clone());
@@ -433,10 +396,6 @@ where
 ///
 impl IntoIterator for BosonLindbladNoiseOperator {
     type Item = ((BosonProduct, BosonProduct), CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter =
-        std::collections::hash_map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<(BosonProduct, BosonProduct), CalculatorComplex>;
     /// Returns the BosonLindbladNoiseOperator in Iterator form.
     ///
@@ -535,35 +494,41 @@ impl fmt::Display for BosonLindbladNoiseOperator {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of BosonLindbladNoiseOperator
     #[test]
     fn so_from_sos() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
         let sos = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = BosonLindbladNoiseOperator::new();
         so.set((pp.clone(), pp), CalculatorComplex::from(0.5))
             .unwrap();
 
-        assert_eq!(BosonLindbladNoiseOperator::from(sos.clone()), so);
+        assert_eq!(
+            BosonLindbladNoiseOperator::try_from(sos.clone()).unwrap(),
+            so
+        );
         assert_eq!(BosonLindbladNoiseOperatorSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of BosonLindbladNoiseOperator
     #[test]
     fn clone_partial_eq() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
         let sos = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -574,17 +539,19 @@ mod test {
         let pp_1: BosonProduct = BosonProduct::new([0], [0]).unwrap();
         let sos_1 = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp_1.clone(), pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: BosonProduct = BosonProduct::new([0], [1]).unwrap();
         let sos_2 = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp_2.clone(), pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -593,33 +560,35 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of BosonLindbladNoiseOperator
     #[test]
     fn debug() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
         let sos = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "BosonLindbladNoiseOperatorSerialize { items: [(BosonProduct { creators: [0], annihilators: [0] }, BosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "BosonLindbladNoiseOperatorSerialize { items: [(BosonProduct { creators: [0], annihilators: [0] }, BosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"BosonLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test BosonLindbladNoiseOperator Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
         let sos = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -639,30 +608,37 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("BosonLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test BosonLindbladNoiseOperator Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: BosonProduct = BosonProduct::new([0], [0]).unwrap();
         let sos = BosonLindbladNoiseOperatorSerialize {
             items: vec![(pp.clone(), pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonLindbladNoiseOperator".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -704,15 +680,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("BosonLindbladNoiseOperator"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

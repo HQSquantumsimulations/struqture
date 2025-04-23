@@ -29,26 +29,17 @@ pub use pauli_product::*;
 mod decoherence_operator;
 pub use decoherence_operator::*;
 
-mod spin_operator;
-pub use spin_operator::*;
+mod pauli_operator;
+pub use pauli_operator::*;
 
-mod spin_hamiltonian;
-pub use spin_hamiltonian::*;
+mod pauli_hamiltonian;
+pub use pauli_hamiltonian::*;
 
-mod spin_system;
-pub use spin_system::*;
+mod pauli_noise_operator;
+pub use pauli_noise_operator::*;
 
-mod spin_hamiltonian_system;
-pub use spin_hamiltonian_system::*;
-
-mod spin_noise_operator;
-pub use spin_noise_operator::*;
-
-mod spin_noise_system;
-pub use spin_noise_system::*;
-
-mod spin_open_system;
-pub use spin_open_system::*;
+mod pauli_open_system;
+pub use pauli_open_system::*;
 
 mod plus_minus_product;
 pub use plus_minus_product::*;
@@ -68,9 +59,9 @@ use crate::CooSparseMatrix;
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
 /// use std::collections::HashMap;
-/// use struqture::spins::{OperateOnSpins, PauliProduct, SpinOperator};
+/// use struqture::spins::{OperateOnSpins, PauliProduct, PauliOperator};
 ///
-/// let mut so = SpinOperator::new();
+/// let mut so = PauliOperator::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// so.add_operator_product(pp_0z.clone(), CalculatorComplex::from(0.2)).unwrap();
 /// let mut mapping: HashMap<PauliProduct, CalculatorComplex> = HashMap::new();
@@ -94,13 +85,6 @@ use crate::CooSparseMatrix;
 ///
 pub trait OperateOnSpins<'a>: PartialEq + Clone + Mul<CalculatorFloat> + Add + Sub {
     // Document locally
-    fn number_spins(&self) -> usize;
-
-    /// Returns maximum index in Self.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
     fn current_number_spins(&self) -> usize;
 }
 
@@ -112,7 +96,7 @@ pub trait ToSparseMatrixOperator<'a>:
     + PartialEq
     + Clone
 where
-    SingleSpinOperator:
+    SinglePauliOperator:
         From<<<Self as OperateOnDensityMatrix<'a>>::Index as SpinIndex>::SingleSpinType>,
     CalculatorComplex: From<<Self as OperateOnDensityMatrix<'a>>::Value>,
     &'a Self: IntoIterator<Item = (&'a Self::Index, &'a Self::Value)>,
@@ -127,16 +111,13 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of the operator-like object.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix(
         &'a self,
-        number_spins: Option<usize>,
+        number_spins: usize,
     ) -> Result<HashMap<(usize, usize), Complex64>, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
+        let dimension = 2usize.pow(number_spins as u32);
         let mut matrix: HashMap<(usize, usize), Complex64> = HashMap::new();
         for row in 0..dimension {
             for (column, val) in self.sparse_matrix_entries_on_row(row)?.into_iter() {
@@ -154,16 +135,10 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>)))` - The matrix representation of the operator-like object.
+    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>)))` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn sparse_matrix_coo(
-        &'a self,
-        number_spins: Option<usize>,
-    ) -> Result<CooSparseMatrix, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
+    fn sparse_matrix_coo(&'a self, number_spins: usize) -> Result<CooSparseMatrix, StruqtureError> {
+        let dimension = 2usize.pow(number_spins as u32);
 
         let capacity = dimension;
         let mut values: Vec<Complex64> = Vec::with_capacity(capacity);
@@ -189,7 +164,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of Self.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_entries_on_row(
         &'a self,
@@ -200,15 +175,15 @@ where
             let mut column = row;
             let mut prefac: Complex<f64> = 1.0.into();
             for (spin_op_index, pauliop) in index.iter() {
-                match SingleSpinOperator::from(*pauliop) {
-                    SingleSpinOperator::X => {
+                match SinglePauliOperator::from(*pauliop) {
+                    SinglePauliOperator::X => {
                         match row.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                             0 => column += 2usize.pow(*spin_op_index as u32),
                             1 => column -= 2usize.pow(*spin_op_index as u32),
                             _ => panic!("Internal error in constructing matrix"),
                         }
                     }
-                    SingleSpinOperator::Y => {
+                    SinglePauliOperator::Y => {
                         match row.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                             0 => {
                                 column += 2usize.pow(*spin_op_index as u32);
@@ -221,7 +196,7 @@ where
                             _ => panic!("Internal error in constructing matrix"),
                         };
                     }
-                    SingleSpinOperator::Z => {
+                    SinglePauliOperator::Z => {
                         match row.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                             0 => {
                                 prefac *= Complex::<f64>::new(1.0, 0.0);
@@ -232,7 +207,7 @@ where
                             _ => panic!("Internal error in constructing matrix"),
                         };
                     }
-                    SingleSpinOperator::Identity => (),
+                    SinglePauliOperator::Identity => (),
                 }
             }
             let mut_value = entries.get_mut(&column);
@@ -259,7 +234,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of the operator-like object.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of the operator-like object.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,
@@ -279,15 +254,15 @@ where
                 let mut prefac: Complex<f64> = 1.0.into();
                 // first the terms corresponding to -i H p => -i H.kron(I) flatten(p)
                 for (spin_op_index, pauliop) in index.iter() {
-                    match SingleSpinOperator::from(*pauliop) {
-                        SingleSpinOperator::X => {
+                    match SinglePauliOperator::from(*pauliop) {
+                        SinglePauliOperator::X => {
                             match row_adjusted.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                                 0 => column += 2usize.pow((*spin_op_index + shift) as u32),
                                 1 => column -= 2usize.pow((*spin_op_index + shift) as u32),
                                 _ => panic!("Internal error in constructing matrix"),
                             }
                         }
-                        SingleSpinOperator::Y => {
+                        SinglePauliOperator::Y => {
                             match row_adjusted.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                                 0 => {
                                     column += 2usize.pow((*spin_op_index + shift) as u32);
@@ -302,7 +277,7 @@ where
                                 _ => panic!("Internal error in constructing matrix"),
                             };
                         }
-                        SingleSpinOperator::Z => {
+                        SinglePauliOperator::Z => {
                             match row_adjusted.div_euclid(2usize.pow(*spin_op_index as u32)) % 2 {
                                 0 => {
                                     prefac *= Complex::<f64>::new(1.0, 0.0);
@@ -313,7 +288,7 @@ where
                                 _ => panic!("Internal error in constructing matrix"),
                             };
                         }
-                        SingleSpinOperator::Identity => (),
+                        SinglePauliOperator::Identity => (),
                     }
                 }
                 prefac *= commutator_prefactor * constant_prefactor;
@@ -355,20 +330,13 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     ///
     /// # Returns
     ///
-    /// * `HashMap<(usize, usize), CalculatorComplex>` - The matrix representation of Self.
+    /// * `HashMap<(usize, usize), CalculatorComplex>` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator(
         &'a self,
-        number_spins: Option<usize>,
+        number_spins: usize,
     ) -> Result<HashMap<(usize, usize), Complex64>, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
-        let number_spins = match number_spins {
-            None => self.number_spins(),
-            Some(num_spins) => num_spins,
-        };
+        let dimension = 2usize.pow(number_spins as u32);
         let mut matrix: HashMap<(usize, usize), Complex64> = HashMap::new();
         for row in 0..dimension.pow(2) {
             for (column, val) in self
@@ -393,20 +361,13 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     ///
     /// # Returns
     ///
-    /// * `(Vec<Complex64>, (Vec<usize>, Vec<usize>)` - The matrix representation of Self.
+    /// * `(Vec<Complex64>, (Vec<usize>, Vec<usize>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_coo(
         &'a self,
-        number_spins: Option<usize>,
+        number_spins: usize,
     ) -> Result<CooSparseMatrix, StruqtureError> {
-        let dimension = match number_spins {
-            None => 2usize.pow(self.current_number_spins() as u32),
-            Some(num_spins) => 2usize.pow(num_spins as u32),
-        };
-        let number_spins = match number_spins {
-            None => self.number_spins(),
-            Some(num_spins) => num_spins,
-        };
+        let dimension = 2usize.pow(number_spins as u32);
         let capacity = dimension;
         let mut values: Vec<Complex64> = Vec::with_capacity(capacity);
         let mut rows: Vec<usize> = Vec::with_capacity(capacity);
@@ -434,31 +395,13 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
     ///
     /// # Returns
     ///
-    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The matrix representation of Self.
+    /// * `Ok(HashMap<(usize, usize), CalculatorComplex>)` - The little endian matrix representation of Self.
     /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
     fn sparse_matrix_superoperator_entries_on_row(
         &'a self,
         row: usize,
         number_spins: usize,
     ) -> Result<HashMap<usize, Complex<f64>>, StruqtureError>;
-
-    /// Return the unitary part of the superoperator in the sparse COO format.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok((Vec<Complex64>, (Vec<usize>, Vec<usize>))` - The matrix representation of Self.
-    /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn unitary_sparse_matrix_coo(&'a self) -> Result<CooSparseMatrix, StruqtureError>;
-
-    /// Output the Lindblad entries in the form (left, right, rate) where left/right are the left and right lindblad operators, and rate is the lindblad rate respectively.
-    ///
-    /// # Returns
-    ///
-    /// * `Ok(Vec<((Vec<Complex64>, (Vec<usize>, Vec<usize>), (Vec<Complex64>, (Vec<usize>, Vec<usize>), Complex64)>)` - The matrix representation of Self.
-    /// * `Err(CalculatorError)` - CalculatorFloat could not be converted to f64.
-    fn sparse_lindblad_entries(
-        &'a self,
-    ) -> Result<Vec<(CooSparseMatrix, CooSparseMatrix, Complex64)>, StruqtureError>;
 }
 
 /// Trait for Hermitian operations on spins.
@@ -468,9 +411,9 @@ pub trait ToSparseMatrixSuperOperator<'a>: OperateOnSpins<'a> + PartialEq + Clon
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorFloat;
 /// use std::collections::HashMap;
-/// use struqture::spins::{HermitianOperateOnSpins, PauliProduct, SpinHamiltonian};
+/// use struqture::spins::{HermitianOperateOnSpins, PauliProduct, PauliHamiltonian};
 ///
-/// let mut sh = SpinHamiltonian::new();
+/// let mut sh = PauliHamiltonian::new();
 /// let pp_0z = PauliProduct::new().z(0);
 /// sh.add_operator_product(pp_0z.clone(), CalculatorFloat::from(0.2)).unwrap();
 /// let mut mapping: HashMap<PauliProduct, CalculatorFloat> = HashMap::new();
@@ -500,7 +443,7 @@ pub trait HermitianOperateOnSpins<'a>:
 where
     &'a Self: IntoIterator<Item = (&'a Self::Index, &'a Self::Value)>,
 
-    SingleSpinOperator:
+    SinglePauliOperator:
         From<<<Self as OperateOnDensityMatrix<'a>>::Index as SpinIndex>::SingleSpinType>,
     <Self as OperateOnDensityMatrix<'a>>::Value: Into<CalculatorFloat>,
 

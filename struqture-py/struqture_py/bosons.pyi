@@ -5,23 +5,23 @@
 """
 Bosons module of struqture Python interface
 
-Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonSystem and BosonHamiltonianSystem),
-and Lindblad type bosonic open systems (BosonLindbladNoiseSystem, BosonLindbladOpenSystem).
+Module for representing bosonic indices (BosonProduct and HermitianBosonProduct), bosonic systems (BosonOperator and BosonHamiltonian),
+and Lindblad type bosonic open systems (BosonLindbladNoiseOperator, BosonLindbladOpenSystem).
 
 .. autosummary::
     :toctree: generated/
 
     BosonProduct
     HermitianBosonProduct
-    BosonSystem
-    BosonHamiltonianSystem
-    BosonLindbladNoiseSystem
+    BosonOperator
+    BosonHamiltonian
+    BosonLindbladNoiseOperator
     BosonLindbladOpenSystem
 
 """
 
 from .struqture_py import ProductType, SystemType, NoiseType
-from typing import Optional, List, Tuple, Union
+from typing import Optional, List, Tuple, Set, Union, Any
 
 class BosonProduct(ProductType):
     """
@@ -50,10 +50,12 @@ class BosonProduct(ProductType):
         b_product = BosonProduct([0], [0])
         npt.assert_equal(b_product.creators(), [0])
         npt.assert_equal(b_product.annihilators(), [0])
+
     """
 
     def __init__(self, creators: List[int], annihilators: List[int]):
         return
+
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -61,6 +63,7 @@ class BosonProduct(ProductType):
         Returns:
             (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
+
     def is_natural_hermitian(self) -> bool:  # type: ignore
         """
         Return whether self is naturally hermitian.
@@ -70,19 +73,25 @@ class BosonProduct(ProductType):
         For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
         Returns:
-            bool: Whether self is naturally hermitian or not."""
+            bool: Whether self is naturally hermitian or not.
+        """
+
     def number_creators(self) -> int:  # type: ignore
         """
         Get the number of creator indices of self.
 
         Returns:
-            int: The number of creator indices in self."""
+            int: The number of creator indices in self.
+        """
+
     def number_annihilators(self) -> int:  # type: ignore
         """
         Get the number of annihilator indices of self.
 
         Returns:
-            int: The number of annihilator indices in self."""
+            int: The number of annihilator indices in self.
+        """
+
     def current_number_modes(self) -> int:  # type: ignore
         """
         Returns the maximal number of modes self acts on.
@@ -95,19 +104,25 @@ class BosonProduct(ProductType):
         would have current_number_modes of four.
 
         Returns:
-            int: The maximal number of modes self acts on."""
+            int: The maximal number of modes self acts on.
+        """
+
     def creators(self) -> List[int]:  # type: ignore
         """
         Return list of creator indices.
 
         Returns:
-            List[int]: A list of the corresponding creator indices."""
+            List[int]: A list of the corresponding creator indices.
+        """
+
     def annihilators(self) -> List[int]:  # type: ignore
         """
         Return list of annihilator indices.
 
         Returns:
-            List[int]: A list of the corresponding annihilator indices."""
+            List[int]: A list of the corresponding annihilator indices.
+        """
+
     def remap_modes(self):  # type: ignore
         """
         Remap modes according to an input dictionary.
@@ -121,6 +136,7 @@ class BosonProduct(ProductType):
         Raises:
            ValueError: Input reordering dictionary is not a permutation of the indices.
         """
+
     def create_valid_pair(self, creators: List[int], annihilators: List[int], value: Union[float, int, str, complex]):  # type: ignore
         """
         Create valid pair of index and value to be set in an operator.
@@ -140,6 +156,22 @@ class BosonProduct(ProductType):
             TypeError: Value is not CalculatorComplex.
             ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
+
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2.
+        """
+
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -152,7 +184,9 @@ class BosonProduct(ProductType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -161,7 +195,9 @@ class BosonProduct(ProductType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes."""
+            ValueError: Cannot serialize object to bytes.
+        """
+
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -170,7 +206,9 @@ class BosonProduct(ProductType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json."""
+            ValueError: Cannot serialize object to json.
+        """
+
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -182,7 +220,9 @@ class BosonProduct(ProductType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def from_string(self, input: str) -> BosonProduct:  # type: ignore
         """
         Convert a string representation of the object to an instance.
@@ -194,13 +234,17 @@ class BosonProduct(ProductType):
             self: The converted object.
 
         Raises:
-            ValueError: Input cannot be converted from str."""
+            ValueError: Input cannot be converted from str.
+        """
+
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library."""
+            str: The current version of the library.
+        """
+
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -208,12 +252,19 @@ class BosonProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object.
+        """
+
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json"""
+            str: The json schema serialized to json
+        """
 
 class HermitianBosonProduct(ProductType):
     """
@@ -242,10 +293,12 @@ class HermitianBosonProduct(ProductType):
         b_product = HermitianBosonProduct([0], [0])
         npt.assert_equal(b_product.creators(), [0])
         npt.assert_equal(b_product.annihilators(), [0])
+
     """
 
     def __init__(self, creators: List[int], annihilators: List[int]):
         return
+
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -253,6 +306,7 @@ class HermitianBosonProduct(ProductType):
         Returns:
             (self, float): The hermitian conjugate of self and the potential sign it has picked up.
         """
+
     def is_natural_hermitian(self) -> bool:  # type: ignore
         """
         Return whether self is naturally hermitian.
@@ -262,19 +316,25 @@ class HermitianBosonProduct(ProductType):
         For mixed objects, this is true when all of the spin, bosonic and fermionic parts' `is_naturally_hermitian` functions evaluate to true.
 
         Returns:
-            bool: Whether self is naturally hermitian or not."""
+            bool: Whether self is naturally hermitian or not.
+        """
+
     def number_creators(self) -> int:  # type: ignore
         """
         Get the number of creator indices of self.
 
         Returns:
-            int: The number of creator indices in self."""
+            int: The number of creator indices in self.
+        """
+
     def number_annihilators(self) -> int:  # type: ignore
         """
         Get the number of annihilator indices of self.
 
         Returns:
-            int: The number of annihilator indices in self."""
+            int: The number of annihilator indices in self.
+        """
+
     def current_number_modes(self) -> int:  # type: ignore
         """
         Returns the maximal number of modes self acts on.
@@ -287,19 +347,25 @@ class HermitianBosonProduct(ProductType):
         would have current_number_modes of four.
 
         Returns:
-            int: The maximal number of modes self acts on."""
+            int: The maximal number of modes self acts on.
+        """
+
     def creators(self) -> List[int]:  # type: ignore
         """
         Return list of creator indices.
 
         Returns:
-            List[int]: A list of the corresponding creator indices."""
+            List[int]: A list of the corresponding creator indices.
+        """
+
     def annihilators(self) -> List[int]:  # type: ignore
         """
         Return list of annihilator indices.
 
         Returns:
-            List[int]: A list of the corresponding annihilator indices."""
+            List[int]: A list of the corresponding annihilator indices.
+        """
+
     def remap_modes(self):  # type: ignore
         """
         Remap modes according to an input dictionary.
@@ -313,6 +379,7 @@ class HermitianBosonProduct(ProductType):
         Raises:
            ValueError: Input reordering dictionary is not a permutation of the indices.
         """
+
     def create_valid_pair(self, creators: List[int], annihilators: List[int], value: Union[float, int, str, complex]):  # type: ignore
         """
         Create valid pair of index and value to be set in an operator.
@@ -332,6 +399,22 @@ class HermitianBosonProduct(ProductType):
             TypeError: Value is not CalculatorComplex.
             ValueError: Indices given in either creators or annihilators contain a double index specification (only applicable to fermionic objects).
         """
+
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2.
+        """
+
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -344,7 +427,9 @@ class HermitianBosonProduct(ProductType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -353,7 +438,9 @@ class HermitianBosonProduct(ProductType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes."""
+            ValueError: Cannot serialize object to bytes.
+        """
+
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -362,7 +449,9 @@ class HermitianBosonProduct(ProductType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json."""
+            ValueError: Cannot serialize object to json.
+        """
+
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -374,7 +463,9 @@ class HermitianBosonProduct(ProductType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def from_string(self, input: str) -> HermitianBosonProduct:  # type: ignore
         """
         Convert a string representation of the object to an instance.
@@ -386,13 +477,17 @@ class HermitianBosonProduct(ProductType):
             self: The converted object.
 
         Raises:
-            ValueError: Input cannot be converted from str."""
+            ValueError: Input cannot be converted from str.
+        """
+
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library."""
+            str: The current version of the library.
+        """
+
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -400,22 +495,26 @@ class HermitianBosonProduct(ProductType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object.
+        """
+
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json"""
+            str: The json schema serialized to json
+        """
 
-class BosonSystem(SystemType):
+class BosonOperator:
     """
     These are representations of systems of bosons.
 
-    BosonSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
+    BosonOperators are characterized by a BosonOperator to represent the hamiltonian of the spin system
     and an optional number of bosons.
-
-    Args:
-        number_bosons (Optional[int]): The number of bosons in the BosonSystem.
 
     Returns:
         self: The new BosonSystem with the input number of bosons.
@@ -428,25 +527,29 @@ class BosonSystem(SystemType):
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex
-        from struqture_py.bosons import BosonSystem, BosonProduct
+        from struqture_py.bosons import BosonOperator, BosonProduct
 
-        ssystem = BosonSystem(2)
+        system = BosonOperator()
         pp = BosonProduct([0], [1])
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.number_modes(), 2)
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-        npt.assert_equal(ssystem.keys(), [pp])
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_modes(), 2)
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
+        npt.assert_equal(system.keys(), [pp])
+
     """
 
-    def __init__(self, number_bosons: Optional[int]):
+    def __init__(self):
         return
+
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
 
         Returns:
-            List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> BosonSystem:  # type: ignore
+            List[OperatorProduct]: The sequence of keys of the self.
+        """
+
+    def empty_clone(self, capacity: Optional[int]) -> BosonOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -456,13 +559,16 @@ class BosonSystem(SystemType):
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
+
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if self contains no values.
 
         Returns:
-            bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> BosonSystem:  # type: ignore
+            bool: Whether self is empty or not.
+        """
+
+    def truncate(self, threshold: float) -> BosonOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -470,7 +576,9 @@ class BosonSystem(SystemType):
             threshold (float): The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self."""
+            self: The truncated version of self.
+        """
+
     def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -482,7 +590,9 @@ class BosonSystem(SystemType):
             CalculatorComplex: Value at key (or 0.0).
 
         Raises:
-            ValueError: Product could not be constructed from key."""
+            ValueError: Product could not be constructed from key.
+        """
+
     def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Remove the value of the input key.
@@ -494,7 +604,9 @@ class BosonSystem(SystemType):
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
         Raises:
-            ValueError: Product could not be constructed."""
+            ValueError: Product could not be constructed.
+        """
+
     def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -507,18 +619,23 @@ class BosonSystem(SystemType):
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
 
         Raises:
-            ValueError: Product could not be constructed."""
-    def add_operator_product(self, key: ProductType):  # type: ignore
+            ValueError: Product could not be constructed.
+        """
+
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Product could not be constructed.
-            ValueError: Error in add_operator_product function of self."""
+            ValueError: Error in add_operator_product function of self.
+        """
+
     def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Return unsorted values in self.
@@ -526,36 +643,38 @@ class BosonSystem(SystemType):
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> BosonSystem:  # type: ignore
+
+    def hermitian_conjugate(self) -> BosonOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
         Returns:
-            self: The hermitian conjugate of self."""
+            self: The hermitian conjugate of self.
+        """
+
     def current_number_modes(self) -> int:  # type: ignore
         """
-        Return maximum index in self.
+        Return the current_number_modes input of self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
+            int: The number of modes in self.
         """
-        Return the number_modes input of self.
 
-        Returns:
-            int: The number of modes in self."""
-    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
 
         Args:
-            number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
+            input (Any): the json of the struqture 1 object to convert.
 
         Returns:
-            Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
+            Any: the input object in struqture 2 form.
 
         Raises:
-            ValueError: Error in adding terms to return values."""
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2.
+        """
+
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -568,7 +687,9 @@ class BosonSystem(SystemType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of self using the [bincode] crate.
@@ -577,7 +698,9 @@ class BosonSystem(SystemType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes."""
+            ValueError: Cannot serialize object to bytes.
+        """
+
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of self.
@@ -586,7 +709,9 @@ class BosonSystem(SystemType):
             str: The serialized form of self.
 
         Raises:
-            ValueError: Cannot serialize object to json."""
+            ValueError: Cannot serialize object to json.
+        """
+
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of self to an instance.
@@ -598,13 +723,17 @@ class BosonSystem(SystemType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def current_version(self) -> str:  # type: ignore
         """
-        Returns the current version of the struqture library .
+        Returns the current version of the struqture library.
 
         Returns:
-            str: The current version of the library."""
+            str: The current version of the library.
+        """
+
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -612,18 +741,25 @@ class BosonSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object.
+        """
+
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json"""
+            str: The json schema serialized to json
+        """
 
-class BosonHamiltonianSystem(SystemType):
+class BosonHamiltonian:
     """
     These are representations of systems of bosons.
 
-    BosonHamiltonianSystems are characterized by a BosonOperator to represent the hamiltonian of the spin system
+    BosonHamiltonians are characterized by a BosonOperator to represent the hamiltonian of the spin system
     and an optional number of bosons.
 
     Returns:
@@ -637,25 +773,29 @@ class BosonHamiltonianSystem(SystemType):
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex
-        from struqture_py.bosons import BosonHamiltonianSystem, HermitianBosonProduct
+        from struqture_py.bosons import BosonHamiltonian, HermitianBosonProduct
 
-        ssystem = BosonHamiltonianSystem(2)
+        system = BosonHamiltonian()
         pp = HermitianBosonProduct([0], [0])
-        ssystem.add_operator_product(pp, 5.0)
-        npt.assert_equal(ssystem.number_modes(), 2)
-        npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
-        npt.assert_equal(ssystem.keys(), [pp])
+        system.add_operator_product(pp, 5.0)
+        npt.assert_equal(system.current_number_modes(), 2)
+        npt.assert_equal(system.get(pp), CalculatorComplex(5))
+        npt.assert_equal(system.keys(), [pp])
+
     """
 
     def __init__(self):
         return
+
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
 
         Returns:
-            List[OperatorProduct]: The sequence of keys of the self."""
-    def empty_clone(self, capacity: Optional[int]) -> BosonHamiltonianSystem:  # type: ignore
+            List[OperatorProduct]: The sequence of keys of the self.
+        """
+
+    def empty_clone(self, capacity: Optional[int]) -> BosonHamiltonian:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -665,13 +805,16 @@ class BosonHamiltonianSystem(SystemType):
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
+
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if self contains no values.
 
         Returns:
-            bool: Whether self is empty or not."""
-    def truncate(self, threshold: float) -> BosonHamiltonianSystem:  # type: ignore
+            bool: Whether self is empty or not.
+        """
+
+    def truncate(self, threshold: float) -> BosonHamiltonian:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -679,7 +822,9 @@ class BosonHamiltonianSystem(SystemType):
             threshold (float): The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self."""
+            self: The truncated version of self.
+        """
+
     def get(self, key) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -691,7 +836,9 @@ class BosonHamiltonianSystem(SystemType):
             CalculatorComplex: Value at key (or 0.0).
 
         Raises:
-            ValueError: Product could not be constructed from key."""
+            ValueError: Product could not be constructed from key.
+        """
+
     def remove(self, key: ProductType) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Remove the value of the input key.
@@ -703,7 +850,9 @@ class BosonHamiltonianSystem(SystemType):
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was removed.
 
         Raises:
-            ValueError: Product could not be constructed."""
+            ValueError: Product could not be constructed.
+        """
+
     def set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> Optional[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -716,18 +865,23 @@ class BosonHamiltonianSystem(SystemType):
             Optional[Union[CalculatorComplex, CalculatorFloat]]: Key existed if this is not None, and this is the value it had before it was overwritten.
 
         Raises:
-            ValueError: Product could not be constructed."""
-    def add_operator_product(self, key: ProductType):  # type: ignore
+            ValueError: Product could not be constructed.
+        """
+
+    def add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]):  # type: ignore
         """
         Add a new (key object, value Union[CalculatorComplex, CalculatorFloat]) pair to existing entries.
 
         Args:
             key (Product type): The key object
+            value (Union[CalculatorComplex, CalculatorFloat]): The value to add.
 
         Raises:
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Product could not be constructed.
-            ValueError: Error in add_operator_product function of self."""
+            ValueError: Error in add_operator_product function of self.
+        """
+
     def values(self) -> List[Union[Union[float, int, str, complex], Union[float, int, str]]]:  # type: ignore
         """
         Return unsorted values in self.
@@ -735,36 +889,38 @@ class BosonHamiltonianSystem(SystemType):
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
-    def hermitian_conjugate(self) -> BosonHamiltonianSystem:  # type: ignore
+
+    def hermitian_conjugate(self) -> BosonHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
 
         Returns:
-            self: The hermitian conjugate of self."""
+            self: The hermitian conjugate of self.
+        """
+
     def current_number_modes(self) -> int:  # type: ignore
         """
-        Return maximum index in self.
+        Return the current_number_modes input of self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
+            int: The number of modes in self.
         """
-        Return the number_modes input of self.
 
-        Returns:
-            int: The number of modes in self."""
-    def separate_into_n_terms(self, number_creators_annihilators: Tuple[int, int]) -> Tuple[Self, Self]:  # type: ignore
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
         """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
 
         Args:
-            number_creators_annihilators (Tuple[int, int]): Number of modes to filter for in the keys.
+            input (Any): the json of the struqture 1 object to convert.
 
         Returns:
-            Tuple[Self, Self]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
+            Any: the input object in struqture 2 form.
 
         Raises:
-            ValueError: Error in adding terms to return values."""
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2.
+        """
+
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of self to an instance using the [bincode] crate.
@@ -777,7 +933,9 @@ class BosonHamiltonianSystem(SystemType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of self using the [bincode] crate.
@@ -786,7 +944,9 @@ class BosonHamiltonianSystem(SystemType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes."""
+            ValueError: Cannot serialize object to bytes.
+        """
+
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of self.
@@ -795,7 +955,9 @@ class BosonHamiltonianSystem(SystemType):
             str: The serialized form of self.
 
         Raises:
-            ValueError: Cannot serialize object to json."""
+            ValueError: Cannot serialize object to json.
+        """
+
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of self to an instance.
@@ -807,13 +969,17 @@ class BosonHamiltonianSystem(SystemType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def current_version(self) -> str:  # type: ignore
         """
-        Returns the current version of the struqture library .
+        Returns the current version of the struqture library.
 
         Returns:
-            str: The current version of the library."""
+            str: The current version of the library.
+        """
+
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -821,24 +987,25 @@ class BosonHamiltonianSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object.
+        """
+
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json"""
+            str: The json schema serialized to json
+        """
 
-class BosonLindbladNoiseSystem(SystemType):
+class BosonLindbladNoiseOperator(NoiseType):
     """
     These are representations of noisy systems of bosons.
 
-    In a BosonLindbladNoiseSystem is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.
-
-    Args:
-        number_bosons (Optional[int]): The number of bosons in the BosonLindbladNoiseSystem.
-
-    Returns:
-        self: The new BosonLindbladNoiseSystem with the input number of bosons.
+    In a BosonLindbladNoiseOperator is characterized by a BosonLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of bosons.
 
     Examples
     --------
@@ -848,30 +1015,19 @@ class BosonLindbladNoiseSystem(SystemType):
         import numpy.testing as npt
         import scipy.sparse as sp
         from qoqo_calculator_pyo3 import CalculatorComplex
-        from struqture_py.bosons import BosonLindbladNoiseSystem, BosonProduct
+        from struqture_py.bosons import BosonLindbladNoiseOperator, BosonProduct
 
-        slns = BosonLindbladNoiseSystem()
+        slns = BosonLindbladNoiseOperator()
         dp = BosonProduct([0], [1])
         slns.add_operator_product((dp, dp), 2.0)
         npt.assert_equal(slns.current_number_modes(), 2)
         npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
+
     """
 
-    def __init__(self, number_bosons: Optional[int]):
+    def __init__(self):
         return
-    def separate_into_n_terms(self, number_creators_annihilators_left: Tuple[int, int], number_creators_annihilators_right: Tuple[int, int]) -> Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]:  # type: ignore
-        """
-        Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations.
 
-        Args:
-            number_creators_annihilators_left (Tuple[int, int]): Number of creators and number of annihilators to filter for in the left term of the keys.
-            number_creators_annihilators_right (Tuple[int, int]): Number of creators and number of annihilators to filter for in the right term of the keys.
-
-        Returns:
-            Tuple[BosonLindbladNoiseSystem, BosonLindbladNoiseSystem]: Operator with the noise terms where the number of creation and annihilation operators matches the number of spins the operator product acts on and Operator with all other contributions.
-
-        Raises:
-            ValueError: Error in adding terms to return values."""
     def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -884,7 +1040,9 @@ class BosonLindbladNoiseSystem(SystemType):
 
         Raises:
             ValueError: Left-hand product could not be constructed from key.
-            ValueError: Right-hand product could not be constructed from key."""
+            ValueError: Right-hand product could not be constructed from key.
+        """
+
     def remove(self, key: Tuple[ProductType, ProductType]) -> Optional[Union[float, int, str, complex]]:  # type: ignore
         """
         Remove the value of the input object key.
@@ -897,7 +1055,9 @@ class BosonLindbladNoiseSystem(SystemType):
 
         Raises:
             ValueError: Left-hand Product could not be constructed.
-            ValueError: Right-hand Product could not be constructed."""
+            ValueError: Right-hand Product could not be constructed.
+        """
+
     def set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> Optional[Union[float, int, str, complex]]:  # type: ignore
         """
         Overwrite an existing entry or set a new entry in self.
@@ -911,7 +1071,9 @@ class BosonLindbladNoiseSystem(SystemType):
 
         Raises:
             ValueError: Left-hand Product could not be constructed.
-            ValueError: Right-hand Product could not be constructed."""
+            ValueError: Right-hand Product could not be constructed.
+        """
+
     def add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]):  # type: ignore
         """
         Adds a new (key object, CalculatorComplex) pair to existing entries.
@@ -924,20 +1086,26 @@ class BosonLindbladNoiseSystem(SystemType):
             TypeError: Value is not CalculatorComplex or CalculatorFloat.
             ValueError: Left-hand product could not be constructed.
             ValueError: Right-hand product could not be constructed.
-            ValueError: Error in add_operator_product function of self."""
+            ValueError: Error in add_operator_product function of self.
+        """
+
     def keys(self) -> List[(OperatorProduct, OperatorProduct)]:  # type: ignore
         """
         Return unsorted keys in self.
 
         Returns:
-            List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self."""
+            List[(OperatorProduct, OperatorProduct)]: The sequence of keys of self.
+        """
+
     def values(self) -> List[Union[float, int, str, complex]]:  # type: ignore
         """
         Return unsorted values in self.
 
         Returns:
-            List[CalculatorComplex]: The sequence of values of self."""
-    def empty_clone(self, capacity) -> BosonLindbladNoiseSystem:  # type: ignore
+            List[CalculatorComplex]: The sequence of values of self.
+        """
+
+    def empty_clone(self, capacity) -> BosonLindbladNoiseOperator:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
 
@@ -947,13 +1115,16 @@ class BosonLindbladNoiseSystem(SystemType):
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
+
     def is_empty(self) -> bool:  # type: ignore
         """
         Return true if object contains no values.
 
         Returns:
-            bool: Whether self is empty or not."""
-    def truncate(self, threshold) -> BosonLindbladNoiseSystem:  # type: ignore
+            bool: Whether self is empty or not.
+        """
+
+    def truncate(self, threshold) -> BosonLindbladNoiseOperator:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
 
@@ -961,19 +1132,32 @@ class BosonLindbladNoiseSystem(SystemType):
             threshold: The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self."""
+            self: The truncated version of self.
+        """
+
     def current_number_modes(self) -> int:  # type: ignore
         """
-        Return maximum index in object.
+        Return the current_number_modes input of self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
+            int: The number of modes in self.
         """
-        Return the number_modes input of self.
+
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
 
         Returns:
-            int: The number of modes in self."""
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2.
+        """
+
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -986,7 +1170,9 @@ class BosonLindbladNoiseSystem(SystemType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -995,7 +1181,9 @@ class BosonLindbladNoiseSystem(SystemType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes."""
+            ValueError: Cannot serialize object to bytes.
+        """
+
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -1004,7 +1192,9 @@ class BosonLindbladNoiseSystem(SystemType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json."""
+            ValueError: Cannot serialize object to json.
+        """
+
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -1016,13 +1206,17 @@ class BosonLindbladNoiseSystem(SystemType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library."""
+            str: The current version of the library.
+        """
+
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -1030,21 +1224,25 @@ class BosonLindbladNoiseSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object.
+        """
+
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json"""
+            str: The json schema serialized to json
+        """
 
 class BosonLindbladOpenSystem(SystemType):
     """
     These are representations of noisy systems of bosons.
 
     In a BosonLindbladOpenSystem is characterized by a BosonLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of bosons.
-
-    Args:
-        number_bosons (Optional[int]): The number of bosons in the BosonLindbladOpenSystem.
 
     Returns:
         self: The new BosonLindbladOpenSystem with the input number of bosons.
@@ -1064,40 +1262,44 @@ class BosonLindbladOpenSystem(SystemType):
         slns.system_add_operator_product(dp, 2.0)
         npt.assert_equal(slns.current_number_modes(), 2)
         npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
+
     """
 
-    def __init__(self, number_bosons: Optional[int]):
+    def __init__(self):
         return
+
     def current_number_modes(self) -> int:  # type: ignore
         """
-        Return maximum index in object.
+        Return the current_number_modes input of self.
 
         Returns:
-            int: Maximum index."""
-    def number_modes(self) -> int:  # type: ignore
+            int: The number of modes in self.
         """
-        Return the number_modes input of self.
 
-        Returns:
-            int: The number of modes in self."""
     def system(self) -> SystemType:  # type: ignore
         """
         Return the system part of self.
 
         Returns:
-            System type: The system of self."""
+            System type: The system of self.
+        """
+
     def noise(self) -> NoiseType:  # type: ignore
         """
         Return the noise part of self.
 
         Returns:
-            Noise type: The noise of self."""
+            Noise type: The noise of self.
+        """
+
     def ungroup(self):  # type: ignore
         """
         Return a tuple of the system and the noise of self.
 
         Returns:
-            (System, Noise): The system and noise of self."""
+            (System, Noise): The system and noise of self.
+        """
+
     def group(self, system, noise) -> BosonLindbladOpenSystem:  # type: ignore
         """
         Take a tuple of a system term and a noise term and combines them to be a OpenSystem.
@@ -1112,7 +1314,9 @@ class BosonLindbladOpenSystem(SystemType):
         Raises:
             ValueError: System could not be constructed.
             ValueError: Noise could not be constructed.
-            ValueError: Grouping could not be constructed."""
+            ValueError: Grouping could not be constructed.
+        """
+
     def empty_clone(self) -> BosonLindbladOpenSystem:  # type: ignore
         """
         Return an instance of self that has no entries but clones all other properties, with the given capacity.
@@ -1120,6 +1324,7 @@ class BosonLindbladOpenSystem(SystemType):
         Returns:
             self: An empty clone with the same properties as self, with the given capacity.
         """
+
     def truncate(self, threshold) -> BosonLindbladOpenSystem:  # type: ignore
         """
         Truncate self by returning a copy without entries under a threshold.
@@ -1128,7 +1333,9 @@ class BosonLindbladOpenSystem(SystemType):
             threshold: The threshold for inclusion.
 
         Returns:
-            self: The truncated version of self."""
+            self: The truncated version of self.
+        """
+
     def system_set(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem:  # type: ignore
         """
         Set a new entry in the system of the open system.
@@ -1144,6 +1351,7 @@ class BosonLindbladOpenSystem(SystemType):
             ValueError: key element cannot be converted to product.
             TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
+
     def noise_set(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem:  # type: ignore
         """
         Set a new entry in the noise of the open system.
@@ -1160,6 +1368,7 @@ class BosonLindbladOpenSystem(SystemType):
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
+
     def system_get(self, key: ProductType) -> Union[float, int, str, complex] or Union[float, int, str]:  # type: ignore
         """
         Get the CalculatorComplex or CalculatorFloat coefficient corresponding to the key.
@@ -1171,7 +1380,9 @@ class BosonLindbladOpenSystem(SystemType):
             CalculatorComplex or CalculatorFloat: Value at key (or 0.0).
 
         Raises:
-            ValueError: key element cannot be converted to product."""
+            ValueError: key element cannot be converted to product.
+        """
+
     def noise_get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the CalculatorComplex coefficient corresponding to the key.
@@ -1184,7 +1395,9 @@ class BosonLindbladOpenSystem(SystemType):
 
         Raises:
             ValueError: Left key element cannot be converted to product.
-            ValueError: Right key element cannot be converted to product."""
+            ValueError: Right key element cannot be converted to product.
+        """
+
     def system_add_operator_product(self, key: ProductType, value: Union[Union[float, int, str, complex], Union[float, int, str]]) -> OpenSystem:  # type: ignore
         """
         Add a new entry to the system of the open system.
@@ -1200,6 +1413,7 @@ class BosonLindbladOpenSystem(SystemType):
             ValueError: key element cannot be converted to product.
             TypeError: Value cannot be converted to Union[CalculatorComplex, CalculatorFloat].
         """
+
     def noise_add_operator_product(self, key: Tuple[ProductType, ProductType], value: Union[float, int, str, complex]) -> OpenSystem:  # type: ignore
         """
         Add a new entry to the system of the open system.
@@ -1214,7 +1428,24 @@ class BosonLindbladOpenSystem(SystemType):
         Raises:
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
-            TypeError: Value cannot be converted to CalculatorComplex."""
+            TypeError: Value cannot be converted to CalculatorComplex.
+        """
+
+    def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore
+        """
+        Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.
+
+        Args:
+            input (Any): the json of the struqture 1 object to convert.
+
+        Returns:
+            Any: the input object in struqture 2 form.
+
+        Raises:
+            ValueError: Input could not be deserialised form json.
+            ValueError: Struqture 1 object could not be converted to struqture 2.
+        """
+
     def from_bincode(self, input: bytearray):  # type: ignore
         """
         Convert the bincode representation of the object to an instance using the [bincode] crate.
@@ -1227,7 +1458,9 @@ class BosonLindbladOpenSystem(SystemType):
 
         Raises:
             TypeError: Input cannot be converted to byte array.
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def to_bincode(self) -> bytearray:  # type: ignore
         """
         Return the bincode representation of the object using the [bincode] crate.
@@ -1236,7 +1469,9 @@ class BosonLindbladOpenSystem(SystemType):
             bytearray: The serialized object (in [bincode] form).
 
         Raises:
-            ValueError: Cannot serialize object to bytes."""
+            ValueError: Cannot serialize object to bytes.
+        """
+
     def to_json(self) -> str:  # type: ignore
         """
         Return the json representation of the object.
@@ -1245,7 +1480,9 @@ class BosonLindbladOpenSystem(SystemType):
             str: The serialized form of the object.
 
         Raises:
-            ValueError: Cannot serialize object to json."""
+            ValueError: Cannot serialize object to json.
+        """
+
     def from_json(self, input: str):  # type: ignore
         """
         Convert the json representation of the object to an instance.
@@ -1257,13 +1494,17 @@ class BosonLindbladOpenSystem(SystemType):
             The deserialized object.
 
         Raises:
-            ValueError: Input cannot be deserialized."""
+            ValueError: Input cannot be deserialized.
+        """
+
     def current_version(self) -> str:  # type: ignore
         """
         Returns the current version of the struqture library .
 
         Returns:
-            str: The current version of the library."""
+            str: The current version of the library.
+        """
+
     def min_supported_version(self) -> str:  # type: ignore
         """
         Return the minimum version of struqture that supports this object.
@@ -1271,9 +1512,16 @@ class BosonLindbladOpenSystem(SystemType):
         Returns:
             str: The minimum version of the struqture library to deserialize this object.
         """
+
+    def _get_serialisation_meta(self):  # type: ignore
+        """
+        Returns the StruqtureSerialisationMeta of the object.
+        """
+
     def json_schema(self) -> str:  # type: ignore
         """
         Return the JsonSchema for the json serialisation of the class.
 
         Returns:
-            str: The json schema serialized to json"""
+            str: The json schema serialized to json
+        """

@@ -17,9 +17,11 @@ use qoqo_calculator::CalculatorComplex;
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
 use std::iter::{FromIterator, IntoIterator};
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::bosons::{BosonLindbladNoiseOperator, BosonProduct};
-use struqture::{ModeIndex, OperateOnDensityMatrix, OperateOnModes};
-use test_case::test_case;
+use struqture::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, STRUQTURE_VERSION};
 
 // Test the new function of the BosonLindbladNoiseOperator
 #[test]
@@ -53,21 +55,6 @@ fn empty_clone_options() {
     );
 }
 
-// Test the current_number_modes function of the BosonLindbladNoiseOperator
-#[test]
-fn internal_map_current_number_modes() {
-    let pp_0: BosonProduct = BosonProduct::new([0], [1]).unwrap();
-    let pp_2: BosonProduct = BosonProduct::new([2], [3]).unwrap();
-    let mut so = BosonLindbladNoiseOperator::new();
-    assert_eq!(so.current_number_modes(), 0_usize);
-    so.set((pp_0.clone(), pp_0), CalculatorComplex::from(0.5))
-        .unwrap();
-    assert_eq!(so.current_number_modes(), 2_usize);
-    so.set((pp_2.clone(), pp_2), CalculatorComplex::from(0.5))
-        .unwrap();
-    assert_eq!(so.current_number_modes(), 4_usize);
-}
-
 // Test the len function of the BosonLindbladNoiseOperator
 #[test]
 fn internal_map_len() {
@@ -82,7 +69,6 @@ fn internal_map_len() {
 fn internal_map_set_get_dict() {
     let mut system = BosonLindbladNoiseOperator::new();
     assert_eq!(system.current_number_modes(), 0_usize);
-    assert_eq!(system.number_modes(), 0_usize);
     let pp_0: BosonProduct = BosonProduct::new([0], [0]).unwrap();
 
     // 1) Test try_set_pauli_product and get functions
@@ -94,7 +80,6 @@ fn internal_map_set_get_dict() {
         .set((pp_0.clone(), pp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(system.current_number_modes(), 1_usize);
-    assert_eq!(system.number_modes(), 1_usize);
     assert_eq!(
         system.get(&(pp_0.clone(), pp_0.clone())),
         &CalculatorComplex::from(0.5)
@@ -183,78 +168,6 @@ fn internal_map_keys() {
     for (val_s, val_m) in values.zip(map.values()) {
         assert_eq!(val_s, val_m);
     }
-}
-
-// Test the separation of terms
-#[test_case((1, 1), (1, 1))]
-#[test_case((1, 1), (2, 2))]
-#[test_case((2, 2), (1, 2))]
-#[test_case((1, 2), (2, 1))]
-fn separate_out_terms(number_spins_left: (usize, usize), number_spins_right: (usize, usize)) {
-    let pp_1_a: BosonProduct = BosonProduct::new([0], [0]).unwrap();
-    let pp_2_a: BosonProduct = BosonProduct::new([0, 1], [1]).unwrap();
-    let pp_2_b: BosonProduct = BosonProduct::new([0], [0, 1]).unwrap();
-    let pp_3_a: BosonProduct = BosonProduct::new([0, 1], [0, 1]).unwrap();
-
-    let mut allowed: Vec<(BosonProduct, BosonProduct, f64)> = Vec::new();
-    let mut not_allowed: Vec<(BosonProduct, BosonProduct, f64)> = vec![
-        (pp_1_a.clone(), pp_1_a.clone(), 1.0),
-        (pp_1_a.clone(), pp_3_a.clone(), 1.0),
-        (pp_3_a.clone(), pp_2_b.clone(), 1.0),
-        (pp_2_b.clone(), pp_2_a.clone(), 1.0),
-    ];
-
-    match (number_spins_left, number_spins_right) {
-        ((1, 1), (1, 1)) => {
-            allowed.push(not_allowed[0].clone());
-            not_allowed.remove(0);
-        }
-        ((1, 1), (2, 2)) => {
-            allowed.push(not_allowed[1].clone());
-            not_allowed.remove(1);
-        }
-        ((2, 2), (1, 2)) => {
-            allowed.push(not_allowed[2].clone());
-            not_allowed.remove(2);
-        }
-        ((1, 2), (2, 1)) => {
-            allowed.push(not_allowed[3].clone());
-            not_allowed.remove(3);
-        }
-        _ => panic!(),
-    }
-
-    let mut separated = BosonLindbladNoiseOperator::new();
-    for (key_l, key_r, value) in allowed.iter() {
-        separated
-            .add_operator_product((key_l.clone(), key_r.clone()), value.into())
-            .unwrap();
-    }
-    let mut remainder = BosonLindbladNoiseOperator::new();
-    for (key_l, key_r, value) in not_allowed.iter() {
-        remainder
-            .add_operator_product((key_l.clone(), key_r.clone()), value.into())
-            .unwrap();
-    }
-
-    let mut so = BosonLindbladNoiseOperator::new();
-    so.add_operator_product(
-        (pp_1_a.clone(), pp_1_a.clone()),
-        CalculatorComplex::from(1.0),
-    )
-    .unwrap();
-    so.add_operator_product((pp_1_a, pp_3_a.clone()), CalculatorComplex::from(1.0))
-        .unwrap();
-    so.add_operator_product((pp_3_a, pp_2_b.clone()), CalculatorComplex::from(1.0))
-        .unwrap();
-    so.add_operator_product((pp_2_b, pp_2_a), CalculatorComplex::from(1.0))
-        .unwrap();
-
-    let result = so
-        .separate_into_n_terms(number_spins_left, number_spins_right)
-        .unwrap();
-    assert_eq!(result.0, separated);
-    assert_eq!(result.1, remainder);
 }
 
 // Test the negative operation: -BosonLindbladNoiseOperator
@@ -414,7 +327,7 @@ fn clone_partial_eq() {
     assert!(so != so_2);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_json() {
     let pp = BosonProduct::new([0], [1]).unwrap();
@@ -428,13 +341,9 @@ fn serde_json() {
     assert_eq!(so, deserialized);
 }
 
-/// Test SpinOperator Serialization and Deserialization traits (readable)
+/// Test PauliOperator Serialization and Deserialization traits (readable)
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp = BosonProduct::new([0], [1]).unwrap();
     let mut so = BosonLindbladNoiseOperator::new();
     so.set((pp.clone(), pp), CalculatorComplex::from(1.0))
@@ -456,15 +365,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("BosonLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -489,10 +404,6 @@ fn bincode() {
 
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp = BosonProduct::new([0], [1]).unwrap();
     let mut so = BosonLindbladNoiseOperator::new();
     so.set((pp.clone(), pp), CalculatorComplex::from(1.0))
@@ -536,15 +447,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
+            Token::Str("type_name"),
+            Token::Str("BosonLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
         ],
@@ -582,4 +499,21 @@ fn test_boson_noise_operator_schema() {
     let value: serde_json::Value = serde_json::to_value(val).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_1::bosons::BosonProduct::from_str("c0a1").unwrap();
+    let mut ss_1 = struqture_1::bosons::BosonLindbladNoiseSystem::new(None);
+    struqture_1::OperateOnDensityMatrix::set(&mut ss_1, (pp_1.clone(), pp_1.clone()), 1.0.into())
+        .unwrap();
+
+    let pp_2 = BosonProduct::new([0], [1]).unwrap();
+    let mut ss_2 = BosonLindbladNoiseOperator::new();
+    ss_2.set((pp_2.clone(), pp_2.clone()), 1.0.into()).unwrap();
+
+    assert!(BosonLindbladNoiseOperator::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

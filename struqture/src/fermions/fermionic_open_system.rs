@@ -10,25 +10,25 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::{FermionHamiltonianSystem, FermionLindbladNoiseSystem};
+use super::{FermionHamiltonian, FermionLindbladNoiseOperator};
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::SpinLindbladOpenSystem;
+use crate::spins::PauliLindbladOpenSystem;
 use crate::{OpenSystem, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::CalculatorFloat;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::ops;
 
-/// FermionLindbladOpenSystems are representations of open systems of fermions, where a system (FermionHamiltonianSystem) interacts with the environment via noise (FermionLindbladNoiseSystem).
+/// FermionLindbladOpenSystems are representations of open systems of fermions, where a system (FermionHamiltonian) interacts with the environment via noise (FermionLindbladNoiseOperator).
 ///
 /// # Example
 ///
 /// ```
 /// use struqture::prelude::*;
 /// use qoqo_calculator::CalculatorComplex;
-/// use struqture::fermions::{FermionProduct, HermitianFermionProduct, FermionLindbladOpenSystem, FermionHamiltonianSystem};
+/// use struqture::fermions::{FermionProduct, HermitianFermionProduct, FermionLindbladOpenSystem, FermionHamiltonian};
 ///
-/// let mut system = FermionLindbladOpenSystem::new(None);
+/// let mut system = FermionLindbladOpenSystem::new();
 ///
 /// let bp_0_1 = FermionProduct::new([0], [1]).unwrap();
 /// let bp_0 = HermitianFermionProduct::new([], [0]).unwrap();
@@ -44,17 +44,20 @@ use std::ops;
 #[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 pub struct FermionLindbladOpenSystem {
-    /// The FermionHamiltonianSystem representing the system terms of the open system
-    system: FermionHamiltonianSystem,
-    /// The FermionLindbladNoiseSystem representing the noise terms of the open system
-    noise: FermionLindbladNoiseSystem,
+    /// The FermionHamiltonian representing the system terms of the open system
+    system: FermionHamiltonian,
+    /// The FermionLindbladNoiseOperator representing the noise terms of the open system
+    noise: FermionLindbladNoiseOperator,
 }
 
-impl crate::MinSupportedVersion for FermionLindbladOpenSystem {}
-
+impl crate::SerializationSupport for FermionLindbladOpenSystem {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionLindbladOpenSystem
+    }
+}
 impl OpenSystem<'_> for FermionLindbladOpenSystem {
-    type System = FermionHamiltonianSystem;
-    type Noise = FermionLindbladNoiseSystem;
+    type System = FermionHamiltonian;
+    type Noise = FermionLindbladNoiseOperator;
 
     // From trait
     fn noise(&self) -> &Self::Noise {
@@ -81,46 +84,18 @@ impl OpenSystem<'_> for FermionLindbladOpenSystem {
         (self.system, self.noise)
     }
 
-    /// Takes a tuple of a system (FermionHamiltonianSystem) and a noise term (FermionLindbladNoiseSystem) and combines them to be a FermionLindbladOpenSystem.
+    /// Takes a tuple of a system (FermionHamiltonian) and a noise term (FermionLindbladNoiseOperator) and combines them to be a FermionLindbladOpenSystem.
     ///
     /// # Arguments
     ///
-    /// * `system` - The FermionHamiltonianSystem to have in the FermionLindbladOpenSystem.
-    /// * `noise` - The FermionLindbladNoiseSystem to have in the FermionLindbladOpenSystem.
+    /// * `system` - The FermionHamiltonian to have in the FermionLindbladOpenSystem.
+    /// * `noise` - The FermionLindbladNoiseOperator to have in the FermionLindbladOpenSystem.
     ///
     /// # Returns
     ///
     /// * `Ok(Self)` - The FermionLindbladOpenSystem with input system and noise terms.
     /// * `Err(StruqtureError::MissmatchedNumberModes)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
-        let (system, noise) = if system.number_modes != noise.number_modes {
-            match (system.number_modes, noise.number_modes) {
-                (Some(n), None) => {
-                    if n >= noise.number_modes() {
-                        let mut noise = noise;
-                        noise.number_modes = Some(n);
-                        (system, noise)
-                    } else {
-                        return Err(StruqtureError::MissmatchedNumberModes);
-                    }
-                }
-                (None, Some(n)) => {
-                    if n >= system.number_modes() {
-                        let mut system = system;
-                        system.number_modes = Some(n);
-                        (system, noise)
-                    } else {
-                        return Err(StruqtureError::MissmatchedNumberModes);
-                    }
-                }
-                (Some(_), Some(_)) => {
-                    return Err(StruqtureError::MissmatchedNumberModes);
-                }
-                _ => panic!("Unexpected missmatch of number modes"),
-            }
-        } else {
-            (system, noise)
-        };
         Ok(Self { system, noise })
     }
 
@@ -133,20 +108,11 @@ impl OpenSystem<'_> for FermionLindbladOpenSystem {
 }
 
 impl OperateOnModes<'_> for FermionLindbladOpenSystem {
-    /// Gets the maximum number_modes of the FermionHamiltonianSystem/FermionLindbladNoiseSystem.
+    /// Gets the maximum current_number_modes of the FermionHamiltonian/FermionLindbladNoiseOperator.
     ///
     /// # Returns
     ///
     /// * `usize` - The number of fermions in the FermionLindbladOpenSystem.
-    fn number_modes(&self) -> usize {
-        self.system.number_modes().max(self.noise.number_modes())
-    }
-
-    /// Return maximum index in FermionLindbladOpenSystem.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - Maximum index.
     fn current_number_modes(&self) -> usize {
         self.system
             .current_number_modes()
@@ -159,18 +125,40 @@ impl OperateOnModes<'_> for FermionLindbladOpenSystem {
 impl FermionLindbladOpenSystem {
     /// Creates a new FermionLindbladOpenSystem.
     ///
-    /// # Arguments
-    ///
-    /// * `number_modes` - The number of modes in the system.
-    ///
     /// # Returns
     ///
     /// * `Self` - The new (empty) FermionLindbladOpenSystem.
-    pub fn new(number_modes: Option<usize>) -> Self {
+    pub fn new() -> Self {
         FermionLindbladOpenSystem {
-            system: FermionHamiltonianSystem::new(number_modes),
-            noise: FermionLindbladNoiseSystem::new(number_modes),
+            system: FermionHamiltonian::new(),
+            noise: FermionLindbladNoiseOperator::new(),
         }
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_1::fermions::FermionLindbladOpenSystem, StruqtureError> {
+        let new_system = self.system().to_struqture_1()?;
+        let new_noise = self.noise().to_struqture_1()?;
+
+        struqture_1::OpenSystem::group(new_system, new_noise).map_err(
+            |err| StruqtureError::GenericError { msg:
+                format!("Could not convert struqture 2.x FermionLindbladOpenSystem to 1.x FermionLindbladOpenSystem, group function failed: {:?}.", err)
+            }
+        )
+    }
+
+    /// Import from struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::fermions::FermionLindbladOpenSystem,
+    ) -> Result<Self, StruqtureError> {
+        let (system_one, noise_one) = struqture_1::OpenSystem::ungroup(value.clone());
+        let new_system = FermionHamiltonian::from_struqture_1(&system_one)?;
+        let new_noise = FermionLindbladNoiseOperator::from_struqture_1(&noise_one)?;
+        Self::group(new_system, new_noise)
     }
 }
 
@@ -205,12 +193,12 @@ impl ops::Add<FermionLindbladOpenSystem> for FermionLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two FermionLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianFermionProduct exceeds that of the FermionHamiltonianSystem.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (FermionProduct, FermionProduct) exceeds that of the FermionLindbladNoiseSystem.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianFermionProduct exceeds that of the FermionHamiltonian.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (FermionProduct, FermionProduct) exceeds that of the FermionLindbladNoiseOperator.
     fn add(self, other: FermionLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys + other_sys)?, (self_noise + other_noise)?)
+        Self::group((self_sys + other_sys)?, self_noise + other_noise)
     }
 }
 
@@ -227,12 +215,12 @@ impl ops::Sub<FermionLindbladOpenSystem> for FermionLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two FermionLindbladOpenSystems subtracted.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianFermionProduct exceeds that of the FermionHamiltonianSystem.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (FermionProduct, FermionProduct) exceeds that of the FermionLindbladNoiseSystem.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianFermionProduct exceeds that of the FermionHamiltonian.
+    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (FermionProduct, FermionProduct) exceeds that of the FermionLindbladNoiseOperator.
     fn sub(self, other: FermionLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
-        Self::group((self_sys - other_sys)?, (self_noise - other_noise)?)
+        Self::group((self_sys - other_sys)?, self_noise - other_noise)
     }
 }
 
@@ -248,7 +236,7 @@ impl ops::Mul<CalculatorFloat> for FermionLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// * `Self` - The FermionLindbladNoiseSystem multiplied by the CalculatorFloat.
+    /// * `Self` - The FermionLindbladNoiseOperator multiplied by the CalculatorFloat.
     fn mul(self, rhs: CalculatorFloat) -> Self::Output {
         Self {
             system: self.system * rhs.clone(),
@@ -270,7 +258,7 @@ impl fmt::Display for FermionLindbladOpenSystem {
     ///
     /// * `std::fmt::Result` - The formatted FermionLindbladOpenSystem.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut output = format!("FermionLindbladOpenSystem({}){{\n", self.number_modes());
+        let mut output = "FermionLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
             writeln!(output, "{}: {},", key, val)?;
@@ -288,7 +276,7 @@ impl fmt::Display for FermionLindbladOpenSystem {
 }
 
 impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
-    type Output = SpinLindbladOpenSystem;
+    type Output = PauliLindbladOpenSystem;
 
     /// Implements JordanWignerFermionToSpin for a FermionLindbladOpenSystem.
     ///
@@ -297,11 +285,11 @@ impl JordanWignerFermionToSpin for FermionLindbladOpenSystem {
     ///
     /// # Returns
     ///
-    /// `SpinLindbladOpenSystem` - The spin open system that results from the transformation.
+    /// `PauliLindbladOpenSystem` - The spin open system that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
-        SpinLindbladOpenSystem::group(jw_system, jw_noise)
-            .expect("Internal bug in jordan_wigner() for FermionHamiltonianSystem or FermionLindbladNoiseSystem. The number of modes in the fermionic system should equal the number of spins in the spin system.")
+        PauliLindbladOpenSystem::group(jw_system, jw_noise)
+            .expect("Internal bug in jordan_wigner() for FermionHamiltonian or FermionLindbladNoiseOperator. The number of modes in the fermionic system should equal the number of spins in the spin system.")
     }
 }

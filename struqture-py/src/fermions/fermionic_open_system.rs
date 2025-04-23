@@ -11,10 +11,10 @@
 // limitations under the License.
 
 use super::{
-    FermionHamiltonianSystemWrapper, FermionLindbladNoiseSystemWrapper, FermionProductWrapper,
+    FermionHamiltonianWrapper, FermionLindbladNoiseOperatorWrapper, FermionProductWrapper,
     HermitianFermionProductWrapper,
 };
-use crate::spins::SpinLindbladOpenSystemWrapper;
+use crate::spins::PauliLindbladOpenSystemWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -23,7 +23,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::fermions::FermionLindbladOpenSystem;
 use struqture::mappings::JordanWignerFermionToSpin;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::{mappings, noisy_system_wrapper};
 
@@ -61,20 +61,16 @@ pub struct FermionLindbladOpenSystemWrapper {
 }
 
 #[mappings(JordanWignerFermionToSpin)]
-#[noisy_system_wrapper(OpenSystem, OperateOnModes, Calculus)]
+#[noisy_system_wrapper(OpenSystem, OperateOnModes, HermitianCalculus)]
 impl FermionLindbladOpenSystemWrapper {
     /// Create a new FermionLindbladOpenSystem.
-    ///
-    /// Args:
-    ///     number_fermions (Optional[int]): The number of fermions in the FermionLindbladOpenSystem.
     ///
     /// Returns:
     ///     self: The new FermionLindbladOpenSystem with the input number of fermions.
     #[new]
-    #[pyo3(signature = (number_fermions = None))]
-    pub fn new(number_fermions: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: FermionLindbladOpenSystem::new(number_fermions),
+            internal: FermionLindbladOpenSystem::new(),
         }
     }
 }

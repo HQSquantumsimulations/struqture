@@ -6,35 +6,35 @@ from struqture_py.fermions import *
 
 def test_jordan_wigner_spin_to_fermion():
     pp = PauliProduct().x(0).z(1).y(2)
-    assert type(pp.jordan_wigner()) == FermionSystem
+    assert type(pp.jordan_wigner()) == FermionOperator
 
     dp = DecoherenceProduct().x(0).iy(2)
-    assert type(dp.jordan_wigner()) == FermionSystem
+    assert type(dp.jordan_wigner()) == FermionOperator
 
     pmp = PlusMinusProduct().plus(0).minus(1)
-    assert type(pmp.jordan_wigner()) == FermionSystem
+    assert type(pmp.jordan_wigner()) == FermionOperator
 
     pmo = PlusMinusOperator()
     pmo.add_operator_product(pmp, 1.0)
-    assert type(pmo.jordan_wigner()) == FermionSystem
+    assert type(pmo.jordan_wigner()) == FermionOperator
 
     pmns = PlusMinusLindbladNoiseOperator()
     pmns.add_operator_product((pmp, pmp), 2.0)
-    assert type(pmns.jordan_wigner()) == FermionLindbladNoiseSystem
+    assert type(pmns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    ss = SpinSystem(4)
+    ss = PauliOperator()
     ss.add_operator_product(pp, 5.0)
-    assert type(ss.jordan_wigner()) == FermionSystem
+    assert type(ss.jordan_wigner()) == FermionOperator
 
-    shs = SpinHamiltonianSystem(5)
+    shs = PauliHamiltonian()
     shs.add_operator_product(pp, 5.0)
-    assert type(shs.jordan_wigner()) == FermionHamiltonianSystem
+    assert type(shs.jordan_wigner()) == FermionHamiltonian
 
-    slns = SpinLindbladNoiseSystem(4)
+    slns = PauliLindbladNoiseOperator()
     slns.add_operator_product((dp, dp), 2.0)
-    assert type(slns.jordan_wigner()) == FermionLindbladNoiseSystem
+    assert type(slns.jordan_wigner()) == FermionLindbladNoiseOperator
 
-    slos = SpinLindbladOpenSystem()
+    slos = PauliLindbladOpenSystem()
     slos.system_add_operator_product(pp, 2.0)
     slos.noise_add_operator_product((dp, dp), 2.0)
     assert type(slos.jordan_wigner()) == FermionLindbladOpenSystem
@@ -42,24 +42,24 @@ def test_jordan_wigner_spin_to_fermion():
 
 def test_jordan_wigner_fermion_to_spin():
     fp = FermionProduct([0], [2, 3])
-    assert type(fp.jordan_wigner()) == SpinSystem
+    assert type(fp.jordan_wigner()) == PauliOperator
 
     hfp = HermitianFermionProduct([0], [2, 3])
-    assert type(hfp.jordan_wigner()) == SpinHamiltonianSystem
+    assert type(hfp.jordan_wigner()) == PauliHamiltonian
 
-    fs = FermionSystem(4)
+    fs = FermionOperator()
     fs.add_operator_product(fp, 1.0)
-    assert type(fs.jordan_wigner()) == SpinSystem
+    assert type(fs.jordan_wigner()) == PauliOperator
 
-    fh = FermionHamiltonianSystem(5)
+    fh = FermionHamiltonian()
     fh.add_operator_product(hfp, 1.0)
-    assert type(fh.jordan_wigner()) == SpinHamiltonianSystem
+    assert type(fh.jordan_wigner()) == PauliHamiltonian
 
-    flns = FermionLindbladNoiseSystem()
+    flns = FermionLindbladNoiseOperator()
     flns.add_operator_product((fp, fp), 1.0)
-    assert type(flns.jordan_wigner()) == SpinLindbladNoiseSystem
+    assert type(flns.jordan_wigner()) == PauliLindbladNoiseOperator
 
     flos = FermionLindbladOpenSystem()
     flos.system_add_operator_product(fp, 2.0)
     flos.noise_add_operator_product((fp, fp), 2.0)
-    assert type(flos.jordan_wigner()) == SpinLindbladOpenSystem
+    assert type(flos.jordan_wigner()) == PauliLindbladOpenSystem

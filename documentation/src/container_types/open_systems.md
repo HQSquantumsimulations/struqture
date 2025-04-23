@@ -17,9 +17,14 @@ and a LindbladNoiseSystem:
 \\]
 
 
-The open systems in struqture are
+The open systems in `struqture` are
 
-* `SpinLindbladOpenSystem`
+* `PauliLindbladOpenSystem`
 * `BosonLindbladOpenSystem`
 * `FermionLindbladOpenSystem`
 * `MixedLindbladOpenSystem`
+
+For examples showing how to use `PauliLindbladOpenSystems`, please see the [the spins section](../physical_types/spins.md#examples-3).
+For examples showing how to use `FermionLindbladOpenSystems`, please see the [the fermions section](../physical_types/fermions.md#examples-3).
+For examples showing how to use `BosonLindbladOpenSystems`, please see the [the bosons section](../physical_types/bosons.md#examples-3).
+For examples showing how to use `MixedLindbladOpenSystems`, please see the [the mixed system section](../physical_types/mixed_systems.md#examples-3).

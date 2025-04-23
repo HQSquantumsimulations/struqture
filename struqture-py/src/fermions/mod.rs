@@ -17,7 +17,7 @@
 //!
 //! This module can be used to represent mixed quantum operators, mixed quantum Hamiltonians and mixed open quantum systems.
 //!
-//! In general the enduser should use the high-level modules [struqture::mixed_systems::MixedSystem] and [struqture::mixed_systems::MixedHamiltonianSystem]
+//! In general the enduser should use the high-level modules [struqture::mixed_systems::MixedOperator] and [struqture::mixed_systems::MixedHamiltonian]
 //! to represent mixed quantum Operators and mixed Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [struqture::mixed_systems::MixedLindbladOpenSystem].
@@ -32,31 +32,31 @@ pub use fermion_product::FermionProductWrapper;
 mod hermitian_fermion_product;
 pub use hermitian_fermion_product::HermitianFermionProductWrapper;
 
-mod fermionic_system;
-pub use fermionic_system::FermionSystemWrapper;
+mod fermionic_operator;
+pub use fermionic_operator::FermionOperatorWrapper;
 
-mod fermionic_hamiltonian_system;
-pub use fermionic_hamiltonian_system::FermionHamiltonianSystemWrapper;
+mod fermionic_hamiltonian;
+pub use fermionic_hamiltonian::FermionHamiltonianWrapper;
 
-mod fermionic_noise_system;
-pub use fermionic_noise_system::FermionLindbladNoiseSystemWrapper;
+mod fermionic_noise_operator;
+pub use fermionic_noise_operator::FermionLindbladNoiseOperatorWrapper;
 
 mod fermionic_open_system;
 pub use fermionic_open_system::FermionLindbladOpenSystemWrapper;
 
 /// Fermions module of struqture Python interface
 ///
-/// Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionSystem and FermionHamiltonianSystem),
-/// and Lindblad type fermionic open systems (FermionLindbladNoiseSystem, FermionLindbladOpenSystem).
+/// Module for representing fermionic indices (FermionProduct and HermitianFermionProduct), fermionic systems (FermionOperator and FermionHamiltonian),
+/// and Lindblad type fermionic open systems (FermionLindbladNoiseOperator, FermionLindbladOpenSystem).
 ///
 /// .. autosummary::
 ///     :toctree: generated/
 ///
 ///     FermionProduct
 ///     HermitianFermionProduct
-///     FermionSystem
-///     FermionHamiltonianSystem
-///     FermionLindbladNoiseSystem
+///     FermionOperator
+///     FermionHamiltonian
+///     FermionLindbladNoiseOperator
 ///     FermionLindbladOpenSystem
 ///
 #[pymodule]
@@ -64,9 +64,9 @@ pub fn fermions(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // pyo3_log::init();
     m.add_class::<FermionProductWrapper>()?;
     m.add_class::<HermitianFermionProductWrapper>()?;
-    m.add_class::<FermionSystemWrapper>()?;
-    m.add_class::<FermionHamiltonianSystemWrapper>()?;
-    m.add_class::<FermionLindbladNoiseSystemWrapper>()?;
+    m.add_class::<FermionOperatorWrapper>()?;
+    m.add_class::<FermionHamiltonianWrapper>()?;
+    m.add_class::<FermionLindbladNoiseOperatorWrapper>()?;
     m.add_class::<FermionLindbladOpenSystemWrapper>()?;
 
     Ok(())

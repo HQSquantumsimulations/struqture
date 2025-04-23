@@ -72,7 +72,11 @@ impl schemars::JsonSchema for MixedProduct {
     }
 }
 
-impl crate::MinSupportedVersion for MixedProduct {}
+impl crate::SerializationSupport for MixedProduct {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::MixedProduct
+    }
+}
 
 impl Serialize for MixedProduct {
     /// Serialization function for MixedProduct according to string type.
@@ -192,6 +196,31 @@ impl<'de> Deserialize<'de> for MixedProduct {
 
             deserializer.deserialize_tuple(3, pp_visitor)
         }
+    }
+}
+
+impl MixedProduct {
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_1::mixed_systems::MixedProduct, StruqtureError> {
+        let self_string = self.to_string();
+        let struqture_1_product = struqture_1::mixed_systems::MixedProduct::from_str(&self_string)
+            .map_err(|err| StruqtureError::GenericError {
+                msg: format!("{}", err),
+            })?;
+        Ok(struqture_1_product)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::mixed_systems::MixedProduct,
+    ) -> Result<Self, StruqtureError> {
+        let value_string = value.to_string();
+        let pauli_product = Self::from_str(&value_string)?;
+        Ok(pauli_product)
     }
 }
 

@@ -21,7 +21,7 @@ use struqture::spins::PlusMinusProduct;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture::{ModeIndex, OperateOnDensityMatrix};
-use struqture_py::mixed_systems::{MixedPlusMinusOperatorWrapper, MixedSystemWrapper};
+use struqture_py::mixed_systems::{MixedOperatorWrapper, MixedPlusMinusOperatorWrapper};
 use test_case::test_case;
 
 // helper functions
@@ -74,7 +74,7 @@ fn test_default_partialeq_debug_clone() {
     })
 }
 
-/// Test number_bosons and current_number_bosons functions of MixedPlusMinusOperator
+/// Test number_bosons function of MixedPlusMinusOperator
 #[test]
 fn test_number_bosons_current() {
     pyo3::prepare_freethreaded_python();
@@ -87,8 +87,7 @@ fn test_number_bosons_current() {
             .call_method1("add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
 
-        let number_system = system.call_method0("number_spins").unwrap();
-        let current_system = system.call_method0("current_number_spins").unwrap();
+        let number_system = system.call_method0("current_number_spins").unwrap();
         let comparison = bool::extract_bound(
             &number_system
                 .call_method1("__eq__", (vec![1_u64],))
@@ -96,16 +95,8 @@ fn test_number_bosons_current() {
         )
         .unwrap();
         assert!(comparison);
-        let comparison = bool::extract_bound(
-            &current_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
 
-        let number_system = system.call_method0("number_bosonic_modes").unwrap();
-        let current_system = system.call_method0("current_number_bosonic_modes").unwrap();
+        let number_system = system.call_method0("current_number_bosonic_modes").unwrap();
         let comparison = bool::extract_bound(
             &number_system
                 .call_method1("__eq__", (vec![2_u64],))
@@ -113,27 +104,12 @@ fn test_number_bosons_current() {
         )
         .unwrap();
         assert!(comparison);
-        let comparison = bool::extract_bound(
-            &current_system
-                .call_method1("__eq__", (vec![2_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
 
-        let number_system = system.call_method0("number_fermionic_modes").unwrap();
-        let current_system = system
+        let number_system = system
             .call_method0("current_number_fermionic_modes")
             .unwrap();
         let comparison = bool::extract_bound(
             &number_system
-                .call_method1("__eq__", (vec![1_u64],))
-                .unwrap(),
-        )
-        .unwrap();
-        assert!(comparison);
-        let comparison = bool::extract_bound(
-            &current_system
                 .call_method1("__eq__", (vec![1_u64],))
                 .unwrap(),
         )
@@ -682,36 +658,30 @@ fn test_from_mixed_sys() {
         )
         .unwrap();
 
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let pp_type = py.get_type::<MixedSystemWrapper>();
-        let pp = pp_type
-            .call1((number_spins, number_bosons, number_fermions))
-            .unwrap();
-        pp.downcast::<MixedSystemWrapper>()
-            .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    "S0Z:Bc0a1:Fc0a0:",
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(1.0, 0.0),
-                    },
-                ),
-            )
-            .unwrap();
+        let pp_type = py.get_type::<MixedOperatorWrapper>();
+        let pp = pp_type.call1((1, 1, 1)).unwrap();
+        pp.downcast::<MixedOperatorWrapper>().unwrap();
+        pp.call_method1(
+            "add_operator_product",
+            (
+                "S0Z:Bc0a1:Fc0a0:",
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(1.0, 0.0),
+                },
+            ),
+        )
+        .unwrap();
 
         let result = py
             .get_type::<MixedPlusMinusOperatorWrapper>()
-            .call_method1("from_mixed_system", (pp,))
+            .call_method1("from_mixed_operator", (pp,))
             .unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (pmp,)).unwrap()).unwrap();
         assert!(equal);
 
         let result = py
             .get_type::<MixedPlusMinusOperatorWrapper>()
-            .call_method1("from_mixed_system", ("No",));
+            .call_method1("from_mixed_operator", ("No",));
         assert!(result.is_err())
     })
 }
@@ -732,36 +702,21 @@ fn test_to_mixed_sys() {
         )
         .unwrap();
 
-        let number_spins: Vec<Option<usize>> = vec![None];
-        let number_bosons: Vec<Option<usize>> = vec![None];
-        let number_fermions: Vec<Option<usize>> = vec![None];
-        let pp_type = py.get_type::<MixedSystemWrapper>();
-        let sys = pp_type
-            .call1((
-                number_spins.clone(),
-                number_bosons.clone(),
-                number_fermions.clone(),
-            ))
-            .unwrap();
-        sys.downcast::<MixedSystemWrapper>()
-            .unwrap()
-            .call_method1(
-                "add_operator_product",
-                (
-                    "S0Z:Bc0a1:Fc0a0:",
-                    CalculatorComplexWrapper {
-                        internal: CalculatorComplex::new(0.0, 1.0),
-                    },
-                ),
-            )
-            .unwrap();
+        let pp_type = py.get_type::<MixedOperatorWrapper>();
+        let sys = pp_type.call1((1, 1, 1)).unwrap();
+        sys.downcast::<MixedOperatorWrapper>().unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (
+                "S0Z:Bc0a1:Fc0a0:",
+                CalculatorComplexWrapper {
+                    internal: CalculatorComplex::new(0.0, 1.0),
+                },
+            ),
+        )
+        .unwrap();
 
-        let result = pmp
-            .call_method1(
-                "to_mixed_system",
-                (number_spins, number_bosons, number_fermions),
-            )
-            .unwrap();
+        let result = pmp.call_method0("to_mixed_operator").unwrap();
         let equal = bool::extract_bound(&result.call_method1("__eq__", (sys,)).unwrap()).unwrap();
         assert!(equal);
     })
@@ -969,7 +924,31 @@ fn test_json_schema() {
             .unwrap();
         let min_version: String =
             String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.2.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_1() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}");
+        let sys_2 = new_system(py, 1, 1, 1);
+        sys_2
+            .call_method1("add_operator_product", ("S0Z:Bc0a0:Fc1a1", 1.0))
+            .unwrap();
+
+        let sys_from_1 = sys_2
+            .call_method1("from_json_struqture_1", (json_string,))
+            .unwrap();
+        let equal =
+            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"items\":[[\"S0Z:Bc0a0:Fc1a1:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}");
+        let sys_from_1 = sys_2.call_method1("from_json_struqture_1", (error_json_string,));
+        assert!(sys_from_1.is_err());
     });
 }

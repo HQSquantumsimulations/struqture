@@ -13,7 +13,7 @@
 use super::{BosonOperator, BosonProduct, HermitianBosonProduct, ModeIndex, OperateOnBosons};
 use crate::{
     GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
+    SymmetricIndex,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -21,14 +21,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// BosonHamiltonians are combinations of HermitianBosonProducts with specific CalculatorComplex coefficients.
 ///
@@ -56,17 +50,18 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "BosonHamiltonianSerialize")]
+#[serde(try_from = "BosonHamiltonianSerialize")]
 #[serde(into = "BosonHamiltonianSerialize")]
 pub struct BosonHamiltonian {
     /// The internal HashMap of HermitianBosonProducts and coefficients (CalculatorComplex)
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<HermitianBosonProduct, CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<HermitianBosonProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for BosonHamiltonian {}
+impl crate::SerializationSupport for BosonHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::BosonHamiltonian
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonHamiltonian {
@@ -84,33 +79,34 @@ impl schemars::JsonSchema for BosonHamiltonian {
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct BosonHamiltonianSerialize {
     items: Vec<(HermitianBosonProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<BosonHamiltonianSerialize> for BosonHamiltonian {
-    fn from(value: BosonHamiltonianSerialize) -> Self {
+impl TryFrom<BosonHamiltonianSerialize> for BosonHamiltonian {
+    type Error = StruqtureError;
+    fn try_from(value: BosonHamiltonianSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: BosonHamiltonian = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<BosonHamiltonian> for BosonHamiltonianSerialize {
     fn from(value: BosonHamiltonian) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(HermitianBosonProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -118,9 +114,6 @@ impl From<BosonHamiltonian> for BosonHamiltonianSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonian {
     type Index = HermitianBosonProduct;
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, Self::Index, Self::Value>;
-    type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
-    type ValueIteratorType = Values<'a, Self::Index, Self::Value>;
 
     // From trait
     fn get(&self, key: &Self::Index) -> &Self::Value {
@@ -131,30 +124,23 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonian {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -191,10 +177,7 @@ impl<'a> OperateOnDensityMatrix<'a> for BosonHamiltonian {
             }
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -235,11 +218,11 @@ impl OperateOnState<'_> for BosonHamiltonian {
 }
 
 impl OperateOnModes<'_> for BosonHamiltonian {
-    /// Returns maximum index in BosonHamiltonian internal_map.
+    /// Gets the maximum index of the BosonHamiltonian.
     ///
     /// # Returns
     ///
-    /// * `usize` - Maximum index.
+    /// * `usize` - The number of modes in the BosonHamiltonian.
     fn current_number_modes(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -250,15 +233,6 @@ impl OperateOnModes<'_> for BosonHamiltonian {
             }
         }
         max_mode
-    }
-
-    /// Gets the maximum index of the BosonHamiltonian.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - The number of modes in the BosonHamiltonian.
-    fn number_modes(&self) -> usize {
-        self.current_number_modes()
     }
 }
 
@@ -282,9 +256,6 @@ impl BosonHamiltonian {
     /// * `Self` - The new (empty) BosonHamiltonian.
     pub fn new() -> Self {
         BosonHamiltonian {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -300,36 +271,38 @@ impl BosonHamiltonian {
     /// * `Self` - The new (empty) BosonHamiltonian.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
     }
 
-    /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
-    ///
-    /// # Arguments
-    ///
-    /// * `number_creators_annihilators` - Number of creation and annihilation terms to filter for in the keys.
-    ///
-    /// # Returns
-    ///
-    /// `Ok((separated, remainder))` - Operator with the noise terms where number_creators_annihilators matches the number of spins the operator product acts on and Operator with all other contributions.
-    pub fn separate_into_n_terms(
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
         &self,
-        number_creators_annihilators: (usize, usize),
-    ) -> Result<(Self, Self), StruqtureError> {
-        let mut separated = Self::default();
-        let mut remainder = Self::default();
-        for (prod, val) in self.iter() {
-            if (prod.creators().len(), prod.annihilators().len()) == number_creators_annihilators {
-                separated.add_operator_product(prod.clone(), val.clone())?;
-            } else {
-                remainder.add_operator_product(prod.clone(), val.clone())?;
-            }
+    ) -> Result<struqture_1::bosons::BosonHamiltonianSystem, StruqtureError> {
+        let mut new_boson_system = struqture_1::bosons::BosonHamiltonianSystem::new(None);
+        for (key, val) in self.iter() {
+            let one_key = key.to_struqture_1()?;
+            let _ = struqture_1::OperateOnDensityMatrix::set(
+                &mut new_boson_system,
+                one_key,
+                val.clone(),
+            );
         }
-        Ok((separated, remainder))
+        Ok(new_boson_system)
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::bosons::BosonHamiltonianSystem,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
+            let self_key = HermitianBosonProduct::from_struqture_1(key)?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
@@ -544,9 +517,6 @@ impl ops::Mul<BosonHamiltonian> for BosonHamiltonian {
 ///
 impl IntoIterator for BosonHamiltonian {
     type Item = (HermitianBosonProduct, CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter = std::collections::hash_map::IntoIter<HermitianBosonProduct, CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<HermitianBosonProduct, CalculatorComplex>;
     /// Returns the BosonHamiltonian in Iterator form.
     ///
@@ -652,34 +622,37 @@ impl fmt::Display for BosonHamiltonian {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of BosonHamiltonian
     #[test]
     fn so_from_sos() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = BosonHamiltonian::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(BosonHamiltonian::from(sos.clone()), so);
+        assert_eq!(BosonHamiltonian::try_from(sos.clone()).unwrap(), so);
         assert_eq!(BosonHamiltonianSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of BosonHamiltonian
     #[test]
     fn clone_partial_eq() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -690,17 +663,19 @@ mod test {
         let pp_1: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos_1 = BosonHamiltonianSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: HermitianBosonProduct = HermitianBosonProduct::new([0], [1]).unwrap();
         let sos_2 = BosonHamiltonianSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -709,33 +684,35 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of BosonHamiltonian
     #[test]
     fn debug() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "BosonHamiltonianSerialize { items: [(HermitianBosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "BosonHamiltonianSerialize { items: [(HermitianBosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"BosonHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test BosonHamiltonian Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -754,30 +731,37 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("BosonHamiltonian"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test BosonHamiltonian Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: HermitianBosonProduct = HermitianBosonProduct::new([0], [0]).unwrap();
         let sos = BosonHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "BosonHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -811,15 +795,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("BosonHamiltonian"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

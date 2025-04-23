@@ -15,26 +15,27 @@
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+use std::str::FromStr;
 use struqture::fermions::{
-    FermionHamiltonianSystem, FermionLindbladNoiseSystem, FermionLindbladOpenSystem,
-    FermionProduct, HermitianFermionProduct,
+    FermionHamiltonian, FermionLindbladNoiseOperator, FermionLindbladOpenSystem, FermionProduct,
+    HermitianFermionProduct,
 };
-use struqture::prelude::*;
 use struqture::ModeIndex;
-#[cfg(feature = "json_schema")]
-use test_case::test_case;
+use struqture::{prelude::*, STRUQTURE_VERSION};
 
+#[cfg(feature = "json_schema")]
 // Test the new function of the FermionLindbladOpenSystem
 #[test]
 fn new_system() {
-    let system = FermionLindbladOpenSystem::new(Some(1));
-    assert_eq!(system.system(), &FermionHamiltonianSystem::new(Some(1)));
-    assert_eq!(system.noise(), &FermionLindbladNoiseSystem::new(Some(1)));
-    assert_eq!(system.number_modes(), 1_usize);
-    assert_eq!(system.current_number_modes(), 1_usize);
+    let system = FermionLindbladOpenSystem::new();
+    assert_eq!(system.system(), &FermionHamiltonian::new());
+    assert_eq!(system.noise(), &FermionLindbladNoiseOperator::new());
+    assert_eq!(system.current_number_modes(), 0_usize);
 
     assert_eq!(
-        FermionLindbladOpenSystem::new(None),
+        FermionLindbladOpenSystem::new(),
         FermionLindbladOpenSystem::default()
     );
 }
@@ -42,12 +43,11 @@ fn new_system() {
 // Test the new function of the FermionLindbladOpenSystem with no modes specified
 #[test]
 fn new_system_none() {
-    let system = FermionLindbladOpenSystem::new(None);
+    let system = FermionLindbladOpenSystem::new();
     assert!(system.system().is_empty());
-    assert_eq!(system.system(), &FermionHamiltonianSystem::default());
+    assert_eq!(system.system(), &FermionHamiltonian::default());
     assert!(system.noise().is_empty());
-    assert_eq!(system.noise(), &FermionLindbladNoiseSystem::default());
-    assert_eq!(system.number_modes(), 0_usize);
+    assert_eq!(system.noise(), &FermionLindbladNoiseOperator::default());
     assert_eq!(system.current_number_modes(), 0_usize);
 }
 
@@ -55,8 +55,8 @@ fn new_system_none() {
 #[test]
 fn group() {
     let slos = FermionLindbladOpenSystem::group(
-        FermionHamiltonianSystem::new(None),
-        FermionLindbladNoiseSystem::new(None),
+        FermionHamiltonian::new(),
+        FermionLindbladNoiseOperator::new(),
     );
     assert!(slos.is_ok());
     let slos = slos.unwrap();
@@ -65,52 +65,12 @@ fn group() {
 }
 
 #[test]
-fn group_with_none() {
-    let flos = FermionLindbladOpenSystem::group(
-        FermionHamiltonianSystem::new(None),
-        FermionLindbladNoiseSystem::new(Some(2)),
-    );
-
-    assert!(flos.is_ok());
-    let os = flos.unwrap();
-    let (system, noise) = os.ungroup();
-
-    assert_eq!(noise.number_modes(), 2);
-    assert_eq!(system.number_modes(), 2);
-
-    let flos = FermionLindbladOpenSystem::group(
-        FermionHamiltonianSystem::new(Some(2)),
-        FermionLindbladNoiseSystem::new(None),
-    );
-
-    assert!(flos.is_ok());
-    let os = flos.unwrap();
-    let (system, noise) = os.ungroup();
-
-    assert_eq!(noise.number_modes(), 2);
-    assert_eq!(system.number_modes(), 2);
-}
-
-// Test the group function of the FermionLindbladOpenSystem
-#[test]
-fn group_failing() {
-    let slos = FermionLindbladOpenSystem::group(
-        FermionHamiltonianSystem::new(Some(3)),
-        FermionLindbladNoiseSystem::new(Some(2)),
-    );
-    assert!(slos.is_err());
-}
-
-#[test]
 fn empty_clone_options() {
     let dp_0: FermionProduct = FermionProduct::new([0], [0]).unwrap();
-    let mut slos = FermionLindbladOpenSystem::new(Some(3));
+    let mut slos = FermionLindbladOpenSystem::new();
     slos.noise_mut()
         .set((dp_0.clone(), dp_0), CalculatorComplex::from(0.5))
         .unwrap();
-
-    let full: Option<usize> = Some(3);
-    assert_eq!(slos.empty_clone(), FermionLindbladOpenSystem::new(full));
 }
 
 // Test the try_set_noise and get functions of the FermionLindbladOpenSystem
@@ -235,9 +195,9 @@ fn noise_system() {
         .set((dp_2.clone(), dp_2.clone()), CalculatorComplex::from(0.5))
         .unwrap();
 
-    let mut system = FermionHamiltonianSystem::new(None);
+    let mut system = FermionHamiltonian::new();
     system.set(pp_0, CalculatorComplex::from(0.4)).unwrap();
-    let mut noise = FermionLindbladNoiseSystem::new(None);
+    let mut noise = FermionLindbladNoiseOperator::new();
     noise
         .set((dp_2.clone(), dp_2), CalculatorComplex::from(0.5))
         .unwrap();
@@ -251,7 +211,7 @@ fn noise_system() {
 fn negative_slos() {
     let dp_0: FermionProduct = FermionProduct::new([0], [0]).unwrap();
     let pp_0: HermitianFermionProduct = HermitianFermionProduct::new([], [0]).unwrap();
-    let mut slos_0 = FermionLindbladOpenSystem::new(Some(1));
+    let mut slos_0 = FermionLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -260,7 +220,7 @@ fn negative_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_minus = FermionLindbladOpenSystem::new(Some(1));
+    let mut slos_0_minus = FermionLindbladOpenSystem::new();
     slos_0_minus
         .system_mut()
         .set(pp_0, CalculatorComplex::from(-0.4))
@@ -280,7 +240,7 @@ fn add_slos_slos() {
     let pp_0: HermitianFermionProduct = HermitianFermionProduct::new([], [0]).unwrap();
     let dp_1: FermionProduct = FermionProduct::new([0], [1]).unwrap();
     let pp_1: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
-    let mut slos_0 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = FermionLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -289,7 +249,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_1 = FermionLindbladOpenSystem::new();
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorComplex::from(0.4))
@@ -298,7 +258,7 @@ fn add_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = FermionLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(0.4))
@@ -326,7 +286,7 @@ fn sub_slos_slos() {
     let pp_0: HermitianFermionProduct = HermitianFermionProduct::new([], [0]).unwrap();
     let dp_1: FermionProduct = FermionProduct::new([0], [1]).unwrap();
     let pp_1: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
-    let mut slos_0 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = FermionLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(0.4))
@@ -335,7 +295,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_1 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_1 = FermionLindbladOpenSystem::new();
     slos_1
         .system_mut()
         .set(pp_1.clone(), CalculatorComplex::from(0.4))
@@ -344,7 +304,7 @@ fn sub_slos_slos() {
         .noise_mut()
         .set((dp_1.clone(), dp_1.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = FermionLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(0.4))
@@ -370,7 +330,7 @@ fn sub_slos_slos() {
 fn mul_so_cf() {
     let dp_0: FermionProduct = FermionProduct::new([0], [0]).unwrap();
     let pp_0: HermitianFermionProduct = HermitianFermionProduct::new([], [0]).unwrap();
-    let mut slos_0 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_0 = FermionLindbladOpenSystem::new();
     slos_0
         .system_mut()
         .set(pp_0.clone(), CalculatorComplex::from(1.0))
@@ -379,7 +339,7 @@ fn mul_so_cf() {
         .noise_mut()
         .set((dp_0.clone(), dp_0.clone()), CalculatorComplex::from(0.5))
         .unwrap();
-    let mut slos_0_1 = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos_0_1 = FermionLindbladOpenSystem::new();
     slos_0_1
         .system_mut()
         .set(pp_0, CalculatorComplex::from(3.0))
@@ -397,7 +357,7 @@ fn mul_so_cf() {
 fn debug() {
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
-    let mut slos = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos = FermionLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -406,7 +366,7 @@ fn debug() {
         .unwrap();
     assert_eq!(
         format!("{:?}", slos),
-        "FermionLindbladOpenSystem { system: FermionHamiltonianSystem { number_modes: Some(2), hamiltonian: FermionHamiltonian { internal_map: {HermitianFermionProduct { creators: [0], annihilators: [1] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }} } }, noise: FermionLindbladNoiseSystem { number_modes: Some(2), operator: FermionLindbladNoiseOperator { internal_map: {(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } } }"
+        "FermionLindbladOpenSystem { system: FermionHamiltonian { internal_map: {HermitianFermionProduct { creators: [0], annihilators: [1] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }} }, noise: FermionLindbladNoiseOperator { internal_map: {(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } }"
     );
 }
 
@@ -415,7 +375,7 @@ fn debug() {
 fn display() {
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
-    let mut slos = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos = FermionLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(0.4))
         .unwrap();
@@ -425,7 +385,7 @@ fn display() {
 
     assert_eq!(
         format!("{}", slos),
-        "FermionLindbladOpenSystem(2){\nSystem: {\nc0a1: (4e-1 + i * 0e0),\n}\nNoise: {\n(c0a0, c0a0): (5e-1 + i * 0e0),\n}\n}"
+        "FermionLindbladOpenSystem{\nSystem: {\nc0a1: (4e-1 + i * 0e0),\n}\nNoise: {\n(c0a0, c0a0): (5e-1 + i * 0e0),\n}\n}"
     );
 }
 
@@ -498,13 +458,9 @@ fn serde_json() {
 
 #[test]
 fn serde_readable() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
-    let mut slos = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos = FermionLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(1.0))
         .unwrap();
@@ -521,14 +477,6 @@ fn serde_readable() {
             },
             Token::Str("system"),
             Token::Struct {
-                name: "FermionHamiltonianSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("hamiltonian"),
-            Token::Struct {
                 name: "FermionHamiltonianSerialize",
                 len: 2,
             },
@@ -540,27 +488,24 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("FermionHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
-            Token::Struct {
-                name: "FermionLindbladNoiseSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("operator"),
             Token::Struct {
                 name: "FermionLindbladNoiseOperatorSerialize",
                 len: 2,
@@ -574,16 +519,21 @@ fn serde_readable() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("FermionLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -615,13 +565,9 @@ fn bincode() {
 /// Test FermionLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
-    use struqture::MINIMUM_STRUQTURE_VERSION;
-    let major_version = MINIMUM_STRUQTURE_VERSION.0;
-    let minor_version = MINIMUM_STRUQTURE_VERSION.1;
-
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
-    let mut slos = FermionLindbladOpenSystem::new(Some(2));
+    let mut slos = FermionLindbladOpenSystem::new();
     slos.system_mut()
         .set(pp, CalculatorComplex::from(1.0))
         .unwrap();
@@ -637,14 +583,6 @@ fn serde_compact() {
                 len: 2,
             },
             Token::Str("system"),
-            Token::Struct {
-                name: "FermionHamiltonianSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("hamiltonian"),
             Token::Struct {
                 name: "FermionHamiltonianSerialize",
                 len: 2,
@@ -672,27 +610,24 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("FermionHamiltonian"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::Str("noise"),
-            Token::Struct {
-                name: "FermionLindbladNoiseSystem",
-                len: 2,
-            },
-            Token::Str("number_modes"),
-            Token::Some,
-            Token::U64(2),
-            Token::Str("operator"),
             Token::Struct {
                 name: "FermionLindbladNoiseOperatorSerialize",
                 len: 2,
@@ -728,16 +663,21 @@ fn serde_compact() {
             Token::F64(0.0),
             Token::TupleEnd,
             Token::SeqEnd,
-            Token::Str("_struqture_version"),
+            Token::Str("serialisation_meta"),
             Token::Struct {
-                name: "StruqtureVersionSerializable",
-                len: 2,
+                name: "StruqtureSerialisationMeta",
+                len: 3,
             },
-            Token::Str("major_version"),
-            Token::U32(major_version),
-            Token::Str("minor_version"),
-            Token::U32(minor_version),
-            Token::StructEnd,
+            Token::Str("type_name"),
+            Token::Str("FermionLindbladNoiseOperator"),
+            Token::Str("min_version"),
+            Token::Tuple { len: 3 },
+            Token::U64(2),
+            Token::U64(0),
+            Token::U64(0),
+            Token::TupleEnd,
+            Token::Str("version"),
+            Token::Str(STRUQTURE_VERSION),
             Token::StructEnd,
             Token::StructEnd,
             Token::StructEnd,
@@ -747,7 +687,7 @@ fn serde_compact() {
 
 #[test]
 fn test_truncate() {
-    let mut system = FermionLindbladOpenSystem::new(None);
+    let mut system = FermionLindbladOpenSystem::new();
     system
         .system_mut()
         .set(HermitianFermionProduct::new([0], [1]).unwrap(), 1.0.into())
@@ -797,7 +737,7 @@ fn test_truncate() {
         0.01.into(),
     );
 
-    let mut test_system1 = FermionLindbladOpenSystem::new(None);
+    let mut test_system1 = FermionLindbladOpenSystem::new();
     test_system1
         .system_mut()
         .set(HermitianFermionProduct::new([0], [1]).unwrap(), 1.0.into())
@@ -835,7 +775,7 @@ fn test_truncate() {
         0.1.into(),
     );
 
-    let mut test_system2 = FermionLindbladOpenSystem::new(None);
+    let mut test_system2 = FermionLindbladOpenSystem::new();
     test_system2
         .system_mut()
         .set(HermitianFermionProduct::new([0], [1]).unwrap(), 1.0.into())
@@ -869,10 +809,9 @@ fn test_truncate() {
 }
 
 #[cfg(feature = "json_schema")]
-#[test_case(None)]
-#[test_case(Some(3))]
-fn test_fermion_noise_system_schema(number_fermions: Option<usize>) {
-    let mut op = FermionLindbladOpenSystem::new(number_fermions);
+#[test]
+fn test_fermion_noise_system_schema() {
+    let mut op = FermionLindbladOpenSystem::new();
     let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
     let dp: FermionProduct = FermionProduct::new([0], [0]).unwrap();
     op.system_mut()
@@ -892,4 +831,29 @@ fn test_fermion_noise_system_schema(number_fermions: Option<usize>) {
     let value: serde_json::Value = serde_json::to_value(val).unwrap();
     let validation = schema_checker.validate(&value);
     assert!(validation.is_ok());
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[cfg(feature = "struqture_1_export")]
+#[test]
+fn test_from_to_struqture_1() {
+    let pp_1 = struqture_1::fermions::HermitianFermionProduct::from_str("c0a1").unwrap();
+    let dp_1 = struqture_1::fermions::FermionProduct::from_str("c0a0").unwrap();
+    let mut ss_1 = struqture_1::fermions::FermionLindbladOpenSystem::new(None);
+    let system_mut_1 = struqture_1::OpenSystem::system_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(system_mut_1, pp_1.clone(), 2.0.into()).unwrap();
+    let noise_mut_1 = struqture_1::OpenSystem::noise_mut(&mut ss_1);
+    struqture_1::OperateOnDensityMatrix::set(noise_mut_1, (dp_1.clone(), dp_1.clone()), 1.0.into())
+        .unwrap();
+
+    let pp_2 = HermitianFermionProduct::new([0], [1]).unwrap();
+    let dp_2 = FermionProduct::new([0], [0]).unwrap();
+    let mut ss_2 = FermionLindbladOpenSystem::new();
+    ss_2.system_mut().set(pp_2.clone(), 2.0.into()).unwrap();
+    ss_2.noise_mut()
+        .set((dp_2.clone(), dp_2.clone()), 1.0.into())
+        .unwrap();
+
+    assert!(FermionLindbladOpenSystem::from_struqture_1(&ss_1).unwrap() == ss_2);
+    assert!(ss_1 == ss_2.to_struqture_1().unwrap());
 }

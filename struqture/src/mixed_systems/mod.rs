@@ -17,7 +17,7 @@
 //!
 //! This module can be used to represent mixed quantum operators, mixed quantum Hamiltonians and mixed open quantum systems.
 //!
-//! In general the enduser should use the high-level [crate::mixed_systems::MixedSystem] and [crate::mixed_systems::MixedHamiltonianSystem] structs
+//! In general the enduser should use the high-level [crate::mixed_systems::MixedSystem] and [crate::mixed_systems::MixedHamiltonian] structs
 //! to represent mixed quantum Operators and mixed Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [crate::mixed_systems::MixedLindbladOpenSystem].
@@ -26,38 +26,32 @@
 
 mod mixed_decoherence_product;
 mod mixed_hamiltonian;
-mod mixed_hamiltonian_system;
 mod mixed_hermitian_product;
 mod mixed_noise_operator;
-mod mixed_noise_system;
 mod mixed_open_system;
 mod mixed_operator;
 mod mixed_plus_minus_operator;
 mod mixed_plus_minus_product;
 mod mixed_product;
-mod mixed_system;
 
 use crate::{
     bosons::BosonIndex, fermions::FermionIndex, ModeIndex, OperateOnDensityMatrix, SpinIndex,
     StruqtureError,
 };
-#[cfg(feature = "json_schema")]
-use mixed_noise_system::TinyVecDef;
+// #[cfg(feature = "json_schema")]
+// use mixed_noise_system::TinyVecDef;
 use qoqo_calculator::CalculatorComplex;
 use std::str::FromStr;
 
 pub use mixed_decoherence_product::MixedDecoherenceProduct;
 pub use mixed_hamiltonian::MixedHamiltonian;
-pub use mixed_hamiltonian_system::MixedHamiltonianSystem;
 pub use mixed_hermitian_product::HermitianMixedProduct;
 pub use mixed_noise_operator::MixedLindbladNoiseOperator;
-pub use mixed_noise_system::MixedLindbladNoiseSystem;
 pub use mixed_open_system::MixedLindbladOpenSystem;
 pub use mixed_operator::MixedOperator;
 pub use mixed_plus_minus_operator::MixedPlusMinusOperator;
 pub use mixed_plus_minus_product::MixedPlusMinusProduct;
 pub use mixed_product::MixedProduct;
-pub use mixed_system::MixedSystem;
 
 /// Trait for all index types requires converting between index types
 pub trait MixedIndex:
@@ -177,11 +171,8 @@ where
 /// sh.set(mp_1.clone(), CalculatorComplex::from(0.5)).unwrap();
 /// sh.set(mp_0.clone(), CalculatorComplex::from(0.2)).unwrap();
 ///
-/// assert_eq!(sh.number_spins(), vec![1]);
 /// assert_eq!(sh.current_number_spins(), vec![1]);
-/// assert_eq!(sh.number_bosonic_modes(), vec![2]);
 /// assert_eq!(sh.current_number_bosonic_modes(), vec![2]);
-/// assert_eq!(sh.number_fermionic_modes(), vec![2]);
 /// assert_eq!(sh.current_number_fermionic_modes(), vec![2]);
 /// ```
 ///
@@ -191,15 +182,6 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of spins in each sub-system of Self.
-    fn number_spins(&self) -> Vec<usize>;
-
-    /// Returns the number of spins a physical operator acts upon in each spin sub-system of Self.
-    ///
-    /// This corresponds to returning the maximum index the spin operator acts on in each sub-system.
-    ///
-    /// # Returns
-    ///
-    /// * `Vec<usize>` - Maximum spin index currently used in each sub-system of Self.
     fn current_number_spins(&self) -> Vec<usize>;
 
     /// Returns the number of bosonic modes in each boson sub-system of Self.
@@ -207,15 +189,6 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of bosonic modes in each sub-system of Self.
-    fn number_bosonic_modes(&self) -> Vec<usize>;
-
-    /// Returns the number of bosonic modes a physical operator acts upon in each boson sub-system of Self.
-    ///
-    /// This corresponds to returning the maximum index the boson operator acts on in each sub-system.
-    ///
-    /// # Returns
-    ///
-    /// * `Vec<usize>` - Maximum boson index currently used in each sub-system of Self.
     fn current_number_bosonic_modes(&self) -> Vec<usize>;
 
     /// Returns the number of fermionic modes in each fermion sub-system of Self.
@@ -223,15 +196,6 @@ pub trait OperateOnMixedSystems<'a>: PartialEq + Clone {
     /// # Returns
     ///
     /// * `Vec<usize>` - The number of fermionic modes in each sub-system of Self.
-    fn number_fermionic_modes(&self) -> Vec<usize>;
-
-    /// Returns the number of fermionic modes a physical operator acts upon in each fermion sub-system of Self.
-    ///
-    /// This corresponds to returning the maximum index the fermion operator acts on in each sub-system.
-    ///
-    /// # Returns
-    ///
-    /// * `Vec<usize>` - Maximum fermion index currently used in each sub-system of Self.
     fn current_number_fermionic_modes(&self) -> Vec<usize>;
 }
 

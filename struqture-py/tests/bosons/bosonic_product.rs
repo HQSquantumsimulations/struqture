@@ -430,7 +430,29 @@ fn test_json_schema() {
 
         let min_version: String =
             String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
-        let rust_min_version = String::from("1.0.0");
+        let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
+    });
+}
+
+#[cfg(feature = "struqture_1_import")]
+#[test]
+fn test_from_json_struqture_1() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "\"c0a1\"");
+        let pp_2 = new_pp(py, vec![0], vec![1]);
+
+        let pp_from_1 = pp_2
+            .call_method1("from_json_struqture_1", (json_string,))
+            .unwrap();
+        let equal =
+            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        assert!(equal);
+
+        let error_json_string: Bound<pyo3::types::PyString> =
+            pyo3::types::PyString::new(py, "\"c0b1\"");
+        let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
+        assert!(pp_from_1.is_err());
     });
 }

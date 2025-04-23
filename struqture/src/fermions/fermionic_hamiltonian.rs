@@ -14,10 +14,10 @@ use super::{
     FermionOperator, FermionProduct, HermitianFermionProduct, ModeIndex, OperateOnFermions,
 };
 use crate::mappings::JordanWignerFermionToSpin;
-use crate::spins::SpinHamiltonian;
+use crate::spins::PauliHamiltonian;
 use crate::{
     GetValue, OperateOnDensityMatrix, OperateOnModes, OperateOnState, StruqtureError,
-    StruqtureVersionSerializable, SymmetricIndex, MINIMUM_STRUQTURE_VERSION,
+    SymmetricIndex,
 };
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
@@ -25,14 +25,8 @@ use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
 
-#[cfg(feature = "indexed_map_iterators")]
-use indexmap::map::{Entry, Iter, Keys, Values};
-#[cfg(feature = "indexed_map_iterators")]
+use indexmap::map::{Entry, Iter};
 use indexmap::IndexMap;
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::hash_map::{Entry, Iter, Keys, Values};
-#[cfg(not(feature = "indexed_map_iterators"))]
-use std::collections::HashMap;
 
 /// FermionHamiltonians are combinations of FermionProducts with specific CalculatorComplex coefficients.
 ///
@@ -60,17 +54,18 @@ use std::collections::HashMap;
 /// ```
 ///
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(from = "FermionHamiltonianSerialize")]
+#[serde(try_from = "FermionHamiltonianSerialize")]
 #[serde(into = "FermionHamiltonianSerialize")]
 pub struct FermionHamiltonian {
     /// The internal HashMap of FermionProducts and coefficients (CalculatorComplex)
-    #[cfg(feature = "indexed_map_iterators")]
     internal_map: IndexMap<HermitianFermionProduct, CalculatorComplex>,
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    internal_map: HashMap<HermitianFermionProduct, CalculatorComplex>,
 }
 
-impl crate::MinSupportedVersion for FermionHamiltonian {}
+impl crate::SerializationSupport for FermionHamiltonian {
+    fn struqture_type() -> crate::StruqtureType {
+        crate::StruqtureType::FermionHamiltonian
+    }
+}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionHamiltonian {
@@ -88,33 +83,34 @@ impl schemars::JsonSchema for FermionHamiltonian {
 #[cfg_attr(feature = "json_schema", schemars(deny_unknown_fields))]
 struct FermionHamiltonianSerialize {
     items: Vec<(HermitianFermionProduct, CalculatorFloat, CalculatorFloat)>,
-    _struqture_version: StruqtureVersionSerializable,
+    serialisation_meta: crate::StruqtureSerialisationMeta,
 }
 
-impl From<FermionHamiltonianSerialize> for FermionHamiltonian {
-    fn from(value: FermionHamiltonianSerialize) -> Self {
+impl TryFrom<FermionHamiltonianSerialize> for FermionHamiltonian {
+    type Error = StruqtureError;
+    fn try_from(value: FermionHamiltonianSerialize) -> Result<Self, Self::Error> {
+        let target_serialisation_meta =
+            <Self as crate::SerializationSupport>::target_serialisation_meta();
+        crate::check_can_be_deserialised(&target_serialisation_meta, &value.serialisation_meta)?;
         let new_noise_op: FermionHamiltonian = value
             .items
             .into_iter()
             .map(|(key, real, imag)| (key, CalculatorComplex { re: real, im: imag }))
             .collect();
-        new_noise_op
+        Ok(new_noise_op)
     }
 }
 
 impl From<FermionHamiltonian> for FermionHamiltonianSerialize {
     fn from(value: FermionHamiltonian) -> Self {
+        let serialisation_meta = crate::SerializationSupport::struqture_serialisation_meta(&value);
         let new_noise_op: Vec<(HermitianFermionProduct, CalculatorFloat, CalculatorFloat)> = value
             .into_iter()
             .map(|(key, val)| (key, val.re, val.im))
             .collect();
-        let current_version = StruqtureVersionSerializable {
-            major_version: MINIMUM_STRUQTURE_VERSION.0,
-            minor_version: MINIMUM_STRUQTURE_VERSION.1,
-        };
         Self {
             items: new_noise_op,
-            _struqture_version: current_version,
+            serialisation_meta,
         }
     }
 }
@@ -122,9 +118,6 @@ impl From<FermionHamiltonian> for FermionHamiltonianSerialize {
 impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonian {
     type Index = HermitianFermionProduct;
     type Value = CalculatorComplex;
-    type IteratorType = Iter<'a, Self::Index, Self::Value>;
-    type KeyIteratorType = Keys<'a, Self::Index, Self::Value>;
-    type ValueIteratorType = Values<'a, Self::Index, Self::Value>;
 
     // From trait
     fn get(&self, key: &HermitianFermionProduct) -> &CalculatorComplex {
@@ -135,30 +128,23 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonian {
     }
 
     // From trait
-    fn iter(&'a self) -> Self::IteratorType {
+    fn iter(&'a self) -> impl ExactSizeIterator<Item = (&'a Self::Index, &'a Self::Value)> {
         self.internal_map.iter()
     }
 
     // From trait
-    fn keys(&'a self) -> Self::KeyIteratorType {
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index> {
         self.internal_map.keys()
     }
 
     // From trait
-    fn values(&'a self) -> Self::ValueIteratorType {
+    fn values(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Value> {
         self.internal_map.values()
     }
 
-    #[cfg(feature = "indexed_map_iterators")]
     // From trait
     fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
         self.internal_map.shift_remove(key)
-    }
-
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    // From trait
-    fn remove(&mut self, key: &Self::Index) -> Option<Self::Value> {
-        self.internal_map.remove(key)
     }
 
     // From trait
@@ -195,10 +181,7 @@ impl<'a> OperateOnDensityMatrix<'a> for FermionHamiltonian {
             }
         } else {
             match self.internal_map.entry(key) {
-                #[cfg(feature = "indexed_map_iterators")]
                 Entry::Occupied(val) => Ok(Some(val.shift_remove())),
-                #[cfg(not(feature = "indexed_map_iterators"))]
-                Entry::Occupied(val) => Ok(Some(val.remove())),
                 Entry::Vacant(_) => Ok(None),
             }
         }
@@ -243,11 +226,11 @@ impl OperateOnState<'_> for FermionHamiltonian {
 }
 
 impl OperateOnModes<'_> for FermionHamiltonian {
-    /// Return maximum index in FermionHamiltonian internal_map.
+    /// Gets the maximum index of the FermionHamiltonian.
     ///
     /// # Returns
     ///
-    /// * `usize` - Maximum index.
+    /// * `usize` - The number of modes in the FermionHamiltonian.
     fn current_number_modes(&self) -> usize {
         let mut max_mode: usize = 0;
         if !self.internal_map.is_empty() {
@@ -258,15 +241,6 @@ impl OperateOnModes<'_> for FermionHamiltonian {
             }
         }
         max_mode
-    }
-
-    /// Gets the maximum index of the FermionHamiltonian.
-    ///
-    /// # Returns
-    ///
-    /// * `usize` - The number of spins in the FermionHamiltonian.
-    fn number_modes(&self) -> usize {
-        self.current_number_modes()
     }
 }
 
@@ -290,9 +264,6 @@ impl FermionHamiltonian {
     /// * `Self` - The new (empty) FermionHamiltonian.
     pub fn new() -> Self {
         FermionHamiltonian {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::new(),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::new(),
         }
     }
@@ -308,11 +279,25 @@ impl FermionHamiltonian {
     /// * `Self` - The new (empty) FermionHamiltonian.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            #[cfg(not(feature = "indexed_map_iterators"))]
-            internal_map: HashMap::with_capacity(capacity),
-            #[cfg(feature = "indexed_map_iterators")]
             internal_map: IndexMap::with_capacity(capacity),
         }
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_export")]
+    pub fn to_struqture_1(
+        &self,
+    ) -> Result<struqture_1::fermions::FermionHamiltonianSystem, StruqtureError> {
+        let mut new_fermion_system = struqture_1::fermions::FermionHamiltonianSystem::new(None);
+        for (key, val) in self.iter() {
+            let one_key = key.to_struqture_1()?;
+            let _ = struqture_1::OperateOnDensityMatrix::set(
+                &mut new_fermion_system,
+                one_key,
+                val.clone(),
+            );
+        }
+        Ok(new_fermion_system)
     }
 
     /// Separate self into an operator with the terms of given number of creation and annihilation operators and an operator with the remaining operations
@@ -338,6 +323,19 @@ impl FermionHamiltonian {
             }
         }
         Ok((separated, remainder))
+    }
+
+    /// Export to struqture_1 format.
+    #[cfg(feature = "struqture_1_import")]
+    pub fn from_struqture_1(
+        value: &struqture_1::fermions::FermionHamiltonianSystem,
+    ) -> Result<Self, StruqtureError> {
+        let mut new_operator = Self::new();
+        for (key, val) in struqture_1::OperateOnDensityMatrix::iter(value) {
+            let self_key = HermitianFermionProduct::from_struqture_1(key)?;
+            let _ = new_operator.set(self_key, val.clone());
+        }
+        Ok(new_operator)
     }
 }
 
@@ -535,10 +533,6 @@ impl ops::Mul<FermionHamiltonian> for FermionHamiltonian {
 ///
 impl IntoIterator for FermionHamiltonian {
     type Item = (HermitianFermionProduct, CalculatorComplex);
-    #[cfg(not(feature = "indexed_map_iterators"))]
-    type IntoIter =
-        std::collections::hash_map::IntoIter<HermitianFermionProduct, CalculatorComplex>;
-    #[cfg(feature = "indexed_map_iterators")]
     type IntoIter = indexmap::map::IntoIter<HermitianFermionProduct, CalculatorComplex>;
     /// Returns the FermionHamiltonian in Iterator form.
     ///
@@ -641,7 +635,7 @@ impl fmt::Display for FermionHamiltonian {
 }
 
 impl JordanWignerFermionToSpin for FermionHamiltonian {
-    type Output = SpinHamiltonian;
+    type Output = PauliHamiltonian;
 
     /// Implements JordanWignerFermionToSpin for a FermionHamiltonian.
     ///
@@ -650,9 +644,9 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
     ///
     /// # Returns
     ///
-    /// `SpinHamiltonian` - The spin Hamiltonian that results from the transformation.
+    /// `PauliHamiltonian` - The spin Hamiltonian that results from the transformation.
     fn jordan_wigner(&self) -> Self::Output {
-        let mut out = SpinHamiltonian::new();
+        let mut out = PauliHamiltonian::new();
 
         for hfp in self.keys() {
             let coeff = self.get(hfp);
@@ -666,12 +660,12 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
             } else {
                 let (fp_conj, conjugate_sign) = fp.hermitian_conjugate();
 
-                let spin_op = fp.jordan_wigner() * coeff.clone()
+                let qubit_op = fp.jordan_wigner() * coeff.clone()
                     + fp_conj.jordan_wigner() * conjugate_sign * coeff.conj();
-                let spin_hamiltonian = SpinHamiltonian::try_from(spin_op).expect(
-                    "Something went wrong when attempting to cast SpinOperator into SpinHamiltonian.",
+                let qubit_hamiltonian = PauliHamiltonian::try_from(qubit_op).expect(
+                    "Something went wrong when attempting to cast PauliOperator into PauliHamiltonian.",
                 );
-                out = out + spin_hamiltonian;
+                out = out + qubit_hamiltonian;
             }
         }
         out
@@ -681,34 +675,37 @@ impl JordanWignerFermionToSpin for FermionHamiltonian {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::STRUQTURE_VERSION;
     use serde_test::{assert_tokens, Configure, Token};
 
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of FermionHamiltonian
     #[test]
     fn so_from_sos() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
         let sos = FermionHamiltonianSerialize {
             items: vec![(pp.clone(), 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: STRUQTURE_VERSION.to_string(),
             },
         };
         let mut so = FermionHamiltonian::new();
         so.set(pp, CalculatorComplex::from(0.5)).unwrap();
 
-        assert_eq!(FermionHamiltonian::from(sos.clone()), so);
+        assert_eq!(FermionHamiltonian::try_from(sos.clone()).unwrap(), so);
         assert_eq!(FermionHamiltonianSerialize::from(so), sos);
     }
-    // Test the Clone and PartialEq traits of SpinOperator
+    // Test the Clone and PartialEq traits of FermionHamiltonian
     #[test]
     fn clone_partial_eq() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
         let sos = FermionHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -719,17 +716,19 @@ mod test {
         let pp_1: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
         let sos_1 = FermionHamiltonianSerialize {
             items: vec![(pp_1, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         let pp_2: HermitianFermionProduct = HermitianFermionProduct::new([0], [1]).unwrap();
         let sos_2 = FermionHamiltonianSerialize {
             items: vec![(pp_2, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
         assert!(sos_1 == sos);
@@ -738,33 +737,35 @@ mod test {
         assert!(sos != sos_2);
     }
 
-    // Test the Debug trait of SpinOperator
+    // Test the Debug trait of FermionHamiltonian
     #[test]
     fn debug() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
         let sos = FermionHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
         assert_eq!(
             format!("{:?}", sos),
-            "FermionHamiltonianSerialize { items: [(HermitianFermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
+            "FermionHamiltonianSerialize { items: [(HermitianFermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"FermionHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (readable)
+    /// Test FermionHamiltonian Serialization and Deserialization traits (readable)
     #[test]
     fn serde_readable() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
         let sos = FermionHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -783,30 +784,37 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("FermionHamiltonian"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],
         );
     }
 
-    /// Test SpinOperator Serialization and Deserialization traits (compact)
+    /// Test FermionHamiltonian Serialization and Deserialization traits (compact)
     #[test]
     fn serde_compact() {
         let pp: HermitianFermionProduct = HermitianFermionProduct::new([0], [0]).unwrap();
         let sos = FermionHamiltonianSerialize {
             items: vec![(pp, 0.5.into(), 0.0.into())],
-            _struqture_version: StruqtureVersionSerializable {
-                major_version: 1,
-                minor_version: 0,
+            serialisation_meta: crate::StruqtureSerialisationMeta {
+                type_name: "FermionHamiltonian".to_string(),
+                min_version: (2, 0, 0),
+                version: "2.0.0".to_string(),
             },
         };
 
@@ -840,15 +848,21 @@ mod test {
                 Token::F64(0.0),
                 Token::TupleEnd,
                 Token::SeqEnd,
-                Token::Str("_struqture_version"),
+                Token::Str("serialisation_meta"),
                 Token::Struct {
-                    name: "StruqtureVersionSerializable",
-                    len: 2,
+                    name: "StruqtureSerialisationMeta",
+                    len: 3,
                 },
-                Token::Str("major_version"),
-                Token::U32(1),
-                Token::Str("minor_version"),
-                Token::U32(0),
+                Token::Str("type_name"),
+                Token::Str("FermionHamiltonian"),
+                Token::Str("min_version"),
+                Token::Tuple { len: 3 },
+                Token::U64(2),
+                Token::U64(0),
+                Token::U64(0),
+                Token::TupleEnd,
+                Token::Str("version"),
+                Token::Str("2.0.0"),
                 Token::StructEnd,
                 Token::StructEnd,
             ],

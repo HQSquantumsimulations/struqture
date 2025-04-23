@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use super::{
-    BosonHamiltonianSystemWrapper, BosonLindbladNoiseSystemWrapper, BosonProductWrapper,
+    BosonHamiltonianWrapper, BosonLindbladNoiseOperatorWrapper, BosonProductWrapper,
     HermitianBosonProductWrapper,
 };
 use bincode::deserialize;
@@ -21,16 +21,13 @@ use pyo3::types::PyByteArray;
 use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonLindbladOpenSystem;
 #[cfg(feature = "json_schema")]
-use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
+use struqture::STRUQTURE_VERSION;
 use struqture::{OpenSystem, OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of bosons.
 ///
 /// In a BosonLindbladOpenSystem is characterized by a BosonLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of bosons.
-///
-/// Args:
-///     number_bosons (Optional[int]): The number of bosons in the BosonLindbladOpenSystem.
 ///
 /// Returns:
 ///     self: The new BosonLindbladOpenSystem with the input number of bosons.
@@ -58,20 +55,16 @@ pub struct BosonLindbladOpenSystemWrapper {
     pub internal: BosonLindbladOpenSystem,
 }
 
-#[noisy_system_wrapper(OpenSystem, OperateOnModes, Calculus)]
+#[noisy_system_wrapper(OpenSystem, OperateOnModes, HermitianCalculus)]
 impl BosonLindbladOpenSystemWrapper {
     /// Create a new BosonLindbladOpenSystem.
-    ///
-    /// Args:
-    ///     number_bosons (Optional[int]): The number of bosons in the BosonLindbladOpenSystem.
     ///
     /// Returns:
     ///     self: The new BosonLindbladOpenSystem with the input number of bosons.
     #[new]
-    #[pyo3(signature = (number_bosons = None))]
-    pub fn new(number_bosons: Option<usize>) -> Self {
+    pub fn new() -> Self {
         Self {
-            internal: BosonLindbladOpenSystem::new(number_bosons),
+            internal: BosonLindbladOpenSystem::new(),
         }
     }
 }

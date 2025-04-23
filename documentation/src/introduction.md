@@ -5,7 +5,7 @@ The library supports building [spin](physical_types/spins.md) objects, [fermioni
 
 Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.
 
-To best support this use case, struqture has a number of design goals:
+To best support this use case, `struqture` has a number of design goals:
 
 * Support for arbitrary spin, bosonic, fermionic and mixed systems
 * Full serialisation support to json and other formats
@@ -18,7 +18,7 @@ To best support this use case, struqture has a number of design goals:
 Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
 Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
 The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported from [qoqo_calculator](https://github.com/HQSquantumsimulations/qoqo_calculator).
-Struqture is designed to also support the construction and (de)serialisation of large systems but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
+Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
 
 This documentation is split into two parts. The [first part](physical_types/intro.md) covers the basic usage for spins, bosons, fermions and mixed systems. The [second part](container_types/intro.md) covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world [example](example.md) is also included in.
 
@@ -37,7 +37,7 @@ pip install struqture-py
 
 ### Rust
 
-You can use struqture in your Rust project by adding 
+You can use `struqture` in your Rust project by adding 
 
 ```TOML
 struqture = { version = "1.0.1" }
@@ -47,4 +47,4 @@ struqture = { version = "1.0.1" }
 
 ## API Documentation
 
-This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of [struqture](https://docs.rs/struqture/) and [struqture-py](https://hqsquantumsimulations.github.io/struqture/pyapi/index.html).
+This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of [struqture](https://docs.rs/struqture/) and [struqture-py](https://hqsquantumsimulations.github.io/struqture/python_api_docs/index.html).

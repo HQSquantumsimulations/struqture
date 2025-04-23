@@ -2,12 +2,12 @@
 
 In this example, we will create the spin-boson Hamiltonian we have used for open-system research in our [paper](https://arxiv.org/abs/2210.12138), for 1 spin and 3 bosonic modes.
 
-The Hamiltonian is as follows:
+The Hamiltonian reads as follows:
 \\[
     \hat{H} = \hat{H}_S + \hat{H}_B + \hat{H}_C
 \\]
 
-with the spin system Hamiltonian \\(\hat{H}_S\\) :
+with the spin (system) Hamiltonian \\(\hat{H}_S\\) :
 
 \\[
     \hat{H} = \frac {\hbar \Delta} {2} \sigma^z_0,
@@ -27,103 +27,56 @@ and the coupling between system and bath \\(\hat{H}_C\\) :
 
 For simplicity, we will set \\(\hbar\\) to 1.0 for this example.
 
-Rust implementation:
-```rust
-use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::BosonProduct;
-use struqture::mixed_systems::{
-    HermitianMixedProduct, MixedHamiltonianSystem,
-};
-use struqture::prelude::*;
-use struqture::spins::PauliProduct;
-
-let mut system = MixedHamiltonianSystem::new([Some(1)], [Some(3)], []);
-
-// Setting up constants:
-let delta = 1.0;
-let omega_k = [2.0, 3.0, 4.0];
-let v_k = [5.0, 6.0, 7.0];
-
-// First, H_S:
-let pp = PauliProduct::new().z(1);
-let hmp = HermitianMixedProduct::new(
-    [pp], [BosonProduct::new([], []).unwrap()], []
-).unwrap();
-system
-    .add_operator_product(hmp, CalculatorComplex::new(delta / 2.0, 0.0))
-    .unwrap();
-
-// Second, H_B:
-for k in 0..3 {
-    let bp = BosonProduct::new([k], [k]).unwrap();
-    let hmp = HermitianMixedProduct::new(
-        [PauliProduct::new()], [bp], []
-    ).unwrap();
-    system
-        .add_operator_product(
-            hmp, CalculatorComplex::new(v_k[k] / 2.0, 0.0)
-        ).unwrap();
-}
-
-// Third, H_C: the hermitian conjugate is implicitly stored,
-// we don't need to add it manually
-let pp = PauliProduct::new().x(0);
-for k in 0..3 {
-    let bp = BosonProduct::new([], [k]).unwrap();
-    let hmp = HermitianMixedProduct::new([pp.clone()], [bp], []).unwrap();
-    system
-        .add_operator_product(
-            hmp, CalculatorComplex::new(omega_k[k], 0.0)
-        ).unwrap();
-}
-
-// Our resulting H:
-println!("{}", system);
-```
-
-Python implementation:
+Implementation:
 ```python
-from qoqo_calculator_pyo3 import CalculatorComplex
+# We start by importing the Hamiltonian class, and the Product classes we will need:
+# BosonProduct and PauliProduct for the terms in the Hamiltonian defined above,
+# and HermitianMixedProduct to add them into the MixedHamiltonian.
 from struqture_py.bosons import BosonProduct
 from struqture_py.mixed_systems import (
-    HermitianMixedProduct, HermitianMixedProduct, MixedHamiltonianSystem,
+    HermitianMixedProduct, MixedHamiltonian,
 )
-from struqture_py.spins import (PauliProduct, PauliProduct)
+from struqture_py.spins import PauliProduct
 
-
-system = MixedHamiltonianSystem([1], [3], [])
+# We initialize the Hamiltonian class: it should contain one spin system and one boson system, but
+# no fermion systems
+hamiltonian = MixedHamiltonian(1, 1, 0)
 
 # Setting up constants:
 delta = 1.0
 omega_k = [2.0, 3.0, 4.0]
 v_k = [5.0, 6.0, 7.0]
 
-# First, H_S:
-pp = PauliProduct().z(1)
-hmp = HermitianMixedProduct([pp], [BosonProduct([], [])], [])
-system.add_operator_product(
-    hmp, CalculatorComplex.from_pair(delta / 2.0, 0.0)
+# First, we build H_S.
+# We add the spin-only term into the hamiltonian, with the correct prefactor
+hamiltonian.add_operator_product(
+    "S1Z:B:", delta / 2.0
 )
 
 # Second, H_B:
+# We iterate over all the bosonic modes
 for k in range(3):
-    bp = BosonProduct([k], [k])
-    hmp = HermitianMixedProduct([PauliProduct()], [bp], [])
-    system.add_operator_product(
-        hmp, CalculatorComplex.from_pair(v_k[k] / 2.0, 0.0)
+    # We add the boson-only term into the hamiltonian, with the correct prefactor
+    hamiltonian.add_operator_product(
+        f"S:Bc{k}a{k}:", v_k[k] / 2.0
     )
 
-# Third, H_C: the hermitian conjugate is implicitly stored,
-# we don't need to add it manually
-pp = PauliProduct().x(0)
+# Third, H_C: the hermitian conjugate is implicitly stored, we don't need to add it manually
+# We iterate over all the bosonic modes
 for k in range(3):
-    bp = BosonProduct([], [k])
-    hmp = HermitianMixedProduct([pp], [bp], [])
-    system.add_operator_product(
-        hmp, CalculatorComplex.from_pair(omega_k[k], 0.0)
+    # We add the spin-boson term into the hamiltonian, with the correct prefactor
+    hamiltonian.add_operator_product(
+        f"S0X:Ba{k}:", omega_k[k]
     )
-
 
 # Our resulting H:
-print(system)
+print(hamiltonian)
+
+# NOTE: the above values used can also be complex, or symbolic.
+# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
+# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
+from qoqo_calculator_pyo3 import CalculatorComplex
+hamiltonian.add_operator_product(hmp, "parameter")
+# The syntax below is particularly useful for building non-hermitian operators, such as MixedOperators, as the imaginary part can then be non-zero
+hamiltonian.add_operator_product(hmp, CalculatorComplex.from_pair("parameter", 0.0))
 ```
