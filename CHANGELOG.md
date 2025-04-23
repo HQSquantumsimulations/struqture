@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Fixed documentation folder structure.
+
 ## 2.0.0-alpha.16
 
 * First `main` branch release for struqture 2.0
