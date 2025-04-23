@@ -737,9 +737,6 @@ where
 {
     type Index;
     type Value;
-    // type IteratorType; // can be removed (and two below) + in where clause
-    // type KeyIteratorType;
-    // type ValueIteratorType;
 
     /// Gets the Self::Value typed coefficient corresponding to the key.
     ///
@@ -764,7 +761,7 @@ where
     /// # Returns
     ///
     /// * `Keys<'_, Self::Index, Self::Value>` - The sequence of keys of Self.
-    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index>; // use this here instead impl ExactSizeIterator + Iterator<Item = &'a <Self as OperateOnDensityMatrix<'a>>::Index>
+    fn keys(&'a self) -> impl ExactSizeIterator<Item = &'a Self::Index>;
 
     /// Returns the unsorted values in Self.
     ///
