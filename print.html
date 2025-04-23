@@ -188,7 +188,7 @@ On other platforms a local Rust toolchain is required to compile the Python sour
 </code></pre>
 <p>to your Cargo.toml file.</p>
 <h2 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h2>
-<p>This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of <a href="https://docs.rs/struqture/">struqture</a> and <a href="https://hqsquantumsimulations.github.io/struqture/pyapi/index.html">struqture-py</a>.</p>
+<p>This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of <a href="https://docs.rs/struqture/">struqture</a> and <a href="https://hqsquantumsimulations.github.io/struqture/python_api_docs/index.html">struqture-py</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-use-struqture"><a class="header" href="#how-to-use-struqture">How to use struqture</a></h1>
 <p>In this part of the user documentation we show the basic usage of operators, Hamiltonians and open systems for spins, bosons, fermions and mixed systems.
 Stuqture is designed with the same patterns to construct objects across all classes, for ease of use.</p>
@@ -1348,43 +1348,25 @@ omega_k = [2.0, 3.0, 4.0]
 v_k = [5.0, 6.0, 7.0]
 
 # First, we build H_S.
-# We initialize our PauliProduct and add on a sigma_z term on spin 1
-pp = PauliProduct().z(1)
-# This term is a spin-only term, so the bosonic part of it will be empty
-bp = BosonProduct([], [])
-# We create a HermitianMixedProduct from the spin and bosonic terms 
-hmp = HermitianMixedProduct([pp], [bp], [])
-# We add the created HermitianMixedProduct containing all the operator information into the hamiltonian, with the correct prefactor
+# We add the spin-only term into the hamiltonian, with the correct prefactor
 hamiltonian.add_operator_product(
-    hmp, delta / 2.0
+    "S1Z:B:", delta / 2.0
 )
 
 # Second, H_B:
-# This term is a boson-only term, so the spin part of it will be empty
-pp = PauliProduct()
 # We iterate over all the bosonic modes
 for k in range(3):
-    # We initialize our BosonProduct with the creation operator acting on k and the annihilation operator acting on k
-    bp = BosonProduct([k], [k])
-    # We create a HermitianMixedProduct from the spin and bosonic terms 
-    hmp = HermitianMixedProduct([pp], [bp], [])
-    # We add the created HermitianMixedProduct containing all the operator information into the hamiltonian, with the correct prefactor
+    # We add the boson-only term into the hamiltonian, with the correct prefactor
     hamiltonian.add_operator_product(
-        hmp, v_k[k] / 2.0
+        f"S:Bc{k}a{k}:", v_k[k] / 2.0
     )
 
 # Third, H_C: the hermitian conjugate is implicitly stored, we don't need to add it manually
-# We create the spin part of the term by initializing a PauliProduct and adding a sigma_x term acting on spin 0
-pp = PauliProduct().x(0)
 # We iterate over all the bosonic modes
 for k in range(3):
-    # We initialize our BosonProduct with the annihilation operator acting on k
-    bp = BosonProduct([], [k])
-    # We create a HermitianMixedProduct from the spin and bosonic terms 
-    hmp = HermitianMixedProduct([pp], [bp], [])
-    # We add the created HermitianMixedProduct containing all the operator information into the hamiltonian, with the correct prefactor
+    # We add the spin-boson term into the hamiltonian, with the correct prefactor
     hamiltonian.add_operator_product(
-        hmp, omega_k[k]
+        f"S0X:Ba{k}:", omega_k[k]
     )
 
 # Our resulting H:
