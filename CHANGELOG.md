@@ -4,8 +4,12 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.0.0-alpha.16
+
+* First `main` branch release for struqture 2.0
 * Updated to `main` branch commits.
 * Reduced code duplication in tests.
+* Switched to new doctest set-up.
 
 ## 2.0.0-alpha.15
 

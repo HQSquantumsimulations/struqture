@@ -19,7 +19,7 @@ jobs:
       # Run tests also on python 3.13
       python_3_13: true
       rust_package_name: "struqture"
-      rust_doc_package_name: "struqture@2.0.0-alpha.15"
+      rust_doc_package_name: "struqture@2.0.0-alpha.16"
       features: "json_schema struqture_1_export struqture_1_import"
 
   build_tests:
