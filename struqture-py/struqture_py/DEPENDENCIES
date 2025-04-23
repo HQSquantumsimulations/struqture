@@ -9668,7 +9668,7 @@ limitations under the License.
 
 
 ====================================================
-getrandom 0.2.15
+getrandom 0.2.16
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -30642,7 +30642,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.0.0-alpha.15
+struqture 2.0.0-alpha.16
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30853,7 +30853,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.0.0-alpha.15
+struqture-py 2.0.0-alpha.16
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -31064,7 +31064,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.0.0-alpha.15
+struqture-py-macros 2.0.0-alpha.16
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
