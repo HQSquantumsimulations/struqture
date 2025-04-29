@@ -1,7 +1,7 @@
 # Struqture
 
 Struqture is a Rust (struqture) and Python (struqture-py) library by [HQS Quantum Simulations](https://quantumsimulations.de/) to represent quantum mechanical operators, Hamiltonians and open quantum systems.
-The library supports building [spin](https://hqsquantumsimulations.github.io/struqture/physical_types/spins.html) objects, [fermionic](https://hqsquantumsimulations.github.io/struqture/physical_types/fermions.html) objects, [bosonic](https://hqsquantumsimulations.github.io/struqture/physical_types/bosons.html) objects and [mixed system](https://hqsquantumsimulations.github.io/struqture/physical_types/mixed_systems.html) objects that contain arbitrary many spin, fermionic and bosonic subsystems.
+The library supports building [spin](https://hqsquantumsimulations.github.io/struqture/physical_types/spins/intro.html) objects, [bosonic](https://hqsquantumsimulations.github.io/struqture/physical_types/bosons/intro.html) objects, [fermionic](https://hqsquantumsimulations.github.io/struqture/physical_types/fermions/intro.html) objects and [mixed system](https://hqsquantumsimulations.github.io/struqture/physical_types/mixed_systems/intro.html) objects that contain arbitrary many spin, bosonic and fermionic subsystems.
 
 Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.
 
@@ -16,12 +16,16 @@ To best support this use case, struqture has a number of design goals:
 
 Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
 Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
-Struqture is designed to also support the construction and (de)serialisation of large systems but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
+Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.
 
 ## Documentation
 
 We recommend users to start with the [user documentation](https://hqsquantumsimulations.github.io/struqture/) for stuqture and struqture-py.
-The user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentation of [struqture](https://docs.rs/struqture/) and [struqture-py](https://hqsquantumsimulations.github.io/struqture/python_api_docs/index.html).
+The user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentation of [struqture](https://docs.rs/struqture/) and [struqture-py](https://hqsquantumsimulations.github.io/struqture/python_api_docs/generated/struqture_py.html).
+
+## Migration guide: from struqture 1.x to struqture 2.x
+
+The Migration [Guide](Migration_Guide.md) should be used as a reference for anyone wanting to migrate existing code which uses struqture 1.0 or above to struqture 2.0.
 
 ## Installation
 
