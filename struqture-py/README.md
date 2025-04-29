@@ -1,7 +1,7 @@
 # Struqture
 
 Struqture is a Rust (struqture) and Python (struqture-py) library by [HQS Quantum Simulations](https://quantumsimulations.de/) to represent quantum mechanical operators, Hamiltonians and open quantum systems.
-The library supports building [spin](https://hqsquantumsimulations.github.io/struqture/physical_types/spins/intro.html) objects, [bosonic](https://hqsquantumsimulations.github.io/struqture/physical_types/bosons/intro.html) objects, [fermionic](https://hqsquantumsimulations.github.io/struqture/physical_types/fermions/intro.html) objects and [mixed system](https://hqsquantumsimulations.github.io/struqture/physical_types/mixed_systems/intro.html) objects that contain arbitrary many spin, fermionic and bosonic subsystems.
+The library supports building [spin](https://hqsquantumsimulations.github.io/struqture/physical_types/spins/intro.html) objects, [bosonic](https://hqsquantumsimulations.github.io/struqture/physical_types/bosons/intro.html) objects, [fermionic](https://hqsquantumsimulations.github.io/struqture/physical_types/fermions/intro.html) objects and [mixed system](https://hqsquantumsimulations.github.io/struqture/physical_types/mixed_systems/intro.html) objects that contain arbitrary many spin, bosonic and fermionic subsystems.
 
 Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.
 
@@ -25,7 +25,7 @@ The user documentation is intended to give a high level overview of the design a
 
 ## Migration guide: from struqture 1.x to struqture 2.x
 
-The Migration [Guide](Migration_Guide.md) should be used as a refence for anyone wanting to migrate existing code which uses struqture 1.0 or above to struqture 2.0.
+The Migration [Guide](Migration_Guide.md) should be used as a reference for anyone wanting to migrate existing code which uses struqture 1.0 or above to struqture 2.0.
 
 ## Installation
 
