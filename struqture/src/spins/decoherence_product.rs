@@ -938,9 +938,7 @@ impl FromStr for DecoherenceProduct {
         } else {
             if !s.starts_with(char::is_numeric) {
                 return Err(StruqtureError::FromStringFailed {
-                    msg: format!(
-                        "Missing spin index in the following DecoherenceProduct: {s}"
-                    ),
+                    msg: format!("Missing spin index in the following DecoherenceProduct: {s}"),
                 });
             }
 
@@ -963,9 +961,7 @@ impl FromStr for DecoherenceProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {index} instead of unsigned integer as spin index"
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }

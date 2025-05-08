@@ -663,16 +663,14 @@ impl<'de> Deserialize<'de> for HermitianBosonProduct {
                 where
                     E: serde::de::Error,
                 {
-                    HermitianBosonProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    HermitianBosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
-                    HermitianBosonProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    HermitianBosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 

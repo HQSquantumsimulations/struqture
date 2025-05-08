@@ -140,16 +140,14 @@ impl<'de> Deserialize<'de> for HermitianMixedProduct {
                 where
                     E: serde::de::Error,
                 {
-                    HermitianMixedProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    HermitianMixedProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<HermitianMixedProduct, E>
                 where
                     E: serde::de::Error,
                 {
-                    HermitianMixedProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    HermitianMixedProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 

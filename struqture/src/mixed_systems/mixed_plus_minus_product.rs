@@ -140,16 +140,14 @@ impl<'de> Deserialize<'de> for MixedPlusMinusProduct {
                 where
                     E: serde::de::Error,
                 {
-                    MixedPlusMinusProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    MixedPlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<MixedPlusMinusProduct, E>
                 where
                     E: serde::de::Error,
                 {
-                    MixedPlusMinusProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    MixedPlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 

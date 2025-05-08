@@ -708,9 +708,7 @@ impl FromStr for PauliProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {index} instead of unsigned integer as spin index"
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }

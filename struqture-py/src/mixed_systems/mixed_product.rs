@@ -204,9 +204,7 @@ impl MixedProductWrapper {
     ///     ValueError: The rhs of the multiplication not MixedProduct.
     pub fn __mul__(&self, other: Self) -> PyResult<Vec<(Self, Complex64)>> {
         let vec_object = (self.internal.clone() * other.internal).map_err(|err| {
-            PyValueError::new_err(format!(
-                "Could not multiply the two MixedProducts: {err:?}"
-            ))
+            PyValueError::new_err(format!("Could not multiply the two MixedProducts: {err:?}"))
         })?;
         let mut return_vector: Vec<(Self, Complex64)> = Vec::new();
         for obj in vec_object {

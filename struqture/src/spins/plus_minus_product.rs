@@ -923,9 +923,7 @@ impl FromStr for PlusMinusProduct {
         } else {
             if !s.starts_with(char::is_numeric) {
                 return Err(StruqtureError::FromStringFailed {
-                    msg: format!(
-                        "Missing spin index in the following PlusMinusProduct: {s}"
-                    ),
+                    msg: format!("Missing spin index in the following PlusMinusProduct: {s}"),
                 });
             }
             let mut internal: TinyVec<[(usize, SinglePlusMinusOperator); 5]> =
@@ -951,9 +949,7 @@ impl FromStr for PlusMinusProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {index} instead of unsigned integer as spin index"
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }
