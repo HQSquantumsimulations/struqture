@@ -361,7 +361,7 @@ fn debug() {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(
-        format!("{:?}", slos),
+        format!("{slos:?}"),
         "PauliLindbladOpenSystem { system: PauliHamiltonian { internal_map: {PauliProduct { items: [(1, X)] }: Float(0.4)} }, noise: PauliLindbladNoiseOperator { internal_map: {(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } }"
     );
 }
@@ -380,7 +380,7 @@ fn display() {
         .unwrap();
 
     assert_eq!(
-        format!("{}", slos),
+        format!("{slos}"),
         "PauliLindbladOpenSystem{\nSystem: {\n1X: 4e-1,\n}\nNoise: {\n(0Z, 0Z): (5e-1 + i * 0e0),\n}\n}"
     );
 }

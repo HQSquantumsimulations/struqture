@@ -360,7 +360,7 @@ fn debug() {
     let _ = so.set(pp, CalculatorFloat::from(0.5));
 
     assert_eq!(
-        format!("{:?}", so),
+        format!("{so:?}"),
         "PauliHamiltonian { internal_map: {PauliProduct { items: [(0, Z)] }: Float(0.5)} }"
     );
 }
@@ -372,7 +372,7 @@ fn display() {
     let pp: PauliProduct = PauliProduct::new().z(0);
     let _ = so.set(pp, CalculatorFloat::from(0.5));
 
-    assert_eq!(format!("{}", so), "PauliHamiltonian{\n0Z: 5e-1,\n}");
+    assert_eq!(format!("{so}"), "PauliHamiltonian{\n0Z: 5e-1,\n}");
 }
 
 // Test the hermitian_conjugate and is_natural_hermitian functions of the HermitianMixedProduct

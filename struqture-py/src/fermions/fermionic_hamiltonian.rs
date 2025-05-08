@@ -108,15 +108,13 @@ impl FermionHamiltonianWrapper {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
                                     PyValueError::new_err(format!(
-                                        "FermionHamiltonians could not be multiplied: {:?}",
-                                        err
+                                        "FermionHamiltonians could not be multiplied: {err:?}"
                                     ))
                                 })?;
                                 Ok(FermionOperatorWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonian: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonian: {err:?}")))
                         }
                     }
                 }
@@ -141,7 +139,7 @@ impl FermionHamiltonianWrapper {
         let (separated, remainder) = self
             .internal
             .separate_into_n_terms(number_creators_annihilators)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok((
             FermionHamiltonianWrapper {
                 internal: separated,

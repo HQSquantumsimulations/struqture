@@ -109,8 +109,7 @@ impl MixedPlusMinusOperatorWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {err:?}")))
                         }
             }
         }
@@ -129,7 +128,7 @@ impl MixedPlusMinusOperatorWrapper {
     #[staticmethod]
     pub fn from_mixed_operator(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedOperatorWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(MixedPlusMinusOperatorWrapper {
             internal: MixedPlusMinusOperator::from(system.clone()),
         })
@@ -145,7 +144,7 @@ impl MixedPlusMinusOperatorWrapper {
     ///     ValueError: Could not create MixedOperator from MixedOperator.
     pub fn to_mixed_operator(&self) -> PyResult<MixedOperatorWrapper> {
         let result: MixedOperator = MixedOperator::try_from(self.internal.clone())
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(MixedOperatorWrapper { internal: result })
     }
 }

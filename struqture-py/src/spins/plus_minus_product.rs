@@ -128,8 +128,7 @@ impl PlusMinusProductWrapper {
     pub fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
         let converted_pauli = SinglePlusMinusOperator::from_str(pauli.as_str()).map_err(|err| {
             PyValueError::new_err(format!(
-                "pauli could not be converted to X, Y, Z: {:?}",
-                err
+                "pauli could not be converted to X, Y, Z: {err:?}"
             ))
         })?;
         Ok(Self {

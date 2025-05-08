@@ -366,16 +366,16 @@ fn hash_debug() {
     let mut dp = DecoherenceProduct::new();
 
     // Empty should resolve as identity:
-    assert_eq!(format!("{}", dp), "I");
+    assert_eq!(format!("{dp}"), "I");
 
     dp = dp.set_pauli(0, SingleDecoherenceOperator::X);
     dp = dp.set_pauli(2, SingleDecoherenceOperator::Z);
 
     assert_eq!(
-        format!("{:?}", dp),
+        format!("{dp:?}"),
         "DecoherenceProduct { items: [(0, X), (2, Z)] }"
     );
-    assert_eq!(format!("{}", dp), "0X2Z");
+    assert_eq!(format!("{dp}"), "0X2Z");
 
     let mut dp_1 = DecoherenceProduct::new();
     dp_1 = dp_1.set_pauli(0, SingleDecoherenceOperator::X);

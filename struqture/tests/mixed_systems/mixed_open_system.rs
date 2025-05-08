@@ -488,7 +488,7 @@ fn debug() {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(
-        format!("{:?}", slos),
+        format!("{slos:?}"),
         "MixedLindbladOpenSystem { system: MixedHamiltonian { internal_map: {HermitianMixedProduct { spins: [PauliProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [1] }], fermions: [FermionProduct { creators: [0], annihilators: [1] }] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 }, noise: MixedLindbladNoiseOperator { internal_map: {(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 } }"
     );
 }
@@ -517,7 +517,7 @@ fn display() {
         .unwrap();
 
     assert_eq!(
-        format!("{}", slos),
+        format!("{slos}"),
         "MixedLindbladOpenSystem{\nSystem: {\nMixedHamiltonian{\nS0X:Bc0a1:Fc0a1:: (4e-1 + i * 0e0),\n}}\nNoise: {\nMixedLindbladNoiseOperator{\n(S2Z:Bc0a3:Fc0a3:, S2Z:Bc0a3:Fc0a3:): (5e-1 + i * 0e0),\n}}\n}"
     );
 }

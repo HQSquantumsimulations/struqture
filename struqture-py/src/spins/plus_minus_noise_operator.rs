@@ -83,7 +83,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         value: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         let system = PauliLindbladNoiseOperatorWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PlusMinusLindbladNoiseOperatorWrapper {
             internal: PlusMinusLindbladNoiseOperator::from(system.clone()),
         })
