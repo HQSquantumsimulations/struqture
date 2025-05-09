@@ -73,34 +73,28 @@ fn jordan_wigner_spin_to_fermion_quote(
                     }
                 }
             }
-        } else if struct_name == "PauliProduct"
-            || struct_name == "DecoherenceProduct"
-            || struct_name == "PlusMinusProduct"
-            || struct_name == "PlusMinusOperator"
-        {
-            output_wrapper_type = quote::format_ident!("FermionOperatorWrapper");
-            quote! {
-                /// Transform the given fermionic object into a spin object using
-                /// the Jordan Wigner mapping.
-                pub fn jordan_wigner(&self) -> #output_wrapper_type {
-                    #output_wrapper_type {
-                        internal: self.internal.jordan_wigner()
-                    }
-                }
-            }
-        } else if struct_name == "PlusMinusLindbladNoiseOperator" {
-            output_wrapper_type = quote::format_ident!("FermionLindbladNoiseOperatorWrapper");
-            quote! {
-                /// Transform the given fermionic object into a spin object using
-                /// the Jordan Wigner mapping.
-                pub fn jordan_wigner(&self) -> #output_wrapper_type {
-                    #output_wrapper_type {
-                        internal: self.internal.jordan_wigner()
-                    }
-                }
-            }
         } else {
-            panic!("JordanWignerSpinToFermion can only be implemented for spin types!")
+            if struct_name == "PauliProduct"
+                || struct_name == "DecoherenceProduct"
+                || struct_name == "PlusMinusProduct"
+                || struct_name == "PlusMinusOperator"
+            {
+                output_wrapper_type = quote::format_ident!("FermionOperatorWrapper");
+            } else if struct_name == "PlusMinusLindbladNoiseOperator" {
+                output_wrapper_type = quote::format_ident!("FermionLindbladNoiseOperatorWrapper");
+            } else {
+                panic!("JordanWignerSpinToFermion can only be implemented for spin types!")
+            };
+
+            quote! {
+                /// Transform the given spin object into a fermionic object using
+                /// the Jordan Wigner mapping.
+                pub fn jordan_wigner(&self) -> #output_wrapper_type {
+                    #output_wrapper_type {
+                        internal: self.internal.jordan_wigner()
+                    }
+                }
+            }
         }
     } else {
         TokenStream::new()
@@ -131,30 +125,24 @@ fn jordan_wigner_fermion_to_spin_quote(
                     }
                 }
             }
-        } else if struct_name == "FermionProduct" {
-            output_wrapper_type = quote::format_ident!("PauliOperatorWrapper");
-            quote! {
-                /// Transform the given fermionic object into a spin object using
-                /// the Jordan Wigner mapping.
-                pub fn jordan_wigner(&self) -> #output_wrapper_type {
-                    #output_wrapper_type {
-                        internal: self.internal.jordan_wigner()
-                    }
-                }
-            }
-        } else if struct_name == "HermitianFermionProduct" {
-            output_wrapper_type = quote::format_ident!("PauliHamiltonianWrapper");
-            quote! {
-                /// Transform the given fermionic object into a spin object using
-                /// the Jordan Wigner mapping.
-                pub fn jordan_wigner(&self) -> #output_wrapper_type {
-                    #output_wrapper_type {
-                        internal: self.internal.jordan_wigner()
-                    }
-                }
-            }
         } else {
-            panic!("JordanWignerFermionToSpin can only be implemented for fermionic types!")
+            if struct_name == "FermionProduct" {
+                output_wrapper_type = quote::format_ident!("PauliOperatorWrapper");
+            } else if struct_name == "HermitianFermionProduct" {
+                output_wrapper_type = quote::format_ident!("PauliHamiltonianWrapper");
+            } else {
+                panic!("JordanWignerFermionToSpin can only be implemented for fermionic types!")
+            };
+
+            quote! {
+                /// Transform the given fermionic object into a spin object using
+                /// the Jordan Wigner mapping.
+                pub fn jordan_wigner(&self) -> #output_wrapper_type {
+                    #output_wrapper_type {
+                        internal: self.internal.jordan_wigner()
+                    }
+                }
+            }
         }
     } else {
         TokenStream::new()
