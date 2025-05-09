@@ -139,14 +139,14 @@ impl<'de> Deserialize<'de> for MixedProduct {
                 where
                     E: serde::de::Error,
                 {
-                    MixedProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    MixedProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<MixedProduct, E>
                 where
                     E: serde::de::Error,
                 {
-                    MixedProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    MixedProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -208,7 +208,7 @@ impl MixedProduct {
         let self_string = self.to_string();
         let struqture_1_product = struqture_1::mixed_systems::MixedProduct::from_str(&self_string)
             .map_err(|err| StruqtureError::GenericError {
-                msg: format!("{}", err),
+                msg: format!("{err}"),
             })?;
         Ok(struqture_1_product)
     }
@@ -331,8 +331,7 @@ impl FromStr for MixedProduct {
                 return Err(StruqtureError::ParsingError {
                     target_type: "MixedIndex".to_string(),
                     msg: format!(
-                        "Encountered subsystem that is neither spin, nor boson, nor fermion: {}",
-                        subsystem
+                        "Encountered subsystem that is neither spin, nor boson, nor fermion: {subsystem}"
                     ),
                 });
             }
@@ -740,15 +739,15 @@ impl std::fmt::Display for MixedProduct {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string: String = String::new();
         for spin in self.spins() {
-            string.push_str(format!("S{}:", spin).as_str());
+            string.push_str(format!("S{spin}:").as_str());
         }
         for boson in self.bosons() {
-            string.push_str(format!("B{}:", boson).as_str());
+            string.push_str(format!("B{boson}:").as_str());
         }
         for fermion in self.fermions() {
-            string.push_str(format!("F{}:", fermion).as_str());
+            string.push_str(format!("F{fermion}:").as_str());
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

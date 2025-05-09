@@ -195,7 +195,7 @@ impl MixedLindbladOpenSystem {
 
         struqture_1::OpenSystem::group(new_system, new_noise).map_err(
             |err| StruqtureError::GenericError { msg:
-                format!("Could not convert struqture 2.x MixedLindbladOpenSystem to 1.x MixedLindbladOpenSystem, group function failed: {:?}.", err)
+                format!("Could not convert struqture 2.x MixedLindbladOpenSystem to 1.x MixedLindbladOpenSystem, group function failed: {err:?}.")
             }
         )
     }
@@ -319,6 +319,6 @@ impl fmt::Display for MixedLindbladOpenSystem {
         output.push_str("}\n");
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }

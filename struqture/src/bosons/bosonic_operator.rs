@@ -516,11 +516,11 @@ impl fmt::Display for BosonOperator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "BosonOperator{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -603,7 +603,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "BosonOperatorSerialize { items: [(BosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"BosonOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }

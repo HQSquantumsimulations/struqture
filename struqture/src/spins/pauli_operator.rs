@@ -611,11 +611,11 @@ impl fmt::Display for PauliOperator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "PauliOperator{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -719,7 +719,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "PauliOperatorSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"PauliOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }

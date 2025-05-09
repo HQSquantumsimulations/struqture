@@ -4,6 +4,9 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.0.1
+
+* Updated to pyo3 0.24.
 * Fixed links in READMEs.
 
 ## 2.0.0

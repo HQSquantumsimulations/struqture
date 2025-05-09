@@ -119,15 +119,13 @@ impl MixedOperatorWrapper {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
                                     PyValueError::new_err(format!(
-                                        "MixedOperators could not be multiplied: {:?}",
-                                        err
+                                        "MixedOperators could not be multiplied: {err:?}"
                                     ))
                                 })?;
                                 Ok(Self { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedOperator: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedOperator: {err:?}")))
                         }
                     }
                 }

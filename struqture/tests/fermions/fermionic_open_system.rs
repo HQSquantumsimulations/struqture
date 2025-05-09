@@ -365,7 +365,7 @@ fn debug() {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
     assert_eq!(
-        format!("{:?}", slos),
+        format!("{slos:?}"),
         "FermionLindbladOpenSystem { system: FermionHamiltonian { internal_map: {HermitianFermionProduct { creators: [0], annihilators: [1] }: CalculatorComplex { re: Float(0.4), im: Float(0.0) }} }, noise: FermionLindbladNoiseOperator { internal_map: {(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }): CalculatorComplex { re: Float(0.5), im: Float(0.0) }} } }"
     );
 }
@@ -384,7 +384,7 @@ fn display() {
         .unwrap();
 
     assert_eq!(
-        format!("{}", slos),
+        format!("{slos}"),
         "FermionLindbladOpenSystem{\nSystem: {\nc0a1: (4e-1 + i * 0e0),\n}\nNoise: {\n(c0a0, c0a0): (5e-1 + i * 0e0),\n}\n}"
     );
 }

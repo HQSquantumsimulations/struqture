@@ -338,14 +338,14 @@ impl<'de> Deserialize<'de> for DecoherenceProduct {
                 where
                     E: serde::de::Error,
                 {
-                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: Error,
                 {
-                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -691,7 +691,7 @@ impl DecoherenceProduct {
         let self_string = self.to_string();
         let struqture_1_product = struqture_1::spins::DecoherenceProduct::from_str(&self_string)
             .map_err(|err| StruqtureError::GenericError {
-                msg: format!("{}", err),
+                msg: format!("{err}"),
             })?;
         Ok(struqture_1_product)
     }
@@ -938,10 +938,7 @@ impl FromStr for DecoherenceProduct {
         } else {
             if !s.starts_with(char::is_numeric) {
                 return Err(StruqtureError::FromStringFailed {
-                    msg: format!(
-                        "Missing spin index in the following DecoherenceProduct: {}",
-                        s
-                    ),
+                    msg: format!("Missing spin index in the following DecoherenceProduct: {s}"),
                 });
             }
 
@@ -964,10 +961,7 @@ impl FromStr for DecoherenceProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {} instead of unsigned integer as spin index",
-                                index
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }
@@ -1000,11 +994,11 @@ impl fmt::Display for DecoherenceProduct {
             string.push('I');
         } else {
             for (index, pauli) in self.items.iter() {
-                string.push_str(format!("{}", index).as_str());
-                string.push_str(format!("{}", pauli).as_str());
+                string.push_str(format!("{index}").as_str());
+                string.push_str(format!("{pauli}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

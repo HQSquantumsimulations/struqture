@@ -128,10 +128,7 @@ impl PauliProductWrapper {
     ///     self: The entry was correctly set and the PauliProduct is returned.
     pub fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
         let converted_pauli = SinglePauliOperator::from_str(pauli.as_str()).map_err(|err| {
-            PyValueError::new_err(format!(
-                "pauli could not be converted to X, Y, Z: {:?}",
-                err
-            ))
+            PyValueError::new_err(format!("pauli could not be converted to X, Y, Z: {err:?}"))
         })?;
         Ok(Self {
             internal: self.internal.clone().set_pauli(index, converted_pauli),

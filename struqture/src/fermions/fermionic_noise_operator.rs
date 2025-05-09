@@ -551,7 +551,7 @@ impl fmt::Display for FermionLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -671,7 +671,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "FermionLindbladNoiseOperatorSerialize { items: [(FermionProduct { creators: [0], annihilators: [0] }, FermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"FermionLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }

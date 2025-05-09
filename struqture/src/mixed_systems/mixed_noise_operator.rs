@@ -669,7 +669,7 @@ impl fmt::Display for MixedLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -801,7 +801,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "MixedLindbladNoiseOperatorSerialize { items: [(MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, serialisation_meta: StruqtureSerialisationMeta { type_name: \"MixedLindbladNoiseOperator\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }

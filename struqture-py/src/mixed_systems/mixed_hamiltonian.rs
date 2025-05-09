@@ -132,15 +132,13 @@ impl MixedHamiltonianWrapper {
                     Ok(x) => {
                         let new_self = (self.clone().internal * x).map_err(|err| {
                             PyValueError::new_err(format!(
-                                "MixedHamiltonians could not be multiplied: {:?}",
-                                err
+                                "MixedHamiltonians could not be multiplied: {err:?}"
                             ))
                         })?;
                         Ok(MixedOperatorWrapper { internal: new_self })
                     },
                     Err(err) => Err(PyValueError::new_err(format!(
-                        "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonian: {:?}",
-                        err)))
+                        "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonian: {err:?}")))
                 }
             }
         }

@@ -284,16 +284,16 @@ fn hash_debug() {
     let mut pp = PauliProduct::new();
 
     // Empty should resolve as identity
-    assert_eq!(format!("{}", pp), "I");
+    assert_eq!(format!("{pp}"), "I");
 
     pp = pp.set_pauli(0, SinglePauliOperator::X);
     pp = pp.set_pauli(2, SinglePauliOperator::Z);
 
     assert_eq!(
-        format!("{:?}", pp),
+        format!("{pp:?}"),
         "PauliProduct { items: [(0, X), (2, Z)] }"
     );
-    assert_eq!(format!("{}", pp), "0X2Z");
+    assert_eq!(format!("{pp}"), "0X2Z");
 
     let mut pp_1 = PauliProduct::new();
     pp_1 = pp_1.set_pauli(0, SinglePauliOperator::X);

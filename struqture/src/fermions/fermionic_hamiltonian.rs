@@ -626,11 +626,11 @@ impl fmt::Display for FermionHamiltonian {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "FermionHamiltonian{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -751,7 +751,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "FermionHamiltonianSerialize { items: [(HermitianFermionProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], serialisation_meta: StruqtureSerialisationMeta { type_name: \"FermionHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }

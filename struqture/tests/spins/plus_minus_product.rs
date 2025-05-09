@@ -279,7 +279,7 @@ fn hash_debug() {
     let mut pmp = PlusMinusProduct::new();
 
     // Empty should resolve as identity
-    assert_eq!(format!("{}", pmp), "I");
+    assert_eq!(format!("{pmp}"), "I");
 
     pmp = pmp.set_pauli(0, SinglePlusMinusOperator::Plus);
     pmp = pmp.set_pauli(1, SinglePlusMinusOperator::Minus);
@@ -287,10 +287,10 @@ fn hash_debug() {
     pmp = pmp.set_pauli(3, SinglePlusMinusOperator::Identity);
 
     assert_eq!(
-        format!("{:?}", pmp),
+        format!("{pmp:?}"),
         "PlusMinusProduct { items: [(0, Plus), (1, Minus), (2, Z)] }"
     );
-    assert_eq!(format!("{}", pmp), "0+1-2Z");
+    assert_eq!(format!("{pmp}"), "0+1-2Z");
 
     let mut pp_1 = PlusMinusProduct::new();
     pp_1 = pp_1.set_pauli(0, SinglePlusMinusOperator::Plus);

@@ -626,11 +626,11 @@ impl fmt::Display for MixedHamiltonian {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "MixedHamiltonian{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -756,7 +756,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "MixedHamiltonianSerialize { items: [(HermitianMixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, serialisation_meta: StruqtureSerialisationMeta { type_name: \"MixedHamiltonian\", min_version: (2, 0, 0), version: \"2.0.0\" } }"
         );
     }
