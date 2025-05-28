@@ -1594,7 +1594,7 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.1.0"
+version = "2.1.0-alpha.0"
 dependencies = [
  "bincode",
  "criterion",
@@ -1618,7 +1618,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "2.1.0"
+version = "2.1.0-alpha.0"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1635,7 +1635,7 @@ dependencies = [
  "schemars",
  "serde_json",
  "struqture 1.12.2",
- "struqture 2.1.0",
+ "struqture 2.1.0-alpha.0",
  "struqture-py-macros",
  "syn",
  "test-case",
@@ -1644,7 +1644,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "2.1.0"
+version = "2.1.0-alpha.0"
 dependencies = [
  "proc-macro2",
  "quote",
