@@ -283,7 +283,7 @@ impl BosonToSpin for BosonProduct {
     type Output = PauliOperator;
 
     // From trait
-    fn boson_spin_mapping(
+    fn dicke_boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
     ) -> Result<Self::Output, StruqtureError> {
@@ -922,7 +922,7 @@ impl BosonToSpin for HermitianBosonProduct {
     type Output = PauliOperator;
 
     // From trait
-    fn boson_spin_mapping(
+    fn dicke_boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
     ) -> Result<Self::Output, StruqtureError> {

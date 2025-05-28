@@ -14,11 +14,14 @@
 //!
 //! This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
 //! the mapping, as well as its use in the context of open system dynamics, can be found at:
-//!                         https://arxiv.org/abs/2210.12138
+//!                         <https://arxiv.org/pdf/2210.12138>
+//!
 //! The mapping is given by:
 //!
-//! JW(a_p^{dagger}) = ( \prod_{i = 1}^{p - 1} Z_i )(X_p - i Y_p)*1/2
-//! JW(a_p) = ( \prod_{i = 1}^{p - 1} Z_i )(X_p + i Y_p)*1/2
+//! $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+//! $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+//!
+//! For a direct mapping, N is set to 1. For a Dicket mapping, N > 1.
 
 use crate::StruqtureError;
 
@@ -29,7 +32,23 @@ pub trait BosonToSpin {
     /// For a BosonHamiltonian it will be a PauliOperator.
     type Output;
 
-    /// Transforms the given bosonic object into a spin object using the mapping.
+    /// Transforms the given bosonic object into a spin object using the direct mapping.
+    ///
+    /// In this mapping, 1 bosonic mode is described by 1 spin.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(output)` - The result of the mapping to a spin object.
+    /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
+    ///   terms such as b†b or (b† + b).
+    fn direct_boson_spin_mapping(&self) -> Result<Self::Output, StruqtureError> {
+        self.dicke_boson_spin_mapping(1)
+    }
+
+    /// Transforms the given bosonic object into a spin object using the Dicke mapping.
+    ///
+    /// In this mapping, 1 bosonic mode is described by N>1 spins.
+    /// We work in the subspace spanned by symmetric Dicke states of spins.
     ///
     /// # Arguments
     ///
@@ -40,7 +59,7 @@ pub trait BosonToSpin {
     /// * `Ok(output)` - The result of the mapping to a spin object.
     /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
     ///   terms such as b†b or (b† + b).
-    fn boson_spin_mapping(
+    fn dicke_boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
     ) -> Result<Self::Output, StruqtureError>;

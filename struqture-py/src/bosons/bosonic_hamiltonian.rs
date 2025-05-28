@@ -131,7 +131,7 @@ impl BosonHamiltonianWrapper {
         Ok(PauliOperatorWrapper {
             internal: self
                 .internal
-                .boson_spin_mapping(number_spins_per_bosonic_mode)
+                .dicke_boson_spin_mapping(number_spins_per_bosonic_mode)
                 .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
         })
     }

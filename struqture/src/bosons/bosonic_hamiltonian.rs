@@ -310,14 +310,14 @@ impl BosonToSpin for BosonHamiltonian {
     type Output = PauliOperator;
 
     // From trait
-    fn boson_spin_mapping(
+    fn dicke_boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
     ) -> Result<Self::Output, StruqtureError> {
         let mut pauli_operator = PauliOperator::new();
         for (key, value) in self.iter() {
-            pauli_operator =
-                pauli_operator + key.boson_spin_mapping(number_spins_per_bosonic_mode)? * value;
+            pauli_operator = pauli_operator
+                + key.dicke_boson_spin_mapping(number_spins_per_bosonic_mode)? * value;
         }
 
         Ok(pauli_operator)

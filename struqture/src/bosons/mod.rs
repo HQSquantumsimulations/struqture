@@ -14,7 +14,7 @@
 //!
 //! This module can be used to represent bosonic quantum operators, bosonic quantum Hamiltonians and bosonic open quantum systems.
 //!
-//! In general the enduser should use the high-level [crate::bosons::BosonSystem] and [crate::bosons::BosonHamiltonian] structs
+//! In general the enduser should use the high-level [crate::bosons::BosonOperator] and [crate::bosons::BosonHamiltonian] structs
 //! to represent bosonic quantum Operators and bosonic Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [crate::bosons::BosonLindbladOpenSystem].
