@@ -1,6 +1,6 @@
 # Applied example
 
-In this example, we will create the qubit-boson Hamiltonian we have used for open-system research in our [paper](https://arxiv.org/abs/2210.12138), for 1 qubit and 3 bosonic modes.
+In this example, we will create the spin-boson Hamiltonian we have used for open-system research in our [paper](https://arxiv.org/abs/2210.12138), for 1 spin and 3 bosonic modes.
 
 The Hamiltonian reads as follows:
 \\[

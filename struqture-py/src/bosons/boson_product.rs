@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::spins::PauliOperatorWrapper;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -25,8 +26,6 @@ use struqture::SerializationSupport;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
 use struqture_py_macros::product_wrapper;
-
-use crate::spins::PauliOperatorWrapper;
 
 /// A product of bosonic creation and annihilation operators.
 ///
