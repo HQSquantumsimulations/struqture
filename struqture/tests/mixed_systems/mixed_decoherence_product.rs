@@ -143,7 +143,7 @@ fn from_string_import_export(
         MixedDecoherenceProduct::new([spins.clone()], [bosons.clone()], [fermions.clone()]);
     assert!(test_new.is_ok());
     let res = test_new.unwrap();
-    let stringformat = format!("{}", res);
+    let stringformat = format!("{res}");
     let test_new = <MixedDecoherenceProduct as std::str::FromStr>::from_str(&stringformat).unwrap();
     for (left, right) in test_new.spins().zip([spins].iter()) {
         assert_eq!(left, right);
@@ -530,11 +530,11 @@ fn debug() {
     let test_new = MixedDecoherenceProduct::new([spins], [bosons], [fermions]).unwrap();
 
     assert_eq!(
-        format!("{:?}", test_new),
+        format!("{test_new:?}"),
         "MixedDecoherenceProduct { spins: [DecoherenceProduct { items: [(0, X), (1, IY), (2, Z)] }], bosons: [BosonProduct { creators: [0, 1, 1], annihilators: [3, 3, 5] }], fermions: [FermionProduct { creators: [0, 1, 2], annihilators: [3, 4, 5] }] }"
     );
     assert_eq!(
-        format!("{}", test_new),
+        format!("{test_new}"),
         "S0X1iY2Z:Bc0c1c1a3a3a5:Fc0c1c2a3a4a5:"
     );
 }

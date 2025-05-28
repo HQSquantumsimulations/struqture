@@ -143,7 +143,7 @@ impl FermionLindbladOpenSystem {
 
         struqture_1::OpenSystem::group(new_system, new_noise).map_err(
             |err| StruqtureError::GenericError { msg:
-                format!("Could not convert struqture 2.x FermionLindbladOpenSystem to 1.x FermionLindbladOpenSystem, group function failed: {:?}.", err)
+                format!("Could not convert struqture 2.x FermionLindbladOpenSystem to 1.x FermionLindbladOpenSystem, group function failed: {err:?}.")
             }
         )
     }
@@ -255,17 +255,17 @@ impl fmt::Display for FermionLindbladOpenSystem {
         let mut output = "FermionLindbladOpenSystem{\n".to_string();
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push_str("}\n");
         output.push_str("Noise: {\n");
         for ((row, column), val) in self.noise.iter() {
-            writeln!(output, "({}, {}): {},", row, column, val)?;
+            writeln!(output, "({row}, {column}): {val},")?;
         }
         output.push_str("}\n");
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

@@ -95,7 +95,7 @@ impl PlusMinusOperatorWrapper {
                     Ok(x) => Ok(Self {
                         internal: self.clone().internal * x,
                     }),
-                    Err(err) => Err(PyValueError::new_err(format!("The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {:?}", err)))
+                    Err(err) => Err(PyValueError::new_err(format!("The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {err:?}")))
                 }
             }
         }
@@ -114,7 +114,7 @@ impl PlusMinusOperatorWrapper {
     #[staticmethod]
     pub fn from_pauli_operator(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = PauliOperatorWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PlusMinusOperatorWrapper {
             internal: PlusMinusOperator::from(system.clone()),
         })
@@ -133,7 +133,7 @@ impl PlusMinusOperatorWrapper {
     #[staticmethod]
     pub fn from_pauli_hamiltonian(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = PauliHamiltonianWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PlusMinusOperatorWrapper {
             internal: PlusMinusOperator::from(system.clone()),
         })
@@ -160,7 +160,7 @@ impl PlusMinusOperatorWrapper {
     ///     ValueError: Could not create PauliHamiltonian from PlusMinusOperator.
     pub fn to_pauli_hamiltonian(&self) -> PyResult<PauliHamiltonianWrapper> {
         let result: PauliHamiltonian = PauliHamiltonian::try_from(self.internal.clone())
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PauliHamiltonianWrapper { internal: result })
     }
 }

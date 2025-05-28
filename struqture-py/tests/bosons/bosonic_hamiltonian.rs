@@ -19,13 +19,10 @@ use struqture::STRUQTURE_VERSION;
 use struqture::{
     bosons::{BosonHamiltonian, HermitianBosonProduct},
     spins::{PauliOperator, PauliProduct},
-    SpinIndex,
+    ModeIndex, OperateOnDensityMatrix, SpinIndex,
 };
-use struqture::{ModeIndex, OperateOnDensityMatrix};
-use struqture_py::{
-    bosons::{BosonHamiltonianWrapper, BosonOperatorWrapper},
-    spins::PauliOperatorWrapper,
-};
+use struqture_py::bosons::{BosonHamiltonianWrapper, BosonOperatorWrapper};
+use struqture_py::spins::PauliOperatorWrapper;
 use test_case::test_case;
 
 // helper functions

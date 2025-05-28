@@ -265,7 +265,7 @@ fn from_string_import_export(creators: &[usize], annihilators: &[usize]) {
     let creators = creators.to_vec();
     let annihilators = annihilators.to_vec();
     let test = HermitianBosonProduct::new(creators, annihilators).unwrap();
-    let stringformat = format!("{}", test);
+    let stringformat = format!("{test}");
     let test_new = <HermitianBosonProduct as std::str::FromStr>::from_str(&stringformat);
     assert!(test_new.is_ok());
     assert_eq!(test, test_new.unwrap());
@@ -643,10 +643,10 @@ fn hash_debug() {
     let hbp = HermitianBosonProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
 
     assert_eq!(
-        format!("{:?}", hbp),
+        format!("{hbp:?}"),
         "HermitianBosonProduct { creators: [0], annihilators: [3] }"
     );
-    assert_eq!(format!("{}", hbp), "c0a3");
+    assert_eq!(format!("{hbp}"), "c0a3");
 
     let creators = &[0];
     let annihilators = &[3];

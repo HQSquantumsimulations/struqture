@@ -137,19 +137,19 @@ fn semver_to_tuple(version: &str) -> Result<(u32, u32, u32), StruqtureError> {
     let rsplit: Vec<&str> = version.splitn(3, '.').collect();
     if !rsplit.len() == 3 {
         return Err(StruqtureError::GenericError {
-            msg: format!("Invalid semver version: {}", version),
+            msg: format!("Invalid semver version: {version}"),
         });
     }
     let major_version = u32::from_str(rsplit[0]).map_err(|_| StruqtureError::GenericError {
-        msg: format!("Invalid semver version: {}", version),
+        msg: format!("Invalid semver version: {version}"),
     })?;
     let minor_version = u32::from_str(rsplit[1]).map_err(|_| StruqtureError::GenericError {
-        msg: format!("Invalid semver version: {}", version),
+        msg: format!("Invalid semver version: {version}"),
     })?;
     let patch_version: Vec<&str> = rsplit[2].splitn(2, '-').collect();
     let patch_version =
         u32::from_str(patch_version[0]).map_err(|_| StruqtureError::GenericError {
-            msg: format!("Invalid semver version: {}", version),
+            msg: format!("Invalid semver version: {version}"),
         })?;
     Ok((major_version, minor_version, patch_version))
 }

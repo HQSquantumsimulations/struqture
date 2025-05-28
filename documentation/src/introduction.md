@@ -5,7 +5,7 @@ The library supports building [spin](physical_types/spins.md) objects, [fermioni
 
 Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.
 
-To best support this use case, struqture has a number of design goals:
+To best support this use case, `struqture` has a number of design goals:
 
 * Support for arbitrary spin, bosonic, fermionic and mixed systems
 * Full serialisation support to json and other formats
@@ -37,7 +37,7 @@ pip install struqture-py
 
 ### Rust
 
-You can use struqture in your Rust project by adding 
+You can use `struqture` in your Rust project by adding 
 
 ```TOML
 struqture = { version = "1.0.1" }
@@ -47,4 +47,4 @@ struqture = { version = "1.0.1" }
 
 ## API Documentation
 
-This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of [struqture](https://docs.rs/struqture/) and [struqture-py](https://hqsquantumsimulations.github.io/struqture/pyapi/index.html).
+This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of [struqture](https://docs.rs/struqture/) and [struqture-py](https://hqsquantumsimulations.github.io/struqture/python_api_docs/generated/struqture_py.html).

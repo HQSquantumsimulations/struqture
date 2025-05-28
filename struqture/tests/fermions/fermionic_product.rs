@@ -200,7 +200,7 @@ fn from_string_import_export(creators: &[usize], annihilators: &[usize]) {
     let creators = creators.to_vec();
     let annihilators = annihilators.to_vec();
     let test = FermionProduct::new(creators, annihilators).unwrap();
-    let stringformat = format!("{}", test);
+    let stringformat = format!("{test}");
     let test_new = <FermionProduct as std::str::FromStr>::from_str(&stringformat);
     assert!(test_new.is_ok());
     assert_eq!(test, test_new.unwrap());
@@ -516,10 +516,10 @@ fn hash_debug() {
     let bp = FermionProduct::new(creators.to_vec(), annihilators.to_vec()).unwrap();
 
     assert_eq!(
-        format!("{:?}", bp),
+        format!("{bp:?}"),
         "FermionProduct { creators: [0], annihilators: [3] }"
     );
-    assert_eq!(format!("{}", bp), "c0a3");
+    assert_eq!(format!("{bp}"), "c0a3");
 
     let creators = &[0];
     let annihilators = &[3];

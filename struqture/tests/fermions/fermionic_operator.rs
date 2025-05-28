@@ -323,7 +323,7 @@ fn debug() {
     let _ = so.set(pp, CalculatorComplex::from(0.5));
 
     assert_eq!(
-        format!("{:?}", so),
+        format!("{so:?}"),
         "FermionOperator { internal_map: {FermionProduct { creators: [0], annihilators: [0] }: CalculatorComplex { re: Float(0.5), im: Float(0.0) }} }"
     );
 }
@@ -336,7 +336,7 @@ fn display() {
     let _ = so.set(pp, CalculatorComplex::from(0.5));
 
     assert_eq!(
-        format!("{}", so),
+        format!("{so}"),
         "FermionOperator{\nc0a0: (5e-1 + i * 0e0),\n}"
     );
 }

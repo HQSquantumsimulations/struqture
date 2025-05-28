@@ -495,7 +495,7 @@ limitations under the License.
 
 
 ====================================================
-ahash 0.8.11
+ahash 0.8.12
 https://github.com/tkaitchuck/ahash
 by Tom Kaitchuck <Tom.Kaitchuck@gmail.com>
 A non-cryptographic hash function using AES-NI for high performance
@@ -1500,7 +1500,7 @@ limitations under the License.
 
 
 ====================================================
-backtrace 0.3.74
+backtrace 0.3.75
 https://github.com/rust-lang/backtrace-rs
 by The Rust Project Developers
 A library to acquire a stack trace (backtrace) at runtime in a Rust program.
@@ -3239,7 +3239,11 @@ LICENSE.Apache2:
 
 
 ====================================================
+<<<<<<< HEAD
 bytemuck 1.22.0
+=======
+bytemuck 1.23.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/Lokathor/bytemuck
 by Lokathor <zefria@gmail.com>
 A crate for mucking around with piles of bytes.
@@ -4496,7 +4500,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 clap 4.5.35
+=======
+clap 4.5.37
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -4732,7 +4740,11 @@ LICENSE-APACHE:
 
 
 ====================================================
+<<<<<<< HEAD
 clap_builder 4.5.35
+=======
+clap_builder 4.5.37
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -9668,7 +9680,7 @@ limitations under the License.
 
 
 ====================================================
-getrandom 0.2.15
+getrandom 0.3.2
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -9676,7 +9688,7 @@ License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
 
-Copyright (c) 2018-2024 The rust-random Project Developers
+Copyright (c) 2018-2025 The rust-random Project Developers
 Copyright (c) 2014 The Rust Project Developers
 
 Permission is hereby granted, free of charge, to any
@@ -10393,8 +10405,13 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 half 2.5.0
 https://github.com/starkat99/half-rs
+=======
+half 2.6.0
+https://github.com/VoidStarKat/half-rs
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 by Kathryn Long <squeeself@gmail.com>
 Half-precision floating point f16 and bf16 types for Rust implementing the IEEE 754-2008 standard binary16 and bfloat16 types.
 License: MIT OR Apache-2.0
@@ -10603,7 +10620,7 @@ LICENSE-APACHE:
 
 
 ====================================================
-hashbrown 0.15.2
+hashbrown 0.15.3
 https://github.com/rust-lang/hashbrown
 by Amanieu d'Antras <amanieu@gmail.com>
 A Rust port of Google's SwissTable hash map
@@ -11085,7 +11102,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 hermit-abi 0.5.0
+=======
+hermit-abi 0.5.1
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/hermit-os/hermit-rs
 by Stefan Lankes
 Hermit system calls definitions.
@@ -12988,7 +13009,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 indexmap 2.8.0
+=======
+indexmap 2.9.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/indexmap-rs/indexmap
 by 
 A hash table with consistent order and fast iteration.
@@ -15153,7 +15178,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 libc 0.2.171
+=======
+libc 0.2.172
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -16489,7 +16518,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 miniz_oxide 0.8.5
+=======
+miniz_oxide 0.8.8
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide
 by Frommi <daniil.liferenko@gmail.com>, oyvindln <oyvindln@users.noreply.github.com>, Rich Geldreich richgel99@gmail.com
 DEFLATE compression and decompression library rewritten in Rust based on miniz
@@ -19338,7 +19371,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 numpy 0.23.0
+=======
+numpy 0.24.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/PyO3/rust-numpy
 by The rust-numpy Project Developers, PyO3 Project and Contributors <https://github.com/PyO3>
 PyO3-based Rust bindings of the NumPy C-API
@@ -22017,7 +22054,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 proc-macro2 1.0.94
+=======
+proc-macro2 1.0.95
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
@@ -22231,7 +22272,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 pyo3 0.23.5
+=======
+pyo3 0.24.2
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Bindings to Python interpreter
@@ -22449,7 +22494,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 pyo3-build-config 0.23.5
+=======
+pyo3-build-config 0.24.2
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Build configuration for the PyO3 ecosystem
@@ -22667,7 +22716,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 pyo3-ffi 0.23.5
+=======
+pyo3-ffi 0.24.2
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Python-API bindings for the PyO3 ecosystem
@@ -22885,7 +22938,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 pyo3-macros 0.23.5
+=======
+pyo3-macros 0.24.2
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Proc macros for PyO3 package
@@ -23103,7 +23160,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 pyo3-macros-backend 0.23.5
+=======
+pyo3-macros-backend 0.24.2
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Code generation for PyO3 package
@@ -23321,7 +23382,11 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
+<<<<<<< HEAD
 qoqo_calculator 1.5.0
+=======
+qoqo_calculator 1.6.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/HQSquantumsimulations/qoqo_calculator
 by HQS Quantum Simulations <info@quantumsimulations.de>
 qoqo-calculator is the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -23533,7 +23598,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 qoqo_calculator_pyo3 1.5.0
+=======
+qoqo_calculator_pyo3 1.6.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/HQSquantumsimulations/qoqo_calculator_pyo3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface to qoqo calculator, the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -23966,7 +24035,11 @@ UEFI Reference Specification Protocol Constants and Definitions
 License: MIT OR Apache-2.0 OR LGPL-2.1-or-later
 
 ====================================================
+<<<<<<< HEAD
 rand 0.9.0
+=======
+rand 0.9.1
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://rust-random.github.io/book
 by The Rand Project Developers, The Rust Project Developers
 Random number generators and other randomness functionality.
@@ -25358,7 +25431,11 @@ limitations under the License.
 
 
 ====================================================
+<<<<<<< HEAD
 redox_syscall 0.5.10
+=======
+redox_syscall 0.5.12
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://gitlab.redox-os.org/redox-os/syscall
 by Jeremy Soller <jackpot51@gmail.com>
 A Rust library to access raw Redox system calls
@@ -29706,7 +29783,11 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
+<<<<<<< HEAD
 smallvec 1.14.0
+=======
+smallvec 1.15.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/servo/rust-smallvec
 by The Servo Project Developers
 'Small vector' optimization: store up to a small number of items on the stack
@@ -30642,7 +30723,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 struqture 2.0.0-alpha.14
+=======
+struqture 2.0.1
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30853,7 +30938,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 struqture-py 2.0.0-alpha.14
+=======
+struqture-py 2.0.1
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -31064,7 +31153,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 struqture-py-macros 2.0.0-alpha.14
+=======
+struqture-py-macros 2.0.1
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -31275,7 +31368,11 @@ LICENSE:
 
 
 ====================================================
+<<<<<<< HEAD
 syn 2.0.100
+=======
+syn 2.0.101
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -31677,7 +31774,7 @@ LICENSE:
 
 
 ====================================================
-synstructure 0.13.1
+synstructure 0.13.2
 https://github.com/mystor/synstructure
 by Nika Layzell <nika@thelayzells.com>
 Helper methods and macros for custom derives
@@ -31695,10 +31792,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 ====================================================
-target-lexicon 0.12.16
+target-lexicon 0.13.2
 https://github.com/bytecodealliance/target-lexicon
 by Dan Gohman <sunfish@mozilla.com>
-Targeting utilities for compilers and related tools
+LLVM target triple types
 License: Apache-2.0 WITH LLVM-exception
 ----------------------------------------------------
 LICENSE:
@@ -33247,7 +33344,11 @@ freely, subject to the following restrictions:
 
 
 ====================================================
+<<<<<<< HEAD
 tokio 1.44.1
+=======
+tokio 1.45.0
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://tokio.rs
 by Tokio Contributors <team@tokio.rs>
 An event-driven, non-blocking I/O platform for writing asynchronous I/O
@@ -44345,10 +44446,10 @@ ICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation a
 
 
 ====================================================
-zerocopy 0.7.35
+zerocopy 0.8.25
 https://github.com/google/zerocopy
-by Joshua Liebow-Feeser <joshlf@google.com>
-Utilities for zero-copy parsing and serialization
+by Joshua Liebow-Feeser <joshlf@google.com>, Jack Wrenn <jswrenn@amazon.com>
+Zerocopy makes zero-cost memory manipulation effortless. We write "unsafe" so you don't have to.
 License: BSD-2-Clause OR Apache-2.0 OR MIT
 ----------------------------------------------------
 LICENSE-MIT:
@@ -44616,6 +44717,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
+<<<<<<< HEAD
 zerocopy 0.8.24
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>, Jack Wrenn <jswrenn@amazon.com>
@@ -44888,8 +44990,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ====================================================
 zerocopy-derive 0.7.35
+=======
+zerocopy-derive 0.8.25
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 https://github.com/google/zerocopy
-by Joshua Liebow-Feeser <joshlf@google.com>
+by Joshua Liebow-Feeser <joshlf@google.com>, Jack Wrenn <jswrenn@amazon.com>
 Custom derive for traits from the zerocopy crate
 License: BSD-2-Clause OR Apache-2.0 OR MIT
 ----------------------------------------------------
@@ -45158,6 +45263,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
+<<<<<<< HEAD
 zerocopy-derive 0.8.24
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>, Jack Wrenn <jswrenn@amazon.com>
@@ -45429,6 +45535,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
+=======
+>>>>>>> 96e1278eef4cd80c7c065a8dc250765f0eef108c
 zerofrom 0.1.6
 https://github.com/unicode-org/icu4x
 by Manish Goregaokar <manishsmail@gmail.com>

@@ -371,7 +371,7 @@ fn debug() {
     let _ = so.set(pp, CalculatorComplex::from(0.5));
 
     assert_eq!(
-        format!("{:?}", so),
+        format!("{so:?}"),
         "PauliOperator { internal_map: {PauliProduct { items: [(0, Z)] }: CalculatorComplex { re: Float(0.5), im: Float(0.0) }} }"
     );
 }
@@ -383,10 +383,7 @@ fn display() {
     let pp: PauliProduct = PauliProduct::new().z(0);
     let _ = so.set(pp, CalculatorComplex::from(0.5));
 
-    assert_eq!(
-        format!("{}", so),
-        "PauliOperator{\n0Z: (5e-1 + i * 0e0),\n}"
-    );
+    assert_eq!(format!("{so}"), "PauliOperator{\n0Z: (5e-1 + i * 0e0),\n}");
 }
 
 // Test the hermitian_conjugate and is_natural_hermitian functions of the HermitianMixedProduct

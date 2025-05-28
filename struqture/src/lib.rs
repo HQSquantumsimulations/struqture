@@ -713,9 +713,6 @@ where
 {
     type Index;
     type Value;
-    // type IteratorType; // can be removed (and two below) + in where clause
-    // type KeyIteratorType;
-    // type ValueIteratorType;
 
     /// Gets the Self::Value typed coefficient corresponding to the key.
     ///

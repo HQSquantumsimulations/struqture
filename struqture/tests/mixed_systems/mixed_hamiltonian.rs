@@ -554,7 +554,7 @@ fn debug() {
     mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
-        format!("{:?}", mo),
+        format!("{mo:?}"),
         "MixedHamiltonian { internal_map: {HermitianMixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [3] }] }: CalculatorComplex { re: Float(1.0), im: Float(0.0) }}, n_spins: 1, n_bosons: 1, n_fermions: 1 }"
     );
 }
@@ -572,7 +572,7 @@ fn display() {
     mo.add_operator_product(pp_0, CalculatorComplex::from(1.0))
         .unwrap();
     assert_eq!(
-        format!("{}", mo),
+        format!("{mo}"),
         format!(
             "MixedHamiltonian{{\nS2Z:Bc0a3:Fc0a3:: {},\n}}",
             CalculatorComplex::from(1.0)

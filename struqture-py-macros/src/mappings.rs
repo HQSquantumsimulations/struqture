@@ -60,7 +60,7 @@ fn jordan_wigner_spin_to_fermion_quote(
             || struct_name == "PauliLindbladNoiseOperator"
             || struct_name == "PauliLindbladOpenSystem"
         {
-            let mut output_wrapper_name = format!("{}Wrapper", struct_name);
+            let mut output_wrapper_name = format!("{struct_name}Wrapper");
             output_wrapper_name = output_wrapper_name.replace("Pauli", "Fermion");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
 
@@ -112,7 +112,7 @@ fn jordan_wigner_fermion_to_spin_quote(
             || struct_name.contains("Hamiltonian")
             || struct_name.contains("System")
         {
-            let mut output_wrapper_name = format!("{}Wrapper", struct_name);
+            let mut output_wrapper_name = format!("{struct_name}Wrapper");
             output_wrapper_name = output_wrapper_name.replace("Fermion", "Pauli");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
 

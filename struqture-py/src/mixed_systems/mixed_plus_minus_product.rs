@@ -177,7 +177,7 @@ impl MixedPlusMinusProductWrapper {
     ) -> PyResult<Vec<(MixedProductWrapper, CalculatorComplexWrapper)>> {
         let result: Vec<(MixedProduct, Complex64)> =
             Vec::<(MixedProduct, Complex64)>::try_from(self.internal.clone()).map_err(|err| {
-                PyValueError::new_err(format!("The conversion was not successful: {:?}", err))
+                PyValueError::new_err(format!("The conversion was not successful: {err:?}"))
             })?;
         let result_pyo3: Vec<(MixedProductWrapper, CalculatorComplexWrapper)> = result
             .iter()

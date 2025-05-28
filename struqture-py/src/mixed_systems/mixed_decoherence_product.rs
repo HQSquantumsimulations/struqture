@@ -125,8 +125,7 @@ impl MixedDecoherenceProductWrapper {
         Ok(Self {
             internal: MixedDecoherenceProduct::new(spinsv, bosonsv, fermionsv).map_err(|err| {
                 PyValueError::new_err(format!(
-                    "Could not construct MixedDecoherenceProduct: {:?}",
-                    err
+                    "Could not construct MixedDecoherenceProduct: {err:?}"
                 ))
             })?,
         })
@@ -163,21 +162,21 @@ impl MixedDecoherenceProductWrapper {
         for s in spins {
             match DecoherenceProduct::from_str(s.as_str()) {
                 Ok(x) => converted_spins.push(x),
-                Err(err) => return Err(PyValueError::new_err(format!("Valid pair could not be constructed, pauli spins couldn't be converted from string: {:?}", err)))
+                Err(err) => return Err(PyValueError::new_err(format!("Valid pair could not be constructed, pauli spins couldn't be converted from string: {err:?}")))
             }
         }
         let mut converted_bosons: Vec<BosonProduct> = Vec::new();
         for b in bosons {
             match BosonProduct::from_str(b.as_str()) {
                 Ok(x) => converted_bosons.push(x),
-                Err(err) => return Err(PyValueError::new_err(format!("Valid pair could not be constructed, bosons couldn't be converted from string: {:?}", err)))
+                Err(err) => return Err(PyValueError::new_err(format!("Valid pair could not be constructed, bosons couldn't be converted from string: {err:?}")))
             }
         }
         let mut converted_fermions: Vec<FermionProduct> = Vec::new();
         for f in fermions {
             match FermionProduct::from_str(f.as_str()) {
                 Ok(x) => converted_fermions.push(x),
-                Err(err) => return Err(PyValueError::new_err(format!("Valid pair could not be constructed, fermions couldn't be converted from string: {:?}", err)))
+                Err(err) => return Err(PyValueError::new_err(format!("Valid pair could not be constructed, fermions couldn't be converted from string: {err:?}")))
             }
         }
 
@@ -190,7 +189,7 @@ impl MixedDecoherenceProductWrapper {
             value,
         )
         .map_err(|err| {
-            PyValueError::new_err(format!("Valid pair could not be constructed: {:?}", err))
+            PyValueError::new_err(format!("Valid pair could not be constructed: {err:?}"))
         })?;
         Ok((
             Self { internal: index },
@@ -211,8 +210,7 @@ impl MixedDecoherenceProductWrapper {
     pub fn __mul__(&self, other: Self) -> PyResult<Vec<(Self, Complex64)>> {
         let vec_object = (self.internal.clone() * other.internal).map_err(|err| {
             PyValueError::new_err(format!(
-                "Could not multiply the two MixedDecoherenceProducts: {:?}",
-                err
+                "Could not multiply the two MixedDecoherenceProducts: {err:?}"
             ))
         })?;
         let mut return_vector: Vec<(Self, Complex64)> = Vec::new();
