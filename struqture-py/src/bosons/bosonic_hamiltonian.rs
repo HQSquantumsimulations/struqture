@@ -113,7 +113,46 @@ impl BosonHamiltonianWrapper {
         }
     }
 
+    /// Transforms the given bosonic object into a spin object using the direct mapping.
+    ///
+    /// This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+    /// the mapping, as well as its use in the context of open system dynamics, can be found at:
+    ///                         <https://arxiv.org/pdf/2210.12138>
+    ///
+    /// The mapping is given by:
+    ///
+    /// $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+    /// $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+    ///
+    /// For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+    ///
+    /// Returns:
+    ///     PauliOperator: The result of the mapping to a spin object.
+    ///
+    /// Raises:
+    ///     ValueError: The boson -> spin transformation is only available for
+    ///                 terms such as b†b or (b† + b).
+    pub fn direct_boson_spin_mapping(&self) -> PyResult<PauliOperatorWrapper> {
+        Ok(PauliOperatorWrapper {
+            internal: self
+                .internal
+                .direct_boson_spin_mapping()
+                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+        })
+    }
+
     /// Transforms the given bosonic object into a spin object using the mapping.
+    ///
+    /// This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+    /// the mapping, as well as its use in the context of open system dynamics, can be found at:
+    ///                         <https://arxiv.org/pdf/2210.12138>
+    ///
+    /// The mapping is given by:
+    ///
+    /// $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+    /// $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+    ///
+    /// For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
     ///
     /// Args:
     ///     number_spins_per_bosonic_mode (int): The number of spins to represent each bosonic mode.
@@ -124,7 +163,7 @@ impl BosonHamiltonianWrapper {
     /// Raises:
     ///     ValueError: The boson -> spin transformation is only available for
     ///                 terms such as b†b or (b† + b).
-    pub fn boson_spin_mapping(
+    pub fn dicke_boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
     ) -> PyResult<PauliOperatorWrapper> {

@@ -21,7 +21,7 @@
 //! $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
 //! $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
 //!
-//! For a direct mapping, N is set to 1. For a Dicket mapping, N > 1.
+//! For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
 
 use crate::StruqtureError;
 

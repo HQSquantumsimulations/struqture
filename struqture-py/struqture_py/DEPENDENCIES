@@ -26462,7 +26462,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-reqwest 0.12.17
+reqwest 0.12.18
 https://github.com/seanmonstar/reqwest
 by Sean McArthur <sean@seanmonstar.com>
 higher level HTTP client library
