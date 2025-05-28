@@ -12,7 +12,10 @@
 
 use super::BosonIndex;
 use crate::{
-    CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, StruqtureError, SymmetricIndex,
+    mappings::BosonToSpin,
+    spins::{PauliOperator, PauliProduct},
+    CorrespondsTo, CreatorsAnnihilators, GetValue, ModeIndex, OperateOnDensityMatrix, SpinIndex,
+    StruqtureError, SymmetricIndex,
 };
 use qoqo_calculator::CalculatorComplex;
 use serde::{
@@ -273,6 +276,82 @@ impl BosonProduct {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;
         Ok(pauli_product)
+    }
+}
+
+impl BosonToSpin for BosonProduct {
+    type Output = PauliOperator;
+
+    /// Transforms the given bosonic object into a spin object using the Dicke mapping.
+    ///
+    /// **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+    /// otherwise the complex conjugate terms will be missing!!
+    ///
+    /// In this mapping, 1 bosonic mode is described by N>1 spins.
+    /// We work in the subspace spanned by symmetric Dicke states of spins.
+    ///
+    /// # Arguments
+    ///
+    /// * `number_spins_per_bosonic_mode` - The number of spins to represent each bosonic mode.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(output)` - The result of the mapping to a spin object.
+    /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
+    ///   terms such as b†b or (b† + b).
+    fn dicke_boson_spin_mapping(
+        &self,
+        number_spins_per_bosonic_mode: usize,
+    ) -> Result<Self::Output, StruqtureError> {
+        let prefactor: CalculatorComplex =
+            (1.0 / (number_spins_per_bosonic_mode as f64).sqrt()).into();
+        let number_creators = self.number_creators();
+        let number_annihilators = self.number_annihilators();
+        let mut pauli_operator = PauliOperator::new();
+
+        match (number_creators, number_annihilators) {
+            (0, 0) => {pauli_operator.add_operator_product(PauliProduct::new(), 1.0.into())?;},
+            (0, 1) => {
+                for j in (self.annihilators[0] * number_spins_per_bosonic_mode)
+                    ..((self.annihilators[0] + 1) * number_spins_per_bosonic_mode)
+                {
+                    pauli_operator
+                        .add_operator_product(PauliProduct::new().x(j), prefactor.clone())?;
+                }
+            }
+            (1, 1) => {
+                if !self.is_natural_hermitian() {
+                    return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) });
+                }
+                for j in (self.annihilators[0] * number_spins_per_bosonic_mode)
+                    ..((self.annihilators[0] + 1) * number_spins_per_bosonic_mode)
+                {
+                    pauli_operator.add_operator_product(
+                        PauliProduct::new().z(j),
+                            0.5.into(),
+                    )?;
+                }
+            },
+            _ => return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) })
+        }
+
+        Ok(pauli_operator)
+    }
+
+    /// Transforms the given bosonic object into a spin object using the direct mapping.
+    ///
+    /// **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+    /// otherwise the complex conjugate terms will be missing!!
+    ///
+    /// In this mapping, 1 bosonic mode is described by 1 spin.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(output)` - The result of the mapping to a spin object.
+    /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
+    ///   terms such as b†b or (b† + b).
+    fn direct_boson_spin_mapping(&self) -> Result<Self::Output, StruqtureError> {
+        self.dicke_boson_spin_mapping(1)
     }
 }
 
@@ -868,6 +947,49 @@ impl HermitianBosonProduct {
         let value_string = value.to_string();
         let pauli_product = Self::from_str(&value_string)?;
         Ok(pauli_product)
+    }
+}
+
+impl BosonToSpin for HermitianBosonProduct {
+    type Output = PauliOperator;
+
+    // From trait
+    fn dicke_boson_spin_mapping(
+        &self,
+        number_spins_per_bosonic_mode: usize,
+    ) -> Result<Self::Output, StruqtureError> {
+        let prefactor: CalculatorComplex =
+            (1.0 / (number_spins_per_bosonic_mode as f64).sqrt()).into();
+        let number_creators = self.number_creators();
+        let number_annihilators = self.number_annihilators();
+        let mut pauli_operator = PauliOperator::new();
+
+        match (number_creators, number_annihilators) {
+            (0, 1) => {
+                for j in (self.annihilators[0] * number_spins_per_bosonic_mode)
+                    ..((self.annihilators[0] + 1) * number_spins_per_bosonic_mode)
+                {
+                    pauli_operator
+                        .add_operator_product(PauliProduct::new().x(j), prefactor.clone())?;
+                }
+            }
+            (1, 1) => {
+                if !self.is_natural_hermitian() {
+                    return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) });
+                }
+                for j in (self.annihilators[0] * number_spins_per_bosonic_mode)
+                    ..((self.annihilators[0] + 1) * number_spins_per_bosonic_mode)
+                {
+                    pauli_operator.add_operator_product(
+                        PauliProduct::new().z(j),
+                            0.5.into(),
+                    )?;
+                }
+            },
+            _ => return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) })
+        }
+
+        Ok(pauli_operator)
     }
 }
 

@@ -93,16 +93,14 @@ impl OpenSystem<'_> for BosonLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The BosonLindbladOpenSystem with input system and noise terms.
-    /// * `Err(StruqtureError::MissmatchedNumberModes)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
         Ok(Self { system, noise })
     }
 
     // From trait
     fn empty_clone(&self) -> Self {
-        Self::group(self.system.empty_clone(None), self.noise.empty_clone(None)).expect(
-            "Internal error: Number of modes in system and noise unexpectedly does not match.",
-        )
+        Self::group(self.system.empty_clone(None), self.noise.empty_clone(None))
+            .expect("Internal error.")
     }
 }
 
@@ -192,8 +190,6 @@ impl ops::Add<BosonLindbladOpenSystem> for BosonLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two BosonLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianBosonProduct exceeds that of the BosonHamiltonian.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (BosonProduct, BosonProduct) exceeds that of the BosonLindbladNoiseOperator.
     fn add(self, other: BosonLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
@@ -214,8 +210,6 @@ impl ops::Sub<BosonLindbladOpenSystem> for BosonLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two BosonLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of HermitianBosonProduct exceeds that of the BosonHamiltonian.
-    /// * `Err(StruqtureError::NumberModesExceeded)` - Index of (BosonProduct, BosonProduct) exceeds that of the BosonLindbladNoiseOperator.
     fn sub(self, other: BosonLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();

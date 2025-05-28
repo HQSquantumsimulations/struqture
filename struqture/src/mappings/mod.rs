@@ -13,6 +13,8 @@
 //! Module for representing mappings between systems of bosons, fermions and spins.
 
 pub mod jordan_wigner;
-
 pub use jordan_wigner::JordanWignerFermionToSpin;
 pub use jordan_wigner::JordanWignerSpinToFermion;
+
+pub mod boson_spin;
+pub use boson_spin::BosonToSpin;

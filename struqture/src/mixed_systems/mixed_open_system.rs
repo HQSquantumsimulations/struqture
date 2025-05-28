@@ -105,13 +105,13 @@ impl OpenSystem<'_> for MixedLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The MixedLindbladOpenSystem with input system and noise terms.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in system and noise do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in system and noise do not match.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
         if system.n_spins != noise.n_spins
             || system.n_bosons != noise.n_bosons
             || system.n_fermions != noise.n_fermions
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: system.n_spins,
                 target_number_boson_subsystems: system.n_bosons,
                 target_number_fermion_subsystems: system.n_fermions,
@@ -243,8 +243,8 @@ impl ops::Add<MixedLindbladOpenSystem> for MixedLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonian and key do not match.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseOperator and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonian and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseOperator and key do not match.
     fn add(self, other: MixedLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
@@ -265,8 +265,8 @@ impl ops::Sub<MixedLindbladOpenSystem> for MixedLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two MixedLindbladOpenSystems subtracted.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonian and key do not match.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseOperator and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in MixedHamiltonian and key do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in MixedLindbladNoiseOperator and key do not match.
     fn sub(self, other: MixedLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();

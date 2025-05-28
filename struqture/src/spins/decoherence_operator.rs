@@ -163,7 +163,6 @@ impl<'a> OperateOnDensityMatrix<'a> for DecoherenceOperator {
     ///
     /// * `Ok(Some(CalculatorComplex))` - The key existed, this is the value it had before it was set with the value input.
     /// * `Ok(None)` - The key did not exist, it has been set with its corresponding value.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of DecoherenceProduct exceeds that of the DecoherenceOperator.
     fn set(
         &mut self,
         key: Self::Index,

@@ -598,7 +598,7 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
     /// # Returns
     ///
     /// * `Ok(Vec<(MixedProduct, Complex64)>)` - The two HermitianMixedProducts multiplied.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in left and right do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in left and right do not match.
     ///
     /// # Panics
     ///
@@ -609,7 +609,7 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
             || self.bosons().len() != rhs.bosons().len()
             || self.fermions().len() != rhs.fermions().len()
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: self.spins().len(),
                 target_number_boson_subsystems: self.bosons().len(),
                 target_number_fermion_subsystems: self.fermions().len(),
@@ -748,7 +748,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
     /// # Returns
     ///
     /// * `Ok(Vec<(MixedProduct, Complex64)>)` - The two (Hermitian)MixedProduct multiplied.
-    /// * `Err(StruqtureError::MissmatchedNumberSubsystems)` - Number of subsystems in left and right do not match.
+    /// * `Err(StruqtureError::MismatchedNumberSubsystems)` - Number of subsystems in left and right do not match.
     ///
     /// # Panics
     ///
@@ -758,7 +758,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
             || self.bosons().len() != rhs.bosons().len()
             || self.fermions().len() != rhs.fermions().len()
         {
-            return Err(StruqtureError::MissmatchedNumberSubsystems {
+            return Err(StruqtureError::MismatchedNumberSubsystems {
                 target_number_spin_subsystems: self.spins().len(),
                 target_number_boson_subsystems: self.bosons().len(),
                 target_number_fermion_subsystems: self.fermions().len(),

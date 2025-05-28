@@ -14,7 +14,7 @@
 //!
 //! This module can be used to represent fermionic quantum operators, fermionic quantum Hamiltonians and fermionic open quantum systems.
 //!
-//! In general the enduser should use the high-level [crate::fermions::FermionSystem] and [crate::fermions::FermionHamiltonian] structs
+//! In general the enduser should use the high-level [crate::fermions::FermionOperator] and [crate::fermions::FermionHamiltonian] structs
 //! to represent fermionic quantum Operators and fermionic Hamiltonians respectively.
 //!
 //! Open Quantum Systems should be represented using [crate::fermions::FermionLindbladOpenSystem].

@@ -98,16 +98,14 @@ impl OpenSystem<'_> for PauliLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The PauliLindbladOpenSystem with input system and noise terms.
-    /// * `Err(StruqtureError::MissmatchedNumberSpins)` - The system and noise do not have the same number of modes.
     fn group(system: Self::System, noise: Self::Noise) -> Result<Self, StruqtureError> {
         Ok(Self { system, noise })
     }
 
     // From trait
     fn empty_clone(&self) -> Self {
-        Self::group(self.system.empty_clone(None), self.noise.empty_clone(None)).expect(
-            "Internal error: Number of spins in system and noise unexpectedly does not match.",
-        )
+        Self::group(self.system.empty_clone(None), self.noise.empty_clone(None))
+            .expect("Internal error.")
     }
 }
 
@@ -224,8 +222,6 @@ impl ops::Add<PauliLindbladOpenSystem> for PauliLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two PauliLindbladOpenSystems added together.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of PauliProduct exceeds that of the PauliHamiltonian.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of (DecoherenceProduct, DecoherenceProduct) exceeds that of the PauliLindbladNoiseOperator.
     fn add(self, other: PauliLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
@@ -246,8 +242,6 @@ impl ops::Sub<PauliLindbladOpenSystem> for PauliLindbladOpenSystem {
     /// # Returns
     ///
     /// * `Ok(Self)` - The two PauliLindbladOpenSystems subtracted.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of PauliProduct exceeds that of the PauliHamiltonian.
-    /// * `Err(StruqtureError::NumberSpinsExceeded)` - Index of (DecoherenceProduct, DecoherenceProduct) exceeds that of the PauliLindbladNoiseOperator.
     fn sub(self, other: PauliLindbladOpenSystem) -> Self::Output {
         let (self_sys, self_noise) = self.ungroup();
         let (other_sys, other_noise) = other.ungroup();
@@ -325,7 +319,8 @@ impl JordanWignerSpinToFermion for PauliLindbladOpenSystem {
     fn jordan_wigner(&self) -> Self::Output {
         let jw_system = self.system().jordan_wigner();
         let jw_noise = self.noise().jordan_wigner();
-        FermionLindbladOpenSystem::group(jw_system, jw_noise)
-            .expect("Internal bug in jordan_wigner() for PauliHamiltonian or PauliLindbladNoiseOperator. The number of modes in the fermionic system should equal the number of spins in the spin system.")
+        FermionLindbladOpenSystem::group(jw_system, jw_noise).expect(
+            "Internal bug in jordan_wigner() for PauliHamiltonian or PauliLindbladNoiseOperator.",
+        )
     }
 }

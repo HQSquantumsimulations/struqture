@@ -266,7 +266,7 @@ impl FermionLindbladNoiseOperator {
     /// Adds all noise entries corresponding to a ((FermionOperator, FermionOperator), CalculatorFloat).
     ///
     /// In the Lindblad equation, Linblad noise operator L_i are not limited to [crate::fermions::FermionProduct] style operators.
-    /// We use ([crate::spins::FermionProduct], [crate::spins::FermionProduct]) as a unique basis.
+    /// We use ([crate::fermions::FermionProduct], [crate::fermions::FermionProduct]) as a unique basis.
     /// This function adds a Linblad-Term defined by a combination of Lindblad operators given as general [crate::fermions::FermionOperator]
     ///
     /// # Arguments
