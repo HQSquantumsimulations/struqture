@@ -832,7 +832,7 @@ fn test_from_json_struqture_1() {
 
 /// Test add_operator_product and remove functions of BosonHamiltonian
 #[test]
-fn boson_to_spin_mapping() {
+fn dicke_boson_to_spin_mapping() {
     let mut rust_operator = PauliOperator::new();
     rust_operator
         .add_operator_product(PauliProduct::new().z(0), 0.05.into())
@@ -849,8 +849,31 @@ fn boson_to_spin_mapping() {
             .call_method1("add_operator_product", ("c0a0", 0.1))
             .unwrap();
 
-        // test access at index 0
-        let comp_op = system.call_method1("boson_spin_mapping", (2,)).unwrap();
+        let comp_op = system
+            .call_method1("dicke_boson_spin_mapping", (2,))
+            .unwrap();
+        let result_wrapper = comp_op.extract::<PauliOperatorWrapper>().unwrap();
+        assert_eq!(result_wrapper.internal, rust_operator);
+    });
+}
+
+/// Test add_operator_product and remove functions of BosonHamiltonian
+#[test]
+fn direct_boson_to_spin_mapping() {
+    let mut rust_operator = PauliOperator::new();
+    rust_operator
+        .add_operator_product(PauliProduct::new().z(0), 0.05.into())
+        .unwrap();
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_system = py.get_type::<BosonHamiltonianWrapper>();
+        let system = new_system.call0().unwrap();
+        system.downcast::<BosonHamiltonianWrapper>().unwrap();
+        system
+            .call_method1("add_operator_product", ("c0a0", 0.1))
+            .unwrap();
+
+        let comp_op = system.call_method0("direct_boson_spin_mapping").unwrap();
         let result_wrapper = comp_op.extract::<PauliOperatorWrapper>().unwrap();
         assert_eq!(result_wrapper.internal, rust_operator);
     });

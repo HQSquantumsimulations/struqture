@@ -11,8 +11,7 @@
 // limitations under the License.
 
 use super::{BosonProduct, OperateOnBosons};
-use crate::spins::PauliLindbladNoiseOperator;
-use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError, mappings::BosonToSpin};
+use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};

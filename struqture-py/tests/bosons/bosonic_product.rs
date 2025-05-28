@@ -17,7 +17,11 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use std::cmp::Ordering;
 #[cfg(feature = "json_schema")]
 use struqture::{bosons::BosonProduct, STRUQTURE_VERSION};
-use struqture_py::bosons::BosonProductWrapper;
+use struqture::{
+    spins::{PauliOperator, PauliProduct},
+    OperateOnDensityMatrix, SpinIndex,
+};
+use struqture_py::{bosons::BosonProductWrapper, spins::PauliOperatorWrapper};
 
 // helper functions
 fn new_pp(
@@ -454,5 +458,48 @@ fn test_from_json_struqture_1() {
             pyo3::types::PyString::new(py, "\"c0b1\"");
         let pp_from_1 = pp_2.call_method1("from_json_struqture_1", (error_json_string,));
         assert!(pp_from_1.is_err());
+    });
+}
+
+/// Test add_operator_product and remove functions of BosonProduct
+#[test]
+fn dicke_boson_to_spin_mapping() {
+    let mut rust_operator = PauliOperator::new();
+    rust_operator
+        .add_operator_product(PauliProduct::new().z(0), 0.5.into())
+        .unwrap();
+    rust_operator
+        .add_operator_product(PauliProduct::new().z(1), 0.5.into())
+        .unwrap();
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_system = py.get_type::<BosonProductWrapper>();
+        let system = new_system.call1(([0], [0])).unwrap();
+        system.downcast::<BosonProductWrapper>().unwrap();
+
+        let comp_op = system
+            .call_method1("dicke_boson_spin_mapping", (2,))
+            .unwrap();
+        let result_wrapper = comp_op.extract::<PauliOperatorWrapper>().unwrap();
+        assert_eq!(result_wrapper.internal, rust_operator);
+    });
+}
+
+/// Test add_operator_product and remove functions of BosonProduct
+#[test]
+fn direct_boson_to_spin_mapping() {
+    let mut rust_operator = PauliOperator::new();
+    rust_operator
+        .add_operator_product(PauliProduct::new().z(0), 0.5.into())
+        .unwrap();
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new_system = py.get_type::<BosonProductWrapper>();
+        let system = new_system.call1(([0], [0])).unwrap();
+        system.downcast::<BosonProductWrapper>().unwrap();
+
+        let comp_op = system.call_method0("direct_boson_spin_mapping").unwrap();
+        let result_wrapper = comp_op.extract::<PauliOperatorWrapper>().unwrap();
+        assert_eq!(result_wrapper.internal, rust_operator);
     });
 }
