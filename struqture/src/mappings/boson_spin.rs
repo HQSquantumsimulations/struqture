@@ -39,7 +39,7 @@ pub trait BosonToSpin {
     ///
     /// * `Ok(output)` - The result of the mapping to a spin object.
     /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
-    ///                           terms such as b†b or (b† + b).
+    ///   terms such as b†b or (b† + b).
     fn boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
