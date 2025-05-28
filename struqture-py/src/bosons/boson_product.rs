@@ -97,6 +97,9 @@ impl BosonProductWrapper {
 
     /// Transforms the given bosonic object into a spin object using the direct mapping.
     ///
+    /// **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+    /// otherwise the complex conjugate terms will be missing!!
+    ///
     /// This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
     /// the mapping, as well as its use in the context of open system dynamics, can be found at:
     ///                         <https://arxiv.org/pdf/2210.12138>
@@ -124,6 +127,9 @@ impl BosonProductWrapper {
     }
 
     /// Transforms the given bosonic object into a spin object using the mapping.
+    ///
+    /// **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+    /// otherwise the complex conjugate terms will be missing!!
     ///
     /// This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
     /// the mapping, as well as its use in the context of open system dynamics, can be found at:

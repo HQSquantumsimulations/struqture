@@ -282,7 +282,23 @@ impl BosonProduct {
 impl BosonToSpin for BosonProduct {
     type Output = PauliOperator;
 
-    // From trait
+    /// Transforms the given bosonic object into a spin object using the Dicke mapping.
+    ///
+    /// **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+    /// otherwise the complex conjugate terms will be missing!!
+    ///
+    /// In this mapping, 1 bosonic mode is described by N>1 spins.
+    /// We work in the subspace spanned by symmetric Dicke states of spins.
+    ///
+    /// # Arguments
+    ///
+    /// * `number_spins_per_bosonic_mode` - The number of spins to represent each bosonic mode.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(output)` - The result of the mapping to a spin object.
+    /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
+    ///   terms such as b†b or (b† + b).
     fn dicke_boson_spin_mapping(
         &self,
         number_spins_per_bosonic_mode: usize,
@@ -320,6 +336,22 @@ impl BosonToSpin for BosonProduct {
         }
 
         Ok(pauli_operator)
+    }
+
+    /// Transforms the given bosonic object into a spin object using the direct mapping.
+    ///
+    /// **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+    /// otherwise the complex conjugate terms will be missing!!
+    ///
+    /// In this mapping, 1 bosonic mode is described by 1 spin.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(output)` - The result of the mapping to a spin object.
+    /// * `Err(StruqtureError)` - The boson -> spin transformation is only available for
+    ///   terms such as b†b or (b† + b).
+    fn direct_boson_spin_mapping(&self) -> Result<Self::Output, StruqtureError> {
+        self.dicke_boson_spin_mapping(1)
     }
 }
 

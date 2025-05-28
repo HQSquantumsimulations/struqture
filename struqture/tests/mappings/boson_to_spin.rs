@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use qoqo_calculator::CalculatorComplex;
-use struqture::bosons::{BosonHamiltonian, HermitianBosonProduct};
+use struqture::bosons::{BosonHamiltonian, BosonProduct, HermitianBosonProduct};
 use struqture::mappings::BosonToSpin;
 use struqture::prelude::*;
 use struqture::spins::{PauliOperator, PauliProduct};
@@ -83,6 +83,77 @@ fn test_hermitian_boson_product_to_spin_error() {
     assert_eq!(bp.dicke_boson_spin_mapping(1), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0a1".into() }));
     assert_eq!(bp.direct_boson_spin_mapping(), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0a1".into() }));
     let bp = HermitianBosonProduct::new([0, 1], [0, 1]).unwrap();
+    assert_eq!(bp.dicke_boson_spin_mapping(1), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0c1a0a1".into() }));
+    assert_eq!(bp.direct_boson_spin_mapping(), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0c1a0a1".into() }));
+}
+
+#[test]
+fn test_boson_product_to_spin_annihilator_only_simple() {
+    let bp = BosonProduct::new([], [0]).unwrap();
+    let pp_1 = PauliProduct::new().x(0);
+    let mut so = PauliOperator::new();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(1.0, 0.0))
+        .unwrap();
+
+    assert_eq!(bp.dicke_boson_spin_mapping(1).unwrap(), so);
+    assert_eq!(bp.direct_boson_spin_mapping().unwrap(), so);
+}
+
+#[test]
+fn test_boson_product_to_spin_annihilator_only() {
+    let bp = BosonProduct::new([], [1]).unwrap();
+    let pp_1 = PauliProduct::new().x(4);
+    let pp_2 = PauliProduct::new().x(5);
+    let pp_3 = PauliProduct::new().x(6);
+    let pp_4 = PauliProduct::new().x(7);
+    let mut so = PauliOperator::new();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_3.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_4.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+
+    assert_eq!(bp.dicke_boson_spin_mapping(4).unwrap(), so);
+}
+
+#[test]
+fn test_boson_product_to_spin_simple() {
+    let bp = BosonProduct::new([0], [0]).unwrap();
+    let pp_1 = PauliProduct::new().z(0);
+    let mut so = PauliOperator::new();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+
+    assert_eq!(bp.dicke_boson_spin_mapping(1).unwrap(), so);
+    assert_eq!(bp.direct_boson_spin_mapping().unwrap(), so);
+}
+
+#[test]
+fn test_boson_product_to_spin() {
+    let bp = BosonProduct::new([1], [1]).unwrap();
+    let pp_1 = PauliProduct::new().z(3);
+    let pp_2 = PauliProduct::new().z(4);
+    let pp_3 = PauliProduct::new().z(5);
+    let mut so = PauliOperator::new();
+    so.add_operator_product(pp_1.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_2.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+    so.add_operator_product(pp_3.clone(), CalculatorComplex::new(0.5, 0.0))
+        .unwrap();
+
+    assert_eq!(bp.dicke_boson_spin_mapping(3).unwrap(), so);
+}
+
+#[test]
+fn test_boson_product_to_spin_error() {
+    let bp = BosonProduct::new([0], [1]).unwrap();
+    assert_eq!(bp.dicke_boson_spin_mapping(1), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0a1".into() }));
+    assert_eq!(bp.direct_boson_spin_mapping(), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0a1".into() }));
+    let bp = BosonProduct::new([0, 1], [0, 1]).unwrap();
     assert_eq!(bp.dicke_boson_spin_mapping(1), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0c1a0a1".into() }));
     assert_eq!(bp.direct_boson_spin_mapping(), Err(struqture::StruqtureError::GenericError{ msg: "The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: c0c1a0a1".into() }));
 }
