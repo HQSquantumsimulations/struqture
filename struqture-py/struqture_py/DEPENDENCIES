@@ -15256,7 +15256,7 @@ ICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation a
 
 
 ====================================================
-lock_api 0.4.12
+lock_api 0.4.13
 https://github.com/Amanieu/parking_lot
 by Amanieu d'Antras <amanieu@gmail.com>
 Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std.
@@ -19745,7 +19745,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ====================================================
-parking_lot 0.12.3
+parking_lot 0.12.4
 https://github.com/Amanieu/parking_lot
 by Amanieu d'Antras <amanieu@gmail.com>
 More compact and efficient implementations of the standard synchronization primitives.
@@ -19986,7 +19986,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-parking_lot_core 0.9.10
+parking_lot_core 0.9.11
 https://github.com/Amanieu/parking_lot
 by Amanieu d'Antras <amanieu@gmail.com>
 An advanced API for creating custom synchronization primitives.
@@ -26462,7 +26462,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-reqwest 0.12.18
+reqwest 0.12.19
 https://github.com/seanmonstar/reqwest
 by Sean McArthur <sean@seanmonstar.com>
 higher level HTTP client library
@@ -30528,7 +30528,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.1.0-alpha.0
+struqture 2.1.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30739,7 +30739,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.1.0-alpha.0
+struqture-py 2.1.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30950,7 +30950,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.1.0-alpha.0
+struqture-py-macros 2.1.0
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -33205,7 +33205,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-tower-http 0.6.4
+tower-http 0.6.5
 https://github.com/tower-rs/tower-http
 by Tower Maintainers <team@tower-rs.com>
 Tower middleware and utilities for HTTP clients and servers
