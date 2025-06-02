@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use crate::bosons::BosonProductWrapper;
+use crate::spins::PauliLindbladNoiseOperatorWrapper;
 use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -19,7 +20,7 @@ use qoqo_calculator_pyo3::CalculatorComplexWrapper;
 use struqture::bosons::BosonLindbladNoiseOperator;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
-use struqture::{OperateOnDensityMatrix, OperateOnModes};
+use struqture::{mappings::BosonToSpin, OperateOnDensityMatrix, OperateOnModes};
 use struqture_py_macros::noisy_system_wrapper;
 
 /// These are representations of noisy systems of bosons.
@@ -60,5 +61,67 @@ impl BosonLindbladNoiseOperatorWrapper {
         Self {
             internal: BosonLindbladNoiseOperator::new(),
         }
+    }
+
+    /// Transforms the given bosonic object into a spin object using the direct mapping.
+    ///
+    /// This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+    /// the mapping, as well as its use in the context of open system dynamics, can be found at:
+    ///                         <https://arxiv.org/pdf/2210.12138>
+    ///
+    /// The mapping is given by:
+    ///
+    /// $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+    /// $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+    ///
+    /// For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+    ///
+    /// Returns:
+    ///     PauliLindbladNoiseOperator: The result of the mapping to a spin object.
+    ///
+    /// Raises:
+    ///     ValueError: The boson -> spin transformation is only available for
+    ///                 terms such as b†b or (b† + b).
+    pub fn direct_boson_spin_mapping(&self) -> PyResult<PauliLindbladNoiseOperatorWrapper> {
+        Ok(PauliLindbladNoiseOperatorWrapper {
+            internal: self
+                .internal
+                .direct_boson_spin_mapping()
+                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+        })
+    }
+
+    /// Transforms the given bosonic object into a spin object using the mapping.
+    ///
+    /// This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+    /// the mapping, as well as its use in the context of open system dynamics, can be found at:
+    ///                         <https://arxiv.org/pdf/2210.12138>
+    ///
+    /// The mapping is given by:
+    ///
+    /// $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+    /// $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+    ///
+    /// For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+    ///
+    /// Args:
+    ///     number_spins_per_bosonic_mode (int): The number of spins to represent each bosonic mode.
+    ///
+    /// Returns:
+    ///     PauliLindbladNoiseOperator: The result of the mapping to a spin object.
+    ///
+    /// Raises:
+    ///     ValueError: The boson -> spin transformation is only available for
+    ///                 terms such as b†b or (b† + b).
+    pub fn dicke_boson_spin_mapping(
+        &self,
+        number_spins_per_bosonic_mode: usize,
+    ) -> PyResult<PauliLindbladNoiseOperatorWrapper> {
+        Ok(PauliLindbladNoiseOperatorWrapper {
+            internal: self
+                .internal
+                .dicke_boson_spin_mapping(number_spins_per_bosonic_mode)
+                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+        })
     }
 }

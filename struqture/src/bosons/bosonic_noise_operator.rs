@@ -11,15 +11,19 @@
 // limitations under the License.
 
 use super::{BosonProduct, OperateOnBosons};
-use crate::{ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError};
+use crate::{
+    mappings::BosonToSpin,
+    spins::{DecoherenceProduct, PauliLindbladNoiseOperator},
+    ModeIndex, OperateOnDensityMatrix, OperateOnModes, StruqtureError,
+};
+use indexmap::map::{Entry, Iter};
+use indexmap::IndexMap;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Write};
 use std::iter::{FromIterator, IntoIterator};
 use std::ops;
-
-use indexmap::map::{Entry, Iter};
-use indexmap::IndexMap;
+use std::str::FromStr;
 
 /// BosonLindbladNoiseOperators represent noise interactions in the Lindblad equation.
 ///
@@ -281,6 +285,34 @@ impl BosonLindbladNoiseOperator {
             let _ = new_operator.set((self_key_left, self_key_right), val.clone());
         }
         Ok(new_operator)
+    }
+}
+
+impl BosonToSpin for BosonLindbladNoiseOperator {
+    type Output = PauliLindbladNoiseOperator;
+
+    // From trait
+    fn dicke_boson_spin_mapping(
+        &self,
+        number_spins_per_bosonic_mode: usize,
+    ) -> Result<Self::Output, StruqtureError> {
+        let mut pauli_operator = PauliLindbladNoiseOperator::new();
+        for ((key_l, key_r), value) in self.iter() {
+            let key_l_spin = key_l.dicke_boson_spin_mapping(number_spins_per_bosonic_mode)?;
+            let key_r_spin = key_r.dicke_boson_spin_mapping(number_spins_per_bosonic_mode)?;
+            let mut new_pauli_operator = PauliLindbladNoiseOperator::new();
+            for left in key_l_spin {
+                for right in key_r_spin.clone() {
+                    let decoh_l = DecoherenceProduct::from_str(left.0.to_string().as_str())?;
+                    let decoh_r = DecoherenceProduct::from_str(right.0.to_string().as_str())?;
+                    new_pauli_operator
+                        .add_operator_product((decoh_l, decoh_r), left.1.clone() * right.1)?;
+                }
+            }
+            pauli_operator = pauli_operator + new_pauli_operator * value;
+        }
+
+        Ok(pauli_operator)
     }
 }
 

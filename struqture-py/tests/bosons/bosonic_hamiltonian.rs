@@ -830,7 +830,7 @@ fn test_from_json_struqture_1() {
     });
 }
 
-/// Test add_operator_product and remove functions of BosonHamiltonian
+/// Test dicke_boson_spin_mapping function of BosonHamiltonian
 #[test]
 fn dicke_boson_to_spin_mapping() {
     let mut rust_operator = PauliOperator::new();
@@ -857,7 +857,7 @@ fn dicke_boson_to_spin_mapping() {
     });
 }
 
-/// Test add_operator_product and remove functions of BosonHamiltonian
+/// Test direct_boson_spin_mapping function of BosonHamiltonian
 #[test]
 fn direct_boson_to_spin_mapping() {
     let mut rust_operator = PauliOperator::new();
