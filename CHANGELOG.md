@@ -4,10 +4,9 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.1.0
+
 * Added boson to spin mapping for BosonLindbladNoiseOperator.
-
-## 2.1.0-alpha.0
-
 * Added `direct_boson_spin_mapping` and `direct_boson_spin_mapping` functions for `BosonHamiltonian` and `BosonProduct` in both struqture and struqture-py.
 * Removed unused errors from lib.rs and fixed typo in error name in lib.rs.
 
