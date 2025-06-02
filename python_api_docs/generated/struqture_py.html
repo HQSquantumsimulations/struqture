@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py &mdash; struqture_py 2.1.0-alpha.0 documentation</title>
+  <title>struqture_py &mdash; struqture_py 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=81a66be9"></script>
+      <script src="../_static/documentation_options.js?v=b9582fdd"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -81,6 +81,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.add_operator_product"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.add_operator_product()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.current_number_modes"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.current_number_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.current_version"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.current_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.dicke_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.dicke_boson_spin_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.direct_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.direct_boson_spin_mapping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.empty_clone"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.empty_clone()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.from_bincode"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.from_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.from_json"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.from_json()</span></code></a></li>
@@ -1385,6 +1387,63 @@ $ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sig
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonLindbladNoiseOperator.dicke_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">dicke_boson_spin_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins_per_bosonic_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonLindbladNoiseOperator.dicke_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the mapping.</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_spins_per_bosonic_mode</strong> (<em>int</em>) -- The number of spins to represent each bosonic mode.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#struqture_py.PauliLindbladNoiseOperator" title="struqture_py.PauliLindbladNoiseOperator">PauliLindbladNoiseOperator</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonLindbladNoiseOperator.direct_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">direct_boson_spin_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonLindbladNoiseOperator.direct_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the direct mapping.</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#struqture_py.PauliLindbladNoiseOperator" title="struqture_py.PauliLindbladNoiseOperator">PauliLindbladNoiseOperator</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
 </dd>
 </dl>
 </dd></dl>
