@@ -1200,9 +1200,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator"
-version = "1.6.0"
+version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd7d8b752b42a435d21ff1b0423aec23c0aee5b7e73c84123f0769a89f8022da"
+checksum = "87efbeb0b9f9d1fe8c1f737028c2033baa9fcfe62359e0f8d751a1fffc5bc96a"
 dependencies = [
  "num-complex",
  "schemars",
@@ -1212,9 +1212,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator_pyo3"
-version = "1.6.0"
+version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9de68f1c5cf20823f43db86412d23abc2f548c96a5908350955bea349baf355e"
+checksum = "2601ff2abe3e7976d1a0270c8957fd3c61aded4eea885fab22adfbd21d68fc87"
 dependencies = [
  "num-complex",
  "pyo3",
@@ -1593,7 +1593,7 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.1.0"
+version = "2.1.1"
 dependencies = [
  "bincode",
  "criterion",
@@ -1617,7 +1617,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "2.1.0"
+version = "2.1.1"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1634,7 +1634,7 @@ dependencies = [
  "schemars",
  "serde_json",
  "struqture 1.12.2",
- "struqture 2.1.0",
+ "struqture 2.1.1",
  "struqture-py-macros",
  "syn",
  "test-case",
@@ -1643,7 +1643,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "2.1.0"
+version = "2.1.1"
 dependencies = [
  "proc-macro2",
  "quote",
