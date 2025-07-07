@@ -53,7 +53,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     system = MixedPlusMinusOperator(1, 1, 1)
 ///     pp = MixedPlusMinusProduct([PauliProduct().z(0)], [BosonProduct([0], [1])], [FermionProduct([0], [0])])
 ///     system.add_operator_product(pp, 5.0)
-///     npt.assert_equal(system.current_number_spins(), [2])
+///     npt.assert_equal(system.current_number_spins(), [1])
 ///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///
 #[pyclass(name = "MixedPlusMinusOperator", module = "struqture_py.mixed_systems")]

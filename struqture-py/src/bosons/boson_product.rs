@@ -122,7 +122,7 @@ impl BosonProductWrapper {
             internal: self
                 .internal
                 .direct_boson_spin_mapping()
-                .map_err(|err| PyValueError::new_err(format!("Error: {:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("Error: {err:?}")))?,
         })
     }
 
@@ -159,7 +159,7 @@ impl BosonProductWrapper {
             internal: self
                 .internal
                 .dicke_boson_spin_mapping(number_spins_per_bosonic_mode)
-                .map_err(|err| PyValueError::new_err(format!("Error: {:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("Error: {err:?}")))?,
         })
     }
 }

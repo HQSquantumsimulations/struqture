@@ -45,7 +45,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     system = BosonHamiltonian()
 ///     pp = HermitianBosonProduct([0], [0])
 ///     system.add_operator_product(pp, 5.0)
-///     npt.assert_equal(system.current_number_modes(), 2)
+///     npt.assert_equal(system.current_number_modes(), 1)
 ///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(system.keys(), [pp])
 ///
@@ -137,7 +137,7 @@ impl BosonHamiltonianWrapper {
             internal: self
                 .internal
                 .direct_boson_spin_mapping()
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 
@@ -171,7 +171,7 @@ impl BosonHamiltonianWrapper {
             internal: self
                 .internal
                 .dicke_boson_spin_mapping(number_spins_per_bosonic_mode)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 }
