@@ -5,7 +5,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 ## Unreleased
 
 * Fixed links in user documentation introduction.
-* Fixed API documentation examples.
+* Fixed API documentation example snippets.
 
 ## 2.1.0
 
