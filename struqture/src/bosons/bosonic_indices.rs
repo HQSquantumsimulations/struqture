@@ -321,7 +321,7 @@ impl BosonToSpin for BosonProduct {
             }
             (1, 1) => {
                 if !self.is_natural_hermitian() {
-                    return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) });
+                    return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {self}") });
                 }
                 for j in (self.annihilators[0] * number_spins_per_bosonic_mode)
                     ..((self.annihilators[0] + 1) * number_spins_per_bosonic_mode)
@@ -332,7 +332,7 @@ impl BosonToSpin for BosonProduct {
                     )?;
                 }
             },
-            _ => return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) })
+            _ => return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {self}") })
         }
 
         Ok(pauli_operator)
@@ -975,7 +975,7 @@ impl BosonToSpin for HermitianBosonProduct {
             }
             (1, 1) => {
                 if !self.is_natural_hermitian() {
-                    return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) });
+                    return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {self}") });
                 }
                 for j in (self.annihilators[0] * number_spins_per_bosonic_mode)
                     ..((self.annihilators[0] + 1) * number_spins_per_bosonic_mode)
@@ -986,7 +986,7 @@ impl BosonToSpin for HermitianBosonProduct {
                     )?;
                 }
             },
-            _ => return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {}", self) })
+            _ => return Err(StruqtureError::GenericError { msg: format!("The boson -> spin transformation is only available for terms such as b†b or (b† + b), but the term here is: {self}") })
         }
 
         Ok(pauli_operator)
