@@ -544,7 +544,7 @@ class FermionOperator:
         system = FermionOperator()
         pp = FermionProduct([0], [0])
         system.add_operator_product(pp, 5.0)
-        npt.assert_equal(system.current_number_modes(), 2)
+        npt.assert_equal(system.current_number_modes(), 1)
         npt.assert_equal(system.get(pp), CalculatorComplex(5))
         npt.assert_equal(system.keys(), [pp])
 
@@ -796,7 +796,7 @@ class FermionHamiltonian:
         system = FermionHamiltonian()
         pp = HermitianFermionProduct([0], [0])
         system.add_operator_product(pp, 5.0)
-        npt.assert_equal(system.current_number_modes(), 2)
+        npt.assert_equal(system.current_number_modes(), 1)
         npt.assert_equal(system.get(pp), CalculatorComplex(5))
         npt.assert_equal(system.keys(), [pp])
 
