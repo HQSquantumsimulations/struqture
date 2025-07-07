@@ -23192,7 +23192,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-qoqo_calculator 1.6.0
+qoqo_calculator 1.6.1
 https://github.com/HQSquantumsimulations/qoqo_calculator
 by HQS Quantum Simulations <info@quantumsimulations.de>
 qoqo-calculator is the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -23404,7 +23404,7 @@ LICENSE:
 
 
 ====================================================
-qoqo_calculator_pyo3 1.6.0
+qoqo_calculator_pyo3 1.6.1
 https://github.com/HQSquantumsimulations/qoqo_calculator_pyo3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface to qoqo calculator, the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -30513,7 +30513,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.1.0
+struqture 2.1.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30724,7 +30724,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.1.0
+struqture-py 2.1.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -30935,7 +30935,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.1.0
+struqture-py-macros 2.1.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
