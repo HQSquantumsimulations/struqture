@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Fixes the macos build tests.
+
 ## 2.1.0
 
 * Added boson to spin mapping for BosonLindbladNoiseOperator.

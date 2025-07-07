@@ -51,7 +51,7 @@ regex = "1.10"
 no-default-features = true
 
 [features]
-extension-module = ["pyo3/extension-module"]
+extension-module = ["pyo3/extension-module", "qoqo_calculator_pyo3/extension-module"]
 default = [
     "extension-module",
     "json_schema",
