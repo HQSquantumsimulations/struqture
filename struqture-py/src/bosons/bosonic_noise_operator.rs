@@ -87,7 +87,7 @@ impl BosonLindbladNoiseOperatorWrapper {
             internal: self
                 .internal
                 .direct_boson_spin_mapping()
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 
@@ -121,7 +121,7 @@ impl BosonLindbladNoiseOperatorWrapper {
             internal: self
                 .internal
                 .dicke_boson_spin_mapping(number_spins_per_bosonic_mode)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 }
