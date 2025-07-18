@@ -36,11 +36,11 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///
 /// `PauliProduct().x(0).x(2)`.
 ///
-/// Note that these methods are setters that set the Pauli operator acting on the corresponding spin, 
-/// and do not represent matrix multiplication. For example 
-/// 
+/// Note that these methods are setters that set the Pauli operator acting on the corresponding spin,
+/// and do not represent matrix multiplication. For example
+///
 /// `PauliProduct().z(0).z(0)`
-/// 
+///
 /// will set the Pauli operator on spin 0 to Z and not to the identity.
 ///
 /// PauliProduct is  supposed to be used as input for the function `set_pauli_product`,
