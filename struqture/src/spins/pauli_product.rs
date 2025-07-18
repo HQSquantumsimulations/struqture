@@ -226,16 +226,16 @@ use schemars;
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliProduct {
-    fn schema_name() -> String {
-        "struqture::spins::PauliProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::PauliProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        let string_schema = generator.subschema_for::<String>();
+        schemars::json_schema!({
+            "type": string_schema,
+            "description": "Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X."
+        })
     }
 }
 

@@ -60,16 +60,16 @@ pub struct MixedPlusMinusProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedPlusMinusProduct {
-    fn schema_name() -> String {
-        "MixedPlusMinusProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedPlusMinusProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  +, - and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0+1+:Bc0a1:Fc0a2:.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        let string_schema = generator.subschema_for::<String>();
+        schemars::json_schema!({
+            "type": string_schema,
+            "description": "Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  +, - and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0+1+:Bc0a1:Fc0a2:."
+        })
     }
 }
 

@@ -887,7 +887,6 @@ pub fn noisywrapper(
                         PyTypeError::new_err(err.to_string())
                     })?;
 
-                    let input = input.as_ref();
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -911,7 +910,6 @@ pub fn noisywrapper(
             #[cfg(feature = "struqture_1_import")]
             pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref();
                     let get_bytes = input
                         .call_method0("to_bincode")
                         .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
@@ -1004,7 +1002,6 @@ pub fn noisywrapper(
             #[staticmethod]
             pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
-                    .as_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 

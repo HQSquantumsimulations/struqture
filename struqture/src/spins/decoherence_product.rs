@@ -256,16 +256,16 @@ pub struct DecoherenceProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceProduct {
-    fn schema_name() -> String {
-        "struqture::spins::DecoherenceProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::DecoherenceProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Decoherence Operators (X, iY, Z) by a string of spin numbers followed by pauli operators. E.g. 0X10iY13Z14X.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        let string_schema = generator.subschema_for::<String>();
+        schemars::json_schema!({
+            "type": string_schema,
+            "description": "Represents products of Decoherence Operators (X, iY, Z) by a string of spin numbers followed by pauli operators. E.g. 0X10iY13Z14X."
+        })
     }
 }
 

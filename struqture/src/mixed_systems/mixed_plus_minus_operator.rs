@@ -68,12 +68,12 @@ impl crate::SerializationSupport for MixedPlusMinusOperator {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedPlusMinusOperator {
-    fn schema_name() -> String {
-        "MixedPlusMinusOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedPlusMinusOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <MixedPlusMinusOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <MixedPlusMinusOperatorSerialize>::json_schema(generator)
     }
 }
 

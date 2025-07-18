@@ -65,12 +65,12 @@ impl crate::SerializationSupport for PauliHamiltonian {
 }
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliHamiltonian {
-    fn schema_name() -> String {
-        "struqture::spins::PauliHamiltonian".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::PauliHamiltonian".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <PauliHamiltonianSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <PauliHamiltonianSerialize>::json_schema(generator)
     }
 }
 

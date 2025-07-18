@@ -399,7 +399,7 @@ fn test_default_partialeq_debug_clone() {
 
         let comparison = bool::extract_bound(
             &comp_op_ungroup
-                .call_method1("__eq__", ((&spin_system, noise.as_ref()),))
+                .call_method1("__eq__", ((&spin_system, noise),))
                 .unwrap(),
         )
         .unwrap();

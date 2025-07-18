@@ -53,16 +53,16 @@ pub struct BosonProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonProduct {
-    fn schema_name() -> String {
-        "BosonProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        let string_schema = generator.subschema_for::<String>();
+        schemars::json_schema!({
+            "type": string_schema,
+            "description": "Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -661,16 +661,16 @@ pub struct HermitianBosonProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for HermitianBosonProduct {
-    fn schema_name() -> String {
-        "HermitianBosonProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "HermitianBosonProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        let string_schema = generator.subschema_for::<String>();
+        schemars::json_schema!({
+            "type": string_schema,
+            "description": "Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
