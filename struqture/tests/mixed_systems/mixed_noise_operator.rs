@@ -13,7 +13,6 @@
 //! Integration test for public API of MixedLindbladNoiseOperator
 
 // use num_complex::Complex64;
-use bincode::{deserialize, serialize};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
@@ -693,12 +692,15 @@ fn bincode() {
     mo.set((pp.clone(), pp), CalculatorComplex::from(1.0))
         .unwrap();
 
-    let serialized = serialize(&mo).unwrap();
-    let deserialized: MixedLindbladNoiseOperator = deserialize(&serialized).unwrap();
+    let config = bincode::config::legacy();
+    let serialized = bincode::serde::encode_to_vec(&mo, config).unwrap();
+    let (deserialized, _len): (MixedLindbladNoiseOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(deserialized, mo);
 
-    let encoded: Vec<u8> = bincode::serialize(&mo.clone().compact()).unwrap();
-    let decoded: MixedLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&mo.clone().compact(), config).unwrap();
+    let (decoded, _len): (MixedLindbladNoiseOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(mo, decoded);
 }
 

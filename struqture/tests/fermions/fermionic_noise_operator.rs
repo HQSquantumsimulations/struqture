@@ -12,7 +12,8 @@
 
 //! Integration test for public API of FermionLindbladNoiseOperator
 
-use bincode::{deserialize, serialize};
+use bincode::config;
+use bincode::serde::{decode_from_slice, encode_to_vec};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
@@ -474,12 +475,16 @@ fn bincode() {
     so.set((pp.clone(), pp), CalculatorComplex::from(1.0))
         .unwrap();
 
-    let serialized = serialize(&so).unwrap();
-    let deserialized: FermionLindbladNoiseOperator = deserialize(&serialized).unwrap();
+    let config = config::legacy();
+
+    let serialized = encode_to_vec(&so, config).unwrap();
+    let (deserialized, _len): (FermionLindbladNoiseOperator, usize) =
+        decode_from_slice(&serialized, config).unwrap();
     assert_eq!(deserialized, so);
 
-    let encoded: Vec<u8> = bincode::serialize(&so.clone().compact()).unwrap();
-    let decoded: FermionLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded = encode_to_vec(so.clone().compact(), config).unwrap();
+    let (decoded, _len): (FermionLindbladNoiseOperator, usize) =
+        decode_from_slice(&encoded, config).unwrap();
     assert_eq!(so, decoded);
 }
 

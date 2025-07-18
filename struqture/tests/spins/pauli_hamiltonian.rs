@@ -532,12 +532,16 @@ fn bincode() {
     let mut so = PauliHamiltonian::new();
     so.set(pp, CalculatorFloat::from(1.0)).unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&so).unwrap();
-    let decoded: PauliHamiltonian = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(so, decoded);
+    let config = bincode::config::legacy();
 
-    let encoded: Vec<u8> = bincode::serialize(&so.clone().compact()).unwrap();
-    let decoded: PauliHamiltonian = bincode::deserialize(&encoded[..]).unwrap();
+    let serialized = bincode::serde::encode_to_vec(&so, config).unwrap();
+    let (deserialized, _len): (PauliHamiltonian, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, so);
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&so.clone().compact(), config).unwrap();
+    let (decoded, _len): (PauliHamiltonian, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(so, decoded);
 }
 

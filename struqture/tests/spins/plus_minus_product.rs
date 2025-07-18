@@ -375,12 +375,16 @@ fn bincode() {
     let mut pmp = PlusMinusProduct::new();
     pmp = pmp.set_pauli(0, SinglePlusMinusOperator::Plus);
 
-    let encoded: Vec<u8> = bincode::serialize(&pmp).unwrap();
-    let decoded: PlusMinusProduct = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(pmp, decoded);
+    let config = bincode::config::legacy();
 
-    let encoded: Vec<u8> = bincode::serialize(&pmp.clone().compact()).unwrap();
-    let decoded: PlusMinusProduct = bincode::deserialize(&encoded[..]).unwrap();
+    let serialized = bincode::serde::encode_to_vec(&pmp, config).unwrap();
+    let (deserialized, _len): (PlusMinusProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, pmp);
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&pmp.clone().compact(), config).unwrap();
+    let (decoded, _len): (PlusMinusProduct, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(pmp, decoded);
 }
 

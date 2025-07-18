@@ -487,12 +487,16 @@ fn bincode() {
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
         .unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&slno).unwrap();
-    let decoded: PlusMinusLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(slno, decoded);
+    let config = bincode::config::legacy();
 
-    let encoded: Vec<u8> = bincode::serialize(&slno.clone().compact()).unwrap();
-    let decoded: PlusMinusLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let serialized = bincode::serde::encode_to_vec(&slno, config).unwrap();
+    let (deserialized, _len): (PlusMinusLindbladNoiseOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, slno);
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&slno.clone().compact(), config).unwrap();
+    let (decoded, _len): (PlusMinusLindbladNoiseOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(slno, decoded);
 }
 
