@@ -18,6 +18,8 @@ are almost identical to the `SinglePauliOperators` with the exception of an addi
 ## Example
 
 In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.
+Note that when using setter methods as in `PauliProduct().x(0)`, the methods set the value of the Pauli operator acting on the corresponding spin and do not 
+represent matrix multiplication, so that `PauliProduct().x(0)` is equivalent to `PauliProduct().x(0).x(0)`, the second call to the setter method `x(0)` having no effect.
 
 ```python
 from struqture_py.spins import PauliProduct, DecoherenceProduct
