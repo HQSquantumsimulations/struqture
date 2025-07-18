@@ -896,12 +896,14 @@ pub fn noisywrapper(
                         let bytes = get_bytes.extract::<Vec<u8>>().map_err(|_| {
                             PyTypeError::new_err("Deserialisation failed".to_string())
                         })?;
-                        deserialize(&bytes[..]).map_err(|err| {
+                        let config = bincode::config::legacy();
+                        let (internal, _) = bincode::serde::decode_from_slice(&bytes[..], config).map_err(|err| {
                             PyTypeError::new_err(format!(
                                 "Type conversion failed: {}",
                                 err
-                            ))}
-                        )
+                            ))
+                        })?;
+                        Ok(internal)
                     }
                 })
             }
@@ -910,14 +912,15 @@ pub fn noisywrapper(
             #[cfg(feature = "struqture_1_import")]
             pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
+                    let config = bincode::config::legacy();
                     let get_bytes = input
                         .call_method0("to_bincode")
                         .map_err(|_| PyTypeError::new_err("Serialisation failed".to_string()))?;
                     let bytes = get_bytes
                         .extract::<Vec<u8>>()
                         .map_err(|_| PyTypeError::new_err("Deserialisation failed".to_string()))?;
-                    let one_import = deserialize(&bytes[..])
-                        .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?;
+                    let one_import = bincode::serde::decode_from_slice(&bytes[..], config)
+                        .map_err(|err| PyTypeError::new_err(format!("Type conversion failed: {}", err)))?.0;
                     let qubit_operator: #struct_ident = #struct_ident::from_struqture_1(&one_import).map_err(
                         |err| PyValueError::new_err(format!("Trying to obtain struqture 2.x object from struqture 1.x object. Conversion failed. Was the right type passed to all functions? {:?}", err)
                     ))?;
@@ -1004,14 +1007,15 @@ pub fn noisywrapper(
                 let bytes = input
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
+               let config = bincode::config::legacy();
 
                 Ok(#ident {
-                    internal: bincode::deserialize(&bytes[..]).map_err(|err| {
+                    internal: bincode::serde::decode_from_slice(&bytes[..], config).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from bytes. {}",
                             err
                         ))
-                    })?,
+                    })?.0,
                 })
             }
 
@@ -1023,7 +1027,9 @@ pub fn noisywrapper(
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
             pub fn to_bincode(&self) -> PyResult<Py<PyByteArray>> {
-                let serialized = bincode::serialize(&self.internal).map_err(|_| {
+                let config = bincode::config::legacy();
+
+                let serialized = bincode::serde::encode_to_vec(&self.internal, config).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
