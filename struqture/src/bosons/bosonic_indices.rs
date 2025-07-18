@@ -212,12 +212,12 @@ impl ModeIndex for BosonProduct {
     }
 
     // From trait
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&'_ self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
     // From trait
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&'_ self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -847,7 +847,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The creator indices in the HermitianBosonProduct.
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&'_ self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
@@ -856,7 +856,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The annihilator indices in the HermitianBosonProduct.
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&'_ self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 

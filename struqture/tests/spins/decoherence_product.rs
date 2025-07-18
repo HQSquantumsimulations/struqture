@@ -467,7 +467,7 @@ fn bincode() {
         bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(deserialized, dp);
 
-    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&dp.clone().compact(), config).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(dp.clone().compact(), config).unwrap();
     let (decoded, _len): (DecoherenceProduct, usize) =
         bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(dp, decoded);

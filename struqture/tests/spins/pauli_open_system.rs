@@ -554,7 +554,7 @@ fn bincode() {
         bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(deserialized, slos);
 
-    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&slos.clone().compact(), config).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(slos.clone().compact(), config).unwrap();
     let (decoded, _len): (PauliLindbladOpenSystem, usize) =
         bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(slos, decoded);

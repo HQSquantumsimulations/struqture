@@ -399,7 +399,7 @@ fn test_default_partialeq_debug_clone() {
 
         let comparison = bool::extract_bound(
             &comp_op_ungroup
-                .call_method1("__eq__", ((&spin_system, noise),))
+                .call_method1("__eq__", ((&spin_system, noise.clone()),))
                 .unwrap(),
         )
         .unwrap();
@@ -1264,7 +1264,7 @@ fn test_to_from_bincode() {
 
         let deserialised_error = new.call_method1(
             "from_bincode",
-            (bincode::serde::encode_to_vec(&vec![0], config).unwrap(),),
+            (bincode::serde::encode_to_vec(vec![0], config).unwrap(),),
         );
         assert!(deserialised_error.is_err());
 

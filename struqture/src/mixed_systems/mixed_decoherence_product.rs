@@ -260,17 +260,17 @@ impl MixedIndex for MixedDecoherenceProduct {
     }
 
     // From trait
-    fn spins(&self) -> std::slice::Iter<DecoherenceProduct> {
+    fn spins(&'_ self) -> std::slice::Iter<'_, DecoherenceProduct> {
         self.spins.iter()
     }
 
     // From trait
-    fn bosons(&self) -> std::slice::Iter<BosonProduct> {
+    fn bosons(&'_ self) -> std::slice::Iter<'_, BosonProduct> {
         self.bosons.iter()
     }
 
     // From trait
-    fn fermions(&self) -> std::slice::Iter<FermionProduct> {
+    fn fermions(&'_ self) -> std::slice::Iter<'_, FermionProduct> {
         self.fermions.iter()
     }
 
