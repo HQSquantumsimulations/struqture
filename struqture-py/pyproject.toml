@@ -21,7 +21,7 @@ profile = "release"
 include = [{ path = "LICENSE", format = "sdist" }]
 
 [tool.black]
-line-length = 89
+line-length = 99
 
 [project.optional-dependencies]
 docs = [
