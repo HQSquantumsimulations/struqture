@@ -64,10 +64,9 @@ impl schemars::JsonSchema for MixedPlusMinusProduct {
         "MixedPlusMinusProduct".into()
     }
 
-    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
-        let string_schema = generator.subschema_for::<String>();
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
         schemars::json_schema!({
-            "type": string_schema,
+            "type": "string",
             "description": "Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  +, - and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0+1+:Bc0a1:Fc0a2:."
         })
     }

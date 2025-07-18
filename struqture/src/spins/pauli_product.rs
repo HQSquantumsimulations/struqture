@@ -230,10 +230,9 @@ impl schemars::JsonSchema for PauliProduct {
         "struqture::spins::PauliProduct".into()
     }
 
-    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
-        let string_schema = generator.subschema_for::<String>();
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
         schemars::json_schema!({
-            "type": string_schema,
+            "type": "string",
             "description": "Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X."
         })
     }

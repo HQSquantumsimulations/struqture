@@ -61,6 +61,7 @@ impl crate::SerializationSupport for DecoherenceOperator {
         crate::StruqtureType::DecoherenceOperator
     }
 }
+
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceOperator {
     fn schema_name() -> std::borrow::Cow<'static, str> {

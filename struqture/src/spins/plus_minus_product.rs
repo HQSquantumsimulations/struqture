@@ -442,10 +442,9 @@ impl schemars::JsonSchema for PlusMinusProduct {
         "struqture::spins::PlusMinusProduct".into()
     }
 
-    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
-        let string_schema = generator.subschema_for::<String>();
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
         schemars::json_schema!({
-            "type": string_schema,
+            "type": "string",
             "description": "Represents products of Plus Minus Spin Operators (Plus, Minus, Z) by a string of spin numbers followed by pauli operators. E.g. 0+10-13Z14+."
         })
     }

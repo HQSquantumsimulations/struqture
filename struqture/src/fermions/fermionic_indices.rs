@@ -59,10 +59,9 @@ impl schemars::JsonSchema for FermionProduct {
         "FermionProduct".into()
     }
 
-    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
-        let string_schema = generator.subschema_for::<String>();
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
         schemars::json_schema!({
-            "type": string_schema,
+            "type": "string",
             "description": "Represents products of Fermionic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
         })
     }
@@ -632,10 +631,9 @@ impl schemars::JsonSchema for HermitianFermionProduct {
         "HermitianFermionProduct".into()
     }
 
-    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
-        let string_schema = generator.subschema_for::<String>();
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
         schemars::json_schema!({
-            "type": string_schema,
+            "type": "string",
             "description": "Represents products of Fermionic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
         })
     }
