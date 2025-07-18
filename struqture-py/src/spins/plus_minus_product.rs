@@ -41,6 +41,13 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///
 /// `PlusMinusProduct().plus(0).plus(2)`.
 ///
+/// Note that these methods are setters that set the operator acting on the corresponding spin,
+/// and do not represent matrix multiplication. For example
+///
+/// `PlusMinusProduct().plus(0).plus(0)`
+///
+/// will set the operator on spin 0 to :math: `\sigma_0^{+}` and does not give the zero vector.
+///
 /// Returns:
 ///     self: The new, empty PlusMinusProduct.
 ///

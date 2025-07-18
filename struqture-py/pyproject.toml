@@ -20,6 +20,9 @@ strip = true
 profile = "release"
 include = [{ path = "LICENSE", format = "sdist" }]
 
+[tool.black]
+line-length = 99
+
 [project.optional-dependencies]
 docs = [
   "sphinx >= 2.1",
