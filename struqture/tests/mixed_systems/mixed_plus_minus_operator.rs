@@ -13,7 +13,6 @@
 //! Integration test for public API of MixedPlusMinusOperator
 
 // use num_complex::Complex64;
-use bincode::{deserialize, serialize};
 use num_complex::Complex64;
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
@@ -873,12 +872,15 @@ fn bincode() {
     let mut mo = MixedPlusMinusOperator::new(1, 1, 1);
     mo.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
-    let serialized = serialize(&mo).unwrap();
-    let deserialized: MixedPlusMinusOperator = deserialize(&serialized).unwrap();
+    let config = bincode::config::legacy();
+    let serialized = bincode::serde::encode_to_vec(&mo, config).unwrap();
+    let (deserialized, _len): (MixedPlusMinusOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(deserialized, mo);
 
-    let encoded: Vec<u8> = bincode::serialize(&mo.clone().compact()).unwrap();
-    let decoded: MixedPlusMinusOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded = bincode::serde::encode_to_vec(mo.clone().compact(), config).unwrap();
+    let (decoded, _len): (MixedPlusMinusOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(mo, decoded);
 }
 

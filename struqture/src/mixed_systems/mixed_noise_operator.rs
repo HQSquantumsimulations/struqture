@@ -71,12 +71,12 @@ impl crate::SerializationSupport for MixedLindbladNoiseOperator {
 }
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedLindbladNoiseOperator {
-    fn schema_name() -> String {
-        "MixedLindbladNoiseOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedLindbladNoiseOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <MixedLindbladNoiseOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <MixedLindbladNoiseOperatorSerialize>::json_schema(generator)
     }
 }
 

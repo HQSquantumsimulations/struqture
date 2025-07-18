@@ -68,12 +68,12 @@ impl crate::SerializationSupport for PauliLindbladNoiseOperator {
 }
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliLindbladNoiseOperator {
-    fn schema_name() -> String {
-        "PlusMinusOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "PlusMinusOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <PauliLindbladNoiseOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <PauliLindbladNoiseOperatorSerialize>::json_schema(generator)
     }
 }
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]

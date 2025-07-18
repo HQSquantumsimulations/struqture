@@ -68,12 +68,12 @@ impl crate::SerializationSupport for FermionOperator {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionOperator {
-    fn schema_name() -> String {
-        "FermionOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "FermionOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <FermionOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <FermionOperatorSerialize>::json_schema(generator)
     }
 }
 

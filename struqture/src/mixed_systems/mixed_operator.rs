@@ -66,12 +66,12 @@ impl crate::SerializationSupport for MixedOperator {
 }
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedOperator {
-    fn schema_name() -> String {
-        "MixedOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <MixedOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <MixedOperatorSerialize>::json_schema(generator)
     }
 }
 

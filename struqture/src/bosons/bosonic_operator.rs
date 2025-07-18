@@ -64,12 +64,12 @@ impl crate::SerializationSupport for BosonOperator {
 }
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonOperator {
-    fn schema_name() -> String {
-        "BosonOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <BosonOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <BosonOperatorSerialize>::json_schema(generator)
     }
 }
 

@@ -553,15 +553,18 @@ fn bincode() {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&slos).unwrap();
-    let decoded: FermionLindbladOpenSystem = bincode::deserialize(&encoded[..]).unwrap();
+    let config = bincode::config::legacy();
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&slos, config).unwrap();
+    let (decoded, _len): (FermionLindbladOpenSystem, usize) =
+        bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(slos, decoded);
 
-    let encoded: Vec<u8> = bincode::serialize(&slos.clone().compact()).unwrap();
-    let decoded: FermionLindbladOpenSystem = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(slos.clone().compact(), config).unwrap();
+    let (decoded, _len): (FermionLindbladOpenSystem, usize) =
+        bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(slos, decoded);
 }
-
 /// Test FermionLindbladOpenSystem Serialization and Deserialization traits (compact)
 #[test]
 fn serde_compact() {
