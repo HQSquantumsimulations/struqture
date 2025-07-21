@@ -13,7 +13,6 @@
 use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::DecoherenceProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
-
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::ffi::c_str;
 use pyo3::prelude::*;

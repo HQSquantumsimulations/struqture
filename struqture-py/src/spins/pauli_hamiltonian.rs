@@ -14,7 +14,6 @@ use super::PauliOperatorWrapper;
 use crate::fermions::FermionHamiltonianWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
-
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::ffi::c_str;
 use pyo3::prelude::*;

@@ -12,7 +12,6 @@
 
 use crate::bosons::{BosonOperatorWrapper, HermitianBosonProductWrapper};
 use crate::spins::PauliOperatorWrapper;
-
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
