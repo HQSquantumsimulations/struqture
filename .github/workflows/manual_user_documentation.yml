@@ -22,7 +22,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip maturin
         pip install struqture-py/[docs]
-    - uses: peaceiris/actions-mdbook@v1
+    - uses: peaceiris/actions-mdbook@v2
       with:
         version: latest
     - name: build
