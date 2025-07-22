@@ -377,7 +377,7 @@ impl SpinIndex for PauliProduct {
     }
 
     // From trait
-    fn iter(&'_ self) -> std::slice::Iter<'_, (usize, SinglePauliOperator)> {
+    fn iter(&self) -> std::slice::Iter<'_, (usize, SinglePauliOperator)> {
         match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),

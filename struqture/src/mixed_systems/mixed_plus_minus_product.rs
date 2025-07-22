@@ -228,7 +228,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<PlusMinusProduct>` - The spin Products in Self.
-    pub fn spins(&'_ self) -> std::slice::Iter<'_, PlusMinusProduct> {
+    pub fn spins(&self) -> std::slice::Iter<'_, PlusMinusProduct> {
         self.spins.iter()
     }
 
@@ -237,7 +237,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<BosonProduct>` - The boson Products in Self.
-    pub fn bosons(&'_ self) -> std::slice::Iter<'_, BosonProduct> {
+    pub fn bosons(&self) -> std::slice::Iter<'_, BosonProduct> {
         self.bosons.iter()
     }
 
@@ -246,7 +246,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<FermionProduct>` - The fermion Products in Self.
-    pub fn fermions(&'_ self) -> std::slice::Iter<'_, FermionProduct> {
+    pub fn fermions(&self) -> std::slice::Iter<'_, FermionProduct> {
         self.fermions.iter()
     }
 

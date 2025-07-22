@@ -85,21 +85,21 @@ where
     /// # Returns
     ///
     /// * `Iter<Self::SpinIndexType>` - The spin Products in Self.
-    fn spins(&'_ self) -> std::slice::Iter<'_, Self::SpinIndexType>;
+    fn spins(&self) -> std::slice::Iter<'_, Self::SpinIndexType>;
 
     /// Gets the boson Products of Self.
     ///
     /// # Returns
     ///
     /// * `Iter<Self::BosonicIndexType>` - The boson Products in Self.
-    fn bosons(&'_ self) -> std::slice::Iter<'_, Self::BosonicIndexType>;
+    fn bosons(&self) -> std::slice::Iter<'_, Self::BosonicIndexType>;
 
     /// Gets the fermion Products of Self.
     ///
     /// # Returns
     ///
     /// * `Iter<Self::FermionicIndexType>` - The fermion Products in Self.
-    fn fermions(&'_ self) -> std::slice::Iter<'_, Self::FermionicIndexType>;
+    fn fermions(&self) -> std::slice::Iter<'_, Self::FermionicIndexType>;
 
     /// Returns the current number of spins each subsystem acts upon.
     ///

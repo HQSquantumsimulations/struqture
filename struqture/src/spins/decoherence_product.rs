@@ -438,7 +438,7 @@ impl SpinIndex for DecoherenceProduct {
     }
 
     // From trait
-    fn iter(&'_ self) -> std::slice::Iter<'_, (usize, SingleDecoherenceOperator)> {
+    fn iter(&self) -> std::slice::Iter<'_, (usize, SingleDecoherenceOperator)> {
         self.items.iter()
     }
 
