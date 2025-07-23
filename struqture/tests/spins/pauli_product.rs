@@ -415,12 +415,15 @@ fn bincode() {
     let mut pp = PauliProduct::new();
     pp = pp.set_pauli(0, SinglePauliOperator::X);
 
-    let encoded: Vec<u8> = bincode::serialize(&pp).unwrap();
-    let decoded: PauliProduct = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(pp, decoded);
+    let config = bincode::config::legacy();
+    let serialized = bincode::serde::encode_to_vec(&pp, config).unwrap();
+    let (deserialized, _len): (PauliProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, pp);
 
-    let encoded: Vec<u8> = bincode::serialize(&pp.clone().compact()).unwrap();
-    let decoded: PauliProduct = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(pp.clone().compact(), config).unwrap();
+    let (decoded, _len): (PauliProduct, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(pp, decoded);
 }
 
@@ -451,16 +454,21 @@ fn serde_compact() {
 fn bincode_single() {
     let spinop = SinglePauliOperator::X;
 
-    let encoded: Vec<u8> = bincode::serialize(&spinop).unwrap();
-    let decoded: SinglePauliOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(spinop.clone(), decoded);
+    let config = bincode::config::legacy();
 
-    let encoded: Vec<u8> = bincode::serialize(&spinop.compact()).unwrap();
-    let decoded: SinglePauliOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(spinop.clone(), decoded);
+    let serialized = bincode::serde::encode_to_vec(spinop, config).unwrap();
+    let (deserialized, _len): (SinglePauliOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, spinop);
 
-    let encoded: Vec<u8> = bincode::serialize(&spinop.readable()).unwrap();
-    let decoded: SinglePauliOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(spinop.compact(), config).unwrap();
+    let (decoded, _len): (SinglePauliOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
+    assert_eq!(spinop, decoded);
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(spinop.readable(), config).unwrap();
+    let (decoded, _len): (SinglePauliOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(spinop.clone(), decoded);
 }
 

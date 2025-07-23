@@ -175,7 +175,7 @@ pub fn productwrapper(
                 /// Raises:
                 ///    ValueError: Input reordering dictionary is not a permutation of the indices.
                 pub fn remap_modes(&self, reordering_dictionary: &Bound<PyAny>) -> PyResult<(#ident, qoqo_calculator_pyo3::CalculatorComplexWrapper)> {
-                    let remap_dict = reordering_dictionary.as_ref().extract::<HashMap<usize, usize>>()?;
+                    let remap_dict = reordering_dictionary.extract::<HashMap<usize, usize>>()?;
                     let (index, value) = self.internal.remap_modes(&remap_dict).map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
                     Ok((#ident{internal: index}, qoqo_calculator_pyo3::CalculatorComplexWrapper{internal: value}))
                 }
@@ -395,7 +395,6 @@ pub fn productwrapper(
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
-                        let input = input.as_ref();
                         let get_str = input.call_method0("__str__").map_err(|_| {
                             PyTypeError::new_err("Type conversion failed".to_string())
                         })?;
@@ -425,7 +424,6 @@ pub fn productwrapper(
             #[cfg(feature = "struqture_1_import")]
             pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
                 Python::with_gil(|py| -> PyResult<#struct_ident> {
-                    let input = input.as_ref();
                     let get_str = input.call_method0("__str__").map_err(|_| {
                         PyTypeError::new_err("Type conversion failed".to_string())
                     })?;
@@ -521,17 +519,16 @@ pub fn productwrapper(
             #[staticmethod]
             pub fn from_bincode(input: &Bound<PyAny>) -> PyResult<#ident> {
                 let bytes = input
-                    .as_ref()
                     .extract::<Vec<u8>>()
                     .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
-
+                let config = bincode::config::legacy();
                 Ok(#ident {
-                    internal: bincode::deserialize(&bytes[..]).map_err(|err| {
+                    internal: bincode::serde::decode_from_slice(&bytes[..], config).map_err(|err| {
                         PyValueError::new_err(format!(
                             "Input cannot be deserialized from bytes. {}",
                             err
                         ))
-                    })?,
+                    })?.0,
                 })
             }
 
@@ -543,7 +540,9 @@ pub fn productwrapper(
             /// Raises:
             ///     ValueError: Cannot serialize object to bytes.
             pub fn to_bincode(&self) -> PyResult<Py<PyByteArray>> {
-                let serialized = bincode::serialize(&self.internal).map_err(|_| {
+                let config = bincode::config::legacy();
+
+                let serialized = bincode::serde::encode_to_vec(&self.internal, config).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
                 let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {

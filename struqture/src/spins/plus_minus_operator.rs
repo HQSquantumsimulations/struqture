@@ -66,12 +66,12 @@ impl crate::SerializationSupport for PlusMinusOperator {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PlusMinusOperator {
-    fn schema_name() -> String {
-        "PlusMinusOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "PlusMinusOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <PlusMinusOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <PlusMinusOperatorSerialize>::json_schema(generator)
     }
 }
 

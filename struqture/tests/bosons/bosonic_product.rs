@@ -241,12 +241,17 @@ fn test_bincode(creators: &[usize], annihilators: &[usize]) {
     let annihilators = annihilators.to_vec();
     let test = BosonProduct::new(creators, annihilators).unwrap();
 
-    let serialized = bincode::serialize(&test).unwrap();
-    let deserialized: BosonProduct = bincode::deserialize(&serialized).unwrap();
+    let config = bincode::config::legacy();
+
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&test, config).unwrap();
+    let (deserialized, _len): (BosonProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(test, deserialized);
 
-    let serialized = bincode::serialize(&test.clone().compact()).unwrap();
-    let deserialized: BosonProduct = bincode::deserialize(&serialized).unwrap();
+    let serialized: Vec<u8> =
+        bincode::serde::encode_to_vec(test.clone().compact(), config).unwrap();
+    let (deserialized, _len): (BosonProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(test, deserialized);
 }
 

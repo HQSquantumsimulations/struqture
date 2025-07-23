@@ -60,16 +60,15 @@ pub struct MixedPlusMinusProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedPlusMinusProduct {
-    fn schema_name() -> String {
-        "MixedPlusMinusProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedPlusMinusProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  +, - and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0+1+:Bc0a1:Fc0a2:.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  +, - and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0+1+:Bc0a1:Fc0a2:."
+        })
     }
 }
 
@@ -229,7 +228,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<PlusMinusProduct>` - The spin Products in Self.
-    pub fn spins(&self) -> std::slice::Iter<PlusMinusProduct> {
+    pub fn spins(&self) -> std::slice::Iter<'_, PlusMinusProduct> {
         self.spins.iter()
     }
 
@@ -238,7 +237,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<BosonProduct>` - The boson Products in Self.
-    pub fn bosons(&self) -> std::slice::Iter<BosonProduct> {
+    pub fn bosons(&self) -> std::slice::Iter<'_, BosonProduct> {
         self.bosons.iter()
     }
 
@@ -247,7 +246,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<FermionProduct>` - The fermion Products in Self.
-    pub fn fermions(&self) -> std::slice::Iter<FermionProduct> {
+    pub fn fermions(&self) -> std::slice::Iter<'_, FermionProduct> {
         self.fermions.iter()
     }
 

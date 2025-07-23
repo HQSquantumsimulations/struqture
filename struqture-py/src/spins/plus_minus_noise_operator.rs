@@ -13,7 +13,6 @@
 use super::PauliLindbladNoiseOperatorWrapper;
 use crate::fermions::FermionLindbladNoiseOperatorWrapper;
 use crate::spins::PlusMinusProductWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;

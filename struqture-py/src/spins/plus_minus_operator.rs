@@ -15,7 +15,6 @@ use crate::{
     fermions::FermionOperatorWrapper,
     spins::{PauliOperatorWrapper, PlusMinusProductWrapper},
 };
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::ffi::c_str;
 use pyo3::prelude::*;
