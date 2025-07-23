@@ -38,6 +38,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc.js"></script>
@@ -94,10 +95,13 @@
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -148,7 +152,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -213,9 +222,11 @@
 <p>The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:</p>
 <pre><code class="language-python">from struqture_py.spins import PlusMinusProduct
 
-product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PlusMinusProducts
+product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PauliProducts
 product = "0+1-2Z"
 </code></pre>
+<p>Note that when using setter methods as in <code>PlusMinusProduct().z(0)</code>, the methods set the value of the operator acting on the corresponding spin and do not
+represent matrix multiplication, so that <code>PlusMinusProduct().z(0)</code> is equivalent to <code>PlusMinusProduct().z(0).z(0)</code>, the second call to the setter method <code>z(0)</code> having no effect.</p>
 <h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
 <p><code>PlusMinusOperators</code> represent operators such as:
 \[
@@ -376,6 +387,7 @@ operator.add_operator_product(("0+1Z", "0+2Z"), 1.0)
         <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
+
 
 
     </div>

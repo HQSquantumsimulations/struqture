@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py &mdash; struqture_py 2.1.1 documentation</title>
+  <title>struqture_py &mdash; struqture_py 2.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=261abb47"></script>
+      <script src="../_static/documentation_options.js?v=3c0dd04c"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -2908,6 +2908,10 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 matrices acting on qubits in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{x}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{z}\)</span>:</p>
 <p><cite>DecoherenceProduct().x(0).z(2)</cite>.</p>
+<p>Note that these methods are setters that set the decoherence operator acting on the corresponding spin,
+and do not represent matrix multiplication. For example</p>
+<p><cite>DecoherenceProduct().z(0).z(0)</cite></p>
+<p>will set the decoherence operator on spin 0 to Z and not to the identity.</p>
 <p>DecoherenceProduct is supposed to be used as input for the function <cite>add_noise</cite>,
 for instance in the spin system classes PauliLindbladOpenSystem or PauliLindbladNoiseOperator,
 or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_systems.MixedDecoherenceProduct&gt;</cite>.</p>
@@ -11042,6 +11046,10 @@ They are representations of products of pauli matrices acting on qubits,
 in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{x}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{x}\)</span> :</p>
 <p><cite>PauliProduct().x(0).x(2)</cite>.</p>
+<p>Note that these methods are setters that set the Pauli operator acting on the corresponding spin,
+and do not represent matrix multiplication. For example</p>
+<p><cite>PauliProduct().z(0).z(0)</cite></p>
+<p>will set the Pauli operator on spin 0 to Z and not to the identity.</p>
 <p>PauliProduct is  supposed to be used as input for the function <cite>set_pauli_product</cite>,
 for instance in the spin system classes PauliLindbladOpenSystem, PauliHamiltonian or PauliOperator,
 or in the mixed systems as part of <cite>MixedProduct &lt;mixed_systems.MixedProduct&gt;</cite>
@@ -12273,6 +12281,10 @@ They are representations of products of pauli matrices acting on qubits,
 in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{+}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{+}\)</span> :</p>
 <p><cite>PlusMinusProduct().plus(0).plus(2)</cite>.</p>
+<p>Note that these methods are setters that set the operator acting on the corresponding spin,
+and do not represent matrix multiplication. For example</p>
+<p><cite>PlusMinusProduct().plus(0).plus(0)</cite></p>
+<p>will set the operator on spin 0 to :math: <cite>sigma_0^{+}</cite> and does not give the zero vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The new, empty PlusMinusProduct.</p>

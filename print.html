@@ -39,6 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -95,10 +96,13 @@
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -149,7 +153,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -307,7 +316,9 @@ PauliProducts are combinations of SinglePauliOperators on specific spin indices.
 <p>DecoherenceProducts are products of a decoherence operators acting on single spins. These <code>SingleDecoherenceOperators</code>
 are almost identical to the <code>SinglePauliOperators</code> with the exception of an additional \(i\) factor and are well suited to represent decoherence properties</p>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.</p>
+<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.
+Note that when using setter methods as in <code>PauliProduct().x(0)</code>, the methods set the value of the Pauli operator acting on the corresponding spin and do not
+represent matrix multiplication, so that <code>PauliProduct().x(0)</code> is equivalent to <code>PauliProduct().x(0).x(0)</code>, the second call to the setter method <code>x(0)</code> having no effect.</p>
 <pre><code class="language-python">from struqture_py.spins import PauliProduct, DecoherenceProduct
 
 # We can build single-spin terms:
@@ -575,9 +586,11 @@ print(python_coo.todense())
 <p>The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:</p>
 <pre><code class="language-python">from struqture_py.spins import PlusMinusProduct
 
-product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PlusMinusProducts
+product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PauliProducts
 product = "0+1-2Z"
 </code></pre>
+<p>Note that when using setter methods as in <code>PlusMinusProduct().z(0)</code>, the methods set the value of the operator acting on the corresponding spin and do not
+represent matrix multiplication, so that <code>PlusMinusProduct().z(0)</code> is equivalent to <code>PlusMinusProduct().z(0).z(0)</code>, the second call to the setter method <code>z(0)</code> having no effect.</p>
 <h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
 <p><code>PlusMinusOperators</code> represent operators such as:
 \[
@@ -1434,6 +1447,7 @@ hamiltonian.add_operator_product(hmp, CalculatorComplex.from_pair("parameter", 0
             });
         });
         </script>
+
 
     </div>
     </body>
