@@ -460,12 +460,16 @@ fn bincode() {
     let mut dp = DecoherenceProduct::new();
     dp = dp.set_pauli(0, SingleDecoherenceOperator::X);
 
-    let encoded: Vec<u8> = bincode::serialize(&dp).unwrap();
-    let decoded: DecoherenceProduct = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(dp, decoded);
+    let config = bincode::config::legacy();
 
-    let encoded: Vec<u8> = bincode::serialize(&dp.clone().compact()).unwrap();
-    let decoded: DecoherenceProduct = bincode::deserialize(&encoded[..]).unwrap();
+    let serialized = bincode::serde::encode_to_vec(&dp, config).unwrap();
+    let (deserialized, _len): (DecoherenceProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, dp);
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(dp.clone().compact(), config).unwrap();
+    let (decoded, _len): (DecoherenceProduct, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(dp, decoded);
 }
 

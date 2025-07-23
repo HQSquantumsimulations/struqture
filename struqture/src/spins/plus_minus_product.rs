@@ -438,16 +438,15 @@ pub struct PlusMinusProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PlusMinusProduct {
-    fn schema_name() -> String {
-        "struqture::spins::PlusMinusProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::PlusMinusProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Plus Minus Spin Operators (Plus, Minus, Z) by a string of spin numbers followed by pauli operators. E.g. 0+10-13Z14+.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Plus Minus Spin Operators (Plus, Minus, Z) by a string of spin numbers followed by pauli operators. E.g. 0+10-13Z14+."
+        })
     }
 }
 
@@ -645,7 +644,7 @@ impl PlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<usize, SinglePlusMinusOperator>` - The iterator form of Self.
-    pub fn iter(&self) -> std::slice::Iter<(usize, SinglePlusMinusOperator)> {
+    pub fn iter(&self) -> std::slice::Iter<'_, (usize, SinglePlusMinusOperator)> {
         match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),

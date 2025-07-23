@@ -548,12 +548,15 @@ fn bincode() {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&slos).unwrap();
-    let decoded: PauliLindbladOpenSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(slos, decoded);
+    let config = bincode::config::legacy();
+    let serialized = bincode::serde::encode_to_vec(&slos, config).unwrap();
+    let (deserialized, _len): (PauliLindbladOpenSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(deserialized, slos);
 
-    let encoded: Vec<u8> = bincode::serialize(&slos.clone().compact()).unwrap();
-    let decoded: PauliLindbladOpenSystem = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(slos.clone().compact(), config).unwrap();
+    let (decoded, _len): (PauliLindbladOpenSystem, usize) =
+        bincode::serde::decode_from_slice(&encoded, config).unwrap();
     assert_eq!(slos, decoded);
 }
 

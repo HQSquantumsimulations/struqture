@@ -35,6 +35,13 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///
 /// `DecoherenceProduct().x(0).z(2)`.
 ///
+/// Note that these methods are setters that set the decoherence operator acting on the corresponding spin,
+/// and do not represent matrix multiplication. For example
+///
+/// `DecoherenceProduct().z(0).z(0)`
+///
+/// will set the decoherence operator on spin 0 to Z and not to the identity.
+///
 /// DecoherenceProduct is supposed to be used as input for the function `add_noise`,
 /// for instance in the spin system classes PauliLindbladOpenSystem or PauliLindbladNoiseOperator,
 /// or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.

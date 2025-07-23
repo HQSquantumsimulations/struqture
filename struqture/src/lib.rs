@@ -39,113 +39,6 @@ pub const STRUQTURE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const CURRENT_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
 pub const MINIMUM_STRUQTURE_VERSION: (u32, u32, u32) = (2, 0, 0);
 use tinyvec::TinyVec;
-#[derive(
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Default,
-    Debug,
-    serde::Serialize,
-    serde::Deserialize,
-)]
-#[serde(try_from = "StruqtureVersionSerializable")]
-#[serde(into = "StruqtureVersionSerializable")]
-struct StruqtureVersion;
-
-#[derive(
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Debug,
-    Default,
-    serde::Serialize,
-    serde::Deserialize,
-)]
-#[cfg_attr(feature = "json_schema", derive(schemars::JsonSchema))]
-/// # StruqtureVersion
-///
-/// The minimal version of struqture needed to deserialize this object.
-struct StruqtureVersionSerializable {
-    /// The semver major version of struqture
-    major_version: u32,
-    /// The semver minor version of struqture
-    minor_version: u32,
-}
-
-impl TryFrom<StruqtureVersionSerializable> for StruqtureVersion {
-    type Error = StruqtureError;
-
-    fn try_from(value: StruqtureVersionSerializable) -> Result<Self, Self::Error> {
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-        if major_version != value.major_version {
-            return Err(StruqtureError::VersionMismatch {
-                library_major_version: major_version,
-                library_minor_version: minor_version,
-                data_major_version: value.major_version,
-                data_minor_version: value.minor_version,
-            });
-        }
-        if major_version == 0 {
-            if minor_version != value.minor_version {
-                return Err(StruqtureError::VersionMismatch {
-                    library_major_version: major_version,
-                    library_minor_version: minor_version,
-                    data_major_version: value.major_version,
-                    data_minor_version: value.minor_version,
-                });
-            }
-        } else if minor_version < value.minor_version {
-            return Err(StruqtureError::VersionMismatch {
-                library_major_version: major_version,
-                library_minor_version: minor_version,
-                data_major_version: value.major_version,
-                data_minor_version: value.minor_version,
-            });
-        }
-
-        Ok(StruqtureVersion)
-    }
-}
-
-impl From<StruqtureVersion> for StruqtureVersionSerializable {
-    fn from(_: StruqtureVersion) -> Self {
-        let mut rsplit = STRUQTURE_VERSION.split('.').take(2);
-        let major_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Major version is not unsigned integer.");
-        let minor_version = u32::from_str(
-            rsplit
-                .next()
-                .expect("Internal error: Version not conforming to semver"),
-        )
-        .expect("Internal error: Minor version is not unsigned integer.");
-        StruqtureVersionSerializable {
-            major_version,
-            minor_version,
-        }
-    }
-}
 
 /// Errors that can occur in struqture.
 #[derive(Debug, Error, PartialEq)]
@@ -345,7 +238,7 @@ where
     /// # Returns
     ///
     /// * `Iter<usize, SingleSpinType>` - The iterator form of Self.
-    fn iter(&self) -> std::slice::Iter<(usize, Self::SingleSpinType)>;
+    fn iter(&self) -> std::slice::Iter<'_, (usize, Self::SingleSpinType)>;
 
     /// Returns maximum index in Self.
     ///
@@ -456,14 +349,14 @@ pub trait ModeIndex:
     /// # Returns
     ///
     /// * `Iter<usize>` - The creator indices in Self.
-    fn creators(&self) -> std::slice::Iter<usize>;
+    fn creators(&self) -> std::slice::Iter<'_, usize>;
 
     /// Gets the annihilator indices of Self.
     ///
     /// # Returns
     ///
     /// * `Iter<usize>` - The annihilator indices in Self.
-    fn annihilators(&self) -> std::slice::Iter<usize>;
+    fn annihilators(&self) -> std::slice::Iter<'_, usize>;
 
     // Document locally
     fn create_valid_pair(

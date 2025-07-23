@@ -63,12 +63,12 @@ impl crate::SerializationSupport for PauliOperator {
 }
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliOperator {
-    fn schema_name() -> String {
-        "PauliOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "PauliOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <PauliOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <PauliOperatorSerialize>::json_schema(generator)
     }
 }
 

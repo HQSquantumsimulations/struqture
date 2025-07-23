@@ -12,7 +12,6 @@
 
 //! Integration test for public API of BosonOperator
 
-use bincode::{deserialize, serialize};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
@@ -418,12 +417,16 @@ fn bincode() {
     let mut so = BosonOperator::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
-    let serialized = serialize(&so).unwrap();
-    let deserialized: BosonOperator = deserialize(&serialized).unwrap();
-    assert_eq!(deserialized, so);
+    let config = bincode::config::legacy();
 
-    let encoded: Vec<u8> = bincode::serialize(&so.clone().compact()).unwrap();
-    let decoded: BosonOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&so, config).unwrap();
+    let (deserialized, _len): (BosonOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(so, deserialized);
+
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(so.clone().compact(), config).unwrap();
+    let (decoded, _len): (BosonOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(so, decoded);
 }
 

@@ -53,16 +53,15 @@ pub struct BosonProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonProduct {
-    fn schema_name() -> String {
-        "BosonProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -212,12 +211,12 @@ impl ModeIndex for BosonProduct {
     }
 
     // From trait
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
     // From trait
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -661,16 +660,15 @@ pub struct HermitianBosonProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for HermitianBosonProduct {
-    fn schema_name() -> String {
-        "HermitianBosonProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "HermitianBosonProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -847,7 +845,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The creator indices in the HermitianBosonProduct.
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
@@ -856,7 +854,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The annihilator indices in the HermitianBosonProduct.
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 

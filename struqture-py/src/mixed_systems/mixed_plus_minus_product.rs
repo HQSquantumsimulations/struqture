@@ -10,6 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use super::MixedProductWrapper;
 use crate::bosons::*;
 use crate::fermions::*;
 use crate::spins::*;
@@ -26,13 +27,11 @@ use struqture::bosons::BosonProduct;
 use struqture::fermions::FermionProduct;
 use struqture::mixed_systems::*;
 use struqture::spins::PlusMinusProduct;
-use struqture::SymmetricIndex;
-use struqture_py_macros::product_wrapper;
-
-use super::MixedProductWrapper;
 use struqture::SerializationSupport;
+use struqture::SymmetricIndex;
 #[cfg(feature = "json_schema")]
 use struqture::STRUQTURE_VERSION;
+use struqture_py_macros::product_wrapper;
 
 /// A mixed product of pauli products and boson products.
 ///

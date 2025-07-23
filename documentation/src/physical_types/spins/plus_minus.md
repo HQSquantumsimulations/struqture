@@ -42,9 +42,12 @@ The following lines of code are equivalent ways to represent these matrices acti
 ```python
 from struqture_py.spins import PlusMinusProduct
 
-product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PlusMinusProducts
+product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PauliProducts
 product = "0+1-2Z"
 ```
+
+Note that when using setter methods as in `PlusMinusProduct().z(0)`, the methods set the value of the operator acting on the corresponding spin and do not 
+represent matrix multiplication, so that `PlusMinusProduct().z(0)` is equivalent to `PlusMinusProduct().z(0).z(0)`, the second call to the setter method `z(0)` having no effect.
 
 ## Operators
 

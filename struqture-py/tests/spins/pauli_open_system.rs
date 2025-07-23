@@ -399,7 +399,7 @@ fn test_default_partialeq_debug_clone() {
 
         let comparison = bool::extract_bound(
             &comp_op_ungroup
-                .call_method1("__eq__", ((&spin_system, noise.as_ref()),))
+                .call_method1("__eq__", ((&spin_system, noise.clone()),))
                 .unwrap(),
         )
         .unwrap();
@@ -1254,13 +1254,18 @@ fn test_to_from_bincode() {
         let serialised = system.call_method0("to_bincode").unwrap();
         let new = new_system(py);
         let deserialised = new.call_method1("from_bincode", (&serialised,)).unwrap();
+        let config = bincode::config::legacy();
 
-        let deserialised_error =
-            new.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
+        let deserialised_error = new.call_method1(
+            "from_bincode",
+            (bincode::serde::encode_to_vec("fails", config).unwrap(),),
+        );
         assert!(deserialised_error.is_err());
 
-        let deserialised_error =
-            new.call_method1("from_bincode", (bincode::serialize(&vec![0]).unwrap(),));
+        let deserialised_error = new.call_method1(
+            "from_bincode",
+            (bincode::serde::encode_to_vec(vec![0], config).unwrap(),),
+        );
         assert!(deserialised_error.is_err());
 
         let deserialised_error = deserialised.call_method0("from_bincode");

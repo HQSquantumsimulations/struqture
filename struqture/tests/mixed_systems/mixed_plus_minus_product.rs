@@ -12,7 +12,6 @@
 
 //! Integration test for public API of mixed indices
 
-use bincode::{deserialize, serialize};
 use itertools::Itertools;
 use num_complex::Complex64;
 use serde_test::{assert_tokens, Configure, Token};
@@ -151,8 +150,10 @@ fn serialize_bincode(
         FermionProduct::new(fermion_creators.to_vec(), fermion_annihilators.to_vec()).unwrap();
     let test_new: MixedPlusMinusProduct = MixedPlusMinusProduct::new([spins], [bosons], [fermions]);
 
-    let serialized = serialize(&test_new).unwrap();
-    let deserialized: MixedPlusMinusProduct = deserialize(&serialized).unwrap();
+    let config = bincode::config::legacy();
+    let serialized = bincode::serde::encode_to_vec(&test_new, config).unwrap();
+    let (deserialized, _len): (MixedPlusMinusProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(test_new, deserialized);
 }
 
