@@ -1,10 +1,6 @@
 [package]
 name = "struqture"
-<<<<<<< HEAD
-version = "2.1.1"
-=======
 version = "2.2.0"
->>>>>>> 1bec2b7b4775b274556b19f1ee7689dd06547702
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.76"
