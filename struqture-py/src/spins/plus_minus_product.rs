@@ -129,8 +129,7 @@ impl PlusMinusProductWrapper {
     pub fn set_pauli(&self, index: usize, pauli: String) -> PyResult<Self> {
         let converted_pauli = SinglePlusMinusOperator::from_str(pauli.as_str()).map_err(|err| {
             PyValueError::new_err(format!(
-                "pauli could not be converted to X, Y, Z: {:?}",
-                err
+                "pauli could not be converted to X, Y, Z: {err:?}"
             ))
         })?;
         Ok(Self {
@@ -146,7 +145,7 @@ impl PlusMinusProductWrapper {
     /// Returns:
     ///     Optional[str]: The key's corresponding value (if it exists).
     pub fn get(&self, index: usize) -> Option<String> {
-        self.internal.get(&index).map(|x| format!("{}", x))
+        self.internal.get(&index).map(|x| format!("{x}"))
     }
 
     /// Return a list of the unsorted keys in self.
@@ -200,8 +199,7 @@ impl PlusMinusProductWrapper {
     pub fn concatenate(&self, other: PlusMinusProductWrapper) -> PyResult<PlusMinusProductWrapper> {
         let concatenated = self.internal.concatenate(other.internal).map_err(|err| {
             PyValueError::new_err(format!(
-                "The two objects could not be concatenated: {:?}",
-                err
+                "The two objects could not be concatenated: {err:?}"
             ))
         })?;
         Ok(PlusMinusProductWrapper {

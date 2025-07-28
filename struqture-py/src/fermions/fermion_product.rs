@@ -74,7 +74,7 @@ impl FermionProductWrapper {
     pub fn new(creators: Vec<usize>, annihilators: Vec<usize>) -> PyResult<Self> {
         Ok(Self {
             internal: FermionProduct::new(creators, annihilators).map_err(|err| {
-                PyValueError::new_err(format!("Could not construct FermionProduct: {:?}", err))
+                PyValueError::new_err(format!("Could not construct FermionProduct: {err:?}"))
             })?,
         })
     }

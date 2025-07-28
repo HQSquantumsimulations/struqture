@@ -148,15 +148,13 @@ impl MixedHamiltonianSystemWrapper {
                     Ok(x) => {
                         let new_self = (self.clone().internal * x).map_err(|err| {
                             PyValueError::new_err(format!(
-                                "MixedHamiltonianSystems could not be multiplied: {:?}",
-                                err
+                                "MixedHamiltonianSystems could not be multiplied: {err:?}"
                             ))
                         })?;
                         Ok(MixedSystemWrapper { internal: new_self })
                     },
                     Err(err) => Err(PyValueError::new_err(format!(
-                        "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonianSystem: {:?}",
-                        err)))
+                        "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedHamiltonianSystem: {err:?}")))
                 }
             }
         }

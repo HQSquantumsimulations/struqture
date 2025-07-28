@@ -127,14 +127,14 @@ impl<'de> Deserialize<'de> for BosonProduct {
                 where
                     E: serde::de::Error,
                 {
-                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
-                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -205,12 +205,12 @@ impl ModeIndex for BosonProduct {
     }
 
     // From trait
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
     // From trait
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -477,13 +477,13 @@ impl std::fmt::Display for BosonProduct {
             string.push('I');
         } else {
             for index in self.creators() {
-                string.push_str(format!("c{}", index).as_str());
+                string.push_str(format!("c{index}").as_str());
             }
             for index in self.annihilators() {
-                string.push_str(format!("a{}", index).as_str());
+                string.push_str(format!("a{index}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -516,10 +516,10 @@ impl FromStr for BosonProduct {
                         match op{
                             "c" => {if parsing_creators{ creators.push(num);} else{return Err(StruqtureError::IndicesNotNormalOrdered{index_i: num, index_j: num+1})}}
                             "a" => {annihilators.push(num); parsing_creators = false;}
-                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {} that is neither 'c' nor 'a' in BosonProduct::from_str", op)})
+                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {op} that is neither 'c' nor 'a' in BosonProduct::from_str")})
                         }
                     }
-                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {}", index)}),
+                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {index}")}),
                 }
             }
             Self::new(creators, annihilators)
@@ -632,16 +632,14 @@ impl<'de> Deserialize<'de> for HermitianBosonProduct {
                 where
                     E: serde::de::Error,
                 {
-                    HermitianBosonProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                    HermitianBosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
-                    HermitianBosonProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                    HermitianBosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -739,7 +737,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The creator indices in the HermitianBosonProduct.
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
@@ -748,7 +746,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The annihilator indices in the HermitianBosonProduct.
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -1134,13 +1132,13 @@ impl std::fmt::Display for HermitianBosonProduct {
             string.push('I'); // Empty is just identity
         } else {
             for index in self.creators() {
-                string.push_str(format!("c{}", index).as_str());
+                string.push_str(format!("c{index}").as_str());
             }
             for index in self.annihilators() {
-                string.push_str(format!("a{}", index).as_str());
+                string.push_str(format!("a{index}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -1175,10 +1173,10 @@ impl FromStr for HermitianBosonProduct {
                         match op{
                             "c" => {if parsing_creators{ creators.push(num);} else{return Err(StruqtureError::IndicesNotNormalOrdered{index_i: num, index_j: num+1})}}
                             "a" => {annihilators.push(num); parsing_creators = false;}
-                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {} that is neither 'c' nor 'a' in HermitianBosonProduct::from_str", op)})
+                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {op} that is neither 'c' nor 'a' in HermitianBosonProduct::from_str")})
                         }
                     }
-                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {}", index)}),
+                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {index}")}),
                 }
             }
             Self::new(creators, annihilators)

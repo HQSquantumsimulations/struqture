@@ -126,8 +126,7 @@ impl SpinSystemWrapper {
                                 Ok(Self { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinSystem: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinSystem: {err:?}")))
                         }
                     }
                 }

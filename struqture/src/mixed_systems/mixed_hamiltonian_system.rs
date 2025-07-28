@@ -751,17 +751,17 @@ impl fmt::Display for MixedHamiltonianSystem {
         let mut output = "MixedHamiltonianSystem(\n".to_string();
         output.push_str("number_spins: ");
         for n in self.number_spins() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_bosons: ");
         for n in self.number_bosonic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_fermions: ");
         for n in self.number_fermionic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push_str(")\n");
         output.push('{');
@@ -772,10 +772,10 @@ impl fmt::Display for MixedHamiltonianSystem {
                 .expect("Cannot compare two unsigned integers internal error in struqture.spins")
         });
         for (key, val) in vec {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }

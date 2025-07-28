@@ -96,7 +96,7 @@ impl PlusMinusOperatorWrapper {
                     Ok(x) => Ok(Self {
                         internal: self.clone().internal * x,
                     }),
-                    Err(err) => Err(PyValueError::new_err(format!("The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {:?}", err)))
+                    Err(err) => Err(PyValueError::new_err(format!("The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {err:?}")))
                 }
             }
         }
@@ -161,7 +161,7 @@ impl PlusMinusOperatorWrapper {
         let result = self
             .internal
             .separate_into_n_terms(number_spins)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok((
             PlusMinusOperatorWrapper { internal: result.0 },
             PlusMinusOperatorWrapper { internal: result.1 },
@@ -181,7 +181,7 @@ impl PlusMinusOperatorWrapper {
     #[staticmethod]
     pub fn from_spin_system(value: &Bound<PyAny>) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinSystemWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PlusMinusOperatorWrapper {
             internal: PlusMinusOperator::from(system.operator().clone()),
         })
@@ -202,7 +202,7 @@ impl PlusMinusOperatorWrapper {
         value: &Bound<PyAny>,
     ) -> PyResult<PlusMinusOperatorWrapper> {
         let system = SpinHamiltonianSystemWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PlusMinusOperatorWrapper {
             internal: PlusMinusOperator::from(system.hamiltonian().clone()),
         })
@@ -223,7 +223,7 @@ impl PlusMinusOperatorWrapper {
         let result: SpinOperator = SpinOperator::from(self.internal.clone());
         Ok(SpinSystemWrapper {
             internal: SpinSystem::from_operator(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 
@@ -243,10 +243,10 @@ impl PlusMinusOperatorWrapper {
         number_spins: Option<usize>,
     ) -> PyResult<SpinHamiltonianSystemWrapper> {
         let result: SpinHamiltonian = SpinHamiltonian::try_from(self.internal.clone())
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(SpinHamiltonianSystemWrapper {
             internal: SpinHamiltonianSystem::from_hamiltonian(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 }

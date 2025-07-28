@@ -126,8 +126,7 @@ impl DecoherenceProductWrapper {
         let converted_pauli =
             SingleDecoherenceOperator::from_str(pauli.as_str()).map_err(|err| {
                 PyValueError::new_err(format!(
-                    "pauli could not be converted to X, iY, Z: {:?}",
-                    err
+                    "pauli could not be converted to X, iY, Z: {err:?}"
                 ))
             })?;
         Ok(Self {

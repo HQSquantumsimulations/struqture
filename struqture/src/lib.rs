@@ -341,7 +341,7 @@ where
     /// # Returns
     ///
     /// * `Iter<usize, SingleSpinType>` - The iterator form of Self.
-    fn iter(&self) -> std::slice::Iter<(usize, Self::SingleSpinType)>;
+    fn iter(&self) -> std::slice::Iter<'_, (usize, Self::SingleSpinType)>;
 
     /// Returns maximum index in Self.
     ///
@@ -452,14 +452,14 @@ pub trait ModeIndex:
     /// # Returns
     ///
     /// * `Iter<usize>` - The creator indices in Self.
-    fn creators(&self) -> std::slice::Iter<usize>;
+    fn creators(&self) -> std::slice::Iter<'_, usize>;
 
     /// Gets the annihilator indices of Self.
     ///
     /// # Returns
     ///
     /// * `Iter<usize>` - The annihilator indices in Self.
-    fn annihilators(&self) -> std::slice::Iter<usize>;
+    fn annihilators(&self) -> std::slice::Iter<'_, usize>;
 
     // Document locally
     fn create_valid_pair(

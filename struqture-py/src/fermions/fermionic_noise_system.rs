@@ -97,7 +97,7 @@ impl FermionLindbladNoiseSystemWrapper {
                 number_creators_annihilators_left,
                 number_creators_annihilators_right,
             )
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok((
             Self {
                 internal: separated,

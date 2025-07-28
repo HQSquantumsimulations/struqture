@@ -719,7 +719,7 @@ impl fmt::Display for MixedLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

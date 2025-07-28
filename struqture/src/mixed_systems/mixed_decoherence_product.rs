@@ -138,7 +138,7 @@ impl<'de> Deserialize<'de> for MixedDecoherenceProduct {
                     E: serde::de::Error,
                 {
                     MixedDecoherenceProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                        .map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<MixedDecoherenceProduct, E>
@@ -146,7 +146,7 @@ impl<'de> Deserialize<'de> for MixedDecoherenceProduct {
                     E: serde::de::Error,
                 {
                     MixedDecoherenceProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                        .map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -229,17 +229,17 @@ impl MixedIndex for MixedDecoherenceProduct {
     }
 
     // From trait
-    fn spins(&self) -> std::slice::Iter<DecoherenceProduct> {
+    fn spins(&self) -> std::slice::Iter<'_, DecoherenceProduct> {
         self.spins.iter()
     }
 
     // From trait
-    fn bosons(&self) -> std::slice::Iter<BosonProduct> {
+    fn bosons(&self) -> std::slice::Iter<'_, BosonProduct> {
         self.bosons.iter()
     }
 
     // From trait
-    fn fermions(&self) -> std::slice::Iter<FermionProduct> {
+    fn fermions(&self) -> std::slice::Iter<'_, FermionProduct> {
         self.fermions.iter()
     }
 
@@ -302,8 +302,7 @@ impl FromStr for MixedDecoherenceProduct {
                 return Err(StruqtureError::ParsingError {
                     target_type: "MixedIndex".to_string(),
                     msg: format!(
-                        "Encountered subsystem that is neither spin, boson nor fermion: {}",
-                        subsystem
+                        "Encountered subsystem that is neither spin, boson nor fermion: {subsystem}"
                     ),
                 });
             }
@@ -533,15 +532,15 @@ impl std::fmt::Display for MixedDecoherenceProduct {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string: String = String::new();
         for spin in self.spins() {
-            string.push_str(format!("S{}:", spin).as_str());
+            string.push_str(format!("S{spin}:").as_str());
         }
         for boson in self.bosons() {
-            string.push_str(format!("B{}:", boson).as_str());
+            string.push_str(format!("B{boson}:").as_str());
         }
         for fermion in self.fermions() {
-            string.push_str(format!("F{}:", fermion).as_str());
+            string.push_str(format!("F{fermion}:").as_str());
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

@@ -72,8 +72,7 @@ impl HermitianBosonProductWrapper {
         Ok(Self {
             internal: HermitianBosonProduct::new(creators, annihilators).map_err(|err| {
                 PyValueError::new_err(format!(
-                    "Could not construct HermitianBosonProduct: {:?}",
-                    err
+                    "Could not construct HermitianBosonProduct: {err:?}"
                 ))
             })?,
         })

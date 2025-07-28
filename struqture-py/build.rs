@@ -76,7 +76,7 @@ fn collect_args_from_doc(doc: &str, class_name: &str) -> Vec<String> {
                 "{}{}",
                 line.trim().split_once([' ', ':']).unwrap_or(("", "")).0,
                 arg_type
-                    .map(|arg_type| format!(": {}", arg_type))
+                    .map(|arg_type| format!(": {arg_type}"))
                     .unwrap_or_default()
             )
         })
@@ -98,7 +98,7 @@ fn collect_return_from_doc(doc: &str, class_name: &str) -> String {
         args_vec[0].trim().split_once([':']).unwrap_or(("", "")).0,
         class_name,
     ) {
-        format!(" -> {}", ret)
+        format!(" -> {ret}")
     } else {
         "".to_owned()
     }
@@ -113,11 +113,8 @@ fn create_doc(module: &str) -> PyResult<String> {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| -> PyResult<String> {
         let python_module = PyModule::import(py, module)?;
-        let dict = python_module.as_ref().getattr("__dict__")?;
-        let module_doc = python_module
-            .as_ref()
-            .getattr("__doc__")?
-            .extract::<String>()?;
+        let dict = python_module.getattr("__dict__")?;
+        let module_doc = python_module.getattr("__doc__")?.extract::<String>()?;
         let r_dict = dict.downcast::<PyDict>()?;
         for (fn_name, func) in r_dict.iter() {
             let name = fn_name.str()?.extract::<String>()?;
@@ -129,12 +126,12 @@ fn create_doc(module: &str) -> PyResult<String> {
             main_doc.push_str(&format!(
                     "class {name}{}:\n    \"\"\"\n{doc}\n\"\"\"\n\n    def __init__(self{}):\n       return\n\n",
                     if name.contains("Product") { "(ProductType)"} else if name.contains("System") { "(SystemType)"} else if name.contains("Noise") { "(NoiseType)"} else { "" },
-                    if args.is_empty() { "".to_owned() } else { format!(", {}", args) },
+                    if args.is_empty() { "".to_owned() } else { format!(", {args}") },
                 ));
             let class_dict = func.getattr("__dict__")?;
             let items = class_dict.call_method0("items")?;
             let dict_obj = py.import("builtins")?.call_method1("dict", (items,))?;
-            let class_r_dict = dict_obj.as_ref().downcast::<PyDict>()?;
+            let class_r_dict = dict_obj.downcast::<PyDict>()?;
             for (class_fn_name, meth) in class_r_dict.iter() {
                 let meth_name = class_fn_name.str()?.extract::<String>()?;
                 let meth_doc = if meth_name.as_str().starts_with("__") {
@@ -156,7 +153,7 @@ fn create_doc(module: &str) -> PyResult<String> {
                 let meth_args = collect_args_from_doc(meth_doc.as_str(), name.as_str()).join(", ");
                 main_doc.push_str(&format!(
                         "    def {meth_name}(self{}){}: # type: ignore\n        \"\"\"\n{meth_doc}\n\"\"\"\n\n",
-                        if meth_args.is_empty() { "".to_owned() } else { format!(", {}", meth_args) },
+                        if meth_args.is_empty() { "".to_owned() } else { format!(", {meth_args}") },
                         collect_return_from_doc(
                             meth_doc.as_str(),
                             name.as_str(),
@@ -188,7 +185,7 @@ fn main() {
         for &module in ["spins", "mixed_systems", "fermions", "bosons"].iter() {
             let qoqo_doc = create_doc(&format!("struqture_py.{module}"))
                 .expect("Could not generate documentation.");
-            let out_dir = std::path::PathBuf::from(format!("struqture_py/{}.pyi", module));
+            let out_dir = std::path::PathBuf::from(format!("struqture_py/{module}.pyi"));
             std::fs::write(&out_dir, qoqo_doc).expect("Could not write to file");
         }
     }

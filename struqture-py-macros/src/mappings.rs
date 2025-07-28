@@ -57,7 +57,7 @@ fn jordan_wigner_spin_to_fermion_quote(
         let output_type;
 
         if struct_name.contains("System") {
-            let mut output_wrapper_name = format!("{}Wrapper", struct_name);
+            let mut output_wrapper_name = format!("{struct_name}Wrapper");
             output_wrapper_name = output_wrapper_name.replace("Spin", "Fermion");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
 
@@ -112,7 +112,7 @@ fn jordan_wigner_fermion_to_spin_quote(
         let from_method;
 
         if struct_name.contains("System") {
-            let mut output_wrapper_name = format!("{}Wrapper", struct_name);
+            let mut output_wrapper_name = format!("{struct_name}Wrapper");
             output_wrapper_name = output_wrapper_name.replace("Fermion", "Spin");
             output_wrapper_type = quote::format_ident!("{}", output_wrapper_name);
 

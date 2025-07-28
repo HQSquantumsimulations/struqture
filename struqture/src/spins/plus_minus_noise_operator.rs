@@ -642,7 +642,7 @@ impl fmt::Display for PlusMinusLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

@@ -520,14 +520,14 @@ impl<'de> Deserialize<'de> for PlusMinusProduct {
                 where
                     E: serde::de::Error,
                 {
-                    PlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    PlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: Error,
                 {
-                    PlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    PlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -645,7 +645,7 @@ impl PlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<usize, SinglePlusMinusOperator>` - The iterator form of Self.
-    pub fn iter(&self) -> std::slice::Iter<(usize, SinglePlusMinusOperator)> {
+    pub fn iter(&self) -> std::slice::Iter<'_, (usize, SinglePlusMinusOperator)> {
         match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
@@ -903,10 +903,7 @@ impl FromStr for PlusMinusProduct {
         } else {
             if !s.starts_with(char::is_numeric) {
                 return Err(StruqtureError::FromStringFailed {
-                    msg: format!(
-                        "Missing spin index in the following PlusMinusProduct: {}",
-                        s
-                    ),
+                    msg: format!("Missing spin index in the following PlusMinusProduct: {s}"),
                 });
             }
             let mut internal: TinyVec<[(usize, SinglePlusMinusOperator); 5]> =
@@ -932,10 +929,7 @@ impl FromStr for PlusMinusProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {} instead of unsigned integer as spin index",
-                                index
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }
@@ -979,11 +973,11 @@ impl fmt::Display for PlusMinusProduct {
             string.push('I');
         } else {
             for (index, pauli) in self.items.iter() {
-                string.push_str(format!("{}", index).as_str());
-                string.push_str(format!("{}", pauli).as_str());
+                string.push_str(format!("{index}").as_str());
+                string.push_str(format!("{pauli}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

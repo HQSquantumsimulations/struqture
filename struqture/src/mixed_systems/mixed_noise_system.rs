@@ -866,17 +866,17 @@ impl fmt::Display for MixedLindbladNoiseSystem {
         let mut output = "MixedLindbladNoiseSystem(\n".to_string();
         output.push_str("number_spins: ");
         for n in self.number_spins() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_bosons: ");
         for n in self.number_bosonic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_fermions: ");
         for n in self.number_fermionic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push_str(")\n{");
         for (key, val) in self.iter() {
@@ -884,6 +884,6 @@ impl fmt::Display for MixedLindbladNoiseSystem {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }

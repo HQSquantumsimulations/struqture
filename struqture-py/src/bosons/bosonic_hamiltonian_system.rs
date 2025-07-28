@@ -106,15 +106,13 @@ impl BosonHamiltonianSystemWrapper {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
                                     PyValueError::new_err(format!(
-                                        "BosonHamiltonianSystems could not be multiplied: {:?}",
-                                        err
+                                        "BosonHamiltonianSystems could not be multiplied: {err:?}"
                                     ))
                                 })?;
                                 Ok(BosonSystemWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonianSystem: {:?}",
-                                err))),
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor BosonHamiltonianSystem: {err:?}"))),
                         }
                     }
                 }

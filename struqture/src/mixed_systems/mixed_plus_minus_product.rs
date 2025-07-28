@@ -140,16 +140,14 @@ impl<'de> Deserialize<'de> for MixedPlusMinusProduct {
                 where
                     E: serde::de::Error,
                 {
-                    MixedPlusMinusProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                    MixedPlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<MixedPlusMinusProduct, E>
                 where
                     E: serde::de::Error,
                 {
-                    MixedPlusMinusProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                    MixedPlusMinusProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -231,7 +229,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<PlusMinusProduct>` - The spin Products in Self.
-    pub fn spins(&self) -> std::slice::Iter<PlusMinusProduct> {
+    pub fn spins(&self) -> std::slice::Iter<'_, PlusMinusProduct> {
         self.spins.iter()
     }
 
@@ -240,7 +238,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<BosonProduct>` - The boson Products in Self.
-    pub fn bosons(&self) -> std::slice::Iter<BosonProduct> {
+    pub fn bosons(&self) -> std::slice::Iter<'_, BosonProduct> {
         self.bosons.iter()
     }
 
@@ -249,7 +247,7 @@ impl MixedPlusMinusProduct {
     /// # Returns
     ///
     /// * `Iter<FermionProduct>` - The fermion Products in Self.
-    pub fn fermions(&self) -> std::slice::Iter<FermionProduct> {
+    pub fn fermions(&self) -> std::slice::Iter<'_, FermionProduct> {
         self.fermions.iter()
     }
 
@@ -406,8 +404,7 @@ impl FromStr for MixedPlusMinusProduct {
                 return Err(StruqtureError::ParsingError {
                     target_type: "MixedPlusMinusProduct".to_string(),
                     msg: format!(
-                        "Encountered subsystem that is neither spin, nor boson, nor fermion: {}",
-                        subsystem
+                        "Encountered subsystem that is neither spin, nor boson, nor fermion: {subsystem}"
                     ),
                 });
             }
@@ -476,15 +473,15 @@ impl std::fmt::Display for MixedPlusMinusProduct {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string: String = String::new();
         for spin in self.spins() {
-            string.push_str(format!("S{}:", spin).as_str());
+            string.push_str(format!("S{spin}:").as_str());
         }
         for boson in self.bosons() {
-            string.push_str(format!("B{}:", boson).as_str());
+            string.push_str(format!("B{boson}:").as_str());
         }
         for fermion in self.fermions() {
-            string.push_str(format!("F{}:", fermion).as_str());
+            string.push_str(format!("F{fermion}:").as_str());
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

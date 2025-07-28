@@ -107,7 +107,7 @@ impl SpinLindbladNoiseSystemWrapper {
         let (separated, remainder) = self
             .internal
             .separate_into_n_terms(number_spins_left, number_spins_right)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok((
             Self {
                 internal: separated,

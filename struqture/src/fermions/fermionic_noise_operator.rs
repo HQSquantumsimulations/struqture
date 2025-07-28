@@ -592,7 +592,7 @@ impl fmt::Display for FermionLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
