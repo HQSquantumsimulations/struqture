@@ -74,12 +74,12 @@ impl crate::MinSupportedVersion for PlusMinusLindbladNoiseOperator {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PlusMinusLindbladNoiseOperator {
-    fn schema_name() -> String {
-        "PlusMinusLindbladNoiseOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "PlusMinusLindbladNoiseOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <PlusMinusLindbladNoiseOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <PlusMinusLindbladNoiseOperatorSerialize>::json_schema(generator)
     }
 }
 
@@ -749,7 +749,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "PlusMinusLindbladNoiseOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
         );
     }

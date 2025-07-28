@@ -12,7 +12,6 @@
 
 //! Integration test for public API of BosonLindbladNoiseSystem
 
-use bincode::{deserialize, serialize};
 use qoqo_calculator::CalculatorComplex;
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
@@ -535,13 +534,16 @@ fn bincode() {
     so.set((pp.clone(), pp), CalculatorComplex::from(1.0))
         .unwrap();
 
-    let serialized = serialize(&so).unwrap();
-    let deserialized: BosonLindbladNoiseSystem = deserialize(&serialized).unwrap();
-    assert_eq!(deserialized, so);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&so, config).unwrap();
+    let (deserialized, _len): (BosonLindbladNoiseSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(so, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&so.clone().compact()).unwrap();
-    let decoded: BosonLindbladNoiseSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(so, decoded);
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(so.clone().compact(), config).unwrap();
+    let (deserialized, _len): (BosonLindbladNoiseSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(so, deserialized);
 }
 
 #[test]

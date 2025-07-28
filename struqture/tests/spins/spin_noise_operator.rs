@@ -612,13 +612,17 @@ fn bincode() {
     slno.set((dp.clone(), dp), CalculatorComplex::from(1.0))
         .unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&slno).unwrap();
-    let decoded: SpinLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(slno, decoded);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&slno, config).unwrap();
+    let (deserialized, _len): (SpinLindbladNoiseOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(slno, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&slno.clone().compact()).unwrap();
-    let decoded: SpinLindbladNoiseOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(slno, decoded);
+    let serialized: Vec<u8> =
+        bincode::serde::encode_to_vec(slno.clone().compact(), config).unwrap();
+    let (deserialized, _len): (SpinLindbladNoiseOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(slno, deserialized);
 }
 
 /// Test SpinLindbladNoiseOperator Serialization and Deserialization traits (compact)

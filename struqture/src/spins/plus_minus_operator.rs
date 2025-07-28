@@ -78,12 +78,12 @@ impl crate::MinSupportedVersion for PlusMinusOperator {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PlusMinusOperator {
-    fn schema_name() -> String {
-        "PlusMinusOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "PlusMinusOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <PlusMinusOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <PlusMinusOperatorSerialize>::json_schema(generator)
     }
 }
 
@@ -739,7 +739,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "PlusMinusOperatorSerialize { items: [(PlusMinusProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 1 } }"
         );
     }

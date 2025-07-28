@@ -12,7 +12,6 @@
 
 //! Integration test for public API of FermionHamiltonian
 
-use bincode::{deserialize, serialize};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
@@ -555,12 +554,15 @@ fn bincode() {
     let mut so = FermionHamiltonian::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
-    let serialized = serialize(&so).unwrap();
-    let deserialized: FermionHamiltonian = deserialize(&serialized).unwrap();
-    assert_eq!(deserialized, so);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&so, config).unwrap();
+    let (deserialized, _len): (FermionHamiltonian, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(so, deserialized);
 
-    let serialized = serialize(&so.clone().compact()).unwrap();
-    let deserialized: FermionHamiltonian = deserialize(&serialized).unwrap();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(so.clone().compact(), config).unwrap();
+    let (deserialized, _len): (FermionHamiltonian, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(deserialized, so);
 }
 

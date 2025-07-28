@@ -74,12 +74,12 @@ impl crate::MinSupportedVersion for SpinHamiltonian {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinHamiltonian {
-    fn schema_name() -> String {
-        "struqture::spins::SpinHamiltonian".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::SpinHamiltonian".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SpinHamiltonianSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <SpinHamiltonianSerialize>::json_schema(generator)
     }
 }
 
@@ -728,7 +728,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", shs),
+            format!("{shs:?}"),
             "SpinHamiltonianSerialize { items: [(PauliProduct { items: [(0, Z)] }, Float(0.5))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

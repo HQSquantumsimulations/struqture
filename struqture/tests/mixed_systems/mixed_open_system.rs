@@ -864,13 +864,17 @@ fn bincode() {
         .set((dp.clone(), dp), CalculatorComplex::from(0.5))
         .unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&slos).unwrap();
-    let decoded: MixedLindbladOpenSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(slos, decoded);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&slos, config).unwrap();
+    let (deserialized, _len): (MixedLindbladOpenSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(slos, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&slos.clone().compact()).unwrap();
-    let decoded: MixedLindbladOpenSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(slos, decoded);
+    let serialized: Vec<u8> =
+        bincode::serde::encode_to_vec(slos.clone().compact(), config).unwrap();
+    let (deserialized, _len): (MixedLindbladOpenSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(slos, deserialized);
 }
 
 /// Test MixedLindbladOpenSystem Serialization and Deserialization traits (compact)

@@ -779,13 +779,16 @@ fn bincode() {
     let mut shs = SpinHamiltonianSystem::new(Some(1));
     shs.set(pp, CalculatorFloat::from(1.0)).unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&shs).unwrap();
-    let decoded: SpinHamiltonianSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(shs, decoded);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&shs, config).unwrap();
+    let (deserialized, _len): (SpinHamiltonianSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(shs, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&shs.clone().compact()).unwrap();
-    let decoded: SpinHamiltonianSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(shs, decoded);
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(shs.clone().compact(), config).unwrap();
+    let (deserialized, _len): (SpinHamiltonianSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(shs, deserialized);
 }
 
 /// Test SpinHamiltonianSystem Serialization and Deserialization traits (compact)

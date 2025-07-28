@@ -12,7 +12,6 @@
 
 //! Integration test for public API of mixed indices
 
-use bincode::{deserialize, serialize};
 use itertools::Itertools;
 use num_complex::Complex64;
 use qoqo_calculator::CalculatorComplex;
@@ -311,8 +310,10 @@ fn serialize_bincode(
     let test_new = HermitianMixedProduct::new([spins], [bosons], [fermions]);
     assert!(test_new.is_ok());
     let res = test_new.unwrap();
-    let serialized = serialize(&res).unwrap();
-    let deserialized: HermitianMixedProduct = deserialize(&serialized).unwrap();
+    let config = bincode::config::legacy();
+    let serialized = bincode::serde::encode_to_vec(&res, config).unwrap();
+    let (deserialized, _): (HermitianMixedProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
     assert_eq!(res, deserialized);
 }
 

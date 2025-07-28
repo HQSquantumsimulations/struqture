@@ -87,12 +87,12 @@ pub struct MixedLindbladNoiseSystem {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedLindbladNoiseSystem {
-    fn schema_name() -> String {
-        "MixedLindbladNoiseSystem".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedLindbladNoiseSystem".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SchemaHelperMixedLindbladNoiseSystem>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <SchemaHelperMixedLindbladNoiseSystem>::json_schema(generator)
     }
 }
 

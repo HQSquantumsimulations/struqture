@@ -75,12 +75,12 @@ impl crate::MinSupportedVersion for MixedOperator {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedOperator {
-    fn schema_name() -> String {
-        "MixedOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <MixedOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <MixedOperatorSerialize>::json_schema(generator)
     }
 }
 
@@ -759,7 +759,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "MixedOperatorSerialize { items: [(MixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

@@ -14,7 +14,7 @@ use super::SpinSystemWrapper;
 use crate::fermions::FermionHamiltonianSystemWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
-use bincode::deserialize;
+
 use num_complex::Complex64;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;

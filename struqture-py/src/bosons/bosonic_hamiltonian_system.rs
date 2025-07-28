@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use crate::bosons::{BosonSystemWrapper, HermitianBosonProductWrapper};
-use bincode::deserialize;
+
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;

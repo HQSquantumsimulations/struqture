@@ -75,12 +75,12 @@ pub struct MixedHamiltonianSystem {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedHamiltonianSystem {
-    fn schema_name() -> String {
-        "MixedHamiltonianSystem".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedHamiltonianSystem".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SchemaHelperMixedHamiltonianSystem>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <SchemaHelperMixedHamiltonianSystem>::json_schema(generator)
     }
 }
 

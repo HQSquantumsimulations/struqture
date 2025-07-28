@@ -71,12 +71,12 @@ impl crate::MinSupportedVersion for BosonLindbladNoiseOperator {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonLindbladNoiseOperator {
-    fn schema_name() -> String {
-        "BosonLindbladNoiseOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonLindbladNoiseOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <BosonLindbladNoiseOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <BosonLindbladNoiseOperatorSerialize>::json_schema(generator)
     }
 }
 

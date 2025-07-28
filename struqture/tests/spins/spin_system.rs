@@ -793,13 +793,16 @@ fn bincode() {
     let mut ss = SpinSystem::new(Some(1));
     ss.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&ss).unwrap();
-    let decoded: SpinSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(ss, decoded);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&ss, config).unwrap();
+    let (deserialized, _len): (SpinSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(ss, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&ss.clone().compact()).unwrap();
-    let decoded: SpinSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(ss, decoded);
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(ss.clone().compact(), config).unwrap();
+    let (deserialized, _len): (SpinSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(ss, deserialized);
 }
 
 /// Test SpinSystem Serialization and Deserialization traits (compact)

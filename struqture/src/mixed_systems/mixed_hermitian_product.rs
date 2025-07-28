@@ -60,16 +60,14 @@ pub struct HermitianMixedProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for HermitianMixedProduct {
-    fn schema_name() -> String {
-        "HermitianMixedProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "HermitianMixedProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  X, Y and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0X1Y:Bc0a0:Fc0a0:.".to_string());
-
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Spin operators and Bosonic and Fermionic creators and annhilators by a string. Spin Operators  X, Y and Z are preceeded and creators (c) and annihilators (a) are followed by the modes they are acting on. E.g. :S0X1Y:Bc0a0:Fc0a0:."
+        })
     }
 }
 
@@ -136,16 +134,14 @@ impl<'de> Deserialize<'de> for HermitianMixedProduct {
                 where
                     E: serde::de::Error,
                 {
-                    HermitianMixedProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    HermitianMixedProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<HermitianMixedProduct, E>
                 where
                     E: serde::de::Error,
                 {
-                    HermitianMixedProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{err:?}")))
+                    HermitianMixedProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
