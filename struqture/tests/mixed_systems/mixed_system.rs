@@ -13,7 +13,6 @@
 //! Integration test for public API of MixedSystem
 
 // use num_complex::Complex64;
-use bincode::{deserialize, serialize};
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
@@ -1021,13 +1020,16 @@ fn bincode() {
     let mut mo = MixedSystem::new([Some(3)], [Some(4)], [Some(3)]);
     mo.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
-    let serialized = serialize(&mo).unwrap();
-    let deserialized: MixedSystem = deserialize(&serialized).unwrap();
-    assert_eq!(deserialized, mo);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&mo, config).unwrap();
+    let (deserialized, _len): (MixedSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized, config).unwrap();
+    assert_eq!(mo, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&mo.clone().compact()).unwrap();
-    let decoded: MixedSystem = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(mo, decoded);
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(mo.clone().compact(), config).unwrap();
+    let (deserialized, _len): (MixedSystem, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(mo, deserialized);
 }
 
 #[test]

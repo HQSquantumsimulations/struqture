@@ -11,7 +11,6 @@
 // limitations under the License.
 
 use crate::mixed_systems::MixedProductWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -123,15 +122,13 @@ impl MixedSystemWrapper {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
                                     PyValueError::new_err(format!(
-                                        "MixedSystems could not be multiplied: {:?}",
-                                        err
+                                        "MixedSystems could not be multiplied: {err:?}"
                                     ))
                                 })?;
                                 Ok(Self { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedSystem: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor MixedSystem: {err:?}")))
                         }
                     }
                 }

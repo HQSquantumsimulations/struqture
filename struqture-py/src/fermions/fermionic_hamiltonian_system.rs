@@ -13,7 +13,6 @@
 use super::FermionSystemWrapper;
 use crate::fermions::HermitianFermionProductWrapper;
 use crate::spins::SpinHamiltonianSystemWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -119,15 +118,13 @@ impl FermionHamiltonianSystemWrapper {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
                                     PyValueError::new_err(format!(
-                                        "FermionHamiltonianSystems could not be multiplied: {:?}",
-                                        err
+                                        "FermionHamiltonianSystems could not be multiplied: {err:?}"
                                     ))
                                 })?;
                                 Ok(FermionSystemWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonianSystem: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionHamiltonianSystem: {err:?}")))
                         }
                     }
                 }

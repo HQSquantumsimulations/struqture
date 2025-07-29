@@ -226,16 +226,14 @@ use schemars;
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for PauliProduct {
-    fn schema_name() -> String {
-        "struqture::spins::PauliProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::PauliProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X.".to_string());
-
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Pauli Operators by a string of spin numbers followed by pauli operators. E.g. 0X10Y13Z14X."
+        })
     }
 }
 impl crate::MinSupportedVersion for PauliProduct {}
@@ -272,14 +270,14 @@ impl<'de> Deserialize<'de> for PauliProduct {
                 where
                     E: serde::de::Error,
                 {
-                    PauliProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    PauliProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: Error,
                 {
-                    PauliProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    PauliProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -373,7 +371,7 @@ impl SpinIndex for PauliProduct {
     }
 
     // From trait
-    fn iter(&self) -> std::slice::Iter<(usize, SingleSpinOperator)> {
+    fn iter(&self) -> std::slice::Iter<'_, (usize, SingleSpinOperator)> {
         match &self.items {
             TinyVec::Heap(x) => x.iter(),
             TinyVec::Inline(x) => x.iter(),
@@ -649,7 +647,7 @@ impl FromStr for PauliProduct {
         } else {
             if !s.starts_with(char::is_numeric) {
                 return Err(StruqtureError::FromStringFailed {
-                    msg: format!("Missing spin index in the following PauliProduct: {}", s),
+                    msg: format!("Missing spin index in the following PauliProduct: {s}"),
                 });
             }
             let mut internal: TinyVec<[(usize, SingleSpinOperator); 5]> =
@@ -672,10 +670,7 @@ impl FromStr for PauliProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {} instead of unsigned integer as spin index",
-                                index
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }
@@ -719,11 +714,11 @@ impl fmt::Display for PauliProduct {
             string.push('I');
         } else {
             for (index, pauli) in self.items.iter() {
-                string.push_str(format!("{}", index).as_str());
-                string.push_str(format!("{}", pauli).as_str());
+                string.push_str(format!("{index}").as_str());
+                string.push_str(format!("{pauli}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

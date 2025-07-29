@@ -375,13 +375,16 @@ fn bincode() {
     let mut pmp = PlusMinusProduct::new();
     pmp = pmp.set_pauli(0, SinglePlusMinusOperator::Plus);
 
-    let encoded: Vec<u8> = bincode::serialize(&pmp).unwrap();
-    let decoded: PlusMinusProduct = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(pmp, decoded);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&pmp, config).unwrap();
+    let (deserialized, _len): (PlusMinusProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(pmp, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&pmp.clone().compact()).unwrap();
-    let decoded: PlusMinusProduct = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(pmp, decoded);
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(pmp.clone().compact(), config).unwrap();
+    let (deserialized, _len): (PlusMinusProduct, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(pmp, deserialized);
 }
 
 /// Test PlusMinusProduct Serialization and Deserialization traits (compact)
@@ -411,16 +414,20 @@ fn serde_compact() {
 fn bincode_single() {
     let spinop = SinglePlusMinusOperator::Plus;
 
-    let encoded: Vec<u8> = bincode::serialize(&spinop).unwrap();
-    let decoded: SinglePlusMinusOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let config = bincode::config::legacy();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&spinop, config).unwrap();
+    let (decoded, _): (SinglePlusMinusOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(spinop.clone(), decoded);
 
-    let encoded: Vec<u8> = bincode::serialize(&spinop.compact()).unwrap();
-    let decoded: SinglePlusMinusOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&spinop.compact(), config).unwrap();
+    let (decoded, _): (SinglePlusMinusOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(spinop.clone(), decoded);
 
-    let encoded: Vec<u8> = bincode::serialize(&spinop.readable()).unwrap();
-    let decoded: SinglePlusMinusOperator = bincode::deserialize(&encoded[..]).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&spinop.readable(), config).unwrap();
+    let (decoded, _): (SinglePlusMinusOperator, usize) =
+        bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(spinop.clone(), decoded);
 }
 

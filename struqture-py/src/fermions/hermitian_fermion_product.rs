@@ -76,8 +76,7 @@ impl HermitianFermionProductWrapper {
         Ok(Self {
             internal: HermitianFermionProduct::new(creators, annihilators).map_err(|err| {
                 PyValueError::new_err(format!(
-                    "Could not construct HermitianFermionProduct: {:?}",
-                    err
+                    "Could not construct HermitianFermionProduct: {err:?}"
                 ))
             })?,
         })

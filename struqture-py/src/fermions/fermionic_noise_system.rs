@@ -12,7 +12,6 @@
 
 use crate::fermions::FermionProductWrapper;
 use crate::spins::SpinLindbladNoiseSystemWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -97,7 +96,7 @@ impl FermionLindbladNoiseSystemWrapper {
                 number_creators_annihilators_left,
                 number_creators_annihilators_right,
             )
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok((
             Self {
                 internal: separated,

@@ -12,7 +12,6 @@
 
 use crate::fermions::FermionProductWrapper;
 use crate::spins::SpinSystemWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -118,8 +117,7 @@ impl FermionSystemWrapper {
                                 Ok(Self { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionSystem: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor FermionSystem: {err:?}")))
                         }
                     }
                 }

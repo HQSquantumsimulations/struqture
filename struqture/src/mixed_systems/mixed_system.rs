@@ -81,12 +81,12 @@ pub struct MixedSystem {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedSystem {
-    fn schema_name() -> String {
-        "MixedSystem".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedSystem".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SchemaHelperMixedSystem>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <SchemaHelperMixedSystem>::json_schema(generator)
     }
 }
 
@@ -778,17 +778,17 @@ impl fmt::Display for MixedSystem {
         let mut output = "MixedSystem(\n".to_string();
         output.push_str("number_spins: ");
         for n in self.number_spins() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_bosons: ");
         for n in self.number_bosonic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_fermions: ");
         for n in self.number_fermionic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push_str(")\n");
         output.push('{');
@@ -799,10 +799,10 @@ impl fmt::Display for MixedSystem {
                 .expect("Cannot compare two unsigned integers internal error in struqture.spins")
         });
         for (key, val) in vec {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }

@@ -87,12 +87,12 @@ pub struct MixedLindbladNoiseSystem {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedLindbladNoiseSystem {
-    fn schema_name() -> String {
-        "MixedLindbladNoiseSystem".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedLindbladNoiseSystem".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SchemaHelperMixedLindbladNoiseSystem>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <SchemaHelperMixedLindbladNoiseSystem>::json_schema(generator)
     }
 }
 
@@ -866,17 +866,17 @@ impl fmt::Display for MixedLindbladNoiseSystem {
         let mut output = "MixedLindbladNoiseSystem(\n".to_string();
         output.push_str("number_spins: ");
         for n in self.number_spins() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_bosons: ");
         for n in self.number_bosonic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push('\n');
         output.push_str("number_fermions: ");
         for n in self.number_fermionic_modes() {
-            write!(output, "{}, ", n)?;
+            write!(output, "{n}, ")?;
         }
         output.push_str(")\n{");
         for (key, val) in self.iter() {
@@ -884,6 +884,6 @@ impl fmt::Display for MixedLindbladNoiseSystem {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }

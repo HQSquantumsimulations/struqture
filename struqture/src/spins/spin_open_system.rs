@@ -325,17 +325,17 @@ impl fmt::Display for SpinLindbladOpenSystem {
         let mut output = format!("SpinLindbladOpenSystem({}){{\n", self.number_spins());
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push_str("}\n");
         output.push_str("Noise: {\n");
         for ((row, column), val) in self.noise.iter() {
-            writeln!(output, "({}, {}): {},", row, column, val)?;
+            writeln!(output, "({row}, {column}): {val},")?;
         }
         output.push_str("}\n");
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

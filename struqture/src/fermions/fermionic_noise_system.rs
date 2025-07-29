@@ -500,7 +500,7 @@ impl fmt::Display for FermionLindbladNoiseSystem {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

@@ -71,12 +71,12 @@ impl crate::MinSupportedVersion for BosonOperator {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonOperator {
-    fn schema_name() -> String {
-        "BosonOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <BosonOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <BosonOperatorSerialize>::json_schema(generator)
     }
 }
 
@@ -547,11 +547,11 @@ impl fmt::Display for BosonOperator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "BosonOperator{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -628,7 +628,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "BosonOperatorSerialize { items: [(BosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

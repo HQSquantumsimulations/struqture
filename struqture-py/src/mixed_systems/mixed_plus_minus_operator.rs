@@ -11,7 +11,6 @@
 // limitations under the License.
 
 use crate::mixed_systems::MixedPlusMinusProductWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -112,8 +111,7 @@ impl MixedPlusMinusOperatorWrapper {
                         internal: self.clone().internal * x,
                     }),
                     Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat nor CalculatorComplex: {err:?}")))
                         }
             }
         }
@@ -132,7 +130,7 @@ impl MixedPlusMinusOperatorWrapper {
     #[staticmethod]
     pub fn from_mixed_system(value: &Bound<PyAny>) -> PyResult<MixedPlusMinusOperatorWrapper> {
         let system = MixedSystemWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(MixedPlusMinusOperatorWrapper {
             internal: MixedPlusMinusOperator::from(system.operator().clone()),
         })
@@ -158,7 +156,7 @@ impl MixedPlusMinusOperatorWrapper {
         number_fermions: Vec<Option<usize>>,
     ) -> PyResult<MixedSystemWrapper> {
         let result: MixedOperator = MixedOperator::try_from(self.internal.clone())
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(MixedSystemWrapper {
             internal: MixedSystem::from_operator(
                 result,
@@ -166,7 +164,7 @@ impl MixedPlusMinusOperatorWrapper {
                 number_bosons,
                 number_fermions,
             )
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 }

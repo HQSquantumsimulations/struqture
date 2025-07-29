@@ -14,7 +14,6 @@ use super::SpinSystemWrapper;
 use crate::fermions::FermionHamiltonianSystemWrapper;
 use crate::spins::PauliProductWrapper;
 use crate::{to_py_coo, PyCooMatrix};
-use bincode::deserialize;
 use num_complex::Complex64;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -125,15 +124,13 @@ impl SpinHamiltonianSystemWrapper {
                             Ok(x) => {
                                 let new_self = (self.clone().internal * x).map_err(|err| {
                                     PyValueError::new_err(format!(
-                                        "SpinHamiltonianSystems could not be multiplied: {:?}",
-                                        err
+                                        "SpinHamiltonianSystems could not be multiplied: {err:?}"
                                     ))
                                 })?;
                                 Ok(SpinSystemWrapper { internal: new_self })
                             },
                             Err(err) => Err(PyValueError::new_err(format!(
-                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonianSystem: {:?}",
-                                err)))
+                                "The rhs of the multiplication is neither CalculatorFloat, CalculatorComplex, nor SpinHamiltonianSystem: {err:?}")))
                         }
                     }
                 }

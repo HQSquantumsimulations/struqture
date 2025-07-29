@@ -55,16 +55,14 @@ pub struct FermionProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for FermionProduct {
-    fn schema_name() -> String {
-        "FermionProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "FermionProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Fermionic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
-
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Fermionic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -132,14 +130,14 @@ impl<'de> Deserialize<'de> for FermionProduct {
                 where
                     E: serde::de::Error,
                 {
-                    FermionProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    FermionProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
-                    FermionProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    FermionProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -219,12 +217,12 @@ impl ModeIndex for FermionProduct {
     }
 
     // From trait
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
     // From trait
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -523,13 +521,13 @@ impl std::fmt::Display for FermionProduct {
             string.push('I'); // empty is just identity
         } else {
             for index in self.creators() {
-                string.push_str(format!("c{}", index).as_str());
+                string.push_str(format!("c{index}").as_str());
             }
             for index in self.annihilators() {
-                string.push_str(format!("a{}", index).as_str());
+                string.push_str(format!("a{index}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -563,10 +561,10 @@ impl FromStr for FermionProduct {
                         match op{
                             "c" => {if parsing_creators{ creators.push(num);} else{return Err(StruqtureError::IndicesNotNormalOrdered{index_i: num, index_j: num+1})}}
                             "a" => {annihilators.push(num); parsing_creators = false;}
-                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {} that is neither 'c' nor 'a' in FermionProduct::from_str", op)})
+                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {op} that is neither 'c' nor 'a' in FermionProduct::from_str")})
                         }
                     }
-                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index of Fermion operator {} is not a FermionProduct::from_str", index)}),
+                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index of Fermion operator {index} is not a FermionProduct::from_str")}),
                 }
             }
             Self::new(creators, annihilators)
@@ -601,16 +599,14 @@ pub struct HermitianFermionProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for HermitianFermionProduct {
-    fn schema_name() -> String {
-        "HermitianFermionProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "HermitianFermionProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Fermionic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
-
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Fermionic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -679,7 +675,7 @@ impl<'de> Deserialize<'de> for HermitianFermionProduct {
                     E: serde::de::Error,
                 {
                     HermitianFermionProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                        .map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
@@ -687,7 +683,7 @@ impl<'de> Deserialize<'de> for HermitianFermionProduct {
                     E: serde::de::Error,
                 {
                     HermitianFermionProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                        .map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -795,7 +791,7 @@ impl ModeIndex for HermitianFermionProduct {
     /// # Returns
     ///
     /// * `usize` - The creator indices in the HermitianFermionProduct.
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
@@ -804,7 +800,7 @@ impl ModeIndex for HermitianFermionProduct {
     /// # Returns
     ///
     /// * `usize` - The annihilator indices in the HermitianFermionProduct.
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -1219,13 +1215,13 @@ impl std::fmt::Display for HermitianFermionProduct {
             string.push('I'); // empty modes is just the identity
         } else {
             for index in self.creators() {
-                string.push_str(format!("c{}", index).as_str());
+                string.push_str(format!("c{index}").as_str());
             }
             for index in self.annihilators() {
-                string.push_str(format!("a{}", index).as_str());
+                string.push_str(format!("a{index}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -1260,10 +1256,10 @@ impl FromStr for HermitianFermionProduct {
                         match op{
                             "c" => {if parsing_creators{ creators.push(num);} else{return Err(StruqtureError::IndicesNotNormalOrdered{index_i: num, index_j: num+1})}}
                             "a" => {annihilators.push(num); parsing_creators = false;}
-                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {} that is neither 'c' nor 'a' in HermitianFermionProduct::from_str", op)})
+                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {op} that is neither 'c' nor 'a' in HermitianFermionProduct::from_str")})
                         }
                     }
-                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index of Fermion operator {} is not a HermitianFermionProduct::from_str", index)}),
+                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index of Fermion operator {index} is not a HermitianFermionProduct::from_str")}),
                 }
             }
             Self::new(creators, annihilators)

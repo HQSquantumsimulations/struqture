@@ -75,12 +75,12 @@ impl crate::MinSupportedVersion for SpinLindbladNoiseOperator {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for SpinLindbladNoiseOperator {
-    fn schema_name() -> String {
-        "PlusMinusOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "PlusMinusOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <SpinLindbladNoiseOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <SpinLindbladNoiseOperatorSerialize>::json_schema(generator)
     }
 }
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
@@ -673,7 +673,7 @@ impl fmt::Display for SpinLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -934,7 +934,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "SpinLindbladNoiseOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

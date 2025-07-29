@@ -71,12 +71,12 @@ impl crate::MinSupportedVersion for BosonLindbladNoiseOperator {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonLindbladNoiseOperator {
-    fn schema_name() -> String {
-        "BosonLindbladNoiseOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonLindbladNoiseOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <BosonLindbladNoiseOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <BosonLindbladNoiseOperatorSerialize>::json_schema(generator)
     }
 }
 
@@ -528,7 +528,7 @@ impl fmt::Display for BosonLindbladNoiseOperator {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -606,7 +606,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "BosonLindbladNoiseOperatorSerialize { items: [(BosonProduct { creators: [0], annihilators: [0] }, BosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

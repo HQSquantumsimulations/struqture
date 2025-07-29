@@ -254,16 +254,14 @@ pub struct DecoherenceProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceProduct {
-    fn schema_name() -> String {
-        "struqture::spins::DecoherenceProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "struqture::spins::DecoherenceProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Decoherence Operators (X, iY, Z) by a string of spin numbers followed by pauli operators. E.g. 0X10iY13Z14X.".to_string());
-
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Decoherence Operators (X, iY, Z) by a string of spin numbers followed by pauli operators. E.g. 0X10iY13Z14X."
+        })
     }
 }
 
@@ -332,14 +330,14 @@ impl<'de> Deserialize<'de> for DecoherenceProduct {
                 where
                     E: serde::de::Error,
                 {
-                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: Error,
                 {
-                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    DecoherenceProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -433,7 +431,7 @@ impl SpinIndex for DecoherenceProduct {
     }
 
     // From trait
-    fn iter(&self) -> std::slice::Iter<(usize, SingleDecoherenceOperator)> {
+    fn iter(&self) -> std::slice::Iter<'_, (usize, SingleDecoherenceOperator)> {
         self.items.iter()
     }
 
@@ -911,10 +909,7 @@ impl FromStr for DecoherenceProduct {
         } else {
             if !s.starts_with(char::is_numeric) {
                 return Err(StruqtureError::FromStringFailed {
-                    msg: format!(
-                        "Missing spin index in the following DecoherenceProduct: {}",
-                        s
-                    ),
+                    msg: format!("Missing spin index in the following DecoherenceProduct: {s}"),
                 });
             }
 
@@ -937,10 +932,7 @@ impl FromStr for DecoherenceProduct {
                     }
                     Err(_) => {
                         return Err(StruqtureError::FromStringFailed {
-                            msg: format!(
-                                "Using {} instead of unsigned integer as spin index",
-                                index
-                            ),
+                            msg: format!("Using {index} instead of unsigned integer as spin index"),
                         })
                     }
                 }
@@ -973,11 +965,11 @@ impl fmt::Display for DecoherenceProduct {
             string.push('I');
         } else {
             for (index, pauli) in self.items.iter() {
-                string.push_str(format!("{}", index).as_str());
-                string.push_str(format!("{}", pauli).as_str());
+                string.push_str(format!("{index}").as_str());
+                string.push_str(format!("{pauli}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 

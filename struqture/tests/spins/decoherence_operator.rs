@@ -624,13 +624,16 @@ fn bincode() {
     let mut so = DecoherenceOperator::new();
     so.set(pp, CalculatorComplex::from(1.0)).unwrap();
 
-    let encoded: Vec<u8> = bincode::serialize(&so).unwrap();
-    let decoded: DecoherenceOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(so, decoded);
+    let config = bincode::config::legacy();
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(&so, config).unwrap();
+    let (deserialized, _len): (DecoherenceOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(so, deserialized);
 
-    let encoded: Vec<u8> = bincode::serialize(&so.clone().compact()).unwrap();
-    let decoded: DecoherenceOperator = bincode::deserialize(&encoded[..]).unwrap();
-    assert_eq!(so, decoded);
+    let serialized: Vec<u8> = bincode::serde::encode_to_vec(so.clone().compact(), config).unwrap();
+    let (deserialized, _len): (DecoherenceOperator, usize) =
+        bincode::serde::decode_from_slice(&serialized[..], config).unwrap();
+    assert_eq!(so, deserialized);
 }
 
 /// Test DecoherenceOperator Serialization and Deserialization traits (compact)

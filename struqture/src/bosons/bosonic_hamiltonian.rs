@@ -70,12 +70,12 @@ impl crate::MinSupportedVersion for BosonHamiltonian {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonHamiltonian {
-    fn schema_name() -> String {
-        "BosonHamiltonian".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonHamiltonian".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <BosonHamiltonianSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <BosonHamiltonianSerialize>::json_schema(generator)
     }
 }
 
@@ -641,11 +641,11 @@ impl fmt::Display for BosonHamiltonian {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "BosonHamiltonian{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -722,7 +722,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "BosonHamiltonianSerialize { items: [(HermitianBosonProduct { creators: [0], annihilators: [0] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

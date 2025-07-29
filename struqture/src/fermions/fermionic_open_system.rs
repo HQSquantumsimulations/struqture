@@ -273,17 +273,17 @@ impl fmt::Display for FermionLindbladOpenSystem {
         let mut output = format!("FermionLindbladOpenSystem({}){{\n", self.number_modes());
         output.push_str("System: {\n");
         for (key, val) in self.system.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push_str("}\n");
         output.push_str("Noise: {\n");
         for ((row, column), val) in self.noise.iter() {
-            writeln!(output, "({}, {}): {},", row, column, val)?;
+            writeln!(output, "({row}, {column}): {val},")?;
         }
         output.push_str("}\n");
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

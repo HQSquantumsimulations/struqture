@@ -77,12 +77,12 @@ impl crate::MinSupportedVersion for MixedHamiltonian {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for MixedHamiltonian {
-    fn schema_name() -> String {
-        "MixedHamiltonian".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "MixedHamiltonian".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <MixedHamiltonianSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <MixedHamiltonianSerialize>::json_schema(generator)
     }
 }
 
@@ -651,11 +651,11 @@ impl fmt::Display for MixedHamiltonian {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "MixedHamiltonian{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -775,7 +775,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "MixedHamiltonianSerialize { items: [(HermitianMixedProduct { spins: [PauliProduct { items: [(2, Z)] }], bosons: [BosonProduct { creators: [0], annihilators: [3] }], fermions: [FermionProduct { creators: [0], annihilators: [2] }] }, Float(0.5), Float(0.0))], n_spins: 1, n_bosons: 1, n_fermions: 1, _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

@@ -72,12 +72,12 @@ impl crate::MinSupportedVersion for DecoherenceOperator {}
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for DecoherenceOperator {
-    fn schema_name() -> String {
-        "DecoherenceOperator".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "DecoherenceOperator".into()
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        <DecoherenceOperatorSerialize>::json_schema(gen)
+    fn json_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        <DecoherenceOperatorSerialize>::json_schema(generator)
     }
 }
 
@@ -536,11 +536,11 @@ impl fmt::Display for DecoherenceOperator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = "DecoherenceOperator{\n".to_string();
         for (key, val) in self.iter() {
-            writeln!(output, "{}: {},", key, val)?;
+            writeln!(output, "{key}: {val},")?;
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 
@@ -662,7 +662,7 @@ mod test {
         };
 
         assert_eq!(
-            format!("{:?}", sos),
+            format!("{sos:?}"),
             "DecoherenceOperatorSerialize { items: [(DecoherenceProduct { items: [(0, Z)] }, Float(0.5), Float(0.0))], _struqture_version: StruqtureVersionSerializable { major_version: 1, minor_version: 0 } }"
         );
     }

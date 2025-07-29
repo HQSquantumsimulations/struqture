@@ -13,7 +13,6 @@
 use super::SpinLindbladNoiseSystemWrapper;
 use crate::fermions::FermionLindbladNoiseSystemWrapper;
 use crate::spins::PlusMinusProductWrapper;
-use bincode::deserialize;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -142,7 +141,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         let result = self
             .internal
             .separate_into_n_terms(number_spins_left, number_spins_right)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok((
             PlusMinusLindbladNoiseOperatorWrapper { internal: result.0 },
             PlusMinusLindbladNoiseOperatorWrapper { internal: result.1 },
@@ -164,7 +163,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
         value: &Bound<PyAny>,
     ) -> PyResult<PlusMinusLindbladNoiseOperatorWrapper> {
         let system = SpinLindbladNoiseSystemWrapper::from_pyany(value)
-            .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?;
+            .map_err(|err| PyValueError::new_err(format!("{err:?}")))?;
         Ok(PlusMinusLindbladNoiseOperatorWrapper {
             internal: PlusMinusLindbladNoiseOperator::from(system.operator().clone()),
         })
@@ -189,7 +188,7 @@ impl PlusMinusLindbladNoiseOperatorWrapper {
             SpinLindbladNoiseOperator::from(self.internal.clone());
         Ok(SpinLindbladNoiseSystemWrapper {
             internal: SpinLindbladNoiseSystem::from_operator(result, number_spins)
-                .map_err(|err| PyValueError::new_err(format!("{:?}", err)))?,
+                .map_err(|err| PyValueError::new_err(format!("{err:?}")))?,
         })
     }
 

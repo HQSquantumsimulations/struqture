@@ -495,6 +495,6 @@ impl fmt::Display for BosonLindbladNoiseSystem {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }

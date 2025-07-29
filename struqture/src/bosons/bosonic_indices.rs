@@ -50,16 +50,14 @@ pub struct BosonProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for BosonProduct {
-    fn schema_name() -> String {
-        "BosonProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "BosonProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
-
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -127,14 +125,14 @@ impl<'de> Deserialize<'de> for BosonProduct {
                 where
                     E: serde::de::Error,
                 {
-                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
-                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{:?}", err)))
+                    BosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -205,12 +203,12 @@ impl ModeIndex for BosonProduct {
     }
 
     // From trait
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
     // From trait
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -477,13 +475,13 @@ impl std::fmt::Display for BosonProduct {
             string.push('I');
         } else {
             for index in self.creators() {
-                string.push_str(format!("c{}", index).as_str());
+                string.push_str(format!("c{index}").as_str());
             }
             for index in self.annihilators() {
-                string.push_str(format!("a{}", index).as_str());
+                string.push_str(format!("a{index}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -516,10 +514,10 @@ impl FromStr for BosonProduct {
                         match op{
                             "c" => {if parsing_creators{ creators.push(num);} else{return Err(StruqtureError::IndicesNotNormalOrdered{index_i: num, index_j: num+1})}}
                             "a" => {annihilators.push(num); parsing_creators = false;}
-                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {} that is neither 'c' nor 'a' in BosonProduct::from_str", op)})
+                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {op} that is neither 'c' nor 'a' in BosonProduct::from_str")})
                         }
                     }
-                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {}", index)}),
+                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {index}")}),
                 }
             }
             Self::new(creators, annihilators)
@@ -555,16 +553,15 @@ pub struct HermitianBosonProduct {
 
 #[cfg(feature = "json_schema")]
 impl schemars::JsonSchema for HermitianBosonProduct {
-    fn schema_name() -> String {
-        "HermitianBosonProduct".to_string()
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "HermitianBosonProduct".into()
     }
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let tmp_schema = gen.subschema_for::<String>();
-        let mut obj = tmp_schema.into_object();
-        let meta = obj.metadata();
-        meta.description = Some("Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1.".to_string());
 
-        schemars::schema::Schema::Object(obj)
+    fn json_schema(_generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "description": "Represents products of Bosonic creators and annhilators by a string creators (c) or annihilators (a) followed by the modes they are acting on. E.g. c0a1."
+        })
     }
 }
 
@@ -632,16 +629,14 @@ impl<'de> Deserialize<'de> for HermitianBosonProduct {
                 where
                     E: serde::de::Error,
                 {
-                    HermitianBosonProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                    HermitianBosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
 
                 fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
-                    HermitianBosonProduct::from_str(v)
-                        .map_err(|err| E::custom(format!("{:?}", err)))
+                    HermitianBosonProduct::from_str(v).map_err(|err| E::custom(format!("{err:?}")))
                 }
             }
 
@@ -739,7 +734,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The creator indices in the HermitianBosonProduct.
-    fn creators(&self) -> std::slice::Iter<usize> {
+    fn creators(&self) -> std::slice::Iter<'_, usize> {
         self.creators.iter()
     }
 
@@ -748,7 +743,7 @@ impl ModeIndex for HermitianBosonProduct {
     /// # Returns
     ///
     /// * `usize` - The annihilator indices in the HermitianBosonProduct.
-    fn annihilators(&self) -> std::slice::Iter<usize> {
+    fn annihilators(&self) -> std::slice::Iter<'_, usize> {
         self.annihilators.iter()
     }
 
@@ -1134,13 +1129,13 @@ impl std::fmt::Display for HermitianBosonProduct {
             string.push('I'); // Empty is just identity
         } else {
             for index in self.creators() {
-                string.push_str(format!("c{}", index).as_str());
+                string.push_str(format!("c{index}").as_str());
             }
             for index in self.annihilators() {
-                string.push_str(format!("a{}", index).as_str());
+                string.push_str(format!("a{index}").as_str());
             }
         }
-        write!(f, "{}", string)
+        write!(f, "{string}")
     }
 }
 
@@ -1175,10 +1170,10 @@ impl FromStr for HermitianBosonProduct {
                         match op{
                             "c" => {if parsing_creators{ creators.push(num);} else{return Err(StruqtureError::IndicesNotNormalOrdered{index_i: num, index_j: num+1})}}
                             "a" => {annihilators.push(num); parsing_creators = false;}
-                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {} that is neither 'c' nor 'a' in HermitianBosonProduct::from_str", op)})
+                            _ => return Err(StruqtureError::FromStringFailed{msg: format!("Used operator {op} that is neither 'c' nor 'a' in HermitianBosonProduct::from_str")})
                         }
                     }
-                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {}", index)}),
+                    Err(_) => return Err(StruqtureError::FromStringFailed{msg: format!("Index in given creators or annihilators is not an integer: {index}")}),
                 }
             }
             Self::new(creators, annihilators)

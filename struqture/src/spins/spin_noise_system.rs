@@ -541,7 +541,7 @@ impl fmt::Display for SpinLindbladNoiseSystem {
         }
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
 

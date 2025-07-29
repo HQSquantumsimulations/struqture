@@ -439,6 +439,6 @@ impl fmt::Display for MixedLindbladOpenSystem {
         output.push_str("}\n");
         output.push('}');
 
-        write!(f, "{}", output)
+        write!(f, "{output}")
     }
 }
