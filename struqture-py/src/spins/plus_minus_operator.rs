@@ -12,7 +12,6 @@
 
 use crate::fermions::FermionSystemWrapper;
 use crate::spins::{PlusMinusProductWrapper, SpinSystemWrapper};
-
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;

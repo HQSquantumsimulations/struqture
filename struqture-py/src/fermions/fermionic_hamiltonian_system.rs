@@ -13,7 +13,6 @@
 use super::FermionSystemWrapper;
 use crate::fermions::HermitianFermionProductWrapper;
 use crate::spins::SpinHamiltonianSystemWrapper;
-
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;

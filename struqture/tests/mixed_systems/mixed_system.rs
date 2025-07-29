@@ -13,7 +13,6 @@
 //! Integration test for public API of MixedSystem
 
 // use num_complex::Complex64;
-
 use qoqo_calculator::{CalculatorComplex, CalculatorFloat};
 use serde_test::{assert_tokens, Configure, Token};
 use std::collections::BTreeMap;
