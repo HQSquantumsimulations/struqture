@@ -1,4 +1,4 @@
-# We only build documentation for struqture 2 now.
+# NOTE: We only build documentation for struqture 2 now.
 # name: Manual user documentation and API documentation generation and upload
 
 # on:
