@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.13.1
+
+* Fixed the release that failed for 1.13.0.
+
 ## 1.13.0
 
 * Updated to pyo3 0.25, bincode 2.0 and schemars 1.0.
