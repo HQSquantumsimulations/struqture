@@ -190,18 +190,18 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.5.41"
+version = "4.5.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be92d32e80243a54711e5d7ce823c35c41c9d929dc4ab58e1276f625841aadf9"
+checksum = "ed87a9d530bb41a67537289bafcac159cb3ee28460e0a4571123d2a778a6a882"
 dependencies = [
  "clap_builder",
 ]
 
 [[package]]
 name = "clap_builder"
-version = "4.5.41"
+version = "4.5.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "707eab41e9622f9139419d573eca0900137718000c517d47da73045f54331c3d"
+checksum = "64f4f3f3c77c94aff3c7e9aac9a2ca1974a5adf392a8bb751e827d6d127ab966"
 dependencies = [
  "anstyle",
  "clap_lex",
@@ -1572,9 +1572,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "struqture"
-version = "1.12.2"
+version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1eea84dde5c0c0a04363c83c4c695e3a96d10d9b019d9c1970f31022859ff5f0"
+checksum = "4b2f2e640f1025117f570025f28d2af1efe1089a69e1714e9fa6519fd86837f7"
 dependencies = [
  "itertools 0.14.0",
  "ndarray",
@@ -1588,7 +1588,7 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "1.13.0"
+version = "1.13.1"
 dependencies = [
  "bincode",
  "criterion",
@@ -1621,7 +1621,7 @@ dependencies = [
  "num-complex",
  "qoqo_calculator",
  "serde",
- "struqture 1.12.2",
+ "struqture 1.13.0",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1629,7 +1629,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.13.0"
+version = "1.13.1"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1645,7 +1645,7 @@ dependencies = [
  "regex",
  "schemars",
  "serde_json",
- "struqture 1.13.0",
+ "struqture 1.13.1",
  "struqture 2.2.0",
  "struqture-py-macros",
  "syn 2.0.104",
@@ -1655,7 +1655,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.13.0"
+version = "1.13.1"
 dependencies = [
  "proc-macro2",
  "quote",
