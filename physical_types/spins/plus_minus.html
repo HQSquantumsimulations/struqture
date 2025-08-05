@@ -222,11 +222,9 @@
 <p>The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:</p>
 <pre><code class="language-python">from struqture_py.spins import PlusMinusProduct
 
-product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PauliProducts
+product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PlusMinusProducts
 product = "0+1-2Z"
 </code></pre>
-<p>Note that when using setter methods as in <code>PlusMinusProduct().z(0)</code>, the methods set the value of the operator acting on the corresponding spin and do not
-represent matrix multiplication, so that <code>PlusMinusProduct().z(0)</code> is equivalent to <code>PlusMinusProduct().z(0).z(0)</code>, the second call to the setter method <code>z(0)</code> having no effect.</p>
 <h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
 <p><code>PlusMinusOperators</code> represent operators such as:
 \[

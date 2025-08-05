@@ -316,9 +316,7 @@ PauliProducts are combinations of SinglePauliOperators on specific spin indices.
 <p>DecoherenceProducts are products of a decoherence operators acting on single spins. These <code>SingleDecoherenceOperators</code>
 are almost identical to the <code>SinglePauliOperators</code> with the exception of an additional \(i\) factor and are well suited to represent decoherence properties</p>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.
-Note that when using setter methods as in <code>PauliProduct().x(0)</code>, the methods set the value of the Pauli operator acting on the corresponding spin and do not
-represent matrix multiplication, so that <code>PauliProduct().x(0)</code> is equivalent to <code>PauliProduct().x(0).x(0)</code>, the second call to the setter method <code>x(0)</code> having no effect.</p>
+<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.</p>
 <pre><code class="language-python">from struqture_py.spins import PauliProduct, DecoherenceProduct
 
 # We can build single-spin terms:
@@ -586,11 +584,9 @@ print(python_coo.todense())
 <p>The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:</p>
 <pre><code class="language-python">from struqture_py.spins import PlusMinusProduct
 
-product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PauliProducts
+product = PlusMinusProduct().plus(0).minus(1).z(2)  # these can be chained similarly to PlusMinusProducts
 product = "0+1-2Z"
 </code></pre>
-<p>Note that when using setter methods as in <code>PlusMinusProduct().z(0)</code>, the methods set the value of the operator acting on the corresponding spin and do not
-represent matrix multiplication, so that <code>PlusMinusProduct().z(0)</code> is equivalent to <code>PlusMinusProduct().z(0).z(0)</code>, the second call to the setter method <code>z(0)</code> having no effect.</p>
 <h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
 <p><code>PlusMinusOperators</code> represent operators such as:
 \[
