@@ -17,8 +17,6 @@ struqture\_py.bosons.BosonLindbladNoiseOperator
       ~BosonLindbladNoiseOperator.add_operator_product
       ~BosonLindbladNoiseOperator.current_number_modes
       ~BosonLindbladNoiseOperator.current_version
-      ~BosonLindbladNoiseOperator.dicke_boson_spin_mapping
-      ~BosonLindbladNoiseOperator.direct_boson_spin_mapping
       ~BosonLindbladNoiseOperator.empty_clone
       ~BosonLindbladNoiseOperator.from_bincode
       ~BosonLindbladNoiseOperator.from_json

@@ -17,8 +17,6 @@ struqture\_py.bosons.BosonHamiltonian
       ~BosonHamiltonian.add_operator_product
       ~BosonHamiltonian.current_number_modes
       ~BosonHamiltonian.current_version
-      ~BosonHamiltonian.dicke_boson_spin_mapping
-      ~BosonHamiltonian.direct_boson_spin_mapping
       ~BosonHamiltonian.empty_clone
       ~BosonHamiltonian.from_bincode
       ~BosonHamiltonian.from_json
