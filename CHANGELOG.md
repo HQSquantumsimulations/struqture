@@ -4,6 +4,11 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.13.3
+
+* Standardised versioning by removing tildes `~`.
+* Updated to nalgebra 0.34 and jsonschema 0.32.
+
 ## 1.13.1 - 1.13.2
 
 * Fixed the release that failed for 1.13.0.
