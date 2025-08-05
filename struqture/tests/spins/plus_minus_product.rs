@@ -415,17 +415,17 @@ fn bincode_single() {
     let spinop = SinglePlusMinusOperator::Plus;
 
     let config = bincode::config::legacy();
-    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&spinop, config).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(spinop, config).unwrap();
     let (decoded, _): (SinglePlusMinusOperator, usize) =
         bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(spinop.clone(), decoded);
 
-    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&spinop.compact(), config).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(spinop.compact(), config).unwrap();
     let (decoded, _): (SinglePlusMinusOperator, usize) =
         bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(spinop.clone(), decoded);
 
-    let encoded: Vec<u8> = bincode::serde::encode_to_vec(&spinop.readable(), config).unwrap();
+    let encoded: Vec<u8> = bincode::serde::encode_to_vec(spinop.readable(), config).unwrap();
     let (decoded, _): (SinglePlusMinusOperator, usize) =
         bincode::serde::decode_from_slice(&encoded[..], config).unwrap();
     assert_eq!(spinop.clone(), decoded);
