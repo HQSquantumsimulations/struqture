@@ -4,6 +4,11 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.2.1
+
+* Updated to qoqo-calculator 1.7.1, jsonschema 0.32, nalgebra 0.34, criterion 0.7.
+* Stardardised versioning by removing tildes `~`.
+
 ## 2.2.0
 
 * Updated to pyo3 0.25.
