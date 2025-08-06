@@ -19,6 +19,8 @@ struqture\_py.bosons.BosonProduct
       ~BosonProduct.creators
       ~BosonProduct.current_number_modes
       ~BosonProduct.current_version
+      ~BosonProduct.dicke_boson_spin_mapping
+      ~BosonProduct.direct_boson_spin_mapping
       ~BosonProduct.from_bincode
       ~BosonProduct.from_json
       ~BosonProduct.from_json_struqture_1

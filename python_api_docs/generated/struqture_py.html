@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py &mdash; struqture_py 2.0.2 documentation</title>
+  <title>struqture_py &mdash; struqture_py 2.2.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=2060aa27"></script>
+      <script src="../_static/documentation_options.js?v=d9f9ff39"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -57,6 +57,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.add_operator_product"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.add_operator_product()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.current_number_modes"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.current_number_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.current_version"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.current_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.dicke_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.dicke_boson_spin_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.direct_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.direct_boson_spin_mapping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.empty_clone"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.empty_clone()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.from_bincode"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.from_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.from_json"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.from_json()</span></code></a></li>
@@ -79,6 +81,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.add_operator_product"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.add_operator_product()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.current_number_modes"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.current_number_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.current_version"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.current_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.dicke_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.dicke_boson_spin_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.direct_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.direct_boson_spin_mapping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.empty_clone"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.empty_clone()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.from_bincode"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.from_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonLindbladNoiseOperator.from_json"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator.from_json()</span></code></a></li>
@@ -148,6 +152,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.creators"><code class="docutils literal notranslate"><span class="pre">BosonProduct.creators()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.current_number_modes"><code class="docutils literal notranslate"><span class="pre">BosonProduct.current_number_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.current_version"><code class="docutils literal notranslate"><span class="pre">BosonProduct.current_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.dicke_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonProduct.dicke_boson_spin_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.direct_boson_spin_mapping"><code class="docutils literal notranslate"><span class="pre">BosonProduct.direct_boson_spin_mapping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.from_bincode"><code class="docutils literal notranslate"><span class="pre">BosonProduct.from_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.from_json"><code class="docutils literal notranslate"><span class="pre">BosonProduct.from_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.from_json_struqture_1"><code class="docutils literal notranslate"><span class="pre">BosonProduct.from_json_struqture_1()</span></code></a></li>
@@ -935,7 +941,7 @@ and an optional number of bosons.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">BosonHamiltonian</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">HermitianBosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 </pre></div>
@@ -985,6 +991,63 @@ and an optional number of bosons.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonHamiltonian.dicke_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">dicke_boson_spin_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins_per_bosonic_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonHamiltonian.dicke_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the mapping.</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_spins_per_bosonic_mode</strong> (<em>int</em>) -- The number of spins to represent each bosonic mode.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#struqture_py.PauliOperator" title="struqture_py.PauliOperator">PauliOperator</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonHamiltonian.direct_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">direct_boson_spin_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonHamiltonian.direct_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the direct mapping.</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#struqture_py.PauliOperator" title="struqture_py.PauliOperator">PauliOperator</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1324,6 +1387,63 @@ and an optional number of bosons.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonLindbladNoiseOperator.dicke_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">dicke_boson_spin_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins_per_bosonic_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonLindbladNoiseOperator.dicke_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the mapping.</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_spins_per_bosonic_mode</strong> (<em>int</em>) -- The number of spins to represent each bosonic mode.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#struqture_py.PauliLindbladNoiseOperator" title="struqture_py.PauliLindbladNoiseOperator">PauliLindbladNoiseOperator</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonLindbladNoiseOperator.direct_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">direct_boson_spin_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonLindbladNoiseOperator.direct_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the direct mapping.</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#struqture_py.PauliLindbladNoiseOperator" title="struqture_py.PauliLindbladNoiseOperator">PauliLindbladNoiseOperator</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2499,6 +2619,67 @@ would have current_number_modes of four.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonProduct.dicke_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">dicke_boson_spin_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins_per_bosonic_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonProduct.dicke_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the mapping.</p>
+<p><strong>WARNING</strong>: This function should only be used in conjunction with a MixedHamiltonian,
+otherwise the complex conjugate terms will be missing!!</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_spins_per_bosonic_mode</strong> (<em>int</em>) -- The number of spins to represent each bosonic mode.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#struqture_py.PauliOperator" title="struqture_py.PauliOperator">PauliOperator</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonProduct.direct_boson_spin_mapping">
+<span class="sig-name descname"><span class="pre">direct_boson_spin_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonProduct.direct_boson_spin_mapping" title="Link to this definition"></a></dt>
+<dd><p>Transforms the given bosonic object into a spin object using the direct mapping.</p>
+<p><strong>WARNING</strong>: This function should only be used in conjunction with a MixedHamiltonian,
+otherwise the complex conjugate terms will be missing!!</p>
+<p>This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+the mapping, as well as its use in the context of open system dynamics, can be found at:</p>
+<blockquote>
+<div><p>&lt;<a class="reference external" href="https://arxiv.org/pdf/2210.12138">https://arxiv.org/pdf/2210.12138</a>&gt;</p>
+</div></blockquote>
+<p>The mapping is given by:</p>
+<p>$ hat{b}_i^{dagger} hat{b}_i rightarrow sum_{j=1}^{N} hat{sigma}_+^{i,j} hat{sigma}_-^{i,j} $
+$ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sigma}_x^{i,j} $</p>
+<p>For a direct mapping, N is set to 1. For a Dicke mapping, N &gt; 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result of the mapping to a spin object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#struqture_py.PauliOperator" title="struqture_py.PauliOperator">PauliOperator</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> -- The boson -&gt; spin transformation is only available for
+    terms such as b†b or (b† + b).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.BosonProduct.from_bincode">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
@@ -2727,6 +2908,10 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 matrices acting on qubits in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{x}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{z}\)</span>:</p>
 <p><cite>DecoherenceProduct().x(0).z(2)</cite>.</p>
+<p>Note that these methods are setters that set the decoherence operator acting on the corresponding spin,
+and do not represent matrix multiplication. For example</p>
+<p><cite>DecoherenceProduct().z(0).z(0)</cite></p>
+<p>will set the decoherence operator on spin 0 to Z and not to the identity.</p>
 <p>DecoherenceProduct is supposed to be used as input for the function <cite>add_noise</cite>,
 for instance in the spin system classes PauliLindbladOpenSystem or PauliLindbladNoiseOperator,
 or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_systems.MixedDecoherenceProduct&gt;</cite>.</p>
@@ -3153,7 +3338,7 @@ and an optional number of fermions.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">FermionHamiltonian</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">HermitianFermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 </pre></div>
@@ -4319,7 +4504,7 @@ and an optional number of fermions.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">FermionOperator</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_modes</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 </pre></div>
@@ -6424,7 +6609,7 @@ and an optional number of mixed_systems.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">MixedHamiltonian</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">HermitianMixedProduct</span><span class="p">([</span><span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="p">[</span><span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="p">[</span><span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -7630,7 +7815,7 @@ and an optional number of mixed_systems.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">MixedOperator</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">MixedProduct</span><span class="p">([</span><span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="p">[</span><span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="p">[</span><span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -8015,7 +8200,7 @@ and an optional number of mixed_systems.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">MixedPlusMinusOperator</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">MixedPlusMinusProduct</span><span class="p">([</span><span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="p">[</span><span class="n">BosonProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="p">[</span><span class="n">FermionProduct</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -9138,7 +9323,7 @@ and an optional number of spins.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">PauliHamiltonian</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 <span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
@@ -10455,7 +10640,7 @@ and an optional number of spins.</p>
 <span class="n">system</span> <span class="o">=</span> <span class="n">PauliOperator</span><span class="p">()</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">PauliProduct</span><span class="p">()</span><span class="o">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">system</span><span class="o">.</span><span class="n">add_operator_product</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pp</span><span class="p">),</span> <span class="n">CalculatorComplex</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">npt</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="n">pp</span><span class="p">])</span>
 <span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span><span class="o">**</span><span class="n">system</span><span class="o">.</span><span class="n">current_number_spins</span><span class="p">()</span>
@@ -10861,6 +11046,10 @@ They are representations of products of pauli matrices acting on qubits,
 in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{x}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{x}\)</span> :</p>
 <p><cite>PauliProduct().x(0).x(2)</cite>.</p>
+<p>Note that these methods are setters that set the Pauli operator acting on the corresponding spin,
+and do not represent matrix multiplication. For example</p>
+<p><cite>PauliProduct().z(0).z(0)</cite></p>
+<p>will set the Pauli operator on spin 0 to Z and not to the identity.</p>
 <p>PauliProduct is  supposed to be used as input for the function <cite>set_pauli_product</cite>,
 for instance in the spin system classes PauliLindbladOpenSystem, PauliHamiltonian or PauliOperator,
 or in the mixed systems as part of <cite>MixedProduct &lt;mixed_systems.MixedProduct&gt;</cite>
@@ -12092,6 +12281,10 @@ They are representations of products of pauli matrices acting on qubits,
 in order to build the terms of a hamiltonian.
 For instance, to represent the term <span class="math notranslate nohighlight">\(\sigma_0^{+}\)</span> <span class="math notranslate nohighlight">\(\sigma_2^{+}\)</span> :</p>
 <p><cite>PlusMinusProduct().plus(0).plus(2)</cite>.</p>
+<p>Note that these methods are setters that set the operator acting on the corresponding spin,
+and do not represent matrix multiplication. For example</p>
+<p><cite>PlusMinusProduct().plus(0).plus(0)</cite></p>
+<p>will set the operator on spin 0 to :math: <cite>sigma_0^{+}</cite> and does not give the zero vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The new, empty PlusMinusProduct.</p>
