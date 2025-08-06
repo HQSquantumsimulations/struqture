@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.2.2
+
+* Added tilde `~` for struqture-py-macros dependency of struqture-py.
+
 ## 2.2.1
 
 * Updated to qoqo-calculator 1.7.1, jsonschema 0.32, nalgebra 0.34, criterion 0.7.
