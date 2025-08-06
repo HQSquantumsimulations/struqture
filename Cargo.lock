@@ -1672,9 +1672,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "struqture"
-version = "1.13.3"
+version = "1.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4d37c61652fba0c10effc946ced7da45bda4c9ad2fd3bbe13fd81a154e2dd13"
+checksum = "8c2da74b8d003595f06980583b82e94943f341e2b4dd4d6ea39577931269ee5c"
 dependencies = [
  "itertools 0.14.0",
  "ndarray",
@@ -1688,7 +1688,7 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.2.2"
+version = "2.2.3"
 dependencies = [
  "bincode",
  "criterion",
@@ -1704,7 +1704,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_test",
- "struqture 1.13.3",
+ "struqture 1.13.4",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1712,7 +1712,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "2.2.2"
+version = "2.2.3"
 dependencies = [
  "bincode",
  "nalgebra",
@@ -1728,8 +1728,8 @@ dependencies = [
  "regex",
  "schemars",
  "serde_json",
- "struqture 1.13.3",
- "struqture 2.2.2",
+ "struqture 1.13.4",
+ "struqture 2.2.3",
  "struqture-py-macros",
  "syn",
  "test-case",
@@ -1738,7 +1738,7 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "2.2.2"
+version = "2.2.3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2331,9 +2331,9 @@ dependencies = [
 
 [[package]]
 name = "zerovec"
-version = "0.11.3"
+version = "0.11.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bdbb9122ea75b11bf96e7492afb723e8a7fbe12c67417aa95e7e3d18144d37cd"
+checksum = "e7aa2bd55086f1ab526693ecbe444205da57e25f4489879da80635a46d90e73b"
 dependencies = [
  "yoke",
  "zerofrom",

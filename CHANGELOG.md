@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.2.3
+
+* Updated struqture 1 dependency to 1.13.
+
 ## 2.2.2
 
 * Added tilde `~` for struqture-py-macros dependency of struqture-py.
