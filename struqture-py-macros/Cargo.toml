@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py-macros"
-version = "2.2.2"
+version = "2.2.3"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.76"
