@@ -42,11 +42,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
-
 operator.add_operator_product(hbp, "parameter")
-operator.add_operator_product(hbp, CalculatorComplex.from_pair("parameter", 0.0))
 ```
 
 
@@ -69,9 +65,5 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorFloat
-
 hamiltonian.add_operator_product("c0a0", "parameter")
-hamiltonian.add_operator_product("c1a1", CalculatorFloat("parameter"))
 ```

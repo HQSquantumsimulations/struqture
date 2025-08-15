@@ -7,3 +7,6 @@ title = "HQS Struqture User Documentation"
 
 [output.html]
 mathjax-support = true
+fold.enable = true
+fold.level = 0
+additional-js = ["theme/expand_some.js"]

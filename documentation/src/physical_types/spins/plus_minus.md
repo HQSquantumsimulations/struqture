@@ -85,10 +85,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
 operator.add_operator_product("0Z1Z", "parameter")
-operator.add_operator_product("0Z1Z", CalculatorComplex.from_pair("parameter", 0.0))
 
 ```
 
