@@ -26,7 +26,7 @@ Note: the package will be faster in Rust than Python, as Rust is a compiled lang
 
 ## Contrast to similar tools
 
-Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. For example, the spin term \\( \sigma_0^x \sigma_4^x \\) is written as `"0X12X"` in struqture, versus Qiskit’s `SparsePauliOp("XIIIIIIIIIIIX")` and QuTiP’s \\( \sigma_0^x \otimes I \otimes ... \otimes I \otimes I \otimes \sigma_4^x \\). By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.
+Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. For example, the spin term \\( \sigma_0^x \sigma_12^x \\) is written as `"0X12X"` in struqture, versus Qiskit’s `SparsePauliOp("XIIIIIIIIIIIX")` and QuTiP’s \\( \sigma_0^x \otimes I \otimes ... \otimes I \otimes I \otimes \sigma_12^x \\). By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.
 Additionally, QuTiP lacks native symbolic parameters; struqture supports them, so you can define a parameterized Hamiltonian once and substitute numerical values later—for example, varying coefficients across Trotter-evolution steps.
 
 ## Installation
