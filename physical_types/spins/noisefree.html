@@ -209,10 +209,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
 operator.add_operator_product("0Z1Z", "parameter")
-operator.add_operator_product("0Z1Z", CalculatorComplex.from_pair("parameter", 0.0))
 
 </code></pre>
 <p>Here is an example of how to build a <code>PauliHamiltonian</code>:</p>
@@ -239,10 +236,7 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorFloat
 hamiltonian.add_operator_product("0Z1Z", "parameter")
-hamiltonian.add_operator_product("0Z1Z", CalculatorFloat("parameter"))
 </code></pre>
 <h2 id="mathematical-operations"><a class="header" href="#mathematical-operations">Mathematical operations</a></h2>
 <p>The available mathematical operations for <code>PauliOperator</code> are demonstrated below:</p>
@@ -338,6 +332,7 @@ print(python_coo.todense())
         <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="../../theme/expand_some.js"></script>
 
 
 

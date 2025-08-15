@@ -196,6 +196,9 @@ The symbolic expression support is achieved by using CalculatorComplex and Calcu
 Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.</p>
 <p>This documentation is split into two parts. The <a href="physical_types/intro.html">first part</a> covers the basic usage for spins, bosons, fermions and mixed systems. The <a href="container_types/intro.html">second part</a> covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world <a href="example.html">example</a> is also included in.</p>
 <p>Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls.</p>
+<h2 id="contrast-to-similar-tools"><a class="header" href="#contrast-to-similar-tools">Contrast to similar tools</a></h2>
+<p>Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. For example, the spin term \( \sigma_0^x \sigma_12^x \) is written as <code>"0X12X"</code> in struqture, versus Qiskit’s <code>SparsePauliOp("XIIIIIIIIIIIX")</code> and QuTiP’s \( \sigma_0^x \otimes I \otimes ... \otimes I \otimes I \otimes \sigma_12^x \). By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.
+Additionally, QuTiP lacks native symbolic parameters; struqture supports them, so you can define a parameterized Hamiltonian once and substitute numerical values later—for example, varying coefficients across Trotter-evolution steps.</p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <h3 id="python"><a class="header" href="#python">Python</a></h3>
 <p>You can install <code>struqture_py</code> from PyPi. For x86 Linux, Windows and macOS systems pre-built wheels are available.
@@ -302,7 +305,7 @@ i &amp; 0
 \end{pmatrix}
 \]</li>
 </ul>
-<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x\ \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x_0 \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
 <p>However, for more fine-grain control over the operators, we invite the user to look into the <code>PauliProducts</code> and <code>DecoherenceProducts</code> classes, in the <a href="physical_types/spins/./products.html">Building blocks</a> section. If not, please proceed to the <a href="physical_types/spins/./noisefree.html">coherent</a> or <a href="physical_types/spins/./noisy.html">decoherent</a> dynamics section.</p>
 <p><strong>NOTE</strong>: There exists an alternative representation, the {+, -, Z} basis, detailed in the <a href="physical_types/spins/./plus_minus.html">alternative basis</a> section.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
@@ -377,10 +380,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
 operator.add_operator_product("0Z1Z", "parameter")
-operator.add_operator_product("0Z1Z", CalculatorComplex.from_pair("parameter", 0.0))
 
 </code></pre>
 <p>Here is an example of how to build a <code>PauliHamiltonian</code>:</p>
@@ -407,10 +407,7 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorFloat
 hamiltonian.add_operator_product("0Z1Z", "parameter")
-hamiltonian.add_operator_product("0Z1Z", CalculatorFloat("parameter"))
 </code></pre>
 <h2 id="mathematical-operations"><a class="header" href="#mathematical-operations">Mathematical operations</a></h2>
 <p>The available mathematical operations for <code>PauliOperator</code> are demonstrated below:</p>
@@ -621,10 +618,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
 operator.add_operator_product("0Z1Z", "parameter")
-operator.add_operator_product("0Z1Z", CalculatorComplex.from_pair("parameter", 0.0))
 
 </code></pre>
 <h3 id="mathematical-operations-1"><a class="header" href="#mathematical-operations-1">Mathematical operations</a></h3>
@@ -781,11 +775,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
-
 operator.add_operator_product(hbp, "parameter")
-operator.add_operator_product(hbp, CalculatorComplex.from_pair("parameter", 0.0))
 </code></pre>
 <p>Here is an example of how to build a <code>BosonHamiltonian</code>:</p>
 <pre><code class="language-python">from struqture_py import bosons
@@ -804,11 +794,7 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorFloat
-
 hamiltonian.add_operator_product("c0a0", "parameter")
-hamiltonian.add_operator_product("c1a1", CalculatorFloat("parameter"))
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="noise-operators-1"><a class="header" href="#noise-operators-1">Noise operators</a></h1>
 <p>We describe decoherence by representing it with the Lindblad equation.
@@ -945,11 +931,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
-
 operator.add_operator_product("c0c1a0a2", "parameter")
-operator.add_operator_product("c0c1a0a2", CalculatorComplex.from_pair("parameter", 0.0))
 </code></pre>
 <p>Here is an example of how to build a <code>FermionHamiltonian</code>:</p>
 <pre><code class="language-python">from struqture_py import fermions
@@ -968,11 +950,7 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorFloat
-
 hamiltonian.add_operator_product("c0a0", "parameter")
-hamiltonian.add_operator_product("c1a1", CalculatorFloat("parameter"))
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="noise-operators-2"><a class="header" href="#noise-operators-2">Noise operators</a></h1>
 <p>We describe decoherence by representing it with the Lindblad equation.
@@ -1115,11 +1093,7 @@ print(operator)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
-
 operator.add_operator_product("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1", "parameter")
-operator.add_operator_product("S0X1Z:S0Y:Bc1c2a2:Fc0c1a0a1", CalculatorComplex.from_pair("parameter", 0.0))
 
 # This will not work, as the number of subsystems of the
 # hamiltonian and product do not match.
@@ -1144,11 +1118,7 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction.
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorFloat
-
 hamiltonian.add_operator_product("S0X:Bc0a0:Fc0a0", "parameter")
-hamiltonian.add_operator_product("S0X:Bc0a0:Fc0a0", CalculatorFloat("parameter"))
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="noise-operators-3"><a class="header" href="#noise-operators-3">Noise operators</a></h1>
 <p>We describe decoherence by representing it with the Lindblad equation.
@@ -1398,11 +1368,7 @@ print(hamiltonian)
 
 # NOTE: the above values used can also be complex, or symbolic.
 # Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-# In order to set a symbolic parameter, we can pass either a string or use the `qoqo_calculator_pyo3` package:
-from qoqo_calculator_pyo3 import CalculatorComplex
 hamiltonian.add_operator_product(hmp, "parameter")
-# The syntax below is particularly useful for building non-hermitian operators, such as MixedOperators, as the imaginary part can then be non-zero
-hamiltonian.add_operator_product(hmp, CalculatorComplex.from_pair("parameter", 0.0))
 </code></pre>
 
                     </main>
@@ -1439,6 +1405,7 @@ hamiltonian.add_operator_product(hmp, CalculatorComplex.from_pair("parameter", 0
         <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="theme/expand_some.js"></script>
 
         <script>
         window.addEventListener('load', function() {

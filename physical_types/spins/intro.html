@@ -257,7 +257,7 @@ i &amp; 0
 \end{pmatrix}
 \]</li>
 </ul>
-<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x\ \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x_0 \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
 <p>However, for more fine-grain control over the operators, we invite the user to look into the <code>PauliProducts</code> and <code>DecoherenceProducts</code> classes, in the <a href="./products.html">Building blocks</a> section. If not, please proceed to the <a href="./noisefree.html">coherent</a> or <a href="./noisy.html">decoherent</a> dynamics section.</p>
 <p><strong>NOTE</strong>: There exists an alternative representation, the {+, -, Z} basis, detailed in the <a href="./plus_minus.html">alternative basis</a> section.</p>
 
@@ -307,6 +307,7 @@ i &amp; 0
         <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="../../theme/expand_some.js"></script>
 
 
 
