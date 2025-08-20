@@ -508,3 +508,14 @@ fn direct_boson_to_spin_mapping() {
         assert_eq!(result_wrapper.internal, rust_operator);
     });
 }
+
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_pp(py, vec![14, 18], vec![27]);
+        let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
+
+        assert_eq!(pprint, "b₁₄b₁₈b₂₇†");
+    })
+}

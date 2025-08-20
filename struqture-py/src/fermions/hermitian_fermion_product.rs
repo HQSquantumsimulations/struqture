@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use super::FermionProductWrapper;
-use crate::spins::PauliHamiltonianWrapper;
+use crate::{create_subscript, spins::PauliHamiltonianWrapper};
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -99,5 +99,34 @@ impl HermitianFermionProductWrapper {
             return_vector.push((FermionProductWrapper { internal: obj.0 }, obj.1));
         }
         return_vector
+    }
+
+    pub fn pprint(&self) -> String {
+        let mut output = String::new();
+        let mut hermitian_part = String::new();
+        for creator in self.creators() {
+            output.push('c');
+            hermitian_part.push('c');
+            let creator_string = format!("{creator}");
+            for char in creator_string.chars() {
+                output.push(create_subscript(char));
+                hermitian_part.push(create_subscript(char));
+            }
+            hermitian_part.push('\u{2020}');
+        }
+        for annihilator in self.annihilators() {
+            output.push('c');
+            hermitian_part.push('c');
+            let annihilator_string = format!("{annihilator}");
+            for char in annihilator_string.chars() {
+                output.push(create_subscript(char));
+                hermitian_part.push(create_subscript(char));
+            }
+            output.push('\u{2020}');
+        }
+
+        output.push_str(" + ");
+        output.push_str(&hermitian_part);
+        output
     }
 }
