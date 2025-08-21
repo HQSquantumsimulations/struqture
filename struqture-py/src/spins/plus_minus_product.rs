@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use super::{DecoherenceProductWrapper, PauliProductWrapper};
-use crate::fermions::FermionOperatorWrapper;
+use crate::{create_subscript, fermions::FermionOperatorWrapper};
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -247,5 +247,26 @@ impl PlusMinusProductWrapper {
             })
             .collect();
         result_pyo3
+    }
+
+    pub fn pprint(&self) -> String {
+        let mut output = String::new();
+        for (index, pauli) in self.internal.clone() {
+            match pauli {
+                SinglePlusMinusOperator::Plus => output.push('+'),
+                SinglePlusMinusOperator::Minus => output.push('-'),
+                SinglePlusMinusOperator::Z => output.push('z'),
+                SinglePlusMinusOperator::Identity => break,
+            };
+            let creator_string = format!("{index}");
+            for char in creator_string.chars() {
+                output.push(create_subscript(char));
+            }
+        }
+        if output.is_empty() {
+            output.push('I');
+        }
+
+        output
     }
 }
