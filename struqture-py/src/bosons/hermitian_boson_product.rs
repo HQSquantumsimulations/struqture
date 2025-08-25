@@ -123,8 +123,13 @@ impl HermitianBosonProductWrapper {
             output.push('\u{2020}');
         }
 
-        output.push_str(" + ");
-        output.push_str(&hermitian_part);
+        if output.is_empty() {
+            output.push('I');
+        } else {
+            output.push_str(" + ");
+            output.push_str(&hermitian_part);
+        }
+
         output
     }
 }

@@ -525,5 +525,9 @@ fn test_pprint() {
         let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
 
         assert_eq!(pprint, "c₁₄c₁₈c₁₄†c₂₇† + c₁₄†c₁₈†c₁₄c₂₇");
+
+        let new = new_pp(py, vec![], vec![]);
+        let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "I");
     })
 }

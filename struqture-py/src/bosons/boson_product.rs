@@ -181,6 +181,10 @@ impl BosonProductWrapper {
             output.push('\u{2020}');
         }
 
+        if output.is_empty() {
+            output.push('I');
+        }
+
         output
     }
 }

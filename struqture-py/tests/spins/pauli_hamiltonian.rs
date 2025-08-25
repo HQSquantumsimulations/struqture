@@ -820,3 +820,17 @@ fn test_from_json_struqture_1() {
         assert!(sys_from_1.is_err());
     });
 }
+
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let sys = new_system(py);
+        sys.call_method1("add_operator_product", ("1Z27Y", 1.2))
+            .unwrap();
+        sys.call_method1("add_operator_product", ("3X", 0.2))
+            .unwrap();
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "1.2e0 z₁y₂₇\n2e-1 x₃\n");
+    })
+}

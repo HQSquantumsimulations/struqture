@@ -517,5 +517,9 @@ fn test_pprint() {
         let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
 
         assert_eq!(pprint, "b₁₄b₁₈b₂₇†");
+
+        let new = new_pp(py, vec![], vec![]);
+        let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "I");
     })
 }
