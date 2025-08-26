@@ -140,7 +140,7 @@ impl DecoherenceProductWrapper {
     }
 
     /// Pretty print (pprint) function.
-    /// 
+    ///
     /// Returns:
     ///     str: string of the pretty print representation of the object.
     pub fn pprint(&self) -> String {
