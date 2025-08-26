@@ -1028,3 +1028,82 @@ fn test_from_json_struqture_1() {
         assert!(sys_from_1.is_err());
     });
 }
+
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let sys = new_system(py, 2, 2, 2);
+        sys.call_method1(
+            "add_operator_product",
+            (
+                (
+                    "S1Z27iY:SI:BI:Bc14c18a27:Fc14c18a27:Fc14c18a27",
+                    "SI:SI:BI:BI:Fa3:FI",
+                ),
+                1.2,
+            ),
+        )
+        .unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (("SI:SI:BI:BI:Fa3:FI", "SI:SI:BI:BI:Fa3:FI"), 0.2),
+        )
+        .unwrap();
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(
+            pprint,
+            "(1.2e0 + i * 0e0) ([z₁iy₂₇, I], [I, b₁₄b₁₈b₂₇†], [c₁₄c₁₈c₂₇†, c₁₄c₁₈c₂₇†], [I, I], [I, I], [c₃†, I])\n(2e-1 + i * 0e0) ([I, I], [I, I], [c₃†, I], [I, I], [I, I], [c₃†, I])\n"
+        );
+
+        let sys = new_system(py, 2, 0, 0);
+        sys.call_method1("add_operator_product", (("S1Z27iY:SI:", "SI:SI:"), 1.2))
+            .unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (("S1Z27iY:S1Z27iY", "S1Z27iY:S1Z27iY:"), 0.2),
+        )
+        .unwrap();
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(
+            pprint,
+            "(1.2e0 + i * 0e0) ([z₁iy₂₇, I], [I, I])\n(2e-1 + i * 0e0) ([z₁iy₂₇, z₁iy₂₇], [z₁iy₂₇, z₁iy₂₇])\n"
+        );
+
+        let sys = new_system(py, 1, 1, 0);
+        sys.call_method1(
+            "add_operator_product",
+            (("S1Z27iY:BI:", "SI:Bc14c18a27:"), 1.2),
+        )
+        .unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (("S1Z27iY:Bc14c18a27", "S1Z27iY:Bc14c18a27:"), 0.2),
+        )
+        .unwrap();
+        println!("In twst");
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(
+            pprint,
+            "(1.2e0 + i * 0e0) (z₁iy₂₇ I, I b₁₄b₁₈b₂₇†)\n(2e-1 + i * 0e0) (z₁iy₂₇ b₁₄b₁₈b₂₇†, z₁iy₂₇ b₁₄b₁₈b₂₇†)\n"
+        );
+
+        let sys = new_system(py, 1, 0, 1);
+        sys.call_method1(
+            "add_operator_product",
+            (("S1Z27iY:FI:", "SI:Fc14c18a27:"), 1.2),
+        )
+        .unwrap();
+        sys.call_method1(
+            "add_operator_product",
+            (("S1Z27iY:Fc14c18a27", "S1Z27iY:Fc14c18a27:"), 0.2),
+        )
+        .unwrap();
+        println!("In twst");
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(
+            pprint,
+            "(1.2e0 + i * 0e0) (z₁iy₂₇ I, I c₁₄c₁₈c₂₇†)\n(2e-1 + i * 0e0) (z₁iy₂₇ c₁₄c₁₈c₂₇†, z₁iy₂₇ c₁₄c₁₈c₂₇†)\n"
+        );
+    })
+}

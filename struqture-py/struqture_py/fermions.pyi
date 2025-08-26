@@ -62,6 +62,14 @@ class FermionProduct(ProductType):
         the Jordan Wigner mapping.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -309,6 +317,14 @@ class HermitianFermionProduct(ProductType):
         """
         Transform the given fermionic object into a spin object using
         the Jordan Wigner mapping.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -662,6 +678,14 @@ class FermionOperator:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> FermionOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -928,6 +952,14 @@ class FermionHamiltonian:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> FermionHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -1043,7 +1075,8 @@ class FermionLindbladNoiseOperator(NoiseType):
     """
     These are representations of noisy systems of fermions.
 
-    In a FermionLindbladNoiseOperator is characterized by a FermionLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of fermions.
+    Returns:
+        self: The new FermionLindbladNoiseSystem.
 
     Examples
     --------
@@ -1177,6 +1210,14 @@ class FermionLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def current_number_modes(self) -> int:  # type: ignore
@@ -1482,6 +1523,14 @@ class FermionLindbladOpenSystem(SystemType):
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to CalculatorComplex.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore

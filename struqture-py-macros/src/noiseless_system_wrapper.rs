@@ -276,6 +276,19 @@ pub fn noiselesswrapper(
                     }
                     system_values
                 }
+
+                /// Pretty print (pprint) function.
+                ///
+                /// Returns:
+                ///     str: string of the pretty print representation of the object.
+                pub fn pprint(&self) -> String {
+                    let mut output = String::new();
+                    for (key, value) in self.internal.iter() {
+                        output.push_str(&(format!("{} ", value) + #index_type { internal: key.clone() }.pprint().as_str() + "\n"));
+                    }
+
+                    output
+                }
         }
     } else {
         TokenStream::new()

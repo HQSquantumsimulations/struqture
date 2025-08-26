@@ -1850,3 +1850,31 @@ fn test_from_json_struqture_1() {
         assert!(sys_from_1.is_err());
     });
 }
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let sys = new_system(py, 2, 2, 2);
+        sys.call_method1(
+            "noise_add_operator_product",
+            (
+                (
+                    "S1Z27iY:SI:BI:Bc14c18a27:Fc14c18a27:Fc14c18a27",
+                    "SI:SI:BI:BI:Fa3:FI",
+                ),
+                1.2,
+            ),
+        )
+        .unwrap();
+        sys.call_method1(
+            "system_add_operator_product",
+            ("S1Z27Y:SI:BI:Bc14c18a27:Fc14c18a27:Fc14c18a27", 1.2),
+        )
+        .unwrap();
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(
+            pprint,
+            "System:\n(1.2e0 + i * 0e0) [z₁y₂₇, I], [I, b₁₄b₁₈b₂₇†], [c₁₄c₁₈c₂₇†, c₁₄c₁₈c₂₇†] + h.c.\n\nNoise:\n(1.2e0 + i * 0e0) ([z₁iy₂₇, I], [I, b₁₄b₁₈b₂₇†], [c₁₄c₁₈c₂₇†, c₁₄c₁₈c₂₇†], [I, I], [I, I], [c₃†, I])\n"
+        );
+    })
+}

@@ -579,3 +579,19 @@ fn test_from_json_struqture_1() {
         assert!(pp_from_1.is_err());
     });
 }
+
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_pp(py);
+        let pp = new.call_method1("set_pauli", (1_u64, "Z")).unwrap();
+        let pp = pp.call_method1("set_pauli", (27_u64, "iY")).unwrap();
+        let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "z₁iy₂₇");
+
+        let new = new_pp(py);
+        let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "I");
+    })
+}
