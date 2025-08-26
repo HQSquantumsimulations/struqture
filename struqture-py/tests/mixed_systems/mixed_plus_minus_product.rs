@@ -629,7 +629,7 @@ fn test_pprint() {
 
         let pp = new_pp(py, vec![], vec!["c14c18a27".to_string()], vec![]);
         let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
-        assert_eq!(pprint, "b₁₄b₁₈b₂₇† ");
+        assert_eq!(pprint, "b₁₄b₁₈b₂₇†");
 
         let pp = new_pp(
             py,

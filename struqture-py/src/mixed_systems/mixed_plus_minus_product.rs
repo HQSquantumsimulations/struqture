@@ -197,56 +197,90 @@ impl MixedPlusMinusProductWrapper {
     pub fn pprint(&self) -> String {
         let mut output = String::new();
         // Spins
-        match self.spins().len() {
-            0 => {}
-            1 => output.push_str((self.spins()[0].pprint() + " ").as_str()),
+        let (spin_string, spin_length) = match self.spins().len() {
+            0 => (String::new(), 0),
+            1 => (self.spins()[0].pprint(), 1),
             _ => {
-                output.push('[');
+                let mut spin_string = String::new();
+                spin_string.push('[');
                 let spins = self.spins();
                 let mut iterator = spins.iter().peekable();
                 while let Some(spin) = iterator.next() {
-                    output.push_str(spin.pprint().as_str());
+                    spin_string.push_str(spin.pprint().as_str());
                     if iterator.peek().is_some() {
-                        output.push_str(", ");
+                        spin_string.push_str(", ");
                     }
                 }
-                output.push_str("], ");
+                spin_string.push(']');
+                (spin_string, 2)
             }
-        }
+        };
         // Bosons
-        match self.bosons().len() {
-            0 => {}
-            1 => output.push_str((self.bosons()[0].pprint() + " ").as_str()),
+        let (boson_string, boson_length) = match self.bosons().len() {
+            0 => (String::new(), 0),
+            1 => (self.bosons()[0].pprint(), 1),
             _ => {
-                output.push('[');
+                let mut boson_string = String::new();
+                boson_string.push('[');
                 let bosons = self.bosons();
                 let mut iterator = bosons.iter().peekable();
                 while let Some(boson) = iterator.next() {
-                    output.push_str(boson.pprint().as_str());
+                    boson_string.push_str(boson.pprint().as_str());
                     if iterator.peek().is_some() {
-                        output.push_str(", ");
+                        boson_string.push_str(", ");
                     }
                 }
-                output.push_str("], ");
+                boson_string.push(']');
+                (boson_string, 2)
             }
-        }
+        };
         // Fermions
-        match self.fermions().len() {
-            0 => {}
-            1 => output.push_str(self.fermions()[0].pprint().as_str()),
+        let (fermion_string, _) = match self.fermions().len() {
+            0 => (String::new(), 0),
+            1 => (self.fermions()[0].pprint(), 1),
             _ => {
-                output.push('[');
+                let mut fermion_string = String::new();
+                fermion_string.push('[');
                 let fermions = self.fermions();
                 let mut iterator = fermions.iter().peekable();
                 while let Some(fermion) = iterator.next() {
-                    output.push_str(fermion.pprint().as_str());
+                    fermion_string.push_str(fermion.pprint().as_str());
                     if iterator.peek().is_some() {
-                        output.push_str(", ");
+                        fermion_string.push_str(", ");
                     }
                 }
-                output.push(']');
+                fermion_string.push(']');
+                (fermion_string, 2)
             }
-        }
+        };
+
+        output.push_str(spin_string.as_str());
+        let spacing = if !boson_string.is_empty() || !fermion_string.is_empty() {
+            match spin_length {
+                0 => "",
+                1 => " ",
+                2 => ", ",
+                _ => panic!("pprint has ended up in an impossible match arm, please contact the developers of struqture.")
+            }
+        } else {
+            ""
+        };
+        output.push_str(spacing);
+
+        output.push_str(boson_string.as_str());
+        let spacing = if !fermion_string.is_empty() {
+            match boson_length {
+                0 => "",
+                1 => " ",
+                2 => ", ",
+                _ => panic!("pprint has ended up in an impossible match arm, please contact the developers of struqture.")
+            }
+        } else {
+            ""
+        };
+        output.push_str(spacing);
+
+        output.push_str(fermion_string.as_str());
 
         output
     }

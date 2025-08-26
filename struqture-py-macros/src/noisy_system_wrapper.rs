@@ -350,6 +350,17 @@ pub fn noisywrapper(
                         }
                     }
                 }
+
+                pub fn pprint(&self) -> String {
+                    let mut output = String::new();
+                    for ((key_l, key_r), value) in self.internal.iter() {
+                        let pprint_left = #index_type { internal: key_l.clone() };
+                        let pprint_right = #index_type { internal: key_r.clone() };
+                        output.push_str(&(format!("{} ({}, {})", value, pprint_left.pprint().as_str(), pprint_right.pprint().as_str()) + "\n"));
+                    }
+
+                    output
+                }
         }
     } else {
         TokenStream::new()
@@ -761,6 +772,17 @@ pub fn noisywrapper(
                         err
                     ))),
                 }
+            }
+
+            pub fn pprint(&self) -> String {
+                let mut output = String::new();
+
+                output.push_str("System:\n");
+                output.push_str(self.system().pprint().as_str());
+                output.push_str("\nNoise:\n");
+                output.push_str(self.noise().pprint().as_str());
+
+                output
             }
         }
     } else {

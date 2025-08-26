@@ -1577,3 +1577,19 @@ fn test_from_json_struqture_1() {
         assert!(sys_from_1.is_err());
     });
 }
+
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let sys = new_system(py);
+        sys.call_method1("system_add_operator_product", ("c14c18a27", 1.0))
+            .unwrap();
+        sys.call_method1("noise_add_operator_product", (("c14c18a27", "a3"), 1.2))
+            .unwrap();
+        sys.call_method1("noise_add_operator_product", (("a3", "a3"), 0.2))
+            .unwrap();
+        let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "System:\n(1e0 + i * 0e0) b₁₄b₁₈b₂₇† + b₁₄†b₁₈†b₂₇\n\nNoise:\n(1.2e0 + i * 0e0) (b₁₄b₁₈b₂₇†, b₃†)\n(2e-1 + i * 0e0) (b₃†, b₃†)\n");
+    })
+}
