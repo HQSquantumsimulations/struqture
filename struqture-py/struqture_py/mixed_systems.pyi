@@ -86,10 +86,7 @@ class MixedProduct(ProductType):
     """
 
     def __init__(
-        self,
-        spins: List[PauliProduct],
-        bosons: List[BosonProduct],
-        fermions: List[FermionProduct],
+        self, spins: List[PauliProduct], bosons: List[BosonProduct], fermions: List[FermionProduct]
     ):
         return
 
@@ -114,6 +111,17 @@ class MixedProduct(ProductType):
             ValueError: Valid pair could not be constructed, fermions couldn't be converted from string.
             TypeError: Value cannot be converted to CalculatorComplex.
             ValueError: Valid pair could not be constructed.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Each particle type is separated by either a comma (if there is more than one subsystem of
+        this type) or by a space (if there is only one subsystem of this type).
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -344,10 +352,7 @@ class HermitianMixedProduct(ProductType):
     """
 
     def __init__(
-        self,
-        spins: List[PauliProduct],
-        bosons: List[BosonProduct],
-        fermions: List[FermionProduct],
+        self, spins: List[PauliProduct], bosons: List[BosonProduct], fermions: List[FermionProduct]
     ):
         return
 
@@ -372,6 +377,17 @@ class HermitianMixedProduct(ProductType):
             ValueError: Valid pair could not be constructed, fermions couldn't be converted from string.
             TypeError: Value cannot be converted to CalculatorComplex.
             ValueError: Valid pair could not be constructed.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Each particle type is separated by either a comma (if there is more than one subsystem of
+        this type) or by a space (if there is only one subsystem of this type).
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -630,6 +646,14 @@ class MixedDecoherenceProduct(ProductType):
             ValueError: Valid pair could not be constructed, fermions couldn't be converted from string.
             TypeError: Value cannot be converted to CalculatorComplex.
             ValueError: Valid pair could not be constructed.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -951,6 +975,14 @@ class MixedOperator:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> MixedOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -1220,6 +1252,14 @@ class MixedHamiltonian:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> MixedHamiltonian:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -1482,6 +1522,14 @@ class MixedLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def current_number_spins(self) -> List[int]:  # type: ignore
@@ -1795,6 +1843,14 @@ class MixedLindbladOpenSystem(SystemType):
             TypeError: Value cannot be converted to CalculatorComplex.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def current_number_spins(self) -> List[int]:  # type: ignore
         """
         Return the current_number_spins input of each spin subsystem of self.
@@ -1995,6 +2051,17 @@ class MixedPlusMinusProduct(ProductType):
 
         Raises:
             ValueError: The conversion was not successful.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Each particle type is separated by either a comma (if there is more than one subsystem of
+        this type) or by a space (if there is only one subsystem of this type).
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -2340,6 +2407,14 @@ class MixedPlusMinusOperator:
 
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self) -> MixedPlusMinusOperator:  # type: ignore

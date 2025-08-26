@@ -35,6 +35,13 @@ class PauliProduct(ProductType):
 
     `PauliProduct().x(0).x(2)`.
 
+    Note that these methods are setters that set the Pauli operator acting on the corresponding spin,
+    and do not represent matrix multiplication. For example
+
+    `PauliProduct().z(0).z(0)`
+
+    will set the Pauli operator on spin 0 to Z and not to the identity.
+
     PauliProduct is  supposed to be used as input for the function `set_pauli_product`,
     for instance in the spin system classes PauliLindbladOpenSystem, PauliHamiltonian or PauliOperator,
     or in the mixed systems as part of `MixedProduct <mixed_systems.MixedProduct>`
@@ -110,6 +117,14 @@ class PauliProduct(ProductType):
 
         Returns:
             self: The entry was correctly set and the PauliProduct is returned.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -323,6 +338,13 @@ class DecoherenceProduct(ProductType):
 
     `DecoherenceProduct().x(0).z(2)`.
 
+    Note that these methods are setters that set the decoherence operator acting on the corresponding spin,
+    and do not represent matrix multiplication. For example
+
+    `DecoherenceProduct().z(0).z(0)`
+
+    will set the decoherence operator on spin 0 to Z and not to the identity.
+
     DecoherenceProduct is supposed to be used as input for the function `add_noise`,
     for instance in the spin system classes PauliLindbladOpenSystem or PauliLindbladNoiseOperator,
     or in the mixed systems as part of `MixedDecoherenceProduct <mixed_systems.MixedDecoherenceProduct>`.
@@ -396,6 +418,14 @@ class DecoherenceProduct(ProductType):
 
         Returns:
             self: The entry was correctly set and the DecoherenceProduct is returned.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -742,6 +772,14 @@ class PauliOperator:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> PauliOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -1036,6 +1074,14 @@ class PauliHamiltonian:
 
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self) -> PauliHamiltonian:  # type: ignore
@@ -1350,6 +1396,14 @@ class PauliLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def current_number_spins(self) -> int:  # type: ignore
@@ -1691,6 +1745,14 @@ class PauliLindbladOpenSystem(SystemType):
             TypeError: Value cannot be converted to CalculatorComplex.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def sparse_matrix_superoperator_coo(self, number_spins: int) -> Tuple[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]:  # type: ignore
         """
         Construct the sparse matrix representation of the superoperator in COO representation.
@@ -1816,6 +1878,13 @@ class PlusMinusProduct(ProductType):
 
     `PlusMinusProduct().plus(0).plus(2)`.
 
+    Note that these methods are setters that set the operator acting on the corresponding spin,
+    and do not represent matrix multiplication. For example
+
+    `PlusMinusProduct().plus(0).plus(0)`
+
+    will set the operator on spin 0 to :math: `\sigma_0^{+}` and does not give the zero vector.
+
     Returns:
         self: The new, empty PlusMinusProduct.
 
@@ -1916,6 +1985,14 @@ class PlusMinusProduct(ProductType):
 
         Returns:
             List[Tuple[(DecoherenceProduct, CalculatorComplex)]]: A list of the terms `self` corresponds to.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self):  # type: ignore
@@ -2296,6 +2373,14 @@ class PlusMinusOperator:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> PlusMinusOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -2580,6 +2665,14 @@ class PlusMinusLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore

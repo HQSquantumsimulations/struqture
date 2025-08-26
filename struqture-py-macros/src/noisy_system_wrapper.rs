@@ -350,7 +350,10 @@ pub fn noisywrapper(
                         }
                     }
                 }
-
+                /// Pretty print (pprint) function.
+                /// 
+                /// Returns:
+                ///     str: string of the pretty print representation of the object.
                 pub fn pprint(&self) -> String {
                     let mut output = String::new();
                     for ((key_l, key_r), value) in self.internal.iter() {
@@ -773,7 +776,10 @@ pub fn noisywrapper(
                     ))),
                 }
             }
-
+            /// Pretty print (pprint) function.
+            /// 
+            /// Returns:
+            ///     str: string of the pretty print representation of the object.
             pub fn pprint(&self) -> String {
                 let mut output = String::new();
 

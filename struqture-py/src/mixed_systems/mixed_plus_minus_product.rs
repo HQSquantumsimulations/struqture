@@ -194,6 +194,13 @@ impl MixedPlusMinusProductWrapper {
         Ok(result_pyo3)
     }
 
+    /// Pretty print (pprint) function.
+    /// 
+    /// Each particle type is separated by either a comma (if there is more than one subsystem of
+    /// this type) or by a space (if there is only one subsystem of this type).
+    /// 
+    /// Returns:
+    ///     str: string of the pretty print representation of the object.
     pub fn pprint(&self) -> String {
         let mut output = String::new();
         // Spins

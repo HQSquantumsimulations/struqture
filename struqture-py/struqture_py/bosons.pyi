@@ -56,6 +56,69 @@ class BosonProduct(ProductType):
     def __init__(self, creators: List[int], annihilators: List[int]):
         return
 
+    def direct_boson_spin_mapping(self) -> PauliOperator:  # type: ignore
+        """
+        Transforms the given bosonic object into a spin object using the direct mapping.
+
+        **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+        otherwise the complex conjugate terms will be missing!!
+
+        This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+        the mapping, as well as its use in the context of open system dynamics, can be found at:
+                                <https://arxiv.org/pdf/2210.12138>
+
+        The mapping is given by:
+
+        $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+        $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+
+        For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+
+        Returns:
+            PauliOperator: The result of the mapping to a spin object.
+
+        Raises:
+            ValueError: The boson -> spin transformation is only available for
+                        terms such as b†b or (b† + b).
+        """
+
+    def dicke_boson_spin_mapping(self, number_spins_per_bosonic_mode: int) -> PauliOperator:  # type: ignore
+        """
+        Transforms the given bosonic object into a spin object using the mapping.
+
+        **WARNING**: This function should only be used in conjunction with a MixedHamiltonian,
+        otherwise the complex conjugate terms will be missing!!
+
+        This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+        the mapping, as well as its use in the context of open system dynamics, can be found at:
+                                <https://arxiv.org/pdf/2210.12138>
+
+        The mapping is given by:
+
+        $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+        $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+
+        For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+
+        Args:
+            number_spins_per_bosonic_mode (int): The number of spins to represent each bosonic mode.
+
+        Returns:
+            PauliOperator: The result of the mapping to a spin object.
+
+        Raises:
+            ValueError: The boson -> spin transformation is only available for
+                        terms such as b†b or (b† + b).
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self):  # type: ignore
         """
         Return the hermitian conjugate of self and its prefactor.
@@ -298,6 +361,14 @@ class HermitianBosonProduct(ProductType):
 
     def __init__(self, creators: List[int], annihilators: List[int]):
         return
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
 
     def hermitian_conjugate(self):  # type: ignore
         """
@@ -644,6 +715,14 @@ class BosonOperator:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
         """
 
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
+        """
+
     def hermitian_conjugate(self) -> BosonOperator:  # type: ignore
         """
         Return the hermitian conjugate of self.
@@ -787,6 +866,55 @@ class BosonHamiltonian:
     def __init__(self):
         return
 
+    def direct_boson_spin_mapping(self) -> PauliOperator:  # type: ignore
+        """
+        Transforms the given bosonic object into a spin object using the direct mapping.
+
+        This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+        the mapping, as well as its use in the context of open system dynamics, can be found at:
+                                <https://arxiv.org/pdf/2210.12138>
+
+        The mapping is given by:
+
+        $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+        $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+
+        For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+
+        Returns:
+            PauliOperator: The result of the mapping to a spin object.
+
+        Raises:
+            ValueError: The boson -> spin transformation is only available for
+                        terms such as b†b or (b† + b).
+        """
+
+    def dicke_boson_spin_mapping(self, number_spins_per_bosonic_mode: int) -> PauliOperator:  # type: ignore
+        """
+        Transforms the given bosonic object into a spin object using the mapping.
+
+        This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+        the mapping, as well as its use in the context of open system dynamics, can be found at:
+                                <https://arxiv.org/pdf/2210.12138>
+
+        The mapping is given by:
+
+        $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+        $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+
+        For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+
+        Args:
+            number_spins_per_bosonic_mode (int): The number of spins to represent each bosonic mode.
+
+        Returns:
+            PauliOperator: The result of the mapping to a spin object.
+
+        Raises:
+            ValueError: The boson -> spin transformation is only available for
+                        terms such as b†b or (b† + b).
+        """
+
     def keys(self) -> List[OperatorProduct]:  # type: ignore
         """
         Return a list of the unsorted keys in self.
@@ -888,6 +1016,14 @@ class BosonHamiltonian:
 
         Returns:
             List[Union[CalculatorComplex, CalculatorFloat]]: The sequence of values of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def hermitian_conjugate(self) -> BosonHamiltonian:  # type: ignore
@@ -1028,6 +1164,55 @@ class BosonLindbladNoiseOperator(NoiseType):
     def __init__(self):
         return
 
+    def direct_boson_spin_mapping(self) -> PauliLindbladNoiseOperator:  # type: ignore
+        """
+        Transforms the given bosonic object into a spin object using the direct mapping.
+
+        This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+        the mapping, as well as its use in the context of open system dynamics, can be found at:
+                                <https://arxiv.org/pdf/2210.12138>
+
+        The mapping is given by:
+
+        $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+        $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+
+        For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+
+        Returns:
+            PauliLindbladNoiseOperator: The result of the mapping to a spin object.
+
+        Raises:
+            ValueError: The boson -> spin transformation is only available for
+                        terms such as b†b or (b† + b).
+        """
+
+    def dicke_boson_spin_mapping(self, number_spins_per_bosonic_mode: int) -> PauliLindbladNoiseOperator:  # type: ignore
+        """
+        Transforms the given bosonic object into a spin object using the mapping.
+
+        This mapping was developped by Juha Leppäkangas at HQS Quantum Simulations. The paper detailing
+        the mapping, as well as its use in the context of open system dynamics, can be found at:
+                                <https://arxiv.org/pdf/2210.12138>
+
+        The mapping is given by:
+
+        $ \hat{b}_i^{dagger} \hat{b}_i \rightarrow \sum_{j=1}^{N} \hat{\sigma}_+^{i,j} \hat{\sigma}_-^{i,j} $
+        $ \hat{b}_i^{dagger} + \hat{b}_i \rightarrow \frac{1}{\root{N}} \sum_{j=1}^{N} \hat{\sigma}_x^{i,j} $
+
+        For a direct mapping, N is set to 1. For a Dicke mapping, N > 1.
+
+        Args:
+            number_spins_per_bosonic_mode (int): The number of spins to represent each bosonic mode.
+
+        Returns:
+            PauliLindbladNoiseOperator: The result of the mapping to a spin object.
+
+        Raises:
+            ValueError: The boson -> spin transformation is only available for
+                        terms such as b†b or (b† + b).
+        """
+
     def get(self, key: Tuple[ProductType, ProductType]) -> Union[float, int, str, complex]:  # type: ignore
         """
         Get the coefficient corresponding to the key.
@@ -1133,6 +1318,14 @@ class BosonLindbladNoiseOperator(NoiseType):
 
         Returns:
             self: The truncated version of self.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def current_number_modes(self) -> int:  # type: ignore
@@ -1429,6 +1622,14 @@ class BosonLindbladOpenSystem(SystemType):
             ValueError: Left key element cannot be converted to product.
             ValueError: Right key element cannot be converted to product.
             TypeError: Value cannot be converted to CalculatorComplex.
+        """
+
+    def pprint(self) -> str:  # type: ignore
+        """
+        Pretty print (pprint) function.
+
+        Returns:
+            str: string of the pretty print representation of the object.
         """
 
     def from_json_struqture_1(self, input: Any) -> Any:  # type: ignore

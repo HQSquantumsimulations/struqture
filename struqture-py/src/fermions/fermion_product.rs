@@ -98,6 +98,10 @@ impl FermionProductWrapper {
         return_vector
     }
 
+    /// Pretty print (pprint) function.
+    /// 
+    /// Returns:
+    ///     str: string of the pretty print representation of the object.
     pub fn pprint(&self) -> String {
         let mut output = String::new();
         for creator in self.creators() {
