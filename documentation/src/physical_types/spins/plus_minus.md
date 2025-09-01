@@ -35,7 +35,7 @@ The {+, -, z} basis is defined as follows:
 \end{pmatrix}
 \\]
 
-## Symbolic values and PlusMinusProduct
+## Symbolic representation and PlusMinusProduct
 
 The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:
 
