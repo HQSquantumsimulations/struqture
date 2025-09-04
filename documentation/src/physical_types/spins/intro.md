@@ -3,13 +3,8 @@
 Struqture can be used to represent spin operators, hamiltonians and open systems, such as:
 
 \\[
-\hat{H} = \sum_{i, j=0}^N \alpha_{i, j} (\sigma^x_i \sigma^x_j + \sigma^y_i \sigma^y_j) + \sum_{i=0}^N \lambda_i \sigma^z_i
+\hat{H} = \sum_{i, j=0}^N \alpha_{i, j} (\sigma^x_i \sigma^x_j + \sigma^y_i \sigma^y_j) + \sum_{i=0}^N \lambda_i \sigma^z_i .
 \\] 
-
-and
-\\[
-    \dot{\rho} = \mathcal{L}(\rho) =-i \[\hat{H}, \rho\] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \\{ L_k^{\dagger} L_j, \rho \\} \right) .
-\\]
 
 All spin objects in `struqture` are expressed based on products of either Pauli matrices {X, Y, Z} or operators which are better suited to express decoherence {X, iY, Z}. 
 
@@ -46,34 +41,13 @@ i & 0
 \end{pmatrix}
 \\]
 
-The modified Pauli matrices (decoherent dynamics):
+Struqture also provides modified Pauli matrices for incoherent dynamics. These are used in order to avoid complex noise operators. The identity, X and Z matrices remain identical to the ones defined above, but the Y matrix is modified as follows:
 
-* I: identity matrix
-\\[
-\begin{pmatrix}
-1 & 0\\\\
-0 & 1
-\end{pmatrix}
-\\]
-* X: \\( \sigma^x \\) matrix
-\\[
-\begin{pmatrix}
-0 & 1\\\\
-1 & 0
-\end{pmatrix}
-\\]
 * iY: \\( \mathrm{i} \sigma^y \\)
 \\[
 \begin{pmatrix}
 0 & 1 \\\\
 -1 & 0
-\end{pmatrix}
-\\]
-* Z: \\( \sigma^z \\) matrix
-\\[
-\begin{pmatrix}
-1 & 0\\\\
-0 & -1
 \end{pmatrix}
 \\]
 
