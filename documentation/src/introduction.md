@@ -27,28 +27,7 @@ SparsePauliOp("XIIIIIIIIIIIX")
 
 If we define the same operator shown above in QuTiP, it would be built as follows. 
 ```python
-qt.tensor(
-    qt.sigmax(), 
-    qt.tensor(
-        qt.qeye(2),
-        qt.tensor(
-            qt.qeye(2),
-            qt.tensor(
-                qt.qeye(2),
-                qt.tensor(
-                    qt.qeye(2),
-                    qt.tensor(
-                        qt.qeye(2),
-                        qt.tensor(
-                            qt.qeye(2),
-                            qt.tensor(
-                                qt.qeye(2),
-                                qt.tensor(
-                                    qt.qeye(2),
-                                    qt.tensor(
-                                        qt.qeye(2),
-                                        qt.tensor(
-                                            qt.qeye(2), qt.sigmax())))))))))))
+tensor(sigmax(), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), sigmax())
 ```
 
 Please note that this will built the full, dense matrix for 12 spins, which will be slow to handle.
