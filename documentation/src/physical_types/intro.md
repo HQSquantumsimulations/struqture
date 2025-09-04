@@ -13,7 +13,7 @@ In the [spins](spins/intro.md) section of the documentation we will explore the 
 ## Using a struqture Hamiltonian from a file
 
 Struqture objects can be stored as either [`JSON`](https://www.json.org/json-en.html) files or as binary code. We highly recommend using `JSON` files, as they are also human-readable.
-Struqture was designed not only to easily instantiate or modify objects, but also to easily transfer them to other users - this is where the `JSON` serialisation comes into play. 
+Struqture was designed not only to easily instantiate or modify objects, but also to easily exchange them with other users - this is where the `JSON` serialisation comes into play. 
 
 For instance, given a file storing our Hamiltonian, `hamiltonian.json`, we can import it in the following way:
 ```python
