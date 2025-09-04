@@ -51,7 +51,7 @@ Struqture also provides modified Pauli matrices for incoherent dynamics. These a
 \end{pmatrix}
 \\]
 
-The simplest way that the user can interact with these matrices is by using symbolic representation: `"0X1X"` represents a \\( \sigma^x_0 \sigma^x_1 \\) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: `"7Y25Z"` represents a \\( \sigma^y_7 \sigma^z_{25} \\) term, where all other spins (0 to 6 and 8 to 24) are acted on by \\(I\\).
+The simplest way that the user can interact with these objects is by using symbolic representation: `"0X1X"` represents a \\( \sigma^x_0 \sigma^x_1 \\) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: `"7Y25Z"` represents a \\( \sigma^y_7 \sigma^z_{25} \\) term, where all other spins (0 to 6 and 8 to 24) are acted on by \\(I\\).
 
 However, for more fine-grain control over the operators, we invite the user to look into the `PauliProducts` and `DecoherenceProducts` classes, in the [Building blocks](./products.md) section. Otherwise, please proceed to the [coherent](./noisefree.md) or [decoherent](./noisy.md) dynamics section.
 
