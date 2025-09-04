@@ -19,10 +19,10 @@ import py_alqorithms
 # Defining the base Hamiltonian
 hamiltonian = PauliHamiltonian()
 number_spins = 4
-for i in number_spins:
-    for j in number_spins-1:
+for i in range(number_spins):
+    for j in (i + 1, number_spins):
         hamiltonian.add_operator_product(f"{i}X{j}X", "J")
-for i in number_spins:
+for i in range(number_spins):
     hamiltonian.add_operator_product(f"{i}Z", "alpha")
 
 print(hamiltonian)
