@@ -34,7 +34,7 @@ print(python_coo.todense())
 
 ## Open Systems and Noise Operators
 
-For operators with noise (`PauliLindbladNoiseOperator`, `PauliLindbladOpenSystem`), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.
+For operators with noise (`PauliLindbladNoiseOperator`, `PauliLindbladOpenSystem`), however, we can only represent them as matrices operating on density matrices (in vector form) and can therefore only construct sparse superoperators.
 
 Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.
 
