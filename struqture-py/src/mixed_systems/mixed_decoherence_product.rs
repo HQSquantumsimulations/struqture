@@ -227,7 +227,7 @@ impl MixedDecoherenceProductWrapper {
             0 => {}
             1 => output.push_str((self.spins()[0].pprint() + " ").as_str()),
             _ => {
-                output.push('[');
+                output.push('(');
                 let spins = self.spins();
                 let mut iterator = spins.iter().peekable();
                 while let Some(spin) = iterator.next() {
@@ -236,7 +236,7 @@ impl MixedDecoherenceProductWrapper {
                         output.push_str(", ");
                     }
                 }
-                output.push_str("], ");
+                output.push_str("), ");
             }
         }
         // Bosons
@@ -244,7 +244,7 @@ impl MixedDecoherenceProductWrapper {
             0 => {}
             1 => output.push_str((self.bosons()[0].pprint() + " ").as_str()),
             _ => {
-                output.push('[');
+                output.push('(');
                 let bosons = self.bosons();
                 let mut iterator = bosons.iter().peekable();
                 while let Some(boson) = iterator.next() {
@@ -253,7 +253,7 @@ impl MixedDecoherenceProductWrapper {
                         output.push_str(", ");
                     }
                 }
-                output.push_str("], ");
+                output.push_str("), ");
             }
         }
         // Fermions
@@ -261,7 +261,7 @@ impl MixedDecoherenceProductWrapper {
             0 => {}
             1 => output.push_str(self.fermions()[0].pprint().as_str()),
             _ => {
-                output.push('[');
+                output.push('(');
                 let fermions = self.fermions();
                 let mut iterator = fermions.iter().peekable();
                 while let Some(fermion) = iterator.next() {
@@ -270,7 +270,7 @@ impl MixedDecoherenceProductWrapper {
                         output.push_str(", ");
                     }
                 }
-                output.push(']');
+                output.push(')');
             }
         }
 

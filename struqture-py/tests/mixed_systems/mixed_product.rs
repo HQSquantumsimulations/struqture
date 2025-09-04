@@ -705,7 +705,7 @@ fn test_pprint() {
         let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(
             pprint,
-            "[z₁y₂₇, I], [I, b₁₄b₁₈b₂₇†], [c₁₄c₁₈c₂₇†, c₁₄c₁₈c₂₇†]"
+            "(z₁y₂₇, I), (I, b₁₄b₁₈b₂₇†), (c₁₄c₁₈c₂₇†, c₁₄c₁₈c₂₇†)"
         );
     })
 }
