@@ -7,7 +7,7 @@
     - [Definitions](physical_types/spins/definitions.md)
     - [Hamiltonians and Operators](physical_types/spins/noisefree.md)
     - [Open Systems and Noise Operators](physical_types/spins/noisy.md)
-    - [Applied example: 100 spins](physical_types/spins/spin_example.md)
+    - [Applied example: 64 spins](physical_types/spins/spin_example.md)
     - [Matrix representation](physical_types/spins/matrices.md)
     - [Advanced Users](physical_types/spins/advanced_users.md)
         - [{+, -, z} basis](physical_types/spins/plus_minus.md)
