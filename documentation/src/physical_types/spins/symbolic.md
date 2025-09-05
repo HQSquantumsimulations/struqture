@@ -10,11 +10,11 @@ For instance, if a user would like to define the following Hamiltonian:
     \hat{H} = J \sum_{i, j} \sigma_x^i \sigma_x^j + \alpha \sum_i \sigma_z^i
 \\]
 
-where the values for \\(J\\) range between [-1.0, 1.0] and the values for \\( \alpha \\) range between [0.2, 0.4], the user might try to define all these Hamiltonians one at a time. However, with struqture, the user can define the Hamiltonian once, passing symbolic parameters `"J"` and `"alpha"` as the coefficients, and substituting them for the correct values in situ, later. This is shown below.
+where the values for \\(J\\) range between [-1.0, 1.0] and the values for \\( \alpha \\) range between [0.2, 0.4], the user might try to define all these Hamiltonians one at a time. However, with struqture, the user can define the Hamiltonian once, passing symbolic parameters `"J"` and `"alpha"` as the coefficients, and substituting them for the correct values in situ, later. We show an example of this below, where we pass our symbolic Hamiltonian to our closed-source software, the HQS Quantum Libraries. These then create the circuit representing the Trotterised time evolution corresponding to the Hamiltonian, and then substitute the `"J"` and `"alpha"` values at each Trotter time step. We can then go on to simulate this circuit, now that the symbolic parameters have been substituted.
 
 ```python
 from struqture_py.spins import PauliHamiltonian
-import py_alqorithms
+from hqs_quantum_libraries import alqorithms
 
 # Defining the base Hamiltonian
 hamiltonian = PauliHamiltonian()
