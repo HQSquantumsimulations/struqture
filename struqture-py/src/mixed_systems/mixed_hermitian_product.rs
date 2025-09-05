@@ -231,10 +231,13 @@ impl HermitianMixedProductWrapper {
                 while let Some(spin) = iterator.next() {
                     output.push_str(spin.pprint().as_str());
                     if iterator.peek().is_some() {
-                        output.push_str(", ");
+                        output.push('\u{2297}');
+                        output.push(' ');
                     }
                 }
-                output.push_str("), ");
+                output.push(')');
+                output.push('\u{2297}');
+                output.push(' ');
             }
         }
         // Bosons
@@ -248,10 +251,13 @@ impl HermitianMixedProductWrapper {
                 while let Some(boson) = iterator.next() {
                     output.push_str(boson.pprint().as_str());
                     if iterator.peek().is_some() {
-                        output.push_str(", ");
+                        output.push('\u{2297}');
+                        output.push(' ');
                     }
                 }
-                output.push_str("), ");
+                output.push(')');
+                output.push('\u{2297}');
+                output.push(' ');
             }
         }
         // Fermions
@@ -265,7 +271,8 @@ impl HermitianMixedProductWrapper {
                 while let Some(fermion) = iterator.next() {
                     output.push_str(fermion.pprint().as_str());
                     if iterator.peek().is_some() {
-                        output.push_str(", ");
+                        output.push('\u{2297}');
+                        output.push(' ');
                     }
                 }
                 output.push(')');
