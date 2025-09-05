@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::fermions::FermionOperatorWrapper;
+use crate::{create_subscript, fermions::FermionOperatorWrapper};
 use num_complex::Complex64;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
@@ -140,5 +140,26 @@ impl PauliProductWrapper {
         Ok(Self {
             internal: self.internal.clone().set_pauli(index, converted_pauli),
         })
+    }
+
+    pub fn pprint(&self) -> String {
+        let mut output = String::new();
+        for (index, pauli) in self.internal.clone() {
+            match pauli {
+                SinglePauliOperator::X => output.push('x'),
+                SinglePauliOperator::Y => output.push('y'),
+                SinglePauliOperator::Z => output.push('z'),
+                SinglePauliOperator::Identity => break,
+            };
+            let creator_string = format!("{index}");
+            for char in creator_string.chars() {
+                output.push(create_subscript(char));
+            }
+        }
+        if output.is_empty() {
+            output.push('I');
+        }
+
+        output
     }
 }

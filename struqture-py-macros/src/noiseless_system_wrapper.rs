@@ -276,6 +276,15 @@ pub fn noiselesswrapper(
                     }
                     system_values
                 }
+
+                pub fn pprint(&self) -> String {
+                    let mut output = String::new();
+                    for (key, value) in self.internal.iter() {
+                        output.push_str(&(format!("{} ", value) + #index_type { internal: key.clone() }.pprint().as_str() + "\n"));
+                    }
+
+                    output
+                }
         }
     } else {
         TokenStream::new()

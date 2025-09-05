@@ -219,4 +219,68 @@ impl MixedDecoherenceProductWrapper {
         }
         Ok(return_vector)
     }
+
+    pub fn pprint(&self) -> String {
+        let mut output = String::new();
+        // Spins
+        match self.spins().len() {
+            0 => {}
+            1 => output.push_str((self.spins()[0].pprint() + " ").as_str()),
+            _ => {
+                output.push('(');
+                let spins = self.spins();
+                let mut iterator = spins.iter().peekable();
+                while let Some(spin) = iterator.next() {
+                    output.push_str(spin.pprint().as_str());
+                    if iterator.peek().is_some() {
+                        output.push('\u{2297}');
+                        output.push(' ');
+                    }
+                }
+                output.push(')');
+                output.push('\u{2297}');
+                output.push(' ');
+            }
+        }
+        // Bosons
+        match self.bosons().len() {
+            0 => {}
+            1 => output.push_str((self.bosons()[0].pprint() + " ").as_str()),
+            _ => {
+                output.push('(');
+                let bosons = self.bosons();
+                let mut iterator = bosons.iter().peekable();
+                while let Some(boson) = iterator.next() {
+                    output.push_str(boson.pprint().as_str());
+                    if iterator.peek().is_some() {
+                        output.push('\u{2297}');
+                        output.push(' ');
+                    }
+                }
+                output.push(')');
+                output.push('\u{2297}');
+                output.push(' ');
+            }
+        }
+        // Fermions
+        match self.fermions().len() {
+            0 => {}
+            1 => output.push_str(self.fermions()[0].pprint().as_str()),
+            _ => {
+                output.push('(');
+                let fermions = self.fermions();
+                let mut iterator = fermions.iter().peekable();
+                while let Some(fermion) = iterator.next() {
+                    output.push_str(fermion.pprint().as_str());
+                    if iterator.peek().is_some() {
+                        output.push('\u{2297}');
+                        output.push(' ');
+                    }
+                }
+                output.push(')');
+            }
+        }
+
+        output
+    }
 }

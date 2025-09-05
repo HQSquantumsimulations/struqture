@@ -480,3 +480,18 @@ fn test_from_json_struqture_1() {
         assert!(pp_from_1.is_err());
     });
 }
+
+#[test]
+fn test_pprint() {
+    pyo3::prepare_freethreaded_python();
+    pyo3::Python::with_gil(|py| {
+        let new = new_pp(py, vec![14, 18], vec![27]);
+        let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
+
+        assert_eq!(pprint, "c₁₄c₁₈c₂₇†");
+
+        let new = new_pp(py, vec![], vec![]);
+        let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
+        assert_eq!(pprint, "I");
+    })
+}

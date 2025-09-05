@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::spins::PauliOperatorWrapper;
+use crate::{create_subscript, spins::PauliOperatorWrapper};
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -96,5 +96,30 @@ impl FermionProductWrapper {
             return_vector.push((Self { internal: obj.0 }, obj.1));
         }
         return_vector
+    }
+
+    pub fn pprint(&self) -> String {
+        let mut output = String::new();
+        for creator in self.creators() {
+            output.push('c');
+            let creator_string = format!("{creator}");
+            for char in creator_string.chars() {
+                output.push(create_subscript(char));
+            }
+        }
+        for annihilator in self.annihilators() {
+            output.push('c');
+            let annihilator_string = format!("{annihilator}");
+            for char in annihilator_string.chars() {
+                output.push(create_subscript(char));
+            }
+            output.push('\u{2020}');
+        }
+
+        if output.is_empty() {
+            output.push('I');
+        }
+
+        output
     }
 }

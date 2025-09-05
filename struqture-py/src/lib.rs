@@ -89,3 +89,9 @@ fn to_py_coo(coo: CooSparseMatrix) -> PyResult<PyCooMatrix> {
         Ok((values, (rows, columns)))
     })
 }
+
+#[inline]
+fn create_subscript(char: char) -> char {
+    let offset = (char as u32) - ('0' as u32);
+    std::char::from_u32('₀' as u32 + offset).expect("Could not create subscript for pretty print")
+}

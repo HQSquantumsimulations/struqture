@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use super::BosonProductWrapper;
+use crate::create_subscript;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -96,5 +97,39 @@ impl HermitianBosonProductWrapper {
             return_vector.push(BosonProductWrapper { internal: obj });
         }
         return_vector
+    }
+
+    pub fn pprint(&self) -> String {
+        let mut output = String::new();
+        let mut hermitian_part = String::new();
+        for creator in self.creators() {
+            output.push('b');
+            hermitian_part.push('b');
+            let creator_string = format!("{creator}");
+            for char in creator_string.chars() {
+                output.push(create_subscript(char));
+                hermitian_part.push(create_subscript(char));
+            }
+            hermitian_part.push('\u{2020}');
+        }
+        for annihilator in self.annihilators() {
+            output.push('b');
+            hermitian_part.push('b');
+            let annihilator_string = format!("{annihilator}");
+            for char in annihilator_string.chars() {
+                output.push(create_subscript(char));
+                hermitian_part.push(create_subscript(char));
+            }
+            output.push('\u{2020}');
+        }
+
+        if output.is_empty() {
+            output.push('I');
+        } else {
+            output.push_str(" + ");
+            output.push_str(&hermitian_part);
+        }
+
+        output
     }
 }
