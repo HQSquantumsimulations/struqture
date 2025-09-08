@@ -106,6 +106,7 @@ impl FermionProductWrapper {
             for char in creator_string.chars() {
                 output.push(create_subscript(char));
             }
+            output.push('\u{2020}');
         }
         for annihilator in self.annihilators() {
             output.push('c');
@@ -113,7 +114,6 @@ impl FermionProductWrapper {
             for char in annihilator_string.chars() {
                 output.push(create_subscript(char));
             }
-            output.push('\u{2020}');
         }
 
         if output.is_empty() {

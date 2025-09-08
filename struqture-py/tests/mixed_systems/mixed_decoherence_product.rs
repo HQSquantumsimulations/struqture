@@ -684,11 +684,11 @@ fn test_pprint() {
             vec!["c14c18a27".to_string()],
         );
         let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
-        assert_eq!(pprint, "z₁iy₂₇ b₁₄b₁₈b₂₇† c₁₄c₁₈c₂₇†");
+        assert_eq!(pprint, "z₁iy₂₇ b₁₄†b₁₈†b₂₇ c₁₄†c₁₈†c₂₇");
 
         let pp = new_pp(py, vec![], vec!["c14c18a27".to_string()], vec![]);
         let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
-        assert_eq!(pprint, "b₁₄b₁₈b₂₇† ");
+        assert_eq!(pprint, "b₁₄†b₁₈†b₂₇ ");
 
         let pp = new_pp(
             py,
@@ -699,7 +699,7 @@ fn test_pprint() {
         let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(
             pprint,
-            "(z₁iy₂₇⊗ I)⊗ (I⊗ b₁₄b₁₈b₂₇†)⊗ (c₁₄c₁₈c₂₇†⊗ c₁₄c₁₈c₂₇†)"
+            "(z₁iy₂₇⊗ I)⊗ (I⊗ b₁₄†b₁₈†b₂₇)⊗ (c₁₄†c₁₈†c₂₇⊗ c₁₄†c₁₈†c₂₇)"
         );
     })
 }
