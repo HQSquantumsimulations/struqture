@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Coherent dynamics: PauliOperator &amp; PauliHamiltonian - HQS Struqture User Documentation</title>
+        <title>Hamiltonians and Operators - HQS Struqture User Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -178,14 +178,13 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="operators-and-hamiltonians"><a class="header" href="#operators-and-hamiltonians">Operators and Hamiltonians</a></h1>
-<p><code>PauliOperators</code> and <code>PauliHamiltonians</code> represent operators or Hamiltonians such as:
+<p>In <code>struqture</code> we distinguish between operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+<code>PauliOperators</code> and <code>PauliHamiltonians</code> represent operators or Hamiltonians such as:
 \[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
 \sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \} .
 \]</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the <code>PauliProducts</code> as keys and the coefficients \(\alpha_j\) as values.</p>
-<p>In <code>struqture</code> we distinguish between operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian, this means that the prefactor of each <code>PauliProduct</code> has to be real.</p>
+<p>While both <code>PauliOperators</code> and <code>PauliHamiltonians</code> are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian, this means that the prefactor of each index has to be real.</p>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
 <p>Here is an example of how to build a <code>PauliOperator</code>:</p>
 <pre><code class="language-python">from struqture_py import spins
@@ -254,43 +253,35 @@ operator_3 = operator_1 - operator_2
 operator_3 = operator_3 + operator_1
 
 # Multiplication:
-operator_1 = operator_1 * 2.0
+operator_1 = operator_1 * 2.0j
 operator_4 = operator_1 * operator_2
 
 </code></pre>
-<p>The same mathematical operations are available for <code>PauliHamiltonian</code>. However, please note that multiplying a <code>PauliHamiltonian</code> by a complex number or another <code>PauliHamiltonian</code> will result in a <code>PauliOperator</code>, as the output is no longer guaranteed to be hermitian.</p>
-<h2 id="matrix-representation-spin-objects-only"><a class="header" href="#matrix-representation-spin-objects-only">Matrix representation: spin objects only</a></h2>
-<p>All spin-objects can be converted into sparse matrices with the following convention.
-If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
-\[
-M = M_2 \otimes M_1 \otimes \mathbb{1}
-\]
-For an \(N\)-spin operator a term acts on the \(2^N\) dimensional space of state vectors.
-A superoperator operates on the \(4^N\) dimensional space of flattened density-matrices.
-struqture uses the convention that density matrices are flattened in row-major order
-\[
-\rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
-\]
-For noiseless objects (<code>PauliOperator</code>, <code>PauliHamiltonian</code>), sparse operators and sparse superoperators can be constructed, as we can represent the operator as a wavefunction.</p>
-<p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
-<pre><code class="language-python">from struqture_py import spins
-from scipy.sparse import coo_matrix
+<p>The same mathematical operations are available for <code>PauliHamiltonian</code>. However, please note that multiplying a <code>PauliHamiltonian</code> by a complex number or another <code>PauliHamiltonian</code> will result in a <code>PauliOperator</code>, as the output is no longer guaranteed to be hermitian.
+This is shown in the snippet below.</p>
+<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
 
-# We start by building the operator we want to represent
-operator = spins.PauliOperator()
-operator.add_operator_product("0Z1Z", 0.5)
+# Setting up two test PauliHamiltonian
+operator_1 = PauliHamiltonian()
+operator_1.add_operator_product("0X", 1.5)
 
-# Using the `sparse_matrix_coo` function, we can
-# return the information in scipy coo_matrix form, which can be directly fed in:
-python_coo = coo_matrix(operator.sparse_matrix_coo(number_spins=2))
-print(python_coo.todense())
+operator_2 = PauliHamiltonian()
+operator_2.add_operator_product("2Z3Z", 0.5)
+
+# Addition &amp; subtraction:
+operator_3 = operator_1 - operator_2  # This remains a PauliHamiltonian
+operator_3 = operator_3 + operator_1  # This remains a PauliHamiltonian
+
+# Multiplication:
+operator_1 = operator_1 * 2.0j  # ! This is now a PauliOperator !
+operator_4 = operator_1 * operator_2 # ! This is now a PauliOperator !
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../physical_types/spins/products.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../physical_types/spins/definitions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
@@ -304,7 +295,7 @@ print(python_coo.todense())
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../physical_types/spins/products.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../physical_types/spins/definitions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 

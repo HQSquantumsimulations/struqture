@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>How to use struqture objects - HQS Struqture User Documentation</title>
+        <title>Matrix representation - HQS Struqture User Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -12,21 +12,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon.svg">
-        <link rel="shortcut icon" href="../favicon.png">
-        <link rel="stylesheet" href="../css/variables.css">
-        <link rel="stylesheet" href="../css/general.css">
-        <link rel="stylesheet" href="../css/chrome.css">
-        <link rel="stylesheet" href="../css/print.css" media="print">
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
 
@@ -35,13 +35,13 @@
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "../";
+            const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc.js"></script>
+        <script src="../../toc.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -108,7 +108,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -143,7 +143,7 @@
                     <h1 class="menu-title">HQS Struqture User Documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
 
@@ -177,51 +177,58 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="how-to-use-struqture-objects"><a class="header" href="#how-to-use-struqture-objects">How to use struqture objects</a></h1>
-<p>Struqture objects may be instantiated directly by the user or imported from a file or database. This section of the documentation explains both approaches and directs you to the remainder of the user guide once you are comfortable with them.</p>
-<h2 id="creating-your-own-hamiltonians-and-operators"><a class="header" href="#creating-your-own-hamiltonians-and-operators">Creating your own Hamiltonians and operators</a></h2>
-<p>To create your own Hamiltonian or operator, simply import the corresponding python class from the <code>spins</code> module. For instance, to import an object corresponding to a Hamiltonian composed of spins, which can be represented by Pauli matrices, run:</p>
-<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
+                        <h1 id="matrix-representation"><a class="header" href="#matrix-representation">Matrix Representation</a></h1>
+<p>All spin-objects can be converted into sparse matrices with the following convention.
+If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
+\[
+M = M_2 \otimes M_1 \otimes \mathbb{1}
+\]
+For an \(N\)-spin operator a term acts on the \(2^N\) dimensional space of state vectors.
+A superoperator operates on the \(4^N\) dimensional space of flattened density-matrices.
+struqture uses the convention that density matrices are flattened in row-major order
+\[
+\rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
+\]</p>
+<h2 id="hamiltonians-and-operators"><a class="header" href="#hamiltonians-and-operators">Hamiltonians and Operators</a></h2>
+<p>For noiseless objects (<code>PauliOperator</code>, <code>PauliHamiltonian</code>), sparse operators and sparse superoperators can be constructed, as we can represent the operator as a wavefunction.</p>
+<p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
+<pre><code class="language-python">from struqture_py import spins
+from scipy.sparse import coo_matrix
+
+# We start by building the operator we want to represent
+operator = spins.PauliOperator()
+operator.add_operator_product("0Z1Z", 0.5)
+
+# Using the `sparse_matrix_coo` function, we can
+# return the information in scipy coo_matrix form, which can be directly fed in:
+python_coo = coo_matrix(operator.sparse_matrix_coo(number_spins=2))
+print(python_coo.todense())
 </code></pre>
-<p>In the <a href="spins/intro.html">spins</a> section of the documentation we will explore the various classes in the <code>spins</code> module.</p>
-<h2 id="using-a-struqture-hamiltonian-from-a-file"><a class="header" href="#using-a-struqture-hamiltonian-from-a-file">Using a struqture Hamiltonian from a file</a></h2>
-<p>Struqture objects can be stored as either <a href="https://www.json.org/json-en.html"><code>JSON</code></a> files or as binary code. We highly recommend using <code>JSON</code> files, as they are also human-readable.
-Struqture was designed not only to easily instantiate or modify objects, but also to easily exchange them with other users - this is where the <code>JSON</code> serialisation comes into play.</p>
-<p>For instance, given a file storing our Hamiltonian, <code>hamiltonian.json</code>, we can import it in the following way:</p>
-<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
+<h2 id="open-systems-and-noise-operators"><a class="header" href="#open-systems-and-noise-operators">Open Systems and Noise Operators</a></h2>
+<p>For operators with noise (<code>PauliLindbladNoiseOperator</code>, <code>PauliLindbladOpenSystem</code>), however, we can only represent them as matrices operating on density matrices (in vector form) and can therefore only construct sparse superoperators.</p>
+<p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
+<pre><code class="language-python">from struqture_py import spins
+from scipy.sparse import coo_matrix
 
-# Reading a file: from_json
-with open("hamiltonian.json", "r") as f:
-    hamiltonian = PauliHamiltonian.from_json(f.read())
+# We start by building the noise operator we want to represent
+operator = spins.PauliLindbladNoiseOperator()
+operator.add_operator_product(("0X2Z", "0X2Z"), 1.0 + 1.5j)
 
-print(hamiltonian)
-
-# Writing to a file: to_json
-# Should you wish to perform the inverse operation (writing your Hamiltonian to a file), you can
-# do so by running the following lines of code:
-with open("hamiltonian.json", "w") as f:
-    f.write(hamiltonian.to_json())
+# Using the `sparse_matrix_coo` function, we can
+# return the information in scipy coo_matrix form, which can be directly fed in:
+python_coo = coo_matrix(operator.sparse_matrix_superoperator_coo(number_spins=3))
+print(python_coo.todense())
 </code></pre>
-<p>Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a file, it can be used in the same manner as one created by the user. Refer to the remaining documentation for the available getters, setters, and properties.</p>
-<h2 id="using-a-struqture-hamiltonian-from-a-database"><a class="header" href="#using-a-struqture-hamiltonian-from-a-database">Using a struqture Hamiltonian from a database</a></h2>
-<p>In this part of the user documentation we show how to work with a user-selected pre-defined Hamiltonian from our database, e.g. <a href="https://docs.cloud.quantumsimulations.de/hqs-spectrum-tools/subfolder/components/molecule_input/molecular_data.html">nmr_database</a>.</p>
-<p>For instance, this code snippet shows how to load the <code>C6H5NO2</code> molecule from the <code>hqs_nmr_parameters</code> database, and turn it into a struqture object:</p>
-<pre><code class="language-python">from hqs_nmr_parameters import examples, nmr_hamiltonian
-
-parameters = examples.molecules["C6H5NO2"]
-hamiltonian = nmr_hamiltonian(parameters=parameters, field=2.5)
-</code></pre>
-<p>Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a databse, it can be used in the same manner as one created by the user. Refer to the remaining documentation for the available getters, setters, and properties.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../physical_types/spins/spin_example.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../physical_types/spins/intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../physical_types/spins/advanced_users.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -231,11 +238,11 @@ hamiltonian = nmr_hamiltonian(parameters=parameters, field=2.5)
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../physical_types/spins/spin_example.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../physical_types/spins/intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../physical_types/spins/advanced_users.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -250,16 +257,16 @@ hamiltonian = nmr_hamiltonian(parameters=parameters, field=2.5)
         </script>
 
 
-        <script src="../elasticlunr.min.js"></script>
-        <script src="../mark.min.js"></script>
-        <script src="../searcher.js"></script>
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
 
-        <script src="../clipboard.min.js"></script>
-        <script src="../highlight.js"></script>
-        <script src="../book.js"></script>
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/expand_some.js"></script>
+        <script src="../../theme/expand_some.js"></script>
 
 
 

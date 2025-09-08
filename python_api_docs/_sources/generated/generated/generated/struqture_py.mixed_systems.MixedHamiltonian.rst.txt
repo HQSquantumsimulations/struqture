@@ -29,6 +29,7 @@ struqture\_py.mixed\_systems.MixedHamiltonian
       ~MixedHamiltonian.json_schema
       ~MixedHamiltonian.keys
       ~MixedHamiltonian.min_supported_version
+      ~MixedHamiltonian.pprint
       ~MixedHamiltonian.remove
       ~MixedHamiltonian.set
       ~MixedHamiltonian.to_bincode

@@ -29,6 +29,7 @@ struqture\_py.spins.PauliOperator
       ~PauliOperator.keys
       ~PauliOperator.min_supported_version
       ~PauliOperator.number_spins
+      ~PauliOperator.pprint
       ~PauliOperator.remove
       ~PauliOperator.set
       ~PauliOperator.sparse_matrix_coo

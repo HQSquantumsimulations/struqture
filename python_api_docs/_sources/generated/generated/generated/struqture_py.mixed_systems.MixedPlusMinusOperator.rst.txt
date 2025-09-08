@@ -30,6 +30,7 @@ struqture\_py.mixed\_systems.MixedPlusMinusOperator
       ~MixedPlusMinusOperator.json_schema
       ~MixedPlusMinusOperator.keys
       ~MixedPlusMinusOperator.min_supported_version
+      ~MixedPlusMinusOperator.pprint
       ~MixedPlusMinusOperator.remove
       ~MixedPlusMinusOperator.set
       ~MixedPlusMinusOperator.to_bincode

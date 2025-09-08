@@ -31,6 +31,7 @@ struqture\_py.spins.DecoherenceProduct
       ~DecoherenceProduct.keys
       ~DecoherenceProduct.min_supported_version
       ~DecoherenceProduct.multiply
+      ~DecoherenceProduct.pprint
       ~DecoherenceProduct.remap_qubits
       ~DecoherenceProduct.set_pauli
       ~DecoherenceProduct.to_bincode

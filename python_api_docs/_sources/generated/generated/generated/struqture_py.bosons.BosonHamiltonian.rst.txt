@@ -29,6 +29,7 @@ struqture\_py.bosons.BosonHamiltonian
       ~BosonHamiltonian.json_schema
       ~BosonHamiltonian.keys
       ~BosonHamiltonian.min_supported_version
+      ~BosonHamiltonian.pprint
       ~BosonHamiltonian.remove
       ~BosonHamiltonian.set
       ~BosonHamiltonian.to_bincode

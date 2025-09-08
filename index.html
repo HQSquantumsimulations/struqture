@@ -178,39 +178,40 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<p>Struqture is a Rust (struqture) and Python (struqture-py) library by <a href="https://quantumsimulations.de/">HQS Quantum Simulations</a> to represent quantum mechanical operators, Hamiltonians and open quantum systems.
-The library supports building <a href="physical_types/spins/intro.html">spin</a> objects, <a href="physical_types/fermions/intro.html">fermionic</a> objects, <a href="physical_types/bosons/intro.html">bosonic</a> objects and <a href="physical_types/mixed_systems/intro.html">mixed system</a> objects that contain arbitrary many spin, fermionic and bosonic subsystems.</p>
-<p>Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.</p>
-<p>To best support this use case, <code>struqture</code> has a number of design goals:</p>
-<ul>
-<li>Support for arbitrary spin, bosonic, fermionic and mixed systems</li>
-<li>Full serialisation support to json and other formats</li>
-<li>Preventing construction of unphysical objects by using well defined types for all objects in struqture</li>
-<li>Support of symbolic values in operators, Hamiltonians and open systems</li>
-</ul>
+<p>Struqture is a Rust library with a Python interface <code>struqture-py</code> by <a href="https://quantumsimulations.de/">HQS Quantum Simulations</a> to define and store Hamiltonians, quantum mechanical operators and open systems.
+The library supports building <a href="physical_types/spins/intro.html">spin</a> objects, as well as other degrees of freedom.</p>
+<p>Struqture has been developed to create and exchange definitions of Hamiltonians and operators. A special focus is the definition of large quantum systems as an input to quantum simulation. Therefore, it is strongly built around symbolic definition, wherein the user defines their Hamiltonian (for instance) as they would do so by writing it down.</p>
+<!-- TODO: modify figure to have a hand-written H top left and struqture representation bottom right. -->
  <img src="./images/docu_graphic.png" alt="struqture" width="90%">
-<p>Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
-Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
-The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported from <a href="https://github.com/HQSquantumsimulations/qoqo_calculator">qoqo_calculator</a>.
-Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.</p>
-<p>This documentation is split into two parts. The <a href="physical_types/intro.html">first part</a> covers the basic usage for spins, bosons, fermions and mixed systems. The <a href="container_types/intro.html">second part</a> covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world <a href="example.html">example</a> is also included in.</p>
-<p>Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls.</p>
-<h2 id="contrast-to-similar-tools"><a class="header" href="#contrast-to-similar-tools">Contrast to similar tools</a></h2>
-<p>Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. For example, the spin term \( \sigma_0^x \sigma_12^x \) is written as <code>"0X12X"</code> in struqture, versus Qiskit’s <code>SparsePauliOp("XIIIIIIIIIIIX")</code> and QuTiP’s \( \sigma_0^x \otimes I \otimes ... \otimes I \otimes I \otimes \sigma_12^x \). By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.
-Additionally, QuTiP lacks native symbolic parameters; struqture supports them, so you can define a parameterized Hamiltonian once and substitute numerical values later—for example, varying coefficients across Trotter-evolution steps.</p>
+<h2 id="advantages-of-struqture"><a class="header" href="#advantages-of-struqture">Advantages of struqture</a></h2>
+<p>Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. We show an example for a 12-spin system below.</p>
+<h3 id="compared-to-qiskit"><a class="header" href="#compared-to-qiskit">Compared to Qiskit</a></h3>
+<p>We define an operator acting on a 12-spin system in struqture:</p>
+<pre><code class="language-python">operator.set("0X12X", 1.0)
+</code></pre>
+<p>This compares to a definition of the same term in Qiskit, which is written as</p>
+<pre><code class="language-python">SparsePauliOp("XIIIIIIIIIIIX")
+</code></pre>
+<h3 id="compared-to-qutip"><a class="header" href="#compared-to-qutip">Compared to QuTiP</a></h3>
+<p>If we define the same operator shown above in QuTiP, it would be built as follows.</p>
+<pre><code class="language-python">tensor(sigmax(), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), sigmax())
+</code></pre>
+<p>Please note that this will built the full, dense matrix for 12 spins, which will be slow to handle.</p>
+<p>By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.</p>
+<h3 id="parametrization-of-operators"><a class="header" href="#parametrization-of-operators">Parametrization of operators</a></h3>
+<p>Additionally, struqture allows for native symbolic parameters, so the user can define a <a href="./physical_types/spins/symbolic.html">parameterized Hamiltonian</a> once and substitute numerical values later.</p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <h3 id="python"><a class="header" href="#python">Python</a></h3>
-<p>You can install <code>struqture_py</code> from PyPi. For x86 Linux, Windows and macOS systems pre-built wheels are available.
-On other platforms a local Rust toolchain is required to compile the Python source distribution.</p>
+<p>You can install <code>struqture_py</code> from PyPi. For Linux, Windows and macOS systems pre-built wheels are available.</p>
 <pre><code class="language-bash">pip install struqture-py
 </code></pre>
 <h3 id="rust"><a class="header" href="#rust">Rust</a></h3>
 <p>You can use <code>struqture</code> in your Rust project by adding</p>
-<pre><code class="language-TOML">struqture = { version = "1.0.1" }
+<pre><code class="language-TOML">struqture = { version = "2.0.1" }
 </code></pre>
 <p>to your Cargo.toml file.</p>
 <h2 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h2>
-<p>This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of <a href="https://docs.rs/struqture/">struqture</a> and <a href="https://hqsquantumsimulations.github.io/struqture/python_api_docs/generated/struqture_py.html">struqture-py</a>.</p>
+<p>This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentation of <a href="https://hqsquantumsimulations.github.io/struqture/python_api_docs/generated/struqture_py.html">struqture-py</a> and <a href="https://docs.rs/struqture/">struqture</a>.</p>
 
                     </main>
 

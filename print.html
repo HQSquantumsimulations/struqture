@@ -179,60 +179,79 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<p>Struqture is a Rust (struqture) and Python (struqture-py) library by <a href="https://quantumsimulations.de/">HQS Quantum Simulations</a> to represent quantum mechanical operators, Hamiltonians and open quantum systems.
-The library supports building <a href="physical_types/spins/intro.html">spin</a> objects, <a href="physical_types/fermions/intro.html">fermionic</a> objects, <a href="physical_types/bosons/intro.html">bosonic</a> objects and <a href="physical_types/mixed_systems/intro.html">mixed system</a> objects that contain arbitrary many spin, fermionic and bosonic subsystems.</p>
-<p>Struqture has been developed to create and exchange definitions of operators, Hamiltonians and open systems. A special focus is the use as input to quantum computing simulation software.</p>
-<p>To best support this use case, <code>struqture</code> has a number of design goals:</p>
-<ul>
-<li>Support for arbitrary spin, bosonic, fermionic and mixed systems</li>
-<li>Full serialisation support to json and other formats</li>
-<li>Preventing construction of unphysical objects by using well defined types for all objects in struqture</li>
-<li>Support of symbolic values in operators, Hamiltonians and open systems</li>
-</ul>
+<p>Struqture is a Rust library with a Python interface <code>struqture-py</code> by <a href="https://quantumsimulations.de/">HQS Quantum Simulations</a> to define and store Hamiltonians, quantum mechanical operators and open systems.
+The library supports building <a href="physical_types/spins/intro.html">spin</a> objects, as well as other degrees of freedom.</p>
+<p>Struqture has been developed to create and exchange definitions of Hamiltonians and operators. A special focus is the definition of large quantum systems as an input to quantum simulation. Therefore, it is strongly built around symbolic definition, wherein the user defines their Hamiltonian (for instance) as they would do so by writing it down.</p>
+<!-- TODO: modify figure to have a hand-written H top left and struqture representation bottom right. -->
  <img src="./images/docu_graphic.png" alt="struqture" width="90%">
-<p>Following these design goals, we prioritize using distinctive types to construct objects over a less verbose syntax.
-Similarly the support of symbolic expression leads to a trade-off in speed compared to an implementation using only floating point values.
-The symbolic expression support is achieved by using CalculatorComplex and CalculatorFloat values instead of complex and float values (respectively), which are imported from <a href="https://github.com/HQSquantumsimulations/qoqo_calculator">qoqo_calculator</a>.
-Struqture is designed to also support the construction and (de)serialisation of large operators but for the use in numeric algorithms we recommend transforming Operators and Hamiltonians into a sparse matrix form.</p>
-<p>This documentation is split into two parts. The <a href="physical_types/intro.html">first part</a> covers the basic usage for spins, bosons, fermions and mixed systems. The <a href="container_types/intro.html">second part</a> covers the shared design patterns between spins, bosons, fermions and mixed systems. A real-world <a href="example.html">example</a> is also included in.</p>
-<p>Note: the package will be faster in Rust than Python, as Rust is a compiled language. This should only make a big difference, however, if you are performing hundreds of multiplication operations and a large amount of getter/setter calls.</p>
-<h2 id="contrast-to-similar-tools"><a class="header" href="#contrast-to-similar-tools">Contrast to similar tools</a></h2>
-<p>Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. For example, the spin term \( \sigma_0^x \sigma_12^x \) is written as <code>"0X12X"</code> in struqture, versus Qiskit’s <code>SparsePauliOp("XIIIIIIIIIIIX")</code> and QuTiP’s \( \sigma_0^x \otimes I \otimes ... \otimes I \otimes I \otimes \sigma_12^x \). By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.
-Additionally, QuTiP lacks native symbolic parameters; struqture supports them, so you can define a parameterized Hamiltonian once and substitute numerical values later—for example, varying coefficients across Trotter-evolution steps.</p>
+<h2 id="advantages-of-struqture"><a class="header" href="#advantages-of-struqture">Advantages of struqture</a></h2>
+<p>Compared with Qiskit and QuTiP, struqture uses a sparse, human‑readable operator notation that records only non‑identity factors. We show an example for a 12-spin system below.</p>
+<h3 id="compared-to-qiskit"><a class="header" href="#compared-to-qiskit">Compared to Qiskit</a></h3>
+<p>We define an operator acting on a 12-spin system in struqture:</p>
+<pre><code class="language-python">operator.set("0X12X", 1.0)
+</code></pre>
+<p>This compares to a definition of the same term in Qiskit, which is written as</p>
+<pre><code class="language-python">SparsePauliOp("XIIIIIIIIIIIX")
+</code></pre>
+<h3 id="compared-to-qutip"><a class="header" href="#compared-to-qutip">Compared to QuTiP</a></h3>
+<p>If we define the same operator shown above in QuTiP, it would be built as follows.</p>
+<pre><code class="language-python">tensor(sigmax(), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), qeye(2), sigmax())
+</code></pre>
+<p>Please note that this will built the full, dense matrix for 12 spins, which will be slow to handle.</p>
+<p>By keeping operators symbolic and not storing full matrices, struqture scales to Hamiltonians with far more sites; when needed, it can generate the (super)operator matrix on demand, whereas QuTiP tracks matrix representations by default.</p>
+<h3 id="parametrization-of-operators"><a class="header" href="#parametrization-of-operators">Parametrization of operators</a></h3>
+<p>Additionally, struqture allows for native symbolic parameters, so the user can define a <a href="./physical_types/spins/symbolic.html">parameterized Hamiltonian</a> once and substitute numerical values later.</p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <h3 id="python"><a class="header" href="#python">Python</a></h3>
-<p>You can install <code>struqture_py</code> from PyPi. For x86 Linux, Windows and macOS systems pre-built wheels are available.
-On other platforms a local Rust toolchain is required to compile the Python source distribution.</p>
+<p>You can install <code>struqture_py</code> from PyPi. For Linux, Windows and macOS systems pre-built wheels are available.</p>
 <pre><code class="language-bash">pip install struqture-py
 </code></pre>
 <h3 id="rust"><a class="header" href="#rust">Rust</a></h3>
 <p>You can use <code>struqture</code> in your Rust project by adding</p>
-<pre><code class="language-TOML">struqture = { version = "1.0.1" }
+<pre><code class="language-TOML">struqture = { version = "2.0.1" }
 </code></pre>
 <p>to your Cargo.toml file.</p>
 <h2 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h2>
-<p>This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentaions of <a href="https://docs.rs/struqture/">struqture</a> and <a href="https://hqsquantumsimulations.github.io/struqture/python_api_docs/generated/struqture_py.html">struqture-py</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-use-struqture"><a class="header" href="#how-to-use-struqture">How to use struqture</a></h1>
-<p>In this part of the user documentation we show the basic usage of operators, Hamiltonians and open systems for spins, bosons, fermions and mixed systems.
-Stuqture is designed with the same patterns to construct objects across all classes, for ease of use.</p>
-<h2 id="getting-started"><a class="header" href="#getting-started">Getting started</a></h2>
-<p>The documentation is split up by type of operators the user would like to create:</p>
-<ul>
-<li><a href="physical_types/./spins.html">spins</a></li>
-<li><a href="physical_types/./bosons.html">bosons</a></li>
-<li><a href="physical_types/./fermions.html">fermions</a></li>
-<li><a href="physical_types/./mixed_systems.html">mixed systems</a></li>
-</ul>
-<h2 id="a-note-on-symbolic-parameters"><a class="header" href="#a-note-on-symbolic-parameters">A note on symbolic parameters</a></h2>
-<p>For all operators, Hamiltonians and open systems in struqture, the user can set (key, value) inputs. For instance, in a <code>BosonOperator</code>, the user adds in <code>BosonProduct</code> terms (keys) with their complex prefactors (values). These values, regardless of the struqture object, can be either a number (float or complex, depending on the operator) or a string. We refer to this as a "symbolic parameter". This can be a great advantage to a more advanced user, who wishes to create, for instance, a Hamiltonian with a varying parameter. By encoding this parameter as a symbolic parameter, the user can replace this parameter with a new value when iterating through the list of values for the varying parameter, rather than having to create a new Hamiltonian at each step in the iteration.</p>
+<p>This user documentation is intended to give a high level overview of the design and usage of struqture. For a full list of the available data types and functions see the API-Documentation of <a href="https://hqsquantumsimulations.github.io/struqture/python_api_docs/generated/struqture_py.html">struqture-py</a> and <a href="https://docs.rs/struqture/">struqture</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-use-struqture-objects"><a class="header" href="#how-to-use-struqture-objects">How to use struqture objects</a></h1>
+<p>Struqture objects may be instantiated directly by the user or imported from a file or database. This section of the documentation explains both approaches and directs you to the remainder of the user guide once you are comfortable with them.</p>
+<h2 id="creating-your-own-hamiltonians-and-operators"><a class="header" href="#creating-your-own-hamiltonians-and-operators">Creating your own Hamiltonians and operators</a></h2>
+<p>To create your own Hamiltonian or operator, simply import the corresponding python class from the <code>spins</code> module. For instance, to import an object corresponding to a Hamiltonian composed of spins, which can be represented by Pauli matrices, run:</p>
+<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
+</code></pre>
+<p>In the <a href="physical_types/spins/intro.html">spins</a> section of the documentation we will explore the various classes in the <code>spins</code> module.</p>
+<h2 id="using-a-struqture-hamiltonian-from-a-file"><a class="header" href="#using-a-struqture-hamiltonian-from-a-file">Using a struqture Hamiltonian from a file</a></h2>
+<p>Struqture objects can be stored as either <a href="https://www.json.org/json-en.html"><code>JSON</code></a> files or as binary code. We highly recommend using <code>JSON</code> files, as they are also human-readable.
+Struqture was designed not only to easily instantiate or modify objects, but also to easily exchange them with other users - this is where the <code>JSON</code> serialisation comes into play.</p>
+<p>For instance, given a file storing our Hamiltonian, <code>hamiltonian.json</code>, we can import it in the following way:</p>
+<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
+
+# Reading a file: from_json
+with open("hamiltonian.json", "r") as f:
+    hamiltonian = PauliHamiltonian.from_json(f.read())
+
+print(hamiltonian)
+
+# Writing to a file: to_json
+# Should you wish to perform the inverse operation (writing your Hamiltonian to a file), you can
+# do so by running the following lines of code:
+with open("hamiltonian.json", "w") as f:
+    f.write(hamiltonian.to_json())
+</code></pre>
+<p>Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a file, it can be used in the same manner as one created by the user. Refer to the remaining documentation for the available getters, setters, and properties.</p>
+<h2 id="using-a-struqture-hamiltonian-from-a-database"><a class="header" href="#using-a-struqture-hamiltonian-from-a-database">Using a struqture Hamiltonian from a database</a></h2>
+<p>In this part of the user documentation we show how to work with a user-selected pre-defined Hamiltonian from our database, e.g. <a href="https://docs.cloud.quantumsimulations.de/hqs-spectrum-tools/subfolder/components/molecule_input/molecular_data.html">nmr_database</a>.</p>
+<p>For instance, this code snippet shows how to load the <code>C6H5NO2</code> molecule from the <code>hqs_nmr_parameters</code> database, and turn it into a struqture object:</p>
+<pre><code class="language-python">from hqs_nmr_parameters import examples, nmr_hamiltonian
+
+parameters = examples.molecules["C6H5NO2"]
+hamiltonian = nmr_hamiltonian(parameters=parameters, field=2.5)
+</code></pre>
+<p>Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a databse, it can be used in the same manner as one created by the user. Refer to the remaining documentation for the available getters, setters, and properties.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="spins"><a class="header" href="#spins">Spins</a></h1>
 <p>Struqture can be used to represent spin operators, hamiltonians and open systems, such as:</p>
 <p>\[
-\hat{H} = \sum_{i, j=0}^N \alpha_{i, j} (\sigma^x_i \sigma^x_j + \sigma^y_i \sigma^y_j) + \sum_{i=0}^N \lambda_i \sigma^z_i
-\]</p>
-<p>and
-\[
-\dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right) .
+\hat{H} = \sum_{i, j=0}^N \alpha_{i, j} (\sigma^x_i \sigma^x_j + \sigma^y_i \sigma^y_j) + \sum_{i=0}^N \lambda_i \sigma^z_i .
 \]</p>
 <p>All spin objects in <code>struqture</code> are expressed based on products of either Pauli matrices {X, Y, Z} or operators which are better suited to express decoherence {X, iY, Z}.</p>
 <p>The Pauli matrices (coherent dynamics):</p>
@@ -274,22 +293,8 @@ i &amp; 0
 \]</p>
 </li>
 </ul>
-<p>The modified Pauli matrices (decoherent dynamics):</p>
+<p>Struqture also provides modified Pauli matrices for incoherent dynamics. These are used in order to avoid complex noise operators. The identity, X and Z matrices remain identical to the ones defined above, but the Y matrix is modified as follows:</p>
 <ul>
-<li>I: identity matrix
-\[
-\begin{pmatrix}
-1 &amp; 0\\
-0 &amp; 1
-\end{pmatrix}
-\]</li>
-<li>X: \( \sigma^x \) matrix
-\[
-\begin{pmatrix}
-0 &amp; 1\\
-1 &amp; 0
-\end{pmatrix}
-\]</li>
 <li>iY: \( \mathrm{i} \sigma^y \)
 \[
 \begin{pmatrix}
@@ -297,67 +302,77 @@ i &amp; 0
 -1 &amp; 0
 \end{pmatrix}
 \]</li>
-<li>Z: \( \sigma^z \) matrix
+</ul>
+<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x_0 \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>PauliProducts</code> and <code>DecoherenceProducts</code> classes, in the <a href="physical_types/spins/./products.html">Building blocks</a> section. Otherwise please proceed to the <a href="physical_types/spins/./noisefree.html">coherent</a> or <a href="physical_types/spins/./noisy.html">decoherent</a> dynamics section.</p>
+<p><strong>NOTE</strong>: There exists an alternative representation, the {+, -, Z} basis, detailed in the <a href="physical_types/spins/./plus_minus.html">alternative basis</a> section.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="spins-1"><a class="header" href="#spins-1">Spins</a></h1>
+<p>Struqture can be used to represent spin operators, hamiltonians and open systems, such as:</p>
+<p>\[
+\hat{H} = \sum_{i, j=0}^N \alpha_{i, j} (\sigma^x_i \sigma^x_j + \sigma^y_i \sigma^y_j) + \sum_{i=0}^N \lambda_i \sigma^z_i .
+\]</p>
+<p>All spin objects in <code>struqture</code> are expressed based on products of either Pauli matrices {X, Y, Z} or operators which are better suited to express decoherence {X, iY, Z}.</p>
+<p>The Pauli matrices (coherent dynamics):</p>
+<ul>
+<li>
+<p>I: identity matrix
+\[
+\begin{pmatrix}
+1 &amp; 0\\
+0 &amp; 1
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>X: \( \sigma^x \) matrix
+\[
+\begin{pmatrix}
+0 &amp; 1\\
+1 &amp; 0
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>Y: \( \sigma^y \) matrix
+\[
+\begin{pmatrix}
+0 &amp; -i\\
+i &amp; 0
+\end{pmatrix}
+\]</p>
+</li>
+<li>
+<p>Z: \( \sigma^z \) matrix
 \[
 \begin{pmatrix}
 1 &amp; 0\\
 0 &amp; -1
 \end{pmatrix}
+\]</p>
+</li>
+</ul>
+<p>Struqture also provides modified Pauli matrices for incoherent dynamics. These are used in order to avoid complex noise operators. The identity, X and Z matrices remain identical to the ones defined above, but the Y matrix is modified as follows:</p>
+<ul>
+<li>iY: \( \mathrm{i} \sigma^y \)
+\[
+\begin{pmatrix}
+0 &amp; 1 \\
+-1 &amp; 0
+\end{pmatrix}
 \]</li>
 </ul>
-<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x_0 \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
-<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>PauliProducts</code> and <code>DecoherenceProducts</code> classes, in the <a href="physical_types/spins/./products.html">Building blocks</a> section. If not, please proceed to the <a href="physical_types/spins/./noisefree.html">coherent</a> or <a href="physical_types/spins/./noisy.html">decoherent</a> dynamics section.</p>
+<p>The simplest way that the user can interact with these objects is by using symbolic representation: <code>"0X1X"</code> represents a \( \sigma^x_0 \sigma^x_1 \) term. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"7Y25Z"</code> represents a \( \sigma^y_7 \sigma^z_{25} \) term, where all other spins (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>PauliProducts</code> and <code>DecoherenceProducts</code> classes, in the <a href="physical_types/spins/./products.html">Building blocks</a> section. Otherwise, please proceed to the <a href="physical_types/spins/./noisefree.html">coherent</a> or <a href="physical_types/spins/./noisy.html">decoherent</a> dynamics section.</p>
 <p><strong>NOTE</strong>: There exists an alternative representation, the {+, -, Z} basis, detailed in the <a href="physical_types/spins/./plus_minus.html">alternative basis</a> section.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
-<p>PauliProducts and DecoherenceProducts are the components that users use to create spin terms, e.g. \( \sigma_0^x \sigma_1^x \).
-<code>PauliProducts</code> can later be combined to create operators or Hamiltonians (see the <a href="physical_types/spins/./noisefree.html">coherent dynamics section</a>), while <code>DecoherenceProducts</code> can be combined to create noise operators or open systems (see the <a href="physical_types/spins/./noisy.html">decoherent dynamics section</a>).</p>
-<p><strong>NOTE</strong>: all of our higher-level objects accept both PauliProducts/DecoherenceProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/spins/./noisefree.html">coherent dynamics section</a>.</p>
-<h2 id="pauliproducts"><a class="header" href="#pauliproducts">PauliProducts</a></h2>
-<p>The products are built by setting the operators acting on separate spins.
-PauliProducts are combinations of SinglePauliOperators on specific spin indices. These are the <code>SinglePauliOperators</code>, or Pauli matrices, that are available for PauliProducts:</p>
-<h2 id="decoherenceproducts"><a class="header" href="#decoherenceproducts">DecoherenceProducts</a></h2>
-<p>DecoherenceProducts are products of a decoherence operators acting on single spins. These <code>SingleDecoherenceOperators</code>
-are almost identical to the <code>SinglePauliOperators</code> with the exception of an additional \(i\) factor and are well suited to represent decoherence properties</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p>In Python the separate operators can be set via functions. In the python interface a PauliProduct can often be replaced by its unique string representation.
-Note that when using setter methods as in <code>PauliProduct().x(0)</code>, the methods set the value of the Pauli operator acting on the corresponding spin and do not
-represent matrix multiplication, so that <code>PauliProduct().x(0)</code> is equivalent to <code>PauliProduct().x(0).x(0)</code>, the second call to the setter method <code>x(0)</code> having no effect.</p>
-<pre><code class="language-python">from struqture_py.spins import PauliProduct, DecoherenceProduct
-
-# We can build single-spin terms:
-sigma_x_0 = PauliProduct().x(0)  # sigma_x acting on spin 0
-sigma_y_1 = PauliProduct().y(1)  # sigma_y acting on spin 1
-sigma_z_2 = PauliProduct().z(2)  # sigma_z acting on spin 2
-
-# As well as two-spin terms:
-sigma_x_0_x_1 = PauliProduct().x(0).x(1)  # sigma_x acting on spin 0 and spin 1
-sigma_y_1_z_20 = PauliProduct().y(1).z(20)  # sigma_y acting on spin 1 and sigma_z spin 20
-# We can also initialize the PauliProducts from string:
-sigma_y_1_z_20 = PauliProduct.from_string("1Y20Z")
-
-# We can chain as many of these as we'd like!
-# A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
-pp = PauliProduct().x(0).y(3).z(20)
-# This is equivalent to the string representation
-pp_string = str(pp)
-
-# The same functionality is available for DecoherenceProducts.
-# **NOTE**: The name of the y() becomes .iy() for DecoherenceProducts to match the change in matrix representation
-# A product of a X acting on spin 0, a iY acting on spin 3 and a Z acting on spin 20
-dp = DecoherenceProduct().x(0).iy(3).z(20)
-# Often equivalent to the string representation
-dp_string = str(dp)
-</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operators-and-hamiltonians"><a class="header" href="#operators-and-hamiltonians">Operators and Hamiltonians</a></h1>
-<p><code>PauliOperators</code> and <code>PauliHamiltonians</code> represent operators or Hamiltonians such as:
+<p>In <code>struqture</code> we distinguish between operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
+<code>PauliOperators</code> and <code>PauliHamiltonians</code> represent operators or Hamiltonians such as:
 \[
 \hat{O} = \sum_{j} \alpha_j \prod_{k=0}^N \sigma_{j, k} \\
 \sigma_{j, k} \in \{ X_k, Y_k, Z_k, I_k \} .
 \]</p>
-<p>From a programming perspective the operators and Hamiltonians are HashMaps or Dictionaries with the <code>PauliProducts</code> as keys and the coefficients \(\alpha_j\) as values.</p>
-<p>In <code>struqture</code> we distinguish between operators and Hamiltonians to avoid introducing unphysical behaviour by accident.
-While both are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian, this means that the prefactor of each <code>PauliProduct</code> has to be real.</p>
-<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<p>While both <code>PauliOperators</code> and <code>PauliHamiltonians</code> are sums over PauliProducts, Hamiltonians are guaranteed to be hermitian. In a spin Hamiltonian, this means that the prefactor of each index has to be real.</p>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
 <p>Here is an example of how to build a <code>PauliOperator</code>:</p>
 <pre><code class="language-python">from struqture_py import spins
 
@@ -425,36 +440,28 @@ operator_3 = operator_1 - operator_2
 operator_3 = operator_3 + operator_1
 
 # Multiplication:
-operator_1 = operator_1 * 2.0
+operator_1 = operator_1 * 2.0j
 operator_4 = operator_1 * operator_2
 
 </code></pre>
-<p>The same mathematical operations are available for <code>PauliHamiltonian</code>. However, please note that multiplying a <code>PauliHamiltonian</code> by a complex number or another <code>PauliHamiltonian</code> will result in a <code>PauliOperator</code>, as the output is no longer guaranteed to be hermitian.</p>
-<h2 id="matrix-representation-spin-objects-only"><a class="header" href="#matrix-representation-spin-objects-only">Matrix representation: spin objects only</a></h2>
-<p>All spin-objects can be converted into sparse matrices with the following convention.
-If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
-\[
-M = M_2 \otimes M_1 \otimes \mathbb{1}
-\]
-For an \(N\)-spin operator a term acts on the \(2^N\) dimensional space of state vectors.
-A superoperator operates on the \(4^N\) dimensional space of flattened density-matrices.
-struqture uses the convention that density matrices are flattened in row-major order
-\[
-\rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
-\]
-For noiseless objects (<code>PauliOperator</code>, <code>PauliHamiltonian</code>), sparse operators and sparse superoperators can be constructed, as we can represent the operator as a wavefunction.</p>
-<p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
-<pre><code class="language-python">from struqture_py import spins
-from scipy.sparse import coo_matrix
+<p>The same mathematical operations are available for <code>PauliHamiltonian</code>. However, please note that multiplying a <code>PauliHamiltonian</code> by a complex number or another <code>PauliHamiltonian</code> will result in a <code>PauliOperator</code>, as the output is no longer guaranteed to be hermitian.
+This is shown in the snippet below.</p>
+<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
 
-# We start by building the operator we want to represent
-operator = spins.PauliOperator()
-operator.add_operator_product("0Z1Z", 0.5)
+# Setting up two test PauliHamiltonian
+operator_1 = PauliHamiltonian()
+operator_1.add_operator_product("0X", 1.5)
 
-# Using the `sparse_matrix_coo` function, we can
-# return the information in scipy coo_matrix form, which can be directly fed in:
-python_coo = coo_matrix(operator.sparse_matrix_coo(number_spins=2))
-print(python_coo.todense())
+operator_2 = PauliHamiltonian()
+operator_2.add_operator_product("2Z3Z", 0.5)
+
+# Addition &amp; subtraction:
+operator_3 = operator_1 - operator_2  # This remains a PauliHamiltonian
+operator_3 = operator_3 + operator_1  # This remains a PauliHamiltonian
+
+# Multiplication:
+operator_1 = operator_1 * 2.0j  # ! This is now a PauliOperator !
+operator_4 = operator_1 * operator_2 # ! This is now a PauliOperator !
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="noise-operators-and-open-systems"><a class="header" href="#noise-operators-and-open-systems">Noise Operators and Open Systems</a></h1>
 <p>We describe decoherence by representing it with the Lindblad equation.
@@ -469,22 +476,22 @@ Therefore, to describe the pure noise part of the Lindblad equation one needs th
 We use the modified Pauli matrices {X, iY, Z} (<code>DecoherenceProducts</code>) as the operator basis.</p>
 <p>The rate matrix and Lindblad noise model are saved as a sum over pairs of spin terms, giving the operators acting from the left and right on the density matrix.
 In programming terms, the object <code>PauliLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>DecoherenceProduct</code>, <code>DecoherenceProduct</code>) as keys and the entries in the rate matrix as values.</p>
-<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
-<p>Here, we add the terms \( L_0 = \sigma_0^{x} \sigma_1^{z} \) and \( L_1 = \sigma_0^{x} \sigma_2^{z} \) with coefficient 1.0:
+<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
+<p>Here, we add the terms \( L_0 = \sigma_0^{x} \sigma_1^{z} \) and \( L_1 = \sigma_0^{x} \sigma_2^{z} \) with coefficient <code>1.0</code>:
 \[ \hat{O}_{noise}(\rho) = 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \]</p>
 <pre><code class="language-python">from struqture_py import spins
 
 # We start by initializing the PauliLindbladNoiseOperator
-operator = spins.PauliLindbladNoiseOperator()
+noise_operator = spins.PauliLindbladNoiseOperator()
 
 # Adding in the (0X1Z, 0X2Z) term
-operator.set(("0X2Z", "0X2Z"), 1.0+1.5*1j)
-print(operator)
+noise_operator.set(("0X1Z", "0X2Z"), 1.0)
+print(noise_operator)
 
 # As with the coherent operators, the `set` function overwrites any existing value for the given key (here, a tuple of strings or DecoherenceProducts).
 # Should you prefer to use and additive method, please use `add_operator_product`:
-operator.add_operator_product(("0X1Z", "0X2Z"), 1.0)
-# NOTE: this is equivalent to: operator.add_operator_product((PauliProduct().x(0).z(1), PauliProduct().x(0).z(2)), 1.0)
+noise_operator.add_operator_product(("0X1Z", "0X2Z"), 1.0)
+# NOTE: this is equivalent to: noise_operator.add_operator_product((PauliProduct().x(0).z(1), PauliProduct().x(0).z(2)), 1.0)
 
 </code></pre>
 <h2 id="open-systems"><a class="header" href="#open-systems">Open systems</a></h2>
@@ -494,7 +501,7 @@ The Lindblad master equation is given by
 \dot{\rho} = \mathcal{L}(\rho) =-i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]
 In <code>struqture</code> they are composed of a hamiltonian (<code>PauliHamiltonian</code>) and noise (<code>PauliLindbladNoiseOperator</code>), representing the first and second parts of the equation (respectively).</p>
-<h3 id="example-3"><a class="header" href="#example-3">Example</a></h3>
+<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
 <pre><code class="language-python">from struqture_py import spins
 
 # We start by initializing our PauliLindbladOpenSystem
@@ -512,7 +519,8 @@ open_system.noise_add_operator_product(("0X2Z", "0X2Z"), 1.5)
 
 print(open_system)
 </code></pre>
-<h2 id="matrix-representation-spin-objects-only-1"><a class="header" href="#matrix-representation-spin-objects-only-1">Matrix representation: spin objects only</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="large-spin-example"><a class="header" href="#large-spin-example">Large Spin Example</a></h1>
+<!-- fill this out --><div style="break-before: page; page-break-before: always;"></div><h1 id="matrix-representation"><a class="header" href="#matrix-representation">Matrix Representation</a></h1>
 <p>All spin-objects can be converted into sparse matrices with the following convention.
 If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
 \[
@@ -523,8 +531,24 @@ A superoperator operates on the \(4^N\) dimensional space of flattened density-m
 struqture uses the convention that density matrices are flattened in row-major order
 \[
 \rho = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix} =&gt; \vec{\rho} = \begin{pmatrix} a \\ b \\ c \\ d \end{pmatrix}
-\]
-For operators with noise (<code>PauliLindbladNoiseOperator</code>, <code>PauliLindbladOpenSystem</code>), however, we can only represent them as density matrices and can therefore only construct sparse superoperators.</p>
+\]</p>
+<h2 id="hamiltonians-and-operators"><a class="header" href="#hamiltonians-and-operators">Hamiltonians and Operators</a></h2>
+<p>For noiseless objects (<code>PauliOperator</code>, <code>PauliHamiltonian</code>), sparse operators and sparse superoperators can be constructed, as we can represent the operator as a wavefunction.</p>
+<p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
+<pre><code class="language-python">from struqture_py import spins
+from scipy.sparse import coo_matrix
+
+# We start by building the operator we want to represent
+operator = spins.PauliOperator()
+operator.add_operator_product("0Z1Z", 0.5)
+
+# Using the `sparse_matrix_coo` function, we can
+# return the information in scipy coo_matrix form, which can be directly fed in:
+python_coo = coo_matrix(operator.sparse_matrix_coo(number_spins=2))
+print(python_coo.todense())
+</code></pre>
+<h2 id="open-systems-and-noise-operators"><a class="header" href="#open-systems-and-noise-operators">Open Systems and Noise Operators</a></h2>
+<p>For operators with noise (<code>PauliLindbladNoiseOperator</code>, <code>PauliLindbladOpenSystem</code>), however, we can only represent them as matrices operating on density matrices (in vector form) and can therefore only construct sparse superoperators.</p>
 <p>Note that the matrix representation functionality exists only for spin objects, and can't be generated for bosonic, fermionic or mixed system objects.</p>
 <pre><code class="language-python">from struqture_py import spins
 from scipy.sparse import coo_matrix
@@ -538,6 +562,14 @@ operator.add_operator_product(("0X2Z", "0X2Z"), 1.0 + 1.5j)
 python_coo = coo_matrix(operator.sparse_matrix_superoperator_coo(number_spins=3))
 print(python_coo.todense())
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-users"><a class="header" href="#advanced-users">Advanced Users</a></h1>
+<p>Welcome to the Advanced Users section of the user documentation for spins. We invite you to peruse the following topics:</p>
+<ul>
+<li><a href="physical_types/spins/./plus_minus.html">Alternative representation {+, -, z}</a></li>
+<li><a href="physical_types/spins/./symbolic.html">Using symbolic parameters</a></li>
+<li><a href="physical_types/spins/./products.html">Building blocks: PauliProduct and DecoherenceProduct</a></li>
+</ul>
+<p>For further advanced topics, please consult the <a href="physical_types/spins/../../container_types/intro.html">Struqture design &amp; implementation</a> section.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the----z-basis"><a class="header" href="#the----z-basis">The {+, -, z} basis</a></h1>
 <h2 id="the-basis-itself"><a class="header" href="#the-basis-itself">The basis itself</a></h2>
 <p>The {+, -, z} basis is defined as follows:</p>
@@ -579,7 +611,7 @@ print(python_coo.todense())
 \]</p>
 </li>
 </ul>
-<h2 id="symbolic-values-and-plusminusproduct"><a class="header" href="#symbolic-values-and-plusminusproduct">Symbolic values and PlusMinusProduct</a></h2>
+<h2 id="symbolic-representation-and-plusminusproduct"><a class="header" href="#symbolic-representation-and-plusminusproduct">Symbolic representation and PlusMinusProduct</a></h2>
 <p>The following lines of code are equivalent ways to represent these matrices acting on spin indices, when passing them to the operators described in the rest of this section:</p>
 <pre><code class="language-python">from struqture_py.spins import PlusMinusProduct
 
@@ -595,7 +627,7 @@ represent matrix multiplication, so that <code>PlusMinusProduct().z(0)</code> is
 \sigma_{j, k} \in \{ +_k, -_k, Z_k, I_k \} .
 \]</p>
 <p>From a programming perspective the operators are HashMaps or Dictionaries with the <code>PlusMinusProducts</code> as keys and the coefficients \(\alpha_j\) as values.</p>
-<h3 id="example-4"><a class="header" href="#example-4">Example</a></h3>
+<h3 id="example-3"><a class="header" href="#example-3">Example</a></h3>
 <p>Here is an example of how to build a <code>PlusMinusOperator</code>:</p>
 <pre><code class="language-python">from struqture_py import spins
 
@@ -641,7 +673,7 @@ operator_1 = operator_1 * 2.0
 operator_4 = operator_1 * operator_2
 
 </code></pre>
-<h3 id="matrix-representation-spin-objects-only-2"><a class="header" href="#matrix-representation-spin-objects-only-2">Matrix representation: spin objects only</a></h3>
+<h3 id="matrix-representation-spin-objects-only"><a class="header" href="#matrix-representation-spin-objects-only">Matrix representation: spin objects only</a></h3>
 <p>All spin-objects can be converted into sparse matrices with the following convention.
 If \(M_2\) corresponds to the matrix acting on spin 2 and \(M_1\) corresponds to the matrix acting on spin 1 the total matrix \(M\) acting on spins 0 to 2 is given by
 \[
@@ -680,7 +712,7 @@ with the rate matrix \(\Gamma_{j,k}\) and the Lindblad operator \(L_{j}\).</p>
 We use the {+, -, Z} matrices (<code>PlusMinusProducts</code>) as the operator basis.</p>
 <p>The rate matrix and Lindblad noise model are saved as a sum over pairs of spin terms, giving the operators acting from the left and right on the density matrix.
 In programming terms, the object <code>PlusMinusLindbladNoiseOperator</code> is given by a HashMap or Dictionary with the tuple (<code>PlusMinusProduct</code>, <code>PlusMinusProduct</code>) as keys and the entries in the rate matrix as values.</p>
-<h3 id="example-5"><a class="header" href="#example-5">Example</a></h3>
+<h3 id="example-4"><a class="header" href="#example-4">Example</a></h3>
 <p>Here, we add the terms \( L_0 = \sigma_0^{+} \sigma_1^{z} \) and \( L_1 = \sigma_0^{+} \sigma_2^{z} \) with coefficient 1.0:
 \[ \hat{O}_{noise}(\rho) = 1.0 \left( L_0 \rho L_1^{\dagger} - \frac{1}{2} \{ L_1^{\dagger} L_0, \rho \} \right) \]</p>
 <pre><code class="language-python">from struqture_py import spins
@@ -698,47 +730,122 @@ operator.add_operator_product(("0+1Z", "0+2Z"), 1.0)
 # NOTE: this is equivalent to: operator.add_operator_product((PlusMinusProduct().plus(0).z(1), PlusMinusProduct().plus(0).z(2)), 1.0)
 
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="symbolic-parameters"><a class="header" href="#symbolic-parameters">Symbolic parameters</a></h1>
+<p>Symbolic parameters, or parametrisation of the classes, can be very useful for users creating Hamiltonians or operators with different coupling/on-site/... strengths.</p>
+<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
+<p>For instance, if a user would like to define the following Hamiltonian:</p>
+<p>\[
+\hat{H} = J \sum_{i, j} \sigma_x^i \sigma_x^j + \alpha \sum_i \sigma_z^i
+\]</p>
+<p>where the values for \(J\) range between [-1.0, 1.0] and the values for \( \alpha \) range between [0.2, 0.4], the user might try to define all these Hamiltonians one at a time. However, with struqture, the user can define the Hamiltonian once, passing symbolic parameters <code>"J"</code> and <code>"alpha"</code> as the coefficients, and substituting them for the correct values in situ, later. We show an example of this below, where we pass our symbolic Hamiltonian to our closed-source software, the HQS Quantum Libraries. These then create the circuit representing the Trotterised time evolution corresponding to the Hamiltonian, and then substitute the <code>"J"</code> and <code>"alpha"</code> values at each Trotter time step. We can then go on to simulate this circuit, now that the symbolic parameters have been substituted.</p>
+<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
+from hqs_quantum_libraries import alqorithms
+
+# Defining the base Hamiltonian
+hamiltonian = PauliHamiltonian()
+number_spins = 4
+for i in range(number_spins):
+    for j in (i + 1, number_spins):
+        hamiltonian.add_operator_product(f"{i}X{j}X", "J")
+for i in range(number_spins):
+    hamiltonian.add_operator_product(f"{i}Z", "alpha")
+
+print(hamiltonian)
+
+# This Hamiltonian can then be used later in the following fashion:
+algorithm = py_alqorithms.QSWAPAlgorithm(1)
+time = 1.0
+for (j_coupling, alpha_coupling) in zip(range(-1.0, 1.0), range(0.2, 0.4)):
+    # turn the hamiltonian into a quantum Circuit (see the qoqo documentation) using the HQS Quantum Libraries
+    circuit = algorithm.create_circuit(hamiltonian, time)
+    circuit_to_run = circuit.substitute_parameters({"J": j_coupling, "alpha": alpha_coupling})
+    # run circuit on hardware or on a simulator
+</code></pre>
+<h2 id="complex-symbolic-parameters"><a class="header" href="#complex-symbolic-parameters">Complex Symbolic Parameters</a></h2>
+<p>A note on complex parameters: we have several classes (<code>PauliOperator</code>, <code>PauliLindbladNoiseOperator</code>) that take complex parameters when building them.
+These can also be made symbolic:</p>
+<ul>
+<li>if the entire parameter (real + imaginary parts) is symbolic, the same code as above can be used: a string is passed instead of a number when adding a product to the operator.</li>
+<li>if only a part (real part or imaginary part) is symbolic, while the other part is a number, the user must use the CalculatorComplex class (<code>qoqo_calculator_pyo3</code> package). This is demonstrated below.</li>
+</ul>
+<pre><code class="language-python">from struqture_py.spins import PauliOperator
+from qoqo_calculator_pyo3 import CalculatorComplex
+
+operator = PauliOperator()
+operator.add_operator_product("0Z1Z", CalculatorComplex.from_pair("a", 1.0))  # This sets: a + i * 1.0
+operator.add_operator_product("0X", CalculatorComplex.from_pair(1.0, "a"))  # This set 1.0 + i * a
+operator.add_operator_product("1X", CalculatorComplex.from_pair("b", "c")) # This sets b + i * c. Please note that b and c will need to be substituted separately.
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-users-pauliproducts-and-decoherenceproducts"><a class="header" href="#advanced-users-pauliproducts-and-decoherenceproducts">Advanced Users: PauliProducts and DecoherenceProducts</a></h1>
+<p>Up until this point, we have shown how to pass terms to a Hamiltonian or operator using symbolic (string) representation. However, the underlying class is the <code>PauliProduct</code> and <code>DecoherenceProduct</code> (for coherent and incoherent dynamics, respectively).</p>
+<p><strong>NOTE</strong>: all of our higher-level objects accept both PauliProducts/DecoherenceProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation, starting instead with the <a href="physical_types/spins/./noisefree.html">coherent dynamics section</a>.</p>
+<p>PauliProducts and DecoherenceProducts are the components that users utilise to create spin terms, e.g. \( \sigma_0^x \sigma_1^x \).
+<code>PauliProducts</code> can later be combined to create operators or Hamiltonians (see the <a href="physical_types/spins/./noisefree.html">coherent dynamics section</a>), while <code>DecoherenceProducts</code> can be combined to create noise operators or open systems (see the <a href="physical_types/spins/./noisy.html">incoherent dynamics section</a>).</p>
+<h2 id="definitions"><a class="header" href="#definitions">Definitions</a></h2>
+<p>The products are built by setting the operators acting on separate spins.
+<code>PauliProducts</code> are combinations of <code>SinglePauliOperators</code> on specific spin indices. These are the <code>SinglePauliOperators</code>, or Pauli matrices, as defined in the <a href="physical_types/spins/./intro.html">introductory section</a>. The same applies to the <code>DecoherenceProducts</code> and their <code>SingleDecoherenceOperators</code>.</p>
+<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
+<p>In Python the separate operators can be set via functions. In the python interface a <code>PauliProduct</code> can often be replaced by its unique string representation.
+Note that when using setter methods as in <code>PauliProduct().x(0)</code>, the methods set the value of the Pauli operator acting on the corresponding spin and do not
+represent matrix multiplication, so that <code>PauliProduct().x(0)</code> is equivalent to <code>PauliProduct().x(0).x(0)</code>, the second call to the setter method <code>x(0)</code> having no effect.</p>
+<pre><code class="language-python">from struqture_py.spins import PauliProduct, DecoherenceProduct
+
+# We can build single-spin terms:
+sigma_x_0 = PauliProduct().x(0)  # sigma_x acting on spin 0
+sigma_y_1 = PauliProduct().y(1)  # sigma_y acting on spin 1
+sigma_z_2 = PauliProduct().z(2)  # sigma_z acting on spin 2
+
+# As well as two-spin terms:
+sigma_x_0_x_1 = PauliProduct().x(0).x(1)  # sigma_x acting on spin 0 and spin 1
+sigma_y_1_z_20 = PauliProduct().y(1).z(20)  # sigma_y acting on spin 1 and sigma_z spin 20
+# We can also initialize the PauliProducts from string:
+sigma_y_1_z_20 = PauliProduct.from_string("1Y20Z")
+
+# We can chain as many of these as we would like!
+# A product of a X acting on spin 0, a Y acting on spin 3 and a Z acting on spin 20
+pp = PauliProduct().x(0).y(3).z(20)
+# This is equivalent to the string representation
+pp_string = str(pp)
+
+# The same functionality is available for DecoherenceProducts.
+# **NOTE**: The name of the y() becomes .iy() for DecoherenceProducts to match the change in matrix representation
+# A product of a X acting on spin 0, a iY acting on spin 3 and a Z acting on spin 20
+dp = DecoherenceProduct().x(0).iy(3).z(20)
+# Often equivalent to the string representation
+dp_string = str(dp)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="non-spin-objects"><a class="header" href="#non-spin-objects">Non-spin objects</a></h1>
+<p>Struqture also supports non-spin systems. The following object families are currently available:</p>
+<ul>
+<li><a href="physical_types/./bosons/intro.html">bosonic modes</a></li>
+<li><a href="physical_types/./fermions/intro.html">fermionic modes</a></li>
+<li><a href="physical_types/./mixed_systems/intro.html">mixed systems</a>: these classes allow combinations of spins, bosonic modes, and fermionic modes within a single model.</li>
+</ul>
+<p>As with spin objects, these types can be instantiated programmatically or loaded from a file, and once constructed they can be used in the same manner as user-created objects. Refer to the respective sections for details on available constructors, operators, getters, setters, and properties.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="bosons"><a class="header" href="#bosons">Bosons</a></h1>
-<p>Struqture can be used to represent bosonic operators, hamiltonians and open systems, such as:</p>
+<p>Struqture can be used to represent bosonic operators and hamiltonians, such as:</p>
 <p>\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
 with
 \[ f(j, k) = \begin{cases} b_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
 \[ g(j, l) = \begin{cases} b_l \\ \mathbb{1} \end{cases} , \]
-and
+or an open system given by its Lindblad desription
 \[
 \dot{\rho} = \mathcal{L}(\rho) = -i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
 \]</p>
 <p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"c0a0"</code> represents a \( b^{\dagger}_0\ b_0 \) term. We use "c" to denote  indices operated on by the creator operator and "a" to denote indices operated on by the annihilation operator. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"c7a25"</code> represents a \( b^{\dagger}_7 b_{25} \) term, where all other terms (0 to 6 and 8 to 24) are acted on by \(I\).</p>
-<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>BosonProduct</code> and <code>HermitianBosonProduct</code> classes, in the <a href="physical_types/bosons/./products.html">Building blocks</a> section. If not, please proceed to the <a href="physical_types/bosons/./noisefree.html">coherent</a> or <a href="physical_types/bosons/./noisy.html">decoherent</a> dynamics section.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="overview-1"><a class="header" href="#overview-1">Overview</a></h1>
-<p>All bosonic objects in <code>struqture</code> are expressed based on products of bosonic creation and annihilation operators, which respect bosonic commutation relations
-\[ \lbrack b_k^{\dagger}, b_j^{\dagger} \rbrack = 0, \\
-\lbrack b_k, b_j \rbrack = 0, \\
-\lbrack b_k, b_j^{\dagger} \rbrack = \delta_{k, j}. \]</p>
-<p><strong>NOTE</strong>: all of our higher-level objects accept BosonProducts/HermitianBosonProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/bosons/./noisefree.html">coherent dynamics section</a>.</p>
-<h2 id="bosonproducts"><a class="header" href="#bosonproducts">BosonProducts</a></h2>
-<p>BosonProducts are simple combinations of bosonic creation and annihilation operators.</p>
-<h2 id="hermitianbosonproducts"><a class="header" href="#hermitianbosonproducts">HermitianBosonProducts</a></h2>
-<p>HermitianBosonProducts are the hermitian equivalent of BosonProducts. This means that even though they are constructed the same (see the next section, <code>Examples</code>), they internally store both that term and its hermitian conjugate. For instance, given the term \(b^{\dagger}_0 b_1 b_2\), a BosonProduct would represent \(b^{\dagger}_0 b_1 b_2\) while a HermitianBosonProduct would represent \(c^{\dagger}_0 b_1 b_2 + b^{\dagger}_2 b^{\dagger}_1 b_0\).</p>
-<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
-<p>The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
-<p>Note: (Hermitian)BosonProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the <code>create_valid_pair</code> function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the commutation and hermitian conjugation rules.</p>
-<pre><code class="language-python">from struqture_py.bosons import BosonProduct, HermitianBosonProduct
-
-# A product of a creation operator acting on bosonic mode 0 and an annihilation operator
-# acting on bosonic mode 20
-bp = BosonProduct([0], [20])
-# Building the term b^{\dagger}_1 * b^{\dagger}_3 * b_0
-bp = BosonProduct.create_valid_pair([3, 1], [0], 1.0)
-
-
-# A product of a creation operator acting on bosonic mode 0 and an annihilation
-# operator acting on bosonic mode 20, as well as a creation operator acting on
-# bosonic mode 20 and an annihilation operator acting on bosonic mode 0
-hbp = HermitianBosonProduct([0], [20])
-# Building the term b^{\dagger}_0 * b^{\dagger}_3 * b_0 + b^{\dagger}_0 * b_3 * b_0
-hbp = HermitianBosonProduct.create_valid_pair([3, 0], [0], 1.0)
-</code></pre>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>BosonProduct</code> and <code>HermitianBosonProduct</code> classes, in the <a href="physical_types/bosons/./products.html">Building blocks</a> section. Otherwise please proceed to the <a href="physical_types/bosons/./noisefree.html">coherent</a> or <a href="physical_types/bosons/./noisy.html">decoherent</a> dynamics section.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bosons-1"><a class="header" href="#bosons-1">Bosons</a></h1>
+<p>Struqture can be used to represent bosonic operators and hamiltonians, such as:</p>
+<p>\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
+with
+\[ f(j, k) = \begin{cases} b_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
+\[ g(j, l) = \begin{cases} b_l \\ \mathbb{1} \end{cases} , \]
+or an open system given by its Lindblad desription
+\[
+\dot{\rho} = \mathcal{L}(\rho) = -i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
+\]</p>
+<p>The simplest way that the user can interact with these objects is by using symbolic representation: <code>"c0a0"</code> represents a \( b^{\dagger}_0\ b_0 \) term. We use "c" to denote  indices operated on by the creator operator and "a" to denote indices operated on by the annihilation operator. This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"c7a25"</code> represents a \( b^{\dagger}_7 b_{25} \) term, where all other terms (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>BosonProduct</code> and <code>HermitianBosonProduct</code> classes, in the <a href="physical_types/bosons/./products.html">Building blocks</a> section. Otherwise, please proceed to the <a href="physical_types/bosons/./noisefree.html">coherent</a> or <a href="physical_types/bosons/./noisy.html">decoherent</a> dynamics section.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operators-and-hamiltonians-1"><a class="header" href="#operators-and-hamiltonians-1">Operators and Hamiltonians</a></h1>
 <p><code>BosonOperators</code> and <code>BosonHamiltonians</code> represent operators or Hamiltonians such as:
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
@@ -851,6 +958,35 @@ open_system.noise_add_operator_product(("c0c1a0a1", "c0c1a0a2"), 1.5)
 
 print(open_system)
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
+<p>All bosonic objects in <code>struqture</code> are expressed based on products of bosonic creation and annihilation operators, which respect bosonic commutation relations
+\[ \lbrack b_k^{\dagger}, b_j^{\dagger} \rbrack = 0, \\
+\lbrack b_k, b_j \rbrack = 0, \\
+\lbrack b_k, b_j^{\dagger} \rbrack = \delta_{k, j}. \]</p>
+<p><strong>NOTE</strong>: all of our higher-level objects accept BosonProducts/HermitianBosonProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/bosons/./noisefree.html">coherent dynamics section</a>.</p>
+<h2 id="bosonproducts"><a class="header" href="#bosonproducts">BosonProducts</a></h2>
+<p>BosonProducts are simple combinations of bosonic creation and annihilation operators.</p>
+<h2 id="hermitianbosonproducts"><a class="header" href="#hermitianbosonproducts">HermitianBosonProducts</a></h2>
+<p>HermitianBosonProducts are the hermitian equivalent of BosonProducts. This means that even though they are constructed the same (see the next section, <code>Examples</code>), they internally store both that term and its hermitian conjugate. For instance, given the term \(b^{\dagger}_0 b_1 b_2\), a BosonProduct would represent \(b^{\dagger}_0 b_1 b_2\) while a HermitianBosonProduct would represent \(c^{\dagger}_0 b_1 b_2 + b^{\dagger}_2 b^{\dagger}_1 b_0\).</p>
+<h2 id="example-10"><a class="header" href="#example-10">Example</a></h2>
+<p>The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
+<p>Note: (Hermitian)BosonProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the <code>create_valid_pair</code> function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the commutation and hermitian conjugation rules.</p>
+<pre><code class="language-python">from struqture_py.bosons import BosonProduct, HermitianBosonProduct
+
+# A product of a creation operator acting on bosonic mode 0 and an annihilation operator
+# acting on bosonic mode 20
+bp = BosonProduct([0], [20])
+# Building the term b^{\dagger}_1 * b^{\dagger}_3 * b_0
+bp = BosonProduct.create_valid_pair([3, 1], [0], 1.0)
+
+
+# A product of a creation operator acting on bosonic mode 0 and an annihilation
+# operator acting on bosonic mode 20, as well as a creation operator acting on
+# bosonic mode 20 and an annihilation operator acting on bosonic mode 0
+hbp = HermitianBosonProduct([0], [20])
+# Building the term b^{\dagger}_0 * b^{\dagger}_3 * b_0 + b^{\dagger}_0 * b_3 * b_0
+hbp = HermitianBosonProduct.create_valid_pair([3, 0], [0], 1.0)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fermions"><a class="header" href="#fermions">Fermions</a></h1>
 <p>Struqture can be used to represent Fermion operators, hamiltonians and open systems, such as:</p>
 <p>\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
@@ -864,36 +1000,21 @@ and
 <p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"c0a0"</code> represents a \( c^{\dagger}_0\ c_0 \) term.
 <strong>Note:</strong> Here c is used in the equations to represent any fermion operator while b was used to represent a boson operator. However, in string serialisation strquture uses the convention that <code>c</code> always represents a creation operator, whether in the fermionic or bosonic degrees of freedom and <code>a</code> always represents an annihilation operator.
 This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"c7a25"</code> represents a \( c^{\dagger}_7 c_{25} \) term, where all other terms (0 to 6 and 8 to 24) are acted on by \(I\).</p>
-<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>FermionProduct</code> and <code>HermitianFermionProduct</code> classes, in the <a href="physical_types/fermions/./products.html">Building blocks</a> section. If not, please proceed to the <a href="physical_types/fermions/./noisefree.html">coherent</a> or <a href="physical_types/fermions/./noisy.html">decoherent</a> dynamics section.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="overview-2"><a class="header" href="#overview-2">Overview</a></h1>
-<p>All fermionic objects in <code>struqture</code> are expressed based on products of fermionic creation and annihilation operators, which respect fermionic anti-commutation relations
-\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\
-\lbrace c_k, c_j \rbrace = 0, \\
-\lbrace c_k, c_j^{\dagger} \rbrace = \delta_{k, j}. \]</p>
-<p><strong>NOTE</strong>: all of our higher-level objects accept FermionProducts/HermitianFermionProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/fermions/./noisefree.html">coherent dynamics section</a>.</p>
-<h2 id="fermionproducts"><a class="header" href="#fermionproducts">FermionProducts</a></h2>
-<p>FermionProducts are simple combinations of fermionic creation and annihilation operators.</p>
-<h2 id="hermitianfermionproducts"><a class="header" href="#hermitianfermionproducts">HermitianFermionProducts</a></h2>
-<p>HermitianFermionProducts are the hermitian equivalent of FermionProducts. This means that even though they are constructed the same (see the next section, <code>Examples</code>), they internally store both that term and its hermitian conjugate. For instance, given the term \(c^{\dagger}_0 c_1 c_2\), a FermionProduct would represent \(c^{\dagger}_0 c_1 c_2\) while a HermitianFermionProduct would represent \(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\).</p>
-<h2 id="example-10"><a class="header" href="#example-10">Example</a></h2>
-<p>The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
-<p>Note: (Hermitian)FermionProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the <code>create_valid_pair</code> function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the anti-commutation and hermitian conjugation rules.</p>
-<pre><code class="language-python">from struqture_py.fermions import FermionProduct, HermitianFermionProduct
-
-# A product of a creation operator acting on fermionic mode 0 and an
-# annihilation operator acting on fermionic mode 20
-fp = FermionProduct([0], [20])
-# Building the term c^{\dagger}_1 * c^{\dagger}_3 * c_0
-fp = FermionProduct.create_valid_pair([3, 1], [0], 1.0)
-
-
-# A product of a creation operator acting on fermionic mode 0 and an annihilation
-# operator acting on fermionic mode 20, as well as a creation operator acting on
-# fermionic mode 20 and an annihilation operator acting on fermionic mode 0
-hfp = HermitianFermionProduct([0], [20])
-# Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
-hfp = HermitianFermionProduct.create_valid_pair([3, 0], [0], 1.0)
-</code></pre>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>FermionProduct</code> and <code>HermitianFermionProduct</code> classes, in the <a href="physical_types/fermions/./products.html">Building blocks</a> section. Otherwise please proceed to the <a href="physical_types/fermions/./noisefree.html">coherent</a> or <a href="physical_types/fermions/./noisy.html">decoherent</a> dynamics section.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fermions-1"><a class="header" href="#fermions-1">Fermions</a></h1>
+<p>Struqture can be used to represent Fermion operators, hamiltonians and open systems, such as:</p>
+<p>\[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
+with
+\[ f(j, k) = \begin{cases} c_k^{\dagger} \\ \mathbb{1} \end{cases} , \]
+\[ g(j, l) = \begin{cases} c_l \\ \mathbb{1} \end{cases} , \]
+and
+\[
+\dot{\rho} = \mathcal{L}(\rho) = -i [\hat{H}, \rho] + \sum_{j,k} \Gamma_{j,k} \left( L_{j}\rho L_{k}^{\dagger} - \frac{1}{2} \{ L_k^{\dagger} L_j, \rho \} \right)
+\]</p>
+<p>The simplest way that the user can interact with these objects is by using symbolic representation: <code>"c0a0"</code> represents a \( c^{\dagger}_0\ c_0 \) term.
+<strong>Note:</strong> Here c is used in the equations to represent any fermion operator while b was used to represent a boson operator. However, in string serialisation strquture uses the convention that <code>c</code> always represents a creation operator, whether in the fermionic or bosonic degrees of freedom and <code>a</code> always represents an annihilation operator.
+This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"c7a25"</code> represents a \( c^{\dagger}_7 c_{25} \) term, where all other terms (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>FermionProduct</code> and <code>HermitianFermionProduct</code> classes, in the <a href="physical_types/fermions/./products.html">Building blocks</a> section. Otherwise please proceed to the <a href="physical_types/fermions/./noisefree.html">coherent</a> or <a href="physical_types/fermions/./noisy.html">decoherent</a> dynamics section.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operators-and-hamiltonians-2"><a class="header" href="#operators-and-hamiltonians-2">Operators and Hamiltonians</a></h1>
 <p><code>FermionOperators</code> and <code>FermionHamiltonians</code> represent operators or Hamiltonians such as:
 \[ \hat{O} = \sum_{j=0}^N \alpha_j \left( \prod_{k=0}^N f(j, k) \right) \left( \prod_{l=0}^N g(j, l) \right) \]
@@ -1007,64 +1128,49 @@ open_system.noise_add_operator_product(("c0c1a0a1", "c0c1a0a2"), 1.5)
 
 print(open_system)
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="overview-1"><a class="header" href="#overview-1">Overview</a></h1>
+<p>All fermionic objects in <code>struqture</code> are expressed based on products of fermionic creation and annihilation operators, which respect fermionic anti-commutation relations
+\[ \lbrace c_k^{\dagger}, c_j^{\dagger} \rbrace = 0, \\
+\lbrace c_k, c_j \rbrace = 0, \\
+\lbrace c_k, c_j^{\dagger} \rbrace = \delta_{k, j}. \]</p>
+<p><strong>NOTE</strong>: all of our higher-level objects accept FermionProducts/HermitianFermionProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/fermions/./noisefree.html">coherent dynamics section</a>.</p>
+<h2 id="fermionproducts"><a class="header" href="#fermionproducts">FermionProducts</a></h2>
+<p>FermionProducts are simple combinations of fermionic creation and annihilation operators.</p>
+<h2 id="hermitianfermionproducts"><a class="header" href="#hermitianfermionproducts">HermitianFermionProducts</a></h2>
+<p>HermitianFermionProducts are the hermitian equivalent of FermionProducts. This means that even though they are constructed the same (see the next section, <code>Examples</code>), they internally store both that term and its hermitian conjugate. For instance, given the term \(c^{\dagger}_0 c_1 c_2\), a FermionProduct would represent \(c^{\dagger}_0 c_1 c_2\) while a HermitianFermionProduct would represent \(c^{\dagger}_0 c_1 c_2 + c^{\dagger}_2 c^{\dagger}_1 c_0\).</p>
+<h2 id="example-14"><a class="header" href="#example-14">Example</a></h2>
+<p>The operator product is constructed by passing an array or a list of integers to represent the creation indices, and an array or a list of integers to represent the annihilation indices.</p>
+<p>Note: (Hermitian)FermionProducts can only been created from the correct ordering of indices (the wrong sequence will return an error) but we have the <code>create_valid_pair</code> function to create a valid Product from arbitrary sequences of operators which also transforms an index value according to the anti-commutation and hermitian conjugation rules.</p>
+<pre><code class="language-python">from struqture_py.fermions import FermionProduct, HermitianFermionProduct
+
+# A product of a creation operator acting on fermionic mode 0 and an
+# annihilation operator acting on fermionic mode 20
+fp = FermionProduct([0], [20])
+# Building the term c^{\dagger}_1 * c^{\dagger}_3 * c_0
+fp = FermionProduct.create_valid_pair([3, 1], [0], 1.0)
+
+
+# A product of a creation operator acting on fermionic mode 0 and an annihilation
+# operator acting on fermionic mode 20, as well as a creation operator acting on
+# fermionic mode 20 and an annihilation operator acting on fermionic mode 0
+hfp = HermitianFermionProduct([0], [20])
+# Building the term c^{\dagger}_0 * c^{\dagger}_3 * c_0 + c^{\dagger}_0 * c_3 * c_0
+hfp = HermitianFermionProduct.create_valid_pair([3, 0], [0], 1.0)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mixed-systems"><a class="header" href="#mixed-systems">Mixed Systems</a></h1>
 <p>Struqture can be used to represent mixed operators, hamiltonians and open systems, such as:
 \[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} b_{l, j}^{\dagger} b_{m, j} \prod_{r, s} c_{r, j}^{\dagger} c_{s, j} \]
 with commutation relations and cyclicity respected.</p>
 <p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"S0Z:Bc0a1:Fc0a0"</code> represents a \( \sigma^z\ b^{\dagger}_0 b_1\ c^{\dagger}_0\ c_0 \) term. In this string representation, each subsystem is defined by its type, and ends with a colon, in order to show where the next subsystem starts. The type is one of three options: "S" if it is a spin subsystem, "B" if it is a bosonic subsystem, and "F" if it is a fermionic subsystem.
 This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"S7Z:Bc7a25:Fc25a7"</code> represents a \( \sigma^{z}_7\ b^{\dagger}_7 b_{25}\ c^{\dagger}_{25}\ c_7 \) term, where all other terms (0 to 6 and 8 to 24) are acted on by \(I\).</p>
-<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>MixedProduct</code>, <code>HermitianMixedProducts</code> and <code>MixedDecoherenceProducts</code> classes, in the <a href="physical_types/mixed_systems/./products.html">Building blocks</a> section. If not, please proceed to the <a href="physical_types/mixed_systems/./noisefree.html">coherent</a> or <a href="physical_types/mixed_systems/./noisy.html">decoherent</a> dynamics section.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="overview-3"><a class="header" href="#overview-3">Overview</a></h1>
-<p>All the mixed operators are expressed based on products of mixed indices which contain spin terms, bosonic terms and fermionic terms. The spin terms respect Pauli operator cyclicity, the bosonic terms respect bosonic commutation relations, and the fermionic terms respect fermionic anti-commutation relations.</p>
-<p>These products respect the following relations:
-\[
--i \sigma^x \sigma^y \sigma^z = I
-\]
-\[ \lbrack b_{k}^{\dagger}, b_{j}^{\dagger} \rbrack = 0, \\
-\lbrack b_{k}, b_{j} \rbrack = 0, \\
-\lbrack b_{k}, b_{j}^{\dagger} \rbrack = \delta_{k, j}. \]
-\[ \lbrace c_{k}^{\dagger}, c_{j}^{\dagger} \rbrace = 0, \\
-\lbrace c_{k}, c_{j} \rbrace = 0, \\
-\lbrace c_{k}, c_{j}^{\dagger} \rbrace = \delta_{k, j}. \]</p>
-<p>with
-\(b^{\dagger}\) the bosonic creation operator, \(b\) the bosonic annihilation operator, \(\lbrack ., . \rbrack\) the bosonic commutation relations, \(c^{\dagger}\) the fermionic creation operator, \(c\) the fermionic annihilation operator, and \(\lbrace ., . \rbrace\) the fermionic anti-commutation relations.</p>
-<p><strong>NOTE</strong>: all of our higher-level objects accept both MixedProducts/HermitianMixedProducts/MixedDecoherenceProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/mixed_systems/./noisefree.html">coherent dynamics section</a>.</p>
-<h2 id="mixedproducts"><a class="header" href="#mixedproducts">MixedProducts</a></h2>
-<p>MixedProducts are combinations of <code>PauliProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
-<h2 id="hermitianmixedproducts"><a class="header" href="#hermitianmixedproducts">HermitianMixedProducts</a></h2>
-<p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate.</p>
-<h2 id="mixeddecoherenceproducts"><a class="header" href="#mixeddecoherenceproducts">MixedDecoherenceProducts</a></h2>
-<p>MixedDecoherenceProducts are combinations of <code>DecoherenceProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
-<h2 id="example-14"><a class="header" href="#example-14">Example</a></h2>
-<p>The operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.</p>
-<pre><code class="language-python">from struqture_py import mixed_systems, bosons, spins, fermions
-
-# Building the spin term sigma^x_0 sigma^z_1
-pp = spins.PauliProduct().x(0).z(1)
-# Building the bosonic term b^{\dagger}_1 * b^{\dagger}_2 * b_2
-bp = bosons.BosonProduct([1, 2], [2])
-# Building the fermionic term c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
-fp = fermions.FermionProduct([0, 1], [0, 1])
-
-# Building the term sigma^x_0 sigma^z_1 b^{\dagger}_1 * b^{\dagger}_2
-# * b_2 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
-hmp = mixed_systems.MixedProduct([pp], [bp], [fp])
-
-# Building the term sigma^x_0 sigma^z_1 c^{\dagger}_1 * c^{\dagger}_2 *
-# c_2 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1  +  h.c.
-hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
-
-
-# Building the spin term sigma^x_0 sigma^z_1
-dp = spins.DecoherenceProduct().x(0).z(1)
-# Building the bosonic term b^{\dagger}_1 * b^{\dagger}_2 * b_2
-bp = bosons.BosonProduct([1, 2], [0, 1])
-# Building the fermionic term c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
-fp = fermions.FermionProduct([0, 1], [0, 1])
-
-# This will work
-mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
-</code></pre>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>MixedProduct</code>, <code>HermitianMixedProducts</code> and <code>MixedDecoherenceProducts</code> classes, in the <a href="physical_types/mixed_systems/./products.html">Building blocks</a> section. Otherwise please proceed to the <a href="physical_types/mixed_systems/./noisefree.html">coherent</a> or <a href="physical_types/mixed_systems/./noisy.html">decoherent</a> dynamics section.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mixed-systems-1"><a class="header" href="#mixed-systems-1">Mixed Systems</a></h1>
+<p>Struqture can be used to represent mixed operators, hamiltonians and open systems, such as:
+\[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} b_{l, j}^{\dagger} b_{m, j} \prod_{r, s} c_{r, j}^{\dagger} c_{s, j} \]
+with commutation relations and cyclicity respected.</p>
+<p>The simplest way that the user can interact with these matrices is by using symbolic representation: <code>"S0Z:Bc0a1:Fc0a0"</code> represents a \( \sigma^z\ b^{\dagger}_0 b_1\ c^{\dagger}_0\ c_0 \) term. In this string representation, each subsystem is defined by its type, and ends with a colon, in order to show where the next subsystem starts. The type is one of three options: "S" if it is a spin subsystem, "B" if it is a bosonic subsystem, and "F" if it is a fermionic subsystem.
+This is a very scalable approach, as indices not mentioned in this string representation are assumed to be acted on by the identity operator: <code>"S7Z:Bc7a25:Fc25a7"</code> represents a \( \sigma^{z}_7\ b^{\dagger}_7 b_{25}\ c^{\dagger}_{25}\ c_7 \) term, where all other terms (0 to 6 and 8 to 24) are acted on by \(I\).</p>
+<p>However, for more fine-grain control over the operators, we invite the user to look into the <code>MixedProduct</code>, <code>HermitianMixedProducts</code> and <code>MixedDecoherenceProducts</code> classes, in the <a href="physical_types/mixed_systems/./products.html">Building blocks</a> section. Otherwise please proceed to the <a href="physical_types/mixed_systems/./noisefree.html">coherent</a> or <a href="physical_types/mixed_systems/./noisy.html">decoherent</a> dynamics section.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operators-and-hamiltonians-3"><a class="header" href="#operators-and-hamiltonians-3">Operators and Hamiltonians</a></h1>
 <p><code>MixedOperators</code> and <code>MixedHamiltonians</code> represent operators or Hamiltonians such as:
 \[ \hat{H} = \sum_j \alpha_j \prod_k \sigma_{j, k} \prod_{l, m} b_{l, j}^{\dagger} b_{m, j} \prod_{r, s} c_{r, j}^{\dagger} c_{s, j} \]
@@ -1175,6 +1281,124 @@ open_system.system_add_operator_product("S0X:Bc0a0:Fc0a0", 2.0)
 open_system.noise_add_operator_product(("S0X1iY:Bc0a0:Fc0c1a0a1", "S0X1Z:Bc0c1a0a1:Fc0a0"), 1.5)
 
 print(open_system)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="overview-2"><a class="header" href="#overview-2">Overview</a></h1>
+<p>All the mixed operators are expressed based on products of mixed indices which contain spin terms, bosonic terms and fermionic terms. The spin terms respect Pauli operator cyclicity, the bosonic terms respect bosonic commutation relations, and the fermionic terms respect fermionic anti-commutation relations.</p>
+<p>These products respect the following relations:
+\[
+-i \sigma^x \sigma^y \sigma^z = I
+\]
+\[ \lbrack b_{k}^{\dagger}, b_{j}^{\dagger} \rbrack = 0, \\
+\lbrack b_{k}, b_{j} \rbrack = 0, \\
+\lbrack b_{k}, b_{j}^{\dagger} \rbrack = \delta_{k, j}. \]
+\[ \lbrace c_{k}^{\dagger}, c_{j}^{\dagger} \rbrace = 0, \\
+\lbrace c_{k}, c_{j} \rbrace = 0, \\
+\lbrace c_{k}, c_{j}^{\dagger} \rbrace = \delta_{k, j}. \]</p>
+<p>with
+\(b^{\dagger}\) the bosonic creation operator, \(b\) the bosonic annihilation operator, \(\lbrack ., . \rbrack\) the bosonic commutation relations, \(c^{\dagger}\) the fermionic creation operator, \(c\) the fermionic annihilation operator, and \(\lbrace ., . \rbrace\) the fermionic anti-commutation relations.</p>
+<p><strong>NOTE</strong>: all of our higher-level objects accept both MixedProducts/HermitianMixedProducts/MixedDecoherenceProducts (depending on the object) as well as <strong>symbolic notation</strong>. If the user is just getting started using <code>struqture</code>, we recommend using the symbolic notation and skipping this section of the documentation for now, starting instead with the <a href="physical_types/mixed_systems/./noisefree.html">coherent dynamics section</a>.</p>
+<h2 id="mixedproducts"><a class="header" href="#mixedproducts">MixedProducts</a></h2>
+<p>MixedProducts are combinations of <code>PauliProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
+<h2 id="hermitianmixedproducts"><a class="header" href="#hermitianmixedproducts">HermitianMixedProducts</a></h2>
+<p>HermitianMixedProducts are the hermitian equivalent of MixedProducts. This means that even though they are constructed the same (see the <code>Examples</code> section), they internally store both that term and its hermitian conjugate.</p>
+<h2 id="mixeddecoherenceproducts"><a class="header" href="#mixeddecoherenceproducts">MixedDecoherenceProducts</a></h2>
+<p>MixedDecoherenceProducts are combinations of <code>DecoherenceProducts</code>, <code>BosonProducts</code> and <code>FermionProducts</code>.</p>
+<h2 id="example-18"><a class="header" href="#example-18">Example</a></h2>
+<p>The operator product is constructed by passing an array/a list of spin terms, an array/a list of bosonic terms and an array/a list of fermionic terms.</p>
+<pre><code class="language-python">from struqture_py import mixed_systems, bosons, spins, fermions
+
+# Building the spin term sigma^x_0 sigma^z_1
+pp = spins.PauliProduct().x(0).z(1)
+# Building the bosonic term b^{\dagger}_1 * b^{\dagger}_2 * b_2
+bp = bosons.BosonProduct([1, 2], [2])
+# Building the fermionic term c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
+fp = fermions.FermionProduct([0, 1], [0, 1])
+
+# Building the term sigma^x_0 sigma^z_1 b^{\dagger}_1 * b^{\dagger}_2
+# * b_2 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
+hmp = mixed_systems.MixedProduct([pp], [bp], [fp])
+
+# Building the term sigma^x_0 sigma^z_1 c^{\dagger}_1 * c^{\dagger}_2 *
+# c_2 * c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1  +  h.c.
+hmp = mixed_systems.HermitianMixedProduct([pp], [bp], [fp])
+
+
+# Building the spin term sigma^x_0 sigma^z_1
+dp = spins.DecoherenceProduct().x(0).z(1)
+# Building the bosonic term b^{\dagger}_1 * b^{\dagger}_2 * b_2
+bp = bosons.BosonProduct([1, 2], [0, 1])
+# Building the fermionic term c^{\dagger}_0 * c^{\dagger}_1 * c_0 * c_1
+fp = fermions.FermionProduct([0, 1], [0, 1])
+
+# This will work
+mdp = mixed_systems.MixedDecoherenceProduct([dp], [bp], [fp])
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="applied-example"><a class="header" href="#applied-example">Applied example</a></h1>
+<p>In this example, we will create the spin-boson Hamiltonian we have used for open-system research in our <a href="https://arxiv.org/abs/2210.12138">paper</a>, for 1 spin and 3 bosonic modes.</p>
+<p>The Hamiltonian reads as follows:
+\[
+\hat{H} = \hat{H}_S + \hat{H}_B + \hat{H}_C
+\]</p>
+<p>with the spin (system) Hamiltonian \(\hat{H}_S\) :</p>
+<p>\[
+\hat{H} = \frac {\hbar \Delta} {2} \sigma^z_0,
+\]</p>
+<p>the bosonic bath Hamiltonian \(\hat{H}_B\) :</p>
+<p>\[
+\hat{H} = \sum_{k=0}^2 \hbar \omega_k c_k^{\dagger} c_k,
+\]</p>
+<p>and the coupling between system and bath \(\hat{H}_C\) :</p>
+<p>\[
+\hat{H} = \sigma_0^x \sum_{k=0}^2 \frac {v_k} {2} \left( c_k + c_k^{\dagger} \right)
+\]</p>
+<p>For simplicity, we will set \(\hbar\) to 1.0 for this example.</p>
+<p>Implementation:</p>
+<pre><code class="language-python"># We start by importing the Hamiltonian class, and the Product classes we will need:
+# BosonProduct and PauliProduct for the terms in the Hamiltonian defined above,
+# and HermitianMixedProduct to add them into the MixedHamiltonian.
+from struqture_py.bosons import BosonProduct
+from struqture_py.mixed_systems import (
+    HermitianMixedProduct, MixedHamiltonian,
+)
+from struqture_py.spins import PauliProduct
+
+# We initialize the Hamiltonian class: it should contain one spin system and one boson system, but
+# no fermion systems
+hamiltonian = MixedHamiltonian(1, 1, 0)
+
+# Setting up constants:
+delta = 1.0
+omega_k = [2.0, 3.0, 4.0]
+v_k = [5.0, 6.0, 7.0]
+
+# First, we build H_S.
+# We add the spin-only term into the hamiltonian, with the correct prefactor
+hamiltonian.add_operator_product(
+    "S1Z:B:", delta / 2.0
+)
+
+# Second, H_B:
+# We iterate over all the bosonic modes
+for k in range(3):
+    # We add the boson-only term into the hamiltonian, with the correct prefactor
+    hamiltonian.add_operator_product(
+        f"S:Bc{k}a{k}:", v_k[k] / 2.0
+    )
+
+# Third, H_C: the hermitian conjugate is implicitly stored, we don't need to add it manually
+# We iterate over all the bosonic modes
+for k in range(3):
+    # We add the spin-boson term into the hamiltonian, with the correct prefactor
+    hamiltonian.add_operator_product(
+        f"S0X:Ba{k}:", omega_k[k]
+    )
+
+# Our resulting H:
+print(hamiltonian)
+
+# NOTE: the above values used can also be complex, or symbolic.
+# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
+hamiltonian.add_operator_product(hmp, "parameter")
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="container-types"><a class="header" href="#container-types">Container Types</a></h1>
 <p>This part of the user documentation focuses on the shared patterns between all physical types: spins, fermions, bosons and mixed systems.
@@ -1303,73 +1527,6 @@ with the Hamiltonian of the system \(\hat{H}\), the rate matrix \(\Gamma_{j,k}\)
 For examples showing how to use <code>FermionLindbladOpenSystems</code>, please see the <a href="container_types/../physical_types/fermions.html#examples-3">the fermions section</a>.
 For examples showing how to use <code>BosonLindbladOpenSystems</code>, please see the <a href="container_types/../physical_types/bosons.html#examples-3">the bosons section</a>.
 For examples showing how to use <code>MixedLindbladOpenSystems</code>, please see the <a href="container_types/../physical_types/mixed_systems.html#examples-3">the mixed system section</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="applied-example"><a class="header" href="#applied-example">Applied example</a></h1>
-<p>In this example, we will create the spin-boson Hamiltonian we have used for open-system research in our <a href="https://arxiv.org/abs/2210.12138">paper</a>, for 1 spin and 3 bosonic modes.</p>
-<p>The Hamiltonian reads as follows:
-\[
-\hat{H} = \hat{H}_S + \hat{H}_B + \hat{H}_C
-\]</p>
-<p>with the spin (system) Hamiltonian \(\hat{H}_S\) :</p>
-<p>\[
-\hat{H} = \frac {\hbar \Delta} {2} \sigma^z_0,
-\]</p>
-<p>the bosonic bath Hamiltonian \(\hat{H}_B\) :</p>
-<p>\[
-\hat{H} = \sum_{k=0}^2 \hbar \omega_k c_k^{\dagger} c_k,
-\]</p>
-<p>and the coupling between system and bath \(\hat{H}_C\) :</p>
-<p>\[
-\hat{H} = \sigma_0^x \sum_{k=0}^2 \frac {v_k} {2} \left( c_k + c_k^{\dagger} \right)
-\]</p>
-<p>For simplicity, we will set \(\hbar\) to 1.0 for this example.</p>
-<p>Implementation:</p>
-<pre><code class="language-python"># We start by importing the Hamiltonian class, and the Product classes we will need:
-# BosonProduct and PauliProduct for the terms in the Hamiltonian defined above,
-# and HermitianMixedProduct to add them into the MixedHamiltonian.
-from struqture_py.bosons import BosonProduct
-from struqture_py.mixed_systems import (
-    HermitianMixedProduct, MixedHamiltonian,
-)
-from struqture_py.spins import PauliProduct
-
-# We initialize the Hamiltonian class: it should contain one spin system and one boson system, but
-# no fermion systems
-hamiltonian = MixedHamiltonian(1, 1, 0)
-
-# Setting up constants:
-delta = 1.0
-omega_k = [2.0, 3.0, 4.0]
-v_k = [5.0, 6.0, 7.0]
-
-# First, we build H_S.
-# We add the spin-only term into the hamiltonian, with the correct prefactor
-hamiltonian.add_operator_product(
-    "S1Z:B:", delta / 2.0
-)
-
-# Second, H_B:
-# We iterate over all the bosonic modes
-for k in range(3):
-    # We add the boson-only term into the hamiltonian, with the correct prefactor
-    hamiltonian.add_operator_product(
-        f"S:Bc{k}a{k}:", v_k[k] / 2.0
-    )
-
-# Third, H_C: the hermitian conjugate is implicitly stored, we don't need to add it manually
-# We iterate over all the bosonic modes
-for k in range(3):
-    # We add the spin-boson term into the hamiltonian, with the correct prefactor
-    hamiltonian.add_operator_product(
-        f"S0X:Ba{k}:", omega_k[k]
-    )
-
-# Our resulting H:
-print(hamiltonian)
-
-# NOTE: the above values used can also be complex, or symbolic.
-# Symbolic parameters can be very useful for a variety of reasons, as detailed in the introduction. 
-hamiltonian.add_operator_product(hmp, "parameter")
-</code></pre>
 
                     </main>
 

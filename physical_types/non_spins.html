@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>How to use struqture objects - HQS Struqture User Documentation</title>
+        <title>Other degrees of freedom - HQS Struqture User Documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -177,51 +177,24 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="how-to-use-struqture-objects"><a class="header" href="#how-to-use-struqture-objects">How to use struqture objects</a></h1>
-<p>Struqture objects may be instantiated directly by the user or imported from a file or database. This section of the documentation explains both approaches and directs you to the remainder of the user guide once you are comfortable with them.</p>
-<h2 id="creating-your-own-hamiltonians-and-operators"><a class="header" href="#creating-your-own-hamiltonians-and-operators">Creating your own Hamiltonians and operators</a></h2>
-<p>To create your own Hamiltonian or operator, simply import the corresponding python class from the <code>spins</code> module. For instance, to import an object corresponding to a Hamiltonian composed of spins, which can be represented by Pauli matrices, run:</p>
-<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
-</code></pre>
-<p>In the <a href="spins/intro.html">spins</a> section of the documentation we will explore the various classes in the <code>spins</code> module.</p>
-<h2 id="using-a-struqture-hamiltonian-from-a-file"><a class="header" href="#using-a-struqture-hamiltonian-from-a-file">Using a struqture Hamiltonian from a file</a></h2>
-<p>Struqture objects can be stored as either <a href="https://www.json.org/json-en.html"><code>JSON</code></a> files or as binary code. We highly recommend using <code>JSON</code> files, as they are also human-readable.
-Struqture was designed not only to easily instantiate or modify objects, but also to easily exchange them with other users - this is where the <code>JSON</code> serialisation comes into play.</p>
-<p>For instance, given a file storing our Hamiltonian, <code>hamiltonian.json</code>, we can import it in the following way:</p>
-<pre><code class="language-python">from struqture_py.spins import PauliHamiltonian
-
-# Reading a file: from_json
-with open("hamiltonian.json", "r") as f:
-    hamiltonian = PauliHamiltonian.from_json(f.read())
-
-print(hamiltonian)
-
-# Writing to a file: to_json
-# Should you wish to perform the inverse operation (writing your Hamiltonian to a file), you can
-# do so by running the following lines of code:
-with open("hamiltonian.json", "w") as f:
-    f.write(hamiltonian.to_json())
-</code></pre>
-<p>Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a file, it can be used in the same manner as one created by the user. Refer to the remaining documentation for the available getters, setters, and properties.</p>
-<h2 id="using-a-struqture-hamiltonian-from-a-database"><a class="header" href="#using-a-struqture-hamiltonian-from-a-database">Using a struqture Hamiltonian from a database</a></h2>
-<p>In this part of the user documentation we show how to work with a user-selected pre-defined Hamiltonian from our database, e.g. <a href="https://docs.cloud.quantumsimulations.de/hqs-spectrum-tools/subfolder/components/molecule_input/molecular_data.html">nmr_database</a>.</p>
-<p>For instance, this code snippet shows how to load the <code>C6H5NO2</code> molecule from the <code>hqs_nmr_parameters</code> database, and turn it into a struqture object:</p>
-<pre><code class="language-python">from hqs_nmr_parameters import examples, nmr_hamiltonian
-
-parameters = examples.molecules["C6H5NO2"]
-hamiltonian = nmr_hamiltonian(parameters=parameters, field=2.5)
-</code></pre>
-<p>Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a databse, it can be used in the same manner as one created by the user. Refer to the remaining documentation for the available getters, setters, and properties.</p>
+                        <h1 id="non-spin-objects"><a class="header" href="#non-spin-objects">Non-spin objects</a></h1>
+<p>Struqture also supports non-spin systems. The following object families are currently available:</p>
+<ul>
+<li><a href="./bosons/intro.html">bosonic modes</a></li>
+<li><a href="./fermions/intro.html">fermionic modes</a></li>
+<li><a href="./mixed_systems/intro.html">mixed systems</a>: these classes allow combinations of spins, bosonic modes, and fermionic modes within a single model.</li>
+</ul>
+<p>As with spin objects, these types can be instantiated programmatically or loaded from a file, and once constructed they can be used in the same manner as user-created objects. Refer to the respective sections for details on available constructors, operators, getters, setters, and properties.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../physical_types/spins/products.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../physical_types/spins/intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../physical_types/bosons/intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -231,11 +204,11 @@ hamiltonian = nmr_hamiltonian(parameters=parameters, field=2.5)
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../physical_types/spins/products.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../physical_types/spins/intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../physical_types/bosons/intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

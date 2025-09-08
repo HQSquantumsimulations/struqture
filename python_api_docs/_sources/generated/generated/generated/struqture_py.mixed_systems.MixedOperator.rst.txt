@@ -29,6 +29,7 @@ struqture\_py.mixed\_systems.MixedOperator
       ~MixedOperator.json_schema
       ~MixedOperator.keys
       ~MixedOperator.min_supported_version
+      ~MixedOperator.pprint
       ~MixedOperator.remove
       ~MixedOperator.set
       ~MixedOperator.to_bincode

@@ -30,6 +30,7 @@ struqture\_py.spins.PauliProduct
       ~PauliProduct.keys
       ~PauliProduct.min_supported_version
       ~PauliProduct.multiply
+      ~PauliProduct.pprint
       ~PauliProduct.remap_qubits
       ~PauliProduct.set_pauli
       ~PauliProduct.to_bincode

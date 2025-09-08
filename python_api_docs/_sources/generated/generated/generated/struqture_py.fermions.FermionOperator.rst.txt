@@ -28,6 +28,7 @@ struqture\_py.fermions.FermionOperator
       ~FermionOperator.json_schema
       ~FermionOperator.keys
       ~FermionOperator.min_supported_version
+      ~FermionOperator.pprint
       ~FermionOperator.remove
       ~FermionOperator.set
       ~FermionOperator.to_bincode

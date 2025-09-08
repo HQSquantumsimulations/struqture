@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py &mdash; struqture_py 2.2.4 documentation</title>
+  <title>struqture_py &mdash; struqture_py 2.3.0-alpha.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=2c9488e7"></script>
+      <script src="../_static/documentation_options.js?v=79756fdd"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -69,6 +69,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.json_schema"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.keys"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.min_supported_version"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.pprint"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.remove"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.set"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.to_bincode"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.to_bincode()</span></code></a></li>
@@ -138,6 +139,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.json_schema"><code class="docutils literal notranslate"><span class="pre">BosonOperator.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.keys"><code class="docutils literal notranslate"><span class="pre">BosonOperator.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.min_supported_version"><code class="docutils literal notranslate"><span class="pre">BosonOperator.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.pprint"><code class="docutils literal notranslate"><span class="pre">BosonOperator.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.remove"><code class="docutils literal notranslate"><span class="pre">BosonOperator.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.set"><code class="docutils literal notranslate"><span class="pre">BosonOperator.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonOperator.to_bincode"><code class="docutils literal notranslate"><span class="pre">BosonOperator.to_bincode()</span></code></a></li>
@@ -164,6 +166,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">BosonProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.number_annihilators"><code class="docutils literal notranslate"><span class="pre">BosonProduct.number_annihilators()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.number_creators"><code class="docutils literal notranslate"><span class="pre">BosonProduct.number_creators()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.pprint"><code class="docutils literal notranslate"><span class="pre">BosonProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.remap_modes"><code class="docutils literal notranslate"><span class="pre">BosonProduct.remap_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">BosonProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonProduct.to_json"><code class="docutils literal notranslate"><span class="pre">BosonProduct.to_json()</span></code></a></li>
@@ -187,6 +190,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.keys"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.multiply"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.multiply()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.pprint"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.remap_qubits"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.remap_qubits()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.set_pauli"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.set_pauli()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.DecoherenceProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">DecoherenceProduct.to_bincode()</span></code></a></li>
@@ -210,6 +214,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.json_schema"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.keys"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.min_supported_version"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.pprint"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.remove"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.separate_into_n_terms"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.separate_into_n_terms()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionHamiltonian.set"><code class="docutils literal notranslate"><span class="pre">FermionHamiltonian.set()</span></code></a></li>
@@ -281,6 +286,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.json_schema"><code class="docutils literal notranslate"><span class="pre">FermionOperator.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.keys"><code class="docutils literal notranslate"><span class="pre">FermionOperator.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.min_supported_version"><code class="docutils literal notranslate"><span class="pre">FermionOperator.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.pprint"><code class="docutils literal notranslate"><span class="pre">FermionOperator.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.remove"><code class="docutils literal notranslate"><span class="pre">FermionOperator.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.set"><code class="docutils literal notranslate"><span class="pre">FermionOperator.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionOperator.to_bincode"><code class="docutils literal notranslate"><span class="pre">FermionOperator.to_bincode()</span></code></a></li>
@@ -306,6 +312,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">FermionProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.number_annihilators"><code class="docutils literal notranslate"><span class="pre">FermionProduct.number_annihilators()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.number_creators"><code class="docutils literal notranslate"><span class="pre">FermionProduct.number_creators()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.pprint"><code class="docutils literal notranslate"><span class="pre">FermionProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.remap_modes"><code class="docutils literal notranslate"><span class="pre">FermionProduct.remap_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">FermionProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.FermionProduct.to_json"><code class="docutils literal notranslate"><span class="pre">FermionProduct.to_json()</span></code></a></li>
@@ -327,6 +334,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.number_annihilators"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.number_annihilators()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.number_creators"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.number_creators()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.pprint"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.remap_modes"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.remap_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianBosonProduct.to_json"><code class="docutils literal notranslate"><span class="pre">HermitianBosonProduct.to_json()</span></code></a></li>
@@ -349,6 +357,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.number_annihilators"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.number_annihilators()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.number_creators"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.number_creators()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.pprint"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.remap_modes"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.remap_modes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianFermionProduct.to_json"><code class="docutils literal notranslate"><span class="pre">HermitianFermionProduct.to_json()</span></code></a></li>
@@ -370,6 +379,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.is_natural_hermitian"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.is_natural_hermitian()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.json_schema"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.pprint"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.spins"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.spins()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.HermitianMixedProduct.to_json"><code class="docutils literal notranslate"><span class="pre">HermitianMixedProduct.to_json()</span></code></a></li>
@@ -391,6 +401,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.is_natural_hermitian"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.is_natural_hermitian()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.json_schema"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.pprint"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.spins"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.spins()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedDecoherenceProduct.to_json"><code class="docutils literal notranslate"><span class="pre">MixedDecoherenceProduct.to_json()</span></code></a></li>
@@ -412,6 +423,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.json_schema"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.keys"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.min_supported_version"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.pprint"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.remove"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.set"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedHamiltonian.to_bincode"><code class="docutils literal notranslate"><span class="pre">MixedHamiltonian.to_bincode()</span></code></a></li>
@@ -485,6 +497,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.json_schema"><code class="docutils literal notranslate"><span class="pre">MixedOperator.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.keys"><code class="docutils literal notranslate"><span class="pre">MixedOperator.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.min_supported_version"><code class="docutils literal notranslate"><span class="pre">MixedOperator.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.pprint"><code class="docutils literal notranslate"><span class="pre">MixedOperator.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.remove"><code class="docutils literal notranslate"><span class="pre">MixedOperator.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.set"><code class="docutils literal notranslate"><span class="pre">MixedOperator.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedOperator.to_bincode"><code class="docutils literal notranslate"><span class="pre">MixedOperator.to_bincode()</span></code></a></li>
@@ -510,6 +523,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.json_schema"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.keys"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.min_supported_version"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.pprint"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.remove"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.set"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusOperator.to_bincode"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusOperator.to_bincode()</span></code></a></li>
@@ -535,6 +549,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.is_natural_hermitian"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.is_natural_hermitian()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.json_schema"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.pprint"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.spins"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.spins()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedPlusMinusProduct.to_json"><code class="docutils literal notranslate"><span class="pre">MixedPlusMinusProduct.to_json()</span></code></a></li>
@@ -557,6 +572,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.is_natural_hermitian"><code class="docutils literal notranslate"><span class="pre">MixedProduct.is_natural_hermitian()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.json_schema"><code class="docutils literal notranslate"><span class="pre">MixedProduct.json_schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">MixedProduct.min_supported_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.pprint"><code class="docutils literal notranslate"><span class="pre">MixedProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.spins"><code class="docutils literal notranslate"><span class="pre">MixedProduct.spins()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">MixedProduct.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.MixedProduct.to_json"><code class="docutils literal notranslate"><span class="pre">MixedProduct.to_json()</span></code></a></li>
@@ -578,6 +594,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.keys"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.min_supported_version"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.number_spins"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.number_spins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.pprint"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.remove"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.set"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliHamiltonian.sparse_matrix_coo"><code class="docutils literal notranslate"><span class="pre">PauliHamiltonian.sparse_matrix_coo()</span></code></a></li>
@@ -656,6 +673,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.keys"><code class="docutils literal notranslate"><span class="pre">PauliOperator.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.min_supported_version"><code class="docutils literal notranslate"><span class="pre">PauliOperator.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.number_spins"><code class="docutils literal notranslate"><span class="pre">PauliOperator.number_spins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.pprint"><code class="docutils literal notranslate"><span class="pre">PauliOperator.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.remove"><code class="docutils literal notranslate"><span class="pre">PauliOperator.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.set"><code class="docutils literal notranslate"><span class="pre">PauliOperator.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliOperator.sparse_matrix_coo"><code class="docutils literal notranslate"><span class="pre">PauliOperator.sparse_matrix_coo()</span></code></a></li>
@@ -683,6 +701,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.keys"><code class="docutils literal notranslate"><span class="pre">PauliProduct.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">PauliProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.multiply"><code class="docutils literal notranslate"><span class="pre">PauliProduct.multiply()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.pprint"><code class="docutils literal notranslate"><span class="pre">PauliProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.remap_qubits"><code class="docutils literal notranslate"><span class="pre">PauliProduct.remap_qubits()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.set_pauli"><code class="docutils literal notranslate"><span class="pre">PauliProduct.set_pauli()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PauliProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">PauliProduct.to_bincode()</span></code></a></li>
@@ -733,6 +752,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.keys"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.keys()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.min_supported_version"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.number_spins"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.number_spins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.pprint"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.remove"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.set"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.set()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusOperator.to_bincode"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator.to_bincode()</span></code></a></li>
@@ -762,6 +782,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.min_supported_version"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.min_supported_version()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.minus"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.minus()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.plus"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.plus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.pprint"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.pprint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.remap_qubits"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.remap_qubits()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.set_pauli"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.set_pauli()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.to_bincode"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.to_bincode()</span></code></a></li>
@@ -1218,6 +1239,11 @@ $ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sig
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonHamiltonian.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonHamiltonian.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.BosonHamiltonian.remove">
@@ -2392,6 +2418,11 @@ and an optional number of bosons.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonOperator.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonOperator.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.BosonOperator.remove">
 <span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonOperator.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
@@ -2847,6 +2878,11 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.BosonProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.BosonProduct.remap_modes">
 <span class="sig-name descname"><span class="pre">remap_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reordering_dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.BosonProduct.remap_modes" title="Link to this definition"></a></dt>
 <dd><p>Remap modes according to an input dictionary.</p>
@@ -3209,6 +3245,11 @@ the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.DecoherenceProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.DecoherenceProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.DecoherenceProduct.remap_qubits">
 <span class="sig-name descname"><span class="pre">remap_qubits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.DecoherenceProduct.remap_qubits" title="Link to this definition"></a></dt>
 <dd><p>Remap the qubits in a new instance of self (returned).</p>
@@ -3565,6 +3606,11 @@ the Jordan Wigner mapping.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.FermionHamiltonian.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.FermionHamiltonian.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.FermionHamiltonian.remove">
@@ -4733,6 +4779,11 @@ the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.FermionOperator.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.FermionOperator.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.FermionOperator.remove">
 <span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.FermionOperator.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
@@ -5133,6 +5184,11 @@ the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.FermionProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.FermionProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.FermionProduct.remap_modes">
 <span class="sig-name descname"><span class="pre">remap_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reordering_dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.FermionProduct.remap_modes" title="Link to this definition"></a></dt>
 <dd><p>Remap modes according to an input dictionary.</p>
@@ -5473,6 +5529,11 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.HermitianBosonProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.HermitianBosonProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.HermitianBosonProduct.remap_modes">
@@ -5822,6 +5883,11 @@ the Jordan Wigner mapping.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.HermitianFermionProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.HermitianFermionProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.HermitianFermionProduct.remap_modes">
@@ -6177,6 +6243,11 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.HermitianMixedProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.HermitianMixedProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.HermitianMixedProduct.spins">
 <span class="sig-name descname"><span class="pre">spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.HermitianMixedProduct.spins" title="Link to this definition"></a></dt>
 <dd><p>Get the spin products of self.</p>
@@ -6527,6 +6598,11 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.MixedDecoherenceProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedDecoherenceProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.MixedDecoherenceProduct.spins">
 <span class="sig-name descname"><span class="pre">spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedDecoherenceProduct.spins" title="Link to this definition"></a></dt>
 <dd><p>Get the spin products of self.</p>
@@ -6856,6 +6932,11 @@ and an optional number of mixed_systems.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.MixedHamiltonian.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedHamiltonian.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.MixedHamiltonian.remove">
@@ -8064,6 +8145,11 @@ and an optional number of mixed_systems.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.MixedOperator.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedOperator.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.MixedOperator.remove">
 <span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedOperator.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
@@ -8467,6 +8553,11 @@ and an optional number of mixed_systems.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.MixedPlusMinusOperator.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedPlusMinusOperator.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.MixedPlusMinusOperator.remove">
@@ -8884,6 +8975,11 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.MixedPlusMinusProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedPlusMinusProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.MixedPlusMinusProduct.spins">
 <span class="sig-name descname"><span class="pre">spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedPlusMinusProduct.spins" title="Link to this definition"></a></dt>
 <dd><p>Get the spin products of self.</p>
@@ -9251,6 +9347,11 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.MixedProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.MixedProduct.spins">
 <span class="sig-name descname"><span class="pre">spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.MixedProduct.spins" title="Link to this definition"></a></dt>
 <dd><p>Get the spin products of self.</p>
@@ -9566,6 +9667,11 @@ the Jordan Wigner mapping.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.PauliHamiltonian.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PauliHamiltonian.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.PauliHamiltonian.remove">
@@ -10885,6 +10991,11 @@ the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.PauliOperator.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PauliOperator.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.PauliOperator.remove">
 <span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PauliOperator.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
@@ -11329,6 +11440,11 @@ the Jordan Wigner mapping.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.PauliProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PauliProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.PauliProduct.remap_qubits">
@@ -12135,6 +12251,11 @@ the Jordan Wigner mapping.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.PlusMinusOperator.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PlusMinusOperator.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.PlusMinusOperator.remove">
 <span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PlusMinusOperator.remove" title="Link to this definition"></a></dt>
 <dd><p>Remove the value of the input key.</p>
@@ -12595,6 +12716,11 @@ the Jordan Wigner mapping.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.PlusMinusProduct.pprint">
+<span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.PlusMinusProduct.pprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.PlusMinusProduct.remap_qubits">

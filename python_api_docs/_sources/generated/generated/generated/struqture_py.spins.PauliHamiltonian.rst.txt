@@ -29,6 +29,7 @@ struqture\_py.spins.PauliHamiltonian
       ~PauliHamiltonian.keys
       ~PauliHamiltonian.min_supported_version
       ~PauliHamiltonian.number_spins
+      ~PauliHamiltonian.pprint
       ~PauliHamiltonian.remove
       ~PauliHamiltonian.set
       ~PauliHamiltonian.sparse_matrix_coo

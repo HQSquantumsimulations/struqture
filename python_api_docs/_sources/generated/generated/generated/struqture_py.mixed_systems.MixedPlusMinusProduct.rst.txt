@@ -29,6 +29,7 @@ struqture\_py.mixed\_systems.MixedPlusMinusProduct
       ~MixedPlusMinusProduct.is_natural_hermitian
       ~MixedPlusMinusProduct.json_schema
       ~MixedPlusMinusProduct.min_supported_version
+      ~MixedPlusMinusProduct.pprint
       ~MixedPlusMinusProduct.spins
       ~MixedPlusMinusProduct.to_bincode
       ~MixedPlusMinusProduct.to_json

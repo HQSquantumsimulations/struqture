@@ -31,6 +31,7 @@ struqture\_py.bosons.BosonProduct
       ~BosonProduct.min_supported_version
       ~BosonProduct.number_annihilators
       ~BosonProduct.number_creators
+      ~BosonProduct.pprint
       ~BosonProduct.remap_modes
       ~BosonProduct.to_bincode
       ~BosonProduct.to_json

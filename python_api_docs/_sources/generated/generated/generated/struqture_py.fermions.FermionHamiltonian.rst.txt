@@ -28,6 +28,7 @@ struqture\_py.fermions.FermionHamiltonian
       ~FermionHamiltonian.json_schema
       ~FermionHamiltonian.keys
       ~FermionHamiltonian.min_supported_version
+      ~FermionHamiltonian.pprint
       ~FermionHamiltonian.remove
       ~FermionHamiltonian.separate_into_n_terms
       ~FermionHamiltonian.set

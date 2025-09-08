@@ -27,6 +27,7 @@ struqture\_py.bosons.BosonOperator
       ~BosonOperator.json_schema
       ~BosonOperator.keys
       ~BosonOperator.min_supported_version
+      ~BosonOperator.pprint
       ~BosonOperator.remove
       ~BosonOperator.set
       ~BosonOperator.to_bincode

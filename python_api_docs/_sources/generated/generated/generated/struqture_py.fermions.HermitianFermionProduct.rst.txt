@@ -30,6 +30,7 @@ struqture\_py.fermions.HermitianFermionProduct
       ~HermitianFermionProduct.min_supported_version
       ~HermitianFermionProduct.number_annihilators
       ~HermitianFermionProduct.number_creators
+      ~HermitianFermionProduct.pprint
       ~HermitianFermionProduct.remap_modes
       ~HermitianFermionProduct.to_bincode
       ~HermitianFermionProduct.to_json

@@ -29,6 +29,7 @@ struqture\_py.mixed\_systems.MixedDecoherenceProduct
       ~MixedDecoherenceProduct.is_natural_hermitian
       ~MixedDecoherenceProduct.json_schema
       ~MixedDecoherenceProduct.min_supported_version
+      ~MixedDecoherenceProduct.pprint
       ~MixedDecoherenceProduct.spins
       ~MixedDecoherenceProduct.to_bincode
       ~MixedDecoherenceProduct.to_json
