@@ -1,6 +1,6 @@
 [package]
 name = "struqture-py"
-version = "2.3.0-alpha.1"
+version = "2.3.0-alpha.2"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 edition = "2021"
 rust-version = "1.76"
@@ -21,9 +21,9 @@ version = "0.25"
 features = ["num-complex", "multiple-pymethods"]
 
 [dependencies]
-struqture = { version = "2.3.0-alpha.1", path = "../struqture", default-features = false }
+struqture = { version = "2.3.0-alpha.2", path = "../struqture", default-features = false }
 struqture_1 = { package = "struqture", version = ">=1.12,<2.0.0", optional = true, default-features = false }
-struqture-py-macros = { version = "2.3.0-alpha.1", path = "../struqture-py-macros" }
+struqture-py-macros = { version = "2.3.0-alpha.2", path = "../struqture-py-macros" }
 qoqo_calculator = { version = "1.7", default-features = false }
 qoqo_calculator_pyo3 = { version = "1.7", default-features = false }
 
