@@ -956,7 +956,7 @@ fn test_pprint() {
         let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(
             pprint,
-            "(1.2e0 + i * 0e0) (z₁y₂₇⊗ I)⊗ (I⊗ b₁₄b₁₈b₂₇†)⊗ (c₁₄c₁₈c₂₇†⊗ c₁₄c₁₈c₂₇†)\n"
+            "(1.2e0 + i * 0e0) (z₁y₂₇⊗ I)⊗ (I⊗ b₁₄†b₁₈†b₂₇)⊗ (c₁₄†c₁₈†c₂₇⊗ c₁₄†c₁₈†c₂₇)\n"
         );
     })
 }
