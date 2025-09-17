@@ -103,33 +103,38 @@ impl HermitianFermionProductWrapper {
 
     pub fn pprint(&self) -> String {
         let mut output = String::new();
-        let mut hermitian_part = String::new();
+        let mut hermitian_parts: Vec<String> = Vec::new();
         for creator in self.creators() {
             output.push('c');
-            hermitian_part.push('c');
+            let mut hermitian_part = "c".to_string();
             let creator_string = format!("{creator}");
             for char in creator_string.chars() {
                 output.push(create_subscript(char));
                 hermitian_part.push(create_subscript(char));
             }
-            hermitian_part.push('\u{2020}');
+            hermitian_parts.push(hermitian_part);
+            output.push('\u{2020}');
         }
         for annihilator in self.annihilators() {
             output.push('c');
-            hermitian_part.push('c');
+            let mut hermitian_part = "c".to_string();
             let annihilator_string = format!("{annihilator}");
             for char in annihilator_string.chars() {
                 output.push(create_subscript(char));
                 hermitian_part.push(create_subscript(char));
             }
-            output.push('\u{2020}');
+            hermitian_part.push('\u{2020}');
+            hermitian_parts.push(hermitian_part);
         }
 
         if output.is_empty() {
             output.push('I');
         } else {
+            hermitian_parts.reverse();
             output.push_str(" + ");
-            output.push_str(&hermitian_part);
+            for hermitian_part in hermitian_parts {
+                output.push_str(&hermitian_part);
+            }
         }
 
         output

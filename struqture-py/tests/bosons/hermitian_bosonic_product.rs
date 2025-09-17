@@ -506,7 +506,7 @@ fn test_pprint() {
         let new = new_pp(py, vec![14, 18], vec![14, 27]);
         let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();
 
-        assert_eq!(pprint, "b₁₄b₁₈b₁₄†b₂₇† + b₁₄†b₁₈†b₁₄b₂₇");
+        assert_eq!(pprint, "b₁₄†b₁₈†b₁₄b₂₇ + b₂₇†b₁₄†b₁₈b₁₄");
 
         let new = new_pp(py, vec![], vec![]);
         let pprint: String = String::extract_bound(&new.call_method0("pprint").unwrap()).unwrap();

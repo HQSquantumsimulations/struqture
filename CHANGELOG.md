@@ -4,6 +4,11 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.3.0-alpha.1
+
+* Updated user documentation to be more beginner friendly
+* Added pretty print function
+
 ## 2.2.4
 
 * Clarified user documentation by removing references to qoqo_calculator_pyo3 in the examples and added a section on how struqture differs to other tools.

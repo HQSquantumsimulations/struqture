@@ -846,7 +846,7 @@ fn test_pprint() {
         let pprint: String = String::extract_bound(&sys.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(
             pprint,
-            "(1.2e0 + i * 0e0) c₁₄c₁₈c₂₇†\n(2e-1 + i * 0e0) c₃†\n"
+            "(1.2e0 + i * 0e0) c₁₄†c₁₈†c₂₇\n(2e-1 + i * 0e0) c₃\n"
         );
     })
 }
