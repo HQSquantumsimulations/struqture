@@ -4,14 +4,12 @@
 In this example we split the sites into $n_1$ sites that experience a strong interaction and $n_2$ sites that experience a weak interaction. More precisely, we consider the Hamiltonian
 
 \\[
-H = - J_\mathrm{strong} \sum_{j=0}^{n_1 - 2} \vec{S}_j \vec{S}_{j+1}
-  + J_\mathrm{weak} \sum_{j < k} R_{jk} \, \vec{S}_j \vec{S}_k
-  \,,
+H = - J_\mathrm{strong} \sum_{j=0}^{n_1 - 2} {\vec{S_j}} \cdot \vec{S_{j+1}} + J_\mathrm{weak} \sum_{j < k} R_{jk} \vec{S}_j \cdot \vec{S}_k
 \\]
-where $J_\mathrm{stong}, J_\mathrm{weak} \in \mathbb{R}$ and $R \in \mathbb{R}^{n \times n}$. The matrix $R$ is a random matrix with values between $0$ and $1$.
+<!-- where $J_\mathrm{strong}, J_\mathrm{weak} \in \mathbb{R}$ and $R \in \mathbb{R}^{n \times n}$. The matrix $R$ is a random matrix with values between $0$ and $1$.
 
 The Hamiltonian is defined on the space $V = V_1 \otimes V_2$, where $V_1$ contains all possible spin states on the first $n_1$ sites and
-$V_2$ contains the states where at most one spin of the remaining sites is in the $\uparrow$ state.
+$V_2$ contains the states where at most one spin of the remaining sites is in the $\uparrow$ state. -->
 
 
 ```python
