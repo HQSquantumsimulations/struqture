@@ -12,4 +12,4 @@ Struqture can be used in conjunction with the HQS NMR package, to calculate NMR 
 * [Simulate an NMR spectrum from a struqture Hamiltonian](https://github.com/HQSquantumsimulations/hqstage-examples/blob/main/hqs_spectrum_tools/7_spectrum_from_struqture_hamiltonian.ipynb)
 * [Solving spin lattice models using struqture](https://github.com/HQSquantumsimulations/hqstage-examples/blob/main/hqs_spectrum_tools/8_spin_lattice_models.ipynb)
 
-Please note that in order to run them you will need the HQS NMR package. You can find install instructions for it [here](https://docs.cloud.quantumsimulations.de/installation.html).
+Please note that the notebooks linked above are pre-run, as they require the HQS NMR python package. Should you wish to run them yourself, please install the HQS NMR package using the [install instructions](https://docs.cloud.quantumsimulations.de/installation.html) and download the accompanying HQS NMR examples.
