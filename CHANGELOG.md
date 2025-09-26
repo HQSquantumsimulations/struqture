@@ -6,7 +6,7 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## 2.3.0
 
-* Improved applied examples in user docu.
+* Improved applied examples in user documentation.
 * Updated user documentation to be more beginner friendly
 * Added pretty print function
 
