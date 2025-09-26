@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.3.0-alpha.2
+
+* Improved applied examples in user docu.
+
 ## 2.3.0-alpha.1
 
 * Updated user documentation to be more beginner friendly
