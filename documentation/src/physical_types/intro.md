@@ -36,7 +36,7 @@ Once a struqture object (e.g. a Hamiltonian or operator) has been loaded from a 
 
 ## Using a struqture Hamiltonian from a database
 
-In this part of the user documentation we show how to work with a user-selected pre-defined Hamiltonian from our database, e.g. [nmr_database](https://docs.cloud.quantumsimulations.de/hqs-spectrum-tools/subfolder/components/molecule_input/molecular_data.html).
+In this part of the user documentation we show how to work with a user-selected pre-defined Hamiltonian from our database, e.g. [nmr_database](https://docs.cloud.quantumsimulations.de/hqs-spectrum-tools/subfolder/database/molecular_data.html).
 
 For instance, this code snippet shows how to load the `C6H5NO2` molecule from the `hqs_nmr_parameters` database, and turn it into a struqture object:
 ```python
