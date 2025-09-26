@@ -1,15 +1,33 @@
-# Large Spin Example
+# Applied Examples
 
+Struqture can be used in a variety of contexts, some of which are detailed below. 
 
-In this example we split the sites into $n_1$ sites that experience a strong interaction and $n_2$ sites that experience a weak interaction. More precisely, we consider the Hamiltonian
+## NMR
+
+### HQS NMR
+
+Struqture can be used in conjunction with the HQS NMR package, to calculate NMR correlators for Hamiltonians. This is shown in the following examples: 
+
+* [Simulate a small-scale Hamiltonian from struqture (json)](10_nmr_using_struqture_and_qiskit.ipynb)
+* [Simulate an NMR spectrum from a struqture Hamiltonian](https://github.com/HQSquantumsimulations/hqstage-examples/blob/main/hqs_spectrum_tools/7_spectrum_from_struqture_hamiltonian.ipynb)
+* [Solving spin lattice models using struqture](https://github.com/HQSquantumsimulations/hqstage-examples/blob/main/hqs_spectrum_tools/8_spin_lattice_models.ipynb)
+
+Please note that in order to run them you will need the HQS NMR package. You can find install instructions for it [here](https://docs.cloud.quantumsimulations.de/installation.html).
+
+## Using the HQS Quantum Solver
+
+This example focuses on implementing a Hamiltonian in struqture, and solving using the HQS Quantum Solver. The HQS Quantum Solver enables the user to run precise simulations of quantum systems by accounting for all interactions between the particles in a system. Additionally, the HQS Quantum Solver gives the user easy access to high-performance routines and solvers needed to work with quantum systems.
+
+In this example we split the sites into $n_1$ sites that experience a strong interaction and $n_2$ sites that experience a weak interaction. More precisely, we consider the folowing Hamiltonian:
 
 \\[
 H = - J_\mathrm{strong} \sum_{j=0}^{n_1 - 2} {\vec{S_j}} \cdot \vec{S_{j+1}} + J_\mathrm{weak} \sum_{j < k} R_{jk} \vec{S}_j \cdot \vec{S}_k
 \\]
-<!-- where $J_\mathrm{strong}, J_\mathrm{weak} \in \mathbb{R}$ and $R \in \mathbb{R}^{n \times n}$. The matrix $R$ is a random matrix with values between $0$ and $1$.
 
-The Hamiltonian is defined on the space $V = V_1 \otimes V_2$, where $V_1$ contains all possible spin states on the first $n_1$ sites and
-$V_2$ contains the states where at most one spin of the remaining sites is in the $\uparrow$ state. -->
+where \\(J_\mathrm{strong}, J_\mathrm{weak} \in \mathbb{R}\\) and \\(R \in \mathbb{R}^{n \times n}\\). The matrix \\(R\\) is a random matrix with values between \\(0\\) and \\(1\\).
+
+The Hamiltonian is defined on the space \\(V = V_1 \otimes V_2\\), where \\(V_1\\) contains all possible spin states on the first \\(n_1\\) sites and
+\\(V_2\\) contains the states where at most one spin of the remaining sites is in the \\(\uparrow\\) state.
 
 
 ```python
