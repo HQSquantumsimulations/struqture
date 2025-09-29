@@ -27629,7 +27629,7 @@ LICENSE:
 
 
 ====================================================
-quote 1.0.40
+quote 1.0.41
 https://github.com/dtolnay/quote
 by David Tolnay <dtolnay@gmail.com>
 Quasi-quoting macro quote!(...)
@@ -29275,7 +29275,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-ref-cast 1.0.24
+ref-cast 1.0.25
 https://github.com/dtolnay/ref-cast
 by David Tolnay <dtolnay@gmail.com>
 Safely cast &T to &U where the struct U contains a single field of type T.
@@ -29489,7 +29489,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-ref-cast-impl 1.0.24
+ref-cast-impl 1.0.25
 https://github.com/dtolnay/ref-cast
 by David Tolnay <dtolnay@gmail.com>
 Derive implementation for ref_cast::RefCast.
@@ -32056,7 +32056,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde 1.0.227
+serde 1.0.228
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -32270,7 +32270,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde_core 1.0.227
+serde_core 1.0.228
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Serde traits only, with no support for derive -- use the `serde` crate instead
@@ -32484,7 +32484,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde_derive 1.0.227
+serde_derive 1.0.228
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -34740,7 +34740,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.3.1
+struqture 2.3.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -34951,7 +34951,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.3.1
+struqture-py 2.3.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -35162,7 +35162,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.3.1
+struqture-py-macros 2.3.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0
@@ -36120,7 +36120,7 @@ SOFTWARE.
 
 
 ====================================================
-thiserror 2.0.16
+thiserror 2.0.17
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -36334,7 +36334,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-thiserror-impl 2.0.16
+thiserror-impl 2.0.17
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate

@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.3.2
+
+* Improved documentation.
+
 ## 2.3.1
 
 * Fixed link in the user documentation.
