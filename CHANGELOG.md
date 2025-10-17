@@ -4,6 +4,8 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+* Updated minimum supported Python version to 3.10.
+
 ## 2.3.2
 
 * Improved documentation.
