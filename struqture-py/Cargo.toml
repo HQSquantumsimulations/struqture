@@ -43,7 +43,7 @@ ndarray = "0.16"
 quote = "1.0"
 syn = { version = "2.0", features = ["full", "visit"] }
 proc-macro2 = "1.0"
-pyo3-build-config = "0.25"
+pyo3-build-config = "0.27"
 pyo3 = "0.25"
 regex = "1.10"
 
