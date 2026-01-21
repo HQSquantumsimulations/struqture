@@ -1,7 +1,6 @@
 [book]
 authors = ["HQS Quantum Simulations", "Kirsten Bark", "Nicolas Vogt"]
 language = "en"
-multilingual = false
 src = "src"
 title = "HQS Struqture User Documentation"
 
