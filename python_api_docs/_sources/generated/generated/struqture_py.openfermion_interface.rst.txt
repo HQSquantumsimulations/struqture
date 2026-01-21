@@ -1,0 +1,21 @@
+struqture\_py.openfermion\_interface
+====================================
+
+.. automodule:: struqture_py.openfermion_interface
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      openfermion_to_struqture
+      struqture_to_openfermion
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PauliHamiltonian
+      PauliProduct
+      QubitOperator
+   

@@ -1,6 +1,0 @@
-struqture\_py.struqture\_to\_openfermion
-========================================
-
-.. currentmodule:: struqture_py
-
-.. autofunction:: struqture_to_openfermion

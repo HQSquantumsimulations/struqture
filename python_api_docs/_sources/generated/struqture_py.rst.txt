@@ -45,4 +45,5 @@
       PlusMinusLindbladNoiseOperator
       PlusMinusOperator
       PlusMinusProduct
+      QubitOperator
    

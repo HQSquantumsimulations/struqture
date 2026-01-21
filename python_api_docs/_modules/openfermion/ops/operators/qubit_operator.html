@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>openfermion.ops.operators.qubit_operator &mdash; struqture_py 2.4.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=976192c0"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            struqture_py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">struqture_py documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">struqture_py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">openfermion.ops.operators.qubit_operator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for openfermion.ops.operators.qubit_operator</h1><div class="highlight"><pre>
+<span></span><span class="c1">#   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1">#   you may not use this file except in compliance with the License.</span>
+<span class="c1">#   You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#       http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1">#   Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1">#   See the License for the specific language governing permissions and</span>
+<span class="c1">#   limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;QubitOperator stores a sum of Pauli operators acting on qubits.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openfermion.ops.operators.symbolic_operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SymbolicOperator</span>
+
+<span class="c1"># Define products of all Pauli operators for symbolic multiplication.</span>
+<span class="n">_PAULI_OPERATOR_PRODUCTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="p">(</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">):</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="QubitOperator">
+<a class="viewcode-back" href="../../../../generated/struqture_py.html#struqture_py.openfermion_interface.QubitOperator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QubitOperator</span><span class="p">(</span><span class="n">SymbolicOperator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A sum of terms acting on qubits, e.g., 0.5 * &#39;X0 X5&#39; + 0.3 * &#39;Z1 Z2&#39;.</span>
+
+<span class="sd">    A term is an operator acting on n qubits and can be represented as:</span>
+
+<span class="sd">    coefficient * local_operator[0] x ... x local_operator[n-1]</span>
+
+<span class="sd">    where x is the tensor product. A local operator is a Pauli operator</span>
+<span class="sd">    (&#39;I&#39;, &#39;X&#39;, &#39;Y&#39;, or &#39;Z&#39;) which acts on one qubit. In math notation a term</span>
+<span class="sd">    is, for example, 0.5 * &#39;X0 X5&#39;, which means that a Pauli X operator acts</span>
+<span class="sd">    on qubit 0 and 5, while the identity operator acts on all other qubits.</span>
+
+<span class="sd">    A QubitOperator represents a sum of terms acting on qubits and overloads</span>
+<span class="sd">    operations for easy manipulation of these objects by the user.</span>
+
+<span class="sd">    Note for a QubitOperator to be a Hamiltonian which is a hermitian</span>
+<span class="sd">    operator, the coefficients of all terms must be real.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        hamiltonian = 0.5 * QubitOperator(&#39;X0 X5&#39;) + 0.3 * QubitOperator(&#39;Z0&#39;)</span>
+
+<span class="sd">    QubitOperator is a subclass of SymbolicOperator. Importantly, it has</span>
+<span class="sd">    attributes set as follows::</span>
+
+<span class="sd">        actions = (&#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;)</span>
+<span class="sd">        action_strings = (&#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;)</span>
+<span class="sd">        action_before_index = True</span>
+<span class="sd">        different_indices_commute = True</span>
+
+<span class="sd">    See the documentation of SymbolicOperator for more details.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            ham = ((QubitOperator(&#39;X0 Y3&#39;, 0.5)</span>
+<span class="sd">                    + 0.6 * QubitOperator(&#39;X0 Y3&#39;)))</span>
+<span class="sd">            # Equivalently</span>
+<span class="sd">            ham2 = QubitOperator(&#39;X0 Y3&#39;, 0.5)</span>
+<span class="sd">            ham2 += 0.6 * QubitOperator(&#39;X0 Y3&#39;)</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Adding QubitOperators is faster using += (as this</span>
+<span class="sd">        is done by in-place addition). Specifying the coefficient</span>
+<span class="sd">        during initialization is faster than multiplying a QubitOperator</span>
+<span class="sd">        with a scalar.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The allowed actions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The string representations of the allowed actions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_before_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether action comes before index in string representations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">different_indices_commute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether factors acting on different indices commute.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="QubitOperator.renormalize">
+<a class="viewcode-back" href="../../../../generated/struqture_py.html#struqture_py.openfermion_interface.QubitOperator.renormalize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">renormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fix the trace norm of an operator to 1&quot;&quot;&quot;</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s1">&#39;Cannot renormalize empty or zero operator&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span> <span class="o">/=</span> <span class="n">norm</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">coefficient</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simplify a term using commutator and anti-commutator relations.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">term</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">coefficient</span><span class="p">,</span> <span class="n">term</span>
+
+        <span class="n">term</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">factor</span><span class="p">:</span> <span class="n">factor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">new_term</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">left_factor</span> <span class="o">=</span> <span class="n">term</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">right_factor</span> <span class="ow">in</span> <span class="n">term</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">left_index</span><span class="p">,</span> <span class="n">left_action</span> <span class="o">=</span> <span class="n">left_factor</span>
+            <span class="n">right_index</span><span class="p">,</span> <span class="n">right_action</span> <span class="o">=</span> <span class="n">right_factor</span>
+
+            <span class="c1"># Still on the same qubit, keep simplifying.</span>
+            <span class="k">if</span> <span class="n">left_index</span> <span class="o">==</span> <span class="n">right_index</span><span class="p">:</span>
+                <span class="n">new_coefficient</span><span class="p">,</span> <span class="n">new_action</span> <span class="o">=</span> <span class="n">_PAULI_OPERATOR_PRODUCTS</span><span class="p">[</span><span class="n">left_action</span><span class="p">,</span> <span class="n">right_action</span><span class="p">]</span>
+                <span class="n">left_factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">left_index</span><span class="p">,</span> <span class="n">new_action</span><span class="p">)</span>
+                <span class="n">coefficient</span> <span class="o">*=</span> <span class="n">new_coefficient</span>
+
+            <span class="c1"># Reached different qubit, save result and re-initialize.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">left_action</span> <span class="o">!=</span> <span class="s1">&#39;I&#39;</span><span class="p">:</span>
+                    <span class="n">new_term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left_factor</span><span class="p">)</span>
+                <span class="n">left_factor</span> <span class="o">=</span> <span class="n">right_factor</span>
+
+        <span class="c1"># Save result of final iteration.</span>
+        <span class="k">if</span> <span class="n">left_factor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;I&#39;</span><span class="p">:</span>
+            <span class="n">new_term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left_factor</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">coefficient</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_term</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, HQS Quantum Simulations GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

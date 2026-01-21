@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6c236516.js";
+            window.path_to_searchindex_js = "searchindex-f02c86ef.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-cdd571b0.js"></script>
@@ -1580,6 +1580,9 @@ For examples showing how to use <code>MixedLindbladOpenSystems</code>, please se
 <p>Struqture also has an interface to the <a href="https://quantumai.google/openfermion">OpenFermion</a> package, allowing users to switch from one package to the other.</p>
 <p>OpenFermion is an open-source library for compiling and analyzing quantum algorithms to simulate fermionic systems, including quantum chemistry. Among other functionalities, this version features data structures and tools for obtaining and manipulating representations of fermionic and qubit Hamiltonians.
 This interface is aimed at any user already using openfermion who wants to create and use Hamiltonians with struqture. It can also be of use to users using struqture to define Hamiltonians and want to use <a href="https://quantumai.google/cirq">cirq</a>, for which OpenFermion formalism is needed.</p>
+<p>To use this interface, OpenFermion must be installed using the command below. Otherwise, Struqture will not export the interface.</p>
+<pre><code class="language-bash">pip install openfermion
+</code></pre>
 <p>For now only the conversion to and from <code>PauliHamiltonian</code> is implemented with the functions <code>struqture_to_openfermion</code> and <code>openfermion_to_struqture</code>.</p>
 
                     </main>

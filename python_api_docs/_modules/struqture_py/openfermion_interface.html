@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py.openfermion_interface &mdash; struqture_py 2.4.2 documentation</title>
+  <title>struqture_py.openfermion_interface &mdash; struqture_py 2.4.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=0823065a"></script>
+      <script src="../../_static/documentation_options.js?v=976192c0"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -70,12 +70,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for struqture_py.openfermion_interface</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauliHamiltonian</span><span class="p">,</span> <span class="n">PauliProduct</span>
+<span></span><span class="c1"># Copyright © 2019-2023 HQS Quantum Simulations GmbH. All Rights Reserved.</span>
+
+<span class="sd">&quot;&quot;&quot;Struqture python interface</span>
+
+<span class="sd">`HQS Quantum Simulations &lt;https://quantumsimulations.de&gt;`_ package for representing physical operators.</span>
+
+<span class="sd">Copyright © 2021-2023 HQS Quantum Simulations GmbH. All Rights Reserved.</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    :toctree: generated/</span>
+
+<span class="sd">    openfermion_to_struqture</span>
+<span class="sd">    struqture_to_openfermion</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">struqture_py</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauliHamiltonian</span><span class="p">,</span> <span class="n">PauliProduct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">openfermion</span><span class="w"> </span><span class="kn">import</span> <span class="n">QubitOperator</span>
 
 
 <div class="viewcode-block" id="struqture_to_openfermion">
-<a class="viewcode-back" href="../../generated/struqture_py.html#struqture_py.struqture_to_openfermion">[docs]</a>
+<a class="viewcode-back" href="../../generated/struqture_py.html#struqture_py.openfermion_interface.struqture_to_openfermion">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">struqture_to_openfermion</span><span class="p">(</span><span class="n">struqture_hamiltonian</span><span class="p">:</span> <span class="n">PauliHamiltonian</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform a struqture Hamiltonian to an OpenFermion Hamiltonian (QubitOperator).</span>
 
@@ -103,7 +118,7 @@
 
 
 <div class="viewcode-block" id="openfermion_to_struqture">
-<a class="viewcode-back" href="../../generated/struqture_py.html#struqture_py.openfermion_to_struqture">[docs]</a>
+<a class="viewcode-back" href="../../generated/struqture_py.html#struqture_py.openfermion_interface.openfermion_to_struqture">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">openfermion_to_struqture</span><span class="p">(</span><span class="n">openfermion_hamiltonian</span><span class="p">:</span> <span class="n">QubitOperator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform an OpenFermion Hamiltonian (QubitOperator) to a struqture Hamiltonian.</span>
 

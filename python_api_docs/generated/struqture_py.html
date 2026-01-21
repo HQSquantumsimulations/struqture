@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py &mdash; struqture_py 2.4.2 documentation</title>
+  <title>struqture_py &mdash; struqture_py 2.4.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=0823065a"></script>
+      <script src="../_static/documentation_options.js?v=976192c0"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -53,8 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/struqture_py.bosons.html">struqture_py.bosons</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/struqture_py.fermions.html">struqture_py.fermions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/struqture_py.openfermion_to_struqture.html">struqture_py.openfermion_to_struqture</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/struqture_py.struqture_to_openfermion.html">struqture_py.struqture_to_openfermion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/struqture_py.openfermion_interface.html">struqture_py.openfermion_interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#struqture_py.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.add_operator_product"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.add_operator_product()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.BosonHamiltonian.current_number_modes"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian.current_number_modes()</span></code></a></li>
@@ -794,6 +793,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.PlusMinusProduct.z"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct.z()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#struqture_py.QubitOperator"><code class="docutils literal notranslate"><span class="pre">QubitOperator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.QubitOperator.action_before_index"><code class="docutils literal notranslate"><span class="pre">QubitOperator.action_before_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.QubitOperator.action_strings"><code class="docutils literal notranslate"><span class="pre">QubitOperator.action_strings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.QubitOperator.actions"><code class="docutils literal notranslate"><span class="pre">QubitOperator.actions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.QubitOperator.different_indices_commute"><code class="docutils literal notranslate"><span class="pre">QubitOperator.different_indices_commute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struqture_py.QubitOperator.renormalize"><code class="docutils literal notranslate"><span class="pre">QubitOperator.renormalize()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#struqture_py.openfermion_to_struqture"><code class="docutils literal notranslate"><span class="pre">openfermion_to_struqture()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#struqture_py.struqture_to_openfermion"><code class="docutils literal notranslate"><span class="pre">struqture_to_openfermion()</span></code></a></li>
 </ul>
@@ -846,11 +853,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/struqture_py.mixed_systems.html#module-struqture_py.mixed_systems" title="struqture_py.mixed_systems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mixed_systems</span></code></a></p></td>
 <td><p>Module for representing mixed physical systems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.openfermion_to_struqture" title="struqture_py.openfermion_to_struqture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openfermion_to_struqture</span></code></a>(openfermion_hamiltonian)</p></td>
-<td><p>Transform an OpenFermion Hamiltonian (QubitOperator) to a struqture Hamiltonian.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.struqture_to_openfermion" title="struqture_py.struqture_to_openfermion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">struqture_to_openfermion</span></code></a>(struqture_hamiltonian)</p></td>
-<td><p>Transform a struqture Hamiltonian to an OpenFermion Hamiltonian (QubitOperator).</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/struqture_py.openfermion_interface.html#module-struqture_py.openfermion_interface" title="struqture_py.openfermion_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openfermion_interface</span></code></a></p></td>
+<td><p>Struqture python interface</p></td>
 </tr>
 </tbody>
 </table>
@@ -957,6 +961,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#struqture_py.PlusMinusProduct" title="struqture_py.PlusMinusProduct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a>()</p></td>
 <td><p>PlusMinusProducts are combinations of SinglePlusMinusOperators on specific qubits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#struqture_py.QubitOperator" title="struqture_py.QubitOperator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QubitOperator</span></code></a>([term, coefficient])</p></td>
+<td><p>A sum of terms acting on qubits, e.g., 0.5 * 'X0 X5' + 0.3 * 'Z1 Z2'.</p></td>
 </tr>
 </tbody>
 </table>
@@ -12861,13 +12868,86 @@ the Jordan Wigner mapping.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="struqture_py.QubitOperator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.</span></span><span class="sig-name descname"><span class="pre">QubitOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openfermion/ops/operators/qubit_operator.html#QubitOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#struqture_py.QubitOperator" title="Link to this definition"></a></dt>
+<dd><p>A sum of terms acting on qubits, e.g., 0.5 * 'X0 X5' + 0.3 * 'Z1 Z2'.</p>
+<p>A term is an operator acting on n qubits and can be represented as:</p>
+<p>coefficient * local_operator[0] x ... x local_operator[n-1]</p>
+<p>where x is the tensor product. A local operator is a Pauli operator
+('I', 'X', 'Y', or 'Z') which acts on one qubit. In math notation a term
+is, for example, 0.5 * 'X0 X5', which means that a Pauli X operator acts
+on qubit 0 and 5, while the identity operator acts on all other qubits.</p>
+<p>A QubitOperator represents a sum of terms acting on qubits and overloads
+operations for easy manipulation of these objects by the user.</p>
+<p>Note for a QubitOperator to be a Hamiltonian which is a hermitian
+operator, the coefficients of all terms must be real.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hamiltonian</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">QubitOperator</span><span class="p">(</span><span class="s1">&#39;X0 X5&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">QubitOperator</span><span class="p">(</span><span class="s1">&#39;Z0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>QubitOperator is a subclass of SymbolicOperator. Importantly, it has
+attributes set as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">actions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+<span class="n">action_strings</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+<span class="n">action_before_index</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">different_indices_commute</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>See the documentation of SymbolicOperator for more details.</p>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ham</span> <span class="o">=</span> <span class="p">((</span><span class="n">QubitOperator</span><span class="p">(</span><span class="s1">&#39;X0 Y3&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">QubitOperator</span><span class="p">(</span><span class="s1">&#39;X0 Y3&#39;</span><span class="p">)))</span>
+<span class="c1"># Equivalently</span>
+<span class="n">ham2</span> <span class="o">=</span> <span class="n">QubitOperator</span><span class="p">(</span><span class="s1">&#39;X0 Y3&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ham2</span> <span class="o">+=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">QubitOperator</span><span class="p">(</span><span class="s1">&#39;X0 Y3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Adding QubitOperators is faster using += (as this
+is done by in-place addition). Specifying the coefficient
+during initialization is faster than multiplying a QubitOperator
+with a scalar.</p>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="struqture_py.QubitOperator.action_before_index">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">action_before_index</span></span><a class="headerlink" href="#struqture_py.QubitOperator.action_before_index" title="Link to this definition"></a></dt>
+<dd><p>Whether action comes before index in string representations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="struqture_py.QubitOperator.action_strings">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">action_strings</span></span><a class="headerlink" href="#struqture_py.QubitOperator.action_strings" title="Link to this definition"></a></dt>
+<dd><p>The string representations of the allowed actions.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="struqture_py.QubitOperator.actions">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">actions</span></span><a class="headerlink" href="#struqture_py.QubitOperator.actions" title="Link to this definition"></a></dt>
+<dd><p>The allowed actions.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="struqture_py.QubitOperator.different_indices_commute">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">different_indices_commute</span></span><a class="headerlink" href="#struqture_py.QubitOperator.different_indices_commute" title="Link to this definition"></a></dt>
+<dd><p>Whether factors acting on different indices commute.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="struqture_py.QubitOperator.renormalize">
+<span class="sig-name descname"><span class="pre">renormalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/openfermion/ops/operators/qubit_operator.html#QubitOperator.renormalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#struqture_py.QubitOperator.renormalize" title="Link to this definition"></a></dt>
+<dd><p>Fix the trace norm of an operator to 1</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="struqture_py.openfermion_to_struqture">
-<span class="sig-prename descclassname"><span class="pre">struqture_py.</span></span><span class="sig-name descname"><span class="pre">openfermion_to_struqture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">openfermion_hamiltonian</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QubitOperator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/struqture_py/openfermion_interface.html#openfermion_to_struqture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#struqture_py.openfermion_to_struqture" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">struqture_py.</span></span><span class="sig-name descname"><span class="pre">openfermion_to_struqture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">openfermion_hamiltonian</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#struqture_py.QubitOperator" title="openfermion.ops.operators.qubit_operator.QubitOperator"><span class="pre">QubitOperator</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/struqture_py/openfermion_interface.html#openfermion_to_struqture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#struqture_py.openfermion_to_struqture" title="Link to this definition"></a></dt>
 <dd><p>Transform an OpenFermion Hamiltonian (QubitOperator) to a struqture Hamiltonian.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>openfermion_hamiltonian</strong> (<em>QubitOperator</em>) -- OpenFermion Hamiltonian to be transformed.</p>
+<dd class="field-odd"><p><strong>openfermion_hamiltonian</strong> (<a class="reference internal" href="#struqture_py.QubitOperator" title="struqture_py.QubitOperator"><em>QubitOperator</em></a>) -- OpenFermion Hamiltonian to be transformed.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Struqture Hamiltonian equivalent to the OpenFermion Hamiltonian.</p>
@@ -12890,7 +12970,7 @@ the Jordan Wigner mapping.</p>
 <dd class="field-even"><p>OpenFermion Hamiltonian equivalent to the struqture Hamiltonian.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>QubitOperator</p>
+<dd class="field-odd"><p><a class="reference internal" href="#struqture_py.QubitOperator" title="struqture_py.QubitOperator">QubitOperator</a></p>
 </dd>
 </dl>
 </dd></dl>
