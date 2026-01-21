@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.4.1
+
+* Fixed the documentation
+
 ## 2.4.0
 
 * Added an OpenFermion interface.

@@ -32550,7 +32550,7 @@ LICENSE:
 
 
 ====================================================
-struqture 2.4.0
+struqture 2.4.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32761,7 +32761,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py 2.4.0
+struqture-py 2.4.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface of struqture, the HQS tool for representing operators, Hamiltonians and open systems.
 License: Apache-2.0
@@ -32972,7 +32972,7 @@ LICENSE:
 
 
 ====================================================
-struqture-py-macros 2.4.0
+struqture-py-macros 2.4.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for struqture-py crate.
 License: Apache-2.0

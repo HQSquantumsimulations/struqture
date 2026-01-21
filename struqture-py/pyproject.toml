@@ -1,6 +1,6 @@
 [project]
 name = "struqture-py"
-version = "2.4.0"
+version = "2.4.1"
 dependencies = ['numpy', 'qoqo_calculator_pyo3>=1.7', 'openfermion']
 license = { text = "Apache-2.0 AND Apache-2.0 with LLVM-exception AND MIT AND Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-CLause" }
 maintainers = [
