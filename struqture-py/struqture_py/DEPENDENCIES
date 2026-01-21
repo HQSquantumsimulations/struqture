@@ -33930,7 +33930,7 @@ SOFTWARE.
 
 
 ====================================================
-thiserror 2.0.17
+thiserror 2.0.18
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -34144,7 +34144,7 @@ END OF TERMS AND CONDITIONS
 
 
 ====================================================
-thiserror-impl 2.0.17
+thiserror-impl 2.0.18
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate
@@ -43784,7 +43784,7 @@ ICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation a
 
 
 ====================================================
-zmij 1.0.14
+zmij 1.0.16
 https://github.com/dtolnay/zmij
 by David Tolnay <dtolnay@gmail.com>
 A double-to-string conversion algorithm based on Schubfach and yy
