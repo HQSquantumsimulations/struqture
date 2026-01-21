@@ -6,7 +6,7 @@ def struqture_to_openfermion(struqture_hamiltonian: PauliHamiltonian):
     """Transform a struqture Hamiltonian to an OpenFermion Hamiltonian (QubitOperator).
 
     Args:
-        struqture_hamiltonian (PauliHamiltonian): struqture hamiltonian to be transformed.
+        struqture_hamiltonian (PauliHamiltonian): struqture Hamiltonian to be transformed.
 
     Returns:
         QubitOperator: OpenFermion Hamiltonian equivalent to the struqture Hamiltonian.
