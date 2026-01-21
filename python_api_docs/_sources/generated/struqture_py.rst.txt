@@ -4,6 +4,13 @@
 .. automodule:: struqture_py
 
    
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      openfermion_to_struqture
+      struqture_to_openfermion
+   
    .. rubric:: Classes
 
    .. autosummary::

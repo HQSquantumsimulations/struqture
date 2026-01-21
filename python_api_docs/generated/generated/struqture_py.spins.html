@@ -6,19 +6,19 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py.spins &mdash; struqture_py 2.3.2 documentation</title>
+  <title>struqture_py.spins &mdash; struqture_py 2.4.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a53555b6"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=7295bdb5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -70,6 +70,8 @@
 <li class="toctree-l3"><a class="reference internal" href="struqture_py.bosons.html">struqture_py.bosons</a></li>
 <li class="toctree-l3"><a class="reference internal" href="struqture_py.fermions.html">struqture_py.fermions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.openfermion_to_struqture.html">struqture_py.openfermion_to_struqture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.struqture_to_openfermion.html">struqture_py.struqture_to_openfermion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
@@ -100,6 +102,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.openfermion_to_struqture"><code class="docutils literal notranslate"><span class="pre">openfermion_to_struqture()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.struqture_to_openfermion"><code class="docutils literal notranslate"><span class="pre">struqture_to_openfermion()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -193,7 +197,7 @@ and Lindblad type spin open systems (PauliLindbladNoiseOperator and PauliLindbla
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">DecoherenceProduct</span></span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">DecoherenceProduct</span></span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct" title="Link to this definition"></a></dt>
 <dd><p>These are combinations of SingleDecoherenceOperators on specific qubits.</p>
 <p>DecoherenceProducts act in a noisy system. They are representation of products of decoherence
 matrices acting on qubits in order to build the terms of a hamiltonian.
@@ -259,7 +263,7 @@ or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_syste
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -273,7 +277,7 @@ or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_syste
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -293,7 +297,7 @@ or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_syste
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -310,7 +314,7 @@ or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_syste
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -333,7 +337,7 @@ or in the mixed systems as part of <cite>MixedDecoherenceProduct &lt;mixed_syste
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -439,7 +443,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -481,7 +485,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.DecoherenceProduct.multiply">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.multiply" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.DecoherenceProduct.multiply" title="Link to this definition"></a></dt>
 <dd><p>Multiplication function for a self-typed object by a self-typed object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -613,7 +617,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliHamiltonian</span></span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliHamiltonian</span></span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of spins.</p>
 <p>PauliHamiltonians are characterized by a PauliOperator to represent the hamiltonian of the spin system
 and an optional number of spins.</p>
@@ -678,7 +682,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -709,7 +713,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -729,7 +733,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -746,7 +750,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -824,7 +828,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliHamiltonian.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliHamiltonian.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1038,7 +1042,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliLindbladNoiseOperator</span></span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliLindbladNoiseOperator</span></span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of spins.</p>
 <p>In a PauliLindbladNoiseOperator is characterized by a PauliLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.</p>
 <dl class="field-list simple">
@@ -1103,7 +1107,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1134,7 +1138,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1154,7 +1158,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1171,7 +1175,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1238,7 +1242,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladNoiseOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1459,7 +1463,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliLindbladOpenSystem</span></span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliLindbladOpenSystem</span></span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of spins.</p>
 <p>In a PauliLindbladOpenSystem is characterized by a SpinLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of spins.</p>
 <dl class="field-list simple">
@@ -1501,7 +1505,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1529,7 +1533,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1549,7 +1553,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1566,7 +1570,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1589,7 +1593,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.group">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.group" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.group" title="Link to this definition"></a></dt>
 <dd><p>Take a tuple of a system term and a noise term and combines them to be a OpenSystem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1623,7 +1627,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliLindbladOpenSystem.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliLindbladOpenSystem.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1935,7 +1939,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliOperator</span></span><a class="headerlink" href="#struqture_py.spins.PauliOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliOperator</span></span><a class="headerlink" href="#struqture_py.spins.PauliOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of spins.</p>
 <p>PauliOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
 and an optional number of spins.</p>
@@ -2000,7 +2004,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2031,7 +2035,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2051,7 +2055,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2068,7 +2072,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2146,7 +2150,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2360,7 +2364,7 @@ and <cite>flatten</cite> flattens a matrix into a vector in row-major form.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliProduct</span></span><a class="headerlink" href="#struqture_py.spins.PauliProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PauliProduct</span></span><a class="headerlink" href="#struqture_py.spins.PauliProduct" title="Link to this definition"></a></dt>
 <dd><p>PauliProducts are combinations of SinglePauliOperators on specific qubits.</p>
 <p>PauliProducts can be used in either noise-free or a noisy system.
 They are representations of products of pauli matrices acting on qubits,
@@ -2428,7 +2432,7 @@ or as part of <cite>HermitianMixedProduct &lt;mixed_systems.HermitianMixedProduc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2442,7 +2446,7 @@ or as part of <cite>HermitianMixedProduct &lt;mixed_systems.HermitianMixedProduc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2462,7 +2466,7 @@ or as part of <cite>HermitianMixedProduct &lt;mixed_systems.HermitianMixedProduc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2479,7 +2483,7 @@ or as part of <cite>HermitianMixedProduct &lt;mixed_systems.HermitianMixedProduc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2502,7 +2506,7 @@ or as part of <cite>HermitianMixedProduct &lt;mixed_systems.HermitianMixedProduc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2591,7 +2595,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2633,7 +2637,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PauliProduct.multiply">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.multiply" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PauliProduct.multiply" title="Link to this definition"></a></dt>
 <dd><p>Multiplication function for a self-typed object by a self-typed object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2782,7 +2786,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PlusMinusLindbladNoiseOperator</span></span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PlusMinusLindbladNoiseOperator</span></span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of spins.</p>
 <p>In a PlusMinusLindbladNoiseOperator is characterized by a PauliLindbladNoiseOperator to represent the hamiltonian of the spin system, and an optional number of spins.</p>
 <dl class="field-list simple">
@@ -2829,7 +2833,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2860,7 +2864,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2880,7 +2884,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2897,7 +2901,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2920,7 +2924,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator.from_pauli_noise_operator">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pauli_noise_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_pauli_noise_operator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_pauli_noise_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.from_pauli_noise_operator" title="Link to this definition"></a></dt>
 <dd><p>Convert a PauliLindbladNoiseOperator into a PlusMinusLindbladNoiseOperator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2984,7 +2988,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusLindbladNoiseOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3159,7 +3163,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PlusMinusOperator</span></span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PlusMinusOperator</span></span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of spins.</p>
 <p>PlusMinusOperators are characterized by a PauliOperator to represent the hamiltonian of the spin system
 and an optional number of spins.</p>
@@ -3220,7 +3224,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3251,7 +3255,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3271,7 +3275,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3288,7 +3292,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3311,7 +3315,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.from_pauli_hamiltonian">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pauli_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_pauli_hamiltonian" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_pauli_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_pauli_hamiltonian" title="Link to this definition"></a></dt>
 <dd><p>Convert a PauliHamiltonian into a PlusMinusOperator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3331,7 +3335,7 @@ and an optional number of spins.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.from_pauli_operator">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pauli_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_pauli_operator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_pauli_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.from_pauli_operator" title="Link to this definition"></a></dt>
 <dd><p>Convert a PauliOperator into a PlusMinusOperator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3406,7 +3410,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3605,7 +3609,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PlusMinusProduct</span></span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.spins.</span></span><span class="sig-name descname"><span class="pre">PlusMinusProduct</span></span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct" title="Link to this definition"></a></dt>
 <dd><p>PlusMinusProducts are combinations of SinglePlusMinusOperators on specific qubits.</p>
 <p>PlusMinusProducts can be used in either noise-free or a noisy system.
 They are representations of products of pauli matrices acting on qubits,
@@ -3670,7 +3674,7 @@ and do not represent matrix multiplication. For example</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3684,7 +3688,7 @@ and do not represent matrix multiplication. For example</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3704,7 +3708,7 @@ and do not represent matrix multiplication. For example</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3721,7 +3725,7 @@ and do not represent matrix multiplication. For example</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3744,7 +3748,7 @@ and do not represent matrix multiplication. For example</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.from_product">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_product" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_product" title="Link to this definition"></a></dt>
 <dd><p>Creates a list of corresponding (PlusMinusProduct, CalculatorComplex) tuples from the input PauliProduct or DecoherenceProduct.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3764,7 +3768,7 @@ and do not represent matrix multiplication. For example</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3853,7 +3857,7 @@ the Jordan Wigner mapping.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.spins.PlusMinusProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.spins.PlusMinusProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

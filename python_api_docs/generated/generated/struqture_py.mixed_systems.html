@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py.mixed_systems &mdash; struqture_py 2.3.2 documentation</title>
+  <title>struqture_py.mixed_systems &mdash; struqture_py 2.4.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a53555b6"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=7295bdb5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -71,6 +71,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#struqture_py.mixed_systems.MixedProduct"><code class="docutils literal notranslate"><span class="pre">MixedProduct</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.openfermion_to_struqture.html">struqture_py.openfermion_to_struqture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="struqture_py.struqture_to_openfermion.html">struqture_py.struqture_to_openfermion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
@@ -101,6 +103,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.openfermion_to_struqture"><code class="docutils literal notranslate"><span class="pre">openfermion_to_struqture()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.html#struqture_py.struqture_to_openfermion"><code class="docutils literal notranslate"><span class="pre">struqture_to_openfermion()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -208,7 +212,7 @@ mixed systems (MixedOperator and MixedHamiltonian) and Lindblad type mixed open 
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">HermitianMixedProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">HermitianMixedProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct" title="Link to this definition"></a></dt>
 <dd><p>A mixed product of pauli products and boson products.</p>
 <p>A <cite>PauliProduct &lt;struqture_py.spins.PauliProduct&gt;</cite> is a representation of products of pauli matrices acting on qubits. It is used in order to build the corresponding spin terms of a hamiltonian.</p>
 <p>A <cite>BosonProduct &lt;struqture_py.bosons.BosonProduct&gt;</cite> is a product of bosonic creation and annihilation operators.
@@ -270,7 +274,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.create_valid_pair">
-<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.create_valid_pair" title="Link to this definition"></a></dt>
 <dd><p>Create a pair (HermitianMixedProduct, CalculatorComplex).</p>
 <p>The first item is the valid HermitianMixedProduct created from the input creators and annihilators.
 The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
@@ -341,7 +345,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -369,7 +373,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -389,7 +393,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -406,7 +410,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -429,7 +433,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -480,7 +484,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.HermitianMixedProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.HermitianMixedProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -563,7 +567,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedDecoherenceProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedDecoherenceProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct" title="Link to this definition"></a></dt>
 <dd><p>A mixed product of pauli products and boson products.</p>
 <p>A <cite>DecoherenceProduct &lt;struqture_py.spins.DecoherenceProduct&gt;</cite> is a representation of products of pauli matrices acting on qubits. It is used in order to build the corresponding spin terms of a hamiltonian.</p>
 <p>A <cite>BosonProduct &lt;struqture_py.bosons.BosonProduct&gt;</cite> is a product of bosonic creation and annihilation operators.
@@ -625,7 +629,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.create_valid_pair">
-<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.create_valid_pair" title="Link to this definition"></a></dt>
 <dd><p>Create a pair (MixedDecoherenceProduct, CalculatorComplex).</p>
 <p>The first item is the valid MixedDecoherenceProduct created from the input creators and annihilators.
 The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
@@ -696,7 +700,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -724,7 +728,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -744,7 +748,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -761,7 +765,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -784,7 +788,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -835,7 +839,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedDecoherenceProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedDecoherenceProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -918,7 +922,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedHamiltonian">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedHamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedHamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of mixed_systems.</p>
 <p>MixedHamiltonians are characterized by a MixedOperator to represent the hamiltonian of the spin system
 and an optional number of mixed_systems.</p>
@@ -1018,7 +1022,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedHamiltonian.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1049,7 +1053,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedHamiltonian.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1069,7 +1073,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedHamiltonian.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1086,7 +1090,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedHamiltonian.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1157,7 +1161,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedHamiltonian.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedHamiltonian.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1308,7 +1312,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladNoiseOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedLindbladNoiseOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedLindbladNoiseOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of mixed_systems.</p>
 <p>In a MixedLindbladNoiseOperator is characterized by a MixedLindbladNoiseOperator to represent the hamiltonian of the system, and an optional number of mixed_systems.</p>
 <p class="rubric">Examples</p>
@@ -1393,7 +1397,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladNoiseOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1424,7 +1428,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1444,7 +1448,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1461,7 +1465,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1521,7 +1525,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladNoiseOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladNoiseOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1679,7 +1683,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedLindbladOpenSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem" title="Link to this definition"></a></dt>
 <dd><p>These are representations of noisy systems of mixed_systems.</p>
 <p>In a MixedLindbladOpenSystem is characterized by a MixedLindbladOpenOperator to represent the hamiltonian of the system, and an optional number of mixed_systems.</p>
 <dl class="field-list simple">
@@ -1742,7 +1746,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1770,7 +1774,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1790,7 +1794,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1807,7 +1811,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1830,7 +1834,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem.group">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.group" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.group" title="Link to this definition"></a></dt>
 <dd><p>Take a tuple of a system term and a noise term and combines them to be a OpenSystem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1857,7 +1861,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedLindbladOpenSystem.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedLindbladOpenSystem.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2129,7 +2133,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of mixed_systems.</p>
 <p>MixedOperators are characterized by a MixedOperator to represent the hamiltonian of the spin system
 and an optional number of mixed_systems.</p>
@@ -2229,7 +2233,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2260,7 +2264,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2280,7 +2284,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2297,7 +2301,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2368,7 +2372,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2519,7 +2523,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedPlusMinusOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedPlusMinusOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator" title="Link to this definition"></a></dt>
 <dd><p>These are representations of systems of mixed_systems.</p>
 <p>MixedPlusMinusOperators are characterized by a MixedOperator to represent the hamiltonian of the spin system
 and an optional number of mixed_systems.</p>
@@ -2619,7 +2623,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2650,7 +2654,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of self to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2670,7 +2674,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of self to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2687,7 +2691,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2710,7 +2714,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_operator">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_mixed_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_operator" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_mixed_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.from_mixed_operator" title="Link to this definition"></a></dt>
 <dd><p>Convert a MixedOperator into a MixedPlusMinusOperator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2778,7 +2782,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusOperator.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusOperator.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2949,7 +2953,7 @@ and an optional number of mixed_systems.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedPlusMinusProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedPlusMinusProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct" title="Link to this definition"></a></dt>
 <dd><p>A mixed product of pauli products and boson products.</p>
 <p>A <cite>PlusMinusProduct &lt;struqture_py.spins.PlusMinusProduct&gt;</cite> is a representation of products of pauli matrices acting on qubits. It is used in order to build the corresponding spin terms of a hamiltonian.</p>
 <p>A <cite>BosonProduct &lt;struqture_py.bosons.BosonProduct&gt;</cite> is a product of bosonic creation and annihilation operators.
@@ -3053,7 +3057,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3081,7 +3085,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3101,7 +3105,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3118,7 +3122,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3141,7 +3145,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.from_mixed_product">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_mixed_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_mixed_product" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_mixed_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_mixed_product" title="Link to this definition"></a></dt>
 <dd><p>Creates a list of corresponding (MixedPlusMinusProduct, CalculatorComplex) tuples from the input MixedProduct.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3161,7 +3165,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3212,7 +3216,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedPlusMinusProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedPlusMinusProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3312,7 +3316,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.mixed_systems.</span></span><span class="sig-name descname"><span class="pre">MixedProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct" title="Link to this definition"></a></dt>
 <dd><p>A mixed product of pauli products and boson products.</p>
 <p>A <cite>PauliProduct &lt;struqture_py.spins.PauliProduct&gt;</cite> is a representation of products of pauli matrices acting on qubits. It is used in order to build the corresponding spin terms of a hamiltonian.</p>
 <p>A <cite>BosonProduct &lt;struqture_py.bosons.BosonProduct&gt;</cite> is a product of bosonic creation and annihilation operators.
@@ -3374,7 +3378,7 @@ as shown in the example below.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.create_valid_pair">
-<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bosons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fermions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.create_valid_pair" title="Link to this definition"></a></dt>
 <dd><p>Create a pair (MixedProduct, CalculatorComplex).</p>
 <p>The first item is the valid MixedProduct created from the input creators and annihilators.
 The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
@@ -3445,7 +3449,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3473,7 +3477,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3493,7 +3497,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3510,7 +3514,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3533,7 +3537,7 @@ The second term is the input CalculatorComplex transformed according to the vali
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3584,7 +3588,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.mixed_systems.MixedProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.mixed_systems.MixedProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

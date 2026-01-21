@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>struqture_py.bosons.BosonProduct &mdash; struqture_py 2.3.2 documentation</title>
+  <title>struqture_py.bosons.BosonProduct &mdash; struqture_py 2.4.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=a53555b6"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=7295bdb5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -65,6 +65,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.fermions.html">struqture_py.fermions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../struqture_py.mixed_systems.html">struqture_py.mixed_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.openfermion_to_struqture.html">struqture_py.openfermion_to_struqture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../struqture_py.struqture_to_openfermion.html">struqture_py.struqture_to_openfermion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonHamiltonian"><code class="docutils literal notranslate"><span class="pre">BosonHamiltonian</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">BosonLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.BosonLindbladOpenSystem"><code class="docutils literal notranslate"><span class="pre">BosonLindbladOpenSystem</span></code></a></li>
@@ -95,6 +97,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusLindbladNoiseOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusLindbladNoiseOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusOperator"><code class="docutils literal notranslate"><span class="pre">PlusMinusOperator</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.PlusMinusProduct"><code class="docutils literal notranslate"><span class="pre">PlusMinusProduct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.openfermion_to_struqture"><code class="docutils literal notranslate"><span class="pre">openfermion_to_struqture()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../struqture_py.html#struqture_py.struqture_to_openfermion"><code class="docutils literal notranslate"><span class="pre">struqture_to_openfermion()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -132,7 +136,7 @@
 <h1>struqture_py.bosons.BosonProduct<a class="headerlink" href="#struqture-py-bosons-bosonproduct" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">struqture_py.bosons.</span></span><span class="sig-name descname"><span class="pre">BosonProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct" title="Link to this definition"></a></dt>
 <dd><p>A product of bosonic creation and annihilation operators.</p>
 <p>The BosonProduct is used as an index for non-hermitian, normal ordered bosonic operators.
 A bosonic operator can be written as a sum over normal ordered products of creation and annihilation operators.
@@ -176,7 +180,7 @@ weight of a product of operators in the sum.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct.annihilators" title="struqture_py.bosons.BosonProduct.annihilators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">annihilators</span></code></a>()</p></td>
 <td><p>Return list of annihilator indices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct.create_valid_pair" title="struqture_py.bosons.BosonProduct.create_valid_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_valid_pair</span></code></a>(annihilators, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct.create_valid_pair" title="struqture_py.bosons.BosonProduct.create_valid_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_valid_pair</span></code></a>(creators, annihilators, value)</p></td>
 <td><p>Create valid pair of index and value to be set in an operator.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../struqture_py.bosons.html#struqture_py.bosons.BosonProduct.creators" title="struqture_py.bosons.BosonProduct.creators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">creators</span></code></a>()</p></td>
@@ -254,7 +258,7 @@ weight of a product of operators in the sum.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.create_valid_pair">
-<span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.create_valid_pair" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_valid_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">creators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annihilators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.create_valid_pair" title="Link to this definition"></a></dt>
 <dd><p>Create valid pair of index and value to be set in an operator.</p>
 <p>The first item is the valid instance of self created from the input creators and annihilators.
 The second term is the input CalculatorComplex transformed according to the valid order of creators and annihilators.</p>
@@ -317,7 +321,7 @@ would have current_number_modes of four.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.current_version">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_version" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">current_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.current_version" title="Link to this definition"></a></dt>
 <dd><p>Returns the current version of the struqture library .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -392,7 +396,7 @@ $ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sig
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_bincode">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the object to an instance using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -412,7 +416,7 @@ $ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sig
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -429,7 +433,7 @@ $ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sig
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_json_struqture_1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json_struqture_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_json_struqture_1" title="Link to this definition"></a></dt>
 <dd><p>Convert a json corresponding to a struqture 1 object to the equivalent object in struqture 2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -452,7 +456,7 @@ $ hat{b}_i^{dagger} + hat{b}_i rightarrow frac{1}{root{N}} sum_{j=1}^{N} hat{sig
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.from_string">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.from_string" title="Link to this definition"></a></dt>
 <dd><p>Convert a string representation of the object to an instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -503,7 +507,7 @@ For mixed objects, this is true when all of the spin, bosonic and fermionic part
 
 <dl class="py method">
 <dt class="sig sig-object py" id="struqture_py.bosons.BosonProduct.json_schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.json_schema" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#struqture_py.bosons.BosonProduct.json_schema" title="Link to this definition"></a></dt>
 <dd><p>Return the JsonSchema for the json serialisation of the class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
