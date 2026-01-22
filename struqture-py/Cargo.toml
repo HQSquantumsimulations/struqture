@@ -37,7 +37,7 @@ numpy = "0.25"
 [dev-dependencies]
 test-case = "3.1"
 nalgebra = "0.34"
-ndarray = "0.16"
+ndarray = "0.17"
 
 [build-dependencies]
 quote = "1.0"

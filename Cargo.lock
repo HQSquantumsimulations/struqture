@@ -932,6 +932,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "ndarray"
+version = "0.17.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "520080814a7a6b4a6e9070823bb24b4531daac8c4627e08ba5de8c5ef2f2752d"
+dependencies = [
+ "matrixmultiply",
+ "num-complex",
+ "num-integer",
+ "num-traits",
+ "portable-atomic",
+ "portable-atomic-util",
+ "rawpointer",
+]
+
+[[package]]
 name = "num"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1018,7 +1033,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "29f1dee9aa8d3f6f8e8b9af3803006101bb3653866ef056d530d53ae68587191"
 dependencies = [
  "libc",
- "ndarray",
+ "ndarray 0.16.1",
  "num-complex",
  "num-integer",
  "num-traits",
@@ -1616,7 +1631,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c2da74b8d003595f06980583b82e94943f341e2b4dd4d6ea39577931269ee5c"
 dependencies = [
  "itertools 0.14.0",
- "ndarray",
+ "ndarray 0.16.1",
  "num-complex",
  "qoqo_calculator",
  "serde",
@@ -1635,7 +1650,7 @@ dependencies = [
  "itertools 0.14.0",
  "jsonschema",
  "nalgebra",
- "ndarray",
+ "ndarray 0.17.2",
  "num-complex",
  "qoqo_calculator",
  "rand",
@@ -1655,7 +1670,7 @@ version = "2.4.3"
 dependencies = [
  "bincode",
  "nalgebra",
- "ndarray",
+ "ndarray 0.17.2",
  "num-complex",
  "numpy",
  "proc-macro2",
