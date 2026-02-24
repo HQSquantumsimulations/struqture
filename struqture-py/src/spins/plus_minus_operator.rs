@@ -51,7 +51,11 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(system.keys(), [pp])
 ///
-#[pyclass(name = "PlusMinusOperator", module = "struqture_py.spins")]
+#[pyclass(
+    from_py_object,
+    name = "PlusMinusOperator",
+    module = "struqture_py.spins"
+)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PlusMinusOperatorWrapper {
     /// Internal storage of [struqture::spins::PlusMinusOperator]

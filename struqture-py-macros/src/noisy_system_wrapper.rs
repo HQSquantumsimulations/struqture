@@ -101,7 +101,7 @@ pub fn noisywrapper(
                 ///     ValueError: Left-hand product could not be constructed from key.
                 ///     ValueError: Right-hand product could not be constructed from key.
                 pub fn get(&self, key: (Py<PyAny>, Py<PyAny>)) -> PyResult<CalculatorComplexWrapper> {
-                    Python::with_gil(|py| -> PyResult<CalculatorComplexWrapper> {
+                    Python::attach(|py| -> PyResult<CalculatorComplexWrapper> {
                         let (converted_left, converted_right) = (
                             #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
                                 PyValueError::new_err(format!(
@@ -141,7 +141,7 @@ pub fn noisywrapper(
                     &mut self,
                     key: (Py<PyAny>, Py<PyAny>),
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
+                    Python::attach(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
                         let (converted_left, converted_right) = (
                             #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
                                 PyValueError::new_err(format!(
@@ -180,7 +180,7 @@ pub fn noisywrapper(
                     key: (Py<PyAny>, Py<PyAny>),
                     value: &Bound<PyAny>,
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
+                    Python::attach(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
                         let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
                             .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
                         let (converted_left, converted_right) = (
@@ -225,7 +225,7 @@ pub fn noisywrapper(
                     key: (Py<PyAny>, Py<PyAny>),
                     value: &Bound<PyAny>,
                 ) -> PyResult<()> {
-                    Python::with_gil(|py| -> PyResult<()> {
+                    Python::attach(|py| -> PyResult<()> {
                         let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
                             .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
                         let (converted_left, converted_right) = (
@@ -382,7 +382,7 @@ pub fn noisywrapper(
             /// Returns:
             ///     int: Maximum index.
             pub fn number_spins(&self) -> usize {
-                Python::with_gil(|py| {
+                Python::attach(|py| {
                     py.run(c_str!("import warnings; warnings.warn(\"The 'number_spins' method has been deprecated, as the total number of spins can no longer be set. Please use the 'current_number_spins' method instead. The 'number_spins' method will be removed in future.\", category=DeprecationWarning, stacklevel=2)"), None, None).unwrap();
                 });
                 self.internal.current_number_spins()
@@ -618,7 +618,7 @@ pub fn noisywrapper(
                 key: (Py<PyAny>, Py<PyAny>),
                 value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
-                Python::with_gil(|py| -> PyResult<#ident> {
+                Python::attach(|py| -> PyResult<#ident> {
                     let dp_left = #index_type::from_pyany(key.0.bind(py))?;
                     let dp_right = #index_type::from_pyany(key.1.bind(py))?;
                     let value = CalculatorComplexWrapper::from_pyany(value)
@@ -669,7 +669,7 @@ pub fn noisywrapper(
                 &mut self,
                 key: (Py<PyAny>, Py<PyAny>),
             ) -> PyResult<CalculatorComplexWrapper> {
-                Python::with_gil(|py| -> PyResult<CalculatorComplexWrapper> {
+                Python::attach(|py| -> PyResult<CalculatorComplexWrapper> {
                     let dp_left = #index_type::from_pyany(key.0.bind(py))?;
                     let dp_right = #index_type::from_pyany(key.1.bind(py))?;
                     let get_value = self.internal.noise().get(&(dp_left, dp_right));
@@ -726,7 +726,7 @@ pub fn noisywrapper(
                 key: (Py<PyAny>, Py<PyAny>),
                 value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
-                Python::with_gil(|py| -> PyResult<#ident> {
+                Python::attach(|py| -> PyResult<#ident> {
                     let dp_left = #index_type::from_pyany(key.0.bind(py))?;
                     let dp_right = #index_type::from_pyany(key.1.bind(py))?;
                     let value = CalculatorComplexWrapper::from_pyany(value)
@@ -869,11 +869,11 @@ pub fn noisywrapper(
         impl #ident {
             /// Fallible conversion of generic python object..
             pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
-                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                Python::attach(|py| -> PyResult<#struct_ident> {
                     let source_serialisation_meta = input.call_method0("_get_serialisation_meta").map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
-                    let source_serialisation_meta: String = source_serialisation_meta.extract().map_err(|_| {
+                    let source_serialisation_meta: String = source_serialisation_meta.as_borrowed().extract().map_err(|_| {
                         PyTypeError::new_err("Trying to use Python object as a struqture-py object that does not behave as struqture-py object. Are you sure you have the right type to all functions?".to_string())
                     })?;
 
@@ -911,7 +911,7 @@ pub fn noisywrapper(
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
             pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
-                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                Python::attach(|py| -> PyResult<#struct_ident> {
                     let config = bincode::config::legacy();
                     let get_bytes = input
                         .call_method0("to_bincode")
@@ -1032,7 +1032,7 @@ pub fn noisywrapper(
                 let serialized = bincode::serde::encode_to_vec(&self.internal, config).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
-                let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
+                let b: Py<PyByteArray> = Python::attach(|py| -> Py<PyByteArray> {
                     PyByteArray::new(py, &serialized[..]).into()
                 });
                 Ok(b)

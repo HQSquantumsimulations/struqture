@@ -47,7 +47,11 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorFloat(2))
 ///
-#[pyclass(name = "BosonLindbladOpenSystem", module = "struqture_py.bosons")]
+#[pyclass(
+    from_py_object,
+    name = "BosonLindbladOpenSystem",
+    module = "struqture_py.bosons"
+)]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct BosonLindbladOpenSystemWrapper {
     /// Internal storage of [struqture::bosons::BosonLindbladOpenSystem]

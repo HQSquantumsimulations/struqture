@@ -64,7 +64,11 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///     npt.assert_equal(pp.get(0), "+")
 ///     npt.assert_equal(pp.keys(), [0, 1, 2, 3])
 ///
-#[pyclass(name = "PlusMinusProduct", module = "struqture_py.spins")]
+#[pyclass(
+    from_py_object,
+    name = "PlusMinusProduct",
+    module = "struqture_py.spins"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct PlusMinusProductWrapper {
     /// Internal storage of [struqture::spins::PlusMinusProduct]

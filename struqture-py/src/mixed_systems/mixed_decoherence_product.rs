@@ -78,6 +78,7 @@ use struqture_py_macros::product_wrapper;
 ///     npt.assert_equal(mp.bosons(), [mp_bosons])
 ///     
 #[pyclass(
+    from_py_object,
     name = "MixedDecoherenceProduct",
     module = "struqture_py.mixed_systems"
 )]
@@ -110,7 +111,7 @@ impl MixedDecoherenceProductWrapper {
         let mut spinsv: Vec<DecoherenceProduct> = Vec::new();
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        Python::with_gil(|py| -> PyResult<()> {
+        Python::attach(|py| -> PyResult<()> {
             for s in spins {
                 spinsv.push(DecoherenceProductWrapper::from_pyany(s.bind(py))?);
             }

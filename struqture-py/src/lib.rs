@@ -59,7 +59,7 @@ fn struqture_py(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
 
     let system = PyModule::import(_py, "sys")?;
     let binding = system.getattr("modules")?;
-    let system_modules: &Bound<PyDict> = binding.downcast()?;
+    let system_modules: &Bound<PyDict> = binding.cast()?;
     system_modules.set_item("struqture_py.spins", module.getattr("spins")?)?;
     system_modules.set_item("struqture_py.fermions", module.getattr("fermions")?)?;
     system_modules.set_item(
@@ -82,7 +82,7 @@ pub type PyCooMatrix = (
 // Simple wrapper function to convert internal COO matrix to a Python compatible form,
 // it expects a CooSparseMatrix so any error handling should be done before using it.
 fn to_py_coo(coo: CooSparseMatrix) -> PyResult<PyCooMatrix> {
-    Python::with_gil(|py| -> PyResult<PyCooMatrix> {
+    Python::attach(|py| -> PyResult<PyCooMatrix> {
         let values: Py<PyArray1<Complex64>> = coo.0.into_pyarray(py).into();
         let rows: Py<PyArray1<usize>> = coo.1 .0.into_pyarray(py).into();
         let columns: Py<PyArray1<usize>> = coo.1 .1.into_pyarray(py).into();

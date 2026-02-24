@@ -79,7 +79,11 @@ use struqture_py_macros::product_wrapper;
 ///     npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
 ///     npt.assert_equal(mp.bosons(), [mp_bosons])
 ///     
-#[pyclass(name = "MixedPlusMinusProduct", module = "struqture_py.mixed_systems")]
+#[pyclass(
+    from_py_object,
+    name = "MixedPlusMinusProduct",
+    module = "struqture_py.mixed_systems"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct MixedPlusMinusProductWrapper {
     // Internal storage of [struqture::mixed_systems::MixedPlusMinusProduct]
@@ -109,7 +113,7 @@ impl MixedPlusMinusProductWrapper {
         let mut spinsv: Vec<PlusMinusProduct> = Vec::new();
         let mut bosonsv: Vec<BosonProduct> = Vec::new();
         let mut fermionsv: Vec<FermionProduct> = Vec::new();
-        Python::with_gil(|py| -> PyResult<()> {
+        Python::attach(|py| -> PyResult<()> {
             for s in spins {
                 spinsv.push(PlusMinusProductWrapper::from_pyany(s.bind(py))?);
             }

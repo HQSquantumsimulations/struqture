@@ -42,7 +42,11 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///
-#[pyclass(name = "BosonLindbladNoiseOperator", module = "struqture_py.bosons")]
+#[pyclass(
+    from_py_object,
+    name = "BosonLindbladNoiseOperator",
+    module = "struqture_py.bosons"
+)]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct BosonLindbladNoiseOperatorWrapper {
     /// Internal storage of [struqture::bosons::BosonLindbladNoiseOperator]

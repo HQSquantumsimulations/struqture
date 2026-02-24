@@ -50,7 +50,11 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(system.keys(), [pp])
 ///
-#[pyclass(name = "FermionHamiltonian", module = "struqture_py.fermions")]
+#[pyclass(
+    from_py_object,
+    name = "FermionHamiltonian",
+    module = "struqture_py.fermions"
+)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct FermionHamiltonianWrapper {
     /// Internal storage of [struqture::fermions::FermionHamiltonian]

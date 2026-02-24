@@ -56,7 +56,11 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     npt.assert_equal(system.current_number_spins(), [1])
 ///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///
-#[pyclass(name = "MixedHamiltonian", module = "struqture_py.mixed_systems")]
+#[pyclass(
+    from_py_object,
+    name = "MixedHamiltonian",
+    module = "struqture_py.mixed_systems"
+)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct MixedHamiltonianWrapper {
     /// Internal storage of [struqture::mixed_systems::MixedHamiltonian]

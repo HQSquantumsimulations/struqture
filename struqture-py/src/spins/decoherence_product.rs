@@ -61,7 +61,11 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///     npt.assert_equal(dp.get(1), "iY")
 ///     npt.assert_equal(dp.keys(), [0, 1, 2, 3])
 ///
-#[pyclass(name = "DecoherenceProduct", module = "struqture_py.spins")]
+#[pyclass(
+    from_py_object,
+    name = "DecoherenceProduct",
+    module = "struqture_py.spins"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct DecoherenceProductWrapper {
     /// Internal storage of [struqture::spins::DecoherenceProduct]

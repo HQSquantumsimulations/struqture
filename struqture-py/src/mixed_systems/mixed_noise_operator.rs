@@ -45,6 +45,7 @@ use struqture_py_macros::noisy_system_wrapper;
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorFloat(2))
 ///
 #[pyclass(
+    from_py_object,
     name = "MixedLindbladNoiseOperator",
     module = "struqture_py.mixed_systems"
 )]

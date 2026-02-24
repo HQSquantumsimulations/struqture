@@ -40,8 +40,8 @@ fn new_system(py: Python) -> Bound<BosonLindbladOpenSystemWrapper> {
 /// Test current_number_modes function of BosonOperator
 #[test]
 fn test_number_modes_current() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let system = new_system(py);
         system
             .call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -50,7 +50,7 @@ fn test_number_modes_current() {
         let number_system = system.call_method0("current_number_modes").unwrap();
 
         let comparison =
-            bool::extract_bound(&number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
+            bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -58,18 +58,18 @@ fn test_number_modes_current() {
 /// Test empty_clone function of BosonOperator
 #[test]
 fn test_empty_clone() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let system = new_system(py);
         let none_system = system.call_method0("empty_clone").unwrap();
         let comparison =
-            bool::extract_bound(&none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract(none_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
 
         let system = new_system(py);
         let some_system = system.call_method0("empty_clone").unwrap();
         let comparison =
-            bool::extract_bound(&some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract(some_system.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -77,8 +77,8 @@ fn test_empty_clone() {
 /// Test add_operator_product and remove functions of BosonOperator
 #[test]
 fn boson_system_test_add_operator_product_remove_system() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system.downcast::<BosonLindbladOpenSystemWrapper>().unwrap();
@@ -95,23 +95,23 @@ fn boson_system_test_add_operator_product_remove_system() {
         // test access at index 0
         let comp_op = system.call_method1("system_get", ("c0a0",)).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("system_get", ("c1a2",)).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("system_get", ("a3",)).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("system_get", ("a2",)).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
@@ -135,8 +135,8 @@ fn boson_system_test_add_operator_product_remove_system() {
 /// Test add_operator_product and remove functions of BosonOperator
 #[test]
 fn boson_system_test_add_operator_product_remove_noise() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system.downcast::<BosonLindbladOpenSystemWrapper>().unwrap();
@@ -157,25 +157,25 @@ fn boson_system_test_add_operator_product_remove_noise() {
             .call_method1("noise_get", (("c0a0", "c0a0"),))
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system
             .call_method1("noise_get", (("c0a0", "c1a2"),))
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap()).unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("noise_get", (("c0a0", "a3"),)).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("noise_get", (("c0a0", "a2"),)).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Get error
@@ -200,8 +200,8 @@ fn boson_system_test_add_operator_product_remove_noise() {
 /// Test add magic method function of BosonOperator
 #[test]
 fn test_neg() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let system_0 = new_system(py);
         system_0
             .call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -213,7 +213,7 @@ fn test_neg() {
 
         let negated = system_0.call_method0("__neg__").unwrap();
         let comparison =
-            bool::extract_bound(&negated.call_method1("__eq__", (system_1,)).unwrap()).unwrap();
+            bool::extract(negated.call_method1("__eq__", (system_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -221,8 +221,8 @@ fn test_neg() {
 /// Test add magic method function of BosonOperator
 #[test]
 fn test_add() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let system_0 = new_system(py);
         system_0
             .call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -241,7 +241,7 @@ fn test_add() {
 
         let added = system_0.call_method1("__add__", (system_1,)).unwrap();
         let comparison =
-            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -249,8 +249,8 @@ fn test_add() {
 /// Test add magic method function of BosonOperator
 #[test]
 fn test_sub() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let system_0 = new_system(py);
         system_0
             .call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 0.1))
@@ -269,7 +269,7 @@ fn test_sub() {
 
         let added = system_0.call_method1("__sub__", (system_1,)).unwrap();
         let comparison =
-            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -277,8 +277,8 @@ fn test_sub() {
 /// Test add magic method function of BosonOperator
 #[test]
 fn test_mul_cf() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let system_0 = new_system(py);
         system_0
             .call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 0.1_f64))
@@ -291,7 +291,7 @@ fn test_mul_cf() {
 
         let added = system_0.call_method1("__mul__", (2.0,)).unwrap();
         let comparison =
-            bool::extract_bound(&added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
+            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap()).unwrap();
         assert!(comparison);
     });
 }
@@ -299,8 +299,8 @@ fn test_mul_cf() {
 /// Test default function of BosonLindbladOpenSystemWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let system = new_system(py);
         let mut new_sys = system
             .call_method1(
@@ -341,7 +341,7 @@ fn test_default_partialeq_debug_clone() {
         // Number of bosons
         let comp_op = new_sys.call_method0("current_number_modes").unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (1,)).unwrap()).unwrap();
         assert!(comparison);
 
         // System
@@ -359,7 +359,7 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (boson_system,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (boson_system,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Noise
@@ -379,7 +379,7 @@ fn test_default_partialeq_debug_clone() {
             )
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (noise,)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (noise,)).unwrap()).unwrap();
         assert!(comparison);
 
         // Ungroup + group
@@ -424,7 +424,7 @@ fn test_default_partialeq_debug_clone() {
             .call_method1("group", (boson_system, noise))
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op_group.call_method1("__eq__", (new_sys,)).unwrap())
+            bool::extract(comp_op_group.call_method1("__eq__", (new_sys,)).unwrap())
                 .unwrap();
         assert!(comparison);
     })
@@ -433,8 +433,8 @@ fn test_default_partialeq_debug_clone() {
 /// Test set_pauli_product and get_pauli_product functions of BosonLindbladOpenSystem
 #[test]
 fn test_set_pauli_get_pauli() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
@@ -537,8 +537,8 @@ fn test_set_pauli_get_pauli() {
 /// Test set_noise and get_noise functions of BosonLindbladOpenSystem
 #[test]
 fn test_set_noise_get_noise() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let system = new_system.call0().unwrap();
         system
@@ -668,8 +668,8 @@ fn test_set_noise_get_noise() {
 /// Test try_set_pauli_product and get_pauli_product functions of BosonLindbladOpenSystem
 #[test]
 fn test_try_set_pauli_get_pauli() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
@@ -768,8 +768,8 @@ fn test_try_set_pauli_get_pauli() {
 /// Test try_set_noise and get_noise functions of BosonLindbladOpenSystem
 #[test]
 fn test_try_set_noise_get_noise() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
@@ -887,8 +887,8 @@ fn test_try_set_noise_get_noise() {
 /// Test add_pauli_product and get_pauli_product functions of BosonLindbladOpenSystem
 #[test]
 fn test_add_pauli_get_pauli() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
@@ -995,8 +995,8 @@ fn test_add_pauli_get_pauli() {
 /// Test add_noise and get_noise functions of BosonLindbladOpenSystem
 #[test]
 fn test_add_noise_get_noise() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = py.get_type::<BosonLindbladOpenSystemWrapper>();
         let new_system_1 = new_system.call0().unwrap();
         let mut system = new_system_1
@@ -1120,7 +1120,7 @@ fn test_add_noise_get_noise() {
 #[test_case(0.0,1.0;"imag")]
 #[test_case(0.7,0.7;"mixed")]
 fn test_truncate(re: f64, im: f64) {
-    pyo3::Python::with_gil(|py| {
+    pyo3::Python::attach(|py| {
         let system = new_system(py);
         system
             .call_method1(
@@ -1249,8 +1249,8 @@ fn test_truncate(re: f64, im: f64) {
 /// Test copy and deepcopy functions of BosonLindbladOpenSystem
 #[test]
 fn test_copy_deepcopy() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = new_system(py);
         let mut system = new_system
             .call_method1(
@@ -1275,10 +1275,10 @@ fn test_copy_deepcopy() {
         let deepcopy_system = system.call_method1("__deepcopy__", ("",)).unwrap();
 
         let comparison_copy =
-            bool::extract_bound(&copy_system.call_method1("__eq__", (&system,)).unwrap()).unwrap();
+            bool::extract(copy_system.call_method1("__eq__", (&system,)).unwrap()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract_bound(&deepcopy_system.call_method1("__eq__", (system,)).unwrap())
+            bool::extract(deepcopy_system.call_method1("__eq__", (system,)).unwrap())
                 .unwrap();
         assert!(comparison_deepcopy);
     });
@@ -1287,8 +1287,8 @@ fn test_copy_deepcopy() {
 /// Test to_bincode and from_bincode functions of BosonLindbladOpenSystem
 #[test]
 fn test_to_from_bincode() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system_1 = new_system(py);
         let mut system = new_system_1
             .call_method1(
@@ -1333,15 +1333,15 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract_bound(&deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
 
 #[test]
 fn test_value_error_bincode() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new = new_system(py);
         let deserialised_error = new.call_method1("from_bincode", ("j",));
         assert!(deserialised_error.is_err());
@@ -1351,8 +1351,8 @@ fn test_value_error_bincode() {
 /// Test to_ and from_json functions of BosonLindbladOpenSystem
 #[test]
 fn test_to_from_json() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system_1 = new_system(py);
         let mut system = new_system_1
             .call_method1(
@@ -1392,7 +1392,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract_bound(&deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
+            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -1400,8 +1400,8 @@ fn test_to_from_json() {
 /// Test the __repr__ and __format__ functions
 #[test]
 fn test_format_repr() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system = new_system(py);
         let mut system = new_system
             .call_method1(
@@ -1446,15 +1446,15 @@ fn test_format_repr() {
             .to_string();
 
         let to_format = system.call_method1("__format__", ("",)).unwrap();
-        let format_op: String = String::extract_bound(&to_format).unwrap();
+        let format_op: String = String::extract(to_format).unwrap();
         assert_eq!(format_op, test_string);
 
         let to_repr = system.call_method0("__repr__").unwrap();
-        let repr_op: String = String::extract_bound(&to_repr).unwrap();
+        let repr_op: String = String::extract(to_repr).unwrap();
         assert_eq!(repr_op, test_string);
 
         let to_str = system.call_method0("__str__").unwrap();
-        let str_op: String = String::extract_bound(&to_str).unwrap();
+        let str_op: String = String::extract(to_str).unwrap();
         assert_eq!(str_op, test_string);
     });
 }
@@ -1462,8 +1462,8 @@ fn test_format_repr() {
 /// Test the __richcmp__ function
 #[test]
 fn test_richcmp() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_system_1 = new_system(py);
         let mut system_one = new_system_1
             .call_method1(
@@ -1504,19 +1504,19 @@ fn test_richcmp() {
             .unwrap();
 
         let comparison =
-            bool::extract_bound(&system_one.call_method1("__eq__", (&system_two,)).unwrap())
+            bool::extract(system_one.call_method1("__eq__", (&system_two,)).unwrap())
                 .unwrap();
         assert!(!comparison);
         let comparison =
-            bool::extract_bound(&system_one.call_method1("__eq__", ("c0a0",)).unwrap()).unwrap();
+            bool::extract(system_one.call_method1("__eq__", ("c0a0",)).unwrap()).unwrap();
         assert!(!comparison);
 
         let comparison =
-            bool::extract_bound(&system_one.call_method1("__ne__", (system_two,)).unwrap())
+            bool::extract(system_one.call_method1("__ne__", (system_two,)).unwrap())
                 .unwrap();
         assert!(comparison);
         let comparison =
-            bool::extract_bound(&system_one.call_method1("__ne__", ("c0a0",)).unwrap()).unwrap();
+            bool::extract(system_one.call_method1("__ne__", ("c0a0",)).unwrap()).unwrap();
         assert!(comparison);
 
         let comparison = system_one.call_method1("__ge__", ("c0a0",));
@@ -1527,25 +1527,25 @@ fn test_richcmp() {
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_json_schema() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new = new_system(py);
 
         let schema: String =
-            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
+            String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(BosonLindbladOpenSystem)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
+            String::extract(new.call_method0("current_version").unwrap()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         new.call_method1("noise_add_operator_product", (("c0a0", "c0a0"), 1.0))
             .unwrap();
         let min_version: String =
-            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -1554,8 +1554,8 @@ fn test_json_schema() {
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_modes\":null,\"operator\":{\"items\":[[\"c1a1\",\"c1a1\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}}}");
         let sys_2 = new_system(py);
         sys_2
@@ -1569,7 +1569,7 @@ fn test_from_json_struqture_1() {
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal =
-            bool::extract_bound(&sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
+            bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"number_modes\":null,\"hamiltonian\":{\"items\":[[\"c0a0\",1.0,0.0]],\"_struqture_version\":{\"major_version\":1,\"minor_version\":0}}},\"noise\":{\"number_modes\":null,\"operator\":{\"items\":[[\"c1a1\",\"c1a1\",1.0,0.0]],\"_struqture_version\":{\"major_version\":3-,\"minor_version\":0}}}}");

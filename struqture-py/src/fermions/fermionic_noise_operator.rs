@@ -45,6 +45,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///
 #[pyclass(
+    from_py_object,
     name = "FermionLindbladNoiseOperator",
     module = "struqture_py.fermions"
 )]

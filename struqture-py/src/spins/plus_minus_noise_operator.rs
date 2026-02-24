@@ -46,7 +46,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///     npt.assert_equal(slns.keys(), [(dp, dp)])
 ///
-#[pyclass(name = "PlusMinusLindbladNoiseOperator", module = "struqture_py.spins")]
+#[pyclass(
+    from_py_object,
+    name = "PlusMinusLindbladNoiseOperator",
+    module = "struqture_py.spins"
+)]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct PlusMinusLindbladNoiseOperatorWrapper {
     /// Internal storage of [struqture::spins::PlusMinusLindbladNoiseOperator]

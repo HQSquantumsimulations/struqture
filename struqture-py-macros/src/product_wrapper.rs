@@ -391,7 +391,7 @@ pub fn productwrapper(
         impl #ident {
             /// Fallible conversion of generic python object..
             pub fn from_pyany(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
-                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                Python::attach(|py| -> PyResult<#struct_ident> {
                     if let Ok(try_downcast) = input.extract::<#ident>() {
                         return Ok(try_downcast.internal);
                     } else {
@@ -423,7 +423,7 @@ pub fn productwrapper(
             /// Fallible conversion of generic python object that is implemented in struqture 1.x.
             #[cfg(feature = "struqture_1_import")]
             pub fn from_pyany_struqture_1(input: &Bound<PyAny>) -> PyResult<#struct_ident> {
-                Python::with_gil(|py| -> PyResult<#struct_ident> {
+                Python::attach(|py| -> PyResult<#struct_ident> {
                     let get_str = input.call_method0("__str__").map_err(|_| {
                         PyTypeError::new_err("Type conversion failed".to_string())
                     })?;
@@ -545,7 +545,7 @@ pub fn productwrapper(
                 let serialized = bincode::serde::encode_to_vec(&self.internal, config).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
-                let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
+                let b: Py<PyByteArray> = Python::attach(|py| -> Py<PyByteArray> {
                     PyByteArray::new(py, &serialized[..]).into()
                 });
                 Ok(b)

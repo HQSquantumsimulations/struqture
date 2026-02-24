@@ -53,7 +53,11 @@ use struqture_py_macros::product_wrapper;
 ///     npt.assert_equal(b_product.creators(), [0])
 ///     npt.assert_equal(b_product.annihilators(), [0])
 ///     
-#[pyclass(name = "HermitianBosonProduct", module = "struqture_py.bosons")]
+#[pyclass(
+    from_py_object,
+    name = "HermitianBosonProduct",
+    module = "struqture_py.bosons"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct HermitianBosonProductWrapper {
     pub internal: HermitianBosonProduct,

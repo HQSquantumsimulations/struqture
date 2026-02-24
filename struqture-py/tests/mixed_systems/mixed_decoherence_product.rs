@@ -44,8 +44,8 @@ fn new_pp(
 /// Test default function of MixedDecoherenceProductWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -105,8 +105,8 @@ fn test_default_partialeq_debug_clone() {
 /// Test new function of MixedDecoherenceProductWrapper
 #[test]
 fn test_new_no_error() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp_type = py.get_type::<MixedDecoherenceProductWrapper>();
 
         let pp = pp_type.call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]));
@@ -117,8 +117,8 @@ fn test_new_no_error() {
 /// Test create_valid_pair functions of MixedDecoherenceProduct
 #[test]
 fn test_new_errors() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = py.get_type::<MixedDecoherenceProductWrapper>();
 
         let valid = pp.call1((
@@ -140,8 +140,8 @@ fn test_new_errors() {
 /// Test from_string function of MixedDecoherenceProduct
 #[test]
 fn test_from_string() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -153,26 +153,26 @@ fn test_from_string() {
             .call_method1("from_string", (":S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
         let comparison =
-            bool::extract_bound(&string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
         let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_bosonic_modes")
             .unwrap();
         let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
+            bool::extract(nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_fermionic_modes")
             .unwrap();
         let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("spins").unwrap();
@@ -185,7 +185,7 @@ fn test_from_string() {
             .call_method1("z", ((0),))
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (vec![spins],)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (vec![spins],)).unwrap()).unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("bosons").unwrap();
@@ -206,7 +206,7 @@ fn test_from_string() {
         let noise_type = py.get_type::<FermionProductWrapper>();
         let fermions = noise_type.call1(([0], [0])).unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (vec![fermions],)).unwrap())
+            bool::extract(comp_op.call_method1("__eq__", (vec![fermions],)).unwrap())
                 .unwrap();
         assert!(comparison);
     });
@@ -215,8 +215,8 @@ fn test_from_string() {
 /// Test from_string function of MixedDecoherenceProduct - PyValueError
 #[test]
 fn test_from_string_error() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_pp_1 = new_pp(py, vec![], vec![], vec![]);
         let error_pp = new_pp_1.call_method1("from_string", ("0X1Z3J",));
         assert!(error_pp.is_err());
@@ -226,8 +226,8 @@ fn test_from_string_error() {
 /// Test hermitian_conjugate and is_natural_hermitian functions of MixedDecoherenceProduct
 #[test]
 fn test_hermitian_conj() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -251,7 +251,7 @@ fn test_hermitian_conj() {
         assert!(comparison);
 
         let is_natural_hermitian_pp =
-            bool::extract_bound(&pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
+            bool::extract(pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
         assert!(!is_natural_hermitian_pp);
     });
 }
@@ -259,8 +259,8 @@ fn test_hermitian_conj() {
 /// Test create_valid_pair functions of MixedDecoherenceProduct
 #[test]
 fn test_create_valid_pair() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -292,8 +292,8 @@ fn test_create_valid_pair() {
 /// Test create_valid_pair functions of MixedDecoherenceProduct
 #[test]
 fn test_create_valid_pair_errors() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -345,8 +345,8 @@ fn test_create_valid_pair_errors() {
 /// Test __mul__ functions of MixedDecoherenceProduct
 #[test]
 fn test_multiply() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp_0 = new_pp(
             py,
             vec!["0Z".into()],
@@ -389,8 +389,8 @@ fn test_multiply() {
 /// Test copy and deepcopy functions of MixedDecoherenceProduct
 #[test]
 fn test_copy_deepcopy() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -403,10 +403,10 @@ fn test_copy_deepcopy() {
         // let copy_deepcopy_param = pp.clone();
 
         let comparison_copy =
-            bool::extract_bound(&copy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
+            bool::extract(copy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract_bound(&deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -414,8 +414,8 @@ fn test_copy_deepcopy() {
 /// Test to_bincode and from_bincode functions of MixedDecoherenceProduct
 #[test]
 fn test_to_from_bincode() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -452,15 +452,15 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
 
 #[test]
 fn test_value_error_bincode() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new = new_pp(
             py,
             vec!["0Z".into()],
@@ -475,8 +475,8 @@ fn test_value_error_bincode() {
 /// Test to_ and from_json functions of MixedDecoherenceProduct
 #[test]
 fn test_to_from_json() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -506,7 +506,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
         assert!(comparison)
     });
 }
@@ -514,8 +514,8 @@ fn test_to_from_json() {
 /// Test the __repr__ and __format__ functions
 #[test]
 fn test_format_repr() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -525,13 +525,13 @@ fn test_format_repr() {
         let format_repr = "S0Z:Bc0a1:Fc0a0:";
 
         let to_str = pp.call_method0("__str__").unwrap();
-        let str_op: String = String::extract_bound(&to_str).unwrap();
+        let str_op: String = String::extract(to_str).unwrap();
 
         let to_format = pp.call_method1("__format__", ("",)).unwrap();
-        let format_op: String = String::extract_bound(&to_format).unwrap();
+        let format_op: String = String::extract(to_format).unwrap();
 
         let to_repr = pp.call_method0("__repr__").unwrap();
-        let repr_op: String = String::extract_bound(&to_repr).unwrap();
+        let repr_op: String = String::extract(to_repr).unwrap();
 
         assert_eq!(str_op, format_repr);
         assert_eq!(format_op, format_repr);
@@ -542,8 +542,8 @@ fn test_format_repr() {
 /// Test the __richcmp__ function
 #[test]
 fn test_richcmp() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp_one = new_pp(
             py,
             vec!["0Z".into()],
@@ -558,7 +558,7 @@ fn test_richcmp() {
         );
 
         let comparison =
-            bool::extract_bound(&pp_one.call_method1("__eq__", (&pp_two,)).unwrap()).unwrap();
+            bool::extract(pp_one.call_method1("__eq__", (&pp_two,)).unwrap()).unwrap();
         assert!(!comparison);
         let comparison = bool::extract_bound(
             &pp_one
@@ -569,7 +569,7 @@ fn test_richcmp() {
         assert!(comparison);
 
         let comparison =
-            bool::extract_bound(&pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
+            bool::extract(pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
         assert!(comparison);
         let comparison = bool::extract_bound(
             &pp_one
@@ -587,8 +587,8 @@ fn test_richcmp() {
 /// Test hash functions of MixedDecoherenceProduct
 #[test]
 fn test_hash() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -606,10 +606,10 @@ fn test_hash() {
         let hash_other_pp = pp_other.call_method0("__hash__").unwrap();
 
         let equal =
-            bool::extract_bound(&hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap()).unwrap();
+            bool::extract(hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap()).unwrap();
         assert!(equal);
         let not_equal =
-            bool::extract_bound(&hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap())
+            bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap())
                 .unwrap();
         assert!(!not_equal);
     });
@@ -618,8 +618,8 @@ fn test_hash() {
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_json_schema() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new = new_pp(
             py,
             vec!["0Z".to_string()],
@@ -628,18 +628,18 @@ fn test_json_schema() {
         );
 
         let schema: String =
-            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
+            String::extract(new.call_method0("json_schema").unwrap()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(MixedDecoherenceProduct)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
+            String::extract(new.call_method0("current_version").unwrap()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         let min_version: String =
-            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -648,8 +648,8 @@ fn test_json_schema() {
 #[cfg(feature = "struqture_1_import")]
 #[test]
 fn test_from_json_struqture_1() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let json_string: Bound<pyo3::types::PyString> =
             pyo3::types::PyString::new(py, "\"S0Z:Bc1a1:Fc0a0\"");
         let pp_2 = new_pp(
@@ -663,7 +663,7 @@ fn test_from_json_struqture_1() {
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
         let equal =
-            bool::extract_bound(&pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+            bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> =
@@ -675,19 +675,19 @@ fn test_from_json_struqture_1() {
 
 #[test]
 fn test_pprint() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["1Z27iY".to_string()],
             vec!["c14c18a27".to_string()],
             vec!["c14c18a27".to_string()],
         );
-        let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
+        let pprint: String = String::extract(pp.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(pprint, "z₁iy₂₇ b₁₄†b₁₈†b₂₇ c₁₄†c₁₈†c₂₇");
 
         let pp = new_pp(py, vec![], vec!["c14c18a27".to_string()], vec![]);
-        let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
+        let pprint: String = String::extract(pp.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(pprint, "b₁₄†b₁₈†b₂₇ ");
 
         let pp = new_pp(
@@ -696,7 +696,7 @@ fn test_pprint() {
             vec!["".to_string(), "c14c18a27".to_string()],
             vec!["c14c18a27".to_string(), "c14c18a27".to_string()],
         );
-        let pprint: String = String::extract_bound(&pp.call_method0("pprint").unwrap()).unwrap();
+        let pprint: String = String::extract(pp.call_method0("pprint").unwrap()).unwrap();
         assert_eq!(
             pprint,
             "(z₁iy₂₇⊗ I)⊗ (I⊗ b₁₄†b₁₈†b₂₇)⊗ (c₁₄†c₁₈†c₂₇⊗ c₁₄†c₁₈†c₂₇)"

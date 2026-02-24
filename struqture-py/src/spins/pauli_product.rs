@@ -64,7 +64,7 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///     npt.assert_equal(pp.get(0), "X")
 ///     npt.assert_equal(pp.keys(), [0, 1, 2, 3])
 ///
-#[pyclass(name = "PauliProduct", module = "struqture_py.spins")]
+#[pyclass(from_py_object, name = "PauliProduct", module = "struqture_py.spins")]
 // #[pyo3(crate = "pyo3")]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct PauliProductWrapper {

@@ -47,7 +47,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     npt.assert_equal(system.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(system.keys(), [pp])
 ///
-#[pyclass(name = "BosonOperator", module = "struqture_py.bosons")]
+#[pyclass(from_py_object, name = "BosonOperator", module = "struqture_py.bosons")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct BosonOperatorWrapper {
     /// Internal storage of [struqture::bosons::BosonOperator]

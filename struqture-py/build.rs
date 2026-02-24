@@ -111,8 +111,8 @@ const TYPING_POTENTIAL_IMPORTS: &[&str] =
 #[cfg(feature = "doc_generator")]
 fn create_doc(module: &str) -> PyResult<String> {
     let mut main_doc = "".to_owned();
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| -> PyResult<String> {
+    Python::initialize();
+    Python::attach(|py| -> PyResult<String> {
         let python_module = PyModule::import(py, module)?;
         let dict = python_module.getattr("__dict__")?;
         let module_doc = python_module.getattr("__doc__")?.extract::<String>()?;
