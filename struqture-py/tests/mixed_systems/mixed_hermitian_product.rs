@@ -37,7 +37,7 @@ fn new_pp(
     pp_type
         .call1((spin_sub, boson_sub, fermion_sub))
         .unwrap()
-        .downcast::<HermitianMixedProductWrapper>()
+        .cast::<HermitianMixedProductWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -156,27 +156,47 @@ fn test_from_string() {
         let string_pp = pp
             .call_method1("from_string", (":S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
-        let comparison =
-            bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            string_pp
+                .call_method1("__eq__", (pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
-        let comparison =
-            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            nbr_spins
+                .call_method1("__eq__", ([1_u64],))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_bosonic_modes")
             .unwrap();
-        let comparison =
-            bool::extract(nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            nbr_spins
+                .call_method1("__eq__", ([2_u64],))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_fermionic_modes")
             .unwrap();
-        let comparison =
-            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            nbr_spins
+                .call_method1("__eq__", ([1_u64],))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("spins").unwrap();
@@ -184,24 +204,30 @@ fn test_from_string() {
         let spins = noise_type
             .call0()
             .unwrap()
-            .downcast::<PauliProductWrapper>()
+            .cast::<PauliProductWrapper>()
             .unwrap()
             .call_method1("z", ((0),))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (vec![spins],)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (vec![spins],))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("bosons").unwrap();
         let noise_type = py.get_type::<BosonProductWrapper>();
         let bosons = noise_type.call1(([0], [1])).unwrap();
-        let comparison = bool::extract_bound(
-            &comp_op
+        let comparison = bool::extract(
+            comp_op
                 .call_method1(
                     "__eq__",
-                    (vec![bosons.downcast::<BosonProductWrapper>().unwrap()],),
+                    (vec![bosons.cast::<BosonProductWrapper>().unwrap()],),
                 )
-                .unwrap(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -209,13 +235,14 @@ fn test_from_string() {
         let comp_op = string_pp.call_method0("fermions").unwrap();
         let noise_type = py.get_type::<FermionProductWrapper>();
         let fermions = noise_type.call1(([0], [0])).unwrap();
-        let comparison = bool::extract_bound(
-            &comp_op
+        let comparison = bool::extract(
+            comp_op
                 .call_method1(
                     "__eq__",
-                    (vec![fermions.downcast::<FermionProductWrapper>().unwrap()],),
+                    (vec![fermions.cast::<FermionProductWrapper>().unwrap()],),
                 )
-                .unwrap(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -245,16 +272,21 @@ fn test_hermitian_conj() {
             vec!["c0a0".into()],
         );
         let hermitian_conjugate_pp = pp.call_method0("hermitian_conjugate").unwrap();
-        let comparison = bool::extract_bound(
-            &hermitian_conjugate_pp
+        let comparison = bool::extract(
+            hermitian_conjugate_pp
                 .call_method1("__eq__", ((&pp, 1_f64),))
-                .unwrap(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
 
-        let is_natural_hermitian_pp =
-            bool::extract(pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
+        let is_natural_hermitian_pp = bool::extract(
+            pp.call_method0("is_natural_hermitian")
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(!is_natural_hermitian_pp);
     });
 }
@@ -282,10 +314,11 @@ fn test_create_valid_pair() {
                 ),
             )
             .unwrap();
-        let comparison = bool::extract_bound(
-            &valid
+        let comparison = bool::extract(
+            valid
                 .call_method1("__eq__", ((pp, Complex64::new(1.0, 2.0)),))
-                .unwrap(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -450,9 +483,13 @@ fn test_multiply() {
         }
 
         let multiplied = pp_0.call_method1("__mul__", (pp_1,)).unwrap();
-        let result =
-            bool::extract(multiplied.call_method1("__eq__", (comparison,)).unwrap())
-                .unwrap();
+        let result = bool::extract(
+            multiplied
+                .call_method1("__eq__", (comparison,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(result);
 
         let pp_error = new_pp(
@@ -482,11 +519,21 @@ fn test_copy_deepcopy() {
         let deepcopy_pp = pp.call_method1("__deepcopy__", ("",)).unwrap();
         // let copy_deepcopy_param = pp.clone();
 
-        let comparison_copy =
-            bool::extract(copy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
+        let comparison_copy = bool::extract(
+            copy_pp
+                .call_method1("__eq__", (&pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison_copy);
-        let comparison_deepcopy =
-            bool::extract(deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison_deepcopy = bool::extract(
+            deepcopy_pp
+                .call_method1("__eq__", (pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -531,8 +578,13 @@ fn test_to_from_bincode() {
         let serialised_error = serialised.call_method0("to_bincode");
         assert!(serialised_error.is_err());
 
-        let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            deserialised
+                .call_method1("__eq__", (pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison)
     });
 }
@@ -585,8 +637,13 @@ fn test_to_from_json() {
         let deserialised_error = deserialised.call_method0("from_json");
         assert!(deserialised_error.is_err());
 
-        let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            deserialised
+                .call_method1("__eq__", (pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison)
     });
 }
@@ -605,13 +662,13 @@ fn test_format_repr() {
         let format_repr = "S0Z:Bc0a1:Fc0a0:";
 
         let to_str = pp.call_method0("__str__").unwrap();
-        let str_op: String = String::extract(to_str).unwrap();
+        let str_op: String = String::extract(to_str.as_borrowed()).unwrap();
 
         let to_format = pp.call_method1("__format__", ("",)).unwrap();
-        let format_op: String = String::extract(to_format).unwrap();
+        let format_op: String = String::extract(to_format.as_borrowed()).unwrap();
 
         let to_repr = pp.call_method0("__repr__").unwrap();
-        let repr_op: String = String::extract(to_repr).unwrap();
+        let repr_op: String = String::extract(to_repr.as_borrowed()).unwrap();
 
         assert_eq!(str_op, format_repr);
         assert_eq!(format_op, format_repr);
@@ -637,24 +694,36 @@ fn test_richcmp() {
             vec!["c0a0".into()],
         );
 
-        let comparison =
-            bool::extract(pp_one.call_method1("__eq__", (&pp_two,)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            pp_one
+                .call_method1("__eq__", (&pp_two,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(!comparison);
-        let comparison = bool::extract_bound(
-            &pp_one
+        let comparison = bool::extract(
+            pp_one
                 .call_method1("__eq__", ("S0Z:Bc0a1:Fc0a0:",))
-                .unwrap(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
 
-        let comparison =
-            bool::extract(pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
+        let comparison = bool::extract(
+            pp_one
+                .call_method1("__ne__", (pp_two,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
-        let comparison = bool::extract_bound(
-            &pp_one
+        let comparison = bool::extract(
+            pp_one
                 .call_method1("__ne__", ("S0Z:Bc0a1:Fc0a0:",))
-                .unwrap(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(!comparison);
@@ -685,12 +754,21 @@ fn test_hash() {
         let hash_pp = pp.call_method0("__hash__").unwrap();
         let hash_other_pp = pp_other.call_method0("__hash__").unwrap();
 
-        let equal =
-            bool::extract(hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap()).unwrap();
+        let equal = bool::extract(
+            hash_pp
+                .call_method1("__eq__", (&hash_pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(equal);
-        let not_equal =
-            bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap())
-                .unwrap();
+        let not_equal = bool::extract(
+            hash_pp
+                .call_method1("__eq__", (hash_other_pp,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(!not_equal);
     });
 }
@@ -708,18 +786,22 @@ fn test_json_schema() {
         );
 
         let schema: String =
-            String::extract(new.call_method0("json_schema").unwrap()).unwrap();
+            String::extract(new.call_method0("json_schema").unwrap().as_borrowed()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(HermitianMixedProduct)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract(new.call_method0("current_version").unwrap()).unwrap();
+            String::extract(new.call_method0("current_version").unwrap().as_borrowed()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
-        let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap()).unwrap();
+        let min_version: String = String::extract(
+            new.call_method0("min_supported_version")
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         let rust_min_version = String::from("2.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -742,8 +824,12 @@ fn test_from_json_struqture_1() {
         let pp_from_1 = pp_2
             .call_method1("from_json_struqture_1", (json_string,))
             .unwrap();
-        let equal =
-            bool::extract(pp_2.call_method1("__eq__", (pp_from_1,)).unwrap()).unwrap();
+        let equal = bool::extract(
+            pp_2.call_method1("__eq__", (pp_from_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> =
@@ -763,11 +849,13 @@ fn test_pprint() {
             vec!["c14c18a27".to_string()],
             vec!["c14c18a27".to_string()],
         );
-        let pprint: String = String::extract(pp.call_method0("pprint").unwrap()).unwrap();
+        let pprint: String =
+            String::extract(pp.call_method0("pprint").unwrap().as_borrowed()).unwrap();
         assert_eq!(pprint, "z₁y₂₇ b₁₄†b₁₈†b₂₇ c₁₄†c₁₈†c₂₇ + h.c.");
 
         let pp = new_pp(py, vec![], vec!["c14c18a27".to_string()], vec![]);
-        let pprint: String = String::extract(pp.call_method0("pprint").unwrap()).unwrap();
+        let pprint: String =
+            String::extract(pp.call_method0("pprint").unwrap().as_borrowed()).unwrap();
         assert_eq!(pprint, "b₁₄†b₁₈†b₂₇  + h.c.");
 
         let pp = new_pp(
@@ -776,7 +864,8 @@ fn test_pprint() {
             vec!["".to_string(), "c14c18a27".to_string()],
             vec!["c14c18a27".to_string(), "c14c18a27".to_string()],
         );
-        let pprint: String = String::extract(pp.call_method0("pprint").unwrap()).unwrap();
+        let pprint: String =
+            String::extract(pp.call_method0("pprint").unwrap().as_borrowed()).unwrap();
         assert_eq!(
             pprint,
             "(z₁y₂₇⊗ I)⊗ (I⊗ b₁₄†b₁₈†b₂₇)⊗ (c₁₄†c₁₈†c₂₇⊗ c₁₄†c₁₈†c₂₇) + h.c."
