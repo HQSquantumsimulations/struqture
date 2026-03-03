@@ -1752,7 +1752,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-aws-lc-rs 1.16.0
+aws-lc-rs 1.16.1
 https://github.com/aws/aws-lc-rs
 by AWS-LibCrypto
 aws-lc-rs is a cryptographic library using AWS-LC for its cryptographic operations. This library strives to be API-compatible with the popular Rust library named ring.
@@ -1965,7 +1965,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 ====================================================
-aws-lc-sys 0.37.1
+aws-lc-sys 0.38.0
 https://github.com/aws/aws-lc-rs
 by AWS-LC
 AWS-LC is a general-purpose cryptographic library maintained by the AWS Cryptography team for AWS and their customers. It іs based on code from the Google BoringSSL project and the OpenSSL project.
@@ -12866,7 +12866,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-getrandom 0.4.1
+getrandom 0.4.2
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -20364,7 +20364,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-ipnet 2.11.0
+ipnet 2.12.0
 https://github.com/krisprice/ipnet
 by Kris Price <kris@krisprice.nz>
 Provides types and useful methods for working with IPv4 and IPv6 network addresses, commonly called IP prefixes. The new `IpNet`, `Ipv4Net`, and `Ipv6Net` types build on the existing `IpAddr`, `Ipv4Addr`, and `Ipv6Addr` types already provided in Rust's standard library and align to their design to stay consistent. The module also provides useful traits that extend `Ipv4Addr` and `Ipv6Addr` with methods for `Add`, `Sub`, `BitAnd`, and `BitOr` operations. The module only uses stable feature so it is guaranteed to compile using the stable toolchain.
@@ -22240,7 +22240,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-js-sys 0.3.89
+js-sys 0.3.91
 https://wasm-bindgen.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Bindings for all JS global objects and functions in all JS environments like
@@ -22483,7 +22483,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-jsonschema 0.42.1
+jsonschema 0.42.2
 https://github.com/Stranger6667/jsonschema
 by Dmitry Dygalo <dmitry@dygalo.dev>
 JSON schema validaton library
@@ -28851,7 +28851,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-pin-project-lite 0.2.16
+pin-project-lite 0.2.17
 https://github.com/taiki-e/pin-project-lite
 by 
 A lightweight version of pin-project written with declarative macros.
@@ -31994,6 +31994,13 @@ UEFI Reference Specification Protocol Constants and Definitions
 License: MIT OR Apache-2.0 OR LGPL-2.1-or-later
 
 ====================================================
+r-efi 6.0.0
+https://github.com/r-efi/r-efi/wiki
+by 
+UEFI Reference Specification Protocol Constants and Definitions
+License: MIT OR Apache-2.0 OR LGPL-2.1-or-later
+
+====================================================
 rand 0.10.0
 https://rust-random.github.io/book
 by The Rand Project Developers, The Rust Project Developers
@@ -33627,7 +33634,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-referencing 0.42.1
+referencing 0.42.2
 https://github.com/Stranger6667/jsonschema
 by Dmitry Dygalo <dmitry@dygalo.dev>
 An implementation-agnostic JSON reference resolution library for Rust.
@@ -34143,7 +34150,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-regex-syntax 0.8.9
+regex-syntax 0.8.10
 https://github.com/rust-lang/regex/tree/master/regex-syntax
 by The Rust Project Developers, Andrew Gallant <jamslam@gmail.com>
 A regular expression parser.
@@ -35145,7 +35152,7 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 
 ====================================================
-rustls 0.23.36
+rustls 0.23.37
 https://github.com/rustls/rustls
 by 
 Rustls is a modern TLS library written in Rust.
@@ -43180,7 +43187,7 @@ LICENSE-APACHE.md:
 
 
 ====================================================
-tokio 1.49.0
+tokio 1.50.0
 https://tokio.rs
 by Tokio Contributors <team@tokio.rs>
 An event-driven, non-blocking I/O platform for writing asynchronous I/O
@@ -46267,7 +46274,7 @@ WASIp3 API bindings for Rust
 License: Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 
 ====================================================
-wasm-bindgen 0.2.112
+wasm-bindgen 0.2.114
 https://wasm-bindgen.github.io/wasm-bindgen
 by The wasm-bindgen Developers
 Easy support for interacting between JS and Rust.
@@ -46509,7 +46516,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-futures 0.4.62
+wasm-bindgen-futures 0.4.64
 https://wasm-bindgen.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Bridging the gap between Rust Futures and JavaScript Promises
@@ -46750,7 +46757,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-macro 0.2.112
+wasm-bindgen-macro 0.2.114
 https://wasm-bindgen.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Definition of the `#[wasm_bindgen]` attribute, an internal dependency
@@ -46992,7 +46999,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-macro-support 0.2.112
+wasm-bindgen-macro-support 0.2.114
 https://wasm-bindgen.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Implementation APIs for the `#[wasm_bindgen]` attribute
@@ -47233,7 +47240,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-shared 0.2.112
+wasm-bindgen-shared 0.2.114
 https://wasm-bindgen.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Shared support between wasm-bindgen and wasm-bindgen cli, an internal
@@ -47499,7 +47506,7 @@ A simple event-driven library for parsing WebAssembly binary files.
 License: Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 
 ====================================================
-web-sys 0.3.89
+web-sys 0.3.91
 https://wasm-bindgen.github.io/wasm-bindgen/web-sys/index.html
 by The wasm-bindgen Developers
 Bindings for all Web APIs, a procedurally generated crate from WebIDL
@@ -57544,7 +57551,7 @@ ICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation a
 
 
 ====================================================
-zerocopy 0.8.39
+zerocopy 0.8.40
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>, Jack Wrenn <jswrenn@amazon.com>
 Zerocopy makes zero-cost memory manipulation effortless. We write "unsafe" so you don't have to.
@@ -57815,7 +57822,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-zerocopy-derive 0.8.39
+zerocopy-derive 0.8.40
 https://github.com/google/zerocopy
 by Joshua Liebow-Feeser <joshlf@google.com>, Jack Wrenn <jswrenn@amazon.com>
 Custom derive for traits from the zerocopy crate
