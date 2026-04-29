@@ -253,7 +253,7 @@ impl PlusMinusLindbladNoiseOperator {
         value: CalculatorComplex,
     ) -> Result<(), StruqtureError> {
         for ((decoherence_product_left, value_left), (decoherence_product_right, value_right)) in
-            left.iter().cartesian_product(right.into_iter())
+            left.iter().cartesian_product(right)
         {
             let value_complex = value_right.conj() * value_left;
             self.add_operator_product(

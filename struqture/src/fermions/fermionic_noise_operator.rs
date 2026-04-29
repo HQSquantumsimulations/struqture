@@ -290,7 +290,7 @@ impl FermionLindbladNoiseOperator {
         }
 
         for ((fermion_product_left, value_left), (fermion_product_right, value_right)) in
-            left.iter().cartesian_product(right.into_iter())
+            left.iter().cartesian_product(right)
         {
             if !(*fermion_product_left == FermionProduct::new([], [])?
                 || *fermion_product_right == FermionProduct::new([], [])?)
