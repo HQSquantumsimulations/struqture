@@ -428,7 +428,7 @@ impl Mul<BosonProduct> for BosonProduct {
             commute_creator_annihilator(&self.annihilators, &rhs.creators);
         for (new_creators, mut new_annihilators) in commuted_creators_annihilators {
             let mut tmp_creators = self.creators.clone();
-            tmp_creators.extend(new_creators.into_iter());
+            tmp_creators.extend(new_creators);
             new_annihilators.extend(rhs.annihilators().copied());
             let (tmp_boson_product, _) = BosonProduct::create_valid_pair(
                 tmp_creators,

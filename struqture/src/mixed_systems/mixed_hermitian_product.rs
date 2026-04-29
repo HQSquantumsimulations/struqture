@@ -666,12 +666,7 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
                         }
                     }
                 }
-                for (left, right) in lhs
-                    .fermions
-                    .clone()
-                    .into_iter()
-                    .zip(rhs.fermions)
-                {
+                for (left, right) in lhs.fermions.clone().into_iter().zip(rhs.fermions) {
                     let fermion_multiplication = left * right;
                     if !tmp_fermions.is_empty() {
                         let mut internal_tmp_fermions: Vec<Vec<(FermionProduct, f64)>> = Vec::new();
@@ -782,23 +777,13 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
             let mut tmp_bosons: Vec<Vec<BosonProduct>> = Vec::with_capacity(lhs.bosons().len());
             let mut tmp_fermions: Vec<Vec<(FermionProduct, f64)>> =
                 Vec::with_capacity(lhs.fermions().len());
-            for (left, right) in lhs
-                .clone()
-                .spins
-                .into_iter()
-                .zip(rhs.clone().spins.into_iter())
-            {
+            for (left, right) in lhs.clone().spins.into_iter().zip(rhs.clone().spins) {
                 let (val, coeff) = left * right;
                 tmp_spins.push(val);
                 coefficient *= coeff;
             }
             // iterate through boson subsystems and multiply subsystem
-            for (left, right) in lhs
-                .clone()
-                .bosons
-                .into_iter()
-                .zip(rhs.clone().bosons.into_iter())
-            {
+            for (left, right) in lhs.clone().bosons.into_iter().zip(rhs.clone().bosons) {
                 let boson_multiplication = left.clone() * right.clone();
                 if !tmp_bosons.is_empty() {
                     let mut internal_tmp_bosons: Vec<Vec<BosonProduct>> = Vec::new();
@@ -816,12 +801,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
                     }
                 }
             }
-            for (left, right) in lhs
-                .fermions
-                .clone()
-                .into_iter()
-                .zip(rhs.clone().fermions.into_iter())
-            {
+            for (left, right) in lhs.fermions.clone().into_iter().zip(rhs.clone().fermions) {
                 let fermion_multiplication = left * right;
                 if !tmp_fermions.is_empty() {
                     let mut internal_tmp_fermions: Vec<Vec<(FermionProduct, f64)>> = Vec::new();
