@@ -19,8 +19,9 @@ jobs:
       # Run tests also on python 3.14
       python_3_14: false
       rust_package_name: "struqture"
-      rust_doc_package_name: "struqture@2.5.0"
+      rust_doc_package_name: "struqture@2.5.1"
       features: "json_schema struqture_1_export struqture_1_import"
+      python_3_14: true
 
   build_tests:
     uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_tests_rust_pyo3.yml@main
@@ -33,3 +34,4 @@ jobs:
       python_3_14: false
       py_interface_folder: "struqture-py"
       has_python_tests: true
+      python_3_14: true
