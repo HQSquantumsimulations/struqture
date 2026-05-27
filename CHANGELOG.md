@@ -4,6 +4,9 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.5.1
+
+* Added deployment of Python 3.14.
 * Updated dependencies to fix `aws-lc-sys` security vulnerability.
 
 ## 2.5.0
