@@ -17,7 +17,6 @@ jobs:
       # Run tests also on macos runners
       macos: true
       # Run tests also on python 3.14
-      python_3_14: false
       rust_package_name: "struqture"
       rust_doc_package_name: "struqture@2.5.1"
       features: "json_schema struqture_1_export struqture_1_import"
@@ -31,7 +30,6 @@ jobs:
       # Don't run tests on macos runners
       macos: true
       # Run tests also on python 3.14
-      python_3_14: false
       py_interface_folder: "struqture-py"
       has_python_tests: true
       python_3_14: true
