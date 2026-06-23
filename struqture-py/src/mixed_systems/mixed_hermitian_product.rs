@@ -77,7 +77,11 @@ use struqture_py_macros::product_wrapper;
 ///     npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
 ///     npt.assert_equal(mp.bosons(), [mp_bosons])
 ///     
-#[pyclass(from_py_object, name = "HermitianMixedProduct", module = "struqture_py.mixed_systems")]
+#[pyclass(
+    from_py_object,
+    name = "HermitianMixedProduct",
+    module = "struqture_py.mixed_systems"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct HermitianMixedProductWrapper {
     // Internal storage of [struqture::mixed_systems::HermitianMixedProduct]

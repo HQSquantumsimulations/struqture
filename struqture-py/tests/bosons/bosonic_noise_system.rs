@@ -105,11 +105,21 @@ fn test_number_modes_current() {
         let number_system = system.call_method0("number_modes").unwrap();
         let current_system = system.call_method0("current_number_modes").unwrap();
 
-        let comparison =
-            bool::extract(number_system.call_method1("__eq__", (1_u64,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            number_system
+                .call_method1("__eq__", (1_u64,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
-        let comparison =
-            bool::extract(current_system.call_method1("__eq__", (1_u64,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            current_system
+                .call_method1("__eq__", (1_u64,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -122,15 +132,25 @@ fn test_empty_clone() {
         let number_modes: Option<usize> = None;
         let system = new_noisesystem(py);
         let none_system = system.call_method1("empty_clone", (number_modes,)).unwrap();
-        let comparison =
-            bool::extract(none_system.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            none_system
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let number_modes: Option<usize> = Some(3);
         let system = new_noisesystem(py);
         let some_system = system.call_method1("empty_clone", (number_modes,)).unwrap();
-        let comparison =
-            bool::extract(some_system.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            some_system
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -143,9 +163,7 @@ fn boson_system_test_add_operator_product_remove() {
         let new_system = py.get_type::<BosonLindbladNoiseSystemWrapper>();
         let number_modes: Option<usize> = Some(4);
         let binding = new_system.call1((number_modes,)).unwrap();
-        let system = binding
-            .cast::<BosonLindbladNoiseSystemWrapper>()
-            .unwrap();
+        let system = binding.cast::<BosonLindbladNoiseSystemWrapper>().unwrap();
         system
             .call_method1("add_operator_product", (("c0a0", "c0a0"), 0.1))
             .unwrap();
@@ -158,29 +176,54 @@ fn boson_system_test_add_operator_product_remove() {
 
         // test access at index 0
         let comp_op = system.call_method1("get", (("c0a0", "c0a0"),)).unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         system.call_method1("remove", (("c0a0", "c0a0"),)).unwrap();
         let comp_op = system.call_method1("get", (("c0a0", "c0a0"),)).unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.0,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system.call_method1("get", (("c0a0", "c0a1"),)).unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.2,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system.call_method1("get", (("c0a0", "c3"),)).unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.05,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system.call_method1("get", (("c0a0", "c2"),)).unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.0,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Get error
@@ -213,10 +256,16 @@ fn test_keys_values() {
         let system = new_noisesystem(py);
 
         let len_system = system.call_method0("__len__").unwrap();
-        let comparison =
-            bool::extract(len_system.call_method1("__eq__", (0_u64,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            len_system
+                .call_method1("__eq__", (0_u64,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
-        let empty_system = bool::extract(system.call_method0("is_empty").unwrap().as_borrowed()).unwrap();
+        let empty_system =
+            bool::extract(system.call_method0("is_empty").unwrap().as_borrowed()).unwrap();
         assert!(empty_system);
 
         system
@@ -227,22 +276,33 @@ fn test_keys_values() {
         let comparison = bool::extract(
             keys_system
                 .call_method1("__eq__", (vec![("c0a0", "c0a0")],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
 
         let values_system = system.call_method0("values").unwrap();
-        let comparison =
-            bool::extract(values_system.call_method1("__eq__", (vec![0.1],)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison = bool::extract(
+            values_system
+                .call_method1("__eq__", (vec![0.1],))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let len_system = system.call_method0("__len__").unwrap();
-        let comparison =
-            bool::extract(len_system.call_method1("__eq__", (1_u64,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            len_system
+                .call_method1("__eq__", (1_u64,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
-        let empty_system = bool::extract(system.call_method0("is_empty").unwrap().as_borrowed()).unwrap();
+        let empty_system =
+            bool::extract(system.call_method0("is_empty").unwrap().as_borrowed()).unwrap();
         assert!(!empty_system);
     });
 }
@@ -361,7 +421,8 @@ fn test_truncate(re: f64, im: f64) {
         let comparison = bool::extract(
             comparison_system1
                 .call_method1("__eq__", (test_system1,))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -370,7 +431,8 @@ fn test_truncate(re: f64, im: f64) {
         let comparison = bool::extract(
             comparison_system2
                 .call_method1("__eq__", (test_system2,))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -412,7 +474,8 @@ fn test_separate() {
         let equal = bool::extract(
             result
                 .call_method1("__eq__", ((pmp_sys, pmp_rem),))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(equal);
@@ -434,8 +497,13 @@ fn test_neg() {
             .unwrap();
 
         let negated = system_0.call_method0("__neg__").unwrap();
-        let comparison =
-            bool::extract(negated.call_method1("__eq__", (system_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            negated
+                .call_method1("__eq__", (system_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -462,8 +530,13 @@ fn test_add() {
             .unwrap();
 
         let added = system_0.call_method1("__add__", (system_1,)).unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -490,8 +563,13 @@ fn test_sub() {
             .unwrap();
 
         let added = system_0.call_method1("__sub__", (system_1,)).unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -512,8 +590,13 @@ fn test_mul_cf() {
             .unwrap();
 
         let added = system_0.call_method1("__mul__", (2.0,)).unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -544,8 +627,13 @@ fn test_mul_cc() {
                 },),
             )
             .unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -569,12 +657,21 @@ fn test_copy_deepcopy() {
         let copy_system = system.call_method0("__copy__").unwrap();
         let deepcopy_system = system.call_method1("__deepcopy__", ("",)).unwrap();
 
-        let comparison_copy =
-            bool::extract(copy_system.call_method1("__eq__", (&system,)).unwrap().as_borrowed()).unwrap();
+        let comparison_copy = bool::extract(
+            copy_system
+                .call_method1("__eq__", (&system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison_copy);
-        let comparison_deepcopy =
-            bool::extract(deepcopy_system.call_method1("__eq__", (system,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison_deepcopy = bool::extract(
+            deepcopy_system
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -619,8 +716,13 @@ fn test_to_from_bincode() {
         let serialised_error = serialised.call_method0("to_bincode");
         assert!(serialised_error.is_err());
 
-        let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            deserialised
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison)
     });
 }
@@ -669,8 +771,13 @@ fn test_to_from_json() {
         let deserialised_error = deserialised.call_method0("from_json");
         assert!(deserialised_error.is_err());
 
-        let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            deserialised
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison)
     });
 }
@@ -745,7 +852,8 @@ fn test_keys_noise() {
         let comparison = bool::extract(
             keys_system
                 .call_method1("__eq__", (vec![("c0a0".to_string(), "c0a0".to_string())],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -778,20 +886,38 @@ fn test_richcmp() {
             )
             .unwrap();
 
-        let comparison =
-            bool::extract(system_one.call_method1("__eq__", (&system_two,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison = bool::extract(
+            system_one
+                .call_method1("__eq__", (&system_two,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(!comparison);
-        let comparison =
-            bool::extract(system_one.call_method1("__eq__", ("c0a0",)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            system_one
+                .call_method1("__eq__", ("c0a0",))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(!comparison);
 
-        let comparison =
-            bool::extract(system_one.call_method1("__ne__", (system_two,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison = bool::extract(
+            system_one
+                .call_method1("__ne__", (system_two,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
-        let comparison =
-            bool::extract(system_one.call_method1("__ne__", ("c0a0",)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            system_one
+                .call_method1("__ne__", ("c0a0",))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let comparison = system_one.call_method1("__ge__", ("c0a0",));
@@ -819,8 +945,12 @@ fn test_json_schema() {
 
         new.call_method1("add_operator_product", (("c0a0", "c0a0"), 1.0))
             .unwrap();
-        let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap().as_borrowed()).unwrap();
+        let min_version: String = String::extract(
+            new.call_method0("min_supported_version")
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         let rust_min_version = String::from("1.0.0");
         assert_eq!(min_version, rust_min_version);
     });

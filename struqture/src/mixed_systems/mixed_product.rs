@@ -625,12 +625,7 @@ impl Mul<HermitianMixedProduct> for MixedProduct {
                     }
                 }
             }
-            for (left, right) in self
-                .fermions
-                .clone()
-                .into_iter()
-                .zip(rhs.fermions)
-            {
+            for (left, right) in self.fermions.clone().into_iter().zip(rhs.fermions) {
                 let fermion_multiplication = left * right;
                 if !tmp_fermions.is_empty() {
                     let mut internal_tmp_fermions: Vec<Vec<(FermionProduct, f64)>> = Vec::new();

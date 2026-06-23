@@ -79,7 +79,11 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///     npt.assert_equal(mp.spins(), [mp_spins_system, mp_spins_bath])
 ///     npt.assert_equal(mp.bosons(), [mp_bosons])
 ///     
-#[pyclass(from_py_object, name = "MixedPlusMinusProduct", module = "struqture_py.mixed_systems")]
+#[pyclass(
+    from_py_object,
+    name = "MixedPlusMinusProduct",
+    module = "struqture_py.mixed_systems"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct MixedPlusMinusProductWrapper {
     // Internal storage of [struqture::mixed_systems::MixedPlusMinusProduct]

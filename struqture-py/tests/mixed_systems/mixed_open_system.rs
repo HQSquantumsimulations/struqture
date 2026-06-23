@@ -86,14 +86,16 @@ fn test_number_modes_current() {
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             current_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -103,14 +105,16 @@ fn test_number_modes_current() {
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![2_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             current_system
                 .call_method1("__eq__", (vec![2_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -122,14 +126,16 @@ fn test_number_modes_current() {
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             current_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -146,8 +152,13 @@ fn test_empty_clone() {
         let number_fermions: Vec<Option<usize>> = vec![None];
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         let none_system = system.call_method0("empty_clone").unwrap();
-        let comparison =
-            bool::extract(none_system.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            none_system
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         let number_spins: Vec<Option<usize>> = vec![None];
@@ -155,8 +166,13 @@ fn test_empty_clone() {
         let number_fermions: Vec<Option<usize>> = vec![None];
         let system = new_system(py, number_spins, number_bosons, number_fermions);
         let some_system = system.call_method0("empty_clone").unwrap();
-        let comparison =
-            bool::extract(some_system.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            some_system
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -171,9 +187,7 @@ fn mixed_system_test_add_operator_product_remove_system() {
         let binding = new_system
             .call1((vec![number_modes], vec![number_modes], vec![number_modes]))
             .unwrap();
-        let system = binding
-            .cast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap();
+        let system = binding.cast::<MixedLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1("system_add_operator_product", ("S0Z:Bc0a1:Fc0a0:", 0.1))
             .unwrap();
@@ -188,30 +202,50 @@ fn mixed_system_test_add_operator_product_remove_system() {
         let comp_op = system
             .call_method1("system_get", ("S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system
             .call_method1("system_get", ("S0Z:Bc0a1:Fc0a2:",))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.2,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system
             .call_method1("system_get", ("S0Z:Bc3a3:Fc0a2:",))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.05,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system
             .call_method1("system_get", ("S0Z:Bc2a2:Fc0a1:",))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.0,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Get error
@@ -250,9 +284,7 @@ fn mixed_system_test_add_operator_product_remove_noise() {
         let binding = new_system
             .call1((vec![number_modes], vec![number_modes], vec![number_modes]))
             .unwrap();
-        let system = binding
-            .cast::<MixedLindbladOpenSystemWrapper>()
-            .unwrap();
+        let system = binding.cast::<MixedLindbladOpenSystemWrapper>().unwrap();
         system
             .call_method1(
                 "noise_add_operator_product",
@@ -276,30 +308,50 @@ fn mixed_system_test_add_operator_product_remove_noise() {
         let comp_op = system
             .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"),))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         // test access at index 1
         let comp_op = system
             .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a2:"),))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.2,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.2,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         // test access at index 3
         let comp_op = system
             .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc3a3:Fc0a2:"),))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.05,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.05,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Get zero
         let comp_op = system
             .call_method1("noise_get", (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc2a2:Fc0a1:"),))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (0.0,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (0.0,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Get error
@@ -363,8 +415,13 @@ fn test_neg() {
             .unwrap();
 
         let negated = system_0.call_method0("__neg__").unwrap();
-        let comparison =
-            bool::extract(negated.call_method1("__eq__", (system_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            negated
+                .call_method1("__eq__", (system_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -412,8 +469,13 @@ fn test_add() {
             .unwrap();
 
         let added = system_0.call_method1("__add__", (system_1,)).unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -461,8 +523,13 @@ fn test_sub() {
             .unwrap();
 
         let added = system_0.call_method1("__sub__", (system_1,)).unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -495,8 +562,13 @@ fn test_mul_cf() {
             .unwrap();
 
         let added = system_0.call_method1("__mul__", (2.0,)).unwrap();
-        let comparison =
-            bool::extract(added.call_method1("__eq__", (system_0_1,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            added
+                .call_method1("__eq__", (system_0_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     });
 }
@@ -546,14 +618,16 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             current_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -563,14 +637,16 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![2_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             current_system
                 .call_method1("__eq__", (vec![2_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -582,14 +658,16 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(
             number_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             current_system
                 .call_method1("__eq__", (vec![1_u64],))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -612,8 +690,13 @@ fn test_default_partialeq_debug_clone() {
                 ),
             )
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (mixed_system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (mixed_system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Noise
@@ -631,8 +714,13 @@ fn test_default_partialeq_debug_clone() {
                 ),
             )
             .unwrap();
-        let comparison =
-            bool::extract(comp_op.call_method1("__eq__", (noise,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            comp_op
+                .call_method1("__eq__", (noise,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
 
         // Ungroup + group
@@ -672,7 +760,8 @@ fn test_default_partialeq_debug_clone() {
         let comparison = bool::extract(
             comp_op_ungroup
                 .call_method1("__eq__", ((&system, &noise),))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -682,9 +771,13 @@ fn test_default_partialeq_debug_clone() {
         let comp_op_group = new_system(py, number_spins, number_bosons, number_fermions)
             .call_method1("group", (system, noise))
             .unwrap();
-        let comparison =
-            bool::extract(comp_op_group.call_method1("__eq__", (new_sys,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison = bool::extract(
+            comp_op_group
+                .call_method1("__eq__", (new_sys,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
     })
 }
@@ -736,7 +829,8 @@ fn test_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -750,7 +844,8 @@ fn test_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -764,7 +859,8 @@ fn test_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -779,7 +875,8 @@ fn test_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -848,7 +945,8 @@ fn test_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -862,7 +960,8 @@ fn test_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -876,7 +975,8 @@ fn test_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -891,7 +991,8 @@ fn test_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -982,7 +1083,8 @@ fn test_try_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -996,7 +1098,8 @@ fn test_try_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1010,7 +1113,8 @@ fn test_try_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1025,7 +1129,8 @@ fn test_try_set_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1090,7 +1195,8 @@ fn test_try_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1104,7 +1210,8 @@ fn test_try_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1118,7 +1225,8 @@ fn test_try_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1133,7 +1241,8 @@ fn test_try_set_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1214,7 +1323,8 @@ fn test_add_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1228,7 +1338,8 @@ fn test_add_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1242,7 +1353,8 @@ fn test_add_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1257,7 +1369,8 @@ fn test_add_pauli_get_pauli() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1333,7 +1446,8 @@ fn test_add_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.1)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1347,7 +1461,8 @@ fn test_add_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.2)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1361,7 +1476,8 @@ fn test_add_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.05)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1376,7 +1492,8 @@ fn test_add_noise_get_noise() {
                     "__eq__",
                     (convert_cf_to_pyobject(py, CalculatorFloat::from(0.0)),),
                 )
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1537,7 +1654,8 @@ fn test_truncate(re: f64, im: f64) {
         let comparison = bool::extract(
             comparison_system1
                 .call_method1("__eq__", (test_system1,))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1546,7 +1664,8 @@ fn test_truncate(re: f64, im: f64) {
         let comparison = bool::extract(
             comparison_system2
                 .call_method1("__eq__", (test_system2,))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1585,12 +1704,21 @@ fn test_copy_deepcopy() {
         let deepcopy_system = system.call_method1("__deepcopy__", ("",)).unwrap();
         // let copy_deepcopy_param: &PyAny = system.clone();
 
-        let comparison_copy =
-            bool::extract(copy_system.call_method1("__eq__", (&system,)).unwrap().as_borrowed()).unwrap();
+        let comparison_copy = bool::extract(
+            copy_system
+                .call_method1("__eq__", (&system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison_copy);
-        let comparison_deepcopy =
-            bool::extract(deepcopy_system.call_method1("__eq__", (system,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison_deepcopy = bool::extract(
+            deepcopy_system
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -1650,8 +1778,13 @@ fn test_to_from_bincode() {
         let serialised_error = serialised.call_method0("to_bincode");
         assert!(serialised_error.is_err());
 
-        let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            deserialised
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison)
     });
 }
@@ -1718,8 +1851,13 @@ fn test_to_from_json() {
         let deserialised_error = deserialised.call_method0("from_json");
         assert!(deserialised_error.is_err());
 
-        let comparison =
-            bool::extract(deserialised.call_method1("__eq__", (system,)).unwrap().as_borrowed()).unwrap();
+        let comparison = bool::extract(
+            deserialised
+                .call_method1("__eq__", (system,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison)
     });
 }
@@ -1854,26 +1992,36 @@ fn test_richcmp() {
             )
             .unwrap();
 
-        let comparison =
-            bool::extract(system_one.call_method1("__eq__", (&system_two,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison = bool::extract(
+            system_one
+                .call_method1("__eq__", (&system_two,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(!comparison);
         let comparison = bool::extract(
             system_one
                 .call_method1("__eq__", ("S0Z:Bc0a1:Fc0a0:",))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(!comparison);
 
-        let comparison =
-            bool::extract(system_one.call_method1("__ne__", (system_two,)).unwrap().as_borrowed())
-                .unwrap();
+        let comparison = bool::extract(
+            system_one
+                .call_method1("__ne__", (system_two,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(comparison);
         let comparison = bool::extract(
             system_one
                 .call_method1("__ne__", ("S0Z:Bc0a1:Fc0a0:",))
-                .unwrap().as_borrowed(),
+                .unwrap()
+                .as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -1906,8 +2054,12 @@ fn test_json_schema() {
             (("S0Z:Bc0a1:Fc0a0:", "S0Z:Bc0a1:Fc0a0:"), 1.0),
         )
         .unwrap();
-        let min_version: String =
-            String::extract(new.call_method0("min_supported_version").unwrap().as_borrowed()).unwrap();
+        let min_version: String = String::extract(
+            new.call_method0("min_supported_version")
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         let rust_min_version = String::from("1.0.0");
         assert_eq!(min_version, rust_min_version);
     });
@@ -1933,8 +2085,13 @@ fn test_from_json_struqture_1() {
         let sys_from_1 = sys_2
             .call_method1("from_json_struqture_2", (json_string,))
             .unwrap();
-        let equal =
-            bool::extract(sys_2.call_method1("__eq__", (sys_from_1,)).unwrap().as_borrowed()).unwrap();
+        let equal = bool::extract(
+            sys_2
+                .call_method1("__eq__", (sys_from_1,))
+                .unwrap()
+                .as_borrowed(),
+        )
+        .unwrap();
         assert!(equal);
 
         let error_json_string: Bound<pyo3::types::PyString> = pyo3::types::PyString::new(py, "{\"system\":{\"items\":[[\"S0X:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedHamiltonian\",\"min_version\":[30,0,0],\"version\":\"2.0.0-alpha.9\"}},\"noise\":{\"items\":[[\"S0Z:Bc1a1:Fc0a0:\",\"S0Z:Bc1a1:Fc0a0:\",1.0,0.0]],\"n_spins\":1,\"n_bosons\":1,\"n_fermions\":1,\"serialisation_meta\":{\"type_name\":\"MixedLindbladNoiseOperator\",\"min_version\":[2,0,0],\"version\":\"2.0.0-alpha.9\"}}}");

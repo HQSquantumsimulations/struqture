@@ -54,7 +54,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     dimension = 4**slns.number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(from_py_object, name = "SpinLindbladOpenSystem", module = "struqture_py.spins")]
+#[pyclass(
+    from_py_object,
+    name = "SpinLindbladOpenSystem",
+    module = "struqture_py.spins"
+)]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct SpinLindbladOpenSystemWrapper {
     /// Internal storage of [struqture::spins::SpinLindbladOpenSystem]
