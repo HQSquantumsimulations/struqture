@@ -18,7 +18,7 @@ jobs:
       macos: true
       # Run tests also on python 3.14
       rust_package_name: "struqture"
-      rust_doc_package_name: "struqture@2.5.1"
+      rust_doc_package_name: "struqture@2.6.0"
       features: "json_schema struqture_1_export struqture_1_import"
       python_3_14: true
 
