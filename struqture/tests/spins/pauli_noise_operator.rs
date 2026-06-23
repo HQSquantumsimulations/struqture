@@ -166,28 +166,28 @@ fn internal_map_add_noise_from_full_operators() {
             DecoherenceProduct::new().x(0),
             DecoherenceProduct::new().x(0)
         )),
-        &CalculatorComplex::from()
+        &CalculatorComplex::from(2.5)
     );
     assert_eq!(
         slno.get(&(
             DecoherenceProduct::new().x(0),
             DecoherenceProduct::new().iy(0)
         )),
-        &CalculatorComplex::from(-)
+        &CalculatorComplex::from(-2.5)
     );
     assert_eq!(
         slno.get(&(
             DecoherenceProduct::new().iy(0),
             DecoherenceProduct::new().x(0)
         )),
-        &CalculatorComplex::from()
+        &CalculatorComplex::from(2.5)
     );
     assert_eq!(
         slno.get(&(
             DecoherenceProduct::new().iy(0),
             DecoherenceProduct::new().iy(0)
         )),
-        &CalculatorComplex::from(-)
+        &CalculatorComplex::from(-2.5)
     );
     assert_eq!(
         slno.get(&(
