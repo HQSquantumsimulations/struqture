@@ -54,7 +54,11 @@ use struqture_py_macros::{mappings, product_wrapper};
 ///     npt.assert_equal(fp.creators(), [0])
 ///     npt.assert_equal(fp.annihilators(), [0])
 ///     
-#[pyclass(name = "HermitianFermionProduct", module = "struqture_py.fermions")]
+#[pyclass(
+    from_py_object,
+    name = "HermitianFermionProduct",
+    module = "struqture_py.fermions"
+)]
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct HermitianFermionProductWrapper {
     pub internal: HermitianFermionProduct,

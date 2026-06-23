@@ -56,7 +56,7 @@ pub fn noisywrapper(
                 ///     ValueError: Left-hand product could not be constructed from key.
                 ///     ValueError: Right-hand product could not be constructed from key.
                 pub fn get(&self, key: (Py<PyAny>, Py<PyAny>)) -> PyResult<CalculatorComplexWrapper> {
-                    Python::with_gil(|py| -> PyResult<CalculatorComplexWrapper> {
+                    Python::attach(|py| -> PyResult<CalculatorComplexWrapper> {
                         let (converted_left, converted_right) = (
                             #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
                                 PyValueError::new_err(format!(
@@ -96,7 +96,7 @@ pub fn noisywrapper(
                     &mut self,
                     key: (Py<PyAny>, Py<PyAny>),
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
+                    Python::attach(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
                         let (converted_left, converted_right) = (
                             #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
                                 PyValueError::new_err(format!(
@@ -135,7 +135,7 @@ pub fn noisywrapper(
                     key: (Py<PyAny>, Py<PyAny>),
                     value: &Bound<PyAny>,
                 ) -> PyResult<Option<CalculatorComplexWrapper>> {
-                    Python::with_gil(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
+                    Python::attach(|py| -> PyResult<Option<CalculatorComplexWrapper>> {
                         let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
                             .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
                         let (converted_left, converted_right) = (
@@ -182,7 +182,7 @@ pub fn noisywrapper(
                 ) -> PyResult<()> {
                     let value = qoqo_calculator_pyo3::convert_into_calculator_complex(value)
                         .map_err(|_| PyTypeError::new_err("Value is not CalculatorComplex"))?;
-                    Python::with_gil(|py| -> PyResult<()> {
+                    Python::attach(|py| -> PyResult<()> {
                         let (converted_left, converted_right) = (
                             #index_type::from_pyany(key.0.bind(py)).map_err(|err| {
                                 PyValueError::new_err(format!(
@@ -662,7 +662,7 @@ pub fn noisywrapper(
                 key: (Py<PyAny>, Py<PyAny>),
                 value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
-                Python::with_gil(|py| -> PyResult<#ident> {
+                Python::attach(|py| -> PyResult<#ident> {
                     let dp_left = #index_type::from_pyany(key.0.bind(py))?;
                     let dp_right = #index_type::from_pyany(key.1.bind(py))?;
                     let value = CalculatorComplexWrapper::from_pyany(value)
@@ -713,7 +713,7 @@ pub fn noisywrapper(
                 &mut self,
                 key: (Py<PyAny>, Py<PyAny>),
             ) -> PyResult<CalculatorComplexWrapper> {
-                Python::with_gil(|py| -> PyResult<CalculatorComplexWrapper> {
+                Python::attach(|py| -> PyResult<CalculatorComplexWrapper> {
                     let dp_left = #index_type::from_pyany(key.0.bind(py))?;
                     let dp_right = #index_type::from_pyany(key.1.bind(py))?;
                     let get_value = self.internal.noise().get(&(dp_left, dp_right));
@@ -770,7 +770,7 @@ pub fn noisywrapper(
                 key: (Py<PyAny>, Py<PyAny>),
                 value: &Bound<PyAny>,
             ) -> PyResult<#ident> {
-                Python::with_gil(|py| -> PyResult<#ident> {
+                Python::attach(|py| -> PyResult<#ident> {
                     let dp_left = #index_type::from_pyany(key.0.bind(py))?;
                     let dp_right = #index_type::from_pyany(key.1.bind(py))?;
                     let value = CalculatorComplexWrapper::from_pyany(value)
@@ -865,8 +865,8 @@ pub fn noisywrapper(
             /// Fallible conversion of generic python object..
             pub fn from_pyany( input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
-                    if let Ok(try_downcast) = input.extract::<#ident>() {
-                        return Ok(try_downcast.internal);
+                    if let Ok(try_cast) = input.extract::<#ident>() {
+                        return Ok(try_cast.internal);
                     } else {
                     let get_bytes = input.call_method0("to_bincode").map_err(|_| {
                         PyTypeError::new_err("Serialisation failed".to_string())
@@ -955,7 +955,7 @@ pub fn noisywrapper(
                 let serialized = bincode::serde::encode_to_vec(&self.internal, config).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
-                let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
+                let b: Py<PyByteArray> = Python::attach(|py| -> Py<PyByteArray> {
                     PyByteArray::new(py, &serialized[..]).into()
                 });
                 Ok(b)

@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 1.14.0
+
+* Updated to pyo3 0.29.0, itertools 0.15, nalgebra 0.35, and jsonschema 0.46.
+
 ## 1.13.4
 
 * Added tilde `~` to the struqture-py-macros dependency of struqture-py.

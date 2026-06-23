@@ -58,7 +58,11 @@ use struqture::{MinSupportedVersion, STRUQTURE_VERSION};
 ///     npt.assert_equal(ssystem.number_spins(), [2])
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///
-#[pyclass(name = "MixedPlusMinusOperator", module = "struqture_py.mixed_systems")]
+#[pyclass(
+    from_py_object,
+    name = "MixedPlusMinusOperator",
+    module = "struqture_py.mixed_systems"
+)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct MixedPlusMinusOperatorWrapper {
     /// Internal storage of [struqture::mixed_systems::MixedPlusMinusOperator]

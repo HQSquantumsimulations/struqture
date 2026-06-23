@@ -331,9 +331,9 @@ pub fn productwrapper(
             /// Fallible conversion of generic python object..
             pub fn from_pyany( input: &Bound<PyAny>
             ) -> PyResult<#struct_ident> {
-                Python::with_gil(|py| -> PyResult<#struct_ident> {
-                if let Ok(try_downcast) = input.extract::<#ident>() {
-                    Ok(try_downcast.internal)
+                Python::attach(|py| -> PyResult<#struct_ident> {
+                if let Ok(try_cast) = input.extract::<#ident>() {
+                    Ok(try_cast.internal)
                 }
                 else {
                 let get_str = input.call_method0("__str__").map_err(|_| {
@@ -425,7 +425,7 @@ pub fn productwrapper(
                 let serialized = bincode::serde::encode_to_vec(&self.internal, config).map_err(|_| {
                     PyValueError::new_err("Cannot serialize object to bytes")
                 })?;
-                let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
+                let b: Py<PyByteArray> = Python::attach(|py| -> Py<PyByteArray> {
                     PyByteArray::new(py, &serialized[..]).into()
                 });
                 Ok(b)

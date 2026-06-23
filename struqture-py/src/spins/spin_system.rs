@@ -63,7 +63,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     dimension = 4**ssystem.number_spins()
 ///     matrix = sp.coo_matrix(ssystem.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinSystem", module = "struqture_py.spins")]
+#[pyclass(from_py_object, name = "SpinSystem", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct SpinSystemWrapper {
     /// Internal storage of [struqture::spins::SpinSystem]

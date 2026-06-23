@@ -52,7 +52,11 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.system().get(dp), CalculatorComplex(2))
 ///
-#[pyclass(name = "FermionLindbladOpenSystem", module = "struqture_py.fermions")]
+#[pyclass(
+    from_py_object,
+    name = "FermionLindbladOpenSystem",
+    module = "struqture_py.fermions"
+)]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct FermionLindbladOpenSystemWrapper {
     /// Internal storage of [struqture::fermions::FermionLindbladOpenSystem]
