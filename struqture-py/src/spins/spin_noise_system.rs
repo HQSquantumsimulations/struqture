@@ -57,7 +57,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     dimension = 4**slns.number_spins()
 ///     matrix = sp.coo_matrix(slns.sparse_matrix_superoperator_coo(), shape=(dimension, dimension))
 ///
-#[pyclass(name = "SpinLindbladNoiseSystem", module = "struqture_py.spins")]
+#[pyclass(from_py_object, name = "SpinLindbladNoiseSystem", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct SpinLindbladNoiseSystemWrapper {
     /// Internal storage of [struqture::spins::SpinLindbladNoiseSystem]

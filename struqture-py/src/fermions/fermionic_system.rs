@@ -56,7 +56,7 @@ use struqture_py_macros::{mappings, noiseless_system_wrapper};
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///
-#[pyclass(name = "FermionSystem", module = "struqture_py.fermions")]
+#[pyclass(from_py_object, name = "FermionSystem", module = "struqture_py.fermions")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct FermionSystemWrapper {
     /// Internal storage of [struqture::fermions::FermionSystem]

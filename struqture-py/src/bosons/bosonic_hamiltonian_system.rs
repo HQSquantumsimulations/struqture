@@ -47,7 +47,7 @@ use struqture_py_macros::noiseless_system_wrapper;
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///
-#[pyclass(name = "BosonHamiltonianSystem", module = "struqture_py.bosons")]
+#[pyclass(from_py_object, name = "BosonHamiltonianSystem", module = "struqture_py.bosons")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct BosonHamiltonianSystemWrapper {
     /// Internal storage of [struqture::bosons::BosonHamiltonianSystem]

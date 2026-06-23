@@ -49,7 +49,7 @@ use struqture_py_macros::{mappings, noisy_system_wrapper};
 ///     npt.assert_equal(slns.current_number_modes(), 2)
 ///     npt.assert_equal(slns.get((dp, dp)), CalculatorComplex(2))
 ///
-#[pyclass(name = "FermionLindbladNoiseSystem", module = "struqture_py.fermions")]
+#[pyclass(from_py_object, name = "FermionLindbladNoiseSystem", module = "struqture_py.fermions")]
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct FermionLindbladNoiseSystemWrapper {
     /// Internal storage of [struqture::fermions::FermionLindbladNoiseSystem]

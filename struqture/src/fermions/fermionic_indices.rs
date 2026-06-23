@@ -358,7 +358,7 @@ impl Mul<FermionProduct> for FermionProduct {
             commute_creator_annihilator_fermionic(&self.annihilators, &rhs.creators);
         for ((new_creators, mut new_annihilators), prefac) in commuted_creators_annihilators {
             let mut tmp_creators = self.creators.clone();
-            tmp_creators.extend(new_creators.into_iter());
+            tmp_creators.extend(new_creators);
             new_annihilators.extend(rhs.annihilators().copied());
             match FermionProduct::create_valid_pair(tmp_creators, new_annihilators, prefac.into()) {
                 Ok((tmp_fermion_product, sign)) => {

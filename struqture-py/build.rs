@@ -110,12 +110,12 @@ const TYPING_POTENTIAL_IMPORTS: &[&str] = &["Optional", "List", "Tuple", "Dict",
 #[cfg(feature = "doc_generator")]
 fn create_doc(module: &str) -> PyResult<String> {
     let mut main_doc = "".to_owned();
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| -> PyResult<String> {
+    Python::initialize();
+    Python::attach(|py| -> PyResult<String> {
         let python_module = PyModule::import(py, module)?;
         let dict = python_module.getattr("__dict__")?;
         let module_doc = python_module.getattr("__doc__")?.extract::<String>()?;
-        let r_dict = dict.downcast::<PyDict>()?;
+        let r_dict = dict.cast::<PyDict>()?;
         for (fn_name, func) in r_dict.iter() {
             let name = fn_name.str()?.extract::<String>()?;
             if name.starts_with("__") {
@@ -131,7 +131,7 @@ fn create_doc(module: &str) -> PyResult<String> {
             let class_dict = func.getattr("__dict__")?;
             let items = class_dict.call_method0("items")?;
             let dict_obj = py.import("builtins")?.call_method1("dict", (items,))?;
-            let class_r_dict = dict_obj.downcast::<PyDict>()?;
+            let class_r_dict = dict_obj.cast::<PyDict>()?;
             for (class_fn_name, meth) in class_r_dict.iter() {
                 let meth_name = class_fn_name.str()?.extract::<String>()?;
                 let meth_doc = if meth_name.as_str().starts_with("__") {

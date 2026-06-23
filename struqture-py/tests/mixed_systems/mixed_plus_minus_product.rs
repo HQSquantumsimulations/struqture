@@ -38,7 +38,7 @@ fn new_pp(
     pp_type
         .call1((spin_sub, boson_sub, fermion_sub))
         .unwrap()
-        .downcast::<MixedPlusMinusProductWrapper>()
+        .cast::<MixedPlusMinusProductWrapper>()
         .unwrap()
         .to_owned()
 }
@@ -46,8 +46,8 @@ fn new_pp(
 /// Test default function of MixedPlusMinusProductWrapper
 #[test]
 fn test_default_partialeq_debug_clone() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -107,8 +107,8 @@ fn test_default_partialeq_debug_clone() {
 /// Test new function of MixedPlusMinusProductWrapper
 #[test]
 fn test_new_no_error() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp_type = py.get_type::<MixedPlusMinusProductWrapper>();
 
         let pp = pp_type.call1((vec!["0Z"], vec!["c0a1"], vec!["c0a0"]));
@@ -119,8 +119,8 @@ fn test_new_no_error() {
 /// Test new errors functions of MixedPlusMinusProduct
 #[test]
 fn test_new_errors() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = py.get_type::<MixedPlusMinusProductWrapper>();
 
         let valid = pp.call1((
@@ -142,8 +142,8 @@ fn test_new_errors() {
 /// Test from_string function of MixedPlusMinusProduct
 #[test]
 fn test_from_string() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp: Bound<MixedPlusMinusProductWrapper> = new_pp(
             py,
             vec!["0Z".into()],
@@ -155,26 +155,26 @@ fn test_from_string() {
             .call_method1("from_string", (":S0Z:Bc0a1:Fc0a0:",))
             .unwrap();
         let comparison =
-            bool::extract_bound(&string_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(string_pp.call_method1("__eq__", (pp,)).unwrap().as_borrowed()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp.call_method0("current_number_spins").unwrap();
         let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap().as_borrowed()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_bosonic_modes")
             .unwrap();
         let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap()).unwrap();
+            bool::extract(nbr_spins.call_method1("__eq__", ([2_u64],)).unwrap().as_borrowed()).unwrap();
         assert!(comparison);
 
         let nbr_spins = string_pp
             .call_method0("current_number_fermionic_modes")
             .unwrap();
         let comparison =
-            bool::extract_bound(&nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap()).unwrap();
+            bool::extract(nbr_spins.call_method1("__eq__", ([1_u64],)).unwrap().as_borrowed()).unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("spins").unwrap();
@@ -182,24 +182,24 @@ fn test_from_string() {
         let spins = noise_type
             .call0()
             .unwrap()
-            .downcast::<PlusMinusProductWrapper>()
+            .cast::<PlusMinusProductWrapper>()
             .unwrap()
             .call_method1("z", ((0),))
             .unwrap();
         let comparison =
-            bool::extract_bound(&comp_op.call_method1("__eq__", (vec![spins],)).unwrap()).unwrap();
+            bool::extract(comp_op.call_method1("__eq__", (vec![spins],)).unwrap().as_borrowed()).unwrap();
         assert!(comparison);
 
         let comp_op = string_pp.call_method0("bosons").unwrap();
         let noise_type = py.get_type::<BosonProductWrapper>();
         let bosons = noise_type.call1(([0], [1])).unwrap();
-        let comparison = bool::extract_bound(
-            &comp_op
+        let comparison = bool::extract(
+            comp_op
                 .call_method1(
                     "__eq__",
-                    (vec![bosons.downcast::<BosonProductWrapper>().unwrap()],),
+                    (vec![bosons.cast::<BosonProductWrapper>().unwrap()],),
                 )
-                .unwrap(),
+                .unwrap().as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -207,13 +207,13 @@ fn test_from_string() {
         let comp_op = string_pp.call_method0("fermions").unwrap();
         let noise_type = py.get_type::<FermionProductWrapper>();
         let fermions = noise_type.call1(([0], [0])).unwrap();
-        let comparison = bool::extract_bound(
-            &comp_op
+        let comparison = bool::extract(
+            comp_op
                 .call_method1(
                     "__eq__",
-                    (vec![fermions.downcast::<FermionProductWrapper>().unwrap()],),
+                    (vec![fermions.cast::<FermionProductWrapper>().unwrap()],),
                 )
-                .unwrap(),
+                .unwrap().as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
@@ -223,8 +223,8 @@ fn test_from_string() {
 /// Test from_string function of MixedPlusMinusProduct - PyValueError
 #[test]
 fn test_from_string_error() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new_pp_1 = new_pp(py, vec![], vec![], vec![]);
         let error_pp = new_pp_1.call_method1("from_string", ("0+1Z3J",));
         assert!(error_pp.is_err());
@@ -233,8 +233,8 @@ fn test_from_string_error() {
 
 #[test]
 fn test_to_pp() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pmp: Bound<MixedPlusMinusProductWrapper> = new_pp(
             py,
             vec!["0Z".into()],
@@ -249,21 +249,21 @@ fn test_to_pp() {
 
         let result = pmp.call_method0("to_mixed_product_list").unwrap();
         let comp = vec![(
-            new_pp.downcast::<MixedProductWrapper>().unwrap(),
+            new_pp.cast::<MixedProductWrapper>().unwrap(),
             CalculatorComplexWrapper {
                 internal: CalculatorComplex::new(1.0, 0.0),
             },
         )];
         let equal =
-            bool::extract_bound(&result.call_method1("__eq__", (comp.clone(),)).unwrap()).unwrap();
+            bool::extract(result.call_method1("__eq__", (comp.clone(),)).unwrap().as_borrowed()).unwrap();
         assert!(equal);
     })
 }
 
 #[test]
 fn test_from_pp() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pmp: Bound<MixedPlusMinusProductWrapper> = new_pp(
             py,
             vec!["0Z".into()],
@@ -280,7 +280,7 @@ fn test_from_pp() {
             .get_type::<MixedPlusMinusProductWrapper>()
             .call_method1(
                 "from_mixed_product",
-                (new_pp.downcast::<MixedProductWrapper>().unwrap(),),
+                (new_pp.cast::<MixedProductWrapper>().unwrap(),),
             )
             .unwrap();
         let comp = vec![(
@@ -289,7 +289,7 @@ fn test_from_pp() {
                 internal: CalculatorComplex::new(1.0, 0.0),
             },
         )];
-        let equal = bool::extract_bound(&result.call_method1("__eq__", (comp,)).unwrap()).unwrap();
+        let equal = bool::extract(result.call_method1("__eq__", (comp,)).unwrap().as_borrowed()).unwrap();
         assert!(equal);
     })
 }
@@ -297,8 +297,8 @@ fn test_from_pp() {
 /// Test hermitian_conjugate and is_natural_hermitian functions of MixedPlusMinusProduct
 #[test]
 fn test_hermitian_conj() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -313,16 +313,16 @@ fn test_hermitian_conj() {
         );
 
         let hermitian_conjugate_pp = pp.call_method0("hermitian_conjugate").unwrap();
-        let comparison = bool::extract_bound(
-            &hermitian_conjugate_pp
+        let comparison = bool::extract(
+            hermitian_conjugate_pp
                 .call_method1("__eq__", ((conjugated_pp, 1_f64),))
-                .unwrap(),
+                .unwrap().as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
 
         let is_natural_hermitian_pp =
-            bool::extract_bound(&pp.call_method0("is_natural_hermitian").unwrap()).unwrap();
+            bool::extract(pp.call_method0("is_natural_hermitian").unwrap().as_borrowed()).unwrap();
         assert!(!is_natural_hermitian_pp);
     });
 }
@@ -330,8 +330,8 @@ fn test_hermitian_conj() {
 /// Test copy and deepcopy functions of MixedPlusMinusProduct
 #[test]
 fn test_copy_deepcopy() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -344,10 +344,10 @@ fn test_copy_deepcopy() {
         // let copy_deepcopy_param = pp.clone();
 
         let comparison_copy =
-            bool::extract_bound(&copy_pp.call_method1("__eq__", (&pp,)).unwrap()).unwrap();
+            bool::extract(copy_pp.call_method1("__eq__", (&pp,)).unwrap().as_borrowed()).unwrap();
         assert!(comparison_copy);
         let comparison_deepcopy =
-            bool::extract_bound(&deepcopy_pp.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(deepcopy_pp.call_method1("__eq__", (pp,)).unwrap().as_borrowed()).unwrap();
         assert!(comparison_deepcopy);
     });
 }
@@ -355,8 +355,8 @@ fn test_copy_deepcopy() {
 /// Test to_bincode and from_bincode functions of MixedPlusMinusProduct
 #[test]
 fn test_to_from_bincode() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -383,7 +383,7 @@ fn test_to_from_bincode() {
         let config = bincode::config::legacy();
         let deserialised_error = new.call_method1(
             "from_bincode",
-            (bincode::serde::encode_to_vec(&vec![0], config).unwrap(),),
+            (bincode::serde::encode_to_vec(vec![0], config).unwrap(),),
         );
         assert!(deserialised_error.is_err());
 
@@ -394,15 +394,15 @@ fn test_to_from_bincode() {
         assert!(serialised_error.is_err());
 
         let comparison =
-            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap().as_borrowed()).unwrap();
         assert!(comparison)
     });
 }
 
 #[test]
 fn test_value_error_bincode() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new = new_pp(
             py,
             vec!["0Z".into()],
@@ -417,8 +417,8 @@ fn test_value_error_bincode() {
 /// Test to_ and from_json functions of MixedPlusMinusProduct
 #[test]
 fn test_to_from_json() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -448,7 +448,7 @@ fn test_to_from_json() {
         assert!(deserialised_error.is_err());
 
         let comparison =
-            bool::extract_bound(&deserialised.call_method1("__eq__", (pp,)).unwrap()).unwrap();
+            bool::extract(deserialised.call_method1("__eq__", (pp,)).unwrap().as_borrowed()).unwrap();
         assert!(comparison)
     });
 }
@@ -456,8 +456,8 @@ fn test_to_from_json() {
 /// Test the __repr__ and __format__ functions
 #[test]
 fn test_format_repr() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -467,13 +467,13 @@ fn test_format_repr() {
         let format_repr = "S0Z:Bc0a1:Fc0a0:";
 
         let to_str = pp.call_method0("__str__").unwrap();
-        let str_op: String = String::extract_bound(&to_str).unwrap();
+        let str_op: String = String::extract(to_str.as_borrowed()).unwrap();
 
         let to_format = pp.call_method1("__format__", ("",)).unwrap();
-        let format_op: String = String::extract_bound(&to_format).unwrap();
+        let format_op: String = String::extract(to_format.as_borrowed()).unwrap();
 
         let to_repr = pp.call_method0("__repr__").unwrap();
-        let repr_op: String = String::extract_bound(&to_repr).unwrap();
+        let repr_op: String = String::extract(to_repr.as_borrowed()).unwrap();
 
         assert_eq!(str_op, format_repr);
         assert_eq!(format_op, format_repr);
@@ -484,8 +484,8 @@ fn test_format_repr() {
 /// Test the __richcmp__ function
 #[test]
 fn test_richcmp() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp_one = new_pp(
             py,
             vec!["0Z".into()],
@@ -500,23 +500,23 @@ fn test_richcmp() {
         );
 
         let comparison =
-            bool::extract_bound(&pp_one.call_method1("__eq__", (&pp_two,)).unwrap()).unwrap();
+            bool::extract(pp_one.call_method1("__eq__", (&pp_two,)).unwrap().as_borrowed()).unwrap();
         assert!(!comparison);
-        let comparison = bool::extract_bound(
-            &pp_one
+        let comparison = bool::extract(
+            pp_one
                 .call_method1("__eq__", ("S0Z:Bc0a1:Fc0a0:",))
-                .unwrap(),
+                .unwrap().as_borrowed(),
         )
         .unwrap();
         assert!(comparison);
 
         let comparison =
-            bool::extract_bound(&pp_one.call_method1("__ne__", (pp_two,)).unwrap()).unwrap();
+            bool::extract(pp_one.call_method1("__ne__", (pp_two,)).unwrap().as_borrowed()).unwrap();
         assert!(comparison);
-        let comparison = bool::extract_bound(
-            &pp_one
+        let comparison = bool::extract(
+            pp_one
                 .call_method1("__ne__", ("S0Z:Bc0a1:Fc0a0:",))
-                .unwrap(),
+                .unwrap().as_borrowed(),
         )
         .unwrap();
         assert!(!comparison);
@@ -529,8 +529,8 @@ fn test_richcmp() {
 /// Test hash functions of MixedPlusMinusProduct
 #[test]
 fn test_hash() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let pp = new_pp(
             py,
             vec!["0Z".into()],
@@ -548,10 +548,10 @@ fn test_hash() {
         let hash_other_pp = pp_other.call_method0("__hash__").unwrap();
 
         let equal =
-            bool::extract_bound(&hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap()).unwrap();
+            bool::extract(hash_pp.call_method1("__eq__", (&hash_pp,)).unwrap().as_borrowed()).unwrap();
         assert!(equal);
         let not_equal =
-            bool::extract_bound(&hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap())
+            bool::extract(hash_pp.call_method1("__eq__", (hash_other_pp,)).unwrap().as_borrowed())
                 .unwrap();
         assert!(!not_equal);
     });
@@ -560,8 +560,8 @@ fn test_hash() {
 #[cfg(feature = "json_schema")]
 #[test]
 fn test_json_schema() {
-    pyo3::prepare_freethreaded_python();
-    pyo3::Python::with_gil(|py| {
+    Python::initialize();
+    pyo3::Python::attach(|py| {
         let new = new_pp(
             py,
             vec!["0Z".to_string()],
@@ -570,18 +570,18 @@ fn test_json_schema() {
         );
 
         let schema: String =
-            String::extract_bound(&new.call_method0("json_schema").unwrap()).unwrap();
+            String::extract(new.call_method0("json_schema").unwrap().as_borrowed()).unwrap();
         let rust_schema =
             serde_json::to_string_pretty(&schemars::schema_for!(MixedPlusMinusProduct)).unwrap();
         assert_eq!(schema, rust_schema);
 
         let version: String =
-            String::extract_bound(&new.call_method0("current_version").unwrap()).unwrap();
+            String::extract(new.call_method0("current_version").unwrap().as_borrowed()).unwrap();
         let rust_version = STRUQTURE_VERSION.to_string();
         assert_eq!(version, rust_version);
 
         let min_version: String =
-            String::extract_bound(&new.call_method0("min_supported_version").unwrap()).unwrap();
+            String::extract(new.call_method0("min_supported_version").unwrap().as_borrowed()).unwrap();
         let rust_min_version = String::from("1.2.0");
         assert_eq!(min_version, rust_min_version);
     });

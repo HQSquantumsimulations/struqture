@@ -52,7 +52,7 @@ use super::SpinHamiltonianSystemWrapper;
 ///     npt.assert_equal(ssystem.get(pp), CalculatorComplex(5))
 ///     npt.assert_equal(ssystem.keys(), [pp])
 ///
-#[pyclass(name = "PlusMinusOperator", module = "struqture_py.spins")]
+#[pyclass(from_py_object, name = "PlusMinusOperator", module = "struqture_py.spins")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PlusMinusOperatorWrapper {
     /// Internal storage of [struqture::spins::PlusMinusOperator]

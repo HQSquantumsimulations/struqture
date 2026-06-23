@@ -610,13 +610,13 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
                 let mut tmp_bosons: Vec<Vec<BosonProduct>> = Vec::with_capacity(lhs.bosons().len());
                 let mut tmp_fermions: Vec<Vec<(FermionProduct, f64)>> =
                     Vec::with_capacity(lhs.fermions().len());
-                for (left, right) in lhs.clone().spins.into_iter().zip(rhs.spins.into_iter()) {
+                for (left, right) in lhs.clone().spins.into_iter().zip(rhs.spins) {
                     let (val, coeff) = left * right;
                     tmp_spins.push(val);
                     coefficient *= coeff;
                 }
                 // iterate through boson subsystems and multiply subsystem
-                for (left, right) in lhs.clone().bosons.into_iter().zip(rhs.bosons.into_iter()) {
+                for (left, right) in lhs.clone().bosons.into_iter().zip(rhs.bosons) {
                     let boson_multiplication = left.clone() * right.clone();
                     if !tmp_bosons.is_empty() {
                         let mut internal_tmp_bosons: Vec<Vec<BosonProduct>> = Vec::new();
@@ -638,7 +638,7 @@ impl Mul<HermitianMixedProduct> for HermitianMixedProduct {
                     .fermions
                     .clone()
                     .into_iter()
-                    .zip(rhs.fermions.into_iter())
+                    .zip(rhs.fermions)
                 {
                     let fermion_multiplication = left * right;
                     if !tmp_fermions.is_empty() {
@@ -754,7 +754,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
                 .clone()
                 .spins
                 .into_iter()
-                .zip(rhs.clone().spins.into_iter())
+                .zip(rhs.clone().spins)
             {
                 let (val, coeff) = left * right;
                 tmp_spins.push(val);
@@ -765,7 +765,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
                 .clone()
                 .bosons
                 .into_iter()
-                .zip(rhs.clone().bosons.into_iter())
+                .zip(rhs.clone().bosons)
             {
                 let boson_multiplication = left.clone() * right.clone();
                 if !tmp_bosons.is_empty() {
@@ -788,7 +788,7 @@ impl Mul<MixedProduct> for HermitianMixedProduct {
                 .fermions
                 .clone()
                 .into_iter()
-                .zip(rhs.clone().fermions.into_iter())
+                .zip(rhs.clone().fermions)
             {
                 let fermion_multiplication = left * right;
                 if !tmp_fermions.is_empty() {
