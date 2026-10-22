@@ -1,8 +1,8 @@
 [project]
 name = "struqture-py"
-version = "2.6.0"
+version = "2.6.1"
 dependencies = ['numpy', 'qoqo_calculator_pyo3>=1.8']
-license = { text = "Apache-2.0 AND Apache-2.0 with LLVM-exception AND MIT AND Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-CLause" }
+license = { text = "Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND MIT AND Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-CLause" }
 maintainers = [
   { name = "HQS Quantum Simulations GmbH", email = "info@quantumsimulations.de" },
 ]
@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 readme = "README_struqture.md"
 
 [build-system]
-requires = ["maturin>=1.0,<2.0"]
+requires = ["maturin>=1.9.4,<2.0"]
 build-backend = "maturin"
 
 [tool.maturin]
