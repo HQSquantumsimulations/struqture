@@ -4,6 +4,10 @@ This changelog track changes to the struqture project starting at version v1.0.0
 
 ## Unreleased
 
+## 2.6.1
+
+* Fixed license capitalization and update to pyo3 0.30
+
 ## 2.6.0
 
 * Updated to pyo3 0.29.0, itertools 0.15, nalgebra 0.35, and jsonschema 0.46.
